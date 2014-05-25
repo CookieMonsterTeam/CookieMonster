@@ -133,7 +133,7 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Ant larva')) eggMult++;
 	if (CM.Sim.Has('Century egg')) {
 		// The boost increases a little every day, with diminishing returns up to +10% on the 100th day
-		var day = Math.floor((new Date().getTime() - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
+		var day = Math.floor((CM.Sim.Date - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
 		day = Math.min(day,100);
 		eggMult += (1 - Math.pow(1 - day / 100, 3)) * 10;
 	}
@@ -1373,6 +1373,7 @@ CM.ReplaceNative = function() {
 	Game.CalculateGains = function() {
 		CM.Backup.CalculateGains();
 		CM.Sim.DoSims = 1;
+		CM.Sim.Date = new Date().getTime();
 	}
 	
 	CM.Backup.seasonPopup = {};
@@ -1496,6 +1497,8 @@ CM.Init = function() {
 		CM.ReplaceNative();
 		CM.LoadConfig(); // Must be after all things are created!
 		
+		Game.CalculateGains();
+		
 		if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
 		else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!','','',1);
 		
@@ -1503,7 +1506,7 @@ CM.Init = function() {
 	}
 }
 
-CM.Sim.DoSims = 1;
+//CM.Sim.DoSims = 1;
 //CM.Sim.DoUpgradesSim = 1;
 
 CM.Cache.Lucky = 0;
@@ -1552,7 +1555,7 @@ CM.ConfigData.SayTime = { label : [ 'Format Time OFF', 'Format Time ON' ], func 
 CM.ConfigData.Scale = { label : [ 'Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation' ], func : function() { CM.Disp.RefreshScale(); } };
 
 CM.VersionMajor = '1.0465';
-CM.VersionMinor = '2';
+CM.VersionMinor = '3';
 
 
 CM.Init();
