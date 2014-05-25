@@ -1556,5 +1556,4 @@ CM.ConfigData.Scale = { label : [ 'Game\'s Setting Scale', 'Metric', 'Short Scal
 CM.VersionMajor = '1.0465';
 CM.VersionMinor = '3';
 
-
 CM.Init();
