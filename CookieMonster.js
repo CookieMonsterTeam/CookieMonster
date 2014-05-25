@@ -1495,10 +1495,9 @@ CM.Init = function() {
 		CM.Disp.CreateTooltipWarnCaut();
 		CM.Disp.AddTooltipBuild();
 		CM.ReplaceNative();
-		CM.LoadConfig(); // Must be after all things are created!
-		
 		Game.CalculateGains();
-		
+		CM.LoadConfig(); // Must be after all things are created!
+				
 		if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
 		else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!','','',1);
 		
