@@ -359,33 +359,6 @@ CM.Sim.BuyUpgrades = function() {
 	//CM.Sim.DoUpgradesSim = 0;
 }
 
-CM.Sim.ResetBonus = function() {
-	CM.Sim.CopyData();
-	
-	if (Game.cookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
-	if (Game.cookiesEarned >= 1000000000) CM.Sim.Win('Oblivion');
-	if (Game.cookiesEarned >= 1000000000000) CM.Sim.Win('From scratch');
-	if (Game.cookiesEarned >= 1000000000000000) CM.Sim.Win('Nihilism');
-	
-	if (Game.cookiesEarned >= 1000000000000000000) CM.Sim.Win('Dematerialize');
-	if (Game.cookiesEarned >= 1000000000000000000000) CM.Sim.Win('Nil zero zilch');
-	if (Game.cookiesEarned >= 1000000000000000000000000) CM.Sim.Win('Transcendence');
-	if (Game.cookiesEarned >= 1000000000000000000000000000) CM.Sim.Win('Obliterate');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');	
-	
-	CM.Sim.prestige = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
-	
-	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
-
-	CM.Sim.CalculateGains();
-	
-	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
-		CM.Sim.CalculateGains();
-	}
-
-	return (CM.Sim.cookiesPs - Game.cookiesPs);
-}
-
 /*********
  * Cache *
  *********/
@@ -1041,16 +1014,6 @@ CM.Disp.AddMenu = function() {
 
 		var possibleHC = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
 		var neededCook = CM.Sim.CookNeedPrest(possibleHC + 1) - (Game.cookiesEarned + Game.cookiesReset);
-		var bonusHC = CM.Sim.ResetBonus();
-		var bciHC = (CM.Sim.CookNeedPrest(CM.Sim.prestige) - CM.Sim.CookNeedPrest(Game.prestige['Heavenly chips'])) / bonusHC;
-		var bciColorHC;
-		if (bonusHC == 0) bciColorHC = CM.Disp.colorGray;
-		else if (bciHC < CM.Disp.min) bciColorHC = CM.Disp.colorBlue;
-		else if (bciHC == CM.Disp.min) bciColorHC = CM.Disp.colorGreen;
-		else if (bciHC > CM.Disp.max) bciColorHC = CM.Disp.colorPurple;
-		else if (bciHC == CM.Disp.max) bciColorHC = CM.Disp.colorRed;
-		else if (bciHC > CM.Disp.mid) bciColorHC = CM.Disp.colorOrange;
-		else bciColorHC = CM.Disp.colorYellow;
 		
 		var str = '<div class=\'title\' style=\'color: ' + CM.Disp.colorBlue + '\'>Cookie Monster Goodies</div>';
 		str += '<div class=\'listing\' style=\'padding:5px 16px; opacity:0.7; font-size: 17px; font-family: \"Kavoon\", Georgia, serif;\'>Lucky Cookies</div>';
@@ -1064,9 +1027,6 @@ CM.Disp.AddMenu = function() {
 		str += '<div class=\'listing\'><b>Heavenly Chips (CUR) :</b> ' + Beautify(Game.prestige['Heavenly chips']) + ' <small>(' + Beautify((Game.prestige['Heavenly chips'] * 2)) + '%)</small></div>';
 		str += '<div class=\'listing\'><b>Cookies To Next Chip :</b> ' + Beautify(neededCook) + '</div>';
 		str += '<div class=\'listing\'><b>Time To Next Chip :</b> ' + CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1) + '</div>';
-		str += '<div class=\'listing\' style=\'padding:5px 16px; opacity:0.7; font-size: 17px; font-family: \"Kavoon\", Georgia, serif;\'>Reset</div>';
-		str += '<div class=\'listing\'><b>Bonus Income :</b> ' + Beautify(bonusHC) + '</div>';
-		str += '<div class=\'listing\'><b>Base Cost Per Income :</b> <span style=\'font-weight: bold; color: ' + bciColorHC + ';\'>' + Beautify(bciHC) + '</span></div>';
 		if (Game.cpsSucked > 0) {
 			str += '<div class=\'listing\' style=\'padding:5px 16px; opacity:0.7; font-size: 17px; font-family: \"Kavoon\", Georgia, serif;\'>Wrinklers</div>';
 			var sucked = 0;
@@ -1554,6 +1514,6 @@ CM.ConfigData.SayTime = { label : [ 'Format Time OFF', 'Format Time ON' ], func 
 CM.ConfigData.Scale = { label : [ 'Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation' ], func : function() { CM.Disp.RefreshScale(); } };
 
 CM.VersionMajor = '1.0465';
-CM.VersionMinor = '3';
+CM.VersionMinor = '4';
 
 CM.Init();
