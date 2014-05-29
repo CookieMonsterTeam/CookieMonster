@@ -52,12 +52,14 @@ Do note though that, although these upgrades have no direct value, if buying the
 
 Simply use like the previous addon, create a bookmark and set this as the URL. Then when in the game, click on that bookmark.
 
-<pre class="js">javascript: (function () {
+```javascript
+javascript: (function () {
 	var load = document.createElement('script');
 	load.setAttribute('type', 'text/javascript');
 	load.setAttribute('src', 'http://aktanusa.github.io/CookieMonster/CookieMonster.js');
 	document.head.appendChild(load);
-}());</pre>
+}());
+```
 
 If (for some reason) the above doesn't work, trying pasting everything after the <code>javascript:</code> bit into your browser's console.
 
@@ -65,7 +67,8 @@ If (for some reason) the above doesn't work, trying pasting everything after the
 
 If you'd rather use the addon as a script via per example *Greasemonkey* or *Tampermonkey*, you can use the following script, which will automatically load *Cookie Monster* every time the original game loads. You may need to specify <code>http://orteil.dashnet.org/cookieclicker/</code> when asked for a *namespace* or *includes*. For how to add an userscript to your browser, refer to your browser/plugin's documentation as the method changes for each one.
 
-<pre class="js">// ==UserScript==
+```javascript
+// ==UserScript==
 // @name Cookie Monster
 // @namespace Cookie
 // @include http://orteil.dashnet.org/cookieclicker/
@@ -82,7 +85,8 @@ Game.Init = function() {
 		load.setAttribute('src', 'http://aktanusa.github.io/CookieMonster/CookieMonster.js');
 		document.head.appendChild(load);
 	}()); 
-}</pre>
+}
+```
 
 # Bugs and suggestions
 
@@ -90,12 +94,14 @@ Any bug or suggestion should be **opened as an issue** [in the repository](https
 
 Before submitting a bug, make sure to give a shot at the latest version of the addon on the <code>dev</code> branch. For this, use the following bookmarklet:
 
-<pre class="js">javascript: (function () {
+```javascript
+javascript: (function () {
 	var load = document.createElement('script');
 	load.setAttribute('type', 'text/javascript');
 	load.setAttribute('src', 'https://raw.githubusercontent.com/Aktanusa/CookieMonster/dev/CookieMonster.js');
 	document.head.appendChild(load);
-}());</pre>
+}());
+```
 
 If the bug is still here, you can submit an issue for it.
 
