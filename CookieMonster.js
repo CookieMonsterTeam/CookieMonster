@@ -1,5 +1,7 @@
 CM = {};
 
+CM.Data = {};
+
 CM.Sim = {};
 
 CM.Cache = {};
@@ -209,10 +211,18 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (CM.Sim.UpgradesOwned >= 50) CM.Sim.Win('Augmenter');
 	if (CM.Sim.UpgradesOwned >= 100) CM.Sim.Win('Upgrader');
 	if (CM.Sim.UpgradesOwned >= 150) CM.Sim.Win('Lord of Progress');
+	
+	var hasAllHalloCook = true;
+	for (var i in CM.Data.HalloCookies) {
+		if (!CM.Sim.Has(CM.Data.HalloCookies[i])) hasAllHalloCook = false;
+	}
+	if (hasAllHalloCook) CM.Sim.Win('Spooky cookies');
 
-	if (CM.Sim.Has('Skull cookies') && CM.Sim.Has('Ghost cookies') && CM.Sim.Has('Bat cookies') && CM.Sim.Has('Slime cookies') && CM.Sim.Has('Pumpkin cookies') && CM.Sim.Has('Eyeball cookies') && CM.Sim.Has('Spider cookies')) CM.Sim.Win('Spooky cookies');
-
-	if (CM.Sim.Has('Christmas tree biscuits') && CM.Sim.Has('Snowflake biscuits') && CM.Sim.Has('Snowman biscuits') && CM.Sim.Has('Holly biscuits') && CM.Sim.Has('Candy cane biscuits') && CM.Sim.Has('Bell biscuits') && CM.Sim.Has('Present biscuits')) CM.Sim.Win('Let it snow');
+	var hasAllChristCook = true;
+	for (var i in CM.Data.ChristCookies) {
+		if (!CM.Sim.Has(CM.Data.ChristCookies[i])) hasAllChristCook = false;
+	}
+	if (hasAllChristCook) CM.Sim.Win('Let it snow');
 }
 
 CM.Sim.BuyBuildings = function() {	
@@ -1015,6 +1025,28 @@ CM.Disp.AddMenu = function() {
 		var possibleHC = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
 		var neededCook = CM.Sim.CookNeedPrest(possibleHC + 1) - (Game.cookiesEarned + Game.cookiesReset);
 		
+		var halloCook = 0;
+		for (var i in CM.Data.HalloCookies) {
+			if (Game.Has(CM.Data.HalloCookies[i])) halloCook++;
+		}
+		var christCook = 0;
+		for (var i in CM.Data.ChristCookies) {
+			if (Game.Has(CM.Data.ChristCookies[i])) christCook++;
+		}
+		var valCook = 0;
+		for (var i in CM.Data.ValCookies) {
+			if (Game.Has(CM.Data.ValCookies[i])) valCook++;
+			else break;
+		}
+		var normEggs = 0;
+		for (var i in Game.eggDrops) {
+			if (Game.HasUnlocked(Game.eggDrops[i])) normEggs++;
+		}
+		var rareEggs = 0;
+		for (var i in Game.rareEggDrops) {
+			if (Game.HasUnlocked(Game.rareEggDrops[i])) rareEggs++;
+		}
+		
 		var str = '<div class=\'title\' style=\'color: ' + CM.Disp.colorBlue + '\'>Cookie Monster Goodies</div>';
 		str += '<div class=\'listing\' style=\'padding:5px 16px; opacity:0.7; font-size: 17px; font-family: \"Kavoon\", Georgia, serif;\'>Lucky Cookies</div>';
 		str += '<div class=\'listing\'><b>\"Lucky!\" Cookies Required :</b> <span style=\'font-weight: bold; color: ' + luckyColor + ';\'>' + Beautify(CM.Cache.Lucky) + '</span>' + luckyTime + '</div>';
@@ -1037,8 +1069,13 @@ CM.Disp.AddMenu = function() {
 			if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 			str += '<div class=\'listing\'><b>Rewards of Popping :</b> ' + Beautify(sucked) + '</div>';
 		}
+		str += '<div class=\'listing\' style=\'padding:5px 16px; opacity:0.7; font-size: 17px; font-family: \"Kavoon\", Georgia, serif;\'>Season Specials</div>';
+		str += '<div class=\'listing\'><b>Halloween Cookies Bought :</b> ' + halloCook + ' of ' + CM.Data.HalloCookies.length + '</div>';					
+		str += '<div class=\'listing\'><b>Christmas Cookies Bought :</b> ' + christCook + ' of ' + CM.Data.ChristCookies.length + '</div>';					
+		str += '<div class=\'listing\'><b>Valentine Cookies Bought :</b> ' + valCook + ' of ' + CM.Data.ValCookies.length + '</div>';					
+		str += '<div class=\'listing\'><b>Normal Eggs Unlocked :</b> ' + normEggs + ' of ' + Game.eggDrops.length + '</div>';					
+		str += '<div class=\'listing\'><b>Rare Eggs Unlocked :</b> ' + rareEggs + ' of ' + Game.rareEggDrops.length + '</div>';					
 		if (Game.season == 'christmas') {
-			str += '<div class=\'listing\' style=\'padding:5px 16px; opacity:0.7; font-size: 17px; font-family: \"Kavoon\", Georgia, serif;\'>Season Specials</div>';
 			str += '<div class=\'listing\'><b>Reindeer Reward :</b> ' + Beautify(CM.Cache.SeaSpec) + '</div>';			
 		}
 		
@@ -1464,6 +1501,10 @@ CM.Init = function() {
 		Game.Win('Third-party');
 	}
 }
+
+CM.Data.HalloCookies = ['Skull cookies', 'Ghost cookies', 'Bat cookies', 'Slime cookies', 'Pumpkin cookies', 'Eyeball cookies', 'Spider cookies'];
+CM.Data.ChristCookies = ['Christmas tree biscuits', 'Snowflake biscuits', 'Snowman biscuits', 'Holly biscuits', 'Candy cane biscuits', 'Bell biscuits', 'Present biscuits'];
+CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour heart biscuits', 'Weeping heart biscuits', 'Golden heart biscuits', 'Eternal heart biscuits'];
 
 //CM.Sim.DoSims = 1;
 //CM.Sim.DoUpgradesSim = 1;
