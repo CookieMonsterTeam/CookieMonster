@@ -997,7 +997,7 @@ CM.Disp.AddMenu = function() {
 		str += '<div class=\'listing\'><a class=\'option\' id=\'' + CM.ConfigPrefix + 'ToolWarnCautPos\' onclick=\'CM.ToggleConfigUp("ToolWarnCautPos");\'>' + CM.Disp.GetConfigDisplay('ToolWarnCautPos') + '</a><label>Placement of the warning/caution boxes</label></div>';
 		str += '<div class=\'listing\' style=\'padding:5px 16px; opacity:0.7; font-size: 17px; font-family: \"Kavoon\", Georgia, serif;\'>Statistics</div>';
 		str += '<div class=\'listing\'><a class=\'option\' id=\'' + CM.ConfigPrefix + 'Stats\' onclick=\'CM.ToggleConfigUp("Stats");\'>' + CM.Disp.GetConfigDisplay('Stats') + '</a><label>Extra Cookie Monster statistics!</label></div>';
-		str += '<div class=\'listing\'><a class=\'option\' id=\'' + CM.ConfigPrefix + 'UpStats\' onclick=\'CM.ToggleConfigUp("UpStats");\'>' + CM.Disp.GetConfigDisplay('UpStats') + '</a><label>Default Game rate is once every 5 seconds</label></div>';
+		str += '<div class=\'listing\'><a class=\'option\' id=\'' + CM.ConfigPrefix + 'UpStats\' onclick=\'CM.ToggleConfigUp("UpStats");\'>' + CM.Disp.GetConfigDisplay('UpStats') + '</a><label>Default Game rate is once every 3 seconds</label></div>';
 		str += '<div class=\'listing\'><a class=\'option\' id=\'' + CM.ConfigPrefix + 'SayTime\' onclick=\'CM.ToggleConfigUp("SayTime");\'>' + CM.Disp.GetConfigDisplay('SayTime') + '</a><label>Change how time is displayed in statistics</label></div>';
 		str += '<div class=\'listing\' style=\'padding:5px 16px; opacity:0.7; font-size: 17px; font-family: \"Kavoon\", Georgia, serif;\'>Other</div>';
 		str += '<div class=\'listing\'><a class=\'option\' id=\'' + CM.ConfigPrefix + 'Scale\' onclick=\'CM.ToggleConfigUp("Scale");\'>' + CM.Disp.GetConfigDisplay('Scale') + '</a><label>Change how long numbers are handled</label></div>';
@@ -1073,8 +1073,8 @@ CM.Disp.AddMenu = function() {
 		str += '<div class=\'listing\'><b>Halloween Cookies Bought :</b> ' + halloCook + ' of ' + CM.Data.HalloCookies.length + '</div>';					
 		str += '<div class=\'listing\'><b>Christmas Cookies Bought :</b> ' + christCook + ' of ' + CM.Data.ChristCookies.length + '</div>';					
 		str += '<div class=\'listing\'><b>Valentine Cookies Bought :</b> ' + valCook + ' of ' + CM.Data.ValCookies.length + '</div>';					
-		str += '<div class=\'listing\'><b>Normal Eggs Unlocked :</b> ' + normEggs + ' of ' + Game.eggDrops.length + '</div>';					
-		str += '<div class=\'listing\'><b>Rare Eggs Unlocked :</b> ' + rareEggs + ' of ' + Game.rareEggDrops.length + '</div>';					
+		str += '<div class=\'listing\'><b>Normal Easter Eggs Unlocked :</b> ' + normEggs + ' of ' + Game.eggDrops.length + '</div>';					
+		str += '<div class=\'listing\'><b>Rare Easter Eggs Unlocked :</b> ' + rareEggs + ' of ' + Game.rareEggDrops.length + '</div>';					
 		if (Game.season == 'christmas') {
 			str += '<div class=\'listing\'><b>Reindeer Reward :</b> ' + Beautify(CM.Cache.SeaSpec) + '</div>';			
 		}
@@ -1086,7 +1086,7 @@ CM.Disp.AddMenu = function() {
 }
 
 CM.Disp.RefreshMenu = function() {
-	if (CM.Config.UpStats && Game.onMenu == 'stats' && Game.drawT % (Game.fps*3) != 0 && Game.drawT % Game.fps == 0) Game.UpdateMenu();
+	if (CM.Config.UpStats && Game.onMenu == 'stats' && Game.drawT % (Game.fps * 3) != 0 && Game.drawT % Game.fps == 0) Game.UpdateMenu();
 }
 
 CM.Disp.CreateTooltipWarnCaut = function() {
@@ -1555,6 +1555,6 @@ CM.ConfigData.SayTime = { label : [ 'Format Time OFF', 'Format Time ON' ], func 
 CM.ConfigData.Scale = { label : [ 'Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation' ], func : function() { CM.Disp.RefreshScale(); } };
 
 CM.VersionMajor = '1.0465';
-CM.VersionMinor = '4';
+CM.VersionMinor = '5';
 
 CM.Init();
