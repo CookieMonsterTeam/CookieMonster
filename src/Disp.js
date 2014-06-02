@@ -646,11 +646,11 @@ CM.Disp.UpdateTitle = function() {
 }
 
 CM.Disp.AddMenu = function() {
-	var title = function(text) {
+	var title = function() {
 		var div = document.createElement('div');
 		div.className = 'title';
 		div.style.color = CM.Disp.colorBlue;
-		div.textContent = text;
+		div.textContent = 'Cookie Monster Goodies';
 		return div;
 	}
 	var header = function(text) {
@@ -667,7 +667,7 @@ CM.Disp.AddMenu = function() {
 	if (Game.onMenu == 'prefs') {
 		var frag = document.createDocumentFragment();
 		
-		frag.appendChild(title('Cookie Monster Goodies'));
+		frag.appendChild(title());
 		
 		var listing = function(config) {
 			var div = document.createElement('div');
@@ -786,7 +786,7 @@ CM.Disp.AddMenu = function() {
 			div.appendChild(text);
 			return div;
 		}
-		stats.appendChild(title('Cookie Monster Goodies'));
+		stats.appendChild(title());
 		stats.appendChild(header('Lucky Cookies'));
 		var luckyReqFrag = document.createDocumentFragment();
 		var luckyReqSpan = document.createElement('span');
@@ -830,6 +830,7 @@ CM.Disp.AddMenu = function() {
 		stats.appendChild(listing('Heavenly Chips (CUR) : ',  hcCurFrag));
 		stats.appendChild(listing('Cookies To Next Chip : ',  document.createTextNode(Beautify(neededCook))));
 		stats.appendChild(listing('Time To Next Chip : ',  document.createTextNode(CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1))));
+		stats.appendChild(listing('Reset Bonus Income : ',  document.createTextNode(Beautify(CM.Sim.ResetBonus()))));
 		if (Game.cpsSucked > 0) {
 			stats.appendChild(header('Wrinklers'));
 			var sucked = 0;

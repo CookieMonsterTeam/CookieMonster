@@ -350,3 +350,30 @@ CM.Sim.BuyUpgrades = function() {
 	}
 }
 
+CM.Sim.ResetBonus = function() {
+	CM.Sim.CopyData();
+	
+	if (Game.cookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
+	if (Game.cookiesEarned >= 1000000000) CM.Sim.Win('Oblivion');
+	if (Game.cookiesEarned >= 1000000000000) CM.Sim.Win('From scratch');
+	if (Game.cookiesEarned >= 1000000000000000) CM.Sim.Win('Nihilism');
+	
+	if (Game.cookiesEarned >= 1000000000000000000) CM.Sim.Win('Dematerialize');
+	if (Game.cookiesEarned >= 1000000000000000000000) CM.Sim.Win('Nil zero zilch');
+	if (Game.cookiesEarned >= 1000000000000000000000000) CM.Sim.Win('Transcendence');
+	if (Game.cookiesEarned >= 1000000000000000000000000000) CM.Sim.Win('Obliterate');
+	if (Game.cookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');	
+	
+	CM.Sim.prestige = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
+	
+	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
+
+	CM.Sim.CalculateGains();
+	
+	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
+		CM.Sim.CalculateGains();
+	}
+
+	return (CM.Sim.cookiesPs - Game.cookiesPs);
+}
+
