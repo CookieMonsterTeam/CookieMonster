@@ -972,7 +972,7 @@ CM.Disp.AddMenu = function() {
 		var luckyCur = Math.min(Game.cookies * 0.1, Game.cookiesPs * 60 * 20) + 13;
 		
 		var chainColor = (Game.cookies < CM.Cache.Chain) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var chainTime = (Game.cookies < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Lucky - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
+		var chainTime = (Game.cookies < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Chain - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
 		
 
 		var possibleHC = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
@@ -1017,7 +1017,7 @@ CM.Disp.AddMenu = function() {
 		luckyReqSpan.style.color = luckyColor;
 		luckyReqSpan.textContent = Beautify(CM.Cache.Lucky);
 		luckyReqFrag.appendChild(luckyReqSpan);
-		if (chainTime != '') {
+		if (luckyTime != '') {
 			var luckyReqSmall = document.createElement('small');
 			luckyReqSmall.textContent = ' (' + luckyTime + ')';
 			luckyReqFrag.appendChild(luckyReqSmall);
@@ -1048,7 +1048,7 @@ CM.Disp.AddMenu = function() {
 		if (chainTime != '') {
 			var chainReqSmall = document.createElement('small');
 			chainReqSmall.textContent = ' (' + chainTime + ')';
-			chainReqFrag.appendChild(luckyReqSmall);
+			chainReqFrag.appendChild(chainReqSmall);
 		}
 		stats.appendChild(listing('Chain Cookies Required', chainReqFrag));
 		stats.appendChild(listing('Chain Reward (MAX)',  document.createTextNode(Beautify(CM.Cache.ChainReward))));
