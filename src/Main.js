@@ -66,6 +66,7 @@ CM.Loop = function() {
 		CM.Cache.RemakeIncome();
 		CM.Cache.RemakeBCI();
 		CM.Cache.RemakeLucky();
+		CM.Cache.RemakeChain();
 		CM.Cache.RemakeSeaSpec();
 		
 		CM.Disp.UpdateBotBarOther();
@@ -120,5 +121,5 @@ CM.ConfigDefault = {BotBar: 1, TimerBar: 1, BuildColor: 1, UpBarColor: 1, Flash:
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '1.0465';
-CM.VersionMinor = '5';
+CM.VersionMinor = '6';
 

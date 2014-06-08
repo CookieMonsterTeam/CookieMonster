@@ -83,6 +83,33 @@ CM.Cache.RemakeLucky = function() {
 	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.1) + 13;
 }
 
+CM.Cache.RemakeChain = function() {
+	CM.Cache.Chain = Game.cookiesPs * 60 * 60 * 3 / 0.25;
+	
+	var digit = 7;
+	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
+	var maxPayout = Game.cookiesPs * 60 * 60 * 3;
+	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
+	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+	while (nextMoni < maxPayout) {
+		chain++;
+		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
+		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+	}
+	CM.Cache.ChainReward = moni;
+	
+	digit = 6;
+	chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
+	moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
+	nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+	while (nextMoni < maxPayout) {
+		chain++;
+		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
+		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+	}
+	CM.Cache.ChainWrathReward = moni;
+}
+
 CM.Cache.RemakeSeaSpec = function() {
 	if (Game.season == 'christmas') {
 		CM.Cache.SeaSpec = Math.max(25, Game.cookiesPs * 60 * 1);
@@ -95,7 +122,9 @@ CM.Cache.LuckyReward = 0;
 CM.Cache.LuckyFrenzy = 0;
 CM.Cache.LuckyRewardFrenzy = 0;
 CM.Cache.SeaSpec = 0;
-
+CM.Cache.Chain = 0;
+CM.Cache.ChainReward = 0;
+CM.Cache.ChainWrathReward = 0;
 /**********
  * Config *
  **********/
@@ -941,6 +970,10 @@ CM.Disp.AddMenu = function() {
 		var luckyColorFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var luckyTimeFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
 		var luckyCur = Math.min(Game.cookies * 0.1, Game.cookiesPs * 60 * 20) + 13;
+		
+		var chainColor = (Game.cookies < CM.Cache.Chain) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var chainTime = (Game.cookies < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Lucky - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
+		
 
 		var possibleHC = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
 		var neededCook = CM.Sim.CookNeedPrest(possibleHC + 1) - (Game.cookiesEarned + Game.cookiesReset);
@@ -971,7 +1004,7 @@ CM.Disp.AddMenu = function() {
 			var div = document.createElement('div');
 			div.className = 'listing';
 			var b = document.createElement('b');
-			b.textContent = name;
+			b.textContent = name + ' : ';
 			div.appendChild(b);
 			div.appendChild(text);
 			return div;
@@ -984,12 +1017,12 @@ CM.Disp.AddMenu = function() {
 		luckyReqSpan.style.color = luckyColor;
 		luckyReqSpan.textContent = Beautify(CM.Cache.Lucky);
 		luckyReqFrag.appendChild(luckyReqSpan);
-		if (luckyTime != '') {
+		if (chainTime != '') {
 			var luckyReqSmall = document.createElement('small');
 			luckyReqSmall.textContent = ' (' + luckyTime + ')';
 			luckyReqFrag.appendChild(luckyReqSmall);
 		}
-		stats.appendChild(listing('\"Lucky!\" Cookies Required : ', luckyReqFrag));
+		stats.appendChild(listing('\"Lucky!\" Cookies Required', luckyReqFrag));
 		var luckyReqFrenFrag = document.createDocumentFragment();
 		var luckyReqFrenSpan = document.createElement('span');
 		luckyReqFrenSpan.style.fontWeight = 'bold';
@@ -1001,26 +1034,41 @@ CM.Disp.AddMenu = function() {
 			luckyReqFrenSmall.textContent = ' (' + luckyTimeFrenzy + ')';
 			luckyReqFrenFrag.appendChild(luckyReqFrenSmall);
 		}
-		stats.appendChild(listing('\"Lucky!\" Cookies Required (Frenzy) : ', luckyReqFrenFrag));
-		stats.appendChild(listing('\"Lucky!\" Reward (MAX) : ',  document.createTextNode(Beautify(CM.Cache.LuckyReward))));
-		stats.appendChild(listing('\"Lucky!\" Reward (MAX) (Frenzy) : ',  document.createTextNode(Beautify(CM.Cache.LuckyRewardFrenzy))));
-		stats.appendChild(listing('\"Lucky!\" Reward (CUR) : ',  document.createTextNode(Beautify(luckyCur))));
+		stats.appendChild(listing('\"Lucky!\" Cookies Required (Frenzy)', luckyReqFrenFrag));
+		stats.appendChild(listing('\"Lucky!\" Reward (MAX)',  document.createTextNode(Beautify(CM.Cache.LuckyReward))));
+		stats.appendChild(listing('\"Lucky!\" Reward (MAX) (Frenzy)',  document.createTextNode(Beautify(CM.Cache.LuckyRewardFrenzy))));
+		stats.appendChild(listing('\"Lucky!\" Reward (CUR)',  document.createTextNode(Beautify(luckyCur))));
+		stats.appendChild(header('Chain Cookies'));
+		var chainReqFrag = document.createDocumentFragment();
+		var chainReqSpan = document.createElement('span');
+		chainReqSpan.style.fontWeight = 'bold';
+		chainReqSpan.style.color = chainColor;
+		chainReqSpan.textContent = Beautify(CM.Cache.Chain);
+		chainReqFrag.appendChild(chainReqSpan);
+		if (chainTime != '') {
+			var chainReqSmall = document.createElement('small');
+			chainReqSmall.textContent = ' (' + chainTime + ')';
+			chainReqFrag.appendChild(luckyReqSmall);
+		}
+		stats.appendChild(listing('Chain Cookies Required', chainReqFrag));
+		stats.appendChild(listing('Chain Reward (MAX)',  document.createTextNode(Beautify(CM.Cache.ChainReward))));
+		stats.appendChild(listing('Chain Reward (MAX) (Wrath)',  document.createTextNode(Beautify(CM.Cache.ChainWrathReward))));
 		stats.appendChild(header('Heavenly Chips'));
 		var hcMaxFrag = document.createDocumentFragment();
 		hcMaxFrag.appendChild(document.createTextNode(Beautify(possibleHC)));
 		var hcMaxSmall = document.createElement('small');
 		hcMaxSmall.textContent = ' (' + Beautify((possibleHC * 2)) + '%)';
 		hcMaxFrag.appendChild(hcMaxSmall);
-		stats.appendChild(listing('Heavenly Chips (MAX) : ',  hcMaxFrag));
+		stats.appendChild(listing('Heavenly Chips (MAX)',  hcMaxFrag));
 		var hcCurFrag = document.createDocumentFragment();
 		hcCurFrag.appendChild(document.createTextNode(Beautify(Game.prestige['Heavenly chips'])));
 		var hcCurSmall = document.createElement('small');
 		hcCurSmall.textContent = ' (' + Beautify((Game.prestige['Heavenly chips'] * 2)) + '%)';
 		hcCurFrag.appendChild(hcCurSmall);
-		stats.appendChild(listing('Heavenly Chips (CUR) : ',  hcCurFrag));
-		stats.appendChild(listing('Cookies To Next Chip : ',  document.createTextNode(Beautify(neededCook))));
-		stats.appendChild(listing('Time To Next Chip : ',  document.createTextNode(CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1))));
-		stats.appendChild(listing('Reset Bonus Income : ',  document.createTextNode(Beautify(CM.Sim.ResetBonus()))));
+		stats.appendChild(listing('Heavenly Chips (CUR)',  hcCurFrag));
+		stats.appendChild(listing('Cookies To Next Chip',  document.createTextNode(Beautify(neededCook))));
+		stats.appendChild(listing('Time To Next Chip',  document.createTextNode(CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1))));
+		stats.appendChild(listing('Reset Bonus Income',  document.createTextNode(Beautify(CM.Sim.ResetBonus()))));
 		if (Game.cpsSucked > 0) {
 			stats.appendChild(header('Wrinklers'));
 			var sucked = 0;
@@ -1029,16 +1077,16 @@ CM.Disp.AddMenu = function() {
 			}
 			sucked *= 1.1;
 			if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-			stats.appendChild(listing('Rewards of Popping : ',  document.createTextNode(Beautify(sucked))));
+			stats.appendChild(listing('Rewards of Popping',  document.createTextNode(Beautify(sucked))));
 		}
 		stats.appendChild(header('Season Specials'));
-		stats.appendChild(listing('Halloween Cookies Bought : ',  document.createTextNode(halloCook + ' of ' + CM.Data.HalloCookies.length)));
-		stats.appendChild(listing('Christmas Cookies Bought : ',  document.createTextNode(christCook + ' of ' + CM.Data.ChristCookies.length)));
-		stats.appendChild(listing('Valentine Cookies Bought : ',  document.createTextNode(valCook + ' of ' + CM.Data.ValCookies.length)));
-		stats.appendChild(listing('Normal Easter Eggs Unlocked : ',  document.createTextNode(normEggs + ' of ' + Game.eggDrops.length)));
-		stats.appendChild(listing('Rare Easter Eggs Unlocked : ',  document.createTextNode(rareEggs + ' of ' + Game.rareEggDrops.length)));
+		stats.appendChild(listing('Halloween Cookies Bought',  document.createTextNode(halloCook + ' of ' + CM.Data.HalloCookies.length)));
+		stats.appendChild(listing('Christmas Cookies Bought',  document.createTextNode(christCook + ' of ' + CM.Data.ChristCookies.length)));
+		stats.appendChild(listing('Valentine Cookies Bought',  document.createTextNode(valCook + ' of ' + CM.Data.ValCookies.length)));
+		stats.appendChild(listing('Normal Easter Eggs Unlocked',  document.createTextNode(normEggs + ' of ' + Game.eggDrops.length)));
+		stats.appendChild(listing('Rare Easter Eggs Unlocked',  document.createTextNode(rareEggs + ' of ' + Game.rareEggDrops.length)));
 		if (Game.season == 'christmas') {
-			stats.appendChild(listing('Reindeer Reward : ',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
+			stats.appendChild(listing('Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
 		}
 			
 		l('menu').insertBefore(stats, l('menu').childNodes[2]);
@@ -1381,6 +1429,7 @@ CM.Loop = function() {
 		CM.Cache.RemakeIncome();
 		CM.Cache.RemakeBCI();
 		CM.Cache.RemakeLucky();
+		CM.Cache.RemakeChain();
 		CM.Cache.RemakeSeaSpec();
 		
 		CM.Disp.UpdateBotBarOther();
@@ -1435,7 +1484,7 @@ CM.ConfigDefault = {BotBar: 1, TimerBar: 1, BuildColor: 1, UpBarColor: 1, Flash:
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '1.0465';
-CM.VersionMinor = '5';
+CM.VersionMinor = '6';
 
 /*******
  * Sim *
@@ -1571,8 +1620,7 @@ CM.Sim.CalculateGains = function() {
 
 	if (CM.Sim.Has('Elder Covenant')) mult *= 0.95;
 
-	CM.Sim.globalCpsMult = mult;
-	CM.Sim.cookiesPs *= CM.Sim.globalCpsMult;			
+	CM.Sim.cookiesPs *= mult;			
 };
 
 CM.Sim.CheckOtherAchiev = function() {

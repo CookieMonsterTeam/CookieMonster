@@ -63,6 +63,33 @@ CM.Cache.RemakeLucky = function() {
 	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.1) + 13;
 }
 
+CM.Cache.RemakeChain = function() {
+	CM.Cache.Chain = Game.cookiesPs * 60 * 60 * 3 / 0.25;
+	
+	var digit = 7;
+	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
+	var maxPayout = Game.cookiesPs * 60 * 60 * 3;
+	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
+	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+	while (nextMoni < maxPayout) {
+		chain++;
+		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
+		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+	}
+	CM.Cache.ChainReward = moni;
+	
+	digit = 6;
+	chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
+	moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
+	nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+	while (nextMoni < maxPayout) {
+		chain++;
+		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
+		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+	}
+	CM.Cache.ChainWrathReward = moni;
+}
+
 CM.Cache.RemakeSeaSpec = function() {
 	if (Game.season == 'christmas') {
 		CM.Cache.SeaSpec = Math.max(25, Game.cookiesPs * 60 * 1);
@@ -75,4 +102,6 @@ CM.Cache.LuckyReward = 0;
 CM.Cache.LuckyFrenzy = 0;
 CM.Cache.LuckyRewardFrenzy = 0;
 CM.Cache.SeaSpec = 0;
-
+CM.Cache.Chain = 0;
+CM.Cache.ChainReward = 0;
+CM.Cache.ChainWrathReward = 0;

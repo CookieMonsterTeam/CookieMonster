@@ -132,8 +132,7 @@ CM.Sim.CalculateGains = function() {
 
 	if (CM.Sim.Has('Elder Covenant')) mult *= 0.95;
 
-	CM.Sim.globalCpsMult = mult;
-	CM.Sim.cookiesPs *= CM.Sim.globalCpsMult;			
+	CM.Sim.cookiesPs *= mult;			
 };
 
 CM.Sim.CheckOtherAchiev = function() {
