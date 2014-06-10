@@ -754,31 +754,50 @@ CM.Disp.AddMenu = function() {
 		
 		var chainColor = (Game.cookies < CM.Cache.Chain) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var chainTime = (Game.cookies < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Chain - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		
+		var chainColorFrenzy = (Game.cookies < CM.Cache.ChainFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var chainTimeFrenzy = (Game.cookies < CM.Cache.ChainFrenzy) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzy - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
+		var chainCurMax = Math.min(Game.cookiesPs * 60 * 60 * 3, Game.cookies * 0.25);
+		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax);
+		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax);
 
 		var possibleHC = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
 		var neededCook = CM.Sim.CookNeedPrest(possibleHC + 1) - (Game.cookiesEarned + Game.cookiesReset);
 		
-		var halloCook = 0;
+		var specDisp = false;
+		var halloCook = [];
 		for (var i in CM.Data.HalloCookies) {
-			if (Game.Has(CM.Data.HalloCookies[i])) halloCook++;
+			if (!Game.Has(CM.Data.HalloCookies[i])) {
+				halloCook.push(CM.Data.HalloCookies[i]);
+				specDisp = true;
+			}
 		}
-		var christCook = 0;
+		var christCook = [];
 		for (var i in CM.Data.ChristCookies) {
-			if (Game.Has(CM.Data.ChristCookies[i])) christCook++;
+			if (!Game.Has(CM.Data.ChristCookies[i])) {
+				christCook.push(CM.Data.ChristCookies[i]);
+				specDisp = true;
+			}
 		}
-		var valCook = 0;
+		var valCook = [];
 		for (var i in CM.Data.ValCookies) {
-			if (Game.Has(CM.Data.ValCookies[i])) valCook++;
-			else break;
+			if (!Game.Has(CM.Data.ValCookies[i])) {
+				valCook.push(CM.Data.ValCookies[i]);
+				specDisp = true;
+			}
 		}
-		var normEggs = 0;
+		var normEggs = [];
 		for (var i in Game.eggDrops) {
-			if (Game.HasUnlocked(Game.eggDrops[i])) normEggs++;
+			if (!Game.HasUnlocked(Game.eggDrops[i])) {
+				normEggs.push(Game.eggDrops[i]);
+				specDisp = true;
+			}
 		}
-		var rareEggs = 0;
+		var rareEggs = [];
 		for (var i in Game.rareEggDrops) {
-			if (Game.HasUnlocked(Game.rareEggDrops[i])) rareEggs++;
+			if (!Game.HasUnlocked(Game.rareEggDrops[i])) {
+				rareEggs.push(Game.rareEggDrops[i]);
+				specDisp = true;
+			}
 		}
 		
 		var listing = function(name, text) {
@@ -831,9 +850,24 @@ CM.Disp.AddMenu = function() {
 			chainReqSmall.textContent = ' (' + chainTime + ')';
 			chainReqFrag.appendChild(chainReqSmall);
 		}
-		stats.appendChild(listing('Chain Cookies Required', chainReqFrag));
-		stats.appendChild(listing('Chain Reward (MAX)',  document.createTextNode(Beautify(CM.Cache.ChainReward))));
-		stats.appendChild(listing('Chain Reward (MAX) (Wrath)',  document.createTextNode(Beautify(CM.Cache.ChainWrathReward))));
+		stats.appendChild(listing('\"Chain\" Cookies Required', chainReqFrag));
+		var chainReqFrenFrag = document.createDocumentFragment();
+		var chainReqFrenSpan = document.createElement('span');
+		chainReqFrenSpan.style.fontWeight = 'bold';
+		chainReqFrenSpan.style.color = chainColorFrenzy;
+		chainReqFrenSpan.textContent = Beautify(CM.Cache.ChainFrenzy);
+		chainReqFrenFrag.appendChild(chainReqFrenSpan);
+		if (chainTimeFrenzy != '') {
+			var chainReqFrenSmall = document.createElement('small');
+			chainReqFrenSmall.textContent = ' (' + chainTimeFrenzy + ')';
+			chainReqFrenFrag.appendChild(chainReqFrenSmall);
+		}
+		stats.appendChild(listing('\"Chain\" Cookies Required (Frenzy)', chainReqFrenFrag));
+		stats.appendChild(listing('\"Chain\" Reward (MAX)',  document.createTextNode(Beautify(CM.Cache.ChainReward))));
+		stats.appendChild(listing('\"Chain\" Reward (MAX) (Wrath)',  document.createTextNode(Beautify(CM.Cache.ChainWrathReward))));
+		stats.appendChild(listing('\"Chain\" Reward (MAX) (Frenzy)',  document.createTextNode(Beautify(CM.Cache.ChainFrenzyReward))));
+		stats.appendChild(listing('\"Chain\" Reward (CUR)',  document.createTextNode(Beautify(chainCur))));
+		stats.appendChild(listing('\"Chain\" Reward (CUR) (Wrath)',  document.createTextNode(Beautify(chainCurWrath))));		
 		stats.appendChild(header('Heavenly Chips'));
 		var hcMaxFrag = document.createDocumentFragment();
 		hcMaxFrag.appendChild(document.createTextNode(Beautify(possibleHC)));
@@ -860,14 +894,55 @@ CM.Disp.AddMenu = function() {
 			if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 			stats.appendChild(listing('Rewards of Popping',  document.createTextNode(Beautify(sucked))));
 		}
-		stats.appendChild(header('Season Specials'));
-		stats.appendChild(listing('Halloween Cookies Bought',  document.createTextNode(halloCook + ' of ' + CM.Data.HalloCookies.length)));
-		stats.appendChild(listing('Christmas Cookies Bought',  document.createTextNode(christCook + ' of ' + CM.Data.ChristCookies.length)));
-		stats.appendChild(listing('Valentine Cookies Bought',  document.createTextNode(valCook + ' of ' + CM.Data.ValCookies.length)));
-		stats.appendChild(listing('Normal Easter Eggs Unlocked',  document.createTextNode(normEggs + ' of ' + Game.eggDrops.length)));
-		stats.appendChild(listing('Rare Easter Eggs Unlocked',  document.createTextNode(rareEggs + ' of ' + Game.rareEggDrops.length)));
-		if (Game.season == 'christmas') {
-			stats.appendChild(listing('Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
+		if (Game.season == 'christmas' || specDisp) {
+			stats.appendChild(header('Season Specials'));
+			
+			if (specDisp) {
+				var createSpecDisp = function(theSpecDisp) {
+					var frag = document.createDocumentFragment();
+					frag.appendChild(document.createTextNode(theSpecDisp.length + ' '));
+					span = document.createElement('span');
+					span.onmouseout = function() { Game.tooltip.hide(); };
+					var placeholder = document.createElement('div');
+					var missing = document.createElement('div');
+					missing.style.minWidth = '140px';
+					missing.style.marginBottom = '4px';
+					var title = document.createElement('div');
+					title.className = 'name';
+					title.style.marginBottom = '4px';
+					title.style.textAlign = 'center';
+					title.textContent = 'Missing';
+					missing.appendChild(title);
+					for (var i in theSpecDisp) {
+						var div = document.createElement('div');
+						div.style.textAlign = 'center';
+						div.appendChild(document.createTextNode(theSpecDisp[i]));
+						missing.appendChild(div);
+					}
+					placeholder.appendChild(missing);
+					span.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML));};
+					span.style.cursor = 'default';
+					span.style.display = 'inline-block';
+					span.style.height = '10px';
+					span.style.width = '10px';
+					span.style.borderRadius = '5px';
+					span.style.textAlign = 'center';
+					span.style.backgroundColor = '#C0C0C0';
+					span.style.color = 'black';
+					span.style.fontSize = '9px';
+					span.style.verticalAlign = 'bottom';
+					span.textContent = '?';
+					frag.appendChild(span);
+					return frag;
+				}
+				if (halloCook.length != 0) stats.appendChild(listing('Halloween Cookies Left to Buy', createSpecDisp(halloCook)));
+				if (christCook.length != 0) stats.appendChild(listing('Christmas Cookies Left to Buy',  createSpecDisp(christCook)));
+				if (valCook.length != 0) stats.appendChild(listing('Valentine Cookies Left to Buy',  createSpecDisp(valCook)));
+				if (normEggs.length != 0) stats.appendChild(listing('Normal Easter Eggs Left to Unlock',  createSpecDisp(normEggs)));
+				if (rareEggs.length != 0) stats.appendChild(listing('Rare Easter Eggs Left to Unlock',  createSpecDisp(rareEggs)));
+			}
+			
+			if (Game.season == 'christmas') stats.appendChild(listing('Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
 		}
 			
 		l('menu').insertBefore(stats, l('menu').childNodes[2]);

@@ -63,12 +63,8 @@ CM.Cache.RemakeLucky = function() {
 	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.1) + 13;
 }
 
-CM.Cache.RemakeChain = function() {
-	CM.Cache.Chain = Game.cookiesPs * 60 * 60 * 3 / 0.25;
-	
-	var digit = 7;
+CM.Cache.MaxChainMoni = function(digit, maxPayout) {
 	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
-	var maxPayout = Game.cookiesPs * 60 * 60 * 3;
 	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
 	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
 	while (nextMoni < maxPayout) {
@@ -76,18 +72,39 @@ CM.Cache.RemakeChain = function() {
 		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
 		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
 	}
-	CM.Cache.ChainReward = moni;
-	
-	digit = 6;
-	chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
-	moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
-	nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
-	while (nextMoni < maxPayout) {
-		chain++;
-		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
-		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+	return moni;
+}
+
+CM.Cache.RemakeChain = function() {
+	var maxPayout = Game.cookiesPs * 60 * 60 * 3;
+	if (Game.frenzy > 0) {
+		maxPayout /= Game.frenzyPower;
 	}
-	CM.Cache.ChainWrathReward = moni;
+	
+	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout);
+	
+	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout);
+	
+	var base = 0;
+	if (CM.Cache.ChainReward > CM.Cache.ChainWrathReward) {
+		base = CM.Cache.ChainReward;
+	}
+	else {
+		base = CM.Cache.ChainWrathReward;
+	}
+	var count = 1;
+	while (base == base + count) {
+		count++;
+	}
+	CM.Cache.Chain = (base + count) / 0.25;
+	
+	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7);
+	
+	count = 1;
+	while(CM.Cache.ChainFrenzyReward == CM.Cache.ChainFrenzyReward + count) {
+		count++;
+	}
+	CM.Cache.ChainFrenzy = (CM.Cache.ChainFrenzyReward + count) / 0.25;
 }
 
 CM.Cache.RemakeSeaSpec = function() {
@@ -105,3 +122,5 @@ CM.Cache.SeaSpec = 0;
 CM.Cache.Chain = 0;
 CM.Cache.ChainReward = 0;
 CM.Cache.ChainWrathReward = 0;
+CM.Cache.ChainFrenzy = 0;
+CM.Cache.ChainFrenzyReward = 0;
