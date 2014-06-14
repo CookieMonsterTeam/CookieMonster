@@ -93,18 +93,29 @@ CM.Cache.RemakeChain = function() {
 		base = CM.Cache.ChainWrathReward;
 	}
 	var count = 1;
-	while (base == base + count) {
-		count++;
+	if (maxPayout < base) {
+		CM.Cache.Chain = 0;
 	}
-	CM.Cache.Chain = (base + count) / 0.25;
+	else {
+		count = 1;
+		while (base == base + count) {
+			count++;
+		}
+		CM.Cache.Chain = (base + count) / 0.25;
+	}
 	
 	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7);
 	
-	count = 1;
-	while(CM.Cache.ChainFrenzyReward == CM.Cache.ChainFrenzyReward + count) {
-		count++;
+	if ((maxPayout * 7) < CM.Cache.ChainFrenzyReward) {
+		CM.Cache.ChainFrenzy = 0;
 	}
-	CM.Cache.ChainFrenzy = (CM.Cache.ChainFrenzyReward + count) / 0.25;
+	else {
+		count = 1;
+		while(CM.Cache.ChainFrenzyReward == CM.Cache.ChainFrenzyReward + count) {
+			count++;
+		}
+		CM.Cache.ChainFrenzy = (CM.Cache.ChainFrenzyReward + count) / 0.25;
+	}
 }
 
 CM.Cache.RemakeSeaSpec = function() {
