@@ -97,7 +97,7 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.Chain = 0;
 	}
 	else {
-		count = 1;
+		count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
 		while (base == base + count) {
 			count++;
 		}
@@ -110,7 +110,7 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.ChainFrenzy = 0;
 	}
 	else {
-		count = 1;
+		count = CM.Cache.ChainFrenzyReward > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(CM.Cache.ChainFrenzyReward) / Math.log(2)) - 53) : 1;
 		while(CM.Cache.ChainFrenzyReward == CM.Cache.ChainFrenzyReward + count) {
 			count++;
 		}
