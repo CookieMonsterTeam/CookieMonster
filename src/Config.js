@@ -13,9 +13,25 @@ CM.LoadConfig = function() {
 		// Check values
 		var mod = false;
 		for (var i in CM.ConfigDefault) {
-			if (CM.Config[i] == undefined || !(CM.Config[i] > -1 && CM.Config[i] < CM.ConfigData[i].label.length)) {
-				mod = true;
-				CM.Config[i] = CM.ConfigDefault[i];
+			if (i != 'StatsPref') {
+				if (CM.Config[i] == undefined || !(CM.Config[i] > -1 && CM.Config[i] < CM.ConfigData[i].label.length)) {
+					mod = true;
+					CM.Config[i] = CM.ConfigDefault[i];
+				}
+			}
+			else { // Statistics Preferences
+				if (CM.Config[i] == undefined) {
+					mod = true;
+					CM.Config[i] = CM.ConfigDefault[i];
+				}
+				else {
+					for (var j in CM.ConfigDefault.StatsPref) {
+						if (CM.Config[i][j] == undefined || !(CM.Config[i][j] > -1 && CM.Config[i][j] < 2)) {
+							mod = true;
+							CM.Config[i][j] = CM.ConfigDefault[i][j];
+						}
+					}
+				}
 			}
 		}
 		if (mod) CM.SaveConfig(CM.Config);
@@ -59,6 +75,16 @@ CM.ToggleConfigDown = function(config) {
 		CM.ConfigData[config].func();
 	}
 	l(CM.ConfigPrefix + config).innerHTML = CM.Disp.GetConfigDisplay(config);
+	CM.SaveConfig(CM.Config);
+}
+
+CM.ToggleStatsConfig = function(config) {
+	if (CM.Config.StatsPref[config] == 0) {
+		CM.Config.StatsPref[config]++;
+	}
+	else {
+		CM.Config.StatsPref[config]--;
+	}
 	CM.SaveConfig(CM.Config);
 }
 

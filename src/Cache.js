@@ -106,15 +106,23 @@ CM.Cache.RemakeChain = function() {
 	
 	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7);
 	
-	if ((maxPayout * 7) < CM.Cache.ChainFrenzyReward) {
+	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7);
+	
+	if (CM.Cache.ChainFrenzyReward > CM.Cache.ChainFrenzyWrathReward) {
+		base = CM.Cache.ChainFrenzyReward;
+	}
+	else {
+		base = CM.Cache.ChainFrenzyWrathReward;
+	}
+	if ((maxPayout * 7) < base) {
 		CM.Cache.ChainFrenzy = 0;
 	}
 	else {
-		count = CM.Cache.ChainFrenzyReward > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(CM.Cache.ChainFrenzyReward) / Math.log(2)) - 53) : 1;
-		while(CM.Cache.ChainFrenzyReward == CM.Cache.ChainFrenzyReward + count) {
+		count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
+		while(base == base + count) {
 			count++;
 		}
-		CM.Cache.ChainFrenzy = (CM.Cache.ChainFrenzyReward + count) / 0.25;
+		CM.Cache.ChainFrenzy = (base + count) / 0.25;
 	}
 }
 
@@ -135,3 +143,4 @@ CM.Cache.ChainReward = 0;
 CM.Cache.ChainWrathReward = 0;
 CM.Cache.ChainFrenzy = 0;
 CM.Cache.ChainFrenzyReward = 0;
+CM.Cache.ChainFrenzyWrathReward = 0;
