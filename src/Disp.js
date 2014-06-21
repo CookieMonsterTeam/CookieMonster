@@ -756,7 +756,7 @@ CM.Disp.AddMenuStats = function(title) {
 		span.style.color = 'black';
 		span.style.fontSize = '13px';
 		span.style.verticalAlign = 'middle';
-		span.textContent = CM.Config.StatsPref[config] ? '+' : '-';
+		span.textContent = CM.Config.StatsPref[config] ? '-' : '+';
 		span.onclick = function() {CM.ToggleStatsConfig(config); Game.UpdateMenu();};
 		div.appendChild(span);
 		return div;
