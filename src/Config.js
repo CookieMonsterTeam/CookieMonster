@@ -37,7 +37,7 @@ CM.LoadConfig = function() {
 		if (mod) CM.SaveConfig(CM.Config);
 		CM.Loop(); // Do loop once
 		for (var i in CM.ConfigDefault) {
-			if (CM.ConfigData[i].func != undefined) {
+			if (i != 'StatsPref' && CM.ConfigData[i].func != undefined) {
 				CM.ConfigData[i].func();
 			}
 		}

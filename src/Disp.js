@@ -1087,9 +1087,20 @@ CM.Disp.AddTooltipUpgrade = function() {
 	}
 }
 
+CM.Disp.AddTooltipBuild10 = function() {
+	for (var i in Game.Objects) {
+		var me = Game.Objects[i];
+		l('buttonBuy10-' + me.id).onmouseover = function() {CM.Disp.Buy10 = true;};
+		l('buttonBuy10-' + me.id).onmouseout = function() {CM.Disp.Buy10 = false;};
+	}
+}
+
 CM.Disp.Tooltip = function(type, name) {
 	if (type == 'b') {
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
+		if (CM.Disp.Buy10) {
+			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join(Beautify(CM.Cache.Objects10[name].price));
+		}
 	}
 	else { // Upgrades
 		CM.Disp.TooltipUpgradeBack[name]();
@@ -1148,12 +1159,23 @@ CM.Disp.UpdateTooltip = function() {
 		var price;
 		var bonus;
 		if (CM.Disp.tooltipType == 'b') {
-			bonus = CM.Cache.Objects[CM.Disp.tooltipName].bonus;
-			price = Game.Objects[CM.Disp.tooltipName].getPrice();
-			if (CM.Config.Tooltip == 1) {
-				l('CMTooltipBorder').style.color = CM.Cache.Objects[CM.Disp.tooltipName].color;
-				l('CMTooltipBCI').textContent = Beautify(CM.Cache.Objects[CM.Disp.tooltipName].bci, 2);
-				l('CMTooltipBCI').style.color = CM.Cache.Objects[CM.Disp.tooltipName].color;
+			if (!CM.Disp.Buy10) {
+				bonus = CM.Cache.Objects[CM.Disp.tooltipName].bonus;
+				price = Game.Objects[CM.Disp.tooltipName].getPrice();
+				if (CM.Config.Tooltip == 1) {
+					l('CMTooltipBorder').style.color = CM.Cache.Objects[CM.Disp.tooltipName].color;
+					l('CMTooltipBCI').textContent = Beautify(CM.Cache.Objects[CM.Disp.tooltipName].bci, 2);
+					l('CMTooltipBCI').style.color = CM.Cache.Objects[CM.Disp.tooltipName].color;
+				}
+			}
+			else {
+				bonus = CM.Cache.Objects10[CM.Disp.tooltipName].bonus;
+				price = CM.Cache.Objects10[CM.Disp.tooltipName].price;
+				if (CM.Config.Tooltip == 1) {
+					l('CMTooltipBorder').style.color = CM.Cache.Objects10[CM.Disp.tooltipName].color;
+					l('CMTooltipBCI').textContent = Beautify(CM.Cache.Objects10[CM.Disp.tooltipName].bci, 2);
+					l('CMTooltipBCI').style.color = CM.Cache.Objects10[CM.Disp.tooltipName].color;
+				}
 			}
 		}
 		else { // Upgrades
@@ -1266,4 +1288,6 @@ CM.Disp.lastGoldenCookieState = 'none';
 
 CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];
+
+CM.Disp.Buy10 = false;
 

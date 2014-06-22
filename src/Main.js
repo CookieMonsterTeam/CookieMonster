@@ -106,6 +106,7 @@ CM.Init = function() {
 		CM.Disp.CreateGCTimer();
 		CM.Disp.CreateTooltipWarnCaut();
 		CM.Disp.AddTooltipBuild();
+		CM.Disp.AddTooltipBuild10();
 		CM.ReplaceNative();
 		Game.CalculateGains();
 		CM.LoadConfig(); // Must be after all things are created!

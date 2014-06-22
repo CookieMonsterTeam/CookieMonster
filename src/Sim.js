@@ -2,6 +2,20 @@
  * Sim *
  *******/
 
+CM.Sim.BuildingGetPrice = function (basePrice, start, increase) {
+	var totalPrice = 0;
+	var count = 0;
+	while(count < increase) {
+		var price = basePrice * Math.pow(Game.priceIncrease, start + count);
+		if (Game.Has('Season savings')) price *= 0.99;
+		if (Game.Has('Santa\'s dominion')) price *= 0.99;
+		if (Game.Has('Faberge egg')) price *= 0.99;
+		totalPrice += Math.ceil(price);
+		count++;
+	}
+	return totalPrice;
+}
+
 eval('CM.Sim.Has = ' + Game.Has.toString().split('Game').join('CM.Sim'));
 
 CM.Sim.Win = function(what) {
@@ -206,12 +220,12 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (hasAllChristCook) CM.Sim.Win('Let it snow');
 }
 
-CM.Sim.BuyBuildings = function() {	
-	CM.Cache.Objects = [];
+CM.Sim.BuyBuildings = function(amount, target) {	
+	CM.Cache[target] = [];
 	for (var i in Game.Objects) {
 		CM.Sim.CopyData();
 		var me = CM.Sim.Objects[i];
-		me.amount++;
+		me.amount += amount;
 		
 		if (i == 'Cursor') {
 			if (me.amount >= 1) CM.Sim.Win('Click');
@@ -304,8 +318,8 @@ CM.Sim.BuyBuildings = function() {
 			CM.Sim.CalculateGains();
 		}
 		
-		CM.Cache.Objects[i] = {};
-		CM.Cache.Objects[i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
+		CM.Cache[target][i] = {};
+		CM.Cache[target][i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
 	}
 }
 

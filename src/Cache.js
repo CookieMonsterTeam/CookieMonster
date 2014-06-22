@@ -3,11 +3,14 @@
  *********/
 
 CM.Cache.RemakeIncome = function() {
-	// Simulate Building Buys
-	CM.Sim.BuyBuildings();
+	// Simulate Building Buys for 1 amount
+	CM.Sim.BuyBuildings(1, 'Objects');
 
 	// Simulate Upgrade Buys
 	CM.Sim.BuyUpgrades();
+	
+	// Simulate Building Buys for 10 amount
+	CM.Sim.BuyBuildings(10, 'Objects10');
 }
 
 CM.Cache.RemakeBuildingsBCI = function() {
@@ -45,12 +48,31 @@ CM.Cache.RemakeUpgradeBCI = function() {
 	}
 }
 
+CM.Cache.RemakeBuildings10BCI = function() {
+	for (var i in CM.Cache.Objects10) {
+		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, 10);
+		CM.Cache.Objects10[i].bci = CM.Cache.Objects10[i].price / CM.Cache.Objects10[i].bonus;
+		var color = '';
+		if (CM.Cache.Objects10[i].bci <= 0 || CM.Cache.Objects10[i].bci == 'Infinity') color = CM.Disp.colorGray;
+		else if (CM.Cache.Objects10[i].bci < CM.Disp.min) color = CM.Disp.colorBlue;
+		else if (CM.Cache.Objects10[i].bci == CM.Disp.min) color = CM.Disp.colorGreen;
+		else if (CM.Cache.Objects10[i].bci == CM.Disp.max) color = CM.Disp.colorRed;
+		else if (CM.Cache.Objects10[i].bci > CM.Disp.max) color = CM.Disp.colorPurple;
+		else if (CM.Cache.Objects10[i].bci > CM.Disp.mid) color = CM.Disp.colorOrange;
+		else color = CM.Disp.colorYellow;
+		CM.Cache.Objects10[i].color = color;
+	}
+}
+
 CM.Cache.RemakeBCI = function() {
-	// Buildings
+	// Buildings for 1 amount
 	CM.Cache.RemakeBuildingsBCI();
 	
 	// Upgrades
 	CM.Cache.RemakeUpgradeBCI();
+	
+	// Buildings for 10 amount
+	CM.Cache.RemakeBuildings10BCI();
 }
 
 CM.Cache.RemakeLucky = function() {
