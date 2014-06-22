@@ -1396,15 +1396,15 @@ CM.Disp.AddTooltipUpgrade = function() {
 CM.Disp.AddTooltipBuild10 = function() {
 	for (var i in Game.Objects) {
 		var me = Game.Objects[i];
-		l('buttonBuy10-' + me.id).onmouseover = function() {CM.Disp.Buy10 = true;};
-		l('buttonBuy10-' + me.id).onmouseout = function() {CM.Disp.Buy10 = false;};
+		l('buttonBuy10-' + me.id).onmouseover = function() {CM.Disp.TooltipBuy10 = true;};
+		l('buttonBuy10-' + me.id).onmouseout = function() {CM.Disp.TooltipBuy10 = false;};
 	}
 }
 
 CM.Disp.Tooltip = function(type, name) {
 	if (type == 'b') {
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
-		if (CM.Disp.Buy10) {
+		if (CM.Disp.TooltipBuy10) {
 			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join(Beautify(CM.Cache.Objects10[name].price));
 		}
 	}
@@ -1465,7 +1465,7 @@ CM.Disp.UpdateTooltip = function() {
 		var price;
 		var bonus;
 		if (CM.Disp.tooltipType == 'b') {
-			if (!CM.Disp.Buy10) {
+			if (!CM.Disp.TooltipBuy10) {
 				bonus = CM.Cache.Objects[CM.Disp.tooltipName].bonus;
 				price = Game.Objects[CM.Disp.tooltipName].getPrice();
 				if (CM.Config.Tooltip == 1) {
@@ -1595,7 +1595,7 @@ CM.Disp.lastGoldenCookieState = 'none';
 CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];
 
-CM.Disp.Buy10 = false;
+CM.Disp.TooltipBuy10 = false;
 
 /********
  * Main *
@@ -1721,7 +1721,7 @@ CM.ConfigDefault = {BotBar: 1, TimerBar: 1, BuildColor: 1, UpBarColor: 1, Flash:
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '1.0465';
-CM.VersionMinor = '7';
+CM.VersionMinor = '8';
 
 /*******
  * Sim *
