@@ -875,7 +875,16 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing('Heavenly Chips (CUR)',  hcCurFrag));
 		stats.appendChild(listing('Cookies To Next Chip',  document.createTextNode(Beautify(neededCook))));
 		stats.appendChild(listing('Time To Next Chip',  document.createTextNode(CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1))));
-		stats.appendChild(listing('Reset Bonus Income',  document.createTextNode(Beautify(CM.Sim.ResetBonus()))));
+		var resetBonus = CM.Sim.ResetBonus();
+		var resetFrag = document.createDocumentFragment();
+		resetFrag.appendChild(document.createTextNode(Beautify(resetBonus)));
+		var increase = Math.round(resetBonus / Game.cookiesPs * 10000);
+		if (isFinite(increase) && increase != 0) {
+			var resetSmall = document.createElement('small');
+			resetSmall.textContent = ' (' + (increase / 100) + '% of income)';
+			resetFrag.appendChild(resetSmall);
+		}
+		stats.appendChild(listing('Reset Bonus Income',  resetFrag));
 	}
 	
 	if (Game.cpsSucked > 0) {
