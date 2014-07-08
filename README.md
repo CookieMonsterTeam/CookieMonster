@@ -1,6 +1,6 @@
 # Cookie Monster
 
-Cookie Monster is an addon you can load into Cookie Clicker, that offers a wide range of tools and statistics to enhance the game. It is **not** a cheat interface – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.
+**Cookie Monster** is an addon you can load into Cookie Clicker, that offers a wide range of tools and statistics to enhance the game. It is **not** a cheat interface – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.
 
 This is a helper, and it is here to help you at *whichever* degree you want, if you only need some help shortening long numbers, it does that. If you need to be accompanied by hand to pick the best buildings to buy, it does that, but **everything is an option**.
 
@@ -50,14 +50,11 @@ Do note though that, although these upgrades have no direct value, if buying the
 
 ## Bookmarklet
 
-Simply use like the previous addon, create a bookmark and set this as the URL. Then when in the game, click on that bookmark.
+Copy this code and save it as a bookmark. Paste it in the URL section. To activate, click the bookmark when the game's open.
 
 ```javascript
 javascript: (function () {
-	var load = document.createElement('script');
-	load.setAttribute('type', 'text/javascript');
-	load.setAttribute('src', 'http://aktanusa.github.io/CookieMonster/CookieMonster.js');
-	document.head.appendChild(load);
+	Game.LoadMod('http://aktanusa.github.io/CookieMonster/CookieMonster.js');
 }());
 ```
 
@@ -80,10 +77,7 @@ var init = Game.Init;
 Game.Init = function() {
 	init();
 	(function () {
-		var load = document.createElement('script');
-		load.setAttribute('type', 'text/javascript');
-		load.setAttribute('src', 'http://aktanusa.github.io/CookieMonster/CookieMonster.js');
-		document.head.appendChild(load);
+		Game.LoadMod('http://aktanusa.github.io/CookieMonster/CookieMonster.js');
 	}()); 
 }
 ```
@@ -96,10 +90,7 @@ Before submitting a bug, make sure to give a shot at the latest version of the a
 
 ```javascript
 javascript: (function () {
-	var load = document.createElement('script');
-	load.setAttribute('type', 'text/javascript');
-	load.setAttribute('src', 'https://raw.githubusercontent.com/Aktanusa/CookieMonster/dev/CookieMonster.js');
-	document.head.appendChild(load);
+	Game.LoadMod('https://raw.githubusercontent.com/Aktanusa/CookieMonster/dev/CookieMonster.js');
 }());
 ```
 
