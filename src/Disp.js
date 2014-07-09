@@ -745,7 +745,7 @@ CM.Disp.AddMenuStats = function(title) {
 		div.style.fontSize = '17px';
 		div.style.fontFamily = '\"Kavoon\", Georgia, serif';
 		div.appendChild(document.createTextNode(text + ' '));
-		span = document.createElement('span');
+		var span = document.createElement('span');
 		span.style.cursor = 'pointer';
 		span.style.display = 'inline-block';
 		span.style.height = '14px';
@@ -771,7 +771,9 @@ CM.Disp.AddMenuStats = function(title) {
 		var div = document.createElement('div');
 		div.className = 'listing';
 		var b = document.createElement('b');
-		b.textContent = name + ' : ';
+		if (typeof name == 'string') b.appendChild(document.createTextNode(name));
+		else b.appendChild(name); // fragment
+		b.appendChild(document.createTextNode(' : '));
 		div.appendChild(b);
 		div.appendChild(text);
 		return div;
@@ -875,6 +877,32 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing('Heavenly Chips (CUR)',  hcCurFrag));
 		stats.appendChild(listing('Cookies To Next Chip',  document.createTextNode(Beautify(neededCook))));
 		stats.appendChild(listing('Time To Next Chip',  document.createTextNode(CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1))));
+		var resetTitleFrag = document.createDocumentFragment();
+		resetTitleFrag.appendChild(document.createTextNode('Reset Bonus Income '))
+		var resetTitleSpan = document.createElement('span');
+		resetTitleSpan.onmouseout = function() { Game.tooltip.hide(); };
+		var resetTitlePlaceholder = document.createElement('div');
+		var resetTitleDesc = document.createElement('div');
+		resetTitleDesc.style.minWidth = '260px';
+		resetTitleDesc.style.marginBottom = '4px';
+		var resetTitleDiv = document.createElement('div');
+		resetTitleDiv.style.textAlign = 'left';
+		resetTitleDiv.textContent = 'The bonus income you would get from new heavenly chips/reset achievements if you have the same buildings/upgrades after reset';
+		resetTitleDesc.appendChild(resetTitleDiv);
+		resetTitlePlaceholder.appendChild(resetTitleDesc);
+		resetTitleSpan.onmouseover = function() {Game.tooltip.draw(this, escape(resetTitlePlaceholder.innerHTML));};
+		resetTitleSpan.style.cursor = 'default';
+		resetTitleSpan.style.display = 'inline-block';
+		resetTitleSpan.style.height = '10px';
+		resetTitleSpan.style.width = '10px';
+		resetTitleSpan.style.borderRadius = '5px';
+		resetTitleSpan.style.textAlign = 'center';
+		resetTitleSpan.style.backgroundColor = '#C0C0C0';
+		resetTitleSpan.style.color = 'black';
+		resetTitleSpan.style.fontSize = '9px';
+		resetTitleSpan.style.verticalAlign = 'bottom';
+		resetTitleSpan.textContent = '?';
+		resetTitleFrag.appendChild(resetTitleSpan);
 		var resetBonus = CM.Sim.ResetBonus();
 		var resetFrag = document.createDocumentFragment();
 		resetFrag.appendChild(document.createTextNode(Beautify(resetBonus)));
@@ -884,7 +912,7 @@ CM.Disp.AddMenuStats = function(title) {
 			resetSmall.textContent = ' (' + (increase / 100) + '% of income)';
 			resetFrag.appendChild(resetSmall);
 		}
-		stats.appendChild(listing('Reset Bonus Income',  resetFrag));
+		stats.appendChild(listing(resetTitleFrag, resetFrag));
 	}
 	
 	if (Game.cpsSucked > 0) {
@@ -943,7 +971,7 @@ CM.Disp.AddMenuStats = function(title) {
 				var createSpecDisp = function(theSpecDisp) {
 					var frag = document.createDocumentFragment();
 					frag.appendChild(document.createTextNode(theSpecDisp.length + ' '));
-					span = document.createElement('span');
+					var span = document.createElement('span');
 					span.onmouseout = function() { Game.tooltip.hide(); };
 					var placeholder = document.createElement('div');
 					var missing = document.createElement('div');
@@ -1264,6 +1292,76 @@ CM.Disp.UpdateTooltipWarnCaut = function() {
 	}
 }
 
+CM.Disp.AddWrinklerAreaDetect = function() {
+	l('backgroundLeftCanvas').onmouseover = function() {CM.Disp.TooltipWrinklerArea = 1;};
+	l('backgroundLeftCanvas').onmouseout = function() {
+		CM.Disp.TooltipWrinklerArea = 0;
+		Game.tooltip.hide();
+		for (var i = 0; i < 10; i++) {
+			CM.Disp.TooltipWrinklerCache[i] = 0;
+		}
+	};
+}
+
+CM.Disp.CheckWrinklerTooltip = function() {
+	if (CM.Disp.TooltipWrinklerArea == 1) {
+		var showingTooltip = false;
+		var mouseInWrinkler = function (x, y, rect) {
+			var dx = x + Math.sin(-rect.r) * (-(rect.h / 2 - rect.o)), dy = y + Math.cos(-rect.r) * (-(rect.h / 2 - rect.o));
+			var h1 = Math.sqrt(dx * dx + dy * dy);
+			var currA = Math.atan2(dy, dx);
+			var newA = currA - rect.r;
+			var x2 = Math.cos(newA) * h1;
+			var y2 = Math.sin(newA) * h1;
+			if (x2 > -0.5 * rect.w && x2 < 0.5 * rect.w && y2 > -0.5 * rect.h && y2 < 0.5 * rect.h) return true;
+			return false;
+		}
+		for (var i in Game.wrinklers) {
+			var me = Game.wrinklers[i];
+			var rect = {w: 100, h: 200, r: (-me.r) * Math.PI / 180, o: 10};
+			if (me.phase > 0 && Game.LeftBackground && Game.mouseX < Game.LeftBackground.canvas.width && mouseInWrinkler(Game.mouseX - me.x, Game.mouseY - me.y, rect)) {
+				if (CM.Disp.TooltipWrinklerCache[i] == 0) {
+					var placeholder = document.createElement('div');
+					var wrinkler = document.createElement('div');
+					wrinkler.style.minWidth = '120px';
+					wrinkler.style.marginBottom = '4px';
+					var div = document.createElement('div');
+					div.style.textAlign = 'center';
+					div.id = 'CMTooltipWrinkler';
+					wrinkler.appendChild(div);
+					placeholder.appendChild(wrinkler);
+					Game.tooltip.draw(this, escape(placeholder.innerHTML), 'wrink');
+					CM.Disp.TooltipWrinkler = i;
+					CM.Disp.TooltipWrinklerCache[i] = 1;
+				}
+				showingTooltip = true;
+			}
+			else {
+				CM.Disp.TooltipWrinklerCache[i] = 0;
+			}
+		}
+		if (!showingTooltip) {
+			Game.tooltip.hide();
+		}
+	}
+}
+
+CM.Disp.UpdateWrinklerTooltip = function() {
+	if (l('CMTooltipWrinkler') != null) {
+		var sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
+		sucked *= 1.1;
+		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+		l('CMTooltipWrinkler').textContent = Beautify(sucked);
+	}
+}
+
+CM.Disp.UpdateTooltipWrinklerLocation = function() {
+	if (Game.tooltip.origin == 'wrink') {
+		Game.tooltip.tta.style.left = (Game.mouseX + l('tooltip').offsetWidth + 20) + 'px';
+		Game.tooltip.tta.style.right = 'auto';
+	}
+}
+
 CM.Disp.ToggleSayTime = function() {
 	if (CM.Config.SayTime == 1) {
 		Game.sayTime = CM.Disp.sayTime;
@@ -1299,4 +1397,11 @@ CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];
 
 CM.Disp.TooltipBuy10 = false;
+
+CM.Disp.TooltipWrinklerArea = 0;
+CM.Disp.TooltipWrinkler = -1;
+CM.Disp.TooltipWrinklerCache = [];
+for (var i = 0; i < 10; i++) {
+	CM.Disp.TooltipWrinklerCache[i] = 0;
+}
 

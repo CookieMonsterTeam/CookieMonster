@@ -33,6 +33,7 @@ CM.ReplaceNative = function() {
 	eval('CM.Backup.tooltip.updateMod = ' + Game.tooltip.update.toString().split('this').join('Game.tooltip'));
 	Game.tooltip.update = function() {
 		CM.Backup.tooltip.updateMod();
+		CM.Disp.UpdateTooltipWrinklerLocation();
 		CM.Disp.UpdateTooltipWarnCaut();
 	}
 	
@@ -82,6 +83,10 @@ CM.Loop = function() {
 	
 	// Update Tooltip
 	CM.Disp.UpdateTooltip();
+	
+	// Update Wrinkler Tooltip
+	CM.Disp.CheckWrinklerTooltip();
+	CM.Disp.UpdateWrinklerTooltip();
 
 	// Check Golden Cookies
 	CM.Disp.CheckGoldenCookie();
@@ -107,6 +112,7 @@ CM.Init = function() {
 		CM.Disp.CreateTooltipWarnCaut();
 		CM.Disp.AddTooltipBuild();
 		CM.Disp.AddTooltipBuild10();
+		CM.Disp.AddWrinklerAreaDetect();
 		CM.ReplaceNative();
 		Game.CalculateGains();
 		CM.LoadConfig(); // Must be after all things are created!
