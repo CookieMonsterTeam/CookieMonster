@@ -725,6 +725,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('Tooltip'));
 	frag.appendChild(listing('ToolWarnCaut'));
 	frag.appendChild(listing('ToolWarnCautPos'));
+	frag.appendChild(listing('ToolWrink'));
 	
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
@@ -1307,7 +1308,7 @@ CM.Disp.AddWrinklerAreaDetect = function() {
 }
 
 CM.Disp.CheckWrinklerTooltip = function() {
-	if (CM.Disp.TooltipWrinklerArea == 1) {
+	if (CM.Config.ToolWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) {
 		var showingTooltip = false;
 		var mouseInWrinkler = function (x, y, rect) {
 			var dx = x + Math.sin(-rect.r) * (-(rect.h / 2 - rect.o)), dy = y + Math.cos(-rect.r) * (-(rect.h / 2 - rect.o));
@@ -1351,7 +1352,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
 }
 
 CM.Disp.UpdateWrinklerTooltip = function() {
-	if (l('CMTooltipWrinkler') != null) {
+	if (CM.Config.ToolWrink == 1 && l('CMTooltipWrinkler') != null) {
 		var sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
 		sucked *= 1.1;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;

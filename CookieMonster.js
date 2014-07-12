@@ -291,6 +291,7 @@ CM.ConfigData.Title = {label: ['Title OFF', 'Title ON'], desc: 'Update title wit
 CM.ConfigData.Tooltip = {label: ['Tooltip Information OFF', 'Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades'};
 CM.ConfigData.ToolWarnCaut = {label: ['Tooltip Warning/Caution OFF', 'Tooltip Warning/Caution ON'], desc: 'A warning/caution when buying if it will put the bank under the amount needed for max "Lucky!"/"Lucky!" (Frenzy) rewards', func: function() {CM.Disp.ToggleToolWarnCaut();}};
 CM.ConfigData.ToolWarnCautPos = {label: ['Tooltip Warning/Caution Position (Left)', 'Tooltip Warning/Caution Position (Bottom)'], desc: 'Placement of the warning/caution boxes', func: function() {CM.Disp.ToggleToolWarnCautPos();}};
+CM.ConfigData.ToolWrink = {label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it'};
 CM.ConfigData.Stats = {label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra Cookie Monster statistics!'};
 CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 3 seconds'};
 CM.ConfigData.SayTime = {label: ['Format Time OFF', 'Format Time ON'], desc: 'Change how time is displayed in statistics', func: function() {CM.Disp.ToggleSayTime();}};
@@ -1031,6 +1032,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('Tooltip'));
 	frag.appendChild(listing('ToolWarnCaut'));
 	frag.appendChild(listing('ToolWarnCautPos'));
+	frag.appendChild(listing('ToolWrink'));
 	
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
@@ -1613,7 +1615,7 @@ CM.Disp.AddWrinklerAreaDetect = function() {
 }
 
 CM.Disp.CheckWrinklerTooltip = function() {
-	if (CM.Disp.TooltipWrinklerArea == 1) {
+	if (CM.Config.ToolWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) {
 		var showingTooltip = false;
 		var mouseInWrinkler = function (x, y, rect) {
 			var dx = x + Math.sin(-rect.r) * (-(rect.h / 2 - rect.o)), dy = y + Math.cos(-rect.r) * (-(rect.h / 2 - rect.o));
@@ -1657,7 +1659,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
 }
 
 CM.Disp.UpdateWrinklerTooltip = function() {
-	if (l('CMTooltipWrinkler') != null) {
+	if (CM.Config.ToolWrink == 1 && l('CMTooltipWrinkler') != null) {
 		var sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
 		sucked *= 1.1;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
@@ -1842,7 +1844,7 @@ CM.Init = function() {
 	}
 }
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCTimer: 1, Title: 1, Tooltip: 1, ToolWarnCaut: 1, ToolWarnCautPos: 0, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCTimer: 1, Title: 1, Tooltip: 1, ToolWarnCaut: 1, ToolWarnCautPos: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '1.0465';
