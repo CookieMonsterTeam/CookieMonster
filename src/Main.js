@@ -109,6 +109,7 @@ CM.Init = function() {
 		CM.Disp.CreateUpgradeBar();
 		CM.Disp.CreateWhiteScreen();
 		CM.Disp.CreateGCTimer();
+		CM.Disp.CreateResetTooltip();
 		CM.Disp.CreateTooltipWarnCaut();
 		CM.Disp.AddTooltipBuild();
 		CM.Disp.AddTooltipBuild10();
@@ -128,5 +129,5 @@ CM.ConfigDefault = {BotBar: 1, TimerBar: 1, BuildColor: 1, UpBarColor: 1, Flash:
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '1.0465';
-CM.VersionMinor = '8';
+CM.VersionMinor = '9';
 

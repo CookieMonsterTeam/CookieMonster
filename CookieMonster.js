@@ -951,6 +951,18 @@ CM.Disp.UpdateTitle = function() {
 	}
 }
 
+CM.Disp.CreateResetTooltip = function() {
+	CM.Disp.ResetTooltipPlaceholder = document.createElement('div');
+	var resetTitleDesc = document.createElement('div');
+	resetTitleDesc.style.minWidth = '260px';
+	resetTitleDesc.style.marginBottom = '4px';
+	var div = document.createElement('div');
+	div.style.textAlign = 'left';
+	div.textContent = 'The bonus income you would get from new heavenly chips/reset achievements if you have the same buildings/upgrades after reset';
+	resetTitleDesc.appendChild(div);
+	CM.Disp.ResetTooltipPlaceholder.appendChild(resetTitleDesc);
+}
+
 CM.Disp.AddMenuPref = function(title) {
 	var header = function(text) {
 		var div = document.createElement('div');
@@ -1187,16 +1199,7 @@ CM.Disp.AddMenuStats = function(title) {
 		resetTitleFrag.appendChild(document.createTextNode('Reset Bonus Income '))
 		var resetTitleSpan = document.createElement('span');
 		resetTitleSpan.onmouseout = function() { Game.tooltip.hide(); };
-		var resetTitlePlaceholder = document.createElement('div');
-		var resetTitleDesc = document.createElement('div');
-		resetTitleDesc.style.minWidth = '260px';
-		resetTitleDesc.style.marginBottom = '4px';
-		var resetTitleDiv = document.createElement('div');
-		resetTitleDiv.style.textAlign = 'left';
-		resetTitleDiv.textContent = 'The bonus income you would get from new heavenly chips/reset achievements if you have the same buildings/upgrades after reset';
-		resetTitleDesc.appendChild(resetTitleDiv);
-		resetTitlePlaceholder.appendChild(resetTitleDesc);
-		resetTitleSpan.onmouseover = function() {Game.tooltip.draw(this, escape(resetTitlePlaceholder.innerHTML));};
+		resetTitleSpan.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp.ResetTooltipPlaceholder.innerHTML));};
 		resetTitleSpan.style.cursor = 'default';
 		resetTitleSpan.style.display = 'inline-block';
 		resetTitleSpan.style.height = '10px';
@@ -1626,6 +1629,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
 			var me = Game.wrinklers[i];
 			var rect = {w: 100, h: 200, r: (-me.r) * Math.PI / 180, o: 10};
 			if (me.phase > 0 && Game.LeftBackground && Game.mouseX < Game.LeftBackground.canvas.width && mouseInWrinkler(Game.mouseX - me.x, Game.mouseY - me.y, rect)) {
+				showingTooltip = true;
 				if (CM.Disp.TooltipWrinklerCache[i] == 0) {
 					var placeholder = document.createElement('div');
 					var wrinkler = document.createElement('div');
@@ -1640,7 +1644,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
 					CM.Disp.TooltipWrinkler = i;
 					CM.Disp.TooltipWrinklerCache[i] = 1;
 				}
-				showingTooltip = true;
+				else break;
 			}
 			else {
 				CM.Disp.TooltipWrinklerCache[i] = 0;
@@ -1663,7 +1667,7 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 
 CM.Disp.UpdateTooltipWrinklerLocation = function() {
 	if (Game.tooltip.origin == 'wrink') {
-		Game.tooltip.tta.style.left = (Game.mouseX + l('tooltip').offsetWidth + 20) + 'px';
+		Game.tooltip.tta.style.left = (Game.mouseX + l('tooltip').offsetWidth + 25) + 'px';
 		Game.tooltip.tta.style.right = 'auto';
 	}
 }
@@ -1822,6 +1826,7 @@ CM.Init = function() {
 		CM.Disp.CreateUpgradeBar();
 		CM.Disp.CreateWhiteScreen();
 		CM.Disp.CreateGCTimer();
+		CM.Disp.CreateResetTooltip();
 		CM.Disp.CreateTooltipWarnCaut();
 		CM.Disp.AddTooltipBuild();
 		CM.Disp.AddTooltipBuild10();
@@ -1841,7 +1846,7 @@ CM.ConfigDefault = {BotBar: 1, TimerBar: 1, BuildColor: 1, UpBarColor: 1, Flash:
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '1.0465';
-CM.VersionMinor = '8';
+CM.VersionMinor = '9';
 
 /*******
  * Sim *
