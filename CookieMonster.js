@@ -1351,6 +1351,14 @@ CM.Disp.RefreshMenu = function() {
 	if (CM.Config.UpStats && Game.onMenu == 'stats' && Game.drawT % (Game.fps * 3) != 0 && Game.drawT % Game.fps == 0) Game.UpdateMenu();
 }
 
+CM.Disp.UpdateTooltipLocation = function() {
+	Game.tooltip.tta.style.top = Math.max(0, Math.min((l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - CM.Disp.TooltipWarnCaut.clientHeight - 64, Game.mouseY - 48)) + 'px';
+	if (Game.tooltip.origin == 'wrink') {
+		Game.tooltip.tta.style.left = (Game.mouseX + l('tooltip').offsetWidth + 25) + 'px';
+		Game.tooltip.tta.style.right = 'auto';
+	}
+}
+
 CM.Disp.CreateTooltipWarnCaut = function() {
 	CM.Disp.TooltipWarnCaut = document.createElement('div');
 	CM.Disp.TooltipWarnCaut.style.position = 'absolute';
@@ -1667,13 +1675,6 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 	}
 }
 
-CM.Disp.UpdateTooltipWrinklerLocation = function() {
-	if (Game.tooltip.origin == 'wrink') {
-		Game.tooltip.tta.style.left = (Game.mouseX + l('tooltip').offsetWidth + 25) + 'px';
-		Game.tooltip.tta.style.right = 'auto';
-	}
-}
-
 CM.Disp.ToggleSayTime = function() {
 	if (CM.Config.SayTime == 1) {
 		Game.sayTime = CM.Disp.sayTime;
@@ -1752,8 +1753,8 @@ CM.ReplaceNative = function() {
 	eval('CM.Backup.tooltip.updateMod = ' + Game.tooltip.update.toString().split('this').join('Game.tooltip'));
 	Game.tooltip.update = function() {
 		CM.Backup.tooltip.updateMod();
-		CM.Disp.UpdateTooltipWrinklerLocation();
 		CM.Disp.UpdateTooltipWarnCaut();
+		CM.Disp.UpdateTooltipLocation();
 	}
 	
 	CM.Backup.RebuildUpgrades = Game.RebuildUpgrades;
@@ -1844,7 +1845,7 @@ CM.Init = function() {
 	}
 }
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCTimer: 1, Title: 1, Tooltip: 1, ToolWarnCaut: 1, ToolWarnCautPos: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCTimer: 1, Title: 1, Tooltip: 1, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '1.0465';

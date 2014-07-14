@@ -1044,6 +1044,14 @@ CM.Disp.RefreshMenu = function() {
 	if (CM.Config.UpStats && Game.onMenu == 'stats' && Game.drawT % (Game.fps * 3) != 0 && Game.drawT % Game.fps == 0) Game.UpdateMenu();
 }
 
+CM.Disp.UpdateTooltipLocation = function() {
+	Game.tooltip.tta.style.top = Math.max(0, Math.min((l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - CM.Disp.TooltipWarnCaut.clientHeight - 64, Game.mouseY - 48)) + 'px';
+	if (Game.tooltip.origin == 'wrink') {
+		Game.tooltip.tta.style.left = (Game.mouseX + l('tooltip').offsetWidth + 25) + 'px';
+		Game.tooltip.tta.style.right = 'auto';
+	}
+}
+
 CM.Disp.CreateTooltipWarnCaut = function() {
 	CM.Disp.TooltipWarnCaut = document.createElement('div');
 	CM.Disp.TooltipWarnCaut.style.position = 'absolute';
@@ -1357,13 +1365,6 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 		sucked *= 1.1;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 		l('CMTooltipWrinkler').textContent = Beautify(sucked);
-	}
-}
-
-CM.Disp.UpdateTooltipWrinklerLocation = function() {
-	if (Game.tooltip.origin == 'wrink') {
-		Game.tooltip.tta.style.left = (Game.mouseX + l('tooltip').offsetWidth + 25) + 'px';
-		Game.tooltip.tta.style.right = 'auto';
 	}
 }
 
