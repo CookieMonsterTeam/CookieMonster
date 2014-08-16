@@ -73,9 +73,14 @@ If you'd rather use the addon as a script via per example *Greasemonkey* or *Tam
 // @grant none
 // ==/UserScript==
 
-(function () {
-	Game.LoadMod('http://aktanusa.github.io/CookieMonster/CookieMonster.js');
-}());
+javascript:(function() {
+    var checkReady = setInterval(function() {
+        if (Game.ready != undefined && Game.ready) {
+            Game.LoadMod('http://aktanusa.github.io/CookieMonster/CookieMonster.js');
+            clearInterval(checkReady);
+        }
+    }, 1000);
+}());</pre>
 ```
 
 # Bugs and suggestions
