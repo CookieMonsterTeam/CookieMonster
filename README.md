@@ -26,7 +26,7 @@ This index is computed for buildings and upgrades. If the relevant option is ena
 * Purple : (upgrades) This item has a worse BCI than any building
 * Gray : (upgrades) This item has not been calculated and/or cannot be calculated due to no definitive worth.
 
-Note : For this index, **lower is better**, meaning a building with a BCI of 1 is more interesting that one with a BCI of 3.
+Note : For this index, **lower is better**, meaning a building with a BCI of 1 is more interesting than one with a BCI of 3.
 
 ## What it doesn't do
 
