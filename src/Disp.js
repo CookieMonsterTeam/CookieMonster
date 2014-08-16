@@ -595,7 +595,7 @@ CM.Disp.CheckGoldenCookie = function() {
 			}
 			
 			CM.Disp.Flash(3);
-			CM.Disp.PlaySound('http://cookie-monster.autopergamene.eu/mp3/bell.mp3');
+			CM.Disp.PlaySound('http://freesound.org/data/previews/66/66717_931655-lq.mp3');
 		}
 		else if (CM.Config.GCTimer == 1) CM.Disp.GCTimer.style.display = 'none';
 	}
