@@ -80,7 +80,7 @@ javascript:(function() {
             clearInterval(checkReady);
         }
     }, 1000);
-}());</pre>
+}());
 ```
 
 # Bugs and suggestions
