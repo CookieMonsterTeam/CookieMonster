@@ -166,3 +166,4 @@ CM.Cache.ChainWrathReward = 0;
 CM.Cache.ChainFrenzy = 0;
 CM.Cache.ChainFrenzyReward = 0;
 CM.Cache.ChainFrenzyWrathReward = 0;
+
