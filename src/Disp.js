@@ -595,7 +595,7 @@ CM.Disp.CheckGoldenCookie = function() {
 			}
 			
 			CM.Disp.Flash(3);
-			CM.Disp.PlaySound('http://freesound.org/data/previews/66/66717_931655-lq.mp3');
+			CM.Disp.PlaySound(CM.Config.GCSoundURL);
 		}
 		else if (CM.Config.GCTimer == 1) CM.Disp.GCTimer.style.display = 'none';
 	}
@@ -609,7 +609,7 @@ CM.Disp.CheckGoldenCookie = function() {
 CM.Disp.EmphSeasonPopup = function() {
 	if (Game.season=='christmas') {
 		CM.Disp.Flash(3);
-		CM.Disp.PlaySound('http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3');
+		CM.Disp.PlaySound(CM.Config.SeaSoundURL);
 	}
 }
 
@@ -687,6 +687,32 @@ CM.Disp.AddMenuPref = function(title) {
 		div.appendChild(label);
 		return div;
 	}
+	
+	var url = function(config) {
+		var div = document.createElement('div');
+		div.className = 'listing';
+		var span = document.createElement('span');
+		span.className = 'option';
+		span.textContent = CM.ConfigData[config].label + ' ';
+		div.appendChild(span);
+		var input = document.createElement('input');
+		input.id = CM.ConfigPrefix + config;
+		input.className = 'option';
+		input.type = 'text';
+		input.value = CM.Config[config];
+		input.style.width = '300px';
+		div.appendChild(input);
+		div.appendChild(document.createTextNode(' '));
+		var a = document.createElement('a');
+		a.className = 'option';
+		a.onclick = function() {CM.Config[config] = l(CM.ConfigPrefix + config).value;CM.SaveConfig(CM.Config);};
+		a.textContent = 'Save';
+		div.appendChild(a);
+		var label = document.createElement('label');
+		label.textContent = CM.ConfigData[config].desc;
+		div.appendChild(label);
+		return div;
+	}
 		
 	frag.appendChild(header('Bars/Colors'));
 	frag.appendChild(listing('BotBar'));
@@ -718,6 +744,8 @@ CM.Disp.AddMenuPref = function(title) {
 	volLabel.textContent = CM.ConfigData[volConfig].desc;
 	volume.appendChild(volLabel);
 	frag.appendChild(volume);
+	frag.appendChild(url('GCSoundURL'));
+	frag.appendChild(url('SeaSoundURL'));
 	frag.appendChild(listing('GCTimer'));
 	frag.appendChild(listing('Title'));
 	

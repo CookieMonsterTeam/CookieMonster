@@ -202,9 +202,17 @@ CM.LoadConfig = function() {
 		var mod = false;
 		for (var i in CM.ConfigDefault) {
 			if (i != 'StatsPref') {
-				if (CM.Config[i] == undefined || !(CM.Config[i] > -1 && CM.Config[i] < CM.ConfigData[i].label.length)) {
-					mod = true;
-					CM.Config[i] = CM.ConfigDefault[i];
+				if (i.indexOf('SoundURL') == -1) {
+					if (CM.Config[i] == undefined || !(CM.Config[i] > -1 && CM.Config[i] < CM.ConfigData[i].label.length)) {
+						mod = true;
+						CM.Config[i] = CM.ConfigDefault[i];
+					}
+				}
+				else {  // Sound URLs
+					if (CM.Config[i] == undefined || typeof CM.Config[i] != 'string') {
+						mod = true;
+						CM.Config[i] = CM.ConfigDefault[i];
+					}
 				}
 			}
 			else { // Statistics Preferences
@@ -286,7 +294,9 @@ CM.ConfigData.Volume = {label: [], desc: 'Volume of the sound'};
 for (var i = 0; i < 101; i++) {
 	CM.ConfigData.Volume.label[i] = i + '%';
 }
-CM.ConfigData.GCTimer = {label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when has been spawned', func: function() {CM.Disp.ToggleGCTimer();}};
+CM.ConfigData.GCSoundURL = {label: 'Golden Cookie Sound URL:', desc: 'URL of the sound to be played when a Golden Cookie spawns'};
+CM.ConfigData.SeaSoundURL = {label: 'Season Special Sound URL:', desc: 'URL of the sound to be played when a Season Special spawns', func: function() {CM.Disp.ToggleGCTimer();}};
+CM.ConfigData.GCTimer = {label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', func: function() {CM.Disp.ToggleGCTimer();}};
 CM.ConfigData.Title = {label: ['Title OFF', 'Title ON'], desc: 'Update title with Golden Cookie/Season Popup timers'};
 CM.ConfigData.Tooltip = {label: ['Tooltip Information OFF', 'Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades'};
 CM.ConfigData.ToolWarnCaut = {label: ['Tooltip Warning/Caution OFF', 'Tooltip Warning/Caution ON'], desc: 'A warning/caution when buying if it will put the bank under the amount needed for max "Lucky!"/"Lucky!" (Frenzy) rewards', func: function() {CM.Disp.ToggleToolWarnCaut();}};
@@ -902,7 +912,7 @@ CM.Disp.CheckGoldenCookie = function() {
 			}
 			
 			CM.Disp.Flash(3);
-			CM.Disp.PlaySound('http://freesound.org/data/previews/66/66717_931655-lq.mp3');
+			CM.Disp.PlaySound(CM.Config.GCSoundURL);
 		}
 		else if (CM.Config.GCTimer == 1) CM.Disp.GCTimer.style.display = 'none';
 	}
@@ -916,7 +926,7 @@ CM.Disp.CheckGoldenCookie = function() {
 CM.Disp.EmphSeasonPopup = function() {
 	if (Game.season=='christmas') {
 		CM.Disp.Flash(3);
-		CM.Disp.PlaySound('http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3');
+		CM.Disp.PlaySound(CM.Config.SeaSoundURL);
 	}
 }
 
@@ -994,6 +1004,32 @@ CM.Disp.AddMenuPref = function(title) {
 		div.appendChild(label);
 		return div;
 	}
+	
+	var url = function(config) {
+		var div = document.createElement('div');
+		div.className = 'listing';
+		var span = document.createElement('span');
+		span.className = 'option';
+		span.textContent = CM.ConfigData[config].label + ' ';
+		div.appendChild(span);
+		var input = document.createElement('input');
+		input.id = CM.ConfigPrefix + config;
+		input.className = 'option';
+		input.type = 'text';
+		input.value = CM.Config[config];
+		input.style.width = '300px';
+		div.appendChild(input);
+		div.appendChild(document.createTextNode(' '));
+		var a = document.createElement('a');
+		a.className = 'option';
+		a.onclick = function() {CM.Config[config] = l(CM.ConfigPrefix + config).value;CM.SaveConfig(CM.Config);};
+		a.textContent = 'Save';
+		div.appendChild(a);
+		var label = document.createElement('label');
+		label.textContent = CM.ConfigData[config].desc;
+		div.appendChild(label);
+		return div;
+	}
 		
 	frag.appendChild(header('Bars/Colors'));
 	frag.appendChild(listing('BotBar'));
@@ -1025,6 +1061,8 @@ CM.Disp.AddMenuPref = function(title) {
 	volLabel.textContent = CM.ConfigData[volConfig].desc;
 	volume.appendChild(volLabel);
 	frag.appendChild(volume);
+	frag.appendChild(url('GCSoundURL'));
+	frag.appendChild(url('SeaSoundURL'));
 	frag.appendChild(listing('GCTimer'));
 	frag.appendChild(listing('Title'));
 	
@@ -1845,7 +1883,7 @@ CM.Init = function() {
 	}
 }
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCTimer: 1, Title: 1, Tooltip: 1, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Tooltip: 1, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '1.0465';
