@@ -203,9 +203,7 @@ CM.Disp.CreateTimerBar = function() {
 	CM.Disp.TimerBar.id = 'CMTimerBar';
 	CM.Disp.TimerBar.style.position = 'absolute';
 	CM.Disp.TimerBar.style.display = 'none';
-	CM.Disp.TimerBar.style.bottom = '0px';
 	CM.Disp.TimerBar.style.height = '48px';
-	CM.Disp.TimerBar.style.width = '100%';
 	CM.Disp.TimerBar.style.fontSize = '10px';
 	CM.Disp.TimerBar.style.fontWeight = 'bold';
 	CM.Disp.TimerBar.style.backgroundColor = 'black';
@@ -235,6 +233,10 @@ CM.Disp.CreateTimerBar = function() {
 			colorBar.id = bars[i].id
 			colorBar.style.display = 'inline-block';
 			colorBar.style.height = '10px';
+			if (bars.length == 1 || i == 1) {
+				colorBar.style.borderTopRightRadius = '10px';
+				colorBar.style.borderBottomRightRadius = '10px';
+			}
 			if (bars[i].color != undefined) {
 				colorBar.style.backgroundColor = bars[i].color;
 			}
@@ -291,6 +293,20 @@ CM.Disp.ToggleTimerBar = function() {
 	}
 	else {
 		CM.Disp.TimerBar.style.display = 'none';
+	}
+	CM.Disp.ToggleTimerBarPos();
+}
+
+CM.Disp.ToggleTimerBarPos = function() {
+	if (CM.Config.TimerBarPos == 0) {
+		CM.Disp.TimerBar.style.width = '30%';
+		CM.Disp.TimerBar.style.bottom = '';
+		l('game').insertBefore(CM.Disp.TimerBar, l('game').childNodes[22]);
+	}
+	else {
+		CM.Disp.TimerBar.style.width = '100%';
+		CM.Disp.TimerBar.style.bottom = '0px';
+		l('wrapper').appendChild(CM.Disp.TimerBar);
 	}
 	CM.Disp.UpdateBotTimerBarDisplay();
 }
@@ -366,7 +382,7 @@ CM.Disp.UpdateTimerBar = function() {
 }
 
 CM.Disp.UpdateBotTimerBarDisplay = function() {
-	if (CM.Config.BotBar == 1 && CM.Config.TimerBar == 1) {
+	if (CM.Config.BotBar == 1 && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
 		CM.Disp.BotBar.style.bottom = '48px';
 		l('game').style.bottom = '104px';
 	}
@@ -374,11 +390,18 @@ CM.Disp.UpdateBotTimerBarDisplay = function() {
 		CM.Disp.BotBar.style.bottom = '0px';
 		l('game').style.bottom = '56px';
 	}
-	else if (CM.Config.TimerBar == 1) {
+	else if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
 		l('game').style.bottom = '48px';
 	}
 	else { // No bars
 		l('game').style.bottom = '0px';
+	}
+	
+	if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+		l('sectionLeft').style.top = '48px';
+	}
+	else {
+		l('sectionLeft').style.top = '';
 	}
 	
 	CM.Disp.UpdateBackground();
@@ -717,6 +740,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(header('Bars/Colors'));
 	frag.appendChild(listing('BotBar'));
 	frag.appendChild(listing('TimerBar'));
+	frag.appendChild(listing('TimerBarPos'));
 	frag.appendChild(listing('BuildColor'));
 	frag.appendChild(listing('UpBarColor'));
 	
