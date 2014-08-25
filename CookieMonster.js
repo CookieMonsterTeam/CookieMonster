@@ -287,7 +287,7 @@ CM.ToggleStatsConfig = function(config) {
 
 CM.ConfigData.BotBar = {label: ['Bottom Bar OFF', 'Bottom Bar ON'], desc: 'Building Information', func: function() {CM.Disp.ToggleBotBar();}};
 CM.ConfigData.TimerBar = {label: ['Timer Bar OFF', 'Timer Bar ON'], desc: 'Timers of Golden Cookie, Season Popup, Frenzy (Normal, Clot, Elder), Click Frenzy', func: function() {CM.Disp.ToggleTimerBar();}};
-CM.ConfigData.TimerBarPos = {label: ['Timer Bar Position (Top-left)', 'Timer Bar Position (Bottom)'], desc: 'Placement of the Timer Bar', func: function() {CM.Disp.ToggleTimerBarPos();}};
+CM.ConfigData.TimerBarPos = {label: ['Timer Bar Position (Top Left)', 'Timer Bar Position (Bottom)'], desc: 'Placement of the Timer Bar', func: function() {CM.Disp.ToggleTimerBarPos();}};
 CM.ConfigData.BuildColor = {label: ['Building Colors OFF', 'Building Colors ON'], desc: 'Color code buildings', func: function() {CM.Disp.UpdateBuildings();}};
 CM.ConfigData.UpBarColor = {label: ['Upgrade Bar/Colors OFF', 'Upgrade Bar/Colors ON'], desc: 'Color code upgrades and add a counter', func: function() {CM.Disp.ToggleUpBarColor();}};
 CM.ConfigData.Flash = {label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen on Golden Cookie/Season Popup'};
@@ -613,14 +613,14 @@ CM.Disp.ToggleTimerBar = function() {
 	else {
 		CM.Disp.TimerBar.style.display = 'none';
 	}
-	CM.Disp.ToggleTimerBarPos();
+	CM.Disp.UpdateBotTimerBarDisplay();
 }
 
 CM.Disp.ToggleTimerBarPos = function() {
 	if (CM.Config.TimerBarPos == 0) {
 		CM.Disp.TimerBar.style.width = '30%';
 		CM.Disp.TimerBar.style.bottom = '';
-		l('game').insertBefore(CM.Disp.TimerBar, l('game').childNodes[22]);
+		l('game').insertBefore(CM.Disp.TimerBar, l('sectionLeft'));
 	}
 	else {
 		CM.Disp.TimerBar.style.width = '100%';

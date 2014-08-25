@@ -294,14 +294,14 @@ CM.Disp.ToggleTimerBar = function() {
 	else {
 		CM.Disp.TimerBar.style.display = 'none';
 	}
-	CM.Disp.ToggleTimerBarPos();
+	CM.Disp.UpdateBotTimerBarDisplay();
 }
 
 CM.Disp.ToggleTimerBarPos = function() {
 	if (CM.Config.TimerBarPos == 0) {
 		CM.Disp.TimerBar.style.width = '30%';
 		CM.Disp.TimerBar.style.bottom = '';
-		l('game').insertBefore(CM.Disp.TimerBar, l('game').childNodes[22]);
+		l('game').insertBefore(CM.Disp.TimerBar, l('sectionLeft'));
 	}
 	else {
 		CM.Disp.TimerBar.style.width = '100%';
