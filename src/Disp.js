@@ -233,7 +233,7 @@ CM.Disp.CreateTimerBar = function() {
 			colorBar.id = bars[i].id
 			colorBar.style.display = 'inline-block';
 			colorBar.style.height = '10px';
-			if (bars.length == 1 || i == 1) {
+			if (bars.length - 1 == i) {
 				colorBar.style.borderTopRightRadius = '10px';
 				colorBar.style.borderBottomRightRadius = '10px';
 			}
