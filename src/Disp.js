@@ -320,6 +320,14 @@ CM.Disp.UpdateTimerBar = function() {
 		if (Game.goldenCookie.life <= 0 && Game.goldenCookie.toDie == 0) {
 			CM.Disp.TimerBarGC.style.display = '';
 			l('CMTimerBarGCMinBar').style.width = Math.round(Math.max(0, Game.goldenCookie.minTime - Game.goldenCookie.time) * maxWidth / Game.goldenCookie.maxTime) + 'px';
+			if (Game.goldenCookie.minTime == Game.goldenCookie.maxTime) {
+				l('CMTimerBarGCMinBar').style.borderTopRightRadius = '10px';
+				l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '10px';
+			}
+			else {
+				l('CMTimerBarGCMinBar').style.borderTopRightRadius = '';
+				l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '';
+			}
 			l('CMTimerBarGCBar').style.width = Math.round(Math.min(Game.goldenCookie.maxTime - Game.goldenCookie.minTime, Game.goldenCookie.maxTime - Game.goldenCookie.time) * maxWidth / Game.goldenCookie.maxTime) + 'px';
 			l('CMTimerBarGCTime').textContent = Math.ceil((Game.goldenCookie.maxTime - Game.goldenCookie.time) / Game.fps);
 			count++;
@@ -497,43 +505,45 @@ CM.Disp.ToggleUpBarColor = function() {
 }
 
 CM.Disp.UpdateUpgrades = function() {
-	var blue = 0;
-	var green = 0;
-	var yellow = 0;
-	var orange = 0;
-	var red = 0;
-	var purple = 0;
-	var gray = 0;
-	
-	for (var i in Game.UpgradesInStore) {
-		var me = Game.UpgradesInStore[i];
-		if (l('upgrade' + i).childNodes.length > 0) {
-			l('upgrade' + i).childNodes[0].style.backgroundColor = CM.Cache.Upgrades[me.name].color;
+	if (CM.Config.UpBarColor == 1) {
+		var blue = 0;
+		var green = 0;
+		var yellow = 0;
+		var orange = 0;
+		var red = 0;
+		var purple = 0;
+		var gray = 0;
+
+		for (var i in Game.UpgradesInStore) {
+			var me = Game.UpgradesInStore[i];
+			if (l('upgrade' + i).childNodes.length > 0) {
+				l('upgrade' + i).childNodes[0].style.backgroundColor = CM.Cache.Upgrades[me.name].color;
+			}
+			else {
+				var div = document.createElement('div');
+				div.style.width = '17px';
+				div.style.height = '17px';
+				div.style.backgroundColor = CM.Cache.Upgrades[me.name].color;
+				l('upgrade' + i).appendChild(div);
+			}
+			if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorBlue) blue++;
+			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorBlue) blue++;
+			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorGreen) green++;
+			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorYellow) yellow++;
+			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorOrange) orange++;
+			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorRed) red++;
+			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorPurple) purple++;
+			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorGray) gray++;
 		}
-		else {
-			var div = document.createElement('div');
-			div.style.width = '17px';
-			div.style.height = '17px';
-			div.style.backgroundColor = CM.Cache.Upgrades[me.name].color;
-			l('upgrade' + i).appendChild(div);
-		}
-		if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorBlue) blue++;
-		else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorBlue) blue++;
-		else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorGreen) green++;
-		else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorYellow) yellow++;
-		else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorOrange) orange++;
-		else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorRed) red++;
-		else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorPurple) purple++;
-		else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorGray) gray++;
+
+		l('CMUpgradeBarBlue').textContent = blue;
+		l('CMUpgradeBarGreen').textContent = green;
+		l('CMUpgradeBarYellow').textContent = yellow;
+		l('CMUpgradeBarOrange').textContent = orange;
+		l('CMUpgradeBarRed').textContent = red;
+		l('CMUpgradeBarPurple').textContent = purple;
+		l('CMUpgradeBarGray').textContent = gray;
 	}
-	
-	l('CMUpgradeBarBlue').textContent = blue;
-	l('CMUpgradeBarGreen').textContent = green;
-	l('CMUpgradeBarYellow').textContent = yellow;
-	l('CMUpgradeBarOrange').textContent = orange;
-	l('CMUpgradeBarRed').textContent = red;
-	l('CMUpgradeBarPurple').textContent = purple;
-	l('CMUpgradeBarGray').textContent = gray;
 }
 
 CM.Disp.CreateWhiteScreen = function() {
