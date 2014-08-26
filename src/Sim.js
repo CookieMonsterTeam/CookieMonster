@@ -10,6 +10,7 @@ CM.Sim.BuildingGetPrice = function (basePrice, start, increase) {
 		if (Game.Has('Season savings')) price *= 0.99;
 		if (Game.Has('Santa\'s dominion')) price *= 0.99;
 		if (Game.Has('Faberge egg')) price *= 0.99;
+		if (Game.Has('Divine discount')) price *= 0.99;
 		totalPrice += Math.ceil(price);
 		count++;
 	}
@@ -35,6 +36,7 @@ CM.Sim.CookNeedPrest = function(prestige) {
 
 CM.Sim.CopyData = function() {
 	// Other variables
+	CM.Sim.heavenlyCookies = Game.heavenlyCookies;
 	CM.Sim.prestige = Game.prestige['Heavenly chips'];
 	CM.Sim.UpgradesOwned = Game.UpgradesOwned;
 	CM.Sim.pledges = Game.pledges;
@@ -74,25 +76,6 @@ CM.Sim.CopyData = function() {
 CM.Sim.CalculateGains = function() {
 	CM.Sim.cookiesPs = 0;
 	var mult = 1;
-	for (var i in CM.Sim.Upgrades) {
-		var me = CM.Sim.Upgrades[i];
-		if (me.bought > 0) {
-			if (Game.Upgrades[i].type == 'cookie' && CM.Sim.Has(Game.Upgrades[i].name)) mult += Game.Upgrades[i].power * 0.01;
-		}
-	}
-	mult += CM.Sim.Has('Specialized chocolate chips') * 0.01;
-	mult += CM.Sim.Has('Designer cocoa beans') * 0.02;
-	mult += CM.Sim.Has('Underworld ovens') * 0.03;
-	mult += CM.Sim.Has('Exotic nuts') * 0.04;
-	mult += CM.Sim.Has('Arcane sugar') * 0.05;
-
-	if (CM.Sim.Has('Increased merriness')) mult += 0.15;
-	if (CM.Sim.Has('Improved jolliness')) mult += 0.15;
-	if (CM.Sim.Has('A lump of coal')) mult += 0.01;
-	if (CM.Sim.Has('An itchy sweater')) mult += 0.01;
-	if (CM.Sim.Has('Santa\'s dominion')) mult += 0.5;
-
-	if (CM.Sim.Has('Santa\'s legacy')) mult += (Game.santaLevel + 1) * 0.1;
 
 	var heavenlyMult = 0;
 	if (CM.Sim.Has('Heavenly chip secret')) heavenlyMult += 0.05;
@@ -100,14 +83,35 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Heavenly bakery')) heavenlyMult += 0.25;
 	if (CM.Sim.Has('Heavenly confectionery')) heavenlyMult += 0.25;
 	if (CM.Sim.Has('Heavenly key')) heavenlyMult += 0.25;
-	mult += parseFloat(CM.Sim.prestige) * 0.02 * heavenlyMult;
+	mult += parseFloat(Game.heavenlyCookies)  *0.1 * heavenlyMult;
+
+	for (var i in CM.Sim.Upgrades) {
+		var me = CM.Sim.Upgrades[i];
+		if (me.bought > 0) {
+			if (Game.Upgrades[i].pool == 'cookie' && CM.Sim.Has(Game.Upgrades[i].name)) mult *= (1 + (typeof(Game.Upgrades[i].power) == 'function' ? Game.Upgrades[i].power(Game.Upgrades[i]) : Game.Upgrades[i].power) * 0.01);
+		}
+	}
+	if (CM.Sim.Has('Specialized chocolate chips')) mult *= 1.01;
+	if (CM.Sim.Has('Designer cocoa beans')) mult *= 1.02;
+	if (CM.Sim.Has('Underworld ovens')) mult *= 1.03;
+	if (CM.Sim.Has('Exotic nuts')) mult *= 1.04;
+	if (CM.Sim.Has('Arcane sugar')) mult *= 1.05;
+
+	if (CM.Sim.Has('Increased merriness')) mult *= 1.15;
+	if (CM.Sim.Has('Improved jolliness')) mult *= 1.15;
+	if (CM.Sim.Has('A lump of coal')) mult *= 1.01;
+	if (CM.Sim.Has('An itchy sweater')) mult *= 1.01;
+	if (CM.Sim.Has('Santa\'s dominion')) mult *= 1.2;
+
+	if (CM.Sim.Has('Santa\'s legacy')) mult *= (Game.santaLevel + 1) * 0.05;
 
 	for (var i in CM.Sim.Objects) {
 		var me = CM.Sim.Objects[i];
-		CM.Sim.cookiesPs += me.amount * (typeof(me.cps) == 'function' ? me.cps() : me.cps);
+		CM.Sim.cookiesPs += me.amount * (typeof(me.cps) == 'function' ? me.cps(me) : me.cps);
 	}
 
 	if (CM.Sim.Has('"egg"')) CM.Sim.cookiesPs += 9; // "egg"
+	if (CM.Sim.Has('"god"')) CM.Sim.cookiesPs += 9;// "god"
 
 	var milkMult = CM.Sim.Has('Santa\'s milk and cookies') ? 1.05 : 1;
 	if (CM.Sim.Has('Kitten helpers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.05 * milkMult);
@@ -115,6 +119,7 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Kitten engineers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten overseers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten managers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten angels')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
 
 	var eggMult = 0;
 	if (CM.Sim.Has('Chicken egg')) eggMult++;
@@ -370,7 +375,6 @@ CM.Sim.ResetBonus = function() {
 	if (Game.cookiesEarned >= 1000000000) CM.Sim.Win('Oblivion');
 	if (Game.cookiesEarned >= 1000000000000) CM.Sim.Win('From scratch');
 	if (Game.cookiesEarned >= 1000000000000000) CM.Sim.Win('Nihilism');
-	
 	if (Game.cookiesEarned >= 1000000000000000000) CM.Sim.Win('Dematerialize');
 	if (Game.cookiesEarned >= 1000000000000000000000) CM.Sim.Win('Nil zero zilch');
 	if (Game.cookiesEarned >= 1000000000000000000000000) CM.Sim.Win('Transcendence');
