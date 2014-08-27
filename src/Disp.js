@@ -390,19 +390,24 @@ CM.Disp.UpdateTimerBar = function() {
 }
 
 CM.Disp.UpdateBotTimerBarDisplay = function() {
-	if (CM.Config.BotBar == 1 && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
-		CM.Disp.BotBar.style.bottom = '48px';
-		l('game').style.bottom = '104px';
-	}
-	else if (CM.Config.BotBar == 1) {
-		CM.Disp.BotBar.style.bottom = '0px';
-		l('game').style.bottom = '56px';
-	}
-	else if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
-		l('game').style.bottom = '48px';
-	}
-	else { // No bars
+	if (Game.OnAscend) {
 		l('game').style.bottom = '0px';
+	}
+	else {
+		if (CM.Config.BotBar == 1 && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
+			CM.Disp.BotBar.style.bottom = '48px';
+			l('game').style.bottom = '104px';
+		}
+		else if (CM.Config.BotBar == 1) {
+			CM.Disp.BotBar.style.bottom = '0px';
+			l('game').style.bottom = '56px';
+		}
+		else if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
+			l('game').style.bottom = '48px';
+		}
+		else { // No bars
+			l('game').style.bottom = '0px';
+		}
 	}
 	
 	if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
@@ -521,8 +526,8 @@ CM.Disp.UpdateUpgrades = function() {
 			}
 			else {
 				var div = document.createElement('div');
-				div.style.width = '17px';
-				div.style.height = '17px';
+				div.style.width = '12px';
+				div.style.height = '12px';
 				div.style.backgroundColor = CM.Cache.Upgrades[me.name].color;
 				l('upgrade' + i).appendChild(div);
 			}
@@ -936,22 +941,17 @@ CM.Disp.AddMenuStats = function(title) {
 	stats.appendChild(header('Heavenly Chips', 'HC'));
 	if (CM.Config.StatsPref.HC) {
 		var possibleHC = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
-		var neededCook = CM.Sim.CookNeedPrest(possibleHC + 1) - (Game.cookiesEarned + Game.cookiesReset);
+		var neededCook = Game.HowManyCookiesReset(possibleHC + 1) - (Game.cookiesEarned + Game.cookiesReset);
 
 		var hcMaxFrag = document.createDocumentFragment();
 		hcMaxFrag.appendChild(document.createTextNode(Beautify(possibleHC)));
-		var hcMaxSmall = document.createElement('small');
-		hcMaxSmall.textContent = ' (' + Beautify((possibleHC * 2)) + '%)';
-		hcMaxFrag.appendChild(hcMaxSmall);
 		stats.appendChild(listing('Heavenly Chips (MAX)',  hcMaxFrag));
 		var hcCurFrag = document.createDocumentFragment();
-		hcCurFrag.appendChild(document.createTextNode(Beautify(Game.prestige['Heavenly chips'])));
-		var hcCurSmall = document.createElement('small');
-		hcCurSmall.textContent = ' (' + Beautify((Game.prestige['Heavenly chips'] * 2)) + '%)';
-		hcCurFrag.appendChild(hcCurSmall);
+		hcCurFrag.appendChild(document.createTextNode(Beautify(Game.heavenlyChipsEarned)));
 		stats.appendChild(listing('Heavenly Chips (CUR)',  hcCurFrag));
 		stats.appendChild(listing('Cookies To Next Chip',  document.createTextNode(Beautify(neededCook))));
 		stats.appendChild(listing('Time To Next Chip',  document.createTextNode(CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1))));
+		// Unneeded? 
 		var resetTitleFrag = document.createDocumentFragment();
 		resetTitleFrag.appendChild(document.createTextNode('Reset Bonus Income '))
 		var resetTitleSpan = document.createElement('span');
@@ -978,7 +978,7 @@ CM.Disp.AddMenuStats = function(title) {
 			resetSmall.textContent = ' (' + (increase / 100) + '% of income)';
 			resetFrag.appendChild(resetSmall);
 		}
-		stats.appendChild(listing(resetTitleFrag, resetFrag));
+		//stats.appendChild(listing(resetTitleFrag, resetFrag));
 	}
 	
 	if (Game.cpsSucked > 0) {
@@ -988,7 +988,9 @@ CM.Disp.AddMenuStats = function(title) {
 			for (var i in Game.wrinklers) {
 				sucked += Game.wrinklers[i].sucked;
 			}
-			sucked *= 1.1;
+			var toSuck = 1.1;
+			if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
+			sucked *= toSuck;
 			if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 			stats.appendChild(listing('Rewards of Popping',  document.createTextNode(Beautify(sucked))));
 		}
@@ -1103,7 +1105,7 @@ CM.Disp.AddMenu = function() {
 }
 
 CM.Disp.RefreshMenu = function() {
-	if (CM.Config.UpStats && Game.onMenu == 'stats' && Game.drawT % (Game.fps * 3) != 0 && Game.drawT % Game.fps == 0) Game.UpdateMenu();
+	if (CM.Config.UpStats && Game.onMenu == 'stats' && Game.drawT % (Game.fps * 5) != 0 && Game.drawT % Game.fps == 0) Game.UpdateMenu();
 }
 
 CM.Disp.UpdateTooltipLocation = function() {
@@ -1424,7 +1426,9 @@ CM.Disp.CheckWrinklerTooltip = function() {
 CM.Disp.UpdateWrinklerTooltip = function() {
 	if (CM.Config.ToolWrink == 1 && l('CMTooltipWrinkler') != null) {
 		var sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
-		sucked *= 1.1;
+		var toSuck = 1.1;
+		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
+		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 		l('CMTooltipWrinkler').textContent = Beautify(sucked);
 	}
@@ -1460,6 +1464,7 @@ CM.Disp.colorRed = 'red';
 CM.Disp.colorPurple = 'magenta';
 CM.Disp.colorGray = '#b3b3b3';
 CM.Disp.lastGoldenCookieState = 'none';
+CM.Disp.lastAscendState = -1;
 
 CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];

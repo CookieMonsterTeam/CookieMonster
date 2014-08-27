@@ -30,14 +30,8 @@ CM.Sim.Win = function(what) {
 
 eval('CM.Sim.HasAchiev = ' + Game.HasAchiev.toString().split('Game').join('CM.Sim'));
 
-CM.Sim.CookNeedPrest = function(prestige) {
-	return ((Math.pow(((prestige * 2) + 1), 2) - 1) / 8) * 1000000000000;
-}
-
 CM.Sim.CopyData = function() {
 	// Other variables
-	CM.Sim.heavenlyCookies = Game.heavenlyCookies;
-	CM.Sim.prestige = Game.prestige['Heavenly chips'];
 	CM.Sim.UpgradesOwned = Game.UpgradesOwned;
 	CM.Sim.pledges = Game.pledges;
 	CM.Sim.AchievementsOwned = Game.AchievementsOwned;
@@ -49,8 +43,10 @@ CM.Sim.CopyData = function() {
 		var me = Game.Objects[i];
 		var you = CM.Sim.Objects[i];
 		you.amount = me.amount;
-		eval('you.cps = ' + me.cps.toString().split('Game.Has').join('CM.Sim.Has').split('Game.Objects').join('CM.Sim.Objects'));		
-		you.name = me.name; // Needed for above eval!
+		eval('you.cps = ' + me.cps.toString().split('Game.Has').join('CM.Sim.Has').split('Game.Objects').join('CM.Sim.Objects'));
+		// Below is needed for above eval!
+		you.baseCps = me.baseCps;
+		you.name = me.name;
 	}
 
 	// Upgrades
@@ -203,8 +199,8 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (bicentennial == 1) CM.Sim.Win('Bicentennial');
 
 	if (buildingsOwned >= 100) CM.Sim.Win('Builder');
-	if (buildingsOwned >= 400) CM.Sim.Win('Architect');
-	if (buildingsOwned >= 800) CM.Sim.Win('Engineer');
+	if (buildingsOwned >= 500) CM.Sim.Win('Architect');
+	if (buildingsOwned >= 1000) CM.Sim.Win('Engineer');
 	if (buildingsOwned >= 1500) CM.Sim.Win('Lord of Constructs');
 	
 	if (CM.Sim.UpgradesOwned >= 20) CM.Sim.Win('Enhancer');
@@ -256,6 +252,13 @@ CM.Sim.BuyBuildings = function(amount, target) {
 			if (me.amount >= 150) CM.Sim.Win('Perfected agriculture');
 			if (me.amount >= 200) CM.Sim.Win('Homegrown');
 		}
+		else if (i == 'Mine') {
+			if (me.amount >= 1) CM.Sim.Win('You know the drill');
+			if (me.amount >= 50) CM.Sim.Win('Excavation site');
+			if (me.amount >= 100) CM.Sim.Win('Hollow the planet');
+			if (me.amount >= 150) CM.Sim.Win('Can you dig it');
+			if (me.amount >= 200) CM.Sim.Win('The center of the Earth');
+		}
 		else if (i == 'Factory') {
 			if (me.amount >= 1) CM.Sim.Win('Production chain');
 			if (me.amount >= 50) CM.Sim.Win('Industrial revolution');
@@ -263,12 +266,26 @@ CM.Sim.BuyBuildings = function(amount, target) {
 			if (me.amount >= 150) CM.Sim.Win('Ultimate automation');
 			if (me.amount >= 200) CM.Sim.Win('Technocracy');
 		}
-		else if (i == 'Mine') {
-			if (me.amount >= 1) CM.Sim.Win('You know the drill');
-			if (me.amount >= 50) CM.Sim.Win('Excavation site');
-			if (me.amount >= 100) CM.Sim.Win('Hollow the planet');
-			if (me.amount >= 150) CM.Sim.Win('Can you dig it');
-			if (me.amount >= 200) CM.Sim.Win('The center of the Earth');
+		else if (i == 'Bank') {
+			if (me.amount >= 1) CM.Sim.Win('Pretty penny');
+			if (me.amount >= 50) CM.Sim.Win('Fit the bill');
+			if (me.amount >= 100) CM.Sim.Win('A loan in the dark');
+			if (me.amount >= 150) CM.Sim.Win('Need for greed');
+			if (me.amount >= 200) CM.Sim.Win('It\'s the economy, stupid');
+		}
+		else if (i == 'Temple') {
+			if (me.amount >= 1) CM.Sim.Win('Your time to shrine');
+			if (me.amount >= 50) CM.Sim.Win('Shady sect');
+			if (me.amount >= 100) CM.Sim.Win('New-age cult');
+			if (me.amount >= 150) CM.Sim.Win('Organized religion');
+			if (me.amount >= 200) CM.Sim.Win('Fanaticism');
+		}
+		else if (i == 'Wizard tower') {
+			if (me.amount >= 1) CM.Sim.Win('Bewitched');
+			if (me.amount >= 50) CM.Sim.Win('The sorcerer\'s apprentice');
+			if (me.amount >= 100) CM.Sim.Win('Charms and enchantments');
+			if (me.amount >= 150) CM.Sim.Win('Curses and maledictions');
+			if (me.amount >= 200) CM.Sim.Win('Magic kingdom');
 		}
 		else if (i == 'Shipment') {
 			if (me.amount >= 1) CM.Sim.Win('Expedition');
@@ -331,11 +348,11 @@ CM.Sim.BuyBuildings = function(amount, target) {
 CM.Sim.BuyUpgrades = function() {
 	CM.Cache.Upgrades = [];
 	for (var i in Game.Upgrades) {
-		if (Game.Upgrades[i].bought == 0 && Game.Upgrades[i].unlocked) {
+		if (Game.Upgrades[i].bought == 0 && Game.Upgrades[i].unlocked && Game.Upgrades[i].pool != 'prestige') {
 			CM.Sim.CopyData();
 			var me = CM.Sim.Upgrades[i];
 			me.bought = 1;
-			if (Game.Upgrades[i].hide != 3) CM.Sim.UpgradesOwned++;
+			if (Game.Upgrades[i].pool == '' || Game.Upgrades[i].pool == 'cookie') CM.Sim.UpgradesOwned++;
 
 			if (i == 'Elder Pledge') {
 				CM.Sim.pledges++;
@@ -380,8 +397,6 @@ CM.Sim.ResetBonus = function() {
 	if (Game.cookiesEarned >= 1000000000000000000000000) CM.Sim.Win('Transcendence');
 	if (Game.cookiesEarned >= 1000000000000000000000000000) CM.Sim.Win('Obliterate');
 	if (Game.cookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');	
-	
-	CM.Sim.prestige = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
 	
 	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
 

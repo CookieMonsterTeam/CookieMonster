@@ -63,39 +63,45 @@ CM.ReplaceNative = function() {
 }
 
 CM.Loop = function() {
-	if (CM.Sim.DoSims) {		
-		CM.Cache.RemakeIncome();
-		CM.Cache.RemakeBCI();
-		CM.Cache.RemakeLucky();
-		CM.Cache.RemakeChain();
-		CM.Cache.RemakeSeaSpec();
-		
-		CM.Disp.UpdateBotBarOther();
-		CM.Disp.UpdateBuildings();
-		CM.Disp.UpdateUpgrades();
-		
-		CM.Sim.DoSims = 0;
+	if (CM.Disp.lastAscendState != Game.OnAscend) {
+		CM.Disp.lastAscendState = Game.OnAscend;
+		CM.Disp.UpdateBotTimerBarDisplay();
 	}
-	
-	// Redraw timers
-	CM.Disp.UpdateBotBarTime();
-	CM.Disp.UpdateTimerBar();
-	
-	// Update Tooltip
-	CM.Disp.UpdateTooltip();
-	
-	// Update Wrinkler Tooltip
-	CM.Disp.CheckWrinklerTooltip();
-	CM.Disp.UpdateWrinklerTooltip();
+	if (!Game.OnAscend && Game.AscendTimer == 0) {
+		if (CM.Sim.DoSims) {		
+			CM.Cache.RemakeIncome();
+			CM.Cache.RemakeBCI();
+			CM.Cache.RemakeLucky();
+			CM.Cache.RemakeChain();
+			CM.Cache.RemakeSeaSpec();
 
-	// Check Golden Cookies
-	CM.Disp.CheckGoldenCookie();
+			CM.Disp.UpdateBotBarOther();
+			CM.Disp.UpdateBuildings();
+			CM.Disp.UpdateUpgrades();
+		
+			CM.Sim.DoSims = 0;
+		}
+
+		// Redraw timers
+		CM.Disp.UpdateBotBarTime();
+		CM.Disp.UpdateTimerBar();
 	
-	// Update Title
-	CM.Disp.UpdateTitle();
-	
-	// Change menu refresh interval
-	CM.Disp.RefreshMenu();
+		// Update Tooltip
+		CM.Disp.UpdateTooltip();
+
+		// Update Wrinkler Tooltip
+		CM.Disp.CheckWrinklerTooltip();
+		CM.Disp.UpdateWrinklerTooltip();
+
+		// Check Golden Cookies
+		CM.Disp.CheckGoldenCookie();
+
+		// Update Title
+		CM.Disp.UpdateTitle();
+
+		// Change menu refresh interval
+		CM.Disp.RefreshMenu();
+	}
 }
 
 CM.Init = function() {
@@ -117,6 +123,7 @@ CM.Init = function() {
 		CM.ReplaceNative();
 		Game.CalculateGains();
 		CM.LoadConfig(); // Must be after all things are created!
+		CM.Disp.lastAscendState = Game.OnAscend;
 
 		if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
 		else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!','','',1);
