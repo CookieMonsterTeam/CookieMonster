@@ -526,8 +526,8 @@ CM.Disp.UpdateUpgrades = function() {
 			}
 			else {
 				var div = document.createElement('div');
-				div.style.width = '12px';
-				div.style.height = '12px';
+				div.style.width = '10px';
+				div.style.height = '10px';
 				div.style.backgroundColor = CM.Cache.Upgrades[me.name].color;
 				l('upgrade' + i).appendChild(div);
 			}
