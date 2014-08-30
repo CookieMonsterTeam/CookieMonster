@@ -45,8 +45,10 @@ CM.ReplaceNative = function() {
 	
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
 	Game.UpdateMenu = function() {
-		CM.Backup.UpdateMenu();
-		CM.Disp.AddMenu();
+		if (jscolor == undefined || jscolor.picker == undefined || jscolor.picker.owner == undefined) {
+			CM.Backup.UpdateMenu();
+			CM.Disp.AddMenu();
+		}
 	}
 	
 	CM.Backup.sayTime = Game.sayTime;
@@ -104,6 +106,8 @@ CM.Init = function() {
 		proceed = confirm('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' is meant for Game version ' + CM.VersionMajor + '.  Loading a different version may cause errors.  Do you still want to load Cookie Monster?');
 	}
 	if (proceed) {
+		CM.Disp.AddJscolor();
+		CM.Disp.CreateCssArea();
 		CM.Disp.CreateBotBar();
 		CM.Disp.CreateTimerBar();
 		CM.Disp.CreateUpgradeBar();
@@ -125,9 +129,9 @@ CM.Init = function() {
 	}
 }
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Tooltip: 1, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Tooltip: 1, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3'}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '1.0465';
-CM.VersionMinor = '11';
+CM.VersionMinor = '12';
 
