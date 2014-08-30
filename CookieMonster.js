@@ -426,6 +426,7 @@ CM.Disp.AddJscolor = function() {
 	CM.Disp.Jscolor = document.createElement('script');
 	CM.Disp.Jscolor.type = 'text/javascript';
 	CM.Disp.Jscolor.setAttribute('src', 'http://aktanusa.github.io/CookieMonster/jscolor/jscolor.js');
+	document.head.appendChild(CM.Disp.Jscolor);
 }
 
 CM.Disp.CreateCssArea = function() {
