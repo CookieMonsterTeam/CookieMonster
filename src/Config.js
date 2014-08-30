@@ -13,31 +13,37 @@ CM.LoadConfig = function() {
 		// Check values
 		var mod = false;
 		for (var i in CM.ConfigDefault) {
-			if (i != 'StatsPref') {
+			if (CM.Config[i] == undefined) {
+				mod = true;
+				CM.Config[i] = CM.ConfigDefault[i];
+			}
+			else if (i != 'StatsPref' && i != 'Colors') {
 				if (i.indexOf('SoundURL') == -1) {
-					if (CM.Config[i] == undefined || !(CM.Config[i] > -1 && CM.Config[i] < CM.ConfigData[i].label.length)) {
+					if (!(CM.Config[i] > -1 && CM.Config[i] < CM.ConfigData[i].label.length)) {
 						mod = true;
 						CM.Config[i] = CM.ConfigDefault[i];
 					}
 				}
 				else {  // Sound URLs
-					if (CM.Config[i] == undefined || typeof CM.Config[i] != 'string') {
+					if (typeof CM.Config[i] != 'string') {
 						mod = true;
 						CM.Config[i] = CM.ConfigDefault[i];
 					}
 				}
 			}
-			else { // Statistics Preferences
-				if (CM.Config[i] == undefined) {
-					mod = true;
-					CM.Config[i] = CM.ConfigDefault[i];
+			else if (i == 'StatsPref') {
+				for (var j in CM.ConfigDefault.StatsPref) {
+					if (CM.Config[i][j] == undefined || !(CM.Config[i][j] > -1 && CM.Config[i][j] < 2)) {
+						mod = true;
+						CM.Config[i][j] = CM.ConfigDefault[i][j];
+					}
 				}
-				else {
-					for (var j in CM.ConfigDefault.StatsPref) {
-						if (CM.Config[i][j] == undefined || !(CM.Config[i][j] > -1 && CM.Config[i][j] < 2)) {
-							mod = true;
-							CM.Config[i][j] = CM.ConfigDefault[i][j];
-						}
+			}
+			else { // Colors
+				for (var j in CM.ConfigDefault.StatsPref) {
+					if (CM.Config[i][j] == undefined || typeof CM.Config[i][j] != 'string') {
+						mod = true;
+						CM.Config[i][j] = CM.ConfigDefault[i][j];
 					}
 				}
 			}
@@ -101,6 +107,7 @@ CM.ConfigData.TimerBar = {label: ['Timer Bar OFF', 'Timer Bar ON'], desc: 'Timer
 CM.ConfigData.TimerBarPos = {label: ['Timer Bar Position (Top Left)', 'Timer Bar Position (Bottom)'], desc: 'Placement of the Timer Bar', func: function() {CM.Disp.ToggleTimerBarPos();}};
 CM.ConfigData.BuildColor = {label: ['Building Colors OFF', 'Building Colors ON'], desc: 'Color code buildings', func: function() {CM.Disp.UpdateBuildings();}};
 CM.ConfigData.UpBarColor = {label: ['Upgrade Bar/Colors OFF', 'Upgrade Bar/Colors ON'], desc: 'Color code upgrades and add a counter', func: function() {CM.Disp.ToggleUpBarColor();}};
+CM.ConfigData.Colors = {desc: {Blue: 'Color for better than best BCI building', Green: 'Color for best BCI building', Yellow: 'Color for between best and worst BCI buildings closer to best', Orange: 'Color for between best and worst BCI buildings closer to worst', Red: 'Color for worst BCI building', Purple: 'Color for worse than worst BCI building', Gray: 'Color for negative or infinity BCI'}, func: function() {CM.Disp.UpdateColors();}};
 CM.ConfigData.Flash = {label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen on Golden Cookie/Season Popup'};
 CM.ConfigData.Sound = {label: ['Sounds OFF', 'Sounds ON'], desc: 'Play a sound on Golden Cookie/Season Popup'};
 CM.ConfigData.Volume = {label: [], desc: 'Volume of the sound'};
