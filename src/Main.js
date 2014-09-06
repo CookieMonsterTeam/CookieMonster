@@ -71,6 +71,7 @@ CM.Loop = function() {
 		CM.Cache.RemakeLucky();
 		CM.Cache.RemakeChain();
 		CM.Cache.RemakeSeaSpec();
+		CM.Cache.RemakeChoEgg();
 		
 		CM.Disp.UpdateBotBarOther();
 		CM.Disp.UpdateBuildings();
@@ -110,8 +111,8 @@ CM.Init = function() {
 		
 		var delay = setInterval(function() {
 			if (jscolor != undefined) {
-			CM.DelayInit();
-			clearInterval(delay);
+				CM.DelayInit();
+				clearInterval(delay);
 			}
 		}, 500);
 	}
@@ -125,6 +126,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateWhiteScreen();
 	CM.Disp.CreateGCTimer();
 	CM.Disp.CreateResetTooltip();
+	CM.Disp.CreateChoEggTooltip();
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
 	CM.Disp.AddTooltipBuild10();

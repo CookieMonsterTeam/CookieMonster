@@ -155,6 +155,15 @@ CM.Cache.RemakeSeaSpec = function() {
 	}
 }
 
+CM.Cache.RemakeChoEgg = function() {
+	var sellTotal = 0;
+	for (var i in Game.Objects) {
+		var me = Game.Objects[i];
+		sellTotal += CM.Sim.BuildingSell(me.basePrice, me.amount, me.amount);
+	}
+	CM.Cache.ChoEgg = (Game.cookies + sellTotal) * 0.05;
+}
+
 CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
 CM.Cache.LuckyFrenzy = 0;
@@ -166,4 +175,5 @@ CM.Cache.ChainWrathReward = 0;
 CM.Cache.ChainFrenzy = 0;
 CM.Cache.ChainFrenzyReward = 0;
 CM.Cache.ChainFrenzyWrathReward = 0;
+CM.Cache.ChoEgg = 0;
 

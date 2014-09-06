@@ -719,6 +719,18 @@ CM.Disp.CreateResetTooltip = function() {
 	CM.Disp.ResetTooltipPlaceholder.appendChild(resetTitleDesc);
 }
 
+CM.Disp.CreateChoEggTooltip = function() {
+	CM.Disp.ChoEggTooltipPlaceholder = document.createElement('div');
+	var choEggTitleDesc = document.createElement('div');
+	choEggTitleDesc.style.minWidth = '290px';
+	choEggTitleDesc.style.marginBottom = '4px';
+	var div = document.createElement('div');
+	div.style.textAlign = 'left';
+	div.textContent = 'The amount of cookies you would get from selling all buildings and then buying Chocolate egg';
+	choEggTitleDesc.appendChild(div);
+	CM.Disp.ChoEggTooltipPlaceholder.appendChild(choEggTitleDesc);
+}
+
 CM.Disp.AddMenuPref = function(title) {
 	var header = function(text) {
 		var div = document.createElement('div');
@@ -1075,7 +1087,9 @@ CM.Disp.AddMenuStats = function(title) {
 			specDisp = true;
 		}
 	}
-	if (Game.season == 'christmas' || specDisp) {
+	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
+	
+	if (Game.season == 'christmas' || specDisp || choEgg) {
 		stats.appendChild(header('Season Specials', 'Sea'));
 		if (CM.Config.StatsPref.Sea) {
 			if (specDisp) {
@@ -1124,6 +1138,26 @@ CM.Disp.AddMenuStats = function(title) {
 			}
 
 			if (Game.season == 'christmas') stats.appendChild(listing('Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
+			if (choEgg) {
+				var choEggTitleFrag = document.createDocumentFragment();
+				choEggTitleFrag.appendChild(document.createTextNode('Chocolate Egg Cookies '))
+				var choEggTitleSpan = document.createElement('span');
+				choEggTitleSpan.onmouseout = function() { Game.tooltip.hide(); };
+				choEggTitleSpan.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp.ChoEggTooltipPlaceholder.innerHTML));};
+				choEggTitleSpan.style.cursor = 'default';
+				choEggTitleSpan.style.display = 'inline-block';
+				choEggTitleSpan.style.height = '10px';
+				choEggTitleSpan.style.width = '10px';
+				choEggTitleSpan.style.borderRadius = '5px';
+				choEggTitleSpan.style.textAlign = 'center';
+				choEggTitleSpan.style.backgroundColor = '#C0C0C0';
+				choEggTitleSpan.style.color = 'black';
+				choEggTitleSpan.style.fontSize = '9px';
+				choEggTitleSpan.style.verticalAlign = 'bottom';
+				choEggTitleSpan.textContent = '?';
+				choEggTitleFrag.appendChild(choEggTitleSpan);
+				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(CM.Cache.ChoEgg))));
+			}
 		}
 	}
 

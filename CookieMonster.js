@@ -175,6 +175,15 @@ CM.Cache.RemakeSeaSpec = function() {
 	}
 }
 
+CM.Cache.RemakeChoEgg = function() {
+	var sellTotal = 0;
+	for (var i in Game.Objects) {
+		var me = Game.Objects[i];
+		sellTotal += CM.Sim.BuildingSell(me.basePrice, me.amount, me.amount);
+	}
+	CM.Cache.ChoEgg = (Game.cookies + sellTotal) * 0.05;
+}
+
 CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
 CM.Cache.LuckyFrenzy = 0;
@@ -186,6 +195,7 @@ CM.Cache.ChainWrathReward = 0;
 CM.Cache.ChainFrenzy = 0;
 CM.Cache.ChainFrenzyReward = 0;
 CM.Cache.ChainFrenzyWrathReward = 0;
+CM.Cache.ChoEgg = 0;
 
 /**********
  * Config *
@@ -1045,6 +1055,18 @@ CM.Disp.CreateResetTooltip = function() {
 	CM.Disp.ResetTooltipPlaceholder.appendChild(resetTitleDesc);
 }
 
+CM.Disp.CreateChoEggTooltip = function() {
+	CM.Disp.ChoEggTooltipPlaceholder = document.createElement('div');
+	var choEggTitleDesc = document.createElement('div');
+	choEggTitleDesc.style.minWidth = '290px';
+	choEggTitleDesc.style.marginBottom = '4px';
+	var div = document.createElement('div');
+	div.style.textAlign = 'left';
+	div.textContent = 'The amount of cookies you would get from selling all buildings and then buying Chocolate egg';
+	choEggTitleDesc.appendChild(div);
+	CM.Disp.ChoEggTooltipPlaceholder.appendChild(choEggTitleDesc);
+}
+
 CM.Disp.AddMenuPref = function(title) {
 	var header = function(text) {
 		var div = document.createElement('div');
@@ -1401,7 +1423,9 @@ CM.Disp.AddMenuStats = function(title) {
 			specDisp = true;
 		}
 	}
-	if (Game.season == 'christmas' || specDisp) {
+	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
+	
+	if (Game.season == 'christmas' || specDisp || choEgg) {
 		stats.appendChild(header('Season Specials', 'Sea'));
 		if (CM.Config.StatsPref.Sea) {
 			if (specDisp) {
@@ -1450,6 +1474,26 @@ CM.Disp.AddMenuStats = function(title) {
 			}
 
 			if (Game.season == 'christmas') stats.appendChild(listing('Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
+			if (choEgg) {
+				var choEggTitleFrag = document.createDocumentFragment();
+				choEggTitleFrag.appendChild(document.createTextNode('Chocolate Egg Cookies '))
+				var choEggTitleSpan = document.createElement('span');
+				choEggTitleSpan.onmouseout = function() { Game.tooltip.hide(); };
+				choEggTitleSpan.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp.ChoEggTooltipPlaceholder.innerHTML));};
+				choEggTitleSpan.style.cursor = 'default';
+				choEggTitleSpan.style.display = 'inline-block';
+				choEggTitleSpan.style.height = '10px';
+				choEggTitleSpan.style.width = '10px';
+				choEggTitleSpan.style.borderRadius = '5px';
+				choEggTitleSpan.style.textAlign = 'center';
+				choEggTitleSpan.style.backgroundColor = '#C0C0C0';
+				choEggTitleSpan.style.color = 'black';
+				choEggTitleSpan.style.fontSize = '9px';
+				choEggTitleSpan.style.verticalAlign = 'bottom';
+				choEggTitleSpan.textContent = '?';
+				choEggTitleFrag.appendChild(choEggTitleSpan);
+				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(CM.Cache.ChoEgg))));
+			}
 		}
 	}
 
@@ -1920,6 +1964,7 @@ CM.Loop = function() {
 		CM.Cache.RemakeLucky();
 		CM.Cache.RemakeChain();
 		CM.Cache.RemakeSeaSpec();
+		CM.Cache.RemakeChoEgg();
 		
 		CM.Disp.UpdateBotBarOther();
 		CM.Disp.UpdateBuildings();
@@ -1959,8 +2004,8 @@ CM.Init = function() {
 		
 		var delay = setInterval(function() {
 			if (jscolor != undefined) {
-			CM.DelayInit();
-			clearInterval(delay);
+				CM.DelayInit();
+				clearInterval(delay);
 			}
 		}, 500);
 	}
@@ -1974,6 +2019,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateWhiteScreen();
 	CM.Disp.CreateGCTimer();
 	CM.Disp.CreateResetTooltip();
+	CM.Disp.CreateChoEggTooltip();
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
 	CM.Disp.AddTooltipBuild10();
@@ -2010,6 +2056,16 @@ CM.Sim.BuildingGetPrice = function (basePrice, start, increase) {
 		count++;
 	}
 	return totalPrice;
+}
+
+CM.Sim.BuildingSell = function(basePrice, start, amount) {
+	var totalMoni = 0;
+	while (amount > 0) {
+		totalMoni += Math.floor(CM.Sim.BuildingGetPrice(basePrice, start, 1) * 0.5);
+		start--;
+		amount--;
+	}
+	return totalMoni;
 }
 
 eval('CM.Sim.Has = ' + Game.Has.toString().split('Game').join('CM.Sim'));
