@@ -1982,7 +1982,7 @@ CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBar
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '1.0465';
-CM.VersionMinor = '12';
+CM.VersionMinor = '13';
 
 /*******
  * Sim *
