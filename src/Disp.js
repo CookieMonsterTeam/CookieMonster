@@ -25,15 +25,15 @@ CM.Disp.FormatTime = function(time, format) {
 	return str;
 }
 
-CM.Disp.GetTimeColor = function(price) {
+CM.Disp.GetTimeColor = function(price, bank, cps) {
 	var color;
 	var text;
-	if (Game.cookies >= price) {
+	if (bank >= price) {
 		color = CM.Disp.colorGreen;
 		text = 'Done!';
 	}
 	else {
-		var time = (price - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked));
+		var time = (price - bank) / cps;
 		text = CM.Disp.FormatTime(time);
 		if (time > 300) {
 			color =  CM.Disp.colorRed;
@@ -205,7 +205,7 @@ CM.Disp.UpdateBotBarTime = function() {
 	
 		for (var i in CM.Cache.Objects) {
 			count++;
-			var timeColor = CM.Disp.GetTimeColor(Game.Objects[i].getPrice());
+			var timeColor = CM.Disp.GetTimeColor(Game.Objects[i].getPrice(), Game.cookies, (Game.cookiesPs * (1 - Game.cpsSucked)));
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].className = CM.Disp.colorTextPre + timeColor.color;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text;
 		}
@@ -1287,6 +1287,11 @@ CM.Disp.AddTooltipBuild10 = function() {
 CM.Disp.Tooltip = function(type, name) {
 	if (type == 'b') {
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
+		var buildPrice = CM.Sim.BuildingGetPrice(Game.Objects[name].basePrice, 0, Game.Objects[name].amount);
+		var amortizeAmount = buildPrice - Game.Objects[name].totalCookies;
+		if (amortizeAmount > 0) {
+			l('tooltip').innerHTML = l('tooltip').innerHTML.split('so far</div>').join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) == 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor(buildPrice, Game.Objects[name].totalCookies, (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text+')</div>');		
+		}
 		if (CM.Disp.TooltipBuy10) {
 			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join(Beautify(CM.Cache.Objects10[name].price));
 		}
@@ -1384,7 +1389,7 @@ CM.Disp.UpdateTooltip = function() {
 				l('CMTooltipIncome').textContent += ' (' + (increase / 100) + '% of income)';
 			}
 		
-			var timeColor = CM.Disp.GetTimeColor(price);
+			var timeColor = CM.Disp.GetTimeColor(price, Game.cookies, (Game.cookiesPs * (1 - Game.cpsSucked)));
 			l('CMTooltipTime').textContent = timeColor.text;
 			l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
 		}
