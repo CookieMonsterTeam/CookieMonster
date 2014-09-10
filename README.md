@@ -75,7 +75,7 @@ If you'd rather use the addon as a script via per example *Greasemonkey* or *Tam
 
 javascript:(function() {
     var checkReady = setInterval(function() {
-        if (Game.ready != undefined && Game.ready) {
+        if (typeof Game.ready !== 'undefined' && Game.ready) {
             Game.LoadMod('http://aktanusa.github.io/CookieMonster/CookieMonster.js');
             clearInterval(checkReady);
         }

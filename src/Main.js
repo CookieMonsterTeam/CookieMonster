@@ -45,7 +45,7 @@ CM.ReplaceNative = function() {
 	
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
 	Game.UpdateMenu = function() {
-		if (jscolor.picker == undefined || jscolor.picker.owner == undefined) {
+		if (typeof jscolor.picker === 'undefined' || typeof jscolor.picker.owner === 'undefined') {
 			CM.Backup.UpdateMenu();
 			CM.Disp.AddMenu();
 		}
@@ -71,7 +71,7 @@ CM.Loop = function() {
 		CM.Cache.RemakeLucky();
 		CM.Cache.RemakeChain();
 		CM.Cache.RemakeSeaSpec();
-		CM.Cache.RemakeChoEgg();
+		CM.Cache.RemakeSellAllTotal();
 		
 		CM.Disp.UpdateBotBarOther();
 		CM.Disp.UpdateBuildings();
@@ -110,7 +110,7 @@ CM.Init = function() {
 		CM.Disp.AddJscolor();
 		
 		var delay = setInterval(function() {
-			if (jscolor != undefined) {
+			if (typeof jscolor !== 'undefined') {
 				CM.DelayInit();
 				clearInterval(delay);
 			}

@@ -251,7 +251,7 @@ CM.Disp.CreateTimerBar = function() {
 				colorBar.style.borderTopRightRadius = '10px';
 				colorBar.style.borderBottomRightRadius = '10px';
 			}
-			if (bars[i].color != undefined) {
+			if (typeof bars[i].color !== 'undefined') {
 				colorBar.className = CM.Disp.colorBackPre + bars[i].color;
 			}
 			div.appendChild(colorBar);
@@ -1156,7 +1156,8 @@ CM.Disp.AddMenuStats = function(title) {
 				choEggTitleSpan.style.verticalAlign = 'bottom';
 				choEggTitleSpan.textContent = '?';
 				choEggTitleFrag.appendChild(choEggTitleSpan);
-				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(CM.Cache.ChoEgg))));
+				var choEggTotal = (Game.cookies + CM.Cache.SellAllTotal) * 0.05;
+				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(choEggTotal))));
 			}
 		}
 	}

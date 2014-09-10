@@ -13,7 +13,7 @@ CM.LoadConfig = function() {
 		// Check values
 		var mod = false;
 		for (var i in CM.ConfigDefault) {
-			if (CM.Config[i] == undefined) {
+			if (typeof CM.Config[i] === 'undefined') {
 				mod = true;
 				CM.Config[i] = CM.ConfigDefault[i];
 			}
@@ -33,7 +33,7 @@ CM.LoadConfig = function() {
 			}
 			else if (i == 'StatsPref') {
 				for (var j in CM.ConfigDefault.StatsPref) {
-					if (CM.Config[i][j] == undefined || !(CM.Config[i][j] > -1 && CM.Config[i][j] < 2)) {
+					if (typeof CM.Config[i][j] === 'undefined' || !(CM.Config[i][j] > -1 && CM.Config[i][j] < 2)) {
 						mod = true;
 						CM.Config[i][j] = CM.ConfigDefault[i][j];
 					}
@@ -41,7 +41,7 @@ CM.LoadConfig = function() {
 			}
 			else { // Colors
 				for (var j in CM.ConfigDefault.StatsPref) {
-					if (CM.Config[i][j] == undefined || typeof CM.Config[i][j] != 'string') {
+					if (typeof CM.Config[i][j] === 'undefined' || typeof CM.Config[i][j] != 'string') {
 						mod = true;
 						CM.Config[i][j] = CM.ConfigDefault[i][j];
 					}
@@ -51,7 +51,7 @@ CM.LoadConfig = function() {
 		if (mod) CM.SaveConfig(CM.Config);
 		CM.Loop(); // Do loop once
 		for (var i in CM.ConfigDefault) {
-			if (i != 'StatsPref' && CM.ConfigData[i].func != undefined) {
+			if (i != 'StatsPref' && typeof CM.ConfigData[i].func !== 'undefined') {
 				CM.ConfigData[i].func();
 			}
 		}
@@ -73,7 +73,7 @@ CM.ToggleConfigUp = function(config) {
 	if (CM.Config[config] == CM.ConfigData[config].label.length) {
 		CM.Config[config] = 0;
 	}
-	if (CM.ConfigData[config].func != undefined) {
+	if (typeof CM.ConfigData[config].func !== 'undefined') {
 		CM.ConfigData[config].func();
 	}
 	l(CM.ConfigPrefix + config).innerHTML = CM.Disp.GetConfigDisplay(config);
@@ -85,7 +85,7 @@ CM.ToggleConfigDown = function(config) {
 	if (CM.Config[config] < 0) {
 		CM.Config[config] = CM.ConfigData[config].label.length - 1;
 	}
-	if (CM.ConfigData[config].func != undefined) {
+	if (typeof CM.ConfigData[config].func !== 'undefined') {
 		CM.ConfigData[config].func();
 	}
 	l(CM.ConfigPrefix + config).innerHTML = CM.Disp.GetConfigDisplay(config);

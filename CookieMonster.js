@@ -175,13 +175,13 @@ CM.Cache.RemakeSeaSpec = function() {
 	}
 }
 
-CM.Cache.RemakeChoEgg = function() {
+CM.Cache.RemakeSellAllTotal = function() {
 	var sellTotal = 0;
 	for (var i in Game.Objects) {
 		var me = Game.Objects[i];
 		sellTotal += CM.Sim.BuildingSell(me.basePrice, me.amount, me.amount);
 	}
-	CM.Cache.ChoEgg = (Game.cookies + sellTotal) * 0.05;
+	CM.Cache.SellAllTotal = sellTotal;
 }
 
 CM.Cache.Lucky = 0;
@@ -195,7 +195,7 @@ CM.Cache.ChainWrathReward = 0;
 CM.Cache.ChainFrenzy = 0;
 CM.Cache.ChainFrenzyReward = 0;
 CM.Cache.ChainFrenzyWrathReward = 0;
-CM.Cache.ChoEgg = 0;
+CM.Cache.SellAllTotal = 0;
 
 /**********
  * Config *
@@ -212,7 +212,7 @@ CM.LoadConfig = function() {
 		// Check values
 		var mod = false;
 		for (var i in CM.ConfigDefault) {
-			if (CM.Config[i] == undefined) {
+			if (typeof CM.Config[i] === 'undefined') {
 				mod = true;
 				CM.Config[i] = CM.ConfigDefault[i];
 			}
@@ -232,7 +232,7 @@ CM.LoadConfig = function() {
 			}
 			else if (i == 'StatsPref') {
 				for (var j in CM.ConfigDefault.StatsPref) {
-					if (CM.Config[i][j] == undefined || !(CM.Config[i][j] > -1 && CM.Config[i][j] < 2)) {
+					if (typeof CM.Config[i][j] === 'undefined' || !(CM.Config[i][j] > -1 && CM.Config[i][j] < 2)) {
 						mod = true;
 						CM.Config[i][j] = CM.ConfigDefault[i][j];
 					}
@@ -240,7 +240,7 @@ CM.LoadConfig = function() {
 			}
 			else { // Colors
 				for (var j in CM.ConfigDefault.StatsPref) {
-					if (CM.Config[i][j] == undefined || typeof CM.Config[i][j] != 'string') {
+					if (typeof CM.Config[i][j] === 'undefined' || typeof CM.Config[i][j] != 'string') {
 						mod = true;
 						CM.Config[i][j] = CM.ConfigDefault[i][j];
 					}
@@ -250,7 +250,7 @@ CM.LoadConfig = function() {
 		if (mod) CM.SaveConfig(CM.Config);
 		CM.Loop(); // Do loop once
 		for (var i in CM.ConfigDefault) {
-			if (i != 'StatsPref' && CM.ConfigData[i].func != undefined) {
+			if (i != 'StatsPref' && typeof CM.ConfigData[i].func !== 'undefined') {
 				CM.ConfigData[i].func();
 			}
 		}
@@ -272,7 +272,7 @@ CM.ToggleConfigUp = function(config) {
 	if (CM.Config[config] == CM.ConfigData[config].label.length) {
 		CM.Config[config] = 0;
 	}
-	if (CM.ConfigData[config].func != undefined) {
+	if (typeof CM.ConfigData[config].func !== 'undefined') {
 		CM.ConfigData[config].func();
 	}
 	l(CM.ConfigPrefix + config).innerHTML = CM.Disp.GetConfigDisplay(config);
@@ -284,7 +284,7 @@ CM.ToggleConfigDown = function(config) {
 	if (CM.Config[config] < 0) {
 		CM.Config[config] = CM.ConfigData[config].label.length - 1;
 	}
-	if (CM.ConfigData[config].func != undefined) {
+	if (typeof CM.ConfigData[config].func !== 'undefined') {
 		CM.ConfigData[config].func();
 	}
 	l(CM.ConfigPrefix + config).innerHTML = CM.Disp.GetConfigDisplay(config);
@@ -587,7 +587,7 @@ CM.Disp.CreateTimerBar = function() {
 				colorBar.style.borderTopRightRadius = '10px';
 				colorBar.style.borderBottomRightRadius = '10px';
 			}
-			if (bars[i].color != undefined) {
+			if (typeof bars[i].color !== 'undefined') {
 				colorBar.className = CM.Disp.colorBackPre + bars[i].color;
 			}
 			div.appendChild(colorBar);
@@ -1492,7 +1492,8 @@ CM.Disp.AddMenuStats = function(title) {
 				choEggTitleSpan.style.verticalAlign = 'bottom';
 				choEggTitleSpan.textContent = '?';
 				choEggTitleFrag.appendChild(choEggTitleSpan);
-				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(CM.Cache.ChoEgg))));
+				var choEggTotal = (Game.cookies + CM.Cache.SellAllTotal) * 0.05;
+				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(choEggTotal))));
 			}
 		}
 	}
@@ -1943,7 +1944,7 @@ CM.ReplaceNative = function() {
 	
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
 	Game.UpdateMenu = function() {
-		if (jscolor.picker == undefined || jscolor.picker.owner == undefined) {
+		if (typeof jscolor.picker === 'undefined' || typeof jscolor.picker.owner === 'undefined') {
 			CM.Backup.UpdateMenu();
 			CM.Disp.AddMenu();
 		}
@@ -1969,7 +1970,7 @@ CM.Loop = function() {
 		CM.Cache.RemakeLucky();
 		CM.Cache.RemakeChain();
 		CM.Cache.RemakeSeaSpec();
-		CM.Cache.RemakeChoEgg();
+		CM.Cache.RemakeSellAllTotal();
 		
 		CM.Disp.UpdateBotBarOther();
 		CM.Disp.UpdateBuildings();
@@ -2008,7 +2009,7 @@ CM.Init = function() {
 		CM.Disp.AddJscolor();
 		
 		var delay = setInterval(function() {
-			if (jscolor != undefined) {
+			if (typeof jscolor !== 'undefined') {
 				CM.DelayInit();
 				clearInterval(delay);
 			}
