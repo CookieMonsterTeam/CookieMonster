@@ -842,6 +842,7 @@ CM.Disp.AddMenuPref = function(title) {
 	
 	frag.appendChild(header('Tooltip'));
 	frag.appendChild(listing('Tooltip'));
+	frag.appendChild(listing('TooltipAmor'));
 	frag.appendChild(listing('ToolWarnCaut'));
 	frag.appendChild(listing('ToolWarnCautPos'));
 	frag.appendChild(listing('ToolWrink'));
@@ -1288,10 +1289,12 @@ CM.Disp.AddTooltipBuild10 = function() {
 CM.Disp.Tooltip = function(type, name) {
 	if (type == 'b') {
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
-		var buildPrice = CM.Sim.BuildingGetPrice(Game.Objects[name].basePrice, 0, Game.Objects[name].amount);
-		var amortizeAmount = buildPrice - Game.Objects[name].totalCookies;
-		if (amortizeAmount > 0) {
-			l('tooltip').innerHTML = l('tooltip').innerHTML.split('so far</div>').join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) == 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor(buildPrice, Game.Objects[name].totalCookies, (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text+')</div>');		
+		if (CM.Config.TooltipAmor == 1) {
+			var buildPrice = CM.Sim.BuildingGetPrice(Game.Objects[name].basePrice, 0, Game.Objects[name].amount);
+			var amortizeAmount = buildPrice - Game.Objects[name].totalCookies;
+			if (amortizeAmount > 0) {
+				l('tooltip').innerHTML = l('tooltip').innerHTML.split('so far</div>').join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) == 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor(buildPrice, Game.Objects[name].totalCookies, (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text + ')</div>');		
+			}
 		}
 		if (CM.Disp.TooltipBuy10) {
 			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join(Beautify(CM.Cache.Objects10[name].price));
