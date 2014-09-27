@@ -1385,7 +1385,15 @@ CM.Disp.AddMenuStats = function(title) {
 			}
 			sucked *= 1.1;
 			if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-			stats.appendChild(listing('Rewards of Popping',  document.createTextNode(Beautify(sucked))));
+			var popAllFrag = document.createDocumentFragment();
+			popAllFrag.appendChild(document.createTextNode(Beautify(sucked) + ' '));
+			
+			var popAllA = document.createElement('a');
+			popAllA.textContent = 'Pop All';
+			popAllA.className = 'option';
+			popAllA.onclick = function() {Game.CollectWrinklers();};
+			popAllFrag.appendChild(popAllA);
+			stats.appendChild(listing('Rewards of Popping',  popAllFrag));
 		}
 	}
 	
