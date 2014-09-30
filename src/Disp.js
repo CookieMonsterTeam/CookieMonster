@@ -722,11 +722,11 @@ CM.Disp.CreateResetTooltip = function() {
 CM.Disp.CreateChoEggTooltip = function() {
 	CM.Disp.ChoEggTooltipPlaceholder = document.createElement('div');
 	var choEggTitleDesc = document.createElement('div');
-	choEggTitleDesc.style.minWidth = '290px';
+	choEggTitleDesc.style.minWidth = '240px';
 	choEggTitleDesc.style.marginBottom = '4px';
 	var div = document.createElement('div');
 	div.style.textAlign = 'left';
-	div.textContent = 'The amount of cookies you would get from selling all buildings and then buying Chocolate egg';
+	div.textContent = 'The amount of cookies you would get from selling all buildings, popping all wrinklers, and then buying Chocolate egg';
 	choEggTitleDesc.appendChild(div);
 	CM.Disp.ChoEggTooltipPlaceholder.appendChild(choEggTitleDesc);
 }
@@ -1039,24 +1039,28 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing(resetTitleFrag, resetFrag));
 	}
 	
+	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
+	
 	if (Game.cpsSucked > 0) {
 		stats.appendChild(header('Wrinklers', 'Wrink'));
-		if (CM.Config.StatsPref.Wrink) {
+		if (CM.Config.StatsPref.Wrink || (CM.Config.StatsPref.Sea && choEgg)) {
 			var sucked = 0;
 			for (var i in Game.wrinklers) {
 				sucked += Game.wrinklers[i].sucked;
 			}
 			sucked *= 1.1;
 			if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-			var popAllFrag = document.createDocumentFragment();
-			popAllFrag.appendChild(document.createTextNode(Beautify(sucked) + ' '));
 			
-			var popAllA = document.createElement('a');
-			popAllA.textContent = 'Pop All';
-			popAllA.className = 'option';
-			popAllA.onclick = function() {Game.CollectWrinklers();};
-			popAllFrag.appendChild(popAllA);
-			stats.appendChild(listing('Rewards of Popping',  popAllFrag));
+			if (CM.Config.StatsPref.Wrink) {
+				var popAllFrag = document.createDocumentFragment();
+				popAllFrag.appendChild(document.createTextNode(Beautify(sucked) + ' '));
+				var popAllA = document.createElement('a');
+				popAllA.textContent = 'Pop All';
+				popAllA.className = 'option';
+				popAllA.onclick = function() {Game.CollectWrinklers();};
+				popAllFrag.appendChild(popAllA);
+				stats.appendChild(listing('Rewards of Popping',  popAllFrag));
+			}
 		}
 	}
 	
@@ -1096,7 +1100,6 @@ CM.Disp.AddMenuStats = function(title) {
 			specDisp = true;
 		}
 	}
-	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 	
 	if (Game.season == 'christmas' || specDisp || choEgg) {
 		stats.appendChild(header('Season Specials', 'Sea'));
@@ -1165,7 +1168,11 @@ CM.Disp.AddMenuStats = function(title) {
 				choEggTitleSpan.style.verticalAlign = 'bottom';
 				choEggTitleSpan.textContent = '?';
 				choEggTitleFrag.appendChild(choEggTitleSpan);
-				var choEggTotal = (Game.cookies + CM.Cache.SellAllTotal) * 0.05;
+				var choEggTotal = Game.cookies + CM.Cache.SellAllTotal;
+				if (Game.cpsSucked > 0) {
+					choEggTotal += sucked;
+				}
+				choEggTotal *= 0.05;
 				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(choEggTotal))));
 			}
 		}
