@@ -129,7 +129,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateChoEggTooltip();
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
-	CM.Disp.AddTooltipBuild10();
+	CM.Disp.AddTooltipBuildExtra();
 	CM.Disp.AddWrinklerAreaDetect();
 	CM.ReplaceNative();
 	Game.CalculateGains();

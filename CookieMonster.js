@@ -1623,11 +1623,15 @@ CM.Disp.AddTooltipUpgrade = function() {
 	}
 }
 
-CM.Disp.AddTooltipBuild10 = function() {
+CM.Disp.AddTooltipBuildExtra = function() {
 	for (var i in Game.Objects) {
 		var me = Game.Objects[i];
 		l('buttonBuy10-' + me.id).onmouseover = function() {CM.Disp.TooltipBuy10 = true;};
 		l('buttonBuy10-' + me.id).onmouseout = function() {CM.Disp.TooltipBuy10 = false;};
+		l('buttonSell-' + me.id).onmouseover = function() {CM.Disp.TooltipSell = true;};
+		l('buttonSell-' + me.id).onmouseout = function() {CM.Disp.TooltipSell = false;};
+		l('buttonSellAll-' + me.id).onmouseover = function() {CM.Disp.TooltipSellAll = true;};
+		l('buttonSellAll-' + me.id).onmouseout = function() {CM.Disp.TooltipSellAll = false;};
 	}
 }
 
@@ -1643,6 +1647,12 @@ CM.Disp.Tooltip = function(type, name) {
 		}
 		if (CM.Disp.TooltipBuy10) {
 			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join(Beautify(CM.Cache.Objects10[name].price));
+		}
+		if (CM.Disp.TooltipSell) {
+			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + Beautify(CM.Sim.BuildingSell(Game.Objects[name].basePrice, Game.Objects[name].amount, 1)));
+		}
+		if (CM.Disp.TooltipSellAll) {
+			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + Beautify(CM.Sim.BuildingSell(Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].amount)));
 		}
 	}
 	else { // Upgrades
@@ -1901,6 +1911,8 @@ CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];
 
 CM.Disp.TooltipBuy10 = false;
+CM.Disp.TooltipSell = false;
+CM.Disp.TooltipSellAll = false;
 
 CM.Disp.TooltipWrinklerArea = 0;
 CM.Disp.TooltipWrinkler = -1;
@@ -2040,7 +2052,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateChoEggTooltip();
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
-	CM.Disp.AddTooltipBuild10();
+	CM.Disp.AddTooltipBuildExtra();
 	CM.Disp.AddWrinklerAreaDetect();
 	CM.ReplaceNative();
 	Game.CalculateGains();
