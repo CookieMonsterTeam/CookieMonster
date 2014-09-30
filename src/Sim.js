@@ -17,6 +17,16 @@ CM.Sim.BuildingGetPrice = function (basePrice, start, increase) {
 	return totalPrice;
 }
 
+CM.Sim.BuildingSell = function(basePrice, start, amount) {
+	var totalMoni = 0;
+	while (amount > 0) {
+		totalMoni += Math.floor(CM.Sim.BuildingGetPrice(basePrice, start, 1) * 0.5);
+		start--;
+		amount--;
+	}
+	return totalMoni;
+}
+
 eval('CM.Sim.Has = ' + Game.Has.toString().split('Game').join('CM.Sim'));
 
 CM.Sim.Win = function(what) {
