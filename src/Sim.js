@@ -2,7 +2,7 @@
  * Sim *
  *******/
 
-CM.Sim.BuildingGetPrice = function (basePrice, start, increase) {
+CM.Sim.BuildingGetPrice = function(basePrice, start, increase) {
 	var totalPrice = 0;
 	var count = 0;
 	while(count < increase) {
