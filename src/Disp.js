@@ -845,6 +845,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('TooltipAmor'));
 	frag.appendChild(listing('ToolWarnCaut'));
 	frag.appendChild(listing('ToolWarnCautPos'));
+	frag.appendChild(listing('ToolWarnCautBon'));
 	frag.appendChild(listing('ToolWrink'));
 	
 	frag.appendChild(header('Statistics'));
@@ -1424,11 +1425,14 @@ CM.Disp.UpdateTooltip = function() {
 		}
 		
 		if (CM.Config.ToolWarnCaut == 1) {
-			var bonusNoFren = bonus;
-			if (Game.frenzy > 0) {
-				bonusNoFren /= Game.frenzyPower;
+			var warn = CM.Cache.Lucky;
+			if (CM.Config.ToolWarnCautBon == 1) {
+				var bonusNoFren = bonus;
+				if (Game.frenzy > 0) {
+					bonusNoFren /= Game.frenzyPower;
+				}
+				warn += ((bonusNoFren * 60 * 20) / 0.1);
 			}
-			var warn = CM.Cache.Lucky + ((bonusNoFren * 60 * 20) / 0.1);
 			var caut = warn * 7;
 			var amount = Game.cookies - price;
 			if (amount < warn || amount < caut) {

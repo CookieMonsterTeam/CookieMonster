@@ -1,6 +1,14 @@
 /*********
  * Cache *
  *********/
+ 
+CM.Cache.NextNumber = function(base) {
+	var count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
+	while (base == base + count) {
+		count = CM.Cache.NextNumber(count);
+	}
+	return (base + count);
+}
 
 CM.Cache.RemakeIncome = function() {
 	// Simulate Building Buys for 1 amount
@@ -119,11 +127,7 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.Chain = 0;
 	}
 	else {
-		count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
-		while (base == base + count) {
-			count++;
-		}
-		CM.Cache.Chain = (base + count) / 0.25;
+		CM.Cache.Chain = CM.Cache.NextNumber(base) / 0.25;
 	}
 	
 	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7);
@@ -140,11 +144,7 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.ChainFrenzy = 0;
 	}
 	else {
-		count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
-		while(base == base + count) {
-			count++;
-		}
-		CM.Cache.ChainFrenzy = (base + count) / 0.25;
+		CM.Cache.ChainFrenzy = CM.Cache.NextNumber(base) / 0.25;
 	}
 }
 

@@ -21,6 +21,14 @@ CM.Sim = {};
 /*********
  * Cache *
  *********/
+ 
+CM.Cache.NextNumber = function(base) {
+	var count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
+	while (base == base + count) {
+		count = CM.Cache.NextNumber(count);
+	}
+	return (base + count);
+}
 
 CM.Cache.RemakeIncome = function() {
 	// Simulate Building Buys for 1 amount
@@ -139,11 +147,7 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.Chain = 0;
 	}
 	else {
-		count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
-		while (base == base + count) {
-			count++;
-		}
-		CM.Cache.Chain = (base + count) / 0.25;
+		CM.Cache.Chain = CM.Cache.NextNumber(base) / 0.25;
 	}
 	
 	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7);
@@ -160,11 +164,7 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.ChainFrenzy = 0;
 	}
 	else {
-		count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
-		while(base == base + count) {
-			count++;
-		}
-		CM.Cache.ChainFrenzy = (base + count) / 0.25;
+		CM.Cache.ChainFrenzy = CM.Cache.NextNumber(base) / 0.25;
 	}
 }
 
@@ -321,6 +321,7 @@ CM.ConfigData.Tooltip = {label: ['Tooltip Information OFF', 'Tooltip Information
 CM.ConfigData.TooltipAmor = {label: ['Tooltip Amortization Information OFF', 'Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip'};
 CM.ConfigData.ToolWarnCaut = {label: ['Tooltip Warning/Caution OFF', 'Tooltip Warning/Caution ON'], desc: 'A warning/caution when buying if it will put the bank under the amount needed for max "Lucky!"/"Lucky!" (Frenzy) rewards', func: function() {CM.Disp.ToggleToolWarnCaut();}};
 CM.ConfigData.ToolWarnCautPos = {label: ['Tooltip Warning/Caution Position (Left)', 'Tooltip Warning/Caution Position (Bottom)'], desc: 'Placement of the warning/caution boxes', func: function() {CM.Disp.ToggleToolWarnCautPos();}};
+CM.ConfigData.ToolWarnCautBon = {label: ['Calculate Tooltip Warning/Caution With Bonus CPS OFF', 'Calculate Tooltip Warning/Caution With Bonus CPS ON'], desc: 'Calculate the warning/caution with or without the bonus CPS you get from buying'};
 CM.ConfigData.ToolWrink = {label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it'};
 CM.ConfigData.Stats = {label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra Cookie Monster statistics!'};
 CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 3 seconds'};
@@ -1182,6 +1183,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('TooltipAmor'));
 	frag.appendChild(listing('ToolWarnCaut'));
 	frag.appendChild(listing('ToolWarnCautPos'));
+	frag.appendChild(listing('ToolWarnCautBon'));
 	frag.appendChild(listing('ToolWrink'));
 	
 	frag.appendChild(header('Statistics'));
@@ -1761,11 +1763,14 @@ CM.Disp.UpdateTooltip = function() {
 		}
 		
 		if (CM.Config.ToolWarnCaut == 1) {
-			var bonusNoFren = bonus;
-			if (Game.frenzy > 0) {
-				bonusNoFren /= Game.frenzyPower;
+			var warn = CM.Cache.Lucky;
+			if (CM.Config.ToolWarnCautBon == 1) {
+				var bonusNoFren = bonus;
+				if (Game.frenzy > 0) {
+					bonusNoFren /= Game.frenzyPower;
+				}
+				warn += ((bonusNoFren * 60 * 20) / 0.1);
 			}
-			var warn = CM.Cache.Lucky + ((bonusNoFren * 60 * 20) / 0.1);
 			var caut = warn * 7;
 			var amount = Game.cookies - price;
 			if (amount < warn || amount < caut) {
@@ -2071,17 +2076,17 @@ CM.DelayInit = function() {
 	Game.Win('Third-party');
 }
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3'}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWarnCautBon: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3'}};
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '1.0465';
-CM.VersionMinor = '13';
+CM.VersionMajor = '1.0466';
+CM.VersionMinor = '1';
 
 /*******
  * Sim *
  *******/
 
-CM.Sim.BuildingGetPrice = function (basePrice, start, increase) {
+CM.Sim.BuildingGetPrice = function(basePrice, start, increase) {
 	var totalPrice = 0;
 	var count = 0;
 	while(count < increase) {
