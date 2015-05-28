@@ -1,6 +1,6 @@
 # Cookie Monster
 
-**Cookie Monster** is an addon you can load into Cookie Clicker, that offers a wide range of tools and statistics to enhance the game. It is **not** a cheat interface – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.
+**Cookie Monster** is an addon you can load into Cookie Clicker, that offers a wide range of tools and statistics to enhance the game. **It is not a cheat interface** – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.
 
 This is a helper, and it is here to help you at *whichever* degree you want, if you only need some help shortening long numbers, it does that. If you need to be accompanied by hand to pick the best buildings to buy, it does that, but **everything is an option**.
 
@@ -10,27 +10,27 @@ You can see the current version, and a full history of all versions and what the
 
 ## What it does
 
-At its core, Cookie Monster computes an index on both buildings and upgrades :
+At its core, Cookie Monster computes an index on both buildings and upgrades:
 
-* **Base Cost per Income (BCI)** : Indicates how much a building is worth by comparing how much it costs to how much income gained
+* **Base Cost per Income (BCI)**: Indicates how much a building is worth by comparing how much it costs to how much income gained
 
 Cookie Monster also indicates the time left before being able to buy an upgrade or building, and takes it into consideration. It will take *everything* in consideration, meaning if buying a building also unlocks an achievement which boosts your income, which unlocks an achievement, it will know and highlight that building's value.
 
-This index is computed for buildings and upgrades. If the relevant option is enabled, it will color-code each of them based on their value :
+This index is computed for buildings and upgrades. If the relevant option is enabled, it will color-code each of them based on their value:
 
-* Light Blue : (upgrades) This item has a better BCI than any building
-* Green : This item has the best BCI
-* Yellow : This item is not the best, but it is closer to best than it is to worst
-* Orange : This item is not the worst, but it is closer to worst than it is to best
-* Red : This item has the worst BCI
-* Purple : (upgrades) This item has a worse BCI than any building
-* Gray : (upgrades) This item has not been calculated and/or cannot be calculated due to no definitive worth.
+* Light Blue: (upgrades) This item has a better BCI than any building
+* Green: This item has the best BCI
+* Yellow: This item is not the best, but it is closer to best than it is to worst
+* Orange: This item is not the worst, but it is closer to worst than it is to best
+* Red: This item has the worst BCI
+* Purple: (upgrades) This item has a worse BCI than any building
+* Gray: (upgrades) This item has not been calculated and/or cannot be calculated due to no definitive worth.
 
-Note : For this index, **lower is better**, meaning a building with a BCI of 1 is more interesting than one with a BCI of 3.
+Note: For this index, **lower is better**, meaning a building with a BCI of 1 is more interesting than one with a BCI of 3.
 
 ## What it doesn't do
 
-Most likely you'll find items in gray like Golden Cookie upgrades, clicking upgrades – everything that doesn't earn you a direct bonus to your income will display as gray. This means the following upgrades are **not** taken into account by Cookie Monster :
+Most likely you'll find items in gray like Golden Cookie upgrades, clicking upgrades – everything that doesn't earn you a direct bonus to your income will display as gray. This means the following upgrades are **not** taken into account by Cookie Monster:
 
 * Plastic mouse
 * Iron mouse
@@ -101,7 +101,7 @@ All suggestions are welcome, even the smallest ones.
 
 #Contributors
 
-* **[Raving_Kumquat](http://cookieclicker.wikia.com/wiki/User:Raving_Kumquat)** : Original author
-* **[Maxime Fabre](https://github.com/Anahkiasen)** : Previous maintainer
-* **Alderi Tokori** : ROI calculations (unused now)
-* **[Aktanusa](https://github.com/Aktanusa)** : Current maintainer
+* **[Raving_Kumquat](http://cookieclicker.wikia.com/wiki/User:Raving_Kumquat)**: Original author
+* **[Maxime Fabre](https://github.com/Anahkiasen)**: Previous maintainer
+* **Alderi Tokori**: ROI calculations (unused now)
+* **[Aktanusa](https://github.com/Aktanusa)**: Current maintainer
