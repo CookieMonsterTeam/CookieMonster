@@ -682,8 +682,12 @@ CM.Disp.UpdateTitle = function() {
 		var titleGC;
 		var titleSP;
 		if (l('goldenCookie').style.display != 'none') {
-			addGC = true;
-			titleGC = '[G ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
+			if (Game.goldenCookie.wrath) {
+				titleGC = '[W ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
+			}
+			else {
+				titleGC = '[G ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
+			}
 		}
 		else {
 			titleGC = '[' +  Math.ceil((Game.goldenCookie.maxTime - Game.goldenCookie.time) / Game.fps) + ']';
