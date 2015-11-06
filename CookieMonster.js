@@ -410,7 +410,7 @@ CM.Disp.Beautify = function(num, frac) {
 			}
 		}
 		if (answer == '') {
-			answer = CM.Backup.Beautify(num);
+			answer = CM.Backup.Beautify(num, frac);
 		}
 		
 		if (negative) {
