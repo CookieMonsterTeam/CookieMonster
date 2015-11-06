@@ -48,7 +48,7 @@ CM.Disp.GetTimeColor = function(price, bank, cps) {
 	return {text: text, color: color};
 }
 
-CM.Disp.Beautify = function(num) {
+CM.Disp.Beautify = function(num, frac) {
 	if (CM.Config.Scale != 0 && isFinite(num)) {
 		var answer = '';
 		var negative = false;
@@ -81,7 +81,7 @@ CM.Disp.Beautify = function(num) {
 		return answer;
 	}
 	else {
-		return CM.Backup.Beautify(num);
+		return CM.Backup.Beautify(num, frac);
 	}
 }
 
