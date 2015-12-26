@@ -295,7 +295,8 @@ CM.Disp.CreateTimerBar = function() {
 	CM.Disp.TimerBarCF.style.height = '12px';
 	CM.Disp.TimerBarCF.style.margin = '0px 10px';
 	CM.Disp.TimerBarCF.style.position = 'relative';
-	CM.Disp.TimerBarCF.appendChild(bar('Click Frenzy', [{id: 'CMTimerBarCFBar', color: CM.Disp.colorBlue}], 'CMTimerBarCFTime'));
+	CM.Disp.TimerBarCF.appendChild(bar('', [{id: 'CMTimerBarCFBar'}], 'CMTimerBarCFTime'));
+	CM.Disp.TimerBarCF.firstChild.firstChild.id = 'CMTimerBarCFType';
 	CM.Disp.TimerBar.appendChild(CM.Disp.TimerBarCF);
 	
 	l('wrapper').appendChild(CM.Disp.TimerBar);
@@ -371,6 +372,10 @@ CM.Disp.UpdateTimerBar = function() {
 				l('CMTimerBarFrenType').textContent = 'Clot';
 				l('CMTimerBarFrenBar').className = CM.Disp.colorBackPre + CM.Disp.colorRed;
 			}
+			else if (Game.frenzyPower == 15) {
+				l('CMTimerBarFrenType').textContent = 'Dragon Harvest';
+				l('CMTimerBarFrenBar').className = CM.Disp.colorBackPre + CM.Disp.colorPurple;
+			}
 			else {
 				l('CMTimerBarFrenType').textContent = 'Blood Frenzy';
 				l('CMTimerBarFrenBar').className = CM.Disp.colorBackPre + CM.Disp.colorGreen;
@@ -385,6 +390,14 @@ CM.Disp.UpdateTimerBar = function() {
 		
 		if (Game.clickFrenzy > 0) {
 			CM.Disp.TimerBarCF.style.display = '';
+			if (Game.clickFrenzyPower == 777) {
+				l('CMTimerBarCFType').textContent = 'Click Frenzy';
+				l('CMTimerBarCFBar').className = CM.Disp.colorBackPre + CM.Disp.colorBlue;
+			}
+			else {
+				l('CMTimerBarCFType').textContent = 'Dragonflight';
+				l('CMTimerBarCFBar').className = CM.Disp.colorBackPre + CM.Disp.colorPurple;
+			}
 			l('CMTimerBarCFBar').style.width = Math.round(Game.clickFrenzy * maxWidth / Game.clickFrenzyMax) + 'px';
 			l('CMTimerBarCFTime').textContent = Math.ceil(Game.clickFrenzy / Game.fps);
 			count++;
@@ -406,8 +419,13 @@ CM.Disp.UpdateTimerBar = function() {
 CM.Disp.UpdateBotTimerBarDisplay = function() {
 	if (Game.OnAscend) {
 		l('game').style.bottom = '0px';
+		CM.Disp.BotBar.style.display = 'none';
+		CM.Disp.TimerBar.style.display = 'none';
+		CM.Disp.GCTimer.style.display = 'none';
 	}
 	else {
+		CM.Disp.BotBar.style.display = '';
+		CM.Disp.TimerBar.style.display = '';
 		if (CM.Config.BotBar == 1 && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
 			CM.Disp.BotBar.style.bottom = '48px';
 			l('game').style.bottom = '104px';
@@ -872,7 +890,7 @@ CM.Disp.AddMenuPref = function(title) {
 	l('menu').childNodes[2].insertBefore(frag, l('menu').childNodes[2].childNodes[l('menu').childNodes[2].childNodes.length - 1]);
 		
 	CM.Disp.FormatButtonOnClickBak = l('formatButton').onclick;
-	l('formatButton').onclick = function() {Game.Toggle('format', 'formatButton', 'Short numbers OFF', 'Short numbers ON'); CM.Disp.RefreshScale();};
+	l('formatButton').onclick = function() {Game.Toggle('format', 'formatButton', 'Short numbers OFF', 'Short numbers ON', '1'); PlaySound('snd/tick.mp3'); CM.Disp.RefreshScale();};
 }
 
 CM.Disp.AddMenuStats = function(title) {
@@ -1006,8 +1024,9 @@ CM.Disp.AddMenuStats = function(title) {
 		hcMaxFrag.appendChild(document.createTextNode(Beautify(possibleHC)));
 		stats.appendChild(listing('Heavenly Chips (MAX)',  hcMaxFrag));
 		var hcCurFrag = document.createDocumentFragment();
-		hcCurFrag.appendChild(document.createTextNode(Beautify(Game.heavenlyChipsEarned)));
-		stats.appendChild(listing('Heavenly Chips (CUR)',  hcCurFrag));
+		// Remove all chip stats?
+		//hcCurFrag.appendChild(document.createTextNode(Beautify(Game.heavenlyChipsEarned)));
+		//stats.appendChild(listing('Heavenly Chips (CUR)',  hcCurFrag));
 		stats.appendChild(listing('Cookies To Next Chip',  document.createTextNode(Beautify(neededCook))));
 		stats.appendChild(listing('Time To Next Chip',  document.createTextNode(CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1))));
 		// Unneeded? 
@@ -1045,18 +1064,20 @@ CM.Disp.AddMenuStats = function(title) {
 	if (Game.cpsSucked > 0) {
 		stats.appendChild(header('Wrinklers', 'Wrink'));
 		if (CM.Config.StatsPref.Wrink || (CM.Config.StatsPref.Sea && choEgg)) {
-			var sucked = 0;
+			var totalSucked = 0;
 			for (var i in Game.wrinklers) {
-				sucked += Game.wrinklers[i].sucked;
+				var sucked = Game.wrinklers[i].sucked;
+				var toSuck = 1.1;
+				if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
+				if (Game.wrinklers[i].type==1) toSuck *= 3; //shiny wrinklers are an elusive, profitable breed
+				sucked *= toSuck;
+				if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+				totalSucked += sucked;
 			}
-			var toSuck = 1.1;
-			if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
-			sucked *= toSuck;
-			if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 			
 			if (CM.Config.StatsPref.Wrink) {
 				var popAllFrag = document.createDocumentFragment();
-				popAllFrag.appendChild(document.createTextNode(Beautify(sucked) + ' '));
+				popAllFrag.appendChild(document.createTextNode(Beautify(totalSucked) + ' '));
 				var popAllA = document.createElement('a');
 				popAllA.textContent = 'Pop All';
 				popAllA.className = 'option';
@@ -1205,7 +1226,7 @@ CM.Disp.RefreshMenu = function() {
 }
 
 CM.Disp.UpdateTooltipLocation = function() {
-	Game.tooltip.tta.style.top = Math.max(0, Math.min((l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - CM.Disp.TooltipWarnCaut.clientHeight - 64, Game.mouseY - 48)) + 'px';
+	Game.tooltip.tta.style.top = Math.max(0, Math.min((l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - CM.Disp.TooltipWarnCaut.clientHeight - 38, Game.mouseY - 48)) + 'px';
 	if (Game.tooltip.origin == 'wrink') {
 		Game.tooltip.tta.style.left = (Game.mouseX + l('tooltip').offsetWidth + 25) + 'px';
 		Game.tooltip.tta.style.right = 'auto';
@@ -1280,7 +1301,7 @@ CM.Disp.AddTooltipBuild = function() {
 		var me = Game.Objects[i];
 		if (l('product' + me.id).onmouseover != null) {
 			CM.Disp.TooltipBuildBack[i] = l('product' + me.id).onmouseover;
-			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\');}');
+			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}');
 		}
 	}
 }
@@ -1291,7 +1312,7 @@ CM.Disp.AddTooltipUpgrade = function() {
 		var me = Game.UpgradesInStore[i];
 		if (l('upgrade' + i).onmouseover != null) {
 			CM.Disp.TooltipUpgradeBack[i] = l('upgrade' + i).onmouseover;
-			eval('l(\'upgrade\' + i).onmouseover = function() {CM.Disp.Tooltip(\'u\', \'' + i + '\');}');
+			eval('l(\'upgrade\' + i).onmouseover = function() {if (!Game.mouseDown) {Game.setOnCrate(this); Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'u\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}}');
 		}
 	}
 }
@@ -1329,7 +1350,7 @@ CM.Disp.Tooltip = function(type, name) {
 		}
 	}
 	else { // Upgrades
-		CM.Disp.TooltipUpgradeBack[name]();
+		l('tooltip').innerHTML = Game.crate(Game.UpgradesInStore[name], 'store', undefined, undefined, 1)();
 	}
 	
 	var area = document.createElement('div');
@@ -1375,9 +1396,9 @@ CM.Disp.Tooltip = function(type, name) {
 
 	CM.Disp.UpdateTooltip();
 	
-	if (type == 'b') {
+//	if (type == 'b') {
 		return l('tooltip').innerHTML;
-	}	
+//	}	
 }
 
 CM.Disp.UpdateTooltip = function() {
@@ -1544,6 +1565,7 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 		var sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
 		var toSuck = 1.1;
 		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
+		if (Game.wrinklers[CM.Disp.TooltipWrinkler].type == 1) toSuck *= 3; //shiny wrinklers are an elusive, profitable breed
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 		l('CMTooltipWrinkler').textContent = Beautify(sucked);
