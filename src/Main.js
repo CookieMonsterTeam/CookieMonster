@@ -67,7 +67,7 @@ CM.ReplaceNative = function() {
 CM.Loop = function() {
 	if (CM.Disp.lastAscendState != Game.OnAscend) {
 		CM.Disp.lastAscendState = Game.OnAscend;
-		CM.Disp.UpdateBotTimerBarDisplay();
+		CM.Disp.UpdateAscendState();
 	}
 	if (!Game.OnAscend && Game.AscendTimer == 0) {
 		if (CM.Sim.DoSims) {		
@@ -96,15 +96,15 @@ CM.Loop = function() {
 		CM.Disp.CheckWrinklerTooltip();
 		CM.Disp.UpdateWrinklerTooltip();
 
-		// Check Golden Cookies
-		CM.Disp.CheckGoldenCookie();
-
 		// Update Title
 		CM.Disp.UpdateTitle();
 
 		// Change menu refresh interval
 		CM.Disp.RefreshMenu();
 	}
+	
+	// Check Golden Cookies
+	CM.Disp.CheckGoldenCookie();
 }
 
 CM.Init = function() {

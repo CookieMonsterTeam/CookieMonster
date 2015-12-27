@@ -417,29 +417,19 @@ CM.Disp.UpdateTimerBar = function() {
 }
 
 CM.Disp.UpdateBotTimerBarDisplay = function() {
-	if (Game.OnAscend) {
-		l('game').style.bottom = '0px';
-		CM.Disp.BotBar.style.display = 'none';
-		CM.Disp.TimerBar.style.display = 'none';
-		CM.Disp.GCTimer.style.display = 'none';
+	if (CM.Config.BotBar == 1 && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
+		CM.Disp.BotBar.style.bottom = '48px';
+		l('game').style.bottom = '104px';
 	}
-	else {
-		CM.Disp.BotBar.style.display = '';
-		CM.Disp.TimerBar.style.display = '';
-		if (CM.Config.BotBar == 1 && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
-			CM.Disp.BotBar.style.bottom = '48px';
-			l('game').style.bottom = '104px';
-		}
-		else if (CM.Config.BotBar == 1) {
-			CM.Disp.BotBar.style.bottom = '0px';
-			l('game').style.bottom = '56px';
-		}
-		else if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
-			l('game').style.bottom = '48px';
-		}
-		else { // No bars
-			l('game').style.bottom = '0px';
-		}
+	else if (CM.Config.BotBar == 1) {
+		CM.Disp.BotBar.style.bottom = '0px';
+		l('game').style.bottom = '56px';
+	}
+	else if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
+		l('game').style.bottom = '48px';
+	}
+	else { // No bars
+		l('game').style.bottom = '0px';
 	}
 	
 	if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
@@ -1570,6 +1560,20 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 		l('CMTooltipWrinkler').textContent = Beautify(sucked);
 	}
+}
+
+CM.Disp.UpdateAscendState = function() {
+	if (Game.OnAscend) {
+		l('game').style.bottom = '0px';
+		if (CM.Config.BotBar == 1) CM.Disp.BotBar.style.display = 'none';
+		if (CM.Config.TimerBar == 1) CM.Disp.TimerBar.style.display = 'none';
+	}
+	else {
+		CM.Disp.ToggleBotBar();
+		CM.Disp.ToggleTimerBar();
+	}
+
+	CM.Disp.UpdateBackground();
 }
 
 CM.Disp.ToggleSayTime = function() {
