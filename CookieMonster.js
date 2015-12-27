@@ -574,7 +574,7 @@ CM.Disp.CreateTimerBar = function() {
 		var type = document.createElement('span');
 		type.style.display = 'inline-block';
 		type.style.textAlign = 'right';
-		type.style.width = '71px';
+		type.style.width = '78px';
 		type.style.marginRight = '5px';
 		type.style.verticalAlign = 'text-top';
 		type.textContent = name;
@@ -666,8 +666,8 @@ CM.Disp.ToggleTimerBarPos = function() {
 
 CM.Disp.UpdateTimerBar = function() {
 	if (CM.Config.TimerBar == 1) {
-		// label width: 76	timer width: 26 div margin: 20
-		var maxWidth = CM.Disp.TimerBar.offsetWidth - 122;
+		// label width: 83	timer width: 26 div margin: 20
+		var maxWidth = CM.Disp.TimerBar.offsetWidth - 129;
 		var count = 0;
 		
 		if (Game.goldenCookie.life <= 0 && Game.goldenCookie.toDie == 0) {
@@ -1554,10 +1554,13 @@ CM.Disp.RefreshMenu = function() {
 }
 
 CM.Disp.UpdateTooltipLocation = function() {
-	Game.tooltip.tta.style.top = Math.max(0, Math.min((l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - CM.Disp.TooltipWarnCaut.clientHeight - 38, Game.mouseY - 48)) + 'px';
-	if (Game.tooltip.origin == 'wrink') {
-		Game.tooltip.tta.style.left = (Game.mouseX + l('tooltip').offsetWidth + 25) + 'px';
-		Game.tooltip.tta.style.right = 'auto';
+	if (Game.tooltip.origin == 'store') {
+		var warnCautOffset = 0;
+		if (CM.Config.ToolWarnCaut == 1 && CM.Config.ToolWarnCautPos == 1) warnCautOffset = CM.Disp.TooltipWarnCaut.clientHeight - 4;
+		Game.tooltip.tta.style.top = Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnCautOffset - 46) + 'px';
+	}
+	else if (!Game.onCrate && !Game.OnAscend && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+		Game.tooltip.tta.style.top = (parseInt(Game.tooltip.tta.style.top) + parseInt(CM.Disp.TimerBar.style.height)) + 'px';
 	}
 }
 
@@ -1614,11 +1617,13 @@ CM.Disp.ToggleToolWarnCaut = function() {
 
 CM.Disp.ToggleToolWarnCautPos = function() {
 	if (CM.Config.ToolWarnCautPos == 0) {
-		CM.Disp.TooltipWarnCaut.style.top = '12px';
+		CM.Disp.TooltipWarnCaut.style.top = 'auto';
+		CM.Disp.TooltipWarnCaut.style.margin = '4px -4px';
 		CM.Disp.TooltipWarnCaut.style.padding = '3px 4px';
 	}
 	else {
-		CM.Disp.TooltipWarnCaut.style.right = '12px';
+		CM.Disp.TooltipWarnCaut.style.right = 'auto';
+		CM.Disp.TooltipWarnCaut.style.margin = '4px';
 		CM.Disp.TooltipWarnCaut.style.padding = '4px 3px';
 	}
 }
@@ -1724,9 +1729,7 @@ CM.Disp.Tooltip = function(type, name) {
 
 	CM.Disp.UpdateTooltip();
 	
-//	if (type == 'b') {
-		return l('tooltip').innerHTML;
-//	}	
+	return l('tooltip').innerHTML;
 }
 
 CM.Disp.UpdateTooltip = function() {
@@ -1788,10 +1791,10 @@ CM.Disp.UpdateTooltip = function() {
 			var amount = Game.cookies - price;
 			if (amount < warn || amount < caut) {
 				if (CM.Config.ToolWarnCautPos == 0) {
-					CM.Disp.TooltipWarnCaut.style.right = (l('tooltip').offsetWidth + 12) + 'px';
+					CM.Disp.TooltipWarnCaut.style.right = '0px';
 				}
 				else {
-					CM.Disp.TooltipWarnCaut.style.top = (l('tooltip').offsetHeight + 12) + 'px';
+					CM.Disp.TooltipWarnCaut.style.top = (l('tooltip').offsetHeight) + 'px';
 				}
 				CM.Disp.TooltipWarnCaut.style.width = (l('tooltip').offsetWidth - 6) + 'px';
 			
@@ -1872,7 +1875,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
 					div.id = 'CMTooltipWrinkler';
 					wrinkler.appendChild(div);
 					placeholder.appendChild(wrinkler);
-					Game.tooltip.draw(this, escape(placeholder.innerHTML), 'wrink');
+					Game.tooltip.draw(this, escape(placeholder.innerHTML));
 					CM.Disp.TooltipWrinkler = i;
 					CM.Disp.TooltipWrinklerCache[i] = 1;
 				}
@@ -2007,6 +2010,7 @@ CM.ReplaceNative = function() {
 	Game.RebuildUpgrades = function() {
 		CM.Backup.RebuildUpgrades();
 		CM.Disp.AddTooltipUpgrade();
+		CM.Sim.DoSims = 1;
 	}
 	
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
