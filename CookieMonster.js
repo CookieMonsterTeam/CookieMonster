@@ -64,6 +64,7 @@ CM.Cache.RemakeBuildingsBCI = function() {
 CM.Cache.RemakeUpgradeBCI = function() {
 	for (var i in CM.Cache.Upgrades) {
 		CM.Cache.Upgrades[i].bci = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
+		if (isNaN(CM.Cache.Upgrades[i].bci)) CM.Cache.Upgrades[i].bci = 'Infinity';
 		var color = '';
 		if (CM.Cache.Upgrades[i].bci <= 0 || CM.Cache.Upgrades[i].bci == 'Infinity') color = CM.Disp.colorGray;
 		else if (CM.Cache.Upgrades[i].bci < CM.Disp.min) color = CM.Disp.colorBlue;
@@ -881,10 +882,15 @@ CM.Disp.UpdateUpgrades = function() {
 
 		for (var i in Game.UpgradesInStore) {
 			var me = Game.UpgradesInStore[i];
-			if (l('upgrade' + i).childNodes.length > 0) {
-				l('upgrade' + i).childNodes[0].className = CM.Disp.colorBackPre + CM.Cache.Upgrades[me.name].color;
+			var addedColor = false;
+			for (var j = 0; j < l('upgrade' + i).childNodes.length; j++) {
+				if (l('upgrade' + i).childNodes[j].className.indexOf(CM.Disp.colorBackPre) != -1) {
+					l('upgrade' + i).childNodes[j].className = CM.Disp.colorBackPre + CM.Cache.Upgrades[me.name].color;
+					addedColor = true;
+					break;
+				}
 			}
-			else {
+			if (!addedColor) {
 				var div = document.createElement('div');
 				div.style.width = '10px';
 				div.style.height = '10px';
@@ -1683,6 +1689,7 @@ CM.Disp.Tooltip = function(type, name) {
 		}
 	}
 	else { // Upgrades
+		if (!Game.UpgradesInStore[name]) return '';
 		l('tooltip').innerHTML = Game.crate(Game.UpgradesInStore[name], 'store', undefined, undefined, 1)();
 	}
 	

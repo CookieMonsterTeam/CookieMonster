@@ -44,6 +44,7 @@ CM.Cache.RemakeBuildingsBCI = function() {
 CM.Cache.RemakeUpgradeBCI = function() {
 	for (var i in CM.Cache.Upgrades) {
 		CM.Cache.Upgrades[i].bci = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
+		if (isNaN(CM.Cache.Upgrades[i].bci)) CM.Cache.Upgrades[i].bci = 'Infinity';
 		var color = '';
 		if (CM.Cache.Upgrades[i].bci <= 0 || CM.Cache.Upgrades[i].bci == 'Infinity') color = CM.Disp.colorGray;
 		else if (CM.Cache.Upgrades[i].bci < CM.Disp.min) color = CM.Disp.colorBlue;
