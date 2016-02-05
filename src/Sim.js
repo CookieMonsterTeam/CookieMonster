@@ -119,14 +119,13 @@ CM.Sim.CalculateGains = function() {
 	CM.Sim.cookiesPs = 0;
 	var mult = 1;
 
-	var heavenlyMult = CM.Sim.GetHeavenlyMultiplier();
-	mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * heavenlyMult;
+	mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
 
 	var cookieMult = 0;
 	for (var i in CM.Sim.Upgrades) {
 		var me = CM.Sim.Upgrades[i];
 		if (me.bought > 0) {
-			if (Game.Upgrades[i].pool == 'cookie' && CM.Sim.Has(Game.Upgrades[i].name)) cookieMult += (typeof(Game.Upgrades[i].power) == 'function' ? Game.Upgrades[i].power(Game.Upgrades[i]) : Game.Upgrades[i].power);
+			if (Game.Upgrades[i].pool == 'cookie' && CM.Sim.Has(Game.Upgrades[i].name)) mult *= (1 + (typeof(Game.Upgrades[i].power) == 'function' ? Game.Upgrades[i].power(Game.Upgrades[i]) : Game.Upgrades[i].power) * 0.01);
 		}
 	}
 
@@ -143,7 +142,7 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('An itchy sweater')) mult *= 1.01;
 	if (CM.Sim.Has('Santa\'s dominion')) mult *= 1.2;
 
-	if (CM.Sim.Has('Santa\'s legacy')) mult *= 1 + (Game.santaLevel + 1) * 0.05;
+	if (CM.Sim.Has('Santa\'s legacy')) mult *= 1 + (Game.santaLevel + 1) * 0.03;
 
 	for (var i in CM.Sim.Objects) {
 		var me = CM.Sim.Objects[i];
@@ -155,10 +154,10 @@ CM.Sim.CalculateGains = function() {
 	var milkMult=1;
 	if (CM.Sim.Has('Santa\'s milk and cookies')) milkMult *= 1.05;
 	if (CM.Sim.hasAura('Breath of Milk')) milkMult *= 1.05;
-	if (CM.Sim.Has('Kitten helpers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.05 * milkMult);
-	if (CM.Sim.Has('Kitten workers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
-	if (CM.Sim.Has('Kitten engineers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten overseers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten helpers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
+	if (CM.Sim.Has('Kitten workers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.125 * milkMult);
+	if (CM.Sim.Has('Kitten engineers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
+	if (CM.Sim.Has('Kitten overseers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.175 * milkMult);
 	if (CM.Sim.Has('Kitten managers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten accountants')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten specialists')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
@@ -194,15 +193,20 @@ CM.Sim.CalculateGains = function() {
 	}
 
 	if (Game.frenzy > 0) mult *= Game.frenzyPower;
+	
+	// Pointless?
+	name = Game.bakeryName.toLowerCase();
+	if (name == 'orteil') mult *= 0.99;
+	else if (name == 'ortiel') mult*=0.0001; //or so help me
 
 	if (CM.Sim.Has('Elder Covenant')) mult *= 0.95;
 
 	if (CM.Sim.Has('Golden switch [off]')) {
-		var goldenSwitchMult = 1.25;
+		var goldenSwitchMult = 1.5;
 		if (CM.Sim.Has('Residual luck')) {
 			var upgrades = ['Get lucky', 'Lucky day', 'Serendipity', 'Heavenly luck', 'Lasting fortune', 'Decisive fate'];
 			for (var i in upgrades) {
-				if (CM.Sim.Has(upgrades[i])) goldenSwitchMult += 0.01;
+				if (CM.Sim.Has(upgrades[i])) goldenSwitchMult += 0.1;
 			}
 		}
 		mult *= goldenSwitchMult;
@@ -320,7 +324,7 @@ CM.Sim.BuyUpgrades = function() {
 			CM.Sim.CopyData();
 			var me = CM.Sim.Upgrades[i];
 			me.bought = 1;
-			if (Game.Upgrades[i].pool == '' || Game.Upgrades[i].pool == 'cookie' || Game.Upgrades[i].pool == 'tech') CM.Sim.UpgradesOwned++;
+			if (Game.CountsAsUpgradeOwned(Game.Upgrades[i].pool)) CM.Sim.UpgradesOwned++;
 
 			if (i == 'Elder Pledge') {
 				CM.Sim.pledges++;

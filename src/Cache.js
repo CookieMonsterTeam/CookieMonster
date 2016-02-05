@@ -85,13 +85,13 @@ CM.Cache.RemakeBCI = function() {
 }
 
 CM.Cache.RemakeLucky = function() {
-	CM.Cache.Lucky = (Game.cookiesPs * 60 * 20) / 0.1;
+	CM.Cache.Lucky = (Game.cookiesPs * 60 * 15) / 0.15;
 	if (Game.frenzy > 0) {
 		CM.Cache.Lucky /= Game.frenzyPower;
 	}
-	CM.Cache.LuckyReward = (CM.Cache.Lucky * 0.1) + 13;
+	CM.Cache.LuckyReward = (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
-	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.1) + 13;
+	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.15) + 13;
 }
 
 CM.Cache.MaxChainMoni = function(digit, maxPayout) {
@@ -107,7 +107,7 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout) {
 }
 
 CM.Cache.RemakeChain = function() {
-	var maxPayout = Game.cookiesPs * 60 * 60 * 3;
+	var maxPayout = Game.cookiesPs * 60 * 60 * 6;
 	if (Game.frenzy > 0) {
 		maxPayout /= Game.frenzyPower;
 	}
