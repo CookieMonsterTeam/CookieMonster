@@ -143,7 +143,6 @@ CM.Cache.RemakeChain = function() {
 	else {
 		base = CM.Cache.ChainWrathReward;
 	}
-	var count = 1;
 	if (maxPayout < base) {
 		CM.Cache.Chain = 0;
 	}
@@ -1313,7 +1312,7 @@ CM.Disp.AddMenuStats = function(title) {
 		var chainTime = (Game.cookies < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Chain - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
 		var chainColorFrenzy = (Game.cookies < CM.Cache.ChainFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var chainTimeFrenzy = (Game.cookies < CM.Cache.ChainFrenzy) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzy - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		var chainCurMax = Math.min(Game.cookiesPs * 60 * 60 * 3, Game.cookies * 0.25);
+		var chainCurMax = Math.min(Game.cookiesPs * 60 * 60 * 6, Game.cookies * 0.25);
 		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax);
 		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax);
 
@@ -1565,9 +1564,10 @@ CM.Disp.UpdateTooltipLocation = function() {
 		if (CM.Config.ToolWarnCaut == 1 && CM.Config.ToolWarnCautPos == 1) warnCautOffset = CM.Disp.TooltipWarnCaut.clientHeight - 4;
 		Game.tooltip.tta.style.top = Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnCautOffset - 46) + 'px';
 	}
-	else if (!Game.onCrate && !Game.OnAscend && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
-		Game.tooltip.tta.style.top = (parseInt(Game.tooltip.tta.style.top) + parseInt(CM.Disp.TimerBar.style.height)) + 'px';
-	}
+	// Kept for future possible use if the code changes again
+	/*else if (!Game.onCrate && !Game.OnAscend && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+		//Game.tooltip.tta.style.top = (parseInt(Game.tooltip.tta.style.top) + parseInt(CM.Disp.TimerBar.style.height)) + 'px';
+	}*/
 }
 
 CM.Disp.CreateTooltipWarnCaut = function() {
@@ -2011,6 +2011,19 @@ CM.ReplaceNative = function() {
 		CM.Backup.tooltip.updateMod();
 		CM.Disp.UpdateTooltipWarnCaut();
 		CM.Disp.UpdateTooltipLocation();
+	}
+	
+	CM.Backup.UpdateSpecial = Game.UpdateSpecial;
+	Game.UpdateSpecial = function() {
+		if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+			var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
+			Game.mouseY -= timerBarHeight;
+			CM.Backup.UpdateSpecial();
+			Game.mouseY += timerBarHeight;
+		}
+		else {
+			CM.Backup.UpdateSpecial();
+		}
 	}
 	
 	CM.Backup.RebuildUpgrades = Game.RebuildUpgrades;
