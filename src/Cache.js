@@ -123,7 +123,6 @@ CM.Cache.RemakeChain = function() {
 	else {
 		base = CM.Cache.ChainWrathReward;
 	}
-	var count = 1;
 	if (maxPayout < base) {
 		CM.Cache.Chain = 0;
 	}
