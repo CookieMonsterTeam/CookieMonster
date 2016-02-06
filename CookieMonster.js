@@ -2126,7 +2126,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateChoEggTooltip();
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
-	CM.Disp.AddTooltipBuildExtra();
+	//CM.Disp.AddTooltipBuildExtra(); // The extra per building was removed
 	CM.Disp.AddWrinklerAreaDetect();
 	CM.ReplaceNative();
 	Game.CalculateGains();
@@ -2142,7 +2142,7 @@ CM.DelayInit = function() {
 CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWarnCautBon: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3'}};
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '1.906';
+CM.VersionMajor = '1.907';
 CM.VersionMinor = '1';
 
 /*******
@@ -2177,7 +2177,11 @@ CM.Sim.BuildingSell = function(basePrice, start, amount) {
 	return totalMoni;
 }
 
-eval('CM.Sim.Has = ' + Game.Has.toString().split('Game').join('CM.Sim'));
+CM.Sim.Has = function(what) {
+	if (Game.ascensionMode == 1 && Game.Upgrades[what].pool == 'prestige') return 0;
+	return (CM.Sim.Upgrades[what] ? CM.Sim.Upgrades[what].bought : 0);
+}
+
 
 CM.Sim.Win = function(what) {
 	if (CM.Sim.Achievements[what]) {
@@ -2266,7 +2270,7 @@ CM.Sim.CalculateGains = function() {
 	CM.Sim.cookiesPs = 0;
 	var mult = 1;
 
-	mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
+	if (Game.ascensionMode != 1) mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
 
 	var cookieMult = 0;
 	for (var i in CM.Sim.Upgrades) {
@@ -2344,7 +2348,7 @@ CM.Sim.CalculateGains = function() {
 	// Pointless?
 	name = Game.bakeryName.toLowerCase();
 	if (name == 'orteil') mult *= 0.99;
-	else if (name == 'ortiel') mult*=0.0001; //or so help me
+	else if (name == 'ortiel') mult *= 0.98; //or so help me
 
 	if (CM.Sim.Has('Elder Covenant')) mult *= 0.95;
 

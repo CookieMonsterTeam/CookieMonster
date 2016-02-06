@@ -30,7 +30,11 @@ CM.Sim.BuildingSell = function(basePrice, start, amount) {
 	return totalMoni;
 }
 
-eval('CM.Sim.Has = ' + Game.Has.toString().split('Game').join('CM.Sim'));
+CM.Sim.Has = function(what) {
+	if (Game.ascensionMode == 1 && Game.Upgrades[what].pool == 'prestige') return 0;
+	return (CM.Sim.Upgrades[what] ? CM.Sim.Upgrades[what].bought : 0);
+}
+
 
 CM.Sim.Win = function(what) {
 	if (CM.Sim.Achievements[what]) {
@@ -119,7 +123,7 @@ CM.Sim.CalculateGains = function() {
 	CM.Sim.cookiesPs = 0;
 	var mult = 1;
 
-	mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
+	if (Game.ascensionMode != 1) mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
 
 	var cookieMult = 0;
 	for (var i in CM.Sim.Upgrades) {
@@ -197,7 +201,7 @@ CM.Sim.CalculateGains = function() {
 	// Pointless?
 	name = Game.bakeryName.toLowerCase();
 	if (name == 'orteil') mult *= 0.99;
-	else if (name == 'ortiel') mult*=0.0001; //or so help me
+	else if (name == 'ortiel') mult *= 0.98; //or so help me
 
 	if (CM.Sim.Has('Elder Covenant')) mult *= 0.95;
 
