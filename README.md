@@ -90,7 +90,7 @@ javascript:(function() {
     }, 1000);
 }());
 ```
-If you are using cookie clicker beta use this instead:
+If you are using the beta, use this instead:
 
 ```javascript
 // ==UserScript==
