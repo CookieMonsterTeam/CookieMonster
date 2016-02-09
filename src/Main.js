@@ -54,7 +54,7 @@ CM.ReplaceNative = function() {
 	Game.RebuildUpgrades = function() {
 		CM.Backup.RebuildUpgrades();
 		CM.Disp.AddTooltipUpgrade();
-		Game.recalculateGains = 1;
+		CM.Sim.DoSims = 1;
 	}
 	
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
