@@ -1797,7 +1797,7 @@ CM.Disp.UpdateTooltip = function() {
 				if (Game.frenzy > 0) {
 					bonusNoFren /= Game.frenzyPower;
 				}
-				warn += ((bonusNoFren * 60 * 20) / 0.1);
+				warn += ((bonusNoFren * 60 * 15) / 0.15);
 			}
 			var caut = warn * 7;
 			var amount = Game.cookies - price;
