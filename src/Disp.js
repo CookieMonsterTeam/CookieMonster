@@ -48,7 +48,7 @@ CM.Disp.GetTimeColor = function(price, bank, cps) {
 	return {text: text, color: color};
 }
 
-CM.Disp.Beautify = function(num) {
+CM.Disp.Beautify = function(num, frac) {
 	if (CM.Config.Scale != 0 && isFinite(num)) {
 		var answer = '';
 		var negative = false;
@@ -72,7 +72,7 @@ CM.Disp.Beautify = function(num) {
 			}
 		}
 		if (answer == '') {
-			answer = CM.Backup.Beautify(num);
+			answer = CM.Backup.Beautify(num, frac);
 		}
 		
 		if (negative) {
@@ -81,7 +81,7 @@ CM.Disp.Beautify = function(num) {
 		return answer;
 	}
 	else {
-		return CM.Backup.Beautify(num);
+		return CM.Backup.Beautify(num, frac);
 	}
 }
 
@@ -236,7 +236,7 @@ CM.Disp.CreateTimerBar = function() {
 		var type = document.createElement('span');
 		type.style.display = 'inline-block';
 		type.style.textAlign = 'right';
-		type.style.width = '71px';
+		type.style.width = '78px';
 		type.style.marginRight = '5px';
 		type.style.verticalAlign = 'text-top';
 		type.textContent = name;
@@ -295,7 +295,8 @@ CM.Disp.CreateTimerBar = function() {
 	CM.Disp.TimerBarCF.style.height = '12px';
 	CM.Disp.TimerBarCF.style.margin = '0px 10px';
 	CM.Disp.TimerBarCF.style.position = 'relative';
-	CM.Disp.TimerBarCF.appendChild(bar('Click Frenzy', [{id: 'CMTimerBarCFBar', color: CM.Disp.colorBlue}], 'CMTimerBarCFTime'));
+	CM.Disp.TimerBarCF.appendChild(bar('', [{id: 'CMTimerBarCFBar'}], 'CMTimerBarCFTime'));
+	CM.Disp.TimerBarCF.firstChild.firstChild.id = 'CMTimerBarCFType';
 	CM.Disp.TimerBar.appendChild(CM.Disp.TimerBarCF);
 	
 	l('wrapper').appendChild(CM.Disp.TimerBar);
@@ -327,8 +328,8 @@ CM.Disp.ToggleTimerBarPos = function() {
 
 CM.Disp.UpdateTimerBar = function() {
 	if (CM.Config.TimerBar == 1) {
-		// label width: 76	timer width: 26 div margin: 20
-		var maxWidth = CM.Disp.TimerBar.offsetWidth - 122;
+		// label width: 83	timer width: 26 div margin: 20
+		var maxWidth = CM.Disp.TimerBar.offsetWidth - 129;
 		var count = 0;
 		
 		if (Game.goldenCookie.life <= 0 && Game.goldenCookie.toDie == 0) {
@@ -371,6 +372,10 @@ CM.Disp.UpdateTimerBar = function() {
 				l('CMTimerBarFrenType').textContent = 'Clot';
 				l('CMTimerBarFrenBar').className = CM.Disp.colorBackPre + CM.Disp.colorRed;
 			}
+			else if (Game.frenzyPower == 15) {
+				l('CMTimerBarFrenType').textContent = 'Dragon Harvest';
+				l('CMTimerBarFrenBar').className = CM.Disp.colorBackPre + CM.Disp.colorPurple;
+			}
 			else {
 				l('CMTimerBarFrenType').textContent = 'Blood Frenzy';
 				l('CMTimerBarFrenBar').className = CM.Disp.colorBackPre + CM.Disp.colorGreen;
@@ -385,6 +390,14 @@ CM.Disp.UpdateTimerBar = function() {
 		
 		if (Game.clickFrenzy > 0) {
 			CM.Disp.TimerBarCF.style.display = '';
+			if (Game.clickFrenzyPower == 777) {
+				l('CMTimerBarCFType').textContent = 'Click Frenzy';
+				l('CMTimerBarCFBar').className = CM.Disp.colorBackPre + CM.Disp.colorBlue;
+			}
+			else {
+				l('CMTimerBarCFType').textContent = 'Dragonflight';
+				l('CMTimerBarCFBar').className = CM.Disp.colorBackPre + CM.Disp.colorPurple;
+			}
 			l('CMTimerBarCFBar').style.width = Math.round(Game.clickFrenzy * maxWidth / Game.clickFrenzyMax) + 'px';
 			l('CMTimerBarCFTime').textContent = Math.ceil(Game.clickFrenzy / Game.fps);
 			count++;
@@ -530,13 +543,18 @@ CM.Disp.UpdateUpgrades = function() {
 
 		for (var i in Game.UpgradesInStore) {
 			var me = Game.UpgradesInStore[i];
-			if (l('upgrade' + i).childNodes.length > 0) {
-				l('upgrade' + i).childNodes[0].className = CM.Disp.colorBackPre + CM.Cache.Upgrades[me.name].color;
+			var addedColor = false;
+			for (var j = 0; j < l('upgrade' + i).childNodes.length; j++) {
+				if (l('upgrade' + i).childNodes[j].className.indexOf(CM.Disp.colorBackPre) != -1) {
+					l('upgrade' + i).childNodes[j].className = CM.Disp.colorBackPre + CM.Cache.Upgrades[me.name].color;
+					addedColor = true;
+					break;
+				}
 			}
-			else {
+			if (!addedColor) {
 				var div = document.createElement('div');
-				div.style.width = '17px';
-				div.style.height = '17px';
+				div.style.width = '10px';
+				div.style.height = '10px';
 				div.className = CM.Disp.colorBackPre + CM.Cache.Upgrades[me.name].color;
 				l('upgrade' + i).appendChild(div);
 			}
@@ -682,8 +700,12 @@ CM.Disp.UpdateTitle = function() {
 		var titleGC;
 		var titleSP;
 		if (l('goldenCookie').style.display != 'none') {
-			addGC = true;
-			titleGC = '[G ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
+			if (Game.goldenCookie.wrath) {
+				titleGC = '[W ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
+			}
+			else {
+				titleGC = '[G ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
+			}
 		}
 		else {
 			titleGC = '[' +  Math.ceil((Game.goldenCookie.maxTime - Game.goldenCookie.time) / Game.fps) + ']';
@@ -867,7 +889,7 @@ CM.Disp.AddMenuPref = function(title) {
 	l('menu').childNodes[2].insertBefore(frag, l('menu').childNodes[2].childNodes[l('menu').childNodes[2].childNodes.length - 1]);
 		
 	CM.Disp.FormatButtonOnClickBak = l('formatButton').onclick;
-	l('formatButton').onclick = function() {Game.Toggle('format', 'formatButton', 'Short numbers OFF', 'Short numbers ON'); CM.Disp.RefreshScale();};
+	l('formatButton').onclick = function() {Game.Toggle('format', 'formatButton', 'Short numbers OFF', 'Short numbers ON', '1'); PlaySound('snd/tick.mp3'); CM.Disp.RefreshScale();};
 }
 
 CM.Disp.AddMenuStats = function(title) {
@@ -919,7 +941,7 @@ CM.Disp.AddMenuStats = function(title) {
 		var luckyTime = (Game.cookies < CM.Cache.Lucky) ? CM.Disp.FormatTime((CM.Cache.Lucky - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
 		var luckyColorFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var luckyTimeFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		var luckyCur = Math.min(Game.cookies * 0.1, Game.cookiesPs * 60 * 20) + 13;
+		var luckyCur = Math.min(Game.cookies * 0.15, Game.cookiesPs * 60 * 15) + 13;
 	
 		var luckyReqFrag = document.createDocumentFragment();
 		var luckyReqSpan = document.createElement('span');
@@ -956,7 +978,7 @@ CM.Disp.AddMenuStats = function(title) {
 		var chainTime = (Game.cookies < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Chain - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
 		var chainColorFrenzy = (Game.cookies < CM.Cache.ChainFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var chainTimeFrenzy = (Game.cookies < CM.Cache.ChainFrenzy) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzy - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		var chainCurMax = Math.min(Game.cookiesPs * 60 * 60 * 3, Game.cookies * 0.25);
+		var chainCurMax = Math.min(Game.cookiesPs * 60 * 60 * 6, Game.cookies * 0.25);
 		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax);
 		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax);
 
@@ -992,25 +1014,22 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing('\"Chain\" Reward (CUR) (Wrath)',  document.createTextNode(Beautify(chainCurWrath))));
 	}
 	
-	stats.appendChild(header('Heavenly Chips', 'HC'));
+	// Useless for now; cleanup later
+	/*stats.appendChild(header('Heavenly Chips', 'HC'));
 	if (CM.Config.StatsPref.HC) {
 		var possibleHC = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
-		var neededCook = CM.Sim.CookNeedPrest(possibleHC + 1) - (Game.cookiesEarned + Game.cookiesReset);
+		var neededCook = Game.HowManyCookiesReset(possibleHC + 1) - (Game.cookiesEarned + Game.cookiesReset);
 
 		var hcMaxFrag = document.createDocumentFragment();
 		hcMaxFrag.appendChild(document.createTextNode(Beautify(possibleHC)));
-		var hcMaxSmall = document.createElement('small');
-		hcMaxSmall.textContent = ' (' + Beautify((possibleHC * 2)) + '%)';
-		hcMaxFrag.appendChild(hcMaxSmall);
 		stats.appendChild(listing('Heavenly Chips (MAX)',  hcMaxFrag));
 		var hcCurFrag = document.createDocumentFragment();
-		hcCurFrag.appendChild(document.createTextNode(Beautify(Game.prestige['Heavenly chips'])));
-		var hcCurSmall = document.createElement('small');
-		hcCurSmall.textContent = ' (' + Beautify((Game.prestige['Heavenly chips'] * 2)) + '%)';
-		hcCurFrag.appendChild(hcCurSmall);
-		stats.appendChild(listing('Heavenly Chips (CUR)',  hcCurFrag));
+		// Remove all chip stats?
+		//hcCurFrag.appendChild(document.createTextNode(Beautify(Game.heavenlyChipsEarned)));
+		//stats.appendChild(listing('Heavenly Chips (CUR)',  hcCurFrag));
 		stats.appendChild(listing('Cookies To Next Chip',  document.createTextNode(Beautify(neededCook))));
 		stats.appendChild(listing('Time To Next Chip',  document.createTextNode(CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1))));
+		// Unneeded? 
 		var resetTitleFrag = document.createDocumentFragment();
 		resetTitleFrag.appendChild(document.createTextNode('Reset Bonus Income '))
 		var resetTitleSpan = document.createElement('span');
@@ -1037,24 +1056,28 @@ CM.Disp.AddMenuStats = function(title) {
 			resetSmall.textContent = ' (' + (increase / 100) + '% of income)';
 			resetFrag.appendChild(resetSmall);
 		}
-		stats.appendChild(listing(resetTitleFrag, resetFrag));
-	}
+		//stats.appendChild(listing(resetTitleFrag, resetFrag));
+	}*/
 	
 	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
 	
 	if (Game.cpsSucked > 0) {
 		stats.appendChild(header('Wrinklers', 'Wrink'));
 		if (CM.Config.StatsPref.Wrink || (CM.Config.StatsPref.Sea && choEgg)) {
-			var sucked = 0;
+			var totalSucked = 0;
 			for (var i in Game.wrinklers) {
-				sucked += Game.wrinklers[i].sucked;
+				var sucked = Game.wrinklers[i].sucked;
+				var toSuck = 1.1;
+				if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
+				if (Game.wrinklers[i].type==1) toSuck *= 3; //shiny wrinklers are an elusive, profitable breed
+				sucked *= toSuck;
+				if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+				totalSucked += sucked;
 			}
-			sucked *= 1.1;
-			if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 			
 			if (CM.Config.StatsPref.Wrink) {
 				var popAllFrag = document.createDocumentFragment();
-				popAllFrag.appendChild(document.createTextNode(Beautify(sucked) + ' '));
+				popAllFrag.appendChild(document.createTextNode(Beautify(totalSucked) + ' '));
 				var popAllA = document.createElement('a');
 				popAllA.textContent = 'Pop All';
 				popAllA.className = 'option';
@@ -1199,15 +1222,19 @@ CM.Disp.AddMenu = function() {
 }
 
 CM.Disp.RefreshMenu = function() {
-	if (CM.Config.UpStats && Game.onMenu == 'stats' && Game.drawT % (Game.fps * 3) != 0 && Game.drawT % Game.fps == 0) Game.UpdateMenu();
+	if (CM.Config.UpStats && Game.onMenu == 'stats' && Game.drawT % (Game.fps * 5) != 0 && Game.drawT % Game.fps == 0) Game.UpdateMenu();
 }
 
 CM.Disp.UpdateTooltipLocation = function() {
-	Game.tooltip.tta.style.top = Math.max(0, Math.min((l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - CM.Disp.TooltipWarnCaut.clientHeight - 64, Game.mouseY - 48)) + 'px';
-	if (Game.tooltip.origin == 'wrink') {
-		Game.tooltip.tta.style.left = (Game.mouseX + l('tooltip').offsetWidth + 25) + 'px';
-		Game.tooltip.tta.style.right = 'auto';
+	if (Game.tooltip.origin == 'store') {
+		var warnCautOffset = 0;
+		if (CM.Config.ToolWarnCaut == 1 && CM.Config.ToolWarnCautPos == 1) warnCautOffset = CM.Disp.TooltipWarnCaut.clientHeight - 4;
+		Game.tooltip.tta.style.top = Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnCautOffset - 46) + 'px';
 	}
+	// Kept for future possible use if the code changes again
+	/*else if (!Game.onCrate && !Game.OnAscend && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+		//Game.tooltip.tta.style.top = (parseInt(Game.tooltip.tta.style.top) + parseInt(CM.Disp.TimerBar.style.height)) + 'px';
+	}*/
 }
 
 CM.Disp.CreateTooltipWarnCaut = function() {
@@ -1263,11 +1290,13 @@ CM.Disp.ToggleToolWarnCaut = function() {
 
 CM.Disp.ToggleToolWarnCautPos = function() {
 	if (CM.Config.ToolWarnCautPos == 0) {
-		CM.Disp.TooltipWarnCaut.style.top = '12px';
+		CM.Disp.TooltipWarnCaut.style.top = 'auto';
+		CM.Disp.TooltipWarnCaut.style.margin = '4px -4px';
 		CM.Disp.TooltipWarnCaut.style.padding = '3px 4px';
 	}
 	else {
-		CM.Disp.TooltipWarnCaut.style.right = '12px';
+		CM.Disp.TooltipWarnCaut.style.right = 'auto';
+		CM.Disp.TooltipWarnCaut.style.margin = '4px';
 		CM.Disp.TooltipWarnCaut.style.padding = '4px 3px';
 	}
 }
@@ -1278,7 +1307,7 @@ CM.Disp.AddTooltipBuild = function() {
 		var me = Game.Objects[i];
 		if (l('product' + me.id).onmouseover != null) {
 			CM.Disp.TooltipBuildBack[i] = l('product' + me.id).onmouseover;
-			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\');}');
+			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}');
 		}
 	}
 }
@@ -1289,7 +1318,7 @@ CM.Disp.AddTooltipUpgrade = function() {
 		var me = Game.UpgradesInStore[i];
 		if (l('upgrade' + i).onmouseover != null) {
 			CM.Disp.TooltipUpgradeBack[i] = l('upgrade' + i).onmouseover;
-			eval('l(\'upgrade\' + i).onmouseover = function() {CM.Disp.Tooltip(\'u\', \'' + i + '\');}');
+			eval('l(\'upgrade\' + i).onmouseover = function() {if (!Game.mouseDown) {Game.setOnCrate(this); Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'u\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}}');
 		}
 	}
 }
@@ -1327,7 +1356,8 @@ CM.Disp.Tooltip = function(type, name) {
 		}
 	}
 	else { // Upgrades
-		CM.Disp.TooltipUpgradeBack[name]();
+		if (!Game.UpgradesInStore[name]) return '';
+		l('tooltip').innerHTML = Game.crate(Game.UpgradesInStore[name], 'store', undefined, undefined, 1)();
 	}
 	
 	var area = document.createElement('div');
@@ -1373,9 +1403,7 @@ CM.Disp.Tooltip = function(type, name) {
 
 	CM.Disp.UpdateTooltip();
 	
-	if (type == 'b') {
-		return l('tooltip').innerHTML;
-	}	
+	return l('tooltip').innerHTML;
 }
 
 CM.Disp.UpdateTooltip = function() {
@@ -1437,10 +1465,10 @@ CM.Disp.UpdateTooltip = function() {
 			var amount = Game.cookies - price;
 			if (amount < warn || amount < caut) {
 				if (CM.Config.ToolWarnCautPos == 0) {
-					CM.Disp.TooltipWarnCaut.style.right = (l('tooltip').offsetWidth + 12) + 'px';
+					CM.Disp.TooltipWarnCaut.style.right = '0px';
 				}
 				else {
-					CM.Disp.TooltipWarnCaut.style.top = (l('tooltip').offsetHeight + 12) + 'px';
+					CM.Disp.TooltipWarnCaut.style.top = (l('tooltip').offsetHeight) + 'px';
 				}
 				CM.Disp.TooltipWarnCaut.style.width = (l('tooltip').offsetWidth - 6) + 'px';
 			
@@ -1521,7 +1549,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
 					div.id = 'CMTooltipWrinkler';
 					wrinkler.appendChild(div);
 					placeholder.appendChild(wrinkler);
-					Game.tooltip.draw(this, escape(placeholder.innerHTML), 'wrink');
+					Game.tooltip.draw(this, escape(placeholder.innerHTML));
 					CM.Disp.TooltipWrinkler = i;
 					CM.Disp.TooltipWrinklerCache[i] = 1;
 				}
@@ -1540,10 +1568,27 @@ CM.Disp.CheckWrinklerTooltip = function() {
 CM.Disp.UpdateWrinklerTooltip = function() {
 	if (CM.Config.ToolWrink == 1 && l('CMTooltipWrinkler') != null) {
 		var sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
-		sucked *= 1.1;
+		var toSuck = 1.1;
+		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
+		if (Game.wrinklers[CM.Disp.TooltipWrinkler].type == 1) toSuck *= 3; //shiny wrinklers are an elusive, profitable breed
+		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 		l('CMTooltipWrinkler').textContent = Beautify(sucked);
 	}
+}
+
+CM.Disp.UpdateAscendState = function() {
+	if (Game.OnAscend) {
+		l('game').style.bottom = '0px';
+		if (CM.Config.BotBar == 1) CM.Disp.BotBar.style.display = 'none';
+		if (CM.Config.TimerBar == 1) CM.Disp.TimerBar.style.display = 'none';
+	}
+	else {
+		CM.Disp.ToggleBotBar();
+		CM.Disp.ToggleTimerBar();
+	}
+
+	CM.Disp.UpdateBackground();
 }
 
 CM.Disp.ToggleSayTime = function() {
@@ -1580,6 +1625,7 @@ CM.Disp.colorPurple = 'Purple';
 CM.Disp.colorGray = 'Gray';
 CM.Disp.colors = [ CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray];
 CM.Disp.lastGoldenCookieState = 'none';
+CM.Disp.lastAscendState = -1;
 
 CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];
