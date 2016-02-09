@@ -1797,7 +1797,7 @@ CM.Disp.UpdateTooltip = function() {
 				if (Game.frenzy > 0) {
 					bonusNoFren /= Game.frenzyPower;
 				}
-				warn += ((bonusNoFren * 60 * 20) / 0.1);
+				warn += ((bonusNoFren * 60 * 15) / 0.15);
 			}
 			var caut = warn * 7;
 			var amount = Game.cookies - price;
@@ -2035,7 +2035,7 @@ CM.ReplaceNative = function() {
 	Game.RebuildUpgrades = function() {
 		CM.Backup.RebuildUpgrades();
 		CM.Disp.AddTooltipUpgrade();
-		Game.recalculateGains = 1;
+		Game.CalculateGains();
 	}
 	
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
@@ -2148,7 +2148,7 @@ CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBar
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2';
-CM.VersionMinor = '1';
+CM.VersionMinor = '2';
 
 /*******
  * Sim *

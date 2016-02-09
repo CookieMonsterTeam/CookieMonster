@@ -54,7 +54,7 @@ CM.ReplaceNative = function() {
 	Game.RebuildUpgrades = function() {
 		CM.Backup.RebuildUpgrades();
 		CM.Disp.AddTooltipUpgrade();
-		Game.recalculateGains = 1;
+		Game.CalculateGains();
 	}
 	
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
@@ -167,5 +167,5 @@ CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBar
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2';
-CM.VersionMinor = '1';
+CM.VersionMinor = '2';
 
