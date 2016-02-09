@@ -60,6 +60,14 @@ javascript: (function () {
 
 If (for some reason) the above doesn't work, trying pasting everything after the <code>javascript:</code> bit into your browser's console.
 
+For beta, use the following instead:
+
+```javascript
+javascript: (function () {
+	Game.LoadMod('http://aktanusa.github.io/CookieMonster/CookieMonsterBeta.js');
+}());
+```
+
 ## Userscript
 
 If you'd rather use the addon as a script via per example *Greasemonkey* or *Tampermonkey*, you can use the following script, which will automatically load *Cookie Monster* every time the original game loads. You may need to specify <code>http://orteil.dashnet.org/cookieclicker/</code> when asked for a *namespace* or *includes*. For how to add an userscript to your browser, refer to your browser/plugin's documentation as the method changes for each one.
@@ -77,6 +85,26 @@ javascript:(function() {
     var checkReady = setInterval(function() {
         if (typeof Game.ready !== 'undefined' && Game.ready) {
             Game.LoadMod('http://aktanusa.github.io/CookieMonster/CookieMonster.js');
+            clearInterval(checkReady);
+        }
+    }, 1000);
+}());
+```
+If you are using cookie clicker beta use this instead:
+
+```javascript
+// ==UserScript==
+// @name Cookie Monster Beta
+// @namespace Cookie
+// @include http://orteil.dashnet.org/cookieclicker/beta/
+// @version 1
+// @grant none
+// ==/UserScript==
+
+javascript:(function() {
+    var checkReady = setInterval(function() {
+        if (typeof Game.ready !== 'undefined' && Game.ready) {
+            Game.LoadMod('http://aktanusa.github.io/CookieMonster/CookieMonsterBeta.js');
             clearInterval(checkReady);
         }
     }, 1000);
