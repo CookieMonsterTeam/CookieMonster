@@ -1014,7 +1014,8 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing('\"Chain\" Reward (CUR) (Wrath)',  document.createTextNode(Beautify(chainCurWrath))));
 	}
 	
-	stats.appendChild(header('Heavenly Chips', 'HC'));
+	// Useless for now; cleanup later
+	/*stats.appendChild(header('Heavenly Chips', 'HC'));
 	if (CM.Config.StatsPref.HC) {
 		var possibleHC = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
 		var neededCook = Game.HowManyCookiesReset(possibleHC + 1) - (Game.cookiesEarned + Game.cookiesReset);
@@ -1056,7 +1057,7 @@ CM.Disp.AddMenuStats = function(title) {
 			resetFrag.appendChild(resetSmall);
 		}
 		//stats.appendChild(listing(resetTitleFrag, resetFrag));
-	}
+	}*/
 	
 	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
 	
