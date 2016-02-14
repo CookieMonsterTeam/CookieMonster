@@ -872,6 +872,7 @@ CM.Disp.AddMenuPref = function(title) {
 	
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
+	frag.appendChild(listing('MissedGCs'));
 	frag.appendChild(listing('UpStats'));
 	frag.appendChild(listing('SayTime'));
 	
@@ -1198,6 +1199,16 @@ CM.Disp.AddMenuStats = function(title) {
 				}
 				choEggTotal *= 0.05;
 				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(choEggTotal))));
+			}
+			
+			var miscStatsNeeded = CM.Config.MissedGCs; //meaningless for now, only matters if extra misc stats are added
+			if (miscStatsNeeded) {
+				stats.appendChild(header('Misc Stats', 'Misc'));
+				if (CM.Config.StatsPref.Misc) {
+					if (CM.Config.MissedGCs) {
+						stats.appendChild(listing('Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
+					}
+				}
 			}
 		}
 	}
