@@ -872,7 +872,6 @@ CM.Disp.AddMenuPref = function(title) {
 	
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
-	frag.appendChild(listing('MissedGCs'));
 	frag.appendChild(listing('UpStats'));
 	frag.appendChild(listing('SayTime'));
 	
