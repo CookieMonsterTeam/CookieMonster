@@ -40,7 +40,7 @@ CM.LoadConfig = function() {
 				}
 			}
 			else { // Colors
-				for (var j in CM.ConfigDefault.StatsPref) {
+				for (var j in CM.ConfigDefault.Colors) {
 					if (typeof CM.Config[i][j] === 'undefined' || typeof CM.Config[i][j] != 'string') {
 						mod = true;
 						CM.Config[i][j] = CM.ConfigDefault[i][j];
