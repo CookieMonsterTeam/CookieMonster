@@ -317,6 +317,7 @@ CM.ConfigData.GCSoundURL = {label: 'Golden Cookie Sound URL:', desc: 'URL of the
 CM.ConfigData.SeaSoundURL = {label: 'Season Special Sound URL:', desc: 'URL of the sound to be played when a Season Special spawns'};
 CM.ConfigData.GCTimer = {label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', func: function() {CM.Disp.ToggleGCTimer();}};
 CM.ConfigData.Title = {label: ['Title OFF', 'Title ON'], desc: 'Update title with Golden Cookie/Season Popup timers'};
+CM.ConfigData.Favicon = {label: ['Favicon OFF', 'Favicon ON'], desc: 'Update favicon with Golden/Wrath Cookie', func: function() {CM.Disp.UpdateFavicon();}};
 CM.ConfigData.Tooltip = {label: ['Tooltip Information OFF', 'Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades'};
 CM.ConfigData.TooltipAmor = {label: ['Tooltip Amortization Information OFF', 'Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip'};
 CM.ConfigData.ToolWarnCaut = {label: ['Tooltip Warning/Caution OFF', 'Tooltip Warning/Caution ON'], desc: 'A warning/caution when buying if it will put the bank under the amount needed for max "Lucky!"/"Lucky!" (Frenzy) rewards', func: function() {CM.Disp.ToggleToolWarnCaut();}};
@@ -972,6 +973,28 @@ CM.Disp.PlaySound = function(url) {
 	}
 }
 
+CM.Disp.CreateFavicon = function() {
+	CM.Disp.Favicon = document.createElement('link');
+	CM.Disp.Favicon.id = 'CMFavicon';
+	CM.Disp.Favicon.rel = 'shortcut icon';
+	CM.Disp.Favicon.href = 'http://orteil.dashnet.org/cookieclicker/favicon.ico';
+	document.getElementsByTagName('head')[0].appendChild(CM.Disp.Favicon);
+}
+
+CM.Disp.UpdateFavicon = function() {
+	if (CM.Config.Favicon == 1 && l('goldenCookie').style.display != 'none') {
+		if (Game.goldenCookie.wrath) {
+			CM.Disp.Favicon.href = 'http://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
+		}
+		else {
+			CM.Disp.Favicon.href = 'http://aktanusa.github.io/CookieMonster/favicon/goldenCookie.ico';
+		}
+	}
+	else {
+		CM.Disp.Favicon.href = 'http://orteil.dashnet.org/cookieclicker/favicon.ico';
+	}
+}
+
 CM.Disp.CreateGCTimer = function() {
 	CM.Disp.GCTimer = document.createElement('div');
 	CM.Disp.GCTimer.style.width = '96px';
@@ -1005,6 +1028,7 @@ CM.Disp.ToggleGCTimer = function() {
 CM.Disp.CheckGoldenCookie = function() {
 	if (CM.Disp.lastGoldenCookieState != l('goldenCookie').style.display) {
 		CM.Disp.lastGoldenCookieState = l('goldenCookie').style.display;
+		CM.Disp.UpdateFavicon();
 		if (l('goldenCookie').style.display != 'none') {
 			if (CM.Config.GCTimer == 1) {
 				CM.Disp.GCTimer.style.display = 'block';
@@ -1199,6 +1223,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(url('SeaSoundURL'));
 	frag.appendChild(listing('GCTimer'));
 	frag.appendChild(listing('Title'));
+	frag.appendChild(listing('Favicon'));
 	
 	frag.appendChild(header('Tooltip'));
 	frag.appendChild(listing('Tooltip'));
@@ -2131,6 +2156,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateTimerBar();
 	CM.Disp.CreateUpgradeBar();
 	CM.Disp.CreateWhiteScreen();
+	CM.Disp.CreateFavicon();
 	CM.Disp.CreateGCTimer();
 	CM.Disp.CreateResetTooltip();
 	CM.Disp.CreateChoEggTooltip();
@@ -2149,7 +2175,7 @@ CM.DelayInit = function() {
 	Game.Win('Third-party');
 }
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWarnCautBon: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3'}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWarnCautBon: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3'}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2';

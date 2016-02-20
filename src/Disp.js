@@ -634,6 +634,28 @@ CM.Disp.PlaySound = function(url) {
 	}
 }
 
+CM.Disp.CreateFavicon = function() {
+	CM.Disp.Favicon = document.createElement('link');
+	CM.Disp.Favicon.id = 'CMFavicon';
+	CM.Disp.Favicon.rel = 'shortcut icon';
+	CM.Disp.Favicon.href = 'http://orteil.dashnet.org/cookieclicker/favicon.ico';
+	document.getElementsByTagName('head')[0].appendChild(CM.Disp.Favicon);
+}
+
+CM.Disp.UpdateFavicon = function() {
+	if (CM.Config.Favicon == 1 && l('goldenCookie').style.display != 'none') {
+		if (Game.goldenCookie.wrath) {
+			CM.Disp.Favicon.href = 'http://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
+		}
+		else {
+			CM.Disp.Favicon.href = 'http://aktanusa.github.io/CookieMonster/favicon/goldenCookie.ico';
+		}
+	}
+	else {
+		CM.Disp.Favicon.href = 'http://orteil.dashnet.org/cookieclicker/favicon.ico';
+	}
+}
+
 CM.Disp.CreateGCTimer = function() {
 	CM.Disp.GCTimer = document.createElement('div');
 	CM.Disp.GCTimer.style.width = '96px';
@@ -667,6 +689,7 @@ CM.Disp.ToggleGCTimer = function() {
 CM.Disp.CheckGoldenCookie = function() {
 	if (CM.Disp.lastGoldenCookieState != l('goldenCookie').style.display) {
 		CM.Disp.lastGoldenCookieState = l('goldenCookie').style.display;
+		CM.Disp.UpdateFavicon();
 		if (l('goldenCookie').style.display != 'none') {
 			if (CM.Config.GCTimer == 1) {
 				CM.Disp.GCTimer.style.display = 'block';
@@ -861,6 +884,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(url('SeaSoundURL'));
 	frag.appendChild(listing('GCTimer'));
 	frag.appendChild(listing('Title'));
+	frag.appendChild(listing('Favicon'));
 	
 	frag.appendChild(header('Tooltip'));
 	frag.appendChild(listing('Tooltip'));
