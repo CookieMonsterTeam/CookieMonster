@@ -306,7 +306,7 @@ CM.ConfigData.TimerBar = {label: ['Timer Bar OFF', 'Timer Bar ON'], desc: 'Timer
 CM.ConfigData.TimerBarPos = {label: ['Timer Bar Position (Top Left)', 'Timer Bar Position (Bottom)'], desc: 'Placement of the Timer Bar', func: function() {CM.Disp.ToggleTimerBarPos();}};
 CM.ConfigData.BuildColor = {label: ['Building Colors OFF', 'Building Colors ON'], desc: 'Color code buildings', func: function() {CM.Disp.UpdateBuildings();}};
 CM.ConfigData.UpBarColor = {label: ['Upgrade Bar/Colors OFF', 'Upgrade Bar/Colors ON'], desc: 'Color code upgrades and add a counter', func: function() {CM.Disp.ToggleUpBarColor();}};
-CM.ConfigData.Colors = {desc: {Blue: 'Color for better than best BCI building', Green: 'Color for best BCI building', Yellow: 'Color for between best and worst BCI buildings closer to best', Orange: 'Color for between best and worst BCI buildings closer to worst', Red: 'Color for worst BCI building', Purple: 'Color for worse than worst BCI building', Gray: 'Color for negative or infinity BCI'}, func: function() {CM.Disp.UpdateColors();}};
+CM.ConfigData.Colors = {desc: {Blue: 'Color Blue.  Used to show better than best BCI building, for Click Frenzy bar, and for various labels', Green: 'Color Green.  Used to show best BCI building, for Blood Frenzy bar, and for various labels', Yellow: 'Color Yellow.  Used to show between best and worst BCI buildings closer to best, for Frenzy bar, and for various labels', Orange: 'Color Orange.  Used to show between best and worst BCI buildings closer to worst, for Next Reindeer bar, and for various labels', Red: 'Color Red.  Used to show worst BCI building, for Clot bar, and for various labels', Purple: 'Color Purple.  Used to show worse than worst BCI building, for Next Cookie bar, and for various labels', Gray: 'Color Gray.  Used to show negative or infinity BCI, and for Next Cookie/Next Reindeer bar', Pink: 'Color Pink.  Used for Dragonflight bar', Brown: 'Color Brown.  Used for Dragon Harvest bar'}, func: function() {CM.Disp.UpdateColors();}};
 CM.ConfigData.Flash = {label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen on Golden Cookie/Season Popup'};
 CM.ConfigData.Sound = {label: ['Sounds OFF', 'Sounds ON'], desc: 'Play a sound on Golden Cookie/Season Popup'};
 CM.ConfigData.Volume = {label: [], desc: 'Volume of the sound'};
@@ -713,7 +713,7 @@ CM.Disp.UpdateTimerBar = function() {
 			}
 			else if (Game.frenzyPower == 15) {
 				l('CMTimerBarFrenType').textContent = 'Dragon Harvest';
-				l('CMTimerBarFrenBar').className = CM.Disp.colorBackPre + CM.Disp.colorPurple;
+				l('CMTimerBarFrenBar').className = CM.Disp.colorBackPre + CM.Disp.colorBrown;
 			}
 			else {
 				l('CMTimerBarFrenType').textContent = 'Blood Frenzy';
@@ -735,7 +735,7 @@ CM.Disp.UpdateTimerBar = function() {
 			}
 			else {
 				l('CMTimerBarCFType').textContent = 'Dragonflight';
-				l('CMTimerBarCFBar').className = CM.Disp.colorBackPre + CM.Disp.colorPurple;
+				l('CMTimerBarCFBar').className = CM.Disp.colorBackPre + CM.Disp.colorPink;
 			}
 			l('CMTimerBarCFBar').style.width = Math.round(Game.clickFrenzy * maxWidth / Game.clickFrenzyMax) + 'px';
 			l('CMTimerBarCFTime').textContent = Math.ceil(Game.clickFrenzy / Game.fps);
@@ -806,7 +806,7 @@ CM.Disp.CreateUpgradeBar = function() {
 	
 	var placeholder = document.createElement('div');
 	var legend = document.createElement('div');
-	legend.style.minWidth = '320px';
+	legend.style.minWidth = '330px';
 	legend.style.marginBottom = '4px';
 	var title = document.createElement('div');
 	title.className = 'name';
@@ -898,7 +898,6 @@ CM.Disp.UpdateUpgrades = function() {
 				l('upgrade' + i).appendChild(div);
 			}
 			if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorBlue) blue++;
-			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorBlue) blue++;
 			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorGreen) green++;
 			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorYellow) yellow++;
 			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorOrange) orange++;
@@ -1991,7 +1990,9 @@ CM.Disp.colorOrange = 'Orange';
 CM.Disp.colorRed = 'Red';
 CM.Disp.colorPurple = 'Purple';
 CM.Disp.colorGray = 'Gray';
-CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray];
+CM.Disp.colorPink = 'Pink';
+CM.Disp.colorBrown = 'Brown';
+CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
 CM.Disp.lastGoldenCookieState = 'none';
 CM.Disp.lastAscendState = -1;
 
@@ -2175,7 +2176,7 @@ CM.DelayInit = function() {
 	Game.Win('Third-party');
 }
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWarnCautBon: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3'}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWarnCautBon: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2';

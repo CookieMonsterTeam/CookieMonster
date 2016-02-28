@@ -374,7 +374,7 @@ CM.Disp.UpdateTimerBar = function() {
 			}
 			else if (Game.frenzyPower == 15) {
 				l('CMTimerBarFrenType').textContent = 'Dragon Harvest';
-				l('CMTimerBarFrenBar').className = CM.Disp.colorBackPre + CM.Disp.colorPurple;
+				l('CMTimerBarFrenBar').className = CM.Disp.colorBackPre + CM.Disp.colorBrown;
 			}
 			else {
 				l('CMTimerBarFrenType').textContent = 'Blood Frenzy';
@@ -396,7 +396,7 @@ CM.Disp.UpdateTimerBar = function() {
 			}
 			else {
 				l('CMTimerBarCFType').textContent = 'Dragonflight';
-				l('CMTimerBarCFBar').className = CM.Disp.colorBackPre + CM.Disp.colorPurple;
+				l('CMTimerBarCFBar').className = CM.Disp.colorBackPre + CM.Disp.colorPink;
 			}
 			l('CMTimerBarCFBar').style.width = Math.round(Game.clickFrenzy * maxWidth / Game.clickFrenzyMax) + 'px';
 			l('CMTimerBarCFTime').textContent = Math.ceil(Game.clickFrenzy / Game.fps);
@@ -467,7 +467,7 @@ CM.Disp.CreateUpgradeBar = function() {
 	
 	var placeholder = document.createElement('div');
 	var legend = document.createElement('div');
-	legend.style.minWidth = '320px';
+	legend.style.minWidth = '330px';
 	legend.style.marginBottom = '4px';
 	var title = document.createElement('div');
 	title.className = 'name';
@@ -559,7 +559,6 @@ CM.Disp.UpdateUpgrades = function() {
 				l('upgrade' + i).appendChild(div);
 			}
 			if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorBlue) blue++;
-			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorBlue) blue++;
 			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorGreen) green++;
 			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorYellow) yellow++;
 			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorOrange) orange++;
@@ -1652,7 +1651,9 @@ CM.Disp.colorOrange = 'Orange';
 CM.Disp.colorRed = 'Red';
 CM.Disp.colorPurple = 'Purple';
 CM.Disp.colorGray = 'Gray';
-CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray];
+CM.Disp.colorPink = 'Pink';
+CM.Disp.colorBrown = 'Brown';
+CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
 CM.Disp.lastGoldenCookieState = 'none';
 CM.Disp.lastAscendState = -1;
 
