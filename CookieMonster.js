@@ -1093,11 +1093,11 @@ CM.Disp.UpdateTitle = function() {
 CM.Disp.CreateResetTooltip = function() {
 	CM.Disp.ResetTooltipPlaceholder = document.createElement('div');
 	var resetTitleDesc = document.createElement('div');
-	resetTitleDesc.style.minWidth = '260px';
+	resetTitleDesc.style.minWidth = '340px';
 	resetTitleDesc.style.marginBottom = '4px';
 	var div = document.createElement('div');
 	div.style.textAlign = 'left';
-	div.textContent = 'The bonus income you would get from new heavenly chips/reset achievements if you have the same buildings/upgrades after reset';
+	div.textContent = 'The bonus income you would get from new prestige levels at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset';
 	resetTitleDesc.appendChild(div);
 	CM.Disp.ResetTooltipPlaceholder.appendChild(resetTitleDesc);
 }
@@ -1376,22 +1376,19 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing('\"Chain\" Reward (CUR) (Wrath)',  document.createTextNode(Beautify(chainCurWrath))));
 	}
 	
-	// Useless for now; cleanup later
-	/*stats.appendChild(header('Heavenly Chips', 'HC'));
-	if (CM.Config.StatsPref.HC) {
-		var possibleHC = Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset);
-		var neededCook = Game.HowManyCookiesReset(possibleHC + 1) - (Game.cookiesEarned + Game.cookiesReset);
+	stats.appendChild(header('Prestige', 'Prestige'));
+	if (CM.Config.StatsPref.Prestige) {
+		var possiblePres = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));
+		var neededCook = Game.HowManyCookiesReset(possiblePres + 1) - (Game.cookiesEarned + Game.cookiesReset);
 
-		var hcMaxFrag = document.createDocumentFragment();
-		hcMaxFrag.appendChild(document.createTextNode(Beautify(possibleHC)));
-		stats.appendChild(listing('Heavenly Chips (MAX)',  hcMaxFrag));
-		var hcCurFrag = document.createDocumentFragment();
-		// Remove all chip stats?
-		//hcCurFrag.appendChild(document.createTextNode(Beautify(Game.heavenlyChipsEarned)));
-		//stats.appendChild(listing('Heavenly Chips (CUR)',  hcCurFrag));
-		stats.appendChild(listing('Cookies To Next Chip',  document.createTextNode(Beautify(neededCook))));
-		stats.appendChild(listing('Time To Next Chip',  document.createTextNode(CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1))));
-		// Unneeded? 
+		var presMaxFrag = document.createDocumentFragment();
+		presMaxFrag.appendChild(document.createTextNode(Beautify(possiblePres)));
+		stats.appendChild(listing('Prestige (MAX)',  presMaxFrag));
+		var presCurFrag = document.createDocumentFragment();
+		presCurFrag.appendChild(document.createTextNode(Beautify(Game.prestige)));
+		stats.appendChild(listing('Prestige (CUR)',  presCurFrag));
+		stats.appendChild(listing('Cookies To Next Level',  document.createTextNode(Beautify(neededCook))));
+		stats.appendChild(listing('Time To Next Level',  document.createTextNode(CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1))));
 		var resetTitleFrag = document.createDocumentFragment();
 		resetTitleFrag.appendChild(document.createTextNode('Reset Bonus Income '))
 		var resetTitleSpan = document.createElement('span');
@@ -1418,8 +1415,8 @@ CM.Disp.AddMenuStats = function(title) {
 			resetSmall.textContent = ' (' + (increase / 100) + '% of income)';
 			resetFrag.appendChild(resetSmall);
 		}
-		//stats.appendChild(listing(resetTitleFrag, resetFrag));
-	}*/
+		stats.appendChild(listing(resetTitleFrag, resetFrag));
+	}
 	
 	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
 	
@@ -1431,7 +1428,7 @@ CM.Disp.AddMenuStats = function(title) {
 				var sucked = Game.wrinklers[i].sucked;
 				var toSuck = 1.1;
 				if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
-				if (Game.wrinklers[i].type==1) toSuck *= 3; //shiny wrinklers are an elusive, profitable breed
+				if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
 				sucked *= toSuck;
 				if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 				totalSucked += sucked;
@@ -1600,7 +1597,7 @@ CM.Disp.UpdateTooltipLocation = function() {
 	}
 	// Kept for future possible use if the code changes again
 	/*else if (!Game.onCrate && !Game.OnAscend && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
-		//Game.tooltip.tta.style.top = (parseInt(Game.tooltip.tta.style.top) + parseInt(CM.Disp.TimerBar.style.height)) + 'px';
+		Game.tooltip.tta.style.top = (parseInt(Game.tooltip.tta.style.top) + parseInt(CM.Disp.TimerBar.style.height)) + 'px';
 	}*/
 }
 
@@ -1937,7 +1934,7 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 		var sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
 		var toSuck = 1.1;
 		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
-		if (Game.wrinklers[CM.Disp.TooltipWrinkler].type == 1) toSuck *= 3; //shiny wrinklers are an elusive, profitable breed
+		if (Game.wrinklers[CM.Disp.TooltipWrinkler].type == 1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 		l('CMTooltipWrinkler').textContent = Beautify(sucked);
@@ -2176,7 +2173,7 @@ CM.DelayInit = function() {
 	Game.Win('Third-party');
 }
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWarnCautBon: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, HC: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWarnCautBon: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2';
@@ -2559,9 +2556,34 @@ CM.Sim.ResetBonus = function() {
 	if (Game.cookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');
 	if (Game.cookiesEarned >= 1000000000000000000000000000000000) CM.Sim.Win('To crumbs, you say?');
 	
+	if (CM.Sim.Upgrades['Heavenly chip secret'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly cookie stand'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly bakery'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly confectionery'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly key'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	
+	CM.Sim.prestige = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));
+	
 	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
 
 	CM.Sim.CalculateGains();
+	
+	CM.Sim.CheckOtherAchiev();
 	
 	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
 		CM.Sim.CalculateGains();

@@ -375,9 +375,34 @@ CM.Sim.ResetBonus = function() {
 	if (Game.cookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');
 	if (Game.cookiesEarned >= 1000000000000000000000000000000000) CM.Sim.Win('To crumbs, you say?');
 	
+	if (CM.Sim.Upgrades['Heavenly chip secret'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly cookie stand'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly bakery'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly confectionery'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly key'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	
+	CM.Sim.prestige = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));
+	
 	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
 
 	CM.Sim.CalculateGains();
+	
+	CM.Sim.CheckOtherAchiev();
 	
 	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
 		CM.Sim.CalculateGains();
