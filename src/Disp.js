@@ -964,7 +964,23 @@ CM.Disp.AddMenuStats = function(title) {
 		var luckyTime = (Game.cookies < CM.Cache.Lucky) ? CM.Disp.FormatTime((CM.Cache.Lucky - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
 		var luckyColorFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var luckyTimeFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		var luckyCur = Math.min(Game.cookies * 0.15, Game.cookiesPs * 60 * 15) + 13;
+		var luckyCurBase = Math.min(Game.cookies * 0.15, Game.cookiesPs * 60 * 15) + 13;
+		var luckyRewardMax = CM.Cache.LuckyReward;
+		var luckyRewardMaxWrath = CM.Cache.LuckyReward;
+		var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
+		var luckyRewardFrenzyMaxWrath = CM.Cache.LuckyRewardFrenzy;
+		var luckyCur = luckyCurBase;
+		var luckyCurWrath = luckyCurBase;
+		if (Game.hasAura('Ancestral Metamorphosis')) {
+			luckyRewardMax *= 1.1;
+			luckyRewardFrenzyMax *= 1.1;
+			luckyCur *= 1.1;
+		}
+		if (Game.hasAura('Unholy Dominion')) {
+			luckyRewardMaxWrath *= 1.1;
+			luckyRewardFrenzyMaxWrath *= 1.1;
+			luckyCurWrath *= 1.1;
+		}
 	
 		var luckyReqFrag = document.createDocumentFragment();
 		var luckyReqSpan = document.createElement('span');
@@ -990,9 +1006,9 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyReqFrenFrag.appendChild(luckyReqFrenSmall);
 		}
 		stats.appendChild(listing('\"Lucky!\" Cookies Required (Frenzy)', luckyReqFrenFrag));
-		stats.appendChild(listing('\"Lucky!\" Reward (MAX)',  document.createTextNode(Beautify(CM.Cache.LuckyReward))));
-		stats.appendChild(listing('\"Lucky!\" Reward (MAX) (Frenzy)',  document.createTextNode(Beautify(CM.Cache.LuckyRewardFrenzy))));
-		stats.appendChild(listing('\"Lucky!\" Reward (CUR)',  document.createTextNode(Beautify(luckyCur))));
+		stats.appendChild(listing('\"Lucky!\" Reward (MAX) (Golden / Wrath)',  document.createTextNode(Beautify(luckyRewardMax) + ' / ' + Beautify(luckyRewardMaxWrath))));
+		stats.appendChild(listing('\"Lucky!\" Reward (MAX) (Frenzy) (Golden / Wrath)',  document.createTextNode(Beautify(luckyRewardFrenzyMax) + ' / ' + Beautify(luckyRewardFrenzyMaxWrath))));
+		stats.appendChild(listing('\"Lucky!\" Reward (CUR) (Golden / Wrath)',  document.createTextNode(Beautify(luckyCur) + ' / ' + Beautify(luckyCurWrath))));
 	}
 	
 	stats.appendChild(header('Chain Cookies', 'Chain'));
@@ -1001,10 +1017,29 @@ CM.Disp.AddMenuStats = function(title) {
 		var chainTime = (Game.cookies < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Chain - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
 		var chainColorFrenzy = (Game.cookies < CM.Cache.ChainFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var chainTimeFrenzy = (Game.cookies < CM.Cache.ChainFrenzy) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzy - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
+		var chainWrathColor = (Game.cookies < CM.Cache.ChainWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var chainWrathTime = (Game.cookies < CM.Cache.ChainWrath) ? CM.Disp.FormatTime((CM.Cache.ChainWrath - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
+		var chainWrathColorFrenzy = (Game.cookies < CM.Cache.ChainFrenzyWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var chainWrathTimeFrenzy = (Game.cookies < CM.Cache.ChainFrenzyWrath) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzyWrath - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
+		
+		var chainRewardMax = CM.Cache.ChainReward;
+		var chainWrathRewardMax = CM.Cache.ChainWrathReward;
+		var chainFrenzyRewardMax = CM.Cache.ChainFrenzyReward;
+		var chainFrenzyWrathRewardMax = CM.Cache.ChainFrenzyWrathReward;
 		var chainCurMax = Math.min(Game.cookiesPs * 60 * 60 * 6, Game.cookies * 0.25);
 		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax);
 		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax);
-
+		if (Game.hasAura('Ancestral Metamorphosis')) {
+			chainRewardMax *= 1.1;
+			chainFrenzyRewardMax *= 1.1;
+			chainCur *= 1.1;
+		}		
+		if (Game.hasAura('Unholy Dominion')) {
+			chainWrathRewardMax *= 1.1;
+			chainFrenzyWrathRewardMax *= 1.1;
+			chainCurWrath *= 1.1;
+		}
+		
 		var chainReqFrag = document.createDocumentFragment();
 		var chainReqSpan = document.createElement('span');
 		chainReqSpan.style.fontWeight = 'bold';
@@ -1017,6 +1052,18 @@ CM.Disp.AddMenuStats = function(title) {
 			chainReqFrag.appendChild(chainReqSmall);
 		}
 		stats.appendChild(listing('\"Chain\" Cookies Required', chainReqFrag));
+		var chainWrathReqFrag = document.createDocumentFragment();
+		var chainWrathReqSpan = document.createElement('span');
+		chainWrathReqSpan.style.fontWeight = 'bold';
+		chainWrathReqSpan.className = CM.Disp.colorTextPre + chainWrathColor;
+		chainWrathReqSpan.textContent = Beautify(CM.Cache.ChainWrath);
+		chainWrathReqFrag.appendChild(chainWrathReqSpan);
+		if (chainWrathTime != '') {
+			var chainWrathReqSmall = document.createElement('small');
+			chainWrathReqSmall.textContent = ' (' + chainWrathTime + ')';
+			chainWrathReqFrag.appendChild(chainWrathReqSmall);
+		}
+		stats.appendChild(listing('\"Chain\" Cookies Required (Wrath)', chainWrathReqFrag));
 		var chainReqFrenFrag = document.createDocumentFragment();
 		var chainReqFrenSpan = document.createElement('span');
 		chainReqFrenSpan.style.fontWeight = 'bold';
@@ -1029,12 +1076,22 @@ CM.Disp.AddMenuStats = function(title) {
 			chainReqFrenFrag.appendChild(chainReqFrenSmall);
 		}
 		stats.appendChild(listing('\"Chain\" Cookies Required (Frenzy)', chainReqFrenFrag));
-		stats.appendChild(listing('\"Chain\" Reward (MAX)',  document.createTextNode(Beautify(CM.Cache.ChainReward))));
-		stats.appendChild(listing('\"Chain\" Reward (MAX) (Wrath)',  document.createTextNode(Beautify(CM.Cache.ChainWrathReward))));
-		stats.appendChild(listing('\"Chain\" Reward (MAX) (Frenzy)',  document.createTextNode(Beautify(CM.Cache.ChainFrenzyReward))));
-		stats.appendChild(listing('\"Chain\" Reward (MAX) (Frenzy) (Wrath)',  document.createTextNode(Beautify(CM.Cache.ChainFrenzyWrathReward))));
-		stats.appendChild(listing('\"Chain\" Reward (CUR)',  document.createTextNode(Beautify(chainCur))));
-		stats.appendChild(listing('\"Chain\" Reward (CUR) (Wrath)',  document.createTextNode(Beautify(chainCurWrath))));
+		var chainWrathReqFrenFrag = document.createDocumentFragment();
+		var chainWrathReqFrenFrag = document.createDocumentFragment();
+		var chainWrathReqFrenSpan = document.createElement('span');
+		chainWrathReqFrenSpan.style.fontWeight = 'bold';
+		chainWrathReqFrenSpan.className = CM.Disp.colorTextPre + chainWrathColorFrenzy;
+		chainWrathReqFrenSpan.textContent = Beautify(CM.Cache.ChainFrenzyWrath);
+		chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSpan);
+		if (chainWrathTimeFrenzy != '') {
+			var chainWrathReqFrenSmall = document.createElement('small');
+			chainWrathReqFrenSmall.textContent = ' (' + chainWrathTimeFrenzy + ')';
+			chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSmall);
+		}
+		stats.appendChild(listing('\"Chain\" Cookies Required (Frenzy) (Wrath)', chainWrathReqFrenFrag));
+		stats.appendChild(listing('\"Chain\" Reward (MAX) (Golden / Wrath)',  document.createTextNode(Beautify(chainRewardMax) + ' / ' + Beautify(chainWrathRewardMax))));
+		stats.appendChild(listing('\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)',  document.createTextNode(Beautify(chainFrenzyRewardMax) + ' / ' + Beautify(chainFrenzyWrathRewardMax))));
+		stats.appendChild(listing('\"Chain\" Reward (CUR) (Golden / Wrath)',  document.createTextNode(Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))));
 	}
 	
 	stats.appendChild(header('Prestige', 'Prestige'));
@@ -1042,14 +1099,15 @@ CM.Disp.AddMenuStats = function(title) {
 		var possiblePres = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));
 		var neededCook = Game.HowManyCookiesReset(possiblePres + 1) - (Game.cookiesEarned + Game.cookiesReset);
 
-		var presMaxFrag = document.createDocumentFragment();
-		presMaxFrag.appendChild(document.createTextNode(Beautify(possiblePres)));
-		stats.appendChild(listing('Prestige (MAX)',  presMaxFrag));
-		var presCurFrag = document.createDocumentFragment();
-		presCurFrag.appendChild(document.createTextNode(Beautify(Game.prestige)));
-		stats.appendChild(listing('Prestige (CUR)',  presCurFrag));
-		stats.appendChild(listing('Cookies To Next Level',  document.createTextNode(Beautify(neededCook))));
-		stats.appendChild(listing('Time To Next Level',  document.createTextNode(CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1))));
+		var presCurMaxFrag = document.createDocumentFragment();
+		presCurMaxFrag.appendChild(document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePres)));
+		stats.appendChild(listing('Prestige Level (CUR / MAX)',  presCurMaxFrag));
+		var cookiesNextFrag = document.createDocumentFragment();
+		cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
+		var cookiesNextSmall = document.createElement('small');
+		cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1)) + ')';
+		cookiesNextFrag.appendChild(cookiesNextSmall);
+		stats.appendChild(listing('Cookies To Next Level', cookiesNextFrag));
 		var resetTitleFrag = document.createDocumentFragment();
 		resetTitleFrag.appendChild(document.createTextNode('Reset Bonus Income '))
 		var resetTitleSpan = document.createElement('span');

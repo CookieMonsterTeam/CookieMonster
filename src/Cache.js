@@ -116,35 +116,34 @@ CM.Cache.RemakeChain = function() {
 	
 	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout);
 	
-	var base = 0;
-	if (CM.Cache.ChainReward > CM.Cache.ChainWrathReward) {
-		base = CM.Cache.ChainReward;
-	}
-	else {
-		base = CM.Cache.ChainWrathReward;
-	}
-	if (maxPayout < base) {
+	if (maxPayout < CM.Cache.ChainReward) {
 		CM.Cache.Chain = 0;
 	}
 	else {
-		CM.Cache.Chain = CM.Cache.NextNumber(base) / 0.25;
+		CM.Cache.Chain = CM.Cache.NextNumber(CM.Cache.ChainReward) / 0.25;
+	}
+	if (maxPayout < CM.Cache.ChainWrathReward) {
+		CM.Cache.Chain = 0;
+	}
+	else {
+		CM.Cache.ChainWrath = CM.Cache.NextNumber(CM.Cache.ChainWrathReward) / 0.25;
 	}
 	
 	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7);
 	
 	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7);
 	
-	if (CM.Cache.ChainFrenzyReward > CM.Cache.ChainFrenzyWrathReward) {
-		base = CM.Cache.ChainFrenzyReward;
-	}
-	else {
-		base = CM.Cache.ChainFrenzyWrathReward;
-	}
-	if ((maxPayout * 7) < base) {
+	if ((maxPayout * 7) < CM.Cache.ChainFrenzyReward) {
 		CM.Cache.ChainFrenzy = 0;
 	}
 	else {
-		CM.Cache.ChainFrenzy = CM.Cache.NextNumber(base) / 0.25;
+		CM.Cache.ChainFrenzy = CM.Cache.NextNumber(CM.Cache.ChainFrenzyReward) / 0.25;
+	}
+	if ((maxPayout * 7) < CM.Cache.ChainFrenzyWrathReward) {
+		CM.Cache.ChainFrenzy = 0;
+	}
+	else {
+		CM.Cache.ChainFrenzyWrath = CM.Cache.NextNumber(CM.Cache.ChainFrenzyWrathReward) / 0.25;
 	}
 }
 
@@ -170,9 +169,11 @@ CM.Cache.LuckyFrenzy = 0;
 CM.Cache.LuckyRewardFrenzy = 0;
 CM.Cache.SeaSpec = 0;
 CM.Cache.Chain = 0;
+CM.Cache.ChainWrath = 0;
 CM.Cache.ChainReward = 0;
 CM.Cache.ChainWrathReward = 0;
 CM.Cache.ChainFrenzy = 0;
+CM.Cache.ChainFrenzyWrath = 0;
 CM.Cache.ChainFrenzyReward = 0;
 CM.Cache.ChainFrenzyWrathReward = 0;
 CM.Cache.SellAllTotal = 0;
