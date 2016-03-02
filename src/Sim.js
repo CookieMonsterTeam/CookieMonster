@@ -230,9 +230,11 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (CM.Sim.Has('Grandmas\' grandmas')) grandmas++;
 	if (CM.Sim.Has('Antigrandmas')) grandmas++;
 	if (CM.Sim.Has('Rainbow grandmas')) grandmas++;
+	if (CM.Sim.Has('Banker grandmas')) grandmas++;
+	if (CM.Sim.Has('Priestess grandmas')) grandmas++;
+	if (CM.Sim.Has('Witch grandmas')) grandmas++;
 	if (!CM.Sim.HasAchiev('Elder') && grandmas >= 7) CM.Sim.Win('Elder');
 
-	// Redo?
 	var buildingsOwned = 0;
 	var mathematician = 1;
 	var base10 = 1;

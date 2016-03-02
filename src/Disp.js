@@ -795,9 +795,14 @@ CM.Disp.AddMenuPref = function(title) {
 		var div = document.createElement('div');
 		div.className = 'listing';
 		var a = document.createElement('a');
-		a.className = 'option';
+		if (CM.ConfigData[config].toggle && CM.Config[config] == 0) {
+			a.className = 'option off';
+		}
+		else {
+			a.className = 'option';
+		}
 		a.id = CM.ConfigPrefix + config;
-		a.onclick = function() {CM.ToggleConfigUp(config);};
+		a.onclick = function() {CM.ToggleConfig(config);};
 		a.textContent = CM.Disp.GetConfigDisplay(config);
 		div.appendChild(a);
 		var label = document.createElement('label');
@@ -1099,9 +1104,7 @@ CM.Disp.AddMenuStats = function(title) {
 		var possiblePres = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));
 		var neededCook = Game.HowManyCookiesReset(possiblePres + 1) - (Game.cookiesEarned + Game.cookiesReset);
 
-		var presCurMaxFrag = document.createDocumentFragment();
-		presCurMaxFrag.appendChild(document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePres)));
-		stats.appendChild(listing('Prestige Level (CUR / MAX)',  presCurMaxFrag));
+		stats.appendChild(listing('Prestige Level (CUR / MAX)',  document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePres))));
 		var cookiesNextFrag = document.createDocumentFragment();
 		cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
 		var cookiesNextSmall = document.createElement('small');
