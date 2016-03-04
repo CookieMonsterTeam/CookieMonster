@@ -39,6 +39,9 @@ CM.Cache.RemakeIncome = function() {
 	
 	// Simulate Building Buys for 10 amount
 	CM.Sim.BuyBuildings(10, 'Objects10');
+	
+	// Simulate Building Buys for 100 amount
+	CM.Sim.BuyBuildings(100, 'Objects100');
 }
 
 CM.Cache.RemakeBuildingsBCI = function() {
@@ -77,19 +80,19 @@ CM.Cache.RemakeUpgradeBCI = function() {
 	}
 }
 
-CM.Cache.RemakeBuildings10BCI = function() {
-	for (var i in CM.Cache.Objects10) {
-		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, 10);
-		CM.Cache.Objects10[i].bci = CM.Cache.Objects10[i].price / CM.Cache.Objects10[i].bonus;
+CM.Cache.RemakeBuildingsOtherBCI = function(amount, target) {
+	for (var i in CM.Cache[target]) {
+		CM.Cache[target][i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, amount);
+		CM.Cache[target][i].bci = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
 		var color = '';
-		if (CM.Cache.Objects10[i].bci <= 0 || CM.Cache.Objects10[i].bci == 'Infinity') color = CM.Disp.colorGray;
-		else if (CM.Cache.Objects10[i].bci < CM.Disp.min) color = CM.Disp.colorBlue;
-		else if (CM.Cache.Objects10[i].bci == CM.Disp.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache.Objects10[i].bci == CM.Disp.max) color = CM.Disp.colorRed;
-		else if (CM.Cache.Objects10[i].bci > CM.Disp.max) color = CM.Disp.colorPurple;
-		else if (CM.Cache.Objects10[i].bci > CM.Disp.mid) color = CM.Disp.colorOrange;
+		if (CM.Cache[target][i].bci <= 0 || CM.Cache[target][i].bci == 'Infinity') color = CM.Disp.colorGray;
+		else if (CM.Cache[target][i].bci < CM.Disp.min) color = CM.Disp.colorBlue;
+		else if (CM.Cache[target][i].bci == CM.Disp.min) color = CM.Disp.colorGreen;
+		else if (CM.Cache[target][i].bci == CM.Disp.max) color = CM.Disp.colorRed;
+		else if (CM.Cache[target][i].bci > CM.Disp.max) color = CM.Disp.colorPurple;
+		else if (CM.Cache[target][i].bci > CM.Disp.mid) color = CM.Disp.colorOrange;
 		else color = CM.Disp.colorYellow;
-		CM.Cache.Objects10[i].color = color;
+		CM.Cache[target][i].color = color;
 	}
 }
 
@@ -101,7 +104,10 @@ CM.Cache.RemakeBCI = function() {
 	CM.Cache.RemakeUpgradeBCI();
 	
 	// Buildings for 10 amount
-	CM.Cache.RemakeBuildings10BCI();
+	CM.Cache.RemakeBuildingsOtherBCI(10, 'Objects10');
+
+	// Buildings for 100 amount
+	CM.Cache.RemakeBuildingsOtherBCI(100, 'Objects100');	
 }
 
 CM.Cache.RemakeLucky = function() {
@@ -178,7 +184,7 @@ CM.Cache.RemakeSellAllTotal = function() {
 	var sellTotal = 0;
 	for (var i in Game.Objects) {
 		var me = Game.Objects[i];
-		sellTotal += CM.Sim.BuildingSell(me.basePrice, me.amount, me.amount);
+		sellTotal += CM.Sim.BuildingSell(me.basePrice, me.amount, me.free, me.amount);
 	}
 	CM.Cache.SellAllTotal = sellTotal;
 }
@@ -795,9 +801,19 @@ CM.Disp.UpdateBotTimerBarDisplay = function() {
 }
 
 CM.Disp.UpdateBuildings = function() {
-	if (CM.Config.BuildColor == 1) {
-		for (var i in CM.Cache.Objects) {
-			l('productPrice' + Game.Objects[i].id).style.color = CM.Config.Colors[CM.Cache.Objects[i].color];
+	if (CM.Config.BuildColor == 1 && Game.buyMode == 1) {
+		var target = '';
+		if (Game.buyBulk == 10) {
+			target = 'Objects10'
+		}
+		else if (Game.buyBulk == 100) {
+			target = 'Objects100'
+		}
+		else {
+			target = 'Objects'
+		}
+		for (var i in CM.Cache[target]) {
+			l('productPrice' + Game.Objects[i].id).style.color = CM.Config.Colors[CM.Cache[target][i].color];
 		}
 	}
 	else {
@@ -1497,7 +1513,7 @@ CM.Disp.AddMenuStats = function(title) {
 	if (Game.cpsSucked > 0) {
 		stats.appendChild(header('Wrinklers', 'Wrink'));
 		if (CM.Config.StatsPref.Wrink || (CM.Config.StatsPref.Sea && choEgg)) {
-			var totalSucked = 0;
+			var totalSucked = 0; // Used in Chocolate Egg calculation below also
 			for (var i in Game.wrinklers) {
 				var sucked = Game.wrinklers[i].sucked;
 				var toSuck = 1.1;
@@ -1627,7 +1643,7 @@ CM.Disp.AddMenuStats = function(title) {
 				choEggTitleFrag.appendChild(choEggTitleSpan);
 				var choEggTotal = Game.cookies + CM.Cache.SellAllTotal;
 				if (Game.cpsSucked > 0) {
-					choEggTotal += sucked;
+					choEggTotal += totalSucked;
 				}
 				choEggTotal *= 0.05;
 				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(choEggTotal))));
@@ -1761,36 +1777,33 @@ CM.Disp.AddTooltipUpgrade = function() {
 	}
 }
 
-CM.Disp.AddTooltipBuildExtra = function() {
-	for (var i in Game.Objects) {
-		var me = Game.Objects[i];
-		l('buttonBuy10-' + me.id).onmouseover = function() {CM.Disp.TooltipBuy10 = true;};
-		l('buttonBuy10-' + me.id).onmouseout = function() {CM.Disp.TooltipBuy10 = false;};
-		l('buttonSell-' + me.id).onmouseover = function() {CM.Disp.TooltipSell = true;};
-		l('buttonSell-' + me.id).onmouseout = function() {CM.Disp.TooltipSell = false;};
-		l('buttonSellAll-' + me.id).onmouseover = function() {CM.Disp.TooltipSellAll = true;};
-		l('buttonSellAll-' + me.id).onmouseout = function() {CM.Disp.TooltipSellAll = false;};
-	}
-}
-
 CM.Disp.Tooltip = function(type, name) {
 	if (type == 'b') {
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
 		if (CM.Config.TooltipAmor == 1) {
-			var buildPrice = CM.Sim.BuildingGetPrice(Game.Objects[name].basePrice, 0, Game.Objects[name].amount);
+			var buildPrice = CM.Sim.BuildingGetPrice(Game.Objects[name].basePrice, 0, Game.Objects[name].free, Game.Objects[name].amount);
 			var amortizeAmount = buildPrice - Game.Objects[name].totalCookies;
 			if (amortizeAmount > 0) {
 				l('tooltip').innerHTML = l('tooltip').innerHTML.split('so far</div>').join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) == 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor(buildPrice, Game.Objects[name].totalCookies, (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text + ')</div>');		
 			}
 		}
-		if (CM.Disp.TooltipBuy10) {
-			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join(Beautify(CM.Cache.Objects10[name].price));
+		if (Game.buyMode == 1) {
+			var target = '';
+			var change = false;
+			if (Game.buyBulk == 10) {
+				target = 'Objects10';
+				change = true;
+			}
+			else if (Game.buyBulk == 100) {
+				target = 'Objects100';
+				change = true;
+			}
+			if (change) {
+				l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join(Beautify(CM.Cache[target][name].price));
+			}
 		}
-		if (CM.Disp.TooltipSell) {
-			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + Beautify(CM.Sim.BuildingSell(Game.Objects[name].basePrice, Game.Objects[name].amount, 1)));
-		}
-		if (CM.Disp.TooltipSellAll) {
-			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + Beautify(CM.Sim.BuildingSell(Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].amount)));
+		else if (Game.buyMode == -1) {
+			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + l('productPrice' + Game.Objects[name].id).innerHTML);
 		}
 	}
 	else { // Upgrades
@@ -1802,7 +1815,7 @@ CM.Disp.Tooltip = function(type, name) {
 	area.id = 'CMTooltipArea';
 	l('tooltip').appendChild(area);
 	
-	if (CM.Config.Tooltip == 1) {
+	if (CM.Config.Tooltip == 1 && (type != 'b' || Game.buyMode == 1)) {
 		l('tooltip').firstChild.style.paddingBottom = '4px';
 		var tooltip = document.createElement('div');
 		tooltip.style.border = '1px solid';
@@ -1849,23 +1862,24 @@ CM.Disp.UpdateTooltip = function() {
 		var price;
 		var bonus;
 		if (CM.Disp.tooltipType == 'b') {
-			if (!CM.Disp.TooltipBuy10) {
-				bonus = CM.Cache.Objects[CM.Disp.tooltipName].bonus;
-				price = Game.Objects[CM.Disp.tooltipName].getPrice();
-				if (CM.Config.Tooltip == 1) {
-					l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Objects[CM.Disp.tooltipName].color;
-					l('CMTooltipBCI').textContent = Beautify(CM.Cache.Objects[CM.Disp.tooltipName].bci, 2);
-					l('CMTooltipBCI').className = CM.Disp.colorTextPre + CM.Cache.Objects[CM.Disp.tooltipName].color;
-				}
+			var target = '';
+			if (Game.buyMode == 1 && Game.buyBulk == 10) {
+				target = 'Objects10';
+				price = CM.Cache[target][CM.Disp.tooltipName].price;
+			}
+			else if (Game.buyMode == 1 && Game.buyBulk == 100) {
+				target = 'Objects100';
+				price = CM.Cache[target][CM.Disp.tooltipName].price;
 			}
 			else {
-				bonus = CM.Cache.Objects10[CM.Disp.tooltipName].bonus;
-				price = CM.Cache.Objects10[CM.Disp.tooltipName].price;
-				if (CM.Config.Tooltip == 1) {
-					l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Objects10[CM.Disp.tooltipName].color;
-					l('CMTooltipBCI').textContent = Beautify(CM.Cache.Objects10[CM.Disp.tooltipName].bci, 2);
-					l('CMTooltipBCI').className = CM.Disp.colorTextPre + CM.Cache.Objects10[CM.Disp.tooltipName].color;
-				}
+				target = 'Objects';
+				price = Game.Objects[CM.Disp.tooltipName].getPrice();
+			}
+			bonus = CM.Cache[target][CM.Disp.tooltipName].bonus;
+			if (CM.Config.Tooltip == 1 && Game.buyMode == 1) {
+				l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
+				l('CMTooltipBCI').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].bci, 2);
+				l('CMTooltipBCI').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 			}
 		}
 		else { // Upgrades
@@ -1877,7 +1891,7 @@ CM.Disp.UpdateTooltip = function() {
 				l('CMTooltipBCI').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
 			}
 		}
-		if (CM.Config.Tooltip == 1) {
+		if (CM.Config.Tooltip == 1 && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 			l('CMTooltipIncome').textContent = Beautify(bonus, 2);
 			
 			var increase = Math.round(bonus / Game.cookiesPs * 10000);
@@ -1901,7 +1915,7 @@ CM.Disp.UpdateTooltip = function() {
 			}
 			var caut = warn * 7;
 			var amount = Game.cookies - price;
-			if (amount < warn || amount < caut) {
+			if ((amount < warn || amount < caut) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				if (CM.Config.ToolWarnCautPos == 0) {
 					CM.Disp.TooltipWarnCaut.style.right = '0px';
 				}
@@ -2066,13 +2080,13 @@ CM.Disp.colorBrown = 'Brown';
 CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
 CM.Disp.lastGoldenCookieState = 'none';
 CM.Disp.lastAscendState = -1;
+CM.Disp.lastBuyMode = -1;
+CM.Disp.lastBuyBulk = -1;
 
 CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];
 
 CM.Disp.TooltipBuy10 = false;
-CM.Disp.TooltipSell = false;
-CM.Disp.TooltipSellAll = false;
 
 CM.Disp.TooltipWrinklerArea = 0;
 CM.Disp.TooltipWrinkler = -1;
@@ -2181,6 +2195,20 @@ CM.Loop = function() {
 		
 			CM.Sim.DoSims = 0;
 		}
+		
+		// Update Buildings Color for different buy/sell modes
+		var updateBuildings = false;
+		if (CM.Disp.lastBuyMode != Game.buyMode) {
+			CM.Disp.lastBuyMode = Game.buyMode;
+			updateBuildings = true;
+		}
+		if (CM.Disp.lastBuyBulk != Game.buyBulk) {
+			CM.Disp.lastBuyBulk = Game.buyBulk;
+			updateBuildings = true;
+		}
+		if (updateBuildings) {
+			CM.Disp.UpdateBuildings();
+		}
 
 		// Redraw timers
 		CM.Disp.UpdateBotBarTime();
@@ -2234,12 +2262,13 @@ CM.DelayInit = function() {
 	CM.Disp.CreateChoEggTooltip();
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
-	//CM.Disp.AddTooltipBuildExtra(); // The extra per building was removed
 	CM.Disp.AddWrinklerAreaDetect();
 	CM.ReplaceNative();
 	Game.CalculateGains();
 	CM.LoadConfig(); // Must be after all things are created!
 	CM.Disp.lastAscendState = Game.OnAscend;
+	CM.Disp.lastBuyMode = Game.buyMode;
+	CM.Disp.lastBuyBulk = Game.buyBulk;
 
 	if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
 	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
@@ -2257,32 +2286,36 @@ CM.VersionMinor = '3';
  * Sim *
  *******/
 
-CM.Sim.BuildingGetPrice = function(basePrice, start, increase) {
-	var totalPrice = 0;
-	var count = 0;
-	while(count < increase) {
-		var price = basePrice * Math.pow(Game.priceIncrease, start + count);
-		if (Game.Has('Season savings')) price *= 0.99;
-		if (Game.Has('Santa\'s dominion')) price *= 0.99;
-		if (Game.Has('Faberge egg')) price *= 0.99;
-		if (Game.Has('Divine discount')) price *= 0.99;
-		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
-		totalPrice += Math.ceil(price);
-		count++;
+CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
+	var price=0;
+	for (var i = Math.max(0 , start); i < Math.max(0, start + increase); i++) {
+		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
 	}
-	return totalPrice;
+	if (Game.Has('Season savings')) price *= 0.99;
+	if (Game.Has('Santa\'s dominion')) price *= 0.99;
+	if (Game.Has('Faberge egg')) price *= 0.99;
+	if (Game.Has('Divine discount')) price *= 0.99;
+	if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
+	return Math.ceil(price);
 }
 
-CM.Sim.BuildingSell = function(basePrice, start, amount) {
-	var totalMoni = 0;
-	while (amount > 0) {
-		var giveBack = 0.5;
-		if (Game.hasAura('Earth Shatterer')) giveBack = 0.85;
-		totalMoni += Math.floor(CM.Sim.BuildingGetPrice(basePrice, start, 1) * giveBack);
-		start--;
-		amount--;
+CM.Sim.BuildingSell = function(basePrice, start, free, amount) {
+	var price=0;
+	for (var i = Math.max(0, start - amount); i < Math.max(0, start); i++) {
+		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
 	}
-	return totalMoni;
+	if (Game.Has('Season savings')) price*=0.99;
+	if (Game.Has('Santa\'s dominion')) price*=0.99;
+	if (Game.Has('Faberge egg')) price*=0.99;
+	if (Game.Has('Divine discount')) price*=0.99;
+	if (Game.hasAura('Fierce Hoarder')) price*=0.98;
+	if (Game.hasAura('Earth Shatterer')) {
+		price *= 0.85;
+	}
+	else {
+		price *= 0.5;
+	}
+	return Math.ceil(price);
 }
 
 CM.Sim.Has = function(what) {

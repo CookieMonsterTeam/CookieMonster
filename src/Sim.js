@@ -2,32 +2,36 @@
  * Sim *
  *******/
 
-CM.Sim.BuildingGetPrice = function(basePrice, start, increase) {
-	var totalPrice = 0;
-	var count = 0;
-	while(count < increase) {
-		var price = basePrice * Math.pow(Game.priceIncrease, start + count);
-		if (Game.Has('Season savings')) price *= 0.99;
-		if (Game.Has('Santa\'s dominion')) price *= 0.99;
-		if (Game.Has('Faberge egg')) price *= 0.99;
-		if (Game.Has('Divine discount')) price *= 0.99;
-		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
-		totalPrice += Math.ceil(price);
-		count++;
+CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
+	var price=0;
+	for (var i = Math.max(0 , start); i < Math.max(0, start + increase); i++) {
+		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
 	}
-	return totalPrice;
+	if (Game.Has('Season savings')) price *= 0.99;
+	if (Game.Has('Santa\'s dominion')) price *= 0.99;
+	if (Game.Has('Faberge egg')) price *= 0.99;
+	if (Game.Has('Divine discount')) price *= 0.99;
+	if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
+	return Math.ceil(price);
 }
 
-CM.Sim.BuildingSell = function(basePrice, start, amount) {
-	var totalMoni = 0;
-	while (amount > 0) {
-		var giveBack = 0.5;
-		if (Game.hasAura('Earth Shatterer')) giveBack = 0.85;
-		totalMoni += Math.floor(CM.Sim.BuildingGetPrice(basePrice, start, 1) * giveBack);
-		start--;
-		amount--;
+CM.Sim.BuildingSell = function(basePrice, start, free, amount) {
+	var price=0;
+	for (var i = Math.max(0, start - amount); i < Math.max(0, start); i++) {
+		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
 	}
-	return totalMoni;
+	if (Game.Has('Season savings')) price*=0.99;
+	if (Game.Has('Santa\'s dominion')) price*=0.99;
+	if (Game.Has('Faberge egg')) price*=0.99;
+	if (Game.Has('Divine discount')) price*=0.99;
+	if (Game.hasAura('Fierce Hoarder')) price*=0.98;
+	if (Game.hasAura('Earth Shatterer')) {
+		price *= 0.85;
+	}
+	else {
+		price *= 0.5;
+	}
+	return Math.ceil(price);
 }
 
 CM.Sim.Has = function(what) {

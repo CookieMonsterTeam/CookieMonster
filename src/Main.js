@@ -98,6 +98,20 @@ CM.Loop = function() {
 		
 			CM.Sim.DoSims = 0;
 		}
+		
+		// Update Buildings Color for different buy/sell modes
+		var updateBuildings = false;
+		if (CM.Disp.lastBuyMode != Game.buyMode) {
+			CM.Disp.lastBuyMode = Game.buyMode;
+			updateBuildings = true;
+		}
+		if (CM.Disp.lastBuyBulk != Game.buyBulk) {
+			CM.Disp.lastBuyBulk = Game.buyBulk;
+			updateBuildings = true;
+		}
+		if (updateBuildings) {
+			CM.Disp.UpdateBuildings();
+		}
 
 		// Redraw timers
 		CM.Disp.UpdateBotBarTime();
@@ -151,12 +165,13 @@ CM.DelayInit = function() {
 	CM.Disp.CreateChoEggTooltip();
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
-	//CM.Disp.AddTooltipBuildExtra(); // The extra per building was removed
 	CM.Disp.AddWrinklerAreaDetect();
 	CM.ReplaceNative();
 	Game.CalculateGains();
 	CM.LoadConfig(); // Must be after all things are created!
 	CM.Disp.lastAscendState = Game.OnAscend;
+	CM.Disp.lastBuyMode = Game.buyMode;
+	CM.Disp.lastBuyBulk = Game.buyBulk;
 
 	if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
 	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
