@@ -2626,6 +2626,35 @@ CM.Util.BuyAllSafeBuildings = function() {
         }
 }
 
+/**
+ * A real doozy; runs the BuyAllSafeBuildings function every X minutes.
+ **/
+CM.Util.autoBuyBuildingsID = 0;
+CM.Util.AutoBuyBuildings = function(minutes) {
+	nminutes = parseInt(minutes);
+	if (isNaN(nminutes) || nminutes < 1){
+		console.log("Don't understand this many minutes between runs:", minutes);
+		return;		
+	}
+	
+	CM.Util.StopAutoBuyBuildings(); // in case it's already running
+	
+	//run it now
+	CM.Util.BuyAllSafeBuildings();
+	
+	timeout = nminutes * 1000 * 60; // convert minutes to miliseconds
+	setInterval(CM.Util.BuyAllSafeBuildings, timeout);
+	
+}
+
+CM.Util.StopAutoBuyBuildings = function() {
+	if (CM.Util.autoBuyBuildingsID != 0){
+		clearInterval(CM.Util.autoBuyBuildingsID);
+		CM.Util.autoBuyBuildingsID = 0;
+	}	
+}
+
+
 CM.Util.autoclickID = 0;
 CM.Util.StartAutoClick = function(timeout) {
 	CM.Util.cookiediv = document.getElementById('bigCookie');
