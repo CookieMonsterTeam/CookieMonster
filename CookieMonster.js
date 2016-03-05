@@ -18,6 +18,8 @@ CM.Disp = {};
 
 CM.Sim = {};
 
+CM.Util = {};
+
 /*********
  * Cache *
  *********/
@@ -2536,6 +2538,93 @@ CM.Sim.ResetBonus = function() {
 	}
 
 	return (CM.Sim.cookiesPs - Game.cookiesPs);
+}
+
+/******************
+ * User Utilities *
+ ******************/
+CM.Util = {};
+// Gets the name of the best building to buy.
+CM.Util.GetBestBuyName = function() {
+        var bestBCI = null;
+        var bestBuilding = null;
+        for (var i in CM.Cache.Objects) {
+                var building = CM.Cache.Objects[i];
+                if (bestBCI === null || building.bci < bestBCI){
+                        bestBuilding = i;
+                        bestBCI = building.bci;
+                }
+        }
+        return bestBuilding;	
+}
+
+CM.Util.GetBestBuy = function() {
+        var bestName = CM.Util.GetBestBuyName();
+        if (bestName === null){
+                return null; // nothing to do?
+        }
+        
+        return Game.Objects[bestName];
+}
+
+/**
+ * Buys one of the best BCI-rated building.
+ **/
+CM.Util.BuyBestBuilding = function() {
+        var building = CM.Util.GetBestBuy();
+        building.buy(1);
+}
+
+/**
+ * Get the warning threshold for the Lucky! events.  Copied from the middle of
+ * CM.Disp.UpdateTooltip()
+ **/
+CM.Util.GetWarnAmount = function() {
+	var warn = CM.Cache.Lucky;
+	if (CM.Config.ToolWarnCautBon == 1) {
+		var bonusNoFren = bonus;
+		if (Game.frenzy > 0) {
+			bonusNoFren /= Game.frenzyPower;
+		}
+		warn += ((bonusNoFren * 60 * 15) / 0.15);
+	}
+	return warn;
+}
+
+CM.Util.IsSafeToBuy = function(price) {
+        if (price > Game.cookies) {
+                return false;
+        }
+        var warn = CM.Util.GetWarnAmount();
+        var caut = warn * 7;
+	var amount = Game.cookies - price;
+	if (amount > warn && amount > caut) {
+	       return true;
+	}
+	return false;
+}
+
+/**
+ * Buys optimal buildings until the next best building would drop
+ * cookies below safe level for 'Lucky' events.
+ **/
+CM.Util.BuyAllSafeBuildings = function() {
+        var building = CM.Util.GetBestBuy();
+        var before = building.amount;
+        if (CM.Util.IsSafeToBuy(building.price)){
+                building.buy(1);
+                if (building.amount > before){
+                        console.log("Bought One:", building.name);
+                        // If buying is successful, call this function again in a quarter second.
+                        // This prevents UI freezing and also allows for CPS to keep going, potentially
+                        // allowing for a lot of purchases.
+                        setTimeout(function(){CM.Util.BuyAllSafeBuildings();}, 250);
+                } else {
+                        console.log("Failed to buy:", building.name);
+                }
+        } else { // not IsSafeToBuy()
+                console.log("Stopped purchases due to lack of funds.");
+        }
 }
 
 /**********
