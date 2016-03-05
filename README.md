@@ -1,12 +1,15 @@
 # Fork notes
 
-This fork is basically to automate a few tasks.  It could be considered cheating.  There's not much UI for the functions, so you'll need to use the console.  Everything is in CM.Util, with the two most interesting functions being:
+This fork is basically to automate a few tasks.  It could be considered cheating.  Actually, it's really cheating.  There's not much UI for the functions, so you'll need to use the console.  Everything is in CM.Util, with the two most interesting functions being:
 
 ```CM.Util.BuyAllSafeBuildings()``` to buy the best buildings (up to 4 per second) until the Lucky! warning threshold is reached.
 
-```CM.Util.StartAutoClick(timeout)``` to automatically click the cookie with **timeout** seconds between clicks.  The default is 20ms, or 50 clicks per second.  There are some weird side effects to the autoclicker, such as auto-killing wrinklers via mouseover and spewing click numbers whenever you're in the cookie/milk pane.  It's advised that you disable the display of clicking numbers.
+```CM.Util.AutoBuyBuildings(minutes)``` to run the ```BuyAllSafeBuildings()``` command periodically (waiting for **minutes** between calls.  This is _so_ cheating.
+
+```CM.Util.StartAutoClick(timeout)``` to automatically click the cookie with **timeout** seconds between clicks.  The default is 20ms, or 50 clicks per second.  There are some weird side effects to the autoclicker, such as auto-killing wrinklers via mouseover and spewing click numbers whenever you're in the cookie/milk pane.  It's advised that you disable the display of clicking numbers.  Obviously, this is cheating, and when click frenzy or dragon flight kick happen, well...
 
 ```CM.Util.StopAutoClick()``` will stop the autoclicker, though so will ```F5```.
+
 
 ## Loading the fork:
 
