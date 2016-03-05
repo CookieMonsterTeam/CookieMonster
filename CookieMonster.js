@@ -2628,6 +2628,7 @@ CM.Util.BuyAllSafeBuildings = function() {
 
 CM.Util.autoclickID = 0;
 CM.Util.StartAutoClick = function(timeout) {
+	CM.Util.cookiediv = document.getElementById('bigCookie');
         if (CM.Util.autoclickID != 0){
 		CM.Util.StopAutoClick();
         }
@@ -2638,7 +2639,7 @@ CM.Util.StartAutoClick = function(timeout) {
 	if (isNaN(ntimeout)){
 		console.log("What is this timeout?", timeout);
 	}
-	CM.Util.autoclickID = setInterval(function(){$('#bigCookie').click();}, ntimeout);
+	CM.Util.autoclickID = setInterval(function(){CM.Util.cookiediv.click();}, ntimeout);
 }
 
 CM.Util.StopAutoClick = function() {
