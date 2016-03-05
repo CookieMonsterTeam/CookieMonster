@@ -90,7 +90,7 @@ CM.Loop = function() {
 			CM.Cache.RemakeLucky();
 			CM.Cache.RemakeChain();
 			CM.Cache.RemakeSeaSpec();
-			CM.Cache.RemakeSellAllTotal();
+			CM.Cache.RemakeSellForChoEgg();
 
 			CM.Disp.UpdateBotBarOther();
 			CM.Disp.UpdateBuildings();

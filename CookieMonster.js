@@ -180,13 +180,33 @@ CM.Cache.RemakeSeaSpec = function() {
 	}
 }
 
-CM.Cache.RemakeSellAllTotal = function() {
-	var sellTotal = 0;
-	for (var i in Game.Objects) {
-		var me = Game.Objects[i];
-		sellTotal += CM.Sim.BuildingSell(me.basePrice, me.amount, me.free, me.amount);
+CM.Cache.RemakeSellForChoEgg = function() {
+	if (Game.hasAura('Earth Shatterer') || Game.dragonLevel < 9) {
+		var sellTotal = 0;
+		for (var i in Game.Objects) {
+			var me = Game.Objects[i];
+			sellTotal += CM.Sim.BuildingSell(me.basePrice, me.amount, me.free, me.amount, 0);
+		}
 	}
-	CM.Cache.SellAllTotal = sellTotal;
+	else {
+		var highestBuilding = '';
+		for (var i in Game.Objects) {
+			if (Game.Objects[i].amount > 0) highestBuilding = i;
+		}
+		var sellTotal = 0;
+		for (var i in Game.Objects) {
+			var me = Game.Objects[i];
+			var amount = 0;
+			if (i == highestBuilding) {
+				amount = me.amount - 1;
+			}
+			else {
+				amount = me.amount;
+			}
+			sellTotal += CM.Sim.BuildingSell(me.basePrice, amount, me.free, amount, 1);
+		}
+	}
+	CM.Cache.SellForChoEgg = sellTotal;
 }
 
 CM.Cache.Lucky = 0;
@@ -202,7 +222,7 @@ CM.Cache.ChainFrenzy = 0;
 CM.Cache.ChainFrenzyWrath = 0;
 CM.Cache.ChainFrenzyReward = 0;
 CM.Cache.ChainFrenzyWrathReward = 0;
-CM.Cache.SellAllTotal = 0;
+CM.Cache.SellForChoEgg = 0;
 
 /**********
  * Config *
@@ -690,7 +710,7 @@ CM.Disp.UpdateTimerBar = function() {
 		var maxWidth = CM.Disp.TimerBar.offsetWidth - 129;
 		var count = 0;
 		
-		if (Game.goldenCookie.life <= 0 && Game.goldenCookie.toDie == 0) {
+		if (Game.goldenCookie.life <= 0 && Game.goldenCookie.toDie == 0 && !Game.Has('Golden switch [off]')) {
 			CM.Disp.TimerBarGC.style.display = '';
 			l('CMTimerBarGCMinBar').style.width = Math.round(Math.max(0, Game.goldenCookie.minTime - Game.goldenCookie.time) * maxWidth / Game.goldenCookie.maxTime) + 'px';
 			if (Game.goldenCookie.minTime == Game.goldenCookie.maxTime) {
@@ -1097,8 +1117,11 @@ CM.Disp.UpdateTitle = function() {
 				titleGC = '[G ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
 			}
 		}
-		else {
+		else if (!Game.Has('Golden switch [off]')) {
 			titleGC = '[' +  Math.ceil((Game.goldenCookie.maxTime - Game.goldenCookie.time) / Game.fps) + ']';
+		}
+		else {
+			titleGC = '[GS]'
 		}
 		if (Game.season=='christmas') {
 			addSP = true;
@@ -1134,11 +1157,11 @@ CM.Disp.CreateResetTooltip = function() {
 CM.Disp.CreateChoEggTooltip = function() {
 	CM.Disp.ChoEggTooltipPlaceholder = document.createElement('div');
 	var choEggTitleDesc = document.createElement('div');
-	choEggTitleDesc.style.minWidth = '240px';
+	choEggTitleDesc.style.minWidth = '310px';
 	choEggTitleDesc.style.marginBottom = '4px';
 	var div = document.createElement('div');
 	div.style.textAlign = 'left';
-	div.textContent = 'The amount of cookies you would get from selling all buildings, popping all wrinklers, and then buying Chocolate egg';
+	div.textContent = 'The amount of cookies you would get from selling all buildings with Earth Shatterer aura (if possible), popping all wrinklers, and then buying Chocolate egg';
 	choEggTitleDesc.appendChild(div);
 	CM.Disp.ChoEggTooltipPlaceholder.appendChild(choEggTitleDesc);
 }
@@ -1641,7 +1664,7 @@ CM.Disp.AddMenuStats = function(title) {
 				choEggTitleSpan.style.verticalAlign = 'bottom';
 				choEggTitleSpan.textContent = '?';
 				choEggTitleFrag.appendChild(choEggTitleSpan);
-				var choEggTotal = Game.cookies + CM.Cache.SellAllTotal;
+				var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
 				if (Game.cpsSucked > 0) {
 					choEggTotal += totalSucked;
 				}
@@ -1803,7 +1826,12 @@ CM.Disp.Tooltip = function(type, name) {
 			}
 		}
 		else if (Game.buyMode == -1) {
-			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + l('productPrice' + Game.Objects[name].id).innerHTML);
+			if (Game.buyBulk == -1) {
+				l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + Beautify(CM.Sim.BuildingSell(Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].free, Game.Objects[name].amount, 0)));
+			}
+			else {
+				l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + Beautify(CM.Sim.BuildingSell(Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].free, Game.buyBulk, 0)));
+			}
 		}
 	}
 	else { // Upgrades
@@ -2187,7 +2215,7 @@ CM.Loop = function() {
 			CM.Cache.RemakeLucky();
 			CM.Cache.RemakeChain();
 			CM.Cache.RemakeSeaSpec();
-			CM.Cache.RemakeSellAllTotal();
+			CM.Cache.RemakeSellForChoEgg();
 
 			CM.Disp.UpdateBotBarOther();
 			CM.Disp.UpdateBuildings();
@@ -2287,7 +2315,7 @@ CM.VersionMinor = '3';
  *******/
 
 CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
-	var price=0;
+	/*var price=0;
 	for (var i = Math.max(0 , start); i < Math.max(0, start + increase); i++) {
 		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
 	}
@@ -2296,11 +2324,25 @@ CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
 	if (Game.Has('Faberge egg')) price *= 0.99;
 	if (Game.Has('Divine discount')) price *= 0.99;
 	if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
-	return Math.ceil(price);
+	return Math.ceil(price);*/
+
+	var moni = 0;
+	for (var i = 0; i < increase; i++) {
+		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
+		if (Game.Has('Season savings')) price *= 0.99;
+		if (Game.Has('Santa\'s dominion')) price *= 0.99;
+		if (Game.Has('Faberge egg')) price *= 0.99;
+		if (Game.Has('Divine discount')) price *= 0.99;
+		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
+		price = Math.ceil(price);
+		moni+=price;
+		start++;
+	}
+	return moni;
 }
 
-CM.Sim.BuildingSell = function(basePrice, start, free, amount) {
-	var price=0;
+CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
+	/*var price=0;
 	for (var i = Math.max(0, start - amount); i < Math.max(0, start); i++) {
 		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
 	}
@@ -2309,13 +2351,32 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount) {
 	if (Game.Has('Faberge egg')) price*=0.99;
 	if (Game.Has('Divine discount')) price*=0.99;
 	if (Game.hasAura('Fierce Hoarder')) price*=0.98;
-	if (Game.hasAura('Earth Shatterer')) {
+	if (Game.hasAura('Earth Shatterer') || emuAura) {
 		price *= 0.85;
 	}
 	else {
 		price *= 0.5;
 	}
-	return Math.ceil(price);
+	return Math.ceil(price);*/
+
+	var moni=0;
+	for (var i = 0; i < amount; i++) {
+		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
+		if (Game.Has('Season savings')) price *= 0.99;
+		if (Game.Has('Santa\'s dominion')) price *= 0.99;
+		if (Game.Has('Faberge egg')) price *= 0.99;
+		if (Game.Has('Divine discount')) price *= 0.99;
+		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
+		price = Math.ceil(price);
+		var giveBack = 0.5;
+		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.85;
+		price = Math.floor(price * giveBack);
+		if (start > 0) {
+			moni += price;
+			start--;
+		}
+	}
+	return moni;
 }
 
 CM.Sim.Has = function(what) {

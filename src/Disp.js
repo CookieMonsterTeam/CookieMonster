@@ -332,7 +332,7 @@ CM.Disp.UpdateTimerBar = function() {
 		var maxWidth = CM.Disp.TimerBar.offsetWidth - 129;
 		var count = 0;
 		
-		if (Game.goldenCookie.life <= 0 && Game.goldenCookie.toDie == 0) {
+		if (Game.goldenCookie.life <= 0 && Game.goldenCookie.toDie == 0 && !Game.Has('Golden switch [off]')) {
 			CM.Disp.TimerBarGC.style.display = '';
 			l('CMTimerBarGCMinBar').style.width = Math.round(Math.max(0, Game.goldenCookie.minTime - Game.goldenCookie.time) * maxWidth / Game.goldenCookie.maxTime) + 'px';
 			if (Game.goldenCookie.minTime == Game.goldenCookie.maxTime) {
@@ -739,8 +739,11 @@ CM.Disp.UpdateTitle = function() {
 				titleGC = '[G ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
 			}
 		}
-		else {
+		else if (!Game.Has('Golden switch [off]')) {
 			titleGC = '[' +  Math.ceil((Game.goldenCookie.maxTime - Game.goldenCookie.time) / Game.fps) + ']';
+		}
+		else {
+			titleGC = '[GS]'
 		}
 		if (Game.season=='christmas') {
 			addSP = true;
@@ -776,11 +779,11 @@ CM.Disp.CreateResetTooltip = function() {
 CM.Disp.CreateChoEggTooltip = function() {
 	CM.Disp.ChoEggTooltipPlaceholder = document.createElement('div');
 	var choEggTitleDesc = document.createElement('div');
-	choEggTitleDesc.style.minWidth = '240px';
+	choEggTitleDesc.style.minWidth = '310px';
 	choEggTitleDesc.style.marginBottom = '4px';
 	var div = document.createElement('div');
 	div.style.textAlign = 'left';
-	div.textContent = 'The amount of cookies you would get from selling all buildings, popping all wrinklers, and then buying Chocolate egg';
+	div.textContent = 'The amount of cookies you would get from selling all buildings with Earth Shatterer aura (if possible), popping all wrinklers, and then buying Chocolate egg';
 	choEggTitleDesc.appendChild(div);
 	CM.Disp.ChoEggTooltipPlaceholder.appendChild(choEggTitleDesc);
 }
@@ -1283,7 +1286,7 @@ CM.Disp.AddMenuStats = function(title) {
 				choEggTitleSpan.style.verticalAlign = 'bottom';
 				choEggTitleSpan.textContent = '?';
 				choEggTitleFrag.appendChild(choEggTitleSpan);
-				var choEggTotal = Game.cookies + CM.Cache.SellAllTotal;
+				var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
 				if (Game.cpsSucked > 0) {
 					choEggTotal += totalSucked;
 				}
@@ -1445,7 +1448,12 @@ CM.Disp.Tooltip = function(type, name) {
 			}
 		}
 		else if (Game.buyMode == -1) {
-			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + l('productPrice' + Game.Objects[name].id).innerHTML);
+			if (Game.buyBulk == -1) {
+				l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + Beautify(CM.Sim.BuildingSell(Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].free, Game.Objects[name].amount, 0)));
+			}
+			else {
+				l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + Beautify(CM.Sim.BuildingSell(Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].free, Game.buyBulk, 0)));
+			}
 		}
 	}
 	else { // Upgrades

@@ -160,13 +160,33 @@ CM.Cache.RemakeSeaSpec = function() {
 	}
 }
 
-CM.Cache.RemakeSellAllTotal = function() {
-	var sellTotal = 0;
-	for (var i in Game.Objects) {
-		var me = Game.Objects[i];
-		sellTotal += CM.Sim.BuildingSell(me.basePrice, me.amount, me.free, me.amount);
+CM.Cache.RemakeSellForChoEgg = function() {
+	if (Game.hasAura('Earth Shatterer') || Game.dragonLevel < 9) {
+		var sellTotal = 0;
+		for (var i in Game.Objects) {
+			var me = Game.Objects[i];
+			sellTotal += CM.Sim.BuildingSell(me.basePrice, me.amount, me.free, me.amount, 0);
+		}
 	}
-	CM.Cache.SellAllTotal = sellTotal;
+	else {
+		var highestBuilding = '';
+		for (var i in Game.Objects) {
+			if (Game.Objects[i].amount > 0) highestBuilding = i;
+		}
+		var sellTotal = 0;
+		for (var i in Game.Objects) {
+			var me = Game.Objects[i];
+			var amount = 0;
+			if (i == highestBuilding) {
+				amount = me.amount - 1;
+			}
+			else {
+				amount = me.amount;
+			}
+			sellTotal += CM.Sim.BuildingSell(me.basePrice, amount, me.free, amount, 1);
+		}
+	}
+	CM.Cache.SellForChoEgg = sellTotal;
 }
 
 CM.Cache.Lucky = 0;
@@ -182,5 +202,5 @@ CM.Cache.ChainFrenzy = 0;
 CM.Cache.ChainFrenzyWrath = 0;
 CM.Cache.ChainFrenzyReward = 0;
 CM.Cache.ChainFrenzyWrathReward = 0;
-CM.Cache.SellAllTotal = 0;
+CM.Cache.SellForChoEgg = 0;
 

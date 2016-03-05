@@ -3,7 +3,7 @@
  *******/
 
 CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
-	var price=0;
+	/*var price=0;
 	for (var i = Math.max(0 , start); i < Math.max(0, start + increase); i++) {
 		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
 	}
@@ -12,11 +12,25 @@ CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
 	if (Game.Has('Faberge egg')) price *= 0.99;
 	if (Game.Has('Divine discount')) price *= 0.99;
 	if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
-	return Math.ceil(price);
+	return Math.ceil(price);*/
+
+	var moni = 0;
+	for (var i = 0; i < increase; i++) {
+		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
+		if (Game.Has('Season savings')) price *= 0.99;
+		if (Game.Has('Santa\'s dominion')) price *= 0.99;
+		if (Game.Has('Faberge egg')) price *= 0.99;
+		if (Game.Has('Divine discount')) price *= 0.99;
+		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
+		price = Math.ceil(price);
+		moni+=price;
+		start++;
+	}
+	return moni;
 }
 
-CM.Sim.BuildingSell = function(basePrice, start, free, amount) {
-	var price=0;
+CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
+	/*var price=0;
 	for (var i = Math.max(0, start - amount); i < Math.max(0, start); i++) {
 		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
 	}
@@ -25,13 +39,32 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount) {
 	if (Game.Has('Faberge egg')) price*=0.99;
 	if (Game.Has('Divine discount')) price*=0.99;
 	if (Game.hasAura('Fierce Hoarder')) price*=0.98;
-	if (Game.hasAura('Earth Shatterer')) {
+	if (Game.hasAura('Earth Shatterer') || emuAura) {
 		price *= 0.85;
 	}
 	else {
 		price *= 0.5;
 	}
-	return Math.ceil(price);
+	return Math.ceil(price);*/
+
+	var moni=0;
+	for (var i = 0; i < amount; i++) {
+		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
+		if (Game.Has('Season savings')) price *= 0.99;
+		if (Game.Has('Santa\'s dominion')) price *= 0.99;
+		if (Game.Has('Faberge egg')) price *= 0.99;
+		if (Game.Has('Divine discount')) price *= 0.99;
+		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
+		price = Math.ceil(price);
+		var giveBack = 0.5;
+		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.85;
+		price = Math.floor(price * giveBack);
+		if (start > 0) {
+			moni += price;
+			start--;
+		}
+	}
+	return moni;
 }
 
 CM.Sim.Has = function(what) {
