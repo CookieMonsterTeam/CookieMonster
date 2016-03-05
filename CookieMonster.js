@@ -2543,7 +2543,6 @@ CM.Sim.ResetBonus = function() {
 /******************
  * User Utilities *
  ******************/
-CM.Util = {};
 // Gets the name of the best building to buy.
 CM.Util.GetBestBuyName = function() {
         var bestBCI = null;
@@ -2625,6 +2624,28 @@ CM.Util.BuyAllSafeBuildings = function() {
         } else { // not IsSafeToBuy()
                 console.log("Stopped purchases due to lack of funds.");
         }
+}
+
+CM.Util.autoclickID = 0;
+CM.Util.StartAutoClick = function(timeout) {
+        if (CM.Util.autoclickID != 0){
+		CM.Util.StopAutoClick();
+        }
+	if (timeout == undefined) {
+		timeout = 20;
+	}
+	var ntimeout = parseInt(timeout);
+	if (isNaN(ntimeout)){
+		console.log("What is this timeout?", timeout);
+	}
+	CM.Util.autoclickID = setInterval(function(){$('#bigCookie').click();}, ntimeout);
+}
+
+CM.Util.StopAutoClick = function() {
+	if (CM.Util.autoclickID != 0){
+		clearInterval(CM.Util.autoclickID);
+		CM.Util.autoclickID = 0;
+	}
 }
 
 /**********
