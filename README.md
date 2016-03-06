@@ -51,7 +51,7 @@ Note: For this index, **lower is better**, meaning a building with a BCI of 1 is
 
 ## What it doesn't do
 
-Most likely you'll find items in gray like Golden Cookie upgrades, clicking upgrades – everything that doesn't earn you a direct bonus to your income will display as gray. This means the following upgrades are **not** taken into account by Cookie Monster:
+Most likely you'll find items in gray like Golden Cookie upgrades, clicking upgrades, season upgrades – everything that doesn't earn you a direct bonus to your income will display as gray. This means the following upgrades are **not** taken into account by Cookie Monster:
 
 * Plastic mouse
 * Iron mouse
@@ -140,7 +140,7 @@ Before submitting a bug, make sure to give a shot at the latest version of the a
 
 ```javascript
 javascript: (function () {
-	Game.LoadMod('https://raw.githubusercontent.com/Aktanusa/CookieMonster/dev/CookieMonster.js');
+	Game.LoadMod('https://cdn.rawgit.com/Aktanusa/CookieMonster/dev/CookieMonster.js');
 }());
 ```
 
@@ -153,4 +153,6 @@ All suggestions are welcome, even the smallest ones.
 * **[Raving_Kumquat](http://cookieclicker.wikia.com/wiki/User:Raving_Kumquat)**: Original author
 * **[Maxime Fabre](https://github.com/Anahkiasen)**: Previous maintainer
 * **Alderi Tokori**: ROI calculations (unused now)
+* **[Alhifar](https://github.com/Alhifar)**: Missed Golden Cookie Stat
+* **[BlackenedGem](https://github.com/BlackenedGem)**: Golden/Wrath Cookie Favicons
 * **[Aktanusa](https://github.com/Aktanusa)**: Current maintainer

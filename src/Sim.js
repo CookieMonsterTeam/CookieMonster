@@ -2,32 +2,69 @@
  * Sim *
  *******/
 
-CM.Sim.BuildingGetPrice = function(basePrice, start, increase) {
-	var totalPrice = 0;
-	var count = 0;
-	while(count < increase) {
-		var price = basePrice * Math.pow(Game.priceIncrease, start + count);
+CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
+	/*var price=0;
+	for (var i = Math.max(0 , start); i < Math.max(0, start + increase); i++) {
+		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
+	}
+	if (Game.Has('Season savings')) price *= 0.99;
+	if (Game.Has('Santa\'s dominion')) price *= 0.99;
+	if (Game.Has('Faberge egg')) price *= 0.99;
+	if (Game.Has('Divine discount')) price *= 0.99;
+	if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
+	return Math.ceil(price);*/
+
+	var moni = 0;
+	for (var i = 0; i < increase; i++) {
+		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
 		if (Game.Has('Season savings')) price *= 0.99;
 		if (Game.Has('Santa\'s dominion')) price *= 0.99;
 		if (Game.Has('Faberge egg')) price *= 0.99;
 		if (Game.Has('Divine discount')) price *= 0.99;
 		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
-		totalPrice += Math.ceil(price);
-		count++;
+		price = Math.ceil(price);
+		moni+=price;
+		start++;
 	}
-	return totalPrice;
+	return moni;
 }
 
-CM.Sim.BuildingSell = function(basePrice, start, amount) {
-	var totalMoni = 0;
-	while (amount > 0) {
-		var giveBack = 0.5;
-		if (Game.hasAura('Earth Shatterer')) giveBack = 0.85;
-		totalMoni += Math.floor(CM.Sim.BuildingGetPrice(basePrice, start, 1) * giveBack);
-		start--;
-		amount--;
+CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
+	/*var price=0;
+	for (var i = Math.max(0, start - amount); i < Math.max(0, start); i++) {
+		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
 	}
-	return totalMoni;
+	if (Game.Has('Season savings')) price*=0.99;
+	if (Game.Has('Santa\'s dominion')) price*=0.99;
+	if (Game.Has('Faberge egg')) price*=0.99;
+	if (Game.Has('Divine discount')) price*=0.99;
+	if (Game.hasAura('Fierce Hoarder')) price*=0.98;
+	if (Game.hasAura('Earth Shatterer') || emuAura) {
+		price *= 0.85;
+	}
+	else {
+		price *= 0.5;
+	}
+	return Math.ceil(price);*/
+
+	var moni=0;
+	for (var i = 0; i < amount; i++) {
+		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
+		if (Game.Has('Season savings')) price *= 0.99;
+		if (Game.Has('Santa\'s dominion')) price *= 0.99;
+		if (Game.Has('Faberge egg')) price *= 0.99;
+		if (Game.Has('Divine discount')) price *= 0.99;
+		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
+		price = Math.ceil(price);
+		var giveBack = 0.5;
+		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.85;
+		price = Math.floor(price * giveBack);
+		if (start > 0) {
+			moni += price;
+			start--;
+		}
+	}
+	return moni;
 }
 
 CM.Sim.Has = function(what) {
@@ -230,9 +267,11 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (CM.Sim.Has('Grandmas\' grandmas')) grandmas++;
 	if (CM.Sim.Has('Antigrandmas')) grandmas++;
 	if (CM.Sim.Has('Rainbow grandmas')) grandmas++;
+	if (CM.Sim.Has('Banker grandmas')) grandmas++;
+	if (CM.Sim.Has('Priestess grandmas')) grandmas++;
+	if (CM.Sim.Has('Witch grandmas')) grandmas++;
 	if (!CM.Sim.HasAchiev('Elder') && grandmas >= 7) CM.Sim.Win('Elder');
 
-	// Redo?
 	var buildingsOwned = 0;
 	var mathematician = 1;
 	var base10 = 1;
@@ -244,7 +283,7 @@ CM.Sim.CheckOtherAchiev = function() {
 			if (CM.Sim.Objects[i].amount < Math.min(128, Math.pow(2, (Game.ObjectsById.length - Game.Objects[i].id) - 1))) mathematician = 0;
 		}
 		if (!CM.Sim.HasAchiev('Base 10')) {
-			if (CM.Sim.Objects[i].amount < (Game.ObjectsById.length - Game.Objects[i].id)*10) base10 = 0;
+			if (CM.Sim.Objects[i].amount < (Game.ObjectsById.length - Game.Objects[i].id) * 10) base10 = 0;
 		}
 	}
 	if (minAmount >= 1) CM.Sim.Win('One with everything');
@@ -375,9 +414,34 @@ CM.Sim.ResetBonus = function() {
 	if (Game.cookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');
 	if (Game.cookiesEarned >= 1000000000000000000000000000000000) CM.Sim.Win('To crumbs, you say?');
 	
+	if (CM.Sim.Upgrades['Heavenly chip secret'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly cookie stand'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly bakery'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly confectionery'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly key'].bought = 1;
+		CM.Sim.UpgradesOwned++;
+	}
+	
+	CM.Sim.prestige = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));
+	
 	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
 
 	CM.Sim.CalculateGains();
+	
+	CM.Sim.CheckOtherAchiev();
 	
 	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
 		CM.Sim.CalculateGains();
