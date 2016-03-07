@@ -148,9 +148,9 @@ CM.Disp.CreateBotBar = function() {
 	var bonus = document.createElement('tr');
 	bonus.appendChild(firstCol('Bonus Income', CM.Disp.colorBlue));
 	tbody.appendChild(bonus);
-	var bci = document.createElement('tr');
-	bci.appendChild(firstCol('Base Cost Per Income', CM.Disp.colorBlue));
-	tbody.appendChild(bci);
+	var roi = document.createElement('tr');
+	roi.appendChild(firstCol('Return On Investment', CM.Disp.colorBlue));
+	tbody.appendChild(roi);
 	var time = document.createElement('tr');
 	time.appendChild(firstCol('Time Left', CM.Disp.colorBlue));
 	tbody.appendChild(time);
@@ -164,7 +164,7 @@ CM.Disp.CreateBotBar = function() {
 		header.appendChild(document.createTextNode(')'));
 		type.appendChild(header);
 		bonus.appendChild(document.createElement('td'));
-		bci.appendChild(document.createElement('td'));
+		roi.appendChild(document.createElement('td'));
 		time.appendChild(document.createElement('td'));
 	
 	}
@@ -194,7 +194,7 @@ CM.Disp.UpdateBotBarOther = function() {
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].bonus, 2);
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].className = CM.Disp.colorTextPre + CM.Cache.Objects[i].color;
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].bci, 2);
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].roi, 2);
 		}
 	}
 }
@@ -446,13 +446,13 @@ CM.Disp.UpdateBuildings = function() {
 	if (CM.Config.BuildColor == 1 && Game.buyMode == 1) {
 		var target = '';
 		if (Game.buyBulk == 10) {
-			target = 'Objects10'
+			target = 'Objects10';
 		}
 		else if (Game.buyBulk == 100) {
-			target = 'Objects100'
+			target = 'Objects100';
 		}
 		else {
-			target = 'Objects'
+			target = 'Objects';
 		}
 		for (var i in CM.Cache[target]) {
 			l('productPrice' + Game.Objects[i].id).style.color = CM.Config.Colors[CM.Cache[target][i].color];
@@ -499,13 +499,13 @@ CM.Disp.CreateUpgradeBar = function() {
 		return div;
 	}
 	
-	legend.appendChild(legendLine(CM.Disp.colorBlue, 'Better than best BCI building'));
-	legend.appendChild(legendLine(CM.Disp.colorGreen, 'Same as best BCI building'));
-	legend.appendChild(legendLine(CM.Disp.colorYellow, 'Between best and worst BCI buildings closer to best'));
-	legend.appendChild(legendLine(CM.Disp.colorOrange, 'Between best and worst BCI buildings closer to worst'));
-	legend.appendChild(legendLine(CM.Disp.colorRed, 'Same as worst BCI building'));
-	legend.appendChild(legendLine(CM.Disp.colorPurple, 'Worse than worst BCI building'));
-	legend.appendChild(legendLine(CM.Disp.colorGray, 'Negative or infinity BCI'));
+	legend.appendChild(legendLine(CM.Disp.colorBlue, 'Better than best ROI building'));
+	legend.appendChild(legendLine(CM.Disp.colorGreen, 'Same as best ROI building'));
+	legend.appendChild(legendLine(CM.Disp.colorYellow, 'Between best and worst ROI buildings closer to best'));
+	legend.appendChild(legendLine(CM.Disp.colorOrange, 'Between best and worst ROI buildings closer to worst'));
+	legend.appendChild(legendLine(CM.Disp.colorRed, 'Same as worst ROI building'));
+	legend.appendChild(legendLine(CM.Disp.colorPurple, 'Worse than worst ROI building'));
+	legend.appendChild(legendLine(CM.Disp.colorGray, 'Negative or infinity ROI'));
 	placeholder.appendChild(legend);
 	
 	CM.Disp.UpgradeBar.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML), 'store');};
@@ -1486,11 +1486,11 @@ CM.Disp.Tooltip = function(type, name) {
 		income.style.color = 'white';
 		income.id = 'CMTooltipIncome';
 		tooltip.appendChild(income);
-		tooltip.appendChild(header('Base Cost Per Income'));
-		var bci = document.createElement('div');
-		bci.style.marginBottom = '4px';
-		bci.id = 'CMTooltipBCI';
-		tooltip.appendChild(bci);
+		tooltip.appendChild(header('Return On Investment'));
+		var roi = document.createElement('div');
+		roi.style.marginBottom = '4px';
+		roi.id = 'CMTooltipROI';
+		tooltip.appendChild(roi);
 		tooltip.appendChild(header('Time Left'));
 		var time = document.createElement('div');
 		time.id = 'CMTooltipTime';
@@ -1528,8 +1528,8 @@ CM.Disp.UpdateTooltip = function() {
 			bonus = CM.Cache[target][CM.Disp.tooltipName].bonus;
 			if (CM.Config.Tooltip == 1 && Game.buyMode == 1) {
 				l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
-				l('CMTooltipBCI').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].bci, 2);
-				l('CMTooltipBCI').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
+				l('CMTooltipROI').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].roi, 2);
+				l('CMTooltipROI').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 			}
 		}
 		else { // Upgrades
@@ -1537,8 +1537,8 @@ CM.Disp.UpdateTooltip = function() {
 			price = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
 			if (CM.Config.Tooltip == 1) {
 				l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
-				l('CMTooltipBCI').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bci, 2);
-				l('CMTooltipBCI').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+				l('CMTooltipROI').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].roi, 2);
+				l('CMTooltipROI').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
 			}
 		}
 		if (CM.Config.Tooltip == 1 && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
@@ -1712,9 +1712,6 @@ CM.Disp.RefreshScale = function() {
 	CM.Disp.UpdateUpgrades();
 }
 
-CM.Disp.min = -1;
-CM.Disp.max = -1;
-CM.Disp.mid = -1;
 CM.Disp.colorTextPre = 'CMText';
 CM.Disp.colorBackPre = 'CMBack';
 CM.Disp.colorBorderPre = 'CMBorder';
@@ -1730,8 +1727,6 @@ CM.Disp.colorBrown = 'Brown';
 CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
 CM.Disp.lastGoldenCookieState = 'none';
 CM.Disp.lastAscendState = -1;
-CM.Disp.lastBuyMode = -1;
-CM.Disp.lastBuyBulk = -1;
 
 CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];

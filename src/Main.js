@@ -86,33 +86,22 @@ CM.Loop = function() {
 	if (!Game.OnAscend && Game.AscendTimer == 0) {
 		if (CM.Sim.DoSims) {		
 			CM.Cache.RemakeIncome();
-			CM.Cache.RemakeBCI();
 			CM.Cache.RemakeLucky();
 			CM.Cache.RemakeChain();
 			CM.Cache.RemakeSeaSpec();
 			CM.Cache.RemakeSellForChoEgg();
-
-			CM.Disp.UpdateBotBarOther();
-			CM.Disp.UpdateBuildings();
-			CM.Disp.UpdateUpgrades();
 		
 			CM.Sim.DoSims = 0;
 		}
 		
-		// Update Buildings Color for different buy/sell modes
-		var updateBuildings = false;
-		if (CM.Disp.lastBuyMode != Game.buyMode) {
-			CM.Disp.lastBuyMode = Game.buyMode;
-			updateBuildings = true;
-		}
-		if (CM.Disp.lastBuyBulk != Game.buyBulk) {
-			CM.Disp.lastBuyBulk = Game.buyBulk;
-			updateBuildings = true;
-		}
-		if (updateBuildings) {
-			CM.Disp.UpdateBuildings();
-		}
+		// Calculate ROI
+		CM.Cache.RemakeROI();
 
+		// Update colors
+		CM.Disp.UpdateBotBarOther();
+		CM.Disp.UpdateBuildings();
+		CM.Disp.UpdateUpgrades();
+		
 		// Redraw timers
 		CM.Disp.UpdateBotBarTime();
 		CM.Disp.UpdateTimerBar();
