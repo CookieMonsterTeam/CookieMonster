@@ -1000,6 +1000,10 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyRewardFrenzyMaxWrath *= 1.1;
 			luckyCurWrath *= 1.1;
 		}
+		var luckySplit = false;
+		if (luckyRewardMax != luckyRewardMaxWrath) {
+			luckySplit = true;
+		}
 	
 		var luckyReqFrag = document.createDocumentFragment();
 		var luckyReqSpan = document.createElement('span');
@@ -1025,9 +1029,9 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyReqFrenFrag.appendChild(luckyReqFrenSmall);
 		}
 		stats.appendChild(listing('\"Lucky!\" Cookies Required (Frenzy)', luckyReqFrenFrag));
-		stats.appendChild(listing('\"Lucky!\" Reward (MAX) (Golden / Wrath)',  document.createTextNode(Beautify(luckyRewardMax) + ' / ' + Beautify(luckyRewardMaxWrath))));
-		stats.appendChild(listing('\"Lucky!\" Reward (MAX) (Frenzy) (Golden / Wrath)',  document.createTextNode(Beautify(luckyRewardFrenzyMax) + ' / ' + Beautify(luckyRewardFrenzyMaxWrath))));
-		stats.appendChild(listing('\"Lucky!\" Reward (CUR) (Golden / Wrath)',  document.createTextNode(Beautify(luckyCur) + ' / ' + Beautify(luckyCurWrath))));
+		stats.appendChild(listing('\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''),  document.createTextNode(Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : ''))));
+		stats.appendChild(listing('\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''),  document.createTextNode(Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : ''))));
+		stats.appendChild(listing('\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''),  document.createTextNode(Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''))));
 	}
 	
 	stats.appendChild(header('Chain Cookies', 'Chain'));
