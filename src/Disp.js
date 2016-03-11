@@ -445,10 +445,10 @@ CM.Disp.UpdateBotTimerBarDisplay = function() {
 CM.Disp.UpdateBuildings = function() {
 	if (CM.Config.BuildColor == 1 && Game.buyMode == 1) {
 		var target = '';
-		if (Game.buyBulk == 10) {
+		if (Game.buyBulk == 10 && CM.Config.BulkBuildColor == 1) {
 			target = 'Objects10';
 		}
-		else if (Game.buyBulk == 100) {
+		else if (Game.buyBulk == 100 && CM.Config.BulkBuildColor == 1) {
 			target = 'Objects100';
 		}
 		else {
@@ -855,6 +855,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('TimerBar'));
 	frag.appendChild(listing('TimerBarPos'));
 	frag.appendChild(listing('BuildColor'));
+	frag.appendChild(listing('BulkBuildColor'));
 	frag.appendChild(listing('UpBarColor'));
 	for (var i = 0; i < CM.Disp.colors.length; i++) {
 		var div = document.createElement('div');

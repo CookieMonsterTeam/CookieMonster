@@ -134,5 +134,5 @@ All suggestions are welcome, even the smallest ones.
 * **[Alderi Tokori](http://forum.dashnet.org/profile/Alderi)**: ROI calculations (unused now)
 * **[Alhifar](https://github.com/Alhifar)**: Missed Golden Cookie Stat
 * **[BlackenedGem](https://github.com/BlackenedGem)**: Golden/Wrath Cookie Favicons
-* **[Sandworm](https://github.com/svschouw)**: Modified ROI Calculation to account for cookies in bank already
+* **[Sandworm](https://github.com/svschouw)**: Modified ROI calculation
 * **[Aktanusa](https://github.com/Aktanusa)**: Current maintainer
