@@ -222,7 +222,8 @@ CM.Sim.CalculateGains = function() {
 		// The boost increases a little every day, with diminishing returns up to +10% on the 100th day
 		var day = Math.floor((CM.Sim.Date - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
 		day = Math.min(day,100);
-		eggMult += (1 - Math.pow(1 - day / 100, 3)) * 10;
+		CM.Cache.CentEgg = (1 - Math.pow(1 - day / 100, 3)) * 10;
+		eggMult += CM.Cache.CentEgg;
 	}
 	mult *= (1 + 0.01 * eggMult);
 	
@@ -403,6 +404,16 @@ CM.Sim.BuyUpgrades = function() {
 	}
 }
 
+CM.Sim.NoGoldSwitchCookiesPS = function() {
+	if (Game.Has('Golden switch [off]')) {
+		CM.Sim.CopyData();
+		CM.Sim.Upgrades['Golden switch [off]'].bought = 0;
+		CM.Sim.CalculateGains();
+		CM.Cache.NoGoldSwitchCookiesPS = CM.Sim.cookiesPs;
+	}
+	else CM.Cache.NoGoldSwitchCookiesPS = Game.cookiesPs;
+}
+
 CM.Sim.ResetBonus = function() {
 	CM.Sim.CopyData();
 	
@@ -436,6 +447,7 @@ CM.Sim.ResetBonus = function() {
 	if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
 		CM.Sim.Upgrades['Heavenly key'].bought = 1;
 		CM.Sim.UpgradesOwned++;
+		CM.Sim.Win('Wholesome');
 	}
 	
 	CM.Sim.prestige = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));

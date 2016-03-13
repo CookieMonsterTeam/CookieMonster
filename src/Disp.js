@@ -764,6 +764,26 @@ CM.Disp.UpdateTitle = function() {
 	}
 }
 
+CM.Disp.CollectWrinklers = function() {
+	for (var i in Game.wrinklers) {
+		if (Game.wrinklers[i].sucked > 0) {
+			Game.wrinklers[i].hp = 0;
+		}
+	}
+}
+
+CM.Disp.CreateGoldCookTooltip = function() {
+	CM.Disp.GoldCookTooltipPlaceholder = document.createElement('div');
+	var goldCookDesc = document.createElement('div');
+	goldCookDesc.style.minWidth = '200px';
+	goldCookDesc.style.marginBottom = '4px';
+	var div = document.createElement('div');
+	div.style.textAlign = 'left';
+	div.textContent = 'Calculated with Golden Switch off';
+	goldCookDesc.appendChild(div);
+	CM.Disp.GoldCookTooltipPlaceholder.appendChild(goldCookDesc);
+}
+
 CM.Disp.CreateResetTooltip = function() {
 	CM.Disp.ResetTooltipPlaceholder = document.createElement('div');
 	var resetTitleDesc = document.createElement('div');
@@ -977,13 +997,36 @@ CM.Disp.AddMenuStats = function(title) {
 		return div;
 	}
 	
+	if (CM.Config.StatsPref.Lucky || CM.Config.StatsPref.Chain) {		
+		var goldListing = function(text) {
+			var frag = document.createDocumentFragment();
+			frag.appendChild(document.createTextNode(text + ' '));
+			var span = document.createElement('span');
+			span.onmouseout = function() { Game.tooltip.hide(); };
+			span.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp.GoldCookTooltipPlaceholder.innerHTML));};
+			span.style.cursor = 'default';
+			span.style.display = 'inline-block';
+			span.style.height = '10px';
+			span.style.width = '10px';
+			span.style.borderRadius = '5px';
+			span.style.textAlign = 'center';
+			span.style.backgroundColor = '#C0C0C0';
+			span.style.color = 'black';
+			span.style.fontSize = '9px';
+			span.style.verticalAlign = 'bottom';
+			span.textContent = '?';
+			frag.appendChild(span);
+			return frag;
+		}
+	}
+	
 	stats.appendChild(header('Lucky Cookies', 'Lucky'));
 	if (CM.Config.StatsPref.Lucky) {
 		var luckyColor = (Game.cookies < CM.Cache.Lucky) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var luckyTime = (Game.cookies < CM.Cache.Lucky) ? CM.Disp.FormatTime((CM.Cache.Lucky - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
 		var luckyColorFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var luckyTimeFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		var luckyCurBase = Math.min(Game.cookies * 0.15, Game.cookiesPs * 60 * 15) + 13;
+		var luckyCurBase = Math.min(Game.cookies * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) + 13;
 		var luckyRewardMax = CM.Cache.LuckyReward;
 		var luckyRewardMaxWrath = CM.Cache.LuckyReward;
 		var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
@@ -1000,10 +1043,7 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyRewardFrenzyMaxWrath *= 1.1;
 			luckyCurWrath *= 1.1;
 		}
-		var luckySplit = false;
-		if (luckyRewardMax != luckyRewardMaxWrath) {
-			luckySplit = true;
-		}
+		var luckySplit = luckyRewardMax != luckyRewardMaxWrath;
 	
 		var luckyReqFrag = document.createDocumentFragment();
 		var luckyReqSpan = document.createElement('span');
@@ -1016,7 +1056,7 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyReqSmall.textContent = ' (' + luckyTime + ')';
 			luckyReqFrag.appendChild(luckyReqSmall);
 		}
-		stats.appendChild(listing('\"Lucky!\" Cookies Required', luckyReqFrag));
+		stats.appendChild(listing(goldListing('\"Lucky!\" Cookies Required'), luckyReqFrag));
 		var luckyReqFrenFrag = document.createDocumentFragment();
 		var luckyReqFrenSpan = document.createElement('span');
 		luckyReqFrenSpan.style.fontWeight = 'bold';
@@ -1028,10 +1068,10 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyReqFrenSmall.textContent = ' (' + luckyTimeFrenzy + ')';
 			luckyReqFrenFrag.appendChild(luckyReqFrenSmall);
 		}
-		stats.appendChild(listing('\"Lucky!\" Cookies Required (Frenzy)', luckyReqFrenFrag));
-		stats.appendChild(listing('\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''),  document.createTextNode(Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : ''))));
-		stats.appendChild(listing('\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''),  document.createTextNode(Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : ''))));
-		stats.appendChild(listing('\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''),  document.createTextNode(Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''))));
+		stats.appendChild(listing(goldListing('\"Lucky!\" Cookies Required (Frenzy)'), luckyReqFrenFrag));
+		stats.appendChild(listing(goldListing('\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : '')),  document.createTextNode(Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : ''))));
+		stats.appendChild(listing(goldListing('\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : '')),  document.createTextNode(Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : ''))));
+		stats.appendChild(listing(goldListing('\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : '')),  document.createTextNode(Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''))));
 	}
 	
 	stats.appendChild(header('Chain Cookies', 'Chain'));
@@ -1049,7 +1089,7 @@ CM.Disp.AddMenuStats = function(title) {
 		var chainWrathRewardMax = CM.Cache.ChainWrathReward;
 		var chainFrenzyRewardMax = CM.Cache.ChainFrenzyReward;
 		var chainFrenzyWrathRewardMax = CM.Cache.ChainFrenzyWrathReward;
-		var chainCurMax = Math.min(Game.cookiesPs * 60 * 60 * 6, Game.cookies * 0.25);
+		var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6, Game.cookies * 0.25);
 		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax);
 		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax);
 		if (Game.hasAura('Ancestral Metamorphosis')) {
@@ -1074,7 +1114,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainReqSmall.textContent = ' (' + chainTime + ')';
 			chainReqFrag.appendChild(chainReqSmall);
 		}
-		stats.appendChild(listing('\"Chain\" Cookies Required', chainReqFrag));
+		stats.appendChild(listing(goldListing('\"Chain\" Cookies Required'), chainReqFrag));
 		var chainWrathReqFrag = document.createDocumentFragment();
 		var chainWrathReqSpan = document.createElement('span');
 		chainWrathReqSpan.style.fontWeight = 'bold';
@@ -1086,7 +1126,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainWrathReqSmall.textContent = ' (' + chainWrathTime + ')';
 			chainWrathReqFrag.appendChild(chainWrathReqSmall);
 		}
-		stats.appendChild(listing('\"Chain\" Cookies Required (Wrath)', chainWrathReqFrag));
+		stats.appendChild(listing(goldListing('\"Chain\" Cookies Required (Wrath)'), chainWrathReqFrag));
 		var chainReqFrenFrag = document.createDocumentFragment();
 		var chainReqFrenSpan = document.createElement('span');
 		chainReqFrenSpan.style.fontWeight = 'bold';
@@ -1098,7 +1138,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainReqFrenSmall.textContent = ' (' + chainTimeFrenzy + ')';
 			chainReqFrenFrag.appendChild(chainReqFrenSmall);
 		}
-		stats.appendChild(listing('\"Chain\" Cookies Required (Frenzy)', chainReqFrenFrag));
+		stats.appendChild(listing(goldListing('\"Chain\" Cookies Required (Frenzy)'), chainReqFrenFrag));
 		var chainWrathReqFrenFrag = document.createDocumentFragment();
 		var chainWrathReqFrenFrag = document.createDocumentFragment();
 		var chainWrathReqFrenSpan = document.createElement('span');
@@ -1111,10 +1151,10 @@ CM.Disp.AddMenuStats = function(title) {
 			chainWrathReqFrenSmall.textContent = ' (' + chainWrathTimeFrenzy + ')';
 			chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSmall);
 		}
-		stats.appendChild(listing('\"Chain\" Cookies Required (Frenzy) (Wrath)', chainWrathReqFrenFrag));
-		stats.appendChild(listing('\"Chain\" Reward (MAX) (Golden / Wrath)',  document.createTextNode(Beautify(chainRewardMax) + ' / ' + Beautify(chainWrathRewardMax))));
-		stats.appendChild(listing('\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)',  document.createTextNode(Beautify(chainFrenzyRewardMax) + ' / ' + Beautify(chainFrenzyWrathRewardMax))));
-		stats.appendChild(listing('\"Chain\" Reward (CUR) (Golden / Wrath)',  document.createTextNode(Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))));
+		stats.appendChild(listing(goldListing('\"Chain\" Cookies Required (Frenzy) (Wrath)'), chainWrathReqFrenFrag));
+		stats.appendChild(listing(goldListing('\"Chain\" Reward (MAX) (Golden / Wrath)'),  document.createTextNode(Beautify(chainRewardMax) + ' / ' + Beautify(chainWrathRewardMax))));
+		stats.appendChild(listing(goldListing('\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)'),  document.createTextNode(Beautify(chainFrenzyRewardMax) + ' / ' + Beautify(chainFrenzyWrathRewardMax))));
+		stats.appendChild(listing(goldListing('\"Chain\" Reward (CUR) (Golden / Wrath)'),  document.createTextNode(Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))));
 	}
 	
 	stats.appendChild(header('Prestige', 'Prestige'));
@@ -1130,7 +1170,7 @@ CM.Disp.AddMenuStats = function(title) {
 		cookiesNextFrag.appendChild(cookiesNextSmall);
 		stats.appendChild(listing('Cookies To Next Level', cookiesNextFrag));
 		var resetTitleFrag = document.createDocumentFragment();
-		resetTitleFrag.appendChild(document.createTextNode('Reset Bonus Income '))
+		resetTitleFrag.appendChild(document.createTextNode('Reset Bonus Income '));
 		var resetTitleSpan = document.createElement('span');
 		resetTitleSpan.onmouseout = function() { Game.tooltip.hide(); };
 		resetTitleSpan.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp.ResetTooltipPlaceholder.innerHTML));};
@@ -1180,7 +1220,7 @@ CM.Disp.AddMenuStats = function(title) {
 				var popAllA = document.createElement('a');
 				popAllA.textContent = 'Pop All';
 				popAllA.className = 'option';
-				popAllA.onclick = function() {Game.CollectWrinklers();};
+				popAllA.onclick = function() { CM.Disp.CollectWrinklers(); };
 				popAllFrag.appendChild(popAllA);
 				stats.appendChild(listing('Rewards of Popping',  popAllFrag));
 			}
@@ -1224,7 +1264,9 @@ CM.Disp.AddMenuStats = function(title) {
 		}
 	}
 	
-	if (Game.season == 'christmas' || specDisp || choEgg) {
+	var centEgg = Game.Has('Century egg');
+	
+	if (Game.season == 'christmas' || specDisp || choEgg || centEgg) {
 		stats.appendChild(header('Season Specials', 'Sea'));
 		if (CM.Config.StatsPref.Sea) {
 			if (specDisp) {
@@ -1297,7 +1339,10 @@ CM.Disp.AddMenuStats = function(title) {
 				}
 				choEggTotal *= 0.05;
 				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(choEggTotal))));
-			}			
+			}
+			if (centEgg) {
+				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode(Beautify(CM.Cache.CentEgg, 1) + '%')));
+			}				
 		}
 	}
 	

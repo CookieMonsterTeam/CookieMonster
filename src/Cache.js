@@ -93,7 +93,7 @@ CM.Cache.RemakeROI = function() {
 }
 
 CM.Cache.RemakeLucky = function() {
-	CM.Cache.Lucky = (Game.cookiesPs * 60 * 15) / 0.15;
+	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) / 0.15;
 	if (Game.frenzy > 0) {
 		CM.Cache.Lucky /= Game.frenzyPower;
 	}
@@ -115,7 +115,7 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout) {
 }
 
 CM.Cache.RemakeChain = function() {
-	var maxPayout = Game.cookiesPs * 60 * 60 * 6;
+	var maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6;
 	if (Game.frenzy > 0) {
 		maxPayout /= Game.frenzyPower;
 	}
@@ -194,6 +194,7 @@ CM.Cache.RemakeSellForChoEgg = function() {
 CM.Cache.min = -1;
 CM.Cache.max = -1;
 CM.Cache.mid = -1;
+CM.Cache.NoGoldSwitchCookiesPS = 0;
 CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
 CM.Cache.LuckyFrenzy = 0;
@@ -207,5 +208,6 @@ CM.Cache.ChainFrenzy = 0;
 CM.Cache.ChainFrenzyWrath = 0;
 CM.Cache.ChainFrenzyReward = 0;
 CM.Cache.ChainFrenzyWrathReward = 0;
+CM.Cache.CentEgg = 0;
 CM.Cache.SellForChoEgg = 0;
 

@@ -86,8 +86,11 @@ CM.Loop = function() {
 	if (!Game.OnAscend && Game.AscendTimer == 0) {
 		if (CM.Sim.DoSims) {		
 			CM.Cache.RemakeIncome();
+			
+			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
 			CM.Cache.RemakeLucky();
 			CM.Cache.RemakeChain();
+			
 			CM.Cache.RemakeSeaSpec();
 			CM.Cache.RemakeSellForChoEgg();
 		
@@ -150,6 +153,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateWhiteScreen();
 	CM.Disp.CreateFavicon();
 	CM.Disp.CreateGCTimer();
+	CM.Disp.CreateGoldCookTooltip();
 	CM.Disp.CreateResetTooltip();
 	CM.Disp.CreateChoEggTooltip();
 	CM.Disp.CreateTooltipWarnCaut();
