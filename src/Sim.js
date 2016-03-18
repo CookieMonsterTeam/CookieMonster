@@ -414,7 +414,7 @@ CM.Sim.NoGoldSwitchCookiesPS = function() {
 	else CM.Cache.NoGoldSwitchCookiesPS = Game.cookiesPs;
 }
 
-CM.Sim.ResetBonus = function() {
+CM.Sim.ResetBonus = function(possiblePresMax) {
 	CM.Sim.CopyData();
 	
 	if (Game.cookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
@@ -450,7 +450,7 @@ CM.Sim.ResetBonus = function() {
 		CM.Sim.Win('Wholesome');
 	}
 	
-	CM.Sim.prestige = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));
+	CM.Sim.prestige = possiblePresMax;
 	
 	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
 

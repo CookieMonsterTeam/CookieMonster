@@ -772,40 +772,16 @@ CM.Disp.CollectWrinklers = function() {
 	}
 }
 
-CM.Disp.CreateGoldCookTooltip = function() {
-	CM.Disp.GoldCookTooltipPlaceholder = document.createElement('div');
-	var goldCookDesc = document.createElement('div');
-	goldCookDesc.style.minWidth = '200px';
-	goldCookDesc.style.marginBottom = '4px';
+CM.Disp.CreateTooltip = function(placeholder, text, minWidth) {
+	CM.Disp[placeholder] = document.createElement('div');
+	var desc = document.createElement('div');
+	desc.style.minWidth = minWidth;
+	desc.style.marginBottom = '4px';
 	var div = document.createElement('div');
 	div.style.textAlign = 'left';
-	div.textContent = 'Calculated with Golden Switch off';
-	goldCookDesc.appendChild(div);
-	CM.Disp.GoldCookTooltipPlaceholder.appendChild(goldCookDesc);
-}
-
-CM.Disp.CreateResetTooltip = function() {
-	CM.Disp.ResetTooltipPlaceholder = document.createElement('div');
-	var resetTitleDesc = document.createElement('div');
-	resetTitleDesc.style.minWidth = '340px';
-	resetTitleDesc.style.marginBottom = '4px';
-	var div = document.createElement('div');
-	div.style.textAlign = 'left';
-	div.textContent = 'The bonus income you would get from new prestige levels at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset';
-	resetTitleDesc.appendChild(div);
-	CM.Disp.ResetTooltipPlaceholder.appendChild(resetTitleDesc);
-}
-
-CM.Disp.CreateChoEggTooltip = function() {
-	CM.Disp.ChoEggTooltipPlaceholder = document.createElement('div');
-	var choEggTitleDesc = document.createElement('div');
-	choEggTitleDesc.style.minWidth = '310px';
-	choEggTitleDesc.style.marginBottom = '4px';
-	var div = document.createElement('div');
-	div.style.textAlign = 'left';
-	div.textContent = 'The amount of cookies you would get from selling all buildings with Earth Shatterer aura (if possible), popping all wrinklers, and then buying Chocolate egg';
-	choEggTitleDesc.appendChild(div);
-	CM.Disp.ChoEggTooltipPlaceholder.appendChild(choEggTitleDesc);
+	div.textContent = text;
+	desc.appendChild(div);
+	CM.Disp[placeholder].appendChild(desc);
 }
 
 CM.Disp.AddMenuPref = function(title) {
@@ -997,27 +973,25 @@ CM.Disp.AddMenuStats = function(title) {
 		return div;
 	}
 	
-	if (CM.Config.StatsPref.Lucky || CM.Config.StatsPref.Chain) {		
-		var goldListing = function(text) {
-			var frag = document.createDocumentFragment();
-			frag.appendChild(document.createTextNode(text + ' '));
-			var span = document.createElement('span');
-			span.onmouseout = function() { Game.tooltip.hide(); };
-			span.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp.GoldCookTooltipPlaceholder.innerHTML));};
-			span.style.cursor = 'default';
-			span.style.display = 'inline-block';
-			span.style.height = '10px';
-			span.style.width = '10px';
-			span.style.borderRadius = '5px';
-			span.style.textAlign = 'center';
-			span.style.backgroundColor = '#C0C0C0';
-			span.style.color = 'black';
-			span.style.fontSize = '9px';
-			span.style.verticalAlign = 'bottom';
-			span.textContent = '?';
-			frag.appendChild(span);
-			return frag;
-		}
+	var listingQuest = function(text, placeholder) {
+		var frag = document.createDocumentFragment();
+		frag.appendChild(document.createTextNode(text + ' '));
+		var span = document.createElement('span');
+		span.onmouseout = function() { Game.tooltip.hide(); };
+		span.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp[placeholder].innerHTML));};
+		span.style.cursor = 'default';
+		span.style.display = 'inline-block';
+		span.style.height = '10px';
+		span.style.width = '10px';
+		span.style.borderRadius = '5px';
+		span.style.textAlign = 'center';
+		span.style.backgroundColor = '#C0C0C0';
+		span.style.color = 'black';
+		span.style.fontSize = '9px';
+		span.style.verticalAlign = 'bottom';
+		span.textContent = '?';
+		frag.appendChild(span);
+		return frag;
 	}
 	
 	stats.appendChild(header('Lucky Cookies', 'Lucky'));
@@ -1056,7 +1030,7 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyReqSmall.textContent = ' (' + luckyTime + ')';
 			luckyReqFrag.appendChild(luckyReqSmall);
 		}
-		stats.appendChild(listing(goldListing('\"Lucky!\" Cookies Required'), luckyReqFrag));
+		stats.appendChild(listing(listingQuest('\"Lucky!\" Cookies Required', 'GoldCookTooltipPlaceholder'), luckyReqFrag));
 		var luckyReqFrenFrag = document.createDocumentFragment();
 		var luckyReqFrenSpan = document.createElement('span');
 		luckyReqFrenSpan.style.fontWeight = 'bold';
@@ -1068,10 +1042,10 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyReqFrenSmall.textContent = ' (' + luckyTimeFrenzy + ')';
 			luckyReqFrenFrag.appendChild(luckyReqFrenSmall);
 		}
-		stats.appendChild(listing(goldListing('\"Lucky!\" Cookies Required (Frenzy)'), luckyReqFrenFrag));
-		stats.appendChild(listing(goldListing('\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : '')),  document.createTextNode(Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : ''))));
-		stats.appendChild(listing(goldListing('\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : '')),  document.createTextNode(Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : ''))));
-		stats.appendChild(listing(goldListing('\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : '')),  document.createTextNode(Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''))));
+		stats.appendChild(listing(listingQuest('\"Lucky!\" Cookies Required (Frenzy)', 'GoldCookTooltipPlaceholder'), luckyReqFrenFrag));
+		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : ''))));
+		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : ''))));
+		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''))));
 	}
 	
 	stats.appendChild(header('Chain Cookies', 'Chain'));
@@ -1114,7 +1088,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainReqSmall.textContent = ' (' + chainTime + ')';
 			chainReqFrag.appendChild(chainReqSmall);
 		}
-		stats.appendChild(listing(goldListing('\"Chain\" Cookies Required'), chainReqFrag));
+		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required', 'GoldCookTooltipPlaceholder'), chainReqFrag));
 		var chainWrathReqFrag = document.createDocumentFragment();
 		var chainWrathReqSpan = document.createElement('span');
 		chainWrathReqSpan.style.fontWeight = 'bold';
@@ -1126,7 +1100,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainWrathReqSmall.textContent = ' (' + chainWrathTime + ')';
 			chainWrathReqFrag.appendChild(chainWrathReqSmall);
 		}
-		stats.appendChild(listing(goldListing('\"Chain\" Cookies Required (Wrath)'), chainWrathReqFrag));
+		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required (Wrath)', 'GoldCookTooltipPlaceholder'), chainWrathReqFrag));
 		var chainReqFrenFrag = document.createDocumentFragment();
 		var chainReqFrenSpan = document.createElement('span');
 		chainReqFrenSpan.style.fontWeight = 'bold';
@@ -1138,7 +1112,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainReqFrenSmall.textContent = ' (' + chainTimeFrenzy + ')';
 			chainReqFrenFrag.appendChild(chainReqFrenSmall);
 		}
-		stats.appendChild(listing(goldListing('\"Chain\" Cookies Required (Frenzy)'), chainReqFrenFrag));
+		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required (Frenzy)', 'GoldCookTooltipPlaceholder'), chainReqFrenFrag));
 		var chainWrathReqFrenFrag = document.createDocumentFragment();
 		var chainWrathReqFrenFrag = document.createDocumentFragment();
 		var chainWrathReqFrenSpan = document.createElement('span');
@@ -1151,42 +1125,51 @@ CM.Disp.AddMenuStats = function(title) {
 			chainWrathReqFrenSmall.textContent = ' (' + chainWrathTimeFrenzy + ')';
 			chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSmall);
 		}
-		stats.appendChild(listing(goldListing('\"Chain\" Cookies Required (Frenzy) (Wrath)'), chainWrathReqFrenFrag));
-		stats.appendChild(listing(goldListing('\"Chain\" Reward (MAX) (Golden / Wrath)'),  document.createTextNode(Beautify(chainRewardMax) + ' / ' + Beautify(chainWrathRewardMax))));
-		stats.appendChild(listing(goldListing('\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)'),  document.createTextNode(Beautify(chainFrenzyRewardMax) + ' / ' + Beautify(chainFrenzyWrathRewardMax))));
-		stats.appendChild(listing(goldListing('\"Chain\" Reward (CUR) (Golden / Wrath)'),  document.createTextNode(Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))));
+		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required (Frenzy) (Wrath)', 'GoldCookTooltipPlaceholder'), chainWrathReqFrenFrag));
+		stats.appendChild(listing(listingQuest('\"Chain\" Reward (MAX) (Golden / Wrath)', 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(chainRewardMax) + ' / ' + Beautify(chainWrathRewardMax))));
+		stats.appendChild(listing(listingQuest('\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)', 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(chainFrenzyRewardMax) + ' / ' + Beautify(chainFrenzyWrathRewardMax))));
+		stats.appendChild(listing(listingQuest('\"Chain\" Reward (CUR) (Golden / Wrath)', 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))));
 	}
 	
+	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
+	
+
+	if (CM.Config.StatsPref.Wrink || (CM.Config.StatsPref.Sea && choEgg) || CM.Config.StatsPref.Prestige) {
+		var totalSucked = 0; // Used in Prestige and Chocolate Egg calculation below also
+		for (var i in Game.wrinklers) {
+			var sucked = Game.wrinklers[i].sucked;
+			var toSuck = 1.1;
+			if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
+			if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
+			sucked *= toSuck;
+			if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+			totalSucked += sucked;
+		}
+	}
+
+	if (choEgg) {
+		var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
+		if (Game.cpsSucked > 0) {
+			choEggTotal += totalSucked;
+		}
+		choEggTotal *= 0.05; // Used in Prestige calculation below also
+	}
+
 	stats.appendChild(header('Prestige', 'Prestige'));
 	if (CM.Config.StatsPref.Prestige) {
+		var possiblePresMax = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset + totalSucked + (choEgg ? choEggTotal : 0)));
 		var possiblePres = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));
 		var neededCook = Game.HowManyCookiesReset(possiblePres + 1) - (Game.cookiesEarned + Game.cookiesReset);
 
-		stats.appendChild(listing('Prestige Level (CUR / MAX)',  document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePres))));
+		stats.appendChild(listing(listingQuest('Prestige Level (CUR / MAX)', 'PrestMaxTooltipPlaceholder'),  document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePresMax))));
 		var cookiesNextFrag = document.createDocumentFragment();
 		cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
 		var cookiesNextSmall = document.createElement('small');
 		cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1)) + ')';
 		cookiesNextFrag.appendChild(cookiesNextSmall);
-		stats.appendChild(listing('Cookies To Next Level', cookiesNextFrag));
-		var resetTitleFrag = document.createDocumentFragment();
-		resetTitleFrag.appendChild(document.createTextNode('Reset Bonus Income '));
-		var resetTitleSpan = document.createElement('span');
-		resetTitleSpan.onmouseout = function() { Game.tooltip.hide(); };
-		resetTitleSpan.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp.ResetTooltipPlaceholder.innerHTML));};
-		resetTitleSpan.style.cursor = 'default';
-		resetTitleSpan.style.display = 'inline-block';
-		resetTitleSpan.style.height = '10px';
-		resetTitleSpan.style.width = '10px';
-		resetTitleSpan.style.borderRadius = '5px';
-		resetTitleSpan.style.textAlign = 'center';
-		resetTitleSpan.style.backgroundColor = '#C0C0C0';
-		resetTitleSpan.style.color = 'black';
-		resetTitleSpan.style.fontSize = '9px';
-		resetTitleSpan.style.verticalAlign = 'bottom';
-		resetTitleSpan.textContent = '?';
-		resetTitleFrag.appendChild(resetTitleSpan);
-		var resetBonus = CM.Sim.ResetBonus();
+		stats.appendChild(listing(listingQuest('Cookies To Next Level', 'NextPrestTooltipPlaceholder'), cookiesNextFrag));
+		stats.appendChild(listing(listingQuest('Heavenly Chips (CUR / MAX)', 'HeavenChipMaxTooltipPlaceholder'),  document.createTextNode(Beautify(Game.heavenlyChips) + ' / ' + Beautify((possiblePresMax - Game.prestige) + Game.heavenlyChips))));
+		var resetBonus = CM.Sim.ResetBonus(possiblePresMax);
 		var resetFrag = document.createDocumentFragment();
 		resetFrag.appendChild(document.createTextNode(Beautify(resetBonus)));
 		var increase = Math.round(resetBonus / Game.cookiesPs * 10000);
@@ -1195,35 +1178,20 @@ CM.Disp.AddMenuStats = function(title) {
 			resetSmall.textContent = ' (' + (increase / 100) + '% of income)';
 			resetFrag.appendChild(resetSmall);
 		}
-		stats.appendChild(listing(resetTitleFrag, resetFrag));
+		stats.appendChild(listing(listingQuest('Reset Bonus Income', 'ResetTooltipPlaceholder'), resetFrag));
 	}
-	
-	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
-	
+		
 	if (Game.cpsSucked > 0) {
-		stats.appendChild(header('Wrinklers', 'Wrink'));
-		if (CM.Config.StatsPref.Wrink || (CM.Config.StatsPref.Sea && choEgg)) {
-			var totalSucked = 0; // Used in Chocolate Egg calculation below also
-			for (var i in Game.wrinklers) {
-				var sucked = Game.wrinklers[i].sucked;
-				var toSuck = 1.1;
-				if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
-				if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
-				sucked *= toSuck;
-				if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-				totalSucked += sucked;
-			}
-			
-			if (CM.Config.StatsPref.Wrink) {
-				var popAllFrag = document.createDocumentFragment();
-				popAllFrag.appendChild(document.createTextNode(Beautify(totalSucked) + ' '));
-				var popAllA = document.createElement('a');
-				popAllA.textContent = 'Pop All';
-				popAllA.className = 'option';
-				popAllA.onclick = function() { CM.Disp.CollectWrinklers(); };
-				popAllFrag.appendChild(popAllA);
-				stats.appendChild(listing('Rewards of Popping',  popAllFrag));
-			}
+		stats.appendChild(header('Wrinklers', 'Wrink'));			
+		if (CM.Config.StatsPref.Wrink) {
+			var popAllFrag = document.createDocumentFragment();
+			popAllFrag.appendChild(document.createTextNode(Beautify(totalSucked) + ' '));
+			var popAllA = document.createElement('a');
+			popAllA.textContent = 'Pop All';
+			popAllA.className = 'option';
+			popAllA.onclick = function() { CM.Disp.CollectWrinklers(); };
+			popAllFrag.appendChild(popAllA);
+			stats.appendChild(listing('Rewards of Popping',  popAllFrag));
 		}
 	}
 	
@@ -1316,29 +1284,7 @@ CM.Disp.AddMenuStats = function(title) {
 
 			if (Game.season == 'christmas') stats.appendChild(listing('Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
 			if (choEgg) {
-				var choEggTitleFrag = document.createDocumentFragment();
-				choEggTitleFrag.appendChild(document.createTextNode('Chocolate Egg Cookies '))
-				var choEggTitleSpan = document.createElement('span');
-				choEggTitleSpan.onmouseout = function() { Game.tooltip.hide(); };
-				choEggTitleSpan.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp.ChoEggTooltipPlaceholder.innerHTML));};
-				choEggTitleSpan.style.cursor = 'default';
-				choEggTitleSpan.style.display = 'inline-block';
-				choEggTitleSpan.style.height = '10px';
-				choEggTitleSpan.style.width = '10px';
-				choEggTitleSpan.style.borderRadius = '5px';
-				choEggTitleSpan.style.textAlign = 'center';
-				choEggTitleSpan.style.backgroundColor = '#C0C0C0';
-				choEggTitleSpan.style.color = 'black';
-				choEggTitleSpan.style.fontSize = '9px';
-				choEggTitleSpan.style.verticalAlign = 'bottom';
-				choEggTitleSpan.textContent = '?';
-				choEggTitleFrag.appendChild(choEggTitleSpan);
-				var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
-				if (Game.cpsSucked > 0) {
-					choEggTotal += totalSucked;
-				}
-				choEggTotal *= 0.05;
-				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(choEggTotal))));
+				stats.appendChild(listing(listingQuest('Chocolate Egg Cookies', 'ChoEggTooltipPlaceholder'), document.createTextNode(Beautify(choEggTotal))));
 			}
 			if (centEgg) {
 				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode(Beautify(CM.Cache.CentEgg, 1) + '%')));
