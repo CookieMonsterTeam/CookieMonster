@@ -44,74 +44,76 @@ CM.Cache.RemakeIncome = function() {
 	CM.Sim.BuyBuildings(100, 'Objects100');
 }
 
-CM.Cache.RemakeBuildingsBCI = function() {
-	CM.Disp.min = -1;
-	CM.Disp.max = -1;
-	CM.Disp.mid = -1;
+CM.Cache.RemakeBuildingsROI = function() {
+	CM.Cache.min = -1;
+	CM.Cache.max = -1;
+	CM.Cache.mid = -1;
 	for (var i in CM.Cache.Objects) {
-		CM.Cache.Objects[i].bci = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
-		if (CM.Disp.min == -1 || CM.Cache.Objects[i].bci < CM.Disp.min) CM.Disp.min = CM.Cache.Objects[i].bci;
-		if (CM.Disp.max == -1 || CM.Cache.Objects[i].bci > CM.Disp.max) CM.Disp.max = CM.Cache.Objects[i].bci;
+		//CM.Cache.Objects[i].roi = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
+		CM.Cache.Objects[i].roi = (Math.max(Game.Objects[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+		if (CM.Cache.min == -1 || CM.Cache.Objects[i].roi < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].roi;
+		if (CM.Cache.max == -1 || CM.Cache.Objects[i].roi > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].roi;
 	}
-	CM.Disp.mid = ((CM.Disp.max - CM.Disp.min) / 2) + CM.Disp.min;
+	CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 	for (var i in CM.Cache.Objects) {
 		var color = '';
-		if (CM.Cache.Objects[i].bci == CM.Disp.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache.Objects[i].bci == CM.Disp.max) color = CM.Disp.colorRed;
-		else if (CM.Cache.Objects[i].bci > CM.Disp.mid) color = CM.Disp.colorOrange;
+		if (CM.Cache.Objects[i].roi == CM.Cache.min) color = CM.Disp.colorGreen;
+		else if (CM.Cache.Objects[i].roi == CM.Cache.max) color = CM.Disp.colorRed;
+		else if (CM.Cache.Objects[i].roi > CM.Cache.mid) color = CM.Disp.colorOrange;
 		else color = CM.Disp.colorYellow;
 		CM.Cache.Objects[i].color = color;
 	}
 }
 
-CM.Cache.RemakeUpgradeBCI = function() {
+CM.Cache.RemakeUpgradeROI = function() {
 	for (var i in CM.Cache.Upgrades) {
-		CM.Cache.Upgrades[i].bci = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
-		if (isNaN(CM.Cache.Upgrades[i].bci)) CM.Cache.Upgrades[i].bci = 'Infinity';
+		//CM.Cache.Upgrades[i].roi = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
+		CM.Cache.Upgrades[i].roi = (Math.max(Game.Upgrades[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
+		if (isNaN(CM.Cache.Upgrades[i].roi)) CM.Cache.Upgrades[i].roi = 'Infinity';
 		var color = '';
-		if (CM.Cache.Upgrades[i].bci <= 0 || CM.Cache.Upgrades[i].bci == 'Infinity') color = CM.Disp.colorGray;
-		else if (CM.Cache.Upgrades[i].bci < CM.Disp.min) color = CM.Disp.colorBlue;
-		else if (CM.Cache.Upgrades[i].bci == CM.Disp.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache.Upgrades[i].bci == CM.Disp.max) color = CM.Disp.colorRed;
-		else if (CM.Cache.Upgrades[i].bci > CM.Disp.max) color = CM.Disp.colorPurple;
-		else if (CM.Cache.Upgrades[i].bci > CM.Disp.mid) color = CM.Disp.colorOrange;
+		if (CM.Cache.Upgrades[i].roi <= 0 || CM.Cache.Upgrades[i].roi == 'Infinity') color = CM.Disp.colorGray;
+		else if (CM.Cache.Upgrades[i].roi < CM.Cache.min) color = CM.Disp.colorBlue;
+		else if (CM.Cache.Upgrades[i].roi == CM.Cache.min) color = CM.Disp.colorGreen;
+		else if (CM.Cache.Upgrades[i].roi == CM.Cache.max) color = CM.Disp.colorRed;
+		else if (CM.Cache.Upgrades[i].roi > CM.Cache.max) color = CM.Disp.colorPurple;
+		else if (CM.Cache.Upgrades[i].roi > CM.Cache.mid) color = CM.Disp.colorOrange;
 		else color = CM.Disp.colorYellow;
 		CM.Cache.Upgrades[i].color = color;
 	}
 }
 
-CM.Cache.RemakeBuildingsOtherBCI = function(amount, target) {
+CM.Cache.RemakeBuildingsOtherROI = function(amount, target) {
 	for (var i in CM.Cache[target]) {
-		CM.Cache[target][i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, amount);
-		CM.Cache[target][i].bci = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
+		//CM.Cache[target][i].roi = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
+		CM.Cache[target][i].roi = (Math.max(CM.Cache[target][i].price - Game.cookies, 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
 		var color = '';
-		if (CM.Cache[target][i].bci <= 0 || CM.Cache[target][i].bci == 'Infinity') color = CM.Disp.colorGray;
-		else if (CM.Cache[target][i].bci < CM.Disp.min) color = CM.Disp.colorBlue;
-		else if (CM.Cache[target][i].bci == CM.Disp.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache[target][i].bci == CM.Disp.max) color = CM.Disp.colorRed;
-		else if (CM.Cache[target][i].bci > CM.Disp.max) color = CM.Disp.colorPurple;
-		else if (CM.Cache[target][i].bci > CM.Disp.mid) color = CM.Disp.colorOrange;
+		if (CM.Cache[target][i].roi <= 0 || CM.Cache[target][i].roi == 'Infinity') color = CM.Disp.colorGray;
+		else if (CM.Cache[target][i].roi < CM.Cache.min) color = CM.Disp.colorBlue;
+		else if (CM.Cache[target][i].roi == CM.Cache.min) color = CM.Disp.colorGreen;
+		else if (CM.Cache[target][i].roi == CM.Cache.max) color = CM.Disp.colorRed;
+		else if (CM.Cache[target][i].roi > CM.Cache.max) color = CM.Disp.colorPurple;
+		else if (CM.Cache[target][i].roi > CM.Cache.mid) color = CM.Disp.colorOrange;
 		else color = CM.Disp.colorYellow;
 		CM.Cache[target][i].color = color;
 	}
 }
 
-CM.Cache.RemakeBCI = function() {
+CM.Cache.RemakeROI = function() {
 	// Buildings for 1 amount
-	CM.Cache.RemakeBuildingsBCI();
+	CM.Cache.RemakeBuildingsROI();
 	
 	// Upgrades
-	CM.Cache.RemakeUpgradeBCI();
+	CM.Cache.RemakeUpgradeROI();
 	
 	// Buildings for 10 amount
-	CM.Cache.RemakeBuildingsOtherBCI(10, 'Objects10');
+	CM.Cache.RemakeBuildingsOtherROI(10, 'Objects10');
 
 	// Buildings for 100 amount
-	CM.Cache.RemakeBuildingsOtherBCI(100, 'Objects100');	
+	CM.Cache.RemakeBuildingsOtherROI(100, 'Objects100');	
 }
 
 CM.Cache.RemakeLucky = function() {
-	CM.Cache.Lucky = (Game.cookiesPs * 60 * 15) / 0.15;
+	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) / 0.15;
 	if (Game.frenzy > 0) {
 		CM.Cache.Lucky /= Game.frenzyPower;
 	}
@@ -133,7 +135,7 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout) {
 }
 
 CM.Cache.RemakeChain = function() {
-	var maxPayout = Game.cookiesPs * 60 * 60 * 6;
+	var maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6;
 	if (Game.frenzy > 0) {
 		maxPayout /= Game.frenzyPower;
 	}
@@ -209,6 +211,10 @@ CM.Cache.RemakeSellForChoEgg = function() {
 	CM.Cache.SellForChoEgg = sellTotal;
 }
 
+CM.Cache.min = -1;
+CM.Cache.max = -1;
+CM.Cache.mid = -1;
+CM.Cache.NoGoldSwitchCookiesPS = 0;
 CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
 CM.Cache.LuckyFrenzy = 0;
@@ -222,6 +228,7 @@ CM.Cache.ChainFrenzy = 0;
 CM.Cache.ChainFrenzyWrath = 0;
 CM.Cache.ChainFrenzyReward = 0;
 CM.Cache.ChainFrenzyWrathReward = 0;
+CM.Cache.CentEgg = 0;
 CM.Cache.SellForChoEgg = 0;
 
 /**********
@@ -344,8 +351,9 @@ CM.ConfigData.BotBar = {label: ['Bottom Bar OFF', 'Bottom Bar ON'], desc: 'Build
 CM.ConfigData.TimerBar = {label: ['Timer Bar OFF', 'Timer Bar ON'], desc: 'Timers of Golden Cookie, Season Popup, Frenzy (Normal, Clot, Elder), Click Frenzy', toggle: true, func: function() {CM.Disp.ToggleTimerBar();}};
 CM.ConfigData.TimerBarPos = {label: ['Timer Bar Position (Top Left)', 'Timer Bar Position (Bottom)'], desc: 'Placement of the Timer Bar', toggle: false, func: function() {CM.Disp.ToggleTimerBarPos();}};
 CM.ConfigData.BuildColor = {label: ['Building Colors OFF', 'Building Colors ON'], desc: 'Color code buildings', toggle: true, func: function() {CM.Disp.UpdateBuildings();}};
+CM.ConfigData.BulkBuildColor = {label: ['Bulk Building Colors (Single Buildings Color)', 'Bulk Building Colors (Calculated Color)'], desc: 'Color code bulk buildings based on single buildings color or calculated bulk value color', toggle: false, func: function() {CM.Disp.UpdateBuildings();}};
 CM.ConfigData.UpBarColor = {label: ['Upgrade Bar/Colors OFF', 'Upgrade Bar/Colors ON'], desc: 'Color code upgrades and add a counter', toggle: true, func: function() {CM.Disp.ToggleUpBarColor();}};
-CM.ConfigData.Colors = {desc: {Blue: 'Color Blue.  Used to show better than best BCI building, for Click Frenzy bar, and for various labels', Green: 'Color Green.  Used to show best BCI building, for Blood Frenzy bar, and for various labels', Yellow: 'Color Yellow.  Used to show between best and worst BCI buildings closer to best, for Frenzy bar, and for various labels', Orange: 'Color Orange.  Used to show between best and worst BCI buildings closer to worst, for Next Reindeer bar, and for various labels', Red: 'Color Red.  Used to show worst BCI building, for Clot bar, and for various labels', Purple: 'Color Purple.  Used to show worse than worst BCI building, for Next Cookie bar, and for various labels', Gray: 'Color Gray.  Used to show negative or infinity BCI, and for Next Cookie/Next Reindeer bar', Pink: 'Color Pink.  Used for Dragonflight bar', Brown: 'Color Brown.  Used for Dragon Harvest bar'}, func: function() {CM.Disp.UpdateColors();}};
+CM.ConfigData.Colors = {desc: {Blue: 'Color Blue.  Used to show better than best ROI building, for Click Frenzy bar, and for various labels', Green: 'Color Green.  Used to show best ROI building, for Blood Frenzy bar, and for various labels', Yellow: 'Color Yellow.  Used to show between best and worst ROI buildings closer to best, for Frenzy bar, and for various labels', Orange: 'Color Orange.  Used to show between best and worst ROI buildings closer to worst, for Next Reindeer bar, and for various labels', Red: 'Color Red.  Used to show worst ROI building, for Clot bar, and for various labels', Purple: 'Color Purple.  Used to show worse than worst ROI building, for Next Cookie bar, and for various labels', Gray: 'Color Gray.  Used to show negative or infinity ROI, and for Next Cookie/Next Reindeer bar', Pink: 'Color Pink.  Used for Dragonflight bar', Brown: 'Color Brown.  Used for Dragon Harvest bar'}, func: function() {CM.Disp.UpdateColors();}};
 CM.ConfigData.Flash = {label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen on Golden Cookie/Season Popup', toggle: true};
 CM.ConfigData.Sound = {label: ['Sounds OFF', 'Sounds ON'], desc: 'Play a sound on Golden Cookie/Season Popup', toggle: true};
 CM.ConfigData.Volume = {label: [], desc: 'Volume of the sound'};
@@ -526,9 +534,9 @@ CM.Disp.CreateBotBar = function() {
 	var bonus = document.createElement('tr');
 	bonus.appendChild(firstCol('Bonus Income', CM.Disp.colorBlue));
 	tbody.appendChild(bonus);
-	var bci = document.createElement('tr');
-	bci.appendChild(firstCol('Base Cost Per Income', CM.Disp.colorBlue));
-	tbody.appendChild(bci);
+	var roi = document.createElement('tr');
+	roi.appendChild(firstCol('Return On Investment', CM.Disp.colorBlue));
+	tbody.appendChild(roi);
 	var time = document.createElement('tr');
 	time.appendChild(firstCol('Time Left', CM.Disp.colorBlue));
 	tbody.appendChild(time);
@@ -542,7 +550,7 @@ CM.Disp.CreateBotBar = function() {
 		header.appendChild(document.createTextNode(')'));
 		type.appendChild(header);
 		bonus.appendChild(document.createElement('td'));
-		bci.appendChild(document.createElement('td'));
+		roi.appendChild(document.createElement('td'));
 		time.appendChild(document.createElement('td'));
 	
 	}
@@ -572,7 +580,7 @@ CM.Disp.UpdateBotBarOther = function() {
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].bonus, 2);
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].className = CM.Disp.colorTextPre + CM.Cache.Objects[i].color;
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].bci, 2);
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].roi, 2);
 		}
 	}
 }
@@ -823,14 +831,14 @@ CM.Disp.UpdateBotTimerBarDisplay = function() {
 CM.Disp.UpdateBuildings = function() {
 	if (CM.Config.BuildColor == 1 && Game.buyMode == 1) {
 		var target = '';
-		if (Game.buyBulk == 10) {
-			target = 'Objects10'
+		if (Game.buyBulk == 10 && CM.Config.BulkBuildColor == 1) {
+			target = 'Objects10';
 		}
-		else if (Game.buyBulk == 100) {
-			target = 'Objects100'
+		else if (Game.buyBulk == 100 && CM.Config.BulkBuildColor == 1) {
+			target = 'Objects100';
 		}
 		else {
-			target = 'Objects'
+			target = 'Objects';
 		}
 		for (var i in CM.Cache[target]) {
 			l('productPrice' + Game.Objects[i].id).style.color = CM.Config.Colors[CM.Cache[target][i].color];
@@ -877,13 +885,13 @@ CM.Disp.CreateUpgradeBar = function() {
 		return div;
 	}
 	
-	legend.appendChild(legendLine(CM.Disp.colorBlue, 'Better than best BCI building'));
-	legend.appendChild(legendLine(CM.Disp.colorGreen, 'Same as best BCI building'));
-	legend.appendChild(legendLine(CM.Disp.colorYellow, 'Between best and worst BCI buildings closer to best'));
-	legend.appendChild(legendLine(CM.Disp.colorOrange, 'Between best and worst BCI buildings closer to worst'));
-	legend.appendChild(legendLine(CM.Disp.colorRed, 'Same as worst BCI building'));
-	legend.appendChild(legendLine(CM.Disp.colorPurple, 'Worse than worst BCI building'));
-	legend.appendChild(legendLine(CM.Disp.colorGray, 'Negative or infinity BCI'));
+	legend.appendChild(legendLine(CM.Disp.colorBlue, 'Better than best ROI building'));
+	legend.appendChild(legendLine(CM.Disp.colorGreen, 'Same as best ROI building'));
+	legend.appendChild(legendLine(CM.Disp.colorYellow, 'Between best and worst ROI buildings closer to best'));
+	legend.appendChild(legendLine(CM.Disp.colorOrange, 'Between best and worst ROI buildings closer to worst'));
+	legend.appendChild(legendLine(CM.Disp.colorRed, 'Same as worst ROI building'));
+	legend.appendChild(legendLine(CM.Disp.colorPurple, 'Worse than worst ROI building'));
+	legend.appendChild(legendLine(CM.Disp.colorGray, 'Negative or infinity ROI'));
 	placeholder.appendChild(legend);
 	
 	CM.Disp.UpgradeBar.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML), 'store');};
@@ -1142,28 +1150,24 @@ CM.Disp.UpdateTitle = function() {
 	}
 }
 
-CM.Disp.CreateResetTooltip = function() {
-	CM.Disp.ResetTooltipPlaceholder = document.createElement('div');
-	var resetTitleDesc = document.createElement('div');
-	resetTitleDesc.style.minWidth = '340px';
-	resetTitleDesc.style.marginBottom = '4px';
-	var div = document.createElement('div');
-	div.style.textAlign = 'left';
-	div.textContent = 'The bonus income you would get from new prestige levels at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset';
-	resetTitleDesc.appendChild(div);
-	CM.Disp.ResetTooltipPlaceholder.appendChild(resetTitleDesc);
+CM.Disp.CollectWrinklers = function() {
+	for (var i in Game.wrinklers) {
+		if (Game.wrinklers[i].sucked > 0) {
+			Game.wrinklers[i].hp = 0;
+		}
+	}
 }
 
-CM.Disp.CreateChoEggTooltip = function() {
-	CM.Disp.ChoEggTooltipPlaceholder = document.createElement('div');
-	var choEggTitleDesc = document.createElement('div');
-	choEggTitleDesc.style.minWidth = '310px';
-	choEggTitleDesc.style.marginBottom = '4px';
+CM.Disp.CreateTooltip = function(placeholder, text, minWidth) {
+	CM.Disp[placeholder] = document.createElement('div');
+	var desc = document.createElement('div');
+	desc.style.minWidth = minWidth;
+	desc.style.marginBottom = '4px';
 	var div = document.createElement('div');
 	div.style.textAlign = 'left';
-	div.textContent = 'The amount of cookies you would get from selling all buildings with Earth Shatterer aura (if possible), popping all wrinklers, and then buying Chocolate egg';
-	choEggTitleDesc.appendChild(div);
-	CM.Disp.ChoEggTooltipPlaceholder.appendChild(choEggTitleDesc);
+	div.textContent = text;
+	desc.appendChild(div);
+	CM.Disp[placeholder].appendChild(desc);
 }
 
 CM.Disp.AddMenuPref = function(title) {
@@ -1233,6 +1237,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('TimerBar'));
 	frag.appendChild(listing('TimerBarPos'));
 	frag.appendChild(listing('BuildColor'));
+	frag.appendChild(listing('BulkBuildColor'));
 	frag.appendChild(listing('UpBarColor'));
 	for (var i = 0; i < CM.Disp.colors.length; i++) {
 		var div = document.createElement('div');
@@ -1354,13 +1359,34 @@ CM.Disp.AddMenuStats = function(title) {
 		return div;
 	}
 	
+	var listingQuest = function(text, placeholder) {
+		var frag = document.createDocumentFragment();
+		frag.appendChild(document.createTextNode(text + ' '));
+		var span = document.createElement('span');
+		span.onmouseout = function() { Game.tooltip.hide(); };
+		span.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp[placeholder].innerHTML));};
+		span.style.cursor = 'default';
+		span.style.display = 'inline-block';
+		span.style.height = '10px';
+		span.style.width = '10px';
+		span.style.borderRadius = '5px';
+		span.style.textAlign = 'center';
+		span.style.backgroundColor = '#C0C0C0';
+		span.style.color = 'black';
+		span.style.fontSize = '9px';
+		span.style.verticalAlign = 'bottom';
+		span.textContent = '?';
+		frag.appendChild(span);
+		return frag;
+	}
+	
 	stats.appendChild(header('Lucky Cookies', 'Lucky'));
 	if (CM.Config.StatsPref.Lucky) {
 		var luckyColor = (Game.cookies < CM.Cache.Lucky) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var luckyTime = (Game.cookies < CM.Cache.Lucky) ? CM.Disp.FormatTime((CM.Cache.Lucky - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
 		var luckyColorFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var luckyTimeFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		var luckyCurBase = Math.min(Game.cookies * 0.15, Game.cookiesPs * 60 * 15) + 13;
+		var luckyCurBase = Math.min(Game.cookies * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) + 13;
 		var luckyRewardMax = CM.Cache.LuckyReward;
 		var luckyRewardMaxWrath = CM.Cache.LuckyReward;
 		var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
@@ -1377,6 +1403,7 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyRewardFrenzyMaxWrath *= 1.1;
 			luckyCurWrath *= 1.1;
 		}
+		var luckySplit = luckyRewardMax != luckyRewardMaxWrath;
 	
 		var luckyReqFrag = document.createDocumentFragment();
 		var luckyReqSpan = document.createElement('span');
@@ -1389,7 +1416,7 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyReqSmall.textContent = ' (' + luckyTime + ')';
 			luckyReqFrag.appendChild(luckyReqSmall);
 		}
-		stats.appendChild(listing('\"Lucky!\" Cookies Required', luckyReqFrag));
+		stats.appendChild(listing(listingQuest('\"Lucky!\" Cookies Required', 'GoldCookTooltipPlaceholder'), luckyReqFrag));
 		var luckyReqFrenFrag = document.createDocumentFragment();
 		var luckyReqFrenSpan = document.createElement('span');
 		luckyReqFrenSpan.style.fontWeight = 'bold';
@@ -1401,10 +1428,10 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyReqFrenSmall.textContent = ' (' + luckyTimeFrenzy + ')';
 			luckyReqFrenFrag.appendChild(luckyReqFrenSmall);
 		}
-		stats.appendChild(listing('\"Lucky!\" Cookies Required (Frenzy)', luckyReqFrenFrag));
-		stats.appendChild(listing('\"Lucky!\" Reward (MAX) (Golden / Wrath)',  document.createTextNode(Beautify(luckyRewardMax) + ' / ' + Beautify(luckyRewardMaxWrath))));
-		stats.appendChild(listing('\"Lucky!\" Reward (MAX) (Frenzy) (Golden / Wrath)',  document.createTextNode(Beautify(luckyRewardFrenzyMax) + ' / ' + Beautify(luckyRewardFrenzyMaxWrath))));
-		stats.appendChild(listing('\"Lucky!\" Reward (CUR) (Golden / Wrath)',  document.createTextNode(Beautify(luckyCur) + ' / ' + Beautify(luckyCurWrath))));
+		stats.appendChild(listing(listingQuest('\"Lucky!\" Cookies Required (Frenzy)', 'GoldCookTooltipPlaceholder'), luckyReqFrenFrag));
+		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : ''))));
+		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : ''))));
+		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''))));
 	}
 	
 	stats.appendChild(header('Chain Cookies', 'Chain'));
@@ -1422,7 +1449,7 @@ CM.Disp.AddMenuStats = function(title) {
 		var chainWrathRewardMax = CM.Cache.ChainWrathReward;
 		var chainFrenzyRewardMax = CM.Cache.ChainFrenzyReward;
 		var chainFrenzyWrathRewardMax = CM.Cache.ChainFrenzyWrathReward;
-		var chainCurMax = Math.min(Game.cookiesPs * 60 * 60 * 6, Game.cookies * 0.25);
+		var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6, Game.cookies * 0.25);
 		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax);
 		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax);
 		if (Game.hasAura('Ancestral Metamorphosis')) {
@@ -1447,7 +1474,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainReqSmall.textContent = ' (' + chainTime + ')';
 			chainReqFrag.appendChild(chainReqSmall);
 		}
-		stats.appendChild(listing('\"Chain\" Cookies Required', chainReqFrag));
+		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required', 'GoldCookTooltipPlaceholder'), chainReqFrag));
 		var chainWrathReqFrag = document.createDocumentFragment();
 		var chainWrathReqSpan = document.createElement('span');
 		chainWrathReqSpan.style.fontWeight = 'bold';
@@ -1459,7 +1486,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainWrathReqSmall.textContent = ' (' + chainWrathTime + ')';
 			chainWrathReqFrag.appendChild(chainWrathReqSmall);
 		}
-		stats.appendChild(listing('\"Chain\" Cookies Required (Wrath)', chainWrathReqFrag));
+		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required (Wrath)', 'GoldCookTooltipPlaceholder'), chainWrathReqFrag));
 		var chainReqFrenFrag = document.createDocumentFragment();
 		var chainReqFrenSpan = document.createElement('span');
 		chainReqFrenSpan.style.fontWeight = 'bold';
@@ -1471,7 +1498,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainReqFrenSmall.textContent = ' (' + chainTimeFrenzy + ')';
 			chainReqFrenFrag.appendChild(chainReqFrenSmall);
 		}
-		stats.appendChild(listing('\"Chain\" Cookies Required (Frenzy)', chainReqFrenFrag));
+		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required (Frenzy)', 'GoldCookTooltipPlaceholder'), chainReqFrenFrag));
 		var chainWrathReqFrenFrag = document.createDocumentFragment();
 		var chainWrathReqFrenFrag = document.createDocumentFragment();
 		var chainWrathReqFrenSpan = document.createElement('span');
@@ -1484,42 +1511,51 @@ CM.Disp.AddMenuStats = function(title) {
 			chainWrathReqFrenSmall.textContent = ' (' + chainWrathTimeFrenzy + ')';
 			chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSmall);
 		}
-		stats.appendChild(listing('\"Chain\" Cookies Required (Frenzy) (Wrath)', chainWrathReqFrenFrag));
-		stats.appendChild(listing('\"Chain\" Reward (MAX) (Golden / Wrath)',  document.createTextNode(Beautify(chainRewardMax) + ' / ' + Beautify(chainWrathRewardMax))));
-		stats.appendChild(listing('\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)',  document.createTextNode(Beautify(chainFrenzyRewardMax) + ' / ' + Beautify(chainFrenzyWrathRewardMax))));
-		stats.appendChild(listing('\"Chain\" Reward (CUR) (Golden / Wrath)',  document.createTextNode(Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))));
+		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required (Frenzy) (Wrath)', 'GoldCookTooltipPlaceholder'), chainWrathReqFrenFrag));
+		stats.appendChild(listing(listingQuest('\"Chain\" Reward (MAX) (Golden / Wrath)', 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(chainRewardMax) + ' / ' + Beautify(chainWrathRewardMax))));
+		stats.appendChild(listing(listingQuest('\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)', 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(chainFrenzyRewardMax) + ' / ' + Beautify(chainFrenzyWrathRewardMax))));
+		stats.appendChild(listing(listingQuest('\"Chain\" Reward (CUR) (Golden / Wrath)', 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))));
 	}
 	
+	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
+	
+
+	if (CM.Config.StatsPref.Wrink || (CM.Config.StatsPref.Sea && choEgg) || CM.Config.StatsPref.Prestige) {
+		var totalSucked = 0; // Used in Prestige and Chocolate Egg calculation below also
+		for (var i in Game.wrinklers) {
+			var sucked = Game.wrinklers[i].sucked;
+			var toSuck = 1.1;
+			if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
+			if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
+			sucked *= toSuck;
+			if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+			totalSucked += sucked;
+		}
+	}
+
+	if (choEgg) {
+		var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
+		if (Game.cpsSucked > 0) {
+			choEggTotal += totalSucked;
+		}
+		choEggTotal *= 0.05; // Used in Prestige calculation below also
+	}
+
 	stats.appendChild(header('Prestige', 'Prestige'));
 	if (CM.Config.StatsPref.Prestige) {
+		var possiblePresMax = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset + totalSucked + (choEgg ? choEggTotal : 0)));
 		var possiblePres = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));
 		var neededCook = Game.HowManyCookiesReset(possiblePres + 1) - (Game.cookiesEarned + Game.cookiesReset);
 
-		stats.appendChild(listing('Prestige Level (CUR / MAX)',  document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePres))));
+		stats.appendChild(listing(listingQuest('Prestige Level (CUR / MAX)', 'PrestMaxTooltipPlaceholder'),  document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePresMax))));
 		var cookiesNextFrag = document.createDocumentFragment();
 		cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
 		var cookiesNextSmall = document.createElement('small');
 		cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1)) + ')';
 		cookiesNextFrag.appendChild(cookiesNextSmall);
-		stats.appendChild(listing('Cookies To Next Level', cookiesNextFrag));
-		var resetTitleFrag = document.createDocumentFragment();
-		resetTitleFrag.appendChild(document.createTextNode('Reset Bonus Income '))
-		var resetTitleSpan = document.createElement('span');
-		resetTitleSpan.onmouseout = function() { Game.tooltip.hide(); };
-		resetTitleSpan.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp.ResetTooltipPlaceholder.innerHTML));};
-		resetTitleSpan.style.cursor = 'default';
-		resetTitleSpan.style.display = 'inline-block';
-		resetTitleSpan.style.height = '10px';
-		resetTitleSpan.style.width = '10px';
-		resetTitleSpan.style.borderRadius = '5px';
-		resetTitleSpan.style.textAlign = 'center';
-		resetTitleSpan.style.backgroundColor = '#C0C0C0';
-		resetTitleSpan.style.color = 'black';
-		resetTitleSpan.style.fontSize = '9px';
-		resetTitleSpan.style.verticalAlign = 'bottom';
-		resetTitleSpan.textContent = '?';
-		resetTitleFrag.appendChild(resetTitleSpan);
-		var resetBonus = CM.Sim.ResetBonus();
+		stats.appendChild(listing(listingQuest('Cookies To Next Level', 'NextPrestTooltipPlaceholder'), cookiesNextFrag));
+		stats.appendChild(listing(listingQuest('Heavenly Chips (CUR / MAX)', 'HeavenChipMaxTooltipPlaceholder'),  document.createTextNode(Beautify(Game.heavenlyChips) + ' / ' + Beautify((possiblePresMax - Game.prestige) + Game.heavenlyChips))));
+		var resetBonus = CM.Sim.ResetBonus(possiblePresMax);
 		var resetFrag = document.createDocumentFragment();
 		resetFrag.appendChild(document.createTextNode(Beautify(resetBonus)));
 		var increase = Math.round(resetBonus / Game.cookiesPs * 10000);
@@ -1528,35 +1564,20 @@ CM.Disp.AddMenuStats = function(title) {
 			resetSmall.textContent = ' (' + (increase / 100) + '% of income)';
 			resetFrag.appendChild(resetSmall);
 		}
-		stats.appendChild(listing(resetTitleFrag, resetFrag));
+		stats.appendChild(listing(listingQuest('Reset Bonus Income', 'ResetTooltipPlaceholder'), resetFrag));
 	}
-	
-	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
-	
+		
 	if (Game.cpsSucked > 0) {
-		stats.appendChild(header('Wrinklers', 'Wrink'));
-		if (CM.Config.StatsPref.Wrink || (CM.Config.StatsPref.Sea && choEgg)) {
-			var totalSucked = 0; // Used in Chocolate Egg calculation below also
-			for (var i in Game.wrinklers) {
-				var sucked = Game.wrinklers[i].sucked;
-				var toSuck = 1.1;
-				if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
-				if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
-				sucked *= toSuck;
-				if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-				totalSucked += sucked;
-			}
-			
-			if (CM.Config.StatsPref.Wrink) {
-				var popAllFrag = document.createDocumentFragment();
-				popAllFrag.appendChild(document.createTextNode(Beautify(totalSucked) + ' '));
-				var popAllA = document.createElement('a');
-				popAllA.textContent = 'Pop All';
-				popAllA.className = 'option';
-				popAllA.onclick = function() {Game.CollectWrinklers();};
-				popAllFrag.appendChild(popAllA);
-				stats.appendChild(listing('Rewards of Popping',  popAllFrag));
-			}
+		stats.appendChild(header('Wrinklers', 'Wrink'));			
+		if (CM.Config.StatsPref.Wrink) {
+			var popAllFrag = document.createDocumentFragment();
+			popAllFrag.appendChild(document.createTextNode(Beautify(totalSucked) + ' '));
+			var popAllA = document.createElement('a');
+			popAllA.textContent = 'Pop All';
+			popAllA.className = 'option';
+			popAllA.onclick = function() { CM.Disp.CollectWrinklers(); };
+			popAllFrag.appendChild(popAllA);
+			stats.appendChild(listing('Rewards of Popping',  popAllFrag));
 		}
 	}
 	
@@ -1597,7 +1618,9 @@ CM.Disp.AddMenuStats = function(title) {
 		}
 	}
 	
-	if (Game.season == 'christmas' || specDisp || choEgg) {
+	var centEgg = Game.Has('Century egg');
+	
+	if (Game.season == 'christmas' || specDisp || choEgg || centEgg) {
 		stats.appendChild(header('Season Specials', 'Sea'));
 		if (CM.Config.StatsPref.Sea) {
 			if (specDisp) {
@@ -1647,30 +1670,11 @@ CM.Disp.AddMenuStats = function(title) {
 
 			if (Game.season == 'christmas') stats.appendChild(listing('Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
 			if (choEgg) {
-				var choEggTitleFrag = document.createDocumentFragment();
-				choEggTitleFrag.appendChild(document.createTextNode('Chocolate Egg Cookies '))
-				var choEggTitleSpan = document.createElement('span');
-				choEggTitleSpan.onmouseout = function() { Game.tooltip.hide(); };
-				choEggTitleSpan.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp.ChoEggTooltipPlaceholder.innerHTML));};
-				choEggTitleSpan.style.cursor = 'default';
-				choEggTitleSpan.style.display = 'inline-block';
-				choEggTitleSpan.style.height = '10px';
-				choEggTitleSpan.style.width = '10px';
-				choEggTitleSpan.style.borderRadius = '5px';
-				choEggTitleSpan.style.textAlign = 'center';
-				choEggTitleSpan.style.backgroundColor = '#C0C0C0';
-				choEggTitleSpan.style.color = 'black';
-				choEggTitleSpan.style.fontSize = '9px';
-				choEggTitleSpan.style.verticalAlign = 'bottom';
-				choEggTitleSpan.textContent = '?';
-				choEggTitleFrag.appendChild(choEggTitleSpan);
-				var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
-				if (Game.cpsSucked > 0) {
-					choEggTotal += totalSucked;
-				}
-				choEggTotal *= 0.05;
-				stats.appendChild(listing(choEggTitleFrag, document.createTextNode(Beautify(choEggTotal))));
-			}			
+				stats.appendChild(listing(listingQuest('Chocolate Egg Cookies', 'ChoEggTooltipPlaceholder'), document.createTextNode(Beautify(choEggTotal))));
+			}
+			if (centEgg) {
+				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode(Beautify(CM.Cache.CentEgg, 1) + '%')));
+			}				
 		}
 	}
 	
@@ -1864,11 +1868,11 @@ CM.Disp.Tooltip = function(type, name) {
 		income.style.color = 'white';
 		income.id = 'CMTooltipIncome';
 		tooltip.appendChild(income);
-		tooltip.appendChild(header('Base Cost Per Income'));
-		var bci = document.createElement('div');
-		bci.style.marginBottom = '4px';
-		bci.id = 'CMTooltipBCI';
-		tooltip.appendChild(bci);
+		tooltip.appendChild(header('Return On Investment'));
+		var roi = document.createElement('div');
+		roi.style.marginBottom = '4px';
+		roi.id = 'CMTooltipROI';
+		tooltip.appendChild(roi);
 		tooltip.appendChild(header('Time Left'));
 		var time = document.createElement('div');
 		time.id = 'CMTooltipTime';
@@ -1906,8 +1910,8 @@ CM.Disp.UpdateTooltip = function() {
 			bonus = CM.Cache[target][CM.Disp.tooltipName].bonus;
 			if (CM.Config.Tooltip == 1 && Game.buyMode == 1) {
 				l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
-				l('CMTooltipBCI').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].bci, 2);
-				l('CMTooltipBCI').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
+				l('CMTooltipROI').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].roi, 2);
+				l('CMTooltipROI').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 			}
 		}
 		else { // Upgrades
@@ -1915,8 +1919,8 @@ CM.Disp.UpdateTooltip = function() {
 			price = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
 			if (CM.Config.Tooltip == 1) {
 				l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
-				l('CMTooltipBCI').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bci, 2);
-				l('CMTooltipBCI').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+				l('CMTooltipROI').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].roi, 2);
+				l('CMTooltipROI').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
 			}
 		}
 		if (CM.Config.Tooltip == 1 && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
@@ -2090,9 +2094,6 @@ CM.Disp.RefreshScale = function() {
 	CM.Disp.UpdateUpgrades();
 }
 
-CM.Disp.min = -1;
-CM.Disp.max = -1;
-CM.Disp.mid = -1;
 CM.Disp.colorTextPre = 'CMText';
 CM.Disp.colorBackPre = 'CMBack';
 CM.Disp.colorBorderPre = 'CMBorder';
@@ -2108,8 +2109,6 @@ CM.Disp.colorBrown = 'Brown';
 CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
 CM.Disp.lastGoldenCookieState = 'none';
 CM.Disp.lastAscendState = -1;
-CM.Disp.lastBuyMode = -1;
-CM.Disp.lastBuyBulk = -1;
 
 CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];
@@ -2211,33 +2210,25 @@ CM.Loop = function() {
 	if (!Game.OnAscend && Game.AscendTimer == 0) {
 		if (CM.Sim.DoSims) {		
 			CM.Cache.RemakeIncome();
-			CM.Cache.RemakeBCI();
+			
+			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
 			CM.Cache.RemakeLucky();
 			CM.Cache.RemakeChain();
+			
 			CM.Cache.RemakeSeaSpec();
 			CM.Cache.RemakeSellForChoEgg();
-
-			CM.Disp.UpdateBotBarOther();
-			CM.Disp.UpdateBuildings();
-			CM.Disp.UpdateUpgrades();
 		
 			CM.Sim.DoSims = 0;
 		}
 		
-		// Update Buildings Color for different buy/sell modes
-		var updateBuildings = false;
-		if (CM.Disp.lastBuyMode != Game.buyMode) {
-			CM.Disp.lastBuyMode = Game.buyMode;
-			updateBuildings = true;
-		}
-		if (CM.Disp.lastBuyBulk != Game.buyBulk) {
-			CM.Disp.lastBuyBulk = Game.buyBulk;
-			updateBuildings = true;
-		}
-		if (updateBuildings) {
-			CM.Disp.UpdateBuildings();
-		}
+		// Calculate ROI
+		CM.Cache.RemakeROI();
 
+		// Update colors
+		CM.Disp.UpdateBotBarOther();
+		CM.Disp.UpdateBuildings();
+		CM.Disp.UpdateUpgrades();
+		
 		// Redraw timers
 		CM.Disp.UpdateBotBarTime();
 		CM.Disp.UpdateTimerBar();
@@ -2286,8 +2277,12 @@ CM.DelayInit = function() {
 	CM.Disp.CreateWhiteScreen();
 	CM.Disp.CreateFavicon();
 	CM.Disp.CreateGCTimer();
-	CM.Disp.CreateResetTooltip();
-	CM.Disp.CreateChoEggTooltip();
+	CM.Disp.CreateTooltip('GoldCookTooltipPlaceholder', 'Calculated with Golden Switch off', '200px');
+	CM.Disp.CreateTooltip('PrestMaxTooltipPlaceholder', 'The MAX prestige is calculated with the cookies gained from popping all wrinklers, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '310px');
+	CM.Disp.CreateTooltip('NextPrestTooltipPlaceholder', 'Not calculated with cookies gained from wrinklers or Chocolate egg', '200px');
+	CM.Disp.CreateTooltip('HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '310px');
+	CM.Disp.CreateTooltip('ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset', '340px');
+	CM.Disp.CreateTooltip('ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers, selling all buildings with Earth Shatterer aura, and then buying Chocolate egg', '290px');
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
 	CM.Disp.AddWrinklerAreaDetect();
@@ -2304,11 +2299,11 @@ CM.DelayInit = function() {
 	Game.Win('Third-party');
 }
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWarnCautBon: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWarnCautBon: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2';
-CM.VersionMinor = '3';
+CM.VersionMinor = '4';
 
 /*******
  * Sim *
@@ -2534,7 +2529,8 @@ CM.Sim.CalculateGains = function() {
 		// The boost increases a little every day, with diminishing returns up to +10% on the 100th day
 		var day = Math.floor((CM.Sim.Date - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
 		day = Math.min(day,100);
-		eggMult += (1 - Math.pow(1 - day / 100, 3)) * 10;
+		CM.Cache.CentEgg = (1 - Math.pow(1 - day / 100, 3)) * 10;
+		eggMult += CM.Cache.CentEgg;
 	}
 	mult *= (1 + 0.01 * eggMult);
 	
@@ -2669,6 +2665,9 @@ CM.Sim.BuyBuildings = function(amount, target) {
 		
 		CM.Cache[target][i] = {};
 		CM.Cache[target][i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
+		if (amount != 1) {
+			CM.Cache[target][i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, amount);
+		}
 	}
 }
 
@@ -2712,7 +2711,17 @@ CM.Sim.BuyUpgrades = function() {
 	}
 }
 
-CM.Sim.ResetBonus = function() {
+CM.Sim.NoGoldSwitchCookiesPS = function() {
+	if (Game.Has('Golden switch [off]')) {
+		CM.Sim.CopyData();
+		CM.Sim.Upgrades['Golden switch [off]'].bought = 0;
+		CM.Sim.CalculateGains();
+		CM.Cache.NoGoldSwitchCookiesPS = CM.Sim.cookiesPs;
+	}
+	else CM.Cache.NoGoldSwitchCookiesPS = Game.cookiesPs;
+}
+
+CM.Sim.ResetBonus = function(possiblePresMax) {
 	CM.Sim.CopyData();
 	
 	if (Game.cookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
@@ -2745,9 +2754,10 @@ CM.Sim.ResetBonus = function() {
 	if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
 		CM.Sim.Upgrades['Heavenly key'].bought = 1;
 		CM.Sim.UpgradesOwned++;
+		CM.Sim.Win('Wholesome');
 	}
 	
-	CM.Sim.prestige = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));
+	CM.Sim.prestige = possiblePresMax;
 	
 	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
 

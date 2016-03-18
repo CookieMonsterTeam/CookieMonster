@@ -12,21 +12,21 @@ You can see the current version, and a full history of all versions and what the
 
 At its core, Cookie Monster computes an index on both buildings and upgrades:
 
-* **Base Cost per Income (BCI)**: Indicates how much a building is worth by comparing how much it costs to how much income gained
+* **Return On Investment (ROI)**: Indicates how much a building is worth by using the formula max(cost - cookies in bank, 0)/cps + cost/Δ cps
 
 Cookie Monster also indicates the time left before being able to buy an upgrade or building, and takes it into consideration. It will take *everything* in consideration, meaning if buying a building also unlocks an achievement which boosts your income, which unlocks an achievement, it will know and highlight that building's value.
 
 This index is computed for buildings and upgrades. If the relevant option is enabled, it will color-code each of them based on their value:
 
-* Light Blue: (upgrades) This item has a better BCI than any building
-* Green: This item has the best BCI
+* Light Blue: (upgrades) This item has a better ROI than any building
+* Green: This item has the best ROI
 * Yellow: This item is not the best, but it is closer to best than it is to worst
 * Orange: This item is not the worst, but it is closer to worst than it is to best
-* Red: This item has the worst BCI
-* Purple: (upgrades) This item has a worse BCI than any building
+* Red: This item has the worst ROI
+* Purple: (upgrades) This item has a worse ROI than any building
 * Gray: (upgrades) This item has not been calculated and/or cannot be calculated due to no definitive worth.
 
-Note: For this index, **lower is better**, meaning a building with a BCI of 1 is more interesting than one with a BCI of 3.
+Note: For this index, **lower is better**, meaning a building with a ROI of 1 is more interesting than one with a ROI of 3.
 
 ## What it doesn't do
 
@@ -131,7 +131,8 @@ All suggestions are welcome, even the smallest ones.
 
 * **[Raving_Kumquat](http://cookieclicker.wikia.com/wiki/User:Raving_Kumquat)**: Original author
 * **[Maxime Fabre](https://github.com/Anahkiasen)**: Previous maintainer
-* **Alderi Tokori**: ROI calculations (unused now)
+* **[Alderi Tokori](http://forum.dashnet.org/profile/Alderi)**: ROI calculations (unused now)
 * **[Alhifar](https://github.com/Alhifar)**: Missed Golden Cookie Stat
 * **[BlackenedGem](https://github.com/BlackenedGem)**: Golden/Wrath Cookie Favicons
+* **[Sandworm](https://github.com/svschouw)**: Modified ROI calculation
 * **[Aktanusa](https://github.com/Aktanusa)**: Current maintainer
