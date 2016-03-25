@@ -359,7 +359,7 @@ CM.Sim.BuyBuildings = function(amount, target) {
 		CM.Cache[target][i] = {};
 		CM.Cache[target][i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
 		if (amount != 1) {
-			CM.Cache[target][i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, amount);
+			CM.Cache.DoRemakeBuildPrices = 1;
 		}
 	}
 }

@@ -10,6 +10,13 @@ CM.Cache.NextNumber = function(base) {
 	return (base + count);
 }
 
+CM.Cache.RemakeBuildingsPrices = function() {
+	for (var i in Game.Objects) {
+		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
+		CM.Cache.Objects100[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
+	}
+}
+
 CM.Cache.RemakeIncome = function() {
 	// Simulate Building Buys for 1 amount
 	CM.Sim.BuyBuildings(1, 'Objects');
@@ -210,4 +217,6 @@ CM.Cache.ChainFrenzyReward = 0;
 CM.Cache.ChainFrenzyWrathReward = 0;
 CM.Cache.CentEgg = 0;
 CM.Cache.SellForChoEgg = 0;
+CM.Cache.Title = '';
+CM.Cache.HadFierHoard = false;
 

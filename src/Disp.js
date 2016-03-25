@@ -726,7 +726,10 @@ CM.Disp.EmphSeasonPopup = function() {
 }
 
 CM.Disp.UpdateTitle = function() {
-	if (CM.Config.Title == 1) {
+	if (Game.OnAscend || CM.Config.Title == 0) {
+		document.title = CM.Cache.Title;
+	}
+	else if (CM.Config.Title == 1) {
 		var addSP = false;
 		
 		var titleGC;
@@ -755,12 +758,34 @@ CM.Disp.UpdateTitle = function() {
 			}
 		}
 		
-		var str = document.title;
+		var str = CM.Cache.Title;
 		if (str.charAt(0) == '[') {
 			str = str.substring(str.lastIndexOf(']') + 1);
 		}
 		
 		document.title = titleGC + (addSP ? titleSP : '') + ' ' + str;
+	}
+	else if (CM.Config.Title == 2) {
+		var str = '';
+		var spawn = false;
+		if (l('goldenCookie').style.display != 'none') {
+			spawn = true;
+			if (Game.goldenCookie.wrath) {
+				str += '[W ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
+			}
+			else {
+				str += '[G ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
+			}
+		}
+		if (Game.season=='christmas' && l('seasonPopup').style.display != 'none') {
+			str += '[R ' +  Math.ceil(Game.seasonPopup.life / Game.fps) + ']';
+			spawn = true;
+		}
+		if (spawn) str += ' - ';
+		var title = 'Cookie Clicker';
+		if (Game.season == 'fools') title = 'Cookie Baker';
+		str += title;
+		document.title = str;
 	}
 }
 
@@ -1287,7 +1312,7 @@ CM.Disp.AddMenuStats = function(title) {
 				stats.appendChild(listing(listingQuest('Chocolate Egg Cookies', 'ChoEggTooltipPlaceholder'), document.createTextNode(Beautify(choEggTotal))));
 			}
 			if (centEgg) {
-				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode(Beautify(CM.Cache.CentEgg, 1) + '%')));
+				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode((Math.round(CM.Cache.CentEgg * 100) / 100) + '%')));
 			}				
 		}
 	}
@@ -1317,7 +1342,7 @@ CM.Disp.AddMenu = function() {
 }
 
 CM.Disp.RefreshMenu = function() {
-	if (CM.Config.UpStats && Game.onMenu == 'stats' && Game.drawT % (Game.fps * 5) != 0 && Game.drawT % Game.fps == 0) Game.UpdateMenu();
+	if (CM.Config.UpStats && Game.onMenu == 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps == 0) Game.UpdateMenu();
 }
 
 CM.Disp.UpdateTooltipLocation = function() {
@@ -1505,6 +1530,11 @@ CM.Disp.Tooltip = function(type, name) {
 
 CM.Disp.UpdateTooltip = function() {
 	if (l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
+		
+		// Error checking
+		if (CM.Disp.tooltipType == 'u' && (typeof Game.UpgradesInStore[CM.Disp.tooltipName] === 'undefined' || typeof CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name] === 'undefined')) {
+			return;
+		}
 		var price;
 		var bonus;
 		if (CM.Disp.tooltipType == 'b') {

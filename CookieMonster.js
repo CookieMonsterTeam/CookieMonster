@@ -30,6 +30,13 @@ CM.Cache.NextNumber = function(base) {
 	return (base + count);
 }
 
+CM.Cache.RemakeBuildingsPrices = function() {
+	for (var i in Game.Objects) {
+		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
+		CM.Cache.Objects100[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
+	}
+}
+
 CM.Cache.RemakeIncome = function() {
 	// Simulate Building Buys for 1 amount
 	CM.Sim.BuyBuildings(1, 'Objects');
@@ -230,6 +237,8 @@ CM.Cache.ChainFrenzyReward = 0;
 CM.Cache.ChainFrenzyWrathReward = 0;
 CM.Cache.CentEgg = 0;
 CM.Cache.SellForChoEgg = 0;
+CM.Cache.Title = '';
+CM.Cache.HadFierHoard = false;
 
 /**********
  * Config *
@@ -363,7 +372,7 @@ for (var i = 0; i < 101; i++) {
 CM.ConfigData.GCSoundURL = {label: 'Golden Cookie Sound URL:', desc: 'URL of the sound to be played when a Golden Cookie spawns'};
 CM.ConfigData.SeaSoundURL = {label: 'Season Special Sound URL:', desc: 'URL of the sound to be played when a Season Special spawns'};
 CM.ConfigData.GCTimer = {label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', toggle: true, func: function() {CM.Disp.ToggleGCTimer();}};
-CM.ConfigData.Title = {label: ['Title OFF', 'Title ON'], desc: 'Update title with Golden Cookie/Season Popup timers', toggle: true};
+CM.ConfigData.Title = {label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 CM.ConfigData.Favicon = {label: ['Favicon OFF', 'Favicon ON'], desc: 'Update favicon with Golden/Wrath Cookie', toggle: true, func: function() {CM.Disp.UpdateFavicon();}};
 CM.ConfigData.Tooltip = {label: ['Tooltip Information OFF', 'Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades', toggle: true};
 CM.ConfigData.TooltipAmor = {label: ['Tooltip Amortization Information OFF', 'Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
@@ -1112,7 +1121,10 @@ CM.Disp.EmphSeasonPopup = function() {
 }
 
 CM.Disp.UpdateTitle = function() {
-	if (CM.Config.Title == 1) {
+	if (Game.OnAscend || CM.Config.Title == 0) {
+		document.title = CM.Cache.Title;
+	}
+	else if (CM.Config.Title == 1) {
 		var addSP = false;
 		
 		var titleGC;
@@ -1141,12 +1153,34 @@ CM.Disp.UpdateTitle = function() {
 			}
 		}
 		
-		var str = document.title;
+		var str = CM.Cache.Title;
 		if (str.charAt(0) == '[') {
 			str = str.substring(str.lastIndexOf(']') + 1);
 		}
 		
 		document.title = titleGC + (addSP ? titleSP : '') + ' ' + str;
+	}
+	else if (CM.Config.Title == 2) {
+		var str = '';
+		var spawn = false;
+		if (l('goldenCookie').style.display != 'none') {
+			spawn = true;
+			if (Game.goldenCookie.wrath) {
+				str += '[W ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
+			}
+			else {
+				str += '[G ' +  Math.ceil(Game.goldenCookie.life / Game.fps) + ']';
+			}
+		}
+		if (Game.season=='christmas' && l('seasonPopup').style.display != 'none') {
+			str += '[R ' +  Math.ceil(Game.seasonPopup.life / Game.fps) + ']';
+			spawn = true;
+		}
+		if (spawn) str += ' - ';
+		var title = 'Cookie Clicker';
+		if (Game.season == 'fools') title = 'Cookie Baker';
+		str += title;
+		document.title = str;
 	}
 }
 
@@ -1673,7 +1707,7 @@ CM.Disp.AddMenuStats = function(title) {
 				stats.appendChild(listing(listingQuest('Chocolate Egg Cookies', 'ChoEggTooltipPlaceholder'), document.createTextNode(Beautify(choEggTotal))));
 			}
 			if (centEgg) {
-				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode(Beautify(CM.Cache.CentEgg, 1) + '%')));
+				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode((Math.round(CM.Cache.CentEgg * 100) / 100) + '%')));
 			}				
 		}
 	}
@@ -1703,7 +1737,7 @@ CM.Disp.AddMenu = function() {
 }
 
 CM.Disp.RefreshMenu = function() {
-	if (CM.Config.UpStats && Game.onMenu == 'stats' && Game.drawT % (Game.fps * 5) != 0 && Game.drawT % Game.fps == 0) Game.UpdateMenu();
+	if (CM.Config.UpStats && Game.onMenu == 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps == 0) Game.UpdateMenu();
 }
 
 CM.Disp.UpdateTooltipLocation = function() {
@@ -1891,6 +1925,11 @@ CM.Disp.Tooltip = function(type, name) {
 
 CM.Disp.UpdateTooltip = function() {
 	if (l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
+		
+		// Error checking
+		if (CM.Disp.tooltipType == 'u' && (typeof Game.UpgradesInStore[CM.Disp.tooltipName] === 'undefined' || typeof CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name] === 'undefined')) {
+			return;
+		}
 		var price;
 		var bonus;
 		if (CM.Disp.tooltipType == 'b') {
@@ -2200,6 +2239,15 @@ CM.ReplaceNative = function() {
 		CM.Backup.Loop();
 		CM.Loop();
 	}
+	
+	CM.Backup.Logic = Game.Logic;
+	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Cache.Title'));	
+	Game.Logic = function() {
+		CM.Backup.LogicMod();
+		
+		// Update Title
+		CM.Disp.UpdateTitle();
+	}
 }
 
 CM.Loop = function() {
@@ -2221,6 +2269,21 @@ CM.Loop = function() {
 			CM.Sim.DoSims = 0;
 		}
 		
+		var hasFierHoard = Game.hasAura('Fierce Hoarder');
+		if (!CM.Cache.HadFierHoard && hasFierHoard) {
+			CM.Cache.HadFierHoard = true;
+			CM.Cache.DoRemakeBuildPrices = 1;
+		}
+		else if (CM.Cache.HadFierHoard && !hasFierHoard) {
+			CM.Cache.HadFierHoard = false;
+			CM.Cache.DoRemakeBuildPrices = 1;
+		}
+		
+		if (CM.Cache.DoRemakeBuildPrices) {
+			CM.Cache.RemakeBuildingsPrices();
+			CM.Cache.DoRemakeBuildPrices = 0;
+		}
+		
 		// Calculate ROI
 		CM.Cache.RemakeROI();
 
@@ -2239,9 +2302,6 @@ CM.Loop = function() {
 		// Update Wrinkler Tooltip
 		CM.Disp.CheckWrinklerTooltip();
 		CM.Disp.UpdateWrinklerTooltip();
-
-		// Update Title
-		CM.Disp.UpdateTitle();
 
 		// Change menu refresh interval
 		CM.Disp.RefreshMenu();
@@ -2282,7 +2342,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateTooltip('NextPrestTooltipPlaceholder', 'Not calculated with cookies gained from wrinklers or Chocolate egg', '200px');
 	CM.Disp.CreateTooltip('HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '310px');
 	CM.Disp.CreateTooltip('ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset', '340px');
-	CM.Disp.CreateTooltip('ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers, selling all buildings with Earth Shatterer aura, and then buying Chocolate egg', '290px');
+	CM.Disp.CreateTooltip('ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers, selling all buildings with Earth Shatterer aura, and then buying Chocolate egg', '300px');
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
 	CM.Disp.AddWrinklerAreaDetect();
@@ -2666,7 +2726,7 @@ CM.Sim.BuyBuildings = function(amount, target) {
 		CM.Cache[target][i] = {};
 		CM.Cache[target][i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
 		if (amount != 1) {
-			CM.Cache[target][i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, amount);
+			CM.Cache.DoRemakeBuildPrices = 1;
 		}
 	}
 }

@@ -76,6 +76,15 @@ CM.ReplaceNative = function() {
 		CM.Backup.Loop();
 		CM.Loop();
 	}
+	
+	CM.Backup.Logic = Game.Logic;
+	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Cache.Title'));	
+	Game.Logic = function() {
+		CM.Backup.LogicMod();
+		
+		// Update Title
+		CM.Disp.UpdateTitle();
+	}
 }
 
 CM.Loop = function() {
@@ -97,6 +106,21 @@ CM.Loop = function() {
 			CM.Sim.DoSims = 0;
 		}
 		
+		var hasFierHoard = Game.hasAura('Fierce Hoarder');
+		if (!CM.Cache.HadFierHoard && hasFierHoard) {
+			CM.Cache.HadFierHoard = true;
+			CM.Cache.DoRemakeBuildPrices = 1;
+		}
+		else if (CM.Cache.HadFierHoard && !hasFierHoard) {
+			CM.Cache.HadFierHoard = false;
+			CM.Cache.DoRemakeBuildPrices = 1;
+		}
+		
+		if (CM.Cache.DoRemakeBuildPrices) {
+			CM.Cache.RemakeBuildingsPrices();
+			CM.Cache.DoRemakeBuildPrices = 0;
+		}
+		
 		// Calculate ROI
 		CM.Cache.RemakeROI();
 
@@ -115,9 +139,6 @@ CM.Loop = function() {
 		// Update Wrinkler Tooltip
 		CM.Disp.CheckWrinklerTooltip();
 		CM.Disp.UpdateWrinklerTooltip();
-
-		// Update Title
-		CM.Disp.UpdateTitle();
 
 		// Change menu refresh interval
 		CM.Disp.RefreshMenu();
@@ -158,7 +179,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateTooltip('NextPrestTooltipPlaceholder', 'Not calculated with cookies gained from wrinklers or Chocolate egg', '200px');
 	CM.Disp.CreateTooltip('HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '310px');
 	CM.Disp.CreateTooltip('ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset', '340px');
-	CM.Disp.CreateTooltip('ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers, selling all buildings with Earth Shatterer aura, and then buying Chocolate egg', '290px');
+	CM.Disp.CreateTooltip('ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers, selling all buildings with Earth Shatterer aura, and then buying Chocolate egg', '300px');
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
 	CM.Disp.AddWrinklerAreaDetect();
