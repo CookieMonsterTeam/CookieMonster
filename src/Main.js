@@ -106,6 +106,7 @@ CM.Loop = function() {
 			CM.Sim.DoSims = 0;
 		}
 		
+		// Check for aura change to recalculate buildings prices
 		var hasFierHoard = Game.hasAura('Fierce Hoarder');
 		if (!CM.Cache.HadFierHoard && hasFierHoard) {
 			CM.Cache.HadFierHoard = true;
@@ -121,8 +122,8 @@ CM.Loop = function() {
 			CM.Cache.DoRemakeBuildPrices = 0;
 		}
 		
-		// Calculate ROI
-		CM.Cache.RemakeROI();
+		// Calculate PP
+		CM.Cache.RemakePP();
 
 		// Update colors
 		CM.Disp.UpdateBotBarOther();

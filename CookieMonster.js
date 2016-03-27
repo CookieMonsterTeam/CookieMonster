@@ -51,72 +51,72 @@ CM.Cache.RemakeIncome = function() {
 	CM.Sim.BuyBuildings(100, 'Objects100');
 }
 
-CM.Cache.RemakeBuildingsROI = function() {
+CM.Cache.RemakeBuildingsPP = function() {
 	CM.Cache.min = -1;
 	CM.Cache.max = -1;
 	CM.Cache.mid = -1;
 	for (var i in CM.Cache.Objects) {
-		//CM.Cache.Objects[i].roi = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
-		CM.Cache.Objects[i].roi = (Math.max(Game.Objects[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
-		if (CM.Cache.min == -1 || CM.Cache.Objects[i].roi < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].roi;
-		if (CM.Cache.max == -1 || CM.Cache.Objects[i].roi > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].roi;
+		//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
+		CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+		if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
+		if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
 	}
 	CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 	for (var i in CM.Cache.Objects) {
 		var color = '';
-		if (CM.Cache.Objects[i].roi == CM.Cache.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache.Objects[i].roi == CM.Cache.max) color = CM.Disp.colorRed;
-		else if (CM.Cache.Objects[i].roi > CM.Cache.mid) color = CM.Disp.colorOrange;
+		if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+		else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+		else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
 		else color = CM.Disp.colorYellow;
 		CM.Cache.Objects[i].color = color;
 	}
 }
 
-CM.Cache.RemakeUpgradeROI = function() {
+CM.Cache.RemakeUpgradePP = function() {
 	for (var i in CM.Cache.Upgrades) {
-		//CM.Cache.Upgrades[i].roi = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
-		CM.Cache.Upgrades[i].roi = (Math.max(Game.Upgrades[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
-		if (isNaN(CM.Cache.Upgrades[i].roi)) CM.Cache.Upgrades[i].roi = 'Infinity';
+		//CM.Cache.Upgrades[i].pp = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
+		CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
+		if (isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = 'Infinity';
 		var color = '';
-		if (CM.Cache.Upgrades[i].roi <= 0 || CM.Cache.Upgrades[i].roi == 'Infinity') color = CM.Disp.colorGray;
-		else if (CM.Cache.Upgrades[i].roi < CM.Cache.min) color = CM.Disp.colorBlue;
-		else if (CM.Cache.Upgrades[i].roi == CM.Cache.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache.Upgrades[i].roi == CM.Cache.max) color = CM.Disp.colorRed;
-		else if (CM.Cache.Upgrades[i].roi > CM.Cache.max) color = CM.Disp.colorPurple;
-		else if (CM.Cache.Upgrades[i].roi > CM.Cache.mid) color = CM.Disp.colorOrange;
+		if (CM.Cache.Upgrades[i].pp <= 0 || CM.Cache.Upgrades[i].pp == 'Infinity') color = CM.Disp.colorGray;
+		else if (CM.Cache.Upgrades[i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
+		else if (CM.Cache.Upgrades[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+		else if (CM.Cache.Upgrades[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+		else if (CM.Cache.Upgrades[i].pp > CM.Cache.max) color = CM.Disp.colorPurple;
+		else if (CM.Cache.Upgrades[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
 		else color = CM.Disp.colorYellow;
 		CM.Cache.Upgrades[i].color = color;
 	}
 }
 
-CM.Cache.RemakeBuildingsOtherROI = function(amount, target) {
+CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 	for (var i in CM.Cache[target]) {
-		//CM.Cache[target][i].roi = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
-		CM.Cache[target][i].roi = (Math.max(CM.Cache[target][i].price - Game.cookies, 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
+		//CM.Cache[target][i].pp = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
+		CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - Game.cookies, 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
 		var color = '';
-		if (CM.Cache[target][i].roi <= 0 || CM.Cache[target][i].roi == 'Infinity') color = CM.Disp.colorGray;
-		else if (CM.Cache[target][i].roi < CM.Cache.min) color = CM.Disp.colorBlue;
-		else if (CM.Cache[target][i].roi == CM.Cache.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache[target][i].roi == CM.Cache.max) color = CM.Disp.colorRed;
-		else if (CM.Cache[target][i].roi > CM.Cache.max) color = CM.Disp.colorPurple;
-		else if (CM.Cache[target][i].roi > CM.Cache.mid) color = CM.Disp.colorOrange;
+		if (CM.Cache[target][i].pp <= 0 || CM.Cache[target][i].pp == 'Infinity') color = CM.Disp.colorGray;
+		else if (CM.Cache[target][i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
+		else if (CM.Cache[target][i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+		else if (CM.Cache[target][i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+		else if (CM.Cache[target][i].pp > CM.Cache.max) color = CM.Disp.colorPurple;
+		else if (CM.Cache[target][i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
 		else color = CM.Disp.colorYellow;
 		CM.Cache[target][i].color = color;
 	}
 }
 
-CM.Cache.RemakeROI = function() {
+CM.Cache.RemakePP = function() {
 	// Buildings for 1 amount
-	CM.Cache.RemakeBuildingsROI();
+	CM.Cache.RemakeBuildingsPP();
 	
 	// Upgrades
-	CM.Cache.RemakeUpgradeROI();
+	CM.Cache.RemakeUpgradePP();
 	
 	// Buildings for 10 amount
-	CM.Cache.RemakeBuildingsOtherROI(10, 'Objects10');
+	CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
 
 	// Buildings for 100 amount
-	CM.Cache.RemakeBuildingsOtherROI(100, 'Objects100');	
+	CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');	
 }
 
 CM.Cache.RemakeLucky = function() {
@@ -362,7 +362,7 @@ CM.ConfigData.TimerBarPos = {label: ['Timer Bar Position (Top Left)', 'Timer Bar
 CM.ConfigData.BuildColor = {label: ['Building Colors OFF', 'Building Colors ON'], desc: 'Color code buildings', toggle: true, func: function() {CM.Disp.UpdateBuildings();}};
 CM.ConfigData.BulkBuildColor = {label: ['Bulk Building Colors (Single Buildings Color)', 'Bulk Building Colors (Calculated Color)'], desc: 'Color code bulk buildings based on single buildings color or calculated bulk value color', toggle: false, func: function() {CM.Disp.UpdateBuildings();}};
 CM.ConfigData.UpBarColor = {label: ['Upgrade Bar/Colors OFF', 'Upgrade Bar/Colors ON'], desc: 'Color code upgrades and add a counter', toggle: true, func: function() {CM.Disp.ToggleUpBarColor();}};
-CM.ConfigData.Colors = {desc: {Blue: 'Color Blue.  Used to show better than best ROI building, for Click Frenzy bar, and for various labels', Green: 'Color Green.  Used to show best ROI building, for Blood Frenzy bar, and for various labels', Yellow: 'Color Yellow.  Used to show between best and worst ROI buildings closer to best, for Frenzy bar, and for various labels', Orange: 'Color Orange.  Used to show between best and worst ROI buildings closer to worst, for Next Reindeer bar, and for various labels', Red: 'Color Red.  Used to show worst ROI building, for Clot bar, and for various labels', Purple: 'Color Purple.  Used to show worse than worst ROI building, for Next Cookie bar, and for various labels', Gray: 'Color Gray.  Used to show negative or infinity ROI, and for Next Cookie/Next Reindeer bar', Pink: 'Color Pink.  Used for Dragonflight bar', Brown: 'Color Brown.  Used for Dragon Harvest bar'}, func: function() {CM.Disp.UpdateColors();}};
+CM.ConfigData.Colors = {desc: {Blue: 'Color Blue.  Used to show better than best PP building, for Click Frenzy bar, and for various labels', Green: 'Color Green.  Used to show best PP building, for Blood Frenzy bar, and for various labels', Yellow: 'Color Yellow.  Used to show between best and worst PP buildings closer to best, for Frenzy bar, and for various labels', Orange: 'Color Orange.  Used to show between best and worst PP buildings closer to worst, for Next Reindeer bar, and for various labels', Red: 'Color Red.  Used to show worst PP building, for Clot bar, and for various labels', Purple: 'Color Purple.  Used to show worse than worst PP building, for Next Cookie bar, and for various labels', Gray: 'Color Gray.  Used to show negative or infinity PP, and for Next Cookie/Next Reindeer bar', Pink: 'Color Pink.  Used for Dragonflight bar', Brown: 'Color Brown.  Used for Dragon Harvest bar'}, func: function() {CM.Disp.UpdateColors();}};
 CM.ConfigData.Flash = {label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen on Golden Cookie/Season Popup', toggle: true};
 CM.ConfigData.Sound = {label: ['Sounds OFF', 'Sounds ON'], desc: 'Play a sound on Golden Cookie/Season Popup', toggle: true};
 CM.ConfigData.Volume = {label: [], desc: 'Volume of the sound'};
@@ -543,9 +543,9 @@ CM.Disp.CreateBotBar = function() {
 	var bonus = document.createElement('tr');
 	bonus.appendChild(firstCol('Bonus Income', CM.Disp.colorBlue));
 	tbody.appendChild(bonus);
-	var roi = document.createElement('tr');
-	roi.appendChild(firstCol('Return On Investment', CM.Disp.colorBlue));
-	tbody.appendChild(roi);
+	var pp = document.createElement('tr');
+	pp.appendChild(firstCol('Payback Period', CM.Disp.colorBlue));
+	tbody.appendChild(pp);
 	var time = document.createElement('tr');
 	time.appendChild(firstCol('Time Left', CM.Disp.colorBlue));
 	tbody.appendChild(time);
@@ -559,7 +559,7 @@ CM.Disp.CreateBotBar = function() {
 		header.appendChild(document.createTextNode(')'));
 		type.appendChild(header);
 		bonus.appendChild(document.createElement('td'));
-		roi.appendChild(document.createElement('td'));
+		pp.appendChild(document.createElement('td'));
 		time.appendChild(document.createElement('td'));
 	
 	}
@@ -589,7 +589,7 @@ CM.Disp.UpdateBotBarOther = function() {
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].bonus, 2);
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].className = CM.Disp.colorTextPre + CM.Cache.Objects[i].color;
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].roi, 2);
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].pp, 2);
 		}
 	}
 }
@@ -894,13 +894,13 @@ CM.Disp.CreateUpgradeBar = function() {
 		return div;
 	}
 	
-	legend.appendChild(legendLine(CM.Disp.colorBlue, 'Better than best ROI building'));
-	legend.appendChild(legendLine(CM.Disp.colorGreen, 'Same as best ROI building'));
-	legend.appendChild(legendLine(CM.Disp.colorYellow, 'Between best and worst ROI buildings closer to best'));
-	legend.appendChild(legendLine(CM.Disp.colorOrange, 'Between best and worst ROI buildings closer to worst'));
-	legend.appendChild(legendLine(CM.Disp.colorRed, 'Same as worst ROI building'));
-	legend.appendChild(legendLine(CM.Disp.colorPurple, 'Worse than worst ROI building'));
-	legend.appendChild(legendLine(CM.Disp.colorGray, 'Negative or infinity ROI'));
+	legend.appendChild(legendLine(CM.Disp.colorBlue, 'Better than best PP building'));
+	legend.appendChild(legendLine(CM.Disp.colorGreen, 'Same as best PP building'));
+	legend.appendChild(legendLine(CM.Disp.colorYellow, 'Between best and worst PP buildings closer to best'));
+	legend.appendChild(legendLine(CM.Disp.colorOrange, 'Between best and worst PP buildings closer to worst'));
+	legend.appendChild(legendLine(CM.Disp.colorRed, 'Same as worst PP building'));
+	legend.appendChild(legendLine(CM.Disp.colorPurple, 'Worse than worst PP building'));
+	legend.appendChild(legendLine(CM.Disp.colorGray, 'Negative or infinity PP'));
 	placeholder.appendChild(legend);
 	
 	CM.Disp.UpgradeBar.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML), 'store');};
@@ -1902,11 +1902,11 @@ CM.Disp.Tooltip = function(type, name) {
 		income.style.color = 'white';
 		income.id = 'CMTooltipIncome';
 		tooltip.appendChild(income);
-		tooltip.appendChild(header('Return On Investment'));
-		var roi = document.createElement('div');
-		roi.style.marginBottom = '4px';
-		roi.id = 'CMTooltipROI';
-		tooltip.appendChild(roi);
+		tooltip.appendChild(header('Payback Period'));
+		var pp = document.createElement('div');
+		pp.style.marginBottom = '4px';
+		pp.id = 'CMTooltipPP';
+		tooltip.appendChild(pp);
 		tooltip.appendChild(header('Time Left'));
 		var time = document.createElement('div');
 		time.id = 'CMTooltipTime';
@@ -1949,8 +1949,8 @@ CM.Disp.UpdateTooltip = function() {
 			bonus = CM.Cache[target][CM.Disp.tooltipName].bonus;
 			if (CM.Config.Tooltip == 1 && Game.buyMode == 1) {
 				l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
-				l('CMTooltipROI').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].roi, 2);
-				l('CMTooltipROI').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
+				l('CMTooltipPP').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].pp, 2);
+				l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 			}
 		}
 		else { // Upgrades
@@ -1958,8 +1958,8 @@ CM.Disp.UpdateTooltip = function() {
 			price = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
 			if (CM.Config.Tooltip == 1) {
 				l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
-				l('CMTooltipROI').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].roi, 2);
-				l('CMTooltipROI').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+				l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
+				l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
 			}
 		}
 		if (CM.Config.Tooltip == 1 && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
@@ -2269,6 +2269,7 @@ CM.Loop = function() {
 			CM.Sim.DoSims = 0;
 		}
 		
+		// Check for aura change to recalculate buildings prices
 		var hasFierHoard = Game.hasAura('Fierce Hoarder');
 		if (!CM.Cache.HadFierHoard && hasFierHoard) {
 			CM.Cache.HadFierHoard = true;
@@ -2284,8 +2285,8 @@ CM.Loop = function() {
 			CM.Cache.DoRemakeBuildPrices = 0;
 		}
 		
-		// Calculate ROI
-		CM.Cache.RemakeROI();
+		// Calculate PP
+		CM.Cache.RemakePP();
 
 		// Update colors
 		CM.Disp.UpdateBotBarOther();

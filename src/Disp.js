@@ -148,9 +148,9 @@ CM.Disp.CreateBotBar = function() {
 	var bonus = document.createElement('tr');
 	bonus.appendChild(firstCol('Bonus Income', CM.Disp.colorBlue));
 	tbody.appendChild(bonus);
-	var roi = document.createElement('tr');
-	roi.appendChild(firstCol('Return On Investment', CM.Disp.colorBlue));
-	tbody.appendChild(roi);
+	var pp = document.createElement('tr');
+	pp.appendChild(firstCol('Payback Period', CM.Disp.colorBlue));
+	tbody.appendChild(pp);
 	var time = document.createElement('tr');
 	time.appendChild(firstCol('Time Left', CM.Disp.colorBlue));
 	tbody.appendChild(time);
@@ -164,7 +164,7 @@ CM.Disp.CreateBotBar = function() {
 		header.appendChild(document.createTextNode(')'));
 		type.appendChild(header);
 		bonus.appendChild(document.createElement('td'));
-		roi.appendChild(document.createElement('td'));
+		pp.appendChild(document.createElement('td'));
 		time.appendChild(document.createElement('td'));
 	
 	}
@@ -194,7 +194,7 @@ CM.Disp.UpdateBotBarOther = function() {
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].bonus, 2);
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].className = CM.Disp.colorTextPre + CM.Cache.Objects[i].color;
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].roi, 2);
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].pp, 2);
 		}
 	}
 }
@@ -499,13 +499,13 @@ CM.Disp.CreateUpgradeBar = function() {
 		return div;
 	}
 	
-	legend.appendChild(legendLine(CM.Disp.colorBlue, 'Better than best ROI building'));
-	legend.appendChild(legendLine(CM.Disp.colorGreen, 'Same as best ROI building'));
-	legend.appendChild(legendLine(CM.Disp.colorYellow, 'Between best and worst ROI buildings closer to best'));
-	legend.appendChild(legendLine(CM.Disp.colorOrange, 'Between best and worst ROI buildings closer to worst'));
-	legend.appendChild(legendLine(CM.Disp.colorRed, 'Same as worst ROI building'));
-	legend.appendChild(legendLine(CM.Disp.colorPurple, 'Worse than worst ROI building'));
-	legend.appendChild(legendLine(CM.Disp.colorGray, 'Negative or infinity ROI'));
+	legend.appendChild(legendLine(CM.Disp.colorBlue, 'Better than best PP building'));
+	legend.appendChild(legendLine(CM.Disp.colorGreen, 'Same as best PP building'));
+	legend.appendChild(legendLine(CM.Disp.colorYellow, 'Between best and worst PP buildings closer to best'));
+	legend.appendChild(legendLine(CM.Disp.colorOrange, 'Between best and worst PP buildings closer to worst'));
+	legend.appendChild(legendLine(CM.Disp.colorRed, 'Same as worst PP building'));
+	legend.appendChild(legendLine(CM.Disp.colorPurple, 'Worse than worst PP building'));
+	legend.appendChild(legendLine(CM.Disp.colorGray, 'Negative or infinity PP'));
 	placeholder.appendChild(legend);
 	
 	CM.Disp.UpgradeBar.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML), 'store');};
@@ -1507,11 +1507,11 @@ CM.Disp.Tooltip = function(type, name) {
 		income.style.color = 'white';
 		income.id = 'CMTooltipIncome';
 		tooltip.appendChild(income);
-		tooltip.appendChild(header('Return On Investment'));
-		var roi = document.createElement('div');
-		roi.style.marginBottom = '4px';
-		roi.id = 'CMTooltipROI';
-		tooltip.appendChild(roi);
+		tooltip.appendChild(header('Payback Period'));
+		var pp = document.createElement('div');
+		pp.style.marginBottom = '4px';
+		pp.id = 'CMTooltipPP';
+		tooltip.appendChild(pp);
 		tooltip.appendChild(header('Time Left'));
 		var time = document.createElement('div');
 		time.id = 'CMTooltipTime';
@@ -1554,8 +1554,8 @@ CM.Disp.UpdateTooltip = function() {
 			bonus = CM.Cache[target][CM.Disp.tooltipName].bonus;
 			if (CM.Config.Tooltip == 1 && Game.buyMode == 1) {
 				l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
-				l('CMTooltipROI').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].roi, 2);
-				l('CMTooltipROI').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
+				l('CMTooltipPP').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].pp, 2);
+				l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 			}
 		}
 		else { // Upgrades
@@ -1563,8 +1563,8 @@ CM.Disp.UpdateTooltip = function() {
 			price = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
 			if (CM.Config.Tooltip == 1) {
 				l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
-				l('CMTooltipROI').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].roi, 2);
-				l('CMTooltipROI').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+				l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
+				l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
 			}
 		}
 		if (CM.Config.Tooltip == 1 && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {

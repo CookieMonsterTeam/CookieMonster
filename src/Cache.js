@@ -31,72 +31,72 @@ CM.Cache.RemakeIncome = function() {
 	CM.Sim.BuyBuildings(100, 'Objects100');
 }
 
-CM.Cache.RemakeBuildingsROI = function() {
+CM.Cache.RemakeBuildingsPP = function() {
 	CM.Cache.min = -1;
 	CM.Cache.max = -1;
 	CM.Cache.mid = -1;
 	for (var i in CM.Cache.Objects) {
-		//CM.Cache.Objects[i].roi = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
-		CM.Cache.Objects[i].roi = (Math.max(Game.Objects[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
-		if (CM.Cache.min == -1 || CM.Cache.Objects[i].roi < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].roi;
-		if (CM.Cache.max == -1 || CM.Cache.Objects[i].roi > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].roi;
+		//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
+		CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+		if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
+		if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
 	}
 	CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 	for (var i in CM.Cache.Objects) {
 		var color = '';
-		if (CM.Cache.Objects[i].roi == CM.Cache.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache.Objects[i].roi == CM.Cache.max) color = CM.Disp.colorRed;
-		else if (CM.Cache.Objects[i].roi > CM.Cache.mid) color = CM.Disp.colorOrange;
+		if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+		else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+		else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
 		else color = CM.Disp.colorYellow;
 		CM.Cache.Objects[i].color = color;
 	}
 }
 
-CM.Cache.RemakeUpgradeROI = function() {
+CM.Cache.RemakeUpgradePP = function() {
 	for (var i in CM.Cache.Upgrades) {
-		//CM.Cache.Upgrades[i].roi = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
-		CM.Cache.Upgrades[i].roi = (Math.max(Game.Upgrades[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
-		if (isNaN(CM.Cache.Upgrades[i].roi)) CM.Cache.Upgrades[i].roi = 'Infinity';
+		//CM.Cache.Upgrades[i].pp = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
+		CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
+		if (isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = 'Infinity';
 		var color = '';
-		if (CM.Cache.Upgrades[i].roi <= 0 || CM.Cache.Upgrades[i].roi == 'Infinity') color = CM.Disp.colorGray;
-		else if (CM.Cache.Upgrades[i].roi < CM.Cache.min) color = CM.Disp.colorBlue;
-		else if (CM.Cache.Upgrades[i].roi == CM.Cache.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache.Upgrades[i].roi == CM.Cache.max) color = CM.Disp.colorRed;
-		else if (CM.Cache.Upgrades[i].roi > CM.Cache.max) color = CM.Disp.colorPurple;
-		else if (CM.Cache.Upgrades[i].roi > CM.Cache.mid) color = CM.Disp.colorOrange;
+		if (CM.Cache.Upgrades[i].pp <= 0 || CM.Cache.Upgrades[i].pp == 'Infinity') color = CM.Disp.colorGray;
+		else if (CM.Cache.Upgrades[i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
+		else if (CM.Cache.Upgrades[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+		else if (CM.Cache.Upgrades[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+		else if (CM.Cache.Upgrades[i].pp > CM.Cache.max) color = CM.Disp.colorPurple;
+		else if (CM.Cache.Upgrades[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
 		else color = CM.Disp.colorYellow;
 		CM.Cache.Upgrades[i].color = color;
 	}
 }
 
-CM.Cache.RemakeBuildingsOtherROI = function(amount, target) {
+CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 	for (var i in CM.Cache[target]) {
-		//CM.Cache[target][i].roi = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
-		CM.Cache[target][i].roi = (Math.max(CM.Cache[target][i].price - Game.cookies, 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
+		//CM.Cache[target][i].pp = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
+		CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - Game.cookies, 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
 		var color = '';
-		if (CM.Cache[target][i].roi <= 0 || CM.Cache[target][i].roi == 'Infinity') color = CM.Disp.colorGray;
-		else if (CM.Cache[target][i].roi < CM.Cache.min) color = CM.Disp.colorBlue;
-		else if (CM.Cache[target][i].roi == CM.Cache.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache[target][i].roi == CM.Cache.max) color = CM.Disp.colorRed;
-		else if (CM.Cache[target][i].roi > CM.Cache.max) color = CM.Disp.colorPurple;
-		else if (CM.Cache[target][i].roi > CM.Cache.mid) color = CM.Disp.colorOrange;
+		if (CM.Cache[target][i].pp <= 0 || CM.Cache[target][i].pp == 'Infinity') color = CM.Disp.colorGray;
+		else if (CM.Cache[target][i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
+		else if (CM.Cache[target][i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+		else if (CM.Cache[target][i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+		else if (CM.Cache[target][i].pp > CM.Cache.max) color = CM.Disp.colorPurple;
+		else if (CM.Cache[target][i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
 		else color = CM.Disp.colorYellow;
 		CM.Cache[target][i].color = color;
 	}
 }
 
-CM.Cache.RemakeROI = function() {
+CM.Cache.RemakePP = function() {
 	// Buildings for 1 amount
-	CM.Cache.RemakeBuildingsROI();
+	CM.Cache.RemakeBuildingsPP();
 	
 	// Upgrades
-	CM.Cache.RemakeUpgradeROI();
+	CM.Cache.RemakeUpgradePP();
 	
 	// Buildings for 10 amount
-	CM.Cache.RemakeBuildingsOtherROI(10, 'Objects10');
+	CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
 
 	// Buildings for 100 amount
-	CM.Cache.RemakeBuildingsOtherROI(100, 'Objects100');	
+	CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');	
 }
 
 CM.Cache.RemakeLucky = function() {
