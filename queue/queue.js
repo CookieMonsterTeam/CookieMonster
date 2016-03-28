@@ -66,5 +66,17 @@ function Queue(){
   this.peek = function(){
     return (queue.length > 0 ? queue[offset] : undefined);
   }
+  
+  /* Returns the item at the spot specified by place in the queue (without 
+   * dequeuing it). If the queue is emprty or the requested place is outside 
+   * the queue length then undefined is returned.
+   */
+  this.get = function(place){
+    var item = undefined;
+	if (queue.length > 0 && place < (queue.length - offset)) {
+	  item = queue[(offset + place)];
+	}
+    return item;
+  }
 
 }
