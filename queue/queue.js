@@ -69,11 +69,11 @@ function Queue(){
   
   /* Returns the item at the spot specified by place in the queue (without 
    * dequeuing it). If the queue is emprty or the requested place is outside 
-   * the queue length then undefined is returned.
+   * the queue then undefined is returned.
    */
   this.get = function(place){
     var item = undefined;
-	if (queue.length > 0 && place < (queue.length - offset)) {
+	if (queue.length > 0 && place < (queue.length - offset) && place >= 0) {
 	  item = queue[(offset + place)];
 	}
     return item;

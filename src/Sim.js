@@ -359,7 +359,7 @@ CM.Sim.BuyBuildings = function(amount, target) {
 		CM.Cache[target][i] = {};
 		CM.Cache[target][i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
 		if (amount != 1) {
-			CM.Cache[target][i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, amount);
+			CM.Cache.DoRemakeBuildPrices = 1;
 		}
 	}
 }
@@ -415,6 +415,48 @@ CM.Sim.NoGoldSwitchCookiesPS = function() {
 }
 
 CM.Sim.ResetBonus = function(possiblePresMax) {
+	var lastAchievementsOwned = -1;
+	
+	// Calculate CPS with all Heavenly upgrades
+	var curCPS = Game.cookiesPs;
+	if (CM.Sim.Upgrades['Heavenly chip secret'].bought == 0 || CM.Sim.Upgrades['Heavenly cookie stand'].bought == 0 || CM.Sim.Upgrades['Heavenly bakery'].bought == 0 || CM.Sim.Upgrades['Heavenly confectionery'].bought == 0 || CM.Sim.Upgrades['Heavenly key'].bought == 0) {
+		CM.Sim.CopyData();
+
+		if (CM.Sim.Upgrades['Heavenly chip secret'].bought == 0) {
+			CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
+			CM.Sim.UpgradesOwned++;
+		}
+		if (CM.Sim.Upgrades['Heavenly cookie stand'].bought == 0) {
+			CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
+			CM.Sim.UpgradesOwned++;
+		}
+		if (CM.Sim.Upgrades['Heavenly bakery'].bought == 0) {
+			CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
+			CM.Sim.UpgradesOwned++;
+		}
+		if (CM.Sim.Upgrades['Heavenly confectionery'].bought == 0) {
+			CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
+			CM.Sim.UpgradesOwned++;
+		}
+		if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
+			CM.Sim.Upgrades['Heavenly key'].bought = 1;
+			CM.Sim.UpgradesOwned++;
+			CM.Sim.Win('Wholesome');
+		}
+		
+		lastAchievementsOwned = CM.Sim.AchievementsOwned;
+
+		CM.Sim.CalculateGains();
+	
+		CM.Sim.CheckOtherAchiev();
+	
+		if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
+			CM.Sim.CalculateGains();
+		}
+
+		curCPS = CM.Sim.cookiesPs;
+	}
+	
 	CM.Sim.CopyData();
 	
 	if (Game.cookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
@@ -452,7 +494,7 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	
 	CM.Sim.prestige = possiblePresMax;
 	
-	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
+	lastAchievementsOwned = CM.Sim.AchievementsOwned;
 
 	CM.Sim.CalculateGains();
 	
@@ -462,6 +504,6 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 		CM.Sim.CalculateGains();
 	}
 
-	return (CM.Sim.cookiesPs - Game.cookiesPs);
+	return (CM.Sim.cookiesPs - curCPS);
 }
 
