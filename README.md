@@ -81,14 +81,14 @@ If you'd rather use the addon as a script via per example *Greasemonkey* or *Tam
 // @grant none
 // ==/UserScript==
 
-javascript:(function() {
+(function() {
     var checkReady = setInterval(function() {
         if (typeof Game.ready !== 'undefined' && Game.ready) {
             Game.LoadMod('http://aktanusa.github.io/CookieMonster/CookieMonster.js');
             clearInterval(checkReady);
         }
     }, 1000);
-}());
+})();
 ```
 If you are using the beta, use this instead:
 
@@ -101,14 +101,14 @@ If you are using the beta, use this instead:
 // @grant none
 // ==/UserScript==
 
-javascript:(function() {
+(function() {
     var checkReady = setInterval(function() {
         if (typeof Game.ready !== 'undefined' && Game.ready) {
             Game.LoadMod('http://aktanusa.github.io/CookieMonster/CookieMonsterBeta.js');
             clearInterval(checkReady);
         }
     }, 1000);
-}());
+})();
 ```
 
 # Bugs and suggestions
