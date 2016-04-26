@@ -22,6 +22,13 @@ CM.Sim = {};
  * Cache *
  *********/
  
+CM.Cache.AddQueue = function() {
+	CM.Cache.Queue = document.createElement('script');
+	CM.Cache.Queue.type = 'text/javascript';
+	CM.Cache.Queue.setAttribute('src', 'http://aktanusa.github.io/CookieMonster/queue/queue.js');
+	document.head.appendChild(CM.Cache.Queue);
+}
+
 CM.Cache.NextNumber = function(base) {
 	var count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
 	while (base == base + count) {
@@ -51,13 +58,27 @@ CM.Cache.RemakeIncome = function() {
 	CM.Sim.BuyBuildings(100, 'Objects100');
 }
 
+CM.Cache.RemakeWrinkBank = function() {
+	var totalSucked = 0;
+	for (var i in Game.wrinklers) {
+		var sucked = Game.wrinklers[i].sucked;
+		var toSuck = 1.1;
+		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
+		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
+		sucked *= toSuck;
+		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+		totalSucked += sucked;
+	}
+	CM.Cache.WrinkBank = totalSucked;
+}
+
 CM.Cache.RemakeBuildingsPP = function() {
 	CM.Cache.min = -1;
 	CM.Cache.max = -1;
 	CM.Cache.mid = -1;
 	for (var i in CM.Cache.Objects) {
 		//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
-		CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+		CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
 		if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
 		if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
 	}
@@ -75,7 +96,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 CM.Cache.RemakeUpgradePP = function() {
 	for (var i in CM.Cache.Upgrades) {
 		//CM.Cache.Upgrades[i].pp = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
-		CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - Game.cookies, 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
+		CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
 		if (isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = 'Infinity';
 		var color = '';
 		if (CM.Cache.Upgrades[i].pp <= 0 || CM.Cache.Upgrades[i].pp == 'Infinity') color = CM.Disp.colorGray;
@@ -92,7 +113,7 @@ CM.Cache.RemakeUpgradePP = function() {
 CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 	for (var i in CM.Cache[target]) {
 		//CM.Cache[target][i].pp = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
-		CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - Game.cookies, 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
+		CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
 		var color = '';
 		if (CM.Cache[target][i].pp <= 0 || CM.Cache[target][i].pp == 'Infinity') color = CM.Disp.colorGray;
 		else if (CM.Cache[target][i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
@@ -218,9 +239,81 @@ CM.Cache.RemakeSellForChoEgg = function() {
 	CM.Cache.SellForChoEgg = sellTotal;
 }
 
+CM.Cache.InitCookiesDiff = function() {
+	CM.Cache.CookiesDiff = new Queue();
+	CM.Cache.WrinkDiff = new Queue();
+	CM.Cache.ChoEggDiff = new Queue();
+	CM.Cache.ClicksDiff = new Queue();
+}
+
+CM.Cache.UpdateAvgCPS = function() {
+	var currDate = Math.floor(Date.now() / 1000);
+	if (CM.Cache.lastDate != currDate) {	
+		var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
+		if (Game.cpsSucked > 0) {
+			choEggTotal += CM.Cache.WrinkBank;
+		}
+		choEggTotal *= 0.05;
+
+		if (CM.Cache.lastDate != -1) {
+			var timeDiff = currDate - CM.Cache.lastDate
+			var bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
+			var wrinkDiffAvg = (CM.Cache.WrinkBank - CM.Cache.lastWrinkCookies) / timeDiff;
+			var choEggDiffAvg = Math.max(0,(choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
+			var clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
+			for (var i = 0; i < timeDiff; i++) {
+				CM.Cache.CookiesDiff.enqueue(bankDiffAvg);
+				CM.Cache.WrinkDiff.enqueue(wrinkDiffAvg);
+				CM.Cache.ChoEggDiff.enqueue(choEggDiffAvg);
+				CM.Cache.ClicksDiff.enqueue(clicksDiffAvg);		
+			}
+			// Assumes the queues are the same length
+			while (CM.Cache.CookiesDiff.getLength() > 1800) {
+				CM.Cache.CookiesDiff.dequeue();
+				CM.Cache.WrinkDiff.dequeue();
+				CM.Cache.ClicksDiff.dequeue();
+			}
+			
+			while (CM.Cache.ClicksDiff.getLength() > 30) {
+				CM.Cache.ClicksDiff.dequeue();
+			}
+		}
+		CM.Cache.lastDate = currDate;
+		CM.Cache.lastCookies = Game.cookies;
+		CM.Cache.lastWrinkCookies = CM.Cache.WrinkBank;
+		CM.Cache.lastChoEgg = choEggTotal;
+		CM.Cache.lastClicks = Game.cookieClicks;
+		
+		var totalGainBank = 0;
+		var totalGainWrink = 0;
+		var totalGainChoEgg = 0;
+		// Assumes the queues are the same length 
+		for (var i = 0; i < Math.min(CM.Cache.CookiesDiff.getLength(), CM.Disp.times[CM.Config.AvgCPSHist] * 60); i++) {
+			totalGainBank += CM.Cache.CookiesDiff.get(i);
+			totalGainWrink += CM.Cache.WrinkDiff.get(i);
+			totalGainChoEgg += CM.Cache.ChoEggDiff.get(i);
+		}
+		CM.Cache.AvgCPS = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0)) / CM.Cache.CookiesDiff.getLength();
+		
+		if (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')) {
+			CM.Cache.AvgCPSChoEgg = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0) + totalGainChoEgg) / CM.Cache.CookiesDiff.getLength();
+		}
+		else {
+			CM.Cache.AvgCPSChoEgg = CM.Cache.AvgCPS;
+		}
+
+		var totalClicks = 0;
+		for (var i = 0; i < Math.min(CM.Cache.ClicksDiff.getLength(), CM.Disp.times[CM.Config.AvgClicksHist]); i++) {
+			totalClicks += CM.Cache.ClicksDiff.get(i);
+		}
+		CM.Cache.AvgClicks = totalClicks / CM.Cache.ClicksDiff.getLength();
+	}
+}
+
 CM.Cache.min = -1;
 CM.Cache.max = -1;
 CM.Cache.mid = -1;
+CM.Cache.WrinkBank = -1;
 CM.Cache.NoGoldSwitchCookiesPS = 0;
 CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
@@ -239,6 +332,18 @@ CM.Cache.CentEgg = 0;
 CM.Cache.SellForChoEgg = 0;
 CM.Cache.Title = '';
 CM.Cache.HadFierHoard = false;
+CM.Cache.lastDate = -1;
+CM.Cache.lastCookies = -1;
+CM.Cache.lastWrinkCookies = -1;
+CM.Cache.lastChoEgg = -1;
+CM.Cache.lastClicks = -1;
+CM.Cache.CookiesDiff;
+CM.Cache.WrinkDiff;
+CM.Cache.ChoEggDiff;
+CM.Cache.ClicksDiff;
+CM.Cache.AvgCPS = -1;
+CM.Cache.AvgCPSChoEgg = -1;
+CM.Cache.AvgClicks = -1;
 
 /**********
  * Config *
@@ -363,6 +468,11 @@ CM.ConfigData.BuildColor = {label: ['Building Colors OFF', 'Building Colors ON']
 CM.ConfigData.BulkBuildColor = {label: ['Bulk Building Colors (Single Buildings Color)', 'Bulk Building Colors (Calculated Color)'], desc: 'Color code bulk buildings based on single buildings color or calculated bulk value color', toggle: false, func: function() {CM.Disp.UpdateBuildings();}};
 CM.ConfigData.UpBarColor = {label: ['Upgrade Bar/Colors OFF', 'Upgrade Bar/Colors ON'], desc: 'Color code upgrades and add a counter', toggle: true, func: function() {CM.Disp.ToggleUpBarColor();}};
 CM.ConfigData.Colors = {desc: {Blue: 'Color Blue.  Used to show better than best PP building, for Click Frenzy bar, and for various labels', Green: 'Color Green.  Used to show best PP building, for Blood Frenzy bar, and for various labels', Yellow: 'Color Yellow.  Used to show between best and worst PP buildings closer to best, for Frenzy bar, and for various labels', Orange: 'Color Orange.  Used to show between best and worst PP buildings closer to worst, for Next Reindeer bar, and for various labels', Red: 'Color Red.  Used to show worst PP building, for Clot bar, and for various labels', Purple: 'Color Purple.  Used to show worse than worst PP building, for Next Cookie bar, and for various labels', Gray: 'Color Gray.  Used to show negative or infinity PP, and for Next Cookie/Next Reindeer bar', Pink: 'Color Pink.  Used for Dragonflight bar', Brown: 'Color Brown.  Used for Dragon Harvest bar'}, func: function() {CM.Disp.UpdateColors();}};
+CM.ConfigData.CalcWrink = {label: ['Calculate with Wrinklers OFF', 'Calculate with Wrinklers ON'], desc: 'Calculate times and average Cookies Per Second with Wrinkers', toggle: true};
+CM.ConfigData.CPSMode = {label: ['Current Cookies Per Second', 'Average Cookies Per Second'], desc: 'Calculate times using current Cookies Per Second or average Cookies Per Second', toggle: false};
+CM.ConfigData.AvgCPSHist = {label: ['Average CPS for past 1m', 'Average CPS for past 5m', 'Average CPS for past 10m', 'Average CPS for past 15m', 'Average CPS for past 30m'], desc: 'How much time average Cookies Per Second should consider', toggle: false};
+CM.ConfigData.AvgClicksHist = {label: ['Average Cookie Clicks for past 1s', 'Average Cookie Clicks for past 5s', 'Average Cookie Clicks for past 10s', 'Average Cookie Clicks for past 15s', 'Average CPS for past 30 mins'], desc: 'How much time average Cookie Clicks should consider', toggle: false};
+CM.ConfigData.ToolWarnCautBon = {label: ['Calculate Tooltip Warning/Caution With Bonus CPS OFF', 'Calculate Tooltip Warning/Caution With Bonus CPS ON'], desc: 'Calculate the warning/caution with or without the bonus CPS you get from buying', toggle: true};
 CM.ConfigData.Flash = {label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen on Golden Cookie/Season Popup', toggle: true};
 CM.ConfigData.Sound = {label: ['Sounds OFF', 'Sounds ON'], desc: 'Play a sound on Golden Cookie/Season Popup', toggle: true};
 CM.ConfigData.Volume = {label: [], desc: 'Volume of the sound'};
@@ -378,7 +488,6 @@ CM.ConfigData.Tooltip = {label: ['Tooltip Information OFF', 'Tooltip Information
 CM.ConfigData.TooltipAmor = {label: ['Tooltip Amortization Information OFF', 'Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
 CM.ConfigData.ToolWarnCaut = {label: ['Tooltip Warning/Caution OFF', 'Tooltip Warning/Caution ON'], desc: 'A warning/caution when buying if it will put the bank under the amount needed for max "Lucky!"/"Lucky!" (Frenzy) rewards', toggle: true, func: function() {CM.Disp.ToggleToolWarnCaut();}};
 CM.ConfigData.ToolWarnCautPos = {label: ['Tooltip Warning/Caution Position (Left)', 'Tooltip Warning/Caution Position (Bottom)'], desc: 'Placement of the warning/caution boxes', toggle: false, func: function() {CM.Disp.ToggleToolWarnCautPos();}};
-CM.ConfigData.ToolWarnCautBon = {label: ['Calculate Tooltip Warning/Caution With Bonus CPS OFF', 'Calculate Tooltip Warning/Caution With Bonus CPS ON'], desc: 'Calculate the warning/caution with or without the bonus CPS you get from buying', toggle: true};
 CM.ConfigData.ToolWrink = {label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
 CM.ConfigData.Stats = {label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra Cookie Monster statistics!', toggle: true};
 CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 5 seconds', toggle: false};
@@ -478,6 +587,20 @@ CM.Disp.Beautify = function(num, frac) {
 	else {
 		return CM.Backup.Beautify(num, frac);
 	}
+}
+
+CM.Disp.GetWrinkConfigBank = function() {
+	if (CM.Config.CalcWrink)
+		return CM.Cache.WrinkBank;
+	else
+		return 0;
+}
+
+CM.Disp.GetCPS = function() {
+	if (CM.Config.CPSMode)
+		return CM.Cache.AvgCPS;
+	else
+		return (Game.cookiesPs * (1 - Game.cpsSucked));
 }
 
 CM.Disp.UpdateBackground = function() {
@@ -600,7 +723,7 @@ CM.Disp.UpdateBotBarTime = function() {
 	
 		for (var i in CM.Cache.Objects) {
 			count++;
-			var timeColor = CM.Disp.GetTimeColor(Game.Objects[i].getPrice(), Game.cookies, (Game.cookiesPs * (1 - Game.cpsSucked)));
+			var timeColor = CM.Disp.GetTimeColor(Game.Objects[i].getPrice(), (Game.cookies + CM.Disp.GetWrinkConfigBank()), CM.Disp.GetCPS());
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].className = CM.Disp.colorTextPre + timeColor.color;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text;
 		}
@@ -1290,6 +1413,11 @@ CM.Disp.AddMenuPref = function(title) {
 		frag.appendChild(div);
 	}
 	
+	frag.appendChild(header('Calculation'));
+	frag.appendChild(listing('CalcWrink'));
+	frag.appendChild(listing('CPSMode'));
+	frag.appendChild(listing('ToolWarnCautBon'));
+
 	frag.appendChild(header('Golden Cookie/Season Popup Emphasis'));
 	frag.appendChild(listing('Flash'));
 	frag.appendChild(listing('Sound'));	
@@ -1325,7 +1453,6 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('TooltipAmor'));
 	frag.appendChild(listing('ToolWarnCaut'));
 	frag.appendChild(listing('ToolWarnCautPos'));
-	frag.appendChild(listing('ToolWarnCautBon'));
 	frag.appendChild(listing('ToolWrink'));
 	
 	frag.appendChild(header('Statistics'));
@@ -1416,11 +1543,11 @@ CM.Disp.AddMenuStats = function(title) {
 	
 	stats.appendChild(header('Lucky Cookies', 'Lucky'));
 	if (CM.Config.StatsPref.Lucky) {
-		var luckyColor = (Game.cookies < CM.Cache.Lucky) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var luckyTime = (Game.cookies < CM.Cache.Lucky) ? CM.Disp.FormatTime((CM.Cache.Lucky - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		var luckyColorFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var luckyTimeFrenzy = (Game.cookies < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		var luckyCurBase = Math.min(Game.cookies * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) + 13;
+		var luckyColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Lucky) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var luckyTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Lucky) ? CM.Disp.FormatTime((CM.Cache.Lucky - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+		var luckyColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.LuckyFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var luckyTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+		var luckyCurBase = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) + 13;
 		var luckyRewardMax = CM.Cache.LuckyReward;
 		var luckyRewardMaxWrath = CM.Cache.LuckyReward;
 		var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
@@ -1470,20 +1597,20 @@ CM.Disp.AddMenuStats = function(title) {
 	
 	stats.appendChild(header('Chain Cookies', 'Chain'));
 	if (CM.Config.StatsPref.Chain) {
-		var chainColor = (Game.cookies < CM.Cache.Chain) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var chainTime = (Game.cookies < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Chain - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		var chainColorFrenzy = (Game.cookies < CM.Cache.ChainFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var chainTimeFrenzy = (Game.cookies < CM.Cache.ChainFrenzy) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzy - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		var chainWrathColor = (Game.cookies < CM.Cache.ChainWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var chainWrathTime = (Game.cookies < CM.Cache.ChainWrath) ? CM.Disp.FormatTime((CM.Cache.ChainWrath - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
-		var chainWrathColorFrenzy = (Game.cookies < CM.Cache.ChainFrenzyWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var chainWrathTimeFrenzy = (Game.cookies < CM.Cache.ChainFrenzyWrath) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzyWrath - Game.cookies) / (Game.cookiesPs * (1 - Game.cpsSucked))) : '';
+		var chainColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Chain) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var chainTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Chain - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+		var chainColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var chainTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzy) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+		var chainWrathColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var chainWrathTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrath) ? CM.Disp.FormatTime((CM.Cache.ChainWrath - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+		var chainWrathColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var chainWrathTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrath) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzyWrath - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
 		
 		var chainRewardMax = CM.Cache.ChainReward;
 		var chainWrathRewardMax = CM.Cache.ChainWrathReward;
 		var chainFrenzyRewardMax = CM.Cache.ChainFrenzyReward;
 		var chainFrenzyWrathRewardMax = CM.Cache.ChainFrenzyWrathReward;
-		var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6, Game.cookies * 0.25);
+		var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.25);
 		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax);
 		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax);
 		if (Game.hasAura('Ancestral Metamorphosis')) {
@@ -1553,39 +1680,16 @@ CM.Disp.AddMenuStats = function(title) {
 	
 	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
 	
-
-	if (CM.Config.StatsPref.Wrink || (CM.Config.StatsPref.Sea && choEgg) || CM.Config.StatsPref.Prestige) {
-		var totalSucked = 0; // Used in Prestige and Chocolate Egg calculation below also
-		for (var i in Game.wrinklers) {
-			var sucked = Game.wrinklers[i].sucked;
-			var toSuck = 1.1;
-			if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
-			if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
-			sucked *= toSuck;
-			if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-			totalSucked += sucked;
-		}
-	}
-
-	if (choEgg) {
-		var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
-		if (Game.cpsSucked > 0) {
-			choEggTotal += totalSucked;
-		}
-		choEggTotal *= 0.05; // Used in Prestige calculation below also
-	}
-
 	stats.appendChild(header('Prestige', 'Prestige'));
 	if (CM.Config.StatsPref.Prestige) {
-		var possiblePresMax = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset + totalSucked + (choEgg ? choEggTotal : 0)));
-		var possiblePres = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset));
-		var neededCook = Game.HowManyCookiesReset(possiblePres + 1) - (Game.cookiesEarned + Game.cookiesReset);
+		var possiblePresMax = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset + CM.Cache.WrinkBank + (choEgg ? CM.Cache.lastChoEgg : 0)));
+		var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (Game.cookiesEarned + Game.cookiesReset + CM.Cache.WrinkBank + (choEgg ? CM.Cache.lastChoEgg : 0));
 
 		stats.appendChild(listing(listingQuest('Prestige Level (CUR / MAX)', 'PrestMaxTooltipPlaceholder'),  document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePresMax))));
 		var cookiesNextFrag = document.createDocumentFragment();
 		cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
 		var cookiesNextSmall = document.createElement('small');
-		cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / (Game.cookiesPs * (1 - Game.cpsSucked)), 1)) + ')';
+		cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / CM.Cache.AvgCPSChoEgg, 1)) + ')';
 		cookiesNextFrag.appendChild(cookiesNextSmall);
 		stats.appendChild(listing(listingQuest('Cookies To Next Level', 'NextPrestTooltipPlaceholder'), cookiesNextFrag));
 		stats.appendChild(listing(listingQuest('Heavenly Chips (CUR / MAX)', 'HeavenChipMaxTooltipPlaceholder'),  document.createTextNode(Beautify(Game.heavenlyChips) + ' / ' + Beautify((possiblePresMax - Game.prestige) + Game.heavenlyChips))));
@@ -1605,7 +1709,7 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(header('Wrinklers', 'Wrink'));			
 		if (CM.Config.StatsPref.Wrink) {
 			var popAllFrag = document.createDocumentFragment();
-			popAllFrag.appendChild(document.createTextNode(Beautify(totalSucked) + ' '));
+			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBank) + ' '));
 			var popAllA = document.createElement('a');
 			popAllA.textContent = 'Pop All';
 			popAllA.className = 'option';
@@ -1704,7 +1808,7 @@ CM.Disp.AddMenuStats = function(title) {
 
 			if (Game.season == 'christmas') stats.appendChild(listing('Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
 			if (choEgg) {
-				stats.appendChild(listing(listingQuest('Chocolate Egg Cookies', 'ChoEggTooltipPlaceholder'), document.createTextNode(Beautify(choEggTotal))));
+				stats.appendChild(listing(listingQuest('Chocolate Egg Cookies', 'ChoEggTooltipPlaceholder'), document.createTextNode(Beautify(CM.Cache.lastChoEgg))));
 			}
 			if (centEgg) {
 				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode((Math.round(CM.Cache.CentEgg * 100) / 100) + '%')));
@@ -1714,6 +1818,8 @@ CM.Disp.AddMenuStats = function(title) {
 	
 	stats.appendChild(header('Miscellaneous', 'Misc'));
 	if (CM.Config.StatsPref.Misc) {
+		stats.appendChild(listing('Average Cookies Per Second (Past ' + CM.Disp.times[CM.Config.AvgCPSHist] + (CM.Config.AvgCPSHist == 0 ? ' minute' : ' minutes') + ')', document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))));
+		stats.appendChild(listing('Average Cookie Clicks Per Second (Past ' + CM.Disp.times[CM.Config.AvgClicksHist] + (CM.Config.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
 		stats.appendChild(listing('Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
 	}
 
@@ -1970,7 +2076,7 @@ CM.Disp.UpdateTooltip = function() {
 				l('CMTooltipIncome').textContent += ' (' + (increase / 100) + '% of income)';
 			}
 		
-			var timeColor = CM.Disp.GetTimeColor(price, Game.cookies, (Game.cookiesPs * (1 - Game.cpsSucked)));
+			var timeColor = CM.Disp.GetTimeColor(price, (Game.cookies + CM.Disp.GetWrinkConfigBank()), CM.Disp.GetCPS());
 			l('CMTooltipTime').textContent = timeColor.text;
 			l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
 		}
@@ -1985,7 +2091,7 @@ CM.Disp.UpdateTooltip = function() {
 				warn += ((bonusNoFren * 60 * 15) / 0.15);
 			}
 			var caut = warn * 7;
-			var amount = Game.cookies - price;
+			var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
 			if ((amount < warn || amount < caut) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				if (CM.Config.ToolWarnCautPos == 0) {
 					CM.Disp.TooltipWarnCaut.style.right = '0px';
@@ -1997,13 +2103,13 @@ CM.Disp.UpdateTooltip = function() {
 			
 				if (amount < warn) {
 					l('CMDispTooltipWarn').style.display = '';
-					l('CMDispTooltipWarnText').textContent = Beautify(warn - amount) + ' (' + CM.Disp.FormatTime((warn - amount) / (Game.cookiesPs * (1 - Game.cpsSucked))) + ')';
+					l('CMDispTooltipWarnText').textContent = Beautify(warn - amount) + ' (' + CM.Disp.FormatTime((warn - amount) / CM.Disp.GetCPS()) + ')';
 					l('CMDispTooltipCaut').style.display = '';
-					l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / (Game.cookiesPs * (1 - Game.cpsSucked))) + ')';
+					l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
 				}
 				else if (amount < caut) {
 					l('CMDispTooltipCaut').style.display = '';
-					l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / (Game.cookiesPs * (1 - Game.cpsSucked))) + ')';
+					l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
 					l('CMDispTooltipWarn').style.display = 'none';
 				}
 				else {
@@ -2038,7 +2144,7 @@ CM.Disp.AddWrinklerAreaDetect = function() {
 	l('backgroundLeftCanvas').onmouseout = function() {
 		CM.Disp.TooltipWrinklerArea = 0;
 		Game.tooltip.hide();
-		for (var i = 0; i < 10; i++) {
+		for (var i in Game.wrinklers) {
 			CM.Disp.TooltipWrinklerCache[i] = 0;
 		}
 	};
@@ -2149,15 +2255,15 @@ CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM
 CM.Disp.lastGoldenCookieState = 'none';
 CM.Disp.lastAscendState = -1;
 
+CM.Disp.times = [1, 5, 10, 15, 30];
+
 CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];
-
-CM.Disp.TooltipBuy10 = false;
 
 CM.Disp.TooltipWrinklerArea = 0;
 CM.Disp.TooltipWrinkler = -1;
 CM.Disp.TooltipWrinklerCache = [];
-for (var i = 0; i < 10; i++) {
+for (var i in Game.wrinklers) {
 	CM.Disp.TooltipWrinklerCache[i] = 0;
 }
 
@@ -2285,6 +2391,9 @@ CM.Loop = function() {
 			CM.Cache.DoRemakeBuildPrices = 0;
 		}
 		
+		// Update Wrinkler Bank
+		CM.Cache.RemakeWrinkBank();
+		
 		// Calculate PP
 		CM.Cache.RemakePP();
 
@@ -2310,6 +2419,9 @@ CM.Loop = function() {
 	
 	// Check Golden Cookies
 	CM.Disp.CheckGoldenCookie();
+	
+	// Update Average CPS (might need to move)
+	CM.Cache.UpdateAvgCPS()
 }
 
 CM.Init = function() {
@@ -2318,10 +2430,11 @@ CM.Init = function() {
 		proceed = confirm('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' is meant for Game version ' + CM.VersionMajor + '.  Loading a different version may cause errors.  Do you still want to load Cookie Monster?');
 	}
 	if (proceed) {
+		CM.Cache.AddQueue();
 		CM.Disp.AddJscolor();
 		
 		var delay = setInterval(function() {
-			if (typeof jscolor !== 'undefined') {
+			if (typeof Queue !== 'undefined' && typeof jscolor !== 'undefined') {
 				CM.DelayInit();
 				clearInterval(delay);
 			}
@@ -2347,6 +2460,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
 	CM.Disp.AddWrinklerAreaDetect();
+	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
 	Game.CalculateGains();
 	CM.LoadConfig(); // Must be after all things are created!
@@ -2360,7 +2474,7 @@ CM.DelayInit = function() {
 	Game.Win('Third-party');
 }
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWarnCautBon: 0, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 1, CPSMode: 1, AvgCPSHist: 2, AvgClicksHist: 2, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2';
@@ -2783,6 +2897,48 @@ CM.Sim.NoGoldSwitchCookiesPS = function() {
 }
 
 CM.Sim.ResetBonus = function(possiblePresMax) {
+	var lastAchievementsOwned = -1;
+	
+	// Calculate CPS with all Heavenly upgrades
+	var curCPS = Game.cookiesPs;
+	if (CM.Sim.Upgrades['Heavenly chip secret'].bought == 0 || CM.Sim.Upgrades['Heavenly cookie stand'].bought == 0 || CM.Sim.Upgrades['Heavenly bakery'].bought == 0 || CM.Sim.Upgrades['Heavenly confectionery'].bought == 0 || CM.Sim.Upgrades['Heavenly key'].bought == 0) {
+		CM.Sim.CopyData();
+
+		if (CM.Sim.Upgrades['Heavenly chip secret'].bought == 0) {
+			CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
+			CM.Sim.UpgradesOwned++;
+		}
+		if (CM.Sim.Upgrades['Heavenly cookie stand'].bought == 0) {
+			CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
+			CM.Sim.UpgradesOwned++;
+		}
+		if (CM.Sim.Upgrades['Heavenly bakery'].bought == 0) {
+			CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
+			CM.Sim.UpgradesOwned++;
+		}
+		if (CM.Sim.Upgrades['Heavenly confectionery'].bought == 0) {
+			CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
+			CM.Sim.UpgradesOwned++;
+		}
+		if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
+			CM.Sim.Upgrades['Heavenly key'].bought = 1;
+			CM.Sim.UpgradesOwned++;
+			CM.Sim.Win('Wholesome');
+		}
+		
+		lastAchievementsOwned = CM.Sim.AchievementsOwned;
+
+		CM.Sim.CalculateGains();
+	
+		CM.Sim.CheckOtherAchiev();
+	
+		if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
+			CM.Sim.CalculateGains();
+		}
+
+		curCPS = CM.Sim.cookiesPs;
+	}
+	
 	CM.Sim.CopyData();
 	
 	if (Game.cookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
@@ -2820,7 +2976,7 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	
 	CM.Sim.prestige = possiblePresMax;
 	
-	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
+	lastAchievementsOwned = CM.Sim.AchievementsOwned;
 
 	CM.Sim.CalculateGains();
 	
@@ -2830,7 +2986,7 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 		CM.Sim.CalculateGains();
 	}
 
-	return (CM.Sim.cookiesPs - Game.cookiesPs);
+	return (CM.Sim.cookiesPs - curCPS);
 }
 
 /**********
