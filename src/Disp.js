@@ -706,6 +706,8 @@ CM.Disp.CreateGCTimer = function() {
 	CM.Disp.GCTimer.style.fontSize = '35px';
 	CM.Disp.GCTimer.style.cursor = 'pointer';
 	CM.Disp.GCTimer.onclick = function () {CM.Disp.goldenShimmer.pop(); CM.Disp.GCTimer.style.display = 'none';};
+	CM.Disp.GCTimer.onmouseover = function() {CM.Disp.goldenShimmer.l.style.filter = 'brightness(125%) drop-shadow(0px 0px 3px rgba(255,255,255,1))'; CM.Disp.goldenShimmer.l.style.webkitFilter = 'brightness(125%) drop-shadow(0px 0px 3px rgba(255,255,255,1))';};
+	CM.Disp.GCTimer.onmouseout = function() {CM.Disp.goldenShimmer.l.style.filter = ''; CM.Disp.goldenShimmer.l.style.webkitFilter = '';};
 		
 	l('game').appendChild(CM.Disp.GCTimer);
 }
