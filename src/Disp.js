@@ -705,7 +705,7 @@ CM.Disp.CreateGCTimer = function() {
 	CM.Disp.GCTimer.style.fontFamily = '\"Kavoon\", Georgia, serif';
 	CM.Disp.GCTimer.style.fontSize = '35px';
 	CM.Disp.GCTimer.style.cursor = 'pointer';
-	CM.Disp.GCTimer.onclick = function () {CM.Disp.goldenShimmer.pop(event); CM.Disp.GCTimer.style.display = 'none';};
+	CM.Disp.GCTimer.onclick = function () {CM.Disp.goldenShimmer.pop(); CM.Disp.GCTimer.style.display = 'none';};
 		
 	l('game').appendChild(CM.Disp.GCTimer);
 }
