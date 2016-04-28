@@ -250,7 +250,7 @@ CM.Disp.CreateTimerBar = function() {
 		var type = document.createElement('span');
 		type.style.display = 'inline-block';
 		type.style.textAlign = 'right';
-		type.style.width = '78px';
+		type.style.width = '108px';
 		type.style.marginRight = '5px';
 		type.style.verticalAlign = 'text-top';
 		type.textContent = name;
@@ -342,8 +342,8 @@ CM.Disp.ToggleTimerBarPos = function() {
 
 CM.Disp.UpdateTimerBar = function() {
 	if (CM.Config.TimerBar == 1) {
-		// label width: 83, timer width: 26, div margin: 20
-		var maxWidth = CM.Disp.TimerBar.offsetWidth - 129;
+		// label width: 113, timer width: 26, div margin: 20
+		var maxWidth = CM.Disp.TimerBar.offsetWidth - 159;
 		var count = 0;
 		
 		if (Game.shimmerTypes['golden'].spawned == 0 && !Game.Has('Golden switch [off]')) {
@@ -376,7 +376,36 @@ CM.Disp.UpdateTimerBar = function() {
 			CM.Disp.TimerBarRen.style.display = 'none';
 		}
 		
-		if (Game.frenzy > 0) {
+		var buffCount = 0;
+		for (var i in Game.buffs) {
+			if (Game.buffs[i]) {
+				buffCount++;
+				CM.Disp['TimerBarBuff' + buffCount].style.display = '';
+				l('CMTimerBarBuff' + buffCount + 'Type').textContent = Game.buffs[i].name;
+				var classColor = '';
+				if (typeof CM.Disp.buffColors[Game.buffs[i].name] !== 'undefined') {
+					classColor = CM.Disp.buffColors[Game.buffs[i].name];
+				}
+				else {
+					classColor = CM.Disp.colorPurple;
+				}
+				l('CMTimerBarBuff' + buffCount + 'Bar').className = CM.Disp.colorBackPre + classColor;
+				l('CMTimerBarBuff' + buffCount + 'Bar').style.width = Math.round(Game.buffs[i].time * maxWidth / Game.buffs[i].maxTime) + 'px';
+				l('CMTimerBarBuff' + buffCount + 'Time').textContent = Math.ceil(Game.buffs[i].time / Game.fps);
+				count++;
+				if (buffCount == 2) {
+					break;
+				}
+			}
+		}
+		if (buffCount < 2) {
+			CM.Disp.TimerBarBuff2.style.display = 'none';
+			if (buffCount < 1) {
+				CM.Disp.TimerBarBuff1.style.display = 'none';
+			}
+		}
+		
+		/*if (Game.frenzy > 0) {
 			CM.Disp.TimerBarBuff1.style.display = '';
 			if (Game.frenzyPower == 7) {
 				l('CMTimerBarBuff1Type').textContent = 'Frenzy';
@@ -418,7 +447,7 @@ CM.Disp.UpdateTimerBar = function() {
 		}
 		else {
 			CM.Disp.TimerBarBuff2.style.display = 'none';
-		}
+		}*/
 		
 		if (count != 0) {
 			var height = 48 / count;
@@ -1777,6 +1806,7 @@ CM.Disp.colorGray = 'Gray';
 CM.Disp.colorPink = 'Pink';
 CM.Disp.colorBrown = 'Brown';
 CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
+CM.Disp.buffColors = {'Frenzy': CM.Disp.colorYellow, 'Dragon Harvest': CM.Disp.colorBrown, 'Elder frenzy': CM.Disp.colorGreen, 'Clot': CM.Disp.colorRed, 'Click frenzy': CM.Disp.colorBlue, 'Dragonflight': CM.Disp.colorPink};
 CM.Disp.lastGoldenCookieState = 0;
 CM.Disp.lastSeasonPopupState = 0;
 CM.Disp.goldenShimmer;
