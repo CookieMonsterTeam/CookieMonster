@@ -122,9 +122,7 @@ CM.Cache.RemakePP = function() {
 
 CM.Cache.RemakeLucky = function() {
 	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) / 0.15;
-	if (Game.frenzy > 0) {
-		CM.Cache.Lucky /= Game.frenzyPower;
-	}
+	CM.Cache.Lucky /= CM.Sim.getCPSBuffMult();
 	CM.Cache.LuckyReward = (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
 	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.15) + 13;
@@ -144,9 +142,7 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout) {
 
 CM.Cache.RemakeChain = function() {
 	var maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6;
-	if (Game.frenzy > 0) {
-		maxPayout /= Game.frenzyPower;
-	}
+	maxPayout /= CM.Sim.getCPSBuffMult();
 	
 	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout);
 	

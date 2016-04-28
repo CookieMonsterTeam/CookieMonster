@@ -22,6 +22,7 @@ CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
 		if (Game.Has('Faberge egg')) price *= 0.99;
 		if (Game.Has('Divine discount')) price *= 0.99;
 		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
+		if (Game.hasBuff('Everything must go')) price *= 0.95;
 		price = Math.ceil(price);
 		moni+=price;
 		start++;
@@ -55,6 +56,7 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
 		if (Game.Has('Faberge egg')) price *= 0.99;
 		if (Game.Has('Divine discount')) price *= 0.99;
 		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
+		if (Game.hasBuff('Everything must go')) price *= 0.95;
 		price = Math.ceil(price);
 		var giveBack = 0.5;
 		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.85;
@@ -96,6 +98,18 @@ CM.Sim.hasAura = function(what) {
 eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString().split('Game.Has').join('CM.Sim.Has').split('me.tieredUpgrades').join('Game.Objects[me.name].tieredUpgrades').split('me.synergies').join('Game.Objects[me.name].synergies').split('syn.buildingTie1.amount').join('CM.Sim.Objects[syn.buildingTie1.name].amount').split('syn.buildingTie2.amount').join('CM.Sim.Objects[syn.buildingTie2.name].amount'));
 
 eval('CM.Sim.getGrandmaSynergyUpgradeMultiplier = ' + Game.getGrandmaSynergyUpgradeMultiplier.toString().split('Game.Objects[\'Grandma\']').join('CM.Sim.Objects[\'Grandma\']'));
+
+CM.Sim.getCPSBuffMult = function() {
+	var mult = 1;
+	var buffs = ['Frenzy', 'Elder frenzy', 'Clot', 'Dragon Harvest'];
+	for (var i in Game.goldenCookieBuildingBuffs) {
+		buffs.push(Game.goldenCookieBuildingBuffs[i][0], Game.goldenCookieBuildingBuffs[i][1]);
+	}
+	for (var i in buffs) {
+		if (Game.hasBuff(buffs[i]) && Game.buffs[buffs[i]].power) mult *= Game.buffs[buffs[i]].power;
+	}
+	return mult;
+}
 
 CM.Sim.InitData = function() {
 	// Buildings
@@ -234,8 +248,8 @@ CM.Sim.CalculateGains = function() {
 		if (rawCookiesPs >= Game.CpsAchievements[i].threshold) CM.Sim.Win(Game.CpsAchievements[i].name);
 	}
 
-	if (Game.frenzy > 0) mult *= Game.frenzyPower;
-	
+	mult *= CM.Sim.getCPSBuffMult();
+
 	// Pointless?
 	name = Game.bakeryName.toLowerCase();
 	if (name == 'orteil') mult *= 0.99;
@@ -254,7 +268,9 @@ CM.Sim.CalculateGains = function() {
 		mult *= goldenSwitchMult;
 	}
 
-	CM.Sim.cookiesPs *= mult;			
+	CM.Sim.cookiesPs *= mult;
+
+	if (Game.hasBuff('Cursed finger')) Game.cookiesPs = 0;
 };
 
 CM.Sim.CheckOtherAchiev = function() {
