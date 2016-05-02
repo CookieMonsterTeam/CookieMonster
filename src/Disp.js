@@ -957,6 +957,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('Stats'));
 	frag.appendChild(listing('UpStats'));
 	frag.appendChild(listing('SayTime'));
+	frag.appendChild(listing('TimeFormat'));
 	
 	frag.appendChild(header('Other'));
 	frag.appendChild(listing('Scale'));	
