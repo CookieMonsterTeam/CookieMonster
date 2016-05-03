@@ -4,11 +4,11 @@
 
 CM.Disp.FormatTime = function(time, format) {
 	if (time == 'Infinity') return time;
-	if (CM.ConfigData.TimeFormat == 1) {
-		if (time > 3153600000) return 'XX:XX:XX:XX:XX';
+	if (CM.Config.TimeFormat) {
+		if (time > 3155760000) return 'XX:XX:XX:XX:XX';
 		time = Math.ceil(time);
-		var y = Math.floor(time / 31536000);
-		var d = Math.floor(time % 31536000 / 86400);
+		var y = Math.floor(time / 31557600);
+		var d = Math.floor(time % 31557600 / 86400);
 		var h = Math.floor(time % 86400 / 3600);
 		var m = Math.floor(time % 3600 / 60);
 		var s = Math.floor(time % 60);
@@ -32,7 +32,7 @@ CM.Disp.FormatTime = function(time, format) {
 		if (s < 10) {
 			str += '0';
 		}
-		str += s + ':';
+		str += s;
 	} else {
 		if (time > 777600000) return format ? 'Over 9000 days!' : '>9000d';
 		time = Math.ceil(time);
@@ -986,8 +986,8 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
 	frag.appendChild(listing('UpStats'));
-	frag.appendChild(listing('SayTime'));
 	frag.appendChild(listing('TimeFormat'));
+	frag.appendChild(listing('SayTime'));
 	
 	frag.appendChild(header('Other'));
 	frag.appendChild(listing('Scale'));	
