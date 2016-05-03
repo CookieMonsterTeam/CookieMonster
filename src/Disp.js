@@ -4,24 +4,54 @@
 
 CM.Disp.FormatTime = function(time, format) {
 	if (time == 'Infinity') return time;
-	if (time > 777600000) return format ? 'Over 9000 days!' : '>9000d';
-	time = Math.ceil(time);
-	var d = Math.floor(time / 86400);
-	var h = Math.floor(time % 86400 / 3600);
-	var m = Math.floor(time % 3600 / 60);
-	var s = Math.floor(time % 60);
-	var str = '';
-	if (d > 0) {
-		str += d + (format ? (d == 1 ? ' day' : ' days') : 'd') + ', ';
+	if (CM.ConfigData.TimeFormat == 1) {
+		if (time > 3153600000) return 'XX:XX:XX:XX:XX';
+		time = Math.ceil(time);
+		var y = Math.floor(time / 31536000);
+		var d = Math.floor(time % 31536000 / 86400);
+		var h = Math.floor(time % 86400 / 3600);
+		var m = Math.floor(time % 3600 / 60);
+		var s = Math.floor(time % 60);
+		var str = '';
+		if (y < 10) {
+			str += '0';
+		}
+		str += y + ':';
+		if (d < 10) {
+			str += '0';
+		}
+		str += d + ':';
+		if (h < 10) {
+			str += '0';
+		}
+		str += h + ':';
+		if (m < 10) {
+			str += '0';
+		}
+		str += m + ':';
+		if (s < 10) {
+			str += '0';
+		}
+		str += s + ':';
+	} else {
+		if (time > 777600000) return format ? 'Over 9000 days!' : '>9000d';
+		time = Math.ceil(time);
+		var d = Math.floor(time / 86400);
+		var h = Math.floor(time % 86400 / 3600);
+		var m = Math.floor(time % 3600 / 60);
+		var s = Math.floor(time % 60);
+		var str = '';
+		if (d > 0) {
+			str += d + (format ? (d == 1 ? ' day' : ' days') : 'd') + ', ';
+		}
+		if (str.length > 0 || h > 0) {
+			str += h + (format ? (h == 1 ? ' hour' : ' hours') : 'h') + ', ';
+		}
+		if (str.length > 0 || m > 0) {
+			str += m + (format ? (m == 1 ? ' minute' : ' minutes') : 'm') + ', ';
+		}
+		str += s + (format ? (s == 1 ? ' second' : ' seconds') : 's');
 	}
-	if (str.length > 0 || h > 0) {
-		str += h + (format ? (h == 1 ? ' hour' : ' hours') : 'h') + ', ';
-	}
-	if (str.length > 0 || m > 0) {
-		str += m + (format ? (m == 1 ? ' minute' : ' minutes') : 'm') + ', ';
-	}
-	str += s + (format ? (s == 1 ? ' second' : ' seconds') : 's');
-	
 	return str;
 }
 
@@ -957,6 +987,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('Stats'));
 	frag.appendChild(listing('UpStats'));
 	frag.appendChild(listing('SayTime'));
+	frag.appendChild(listing('TimeFormat'));
 	
 	frag.appendChild(header('Other'));
 	frag.appendChild(listing('Scale'));	
