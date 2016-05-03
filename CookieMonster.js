@@ -567,7 +567,12 @@ CM.Disp.GetTimeColor = function(price, bank, cps) {
 	var text;
 	if (bank >= price) {
 		color = CM.Disp.colorGreen;
-		text = 'Done!';
+		if (CM.Config.TimeFormat) {
+			text = '00:00:00:00:00';
+		}
+		else {
+			text = 'Done!';
+		}
 	}
 	else {
 		var time = (price - bank) / cps;
