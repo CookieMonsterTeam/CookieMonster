@@ -6,6 +6,7 @@ CM.Disp.FormatTime = function(time, format) {
 	if (time == 'Infinity') return time;
 	if (CM.ConfigData.TimeFormat == 1) {
 		if (time > 3153600000) return 'XX:XX:XX:XX:XX';
+		if ((format == 1) && (time < 1)) return '';
 		time = Math.ceil(time);
 		var y = Math.floor(time / 31536000);
 		var d = Math.floor(time % 31536000 / 86400);
