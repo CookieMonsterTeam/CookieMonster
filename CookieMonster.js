@@ -296,8 +296,8 @@ CM.Cache.UpdateAvgCPS = function() {
 		}
 		CM.Cache.AvgCPS = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0)) / cpsLength;
 		
-		if (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')) {
-			CM.Cache.AvgCPSChoEgg = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0) + totalGainChoEgg) / cpsLength;
+		if ((Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')) || CM.Config.CalcWrink == 0) {
+			CM.Cache.AvgCPSChoEgg = (totalGainBank + totalGainWrink + totalGainChoEgg) / cpsLength;
 		}
 		else {
 			CM.Cache.AvgCPSChoEgg = CM.Cache.AvgCPS;
