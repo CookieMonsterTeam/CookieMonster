@@ -219,27 +219,27 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Kitten experts')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten angels')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
 
-	var eggMult = 0;
-	if (CM.Sim.Has('Chicken egg')) eggMult++;
-	if (CM.Sim.Has('Duck egg')) eggMult++;
-	if (CM.Sim.Has('Turkey egg')) eggMult++;
-	if (CM.Sim.Has('Quail egg')) eggMult++;
-	if (CM.Sim.Has('Robin egg')) eggMult++;
-	if (CM.Sim.Has('Ostrich egg')) eggMult++;
-	if (CM.Sim.Has('Cassowary egg')) eggMult++;
-	if (CM.Sim.Has('Salmon roe')) eggMult++;
-	if (CM.Sim.Has('Frogspawn')) eggMult++;
-	if (CM.Sim.Has('Shark egg')) eggMult++;
-	if (CM.Sim.Has('Turtle egg')) eggMult++;
-	if (CM.Sim.Has('Ant larva')) eggMult++;
+	var eggMult = 1;
+	if (CM.Sim.Has('Chicken egg')) eggMult *= 1.01;
+	if (CM.Sim.Has('Duck egg')) eggMult *= 1.01;
+	if (CM.Sim.Has('Turkey egg')) eggMult *= 1.01;
+	if (CM.Sim.Has('Quail egg')) eggMult *= 1.01;
+	if (CM.Sim.Has('Robin egg')) eggMult *= 1.01;
+	if (CM.Sim.Has('Ostrich egg')) eggMult *= 1.01;
+	if (CM.Sim.Has('Cassowary egg')) eggMult *= 1.01;
+	if (CM.Sim.Has('Salmon roe')) eggMult *= 1.01;
+	if (CM.Sim.Has('Frogspawn')) eggMult *= 1.01;
+	if (CM.Sim.Has('Shark egg')) eggMult *= 1.01;
+	if (CM.Sim.Has('Turtle egg')) eggMult *= 1.01;
+	if (CM.Sim.Has('Ant larva')) eggMult *= 1.01;
 	if (CM.Sim.Has('Century egg')) {
 		// The boost increases a little every day, with diminishing returns up to +10% on the 100th day
 		var day = Math.floor((CM.Sim.Date - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
 		day = Math.min(day,100);
-		CM.Cache.CentEgg = (1 - Math.pow(1 - day / 100, 3)) * 10;
-		eggMult += CM.Cache.CentEgg;
+		CM.Cache.CentEgg = 1 + (1 - Math.pow(1 - day / 100, 3)) * 0.1;
+		eggMult *= CM.Cache.CentEgg;
 	}
-	mult *= (1 + 0.01 * eggMult);
+	mult *= eggMult;
 	
 	if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;
 	
