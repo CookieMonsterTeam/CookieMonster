@@ -101,12 +101,8 @@ eval('CM.Sim.getGrandmaSynergyUpgradeMultiplier = ' + Game.getGrandmaSynergyUpgr
 
 CM.Sim.getCPSBuffMult = function() {
 	var mult = 1;
-	var buffs = ['Frenzy', 'Elder frenzy', 'Clot', 'Dragon Harvest'];
-	for (var i in Game.goldenCookieBuildingBuffs) {
-		buffs.push(Game.goldenCookieBuildingBuffs[i][0], Game.goldenCookieBuildingBuffs[i][1]);
-	}
-	for (var i in buffs) {
-		if (Game.hasBuff(buffs[i]) && Game.buffs[buffs[i]].power) mult *= Game.buffs[buffs[i]].power;
+	for (var i in Game.buffs) {
+		if (typeof Game.buffs[i].multCpS != 'undefined') mult *= Game.buffs[i].multCpS;
 	}
 	return mult;
 }
@@ -177,10 +173,10 @@ CM.Sim.CalculateGains = function() {
 	if (Game.ascensionMode != 1) mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
 
 	var cookieMult = 0;
-	for (var i in CM.Sim.Upgrades) {
-		var me = CM.Sim.Upgrades[i];
-		if (me.bought > 0) {
-			if (Game.Upgrades[i].pool == 'cookie' && CM.Sim.Has(Game.Upgrades[i].name)) mult *= (1 + (typeof(Game.Upgrades[i].power) == 'function' ? Game.Upgrades[i].power(Game.Upgrades[i]) : Game.Upgrades[i].power) * 0.01);
+	for (var i in Game.cookieUpgrades) {
+		var me = Game.cookieUpgrades[i];
+		if (CM.Sim.Has(me.name)) {
+			mult *= (1 + (typeof(me.power) == 'function' ? me.power(me) : me.power) * 0.01);
 		}
 	}
 
@@ -270,7 +266,8 @@ CM.Sim.CalculateGains = function() {
 
 	CM.Sim.cookiesPs *= mult;
 
-	if (Game.hasBuff('Cursed finger')) Game.cookiesPs = 0;
+	// TODO remove?
+	// if (Game.hasBuff('Cursed finger')) Game.cookiesPs = 0;
 };
 
 CM.Sim.CheckOtherAchiev = function() {

@@ -181,7 +181,10 @@ CM.Cache.RemakeChain = function() {
 
 CM.Cache.RemakeSeaSpec = function() {
 	if (Game.season == 'christmas') {
-		CM.Cache.SeaSpec = Math.max(25, Game.cookiesPs * 60 * 1);
+		var val = Game.cookiesPs * 60;
+		if (Game.hasBuff('Elder frenzy')) val *= 0.5; // very sorry
+		if (Game.hasBuff('Frenzy')) val *= 0.75; // I sincerely apologize		
+		CM.Cache.SeaSpec = Math.max(25, val);
 		if (Game.Has('Ho ho ho-flavored frosting')) CM.Cache.SeaSpec *= 2;
 	}
 }
