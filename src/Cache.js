@@ -122,9 +122,7 @@ CM.Cache.RemakePP = function() {
 
 CM.Cache.RemakeLucky = function() {
 	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) / 0.15;
-	if (Game.frenzy > 0) {
-		CM.Cache.Lucky /= Game.frenzyPower;
-	}
+	CM.Cache.Lucky /= CM.Sim.getCPSBuffMult();
 	CM.Cache.LuckyReward = (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
 	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.15) + 13;
@@ -144,9 +142,7 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout) {
 
 CM.Cache.RemakeChain = function() {
 	var maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6;
-	if (Game.frenzy > 0) {
-		maxPayout /= Game.frenzyPower;
-	}
+	maxPayout /= CM.Sim.getCPSBuffMult();
 	
 	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout);
 	
@@ -159,7 +155,7 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.Chain = CM.Cache.NextNumber(CM.Cache.ChainReward) / 0.25;
 	}
 	if (maxPayout < CM.Cache.ChainWrathReward) {
-		CM.Cache.Chain = 0;
+		CM.Cache.ChainWrath = 0;
 	}
 	else {
 		CM.Cache.ChainWrath = CM.Cache.NextNumber(CM.Cache.ChainWrathReward) / 0.25;
@@ -176,7 +172,7 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.ChainFrenzy = CM.Cache.NextNumber(CM.Cache.ChainFrenzyReward) / 0.25;
 	}
 	if ((maxPayout * 7) < CM.Cache.ChainFrenzyWrathReward) {
-		CM.Cache.ChainFrenzy = 0;
+		CM.Cache.ChainFrenzyWrath = 0;
 	}
 	else {
 		CM.Cache.ChainFrenzyWrath = CM.Cache.NextNumber(CM.Cache.ChainFrenzyWrathReward) / 0.25;
@@ -185,7 +181,10 @@ CM.Cache.RemakeChain = function() {
 
 CM.Cache.RemakeSeaSpec = function() {
 	if (Game.season == 'christmas') {
-		CM.Cache.SeaSpec = Math.max(25, Game.cookiesPs * 60 * 1);
+		var val = Game.cookiesPs * 60;
+		if (Game.hasBuff('Elder frenzy')) val *= 0.5; // very sorry
+		if (Game.hasBuff('Frenzy')) val *= 0.75; // I sincerely apologize		
+		CM.Cache.SeaSpec = Math.max(25, val);
 		if (Game.Has('Ho ho ho-flavored frosting')) CM.Cache.SeaSpec *= 2;
 	}
 }
@@ -276,8 +275,8 @@ CM.Cache.UpdateAvgCPS = function() {
 		}
 		CM.Cache.AvgCPS = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0)) / cpsLength;
 		
-		if (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')) {
-			CM.Cache.AvgCPSChoEgg = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0) + totalGainChoEgg) / cpsLength;
+		if ((Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')) || CM.Config.CalcWrink == 0) {
+			CM.Cache.AvgCPSChoEgg = (totalGainBank + totalGainWrink + totalGainChoEgg) / cpsLength;
 		}
 		else {
 			CM.Cache.AvgCPSChoEgg = CM.Cache.AvgCPS;
