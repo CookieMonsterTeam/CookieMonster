@@ -13,14 +13,6 @@ CM.ReplaceNative = function() {
 		CM.Sim.Date = new Date().getTime();
 	}
 	
-	CM.Backup.seasonPopup = {};
-	CM.Backup.seasonPopup.spawn = Game.seasonPopup.spawn;
-	eval('CM.Backup.seasonPopup.spawnMod = ' + Game.seasonPopup.spawn.toString().split('this').join('Game.seasonPopup'));
-	Game.seasonPopup.spawn = function() {
-		CM.Backup.seasonPopup.spawnMod();
-		CM.Disp.EmphSeasonPopup();
-	}
-	
 	CM.Backup.tooltip = {};
 	CM.Backup.tooltip.draw = Game.tooltip.draw;
 	eval('CM.Backup.tooltip.drawMod = ' + Game.tooltip.draw.toString().split('this').join('Game.tooltip'));
@@ -151,6 +143,9 @@ CM.Loop = function() {
 	// Check Golden Cookies
 	CM.Disp.CheckGoldenCookie();
 	
+	// Check Season Popup
+	CM.Disp.CheckSeasonPopup();
+
 	// Update Average CPS (might need to move)
 	CM.Cache.UpdateAvgCPS()
 }
@@ -210,4 +205,6 @@ CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2';
 CM.VersionMinor = '6';
+CM.VersionMajor = '2.002';
+CM.VersionMinor = '1';
 
