@@ -1909,7 +1909,7 @@ CM.Disp.AddMenuStats = function(title) {
 				stats.appendChild(listing(listingQuest('Chocolate Egg Cookies', 'ChoEggTooltipPlaceholder'), document.createTextNode(Beautify(CM.Cache.lastChoEgg))));
 			}
 			if (centEgg) {
-				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode((Math.round(CM.Cache.CentEgg * 100) / 100) + '%')));
+				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode((Math.round((CM.Cache.CentEgg - 1) * 10000) / 100) + '%')));
 			}				
 		}
 	}
@@ -2573,7 +2573,7 @@ CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkB
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.002';
-CM.VersionMinor = '1';
+CM.VersionMinor = '2';
 
 /*******
  * Sim *
@@ -2808,7 +2808,7 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Century egg')) {
 		// The boost increases a little every day, with diminishing returns up to +10% on the 100th day
 		var day = Math.floor((CM.Sim.Date - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
-		day = Math.min(day,100);
+		day = Math.min(day, 100);
 		CM.Cache.CentEgg = 1 + (1 - Math.pow(1 - day / 100, 3)) * 0.1;
 		eggMult *= CM.Cache.CentEgg;
 	}
