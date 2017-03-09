@@ -1580,7 +1580,7 @@ CM.Disp.Tooltip = function(type, name) {
 		if (CM.Config.TooltipNextMultiple == 1) {
 			var marker = addedAmor  ? ')' : 'so far';
 			var multiple_quantity = CM.Cache.Objects[name].multiple_quantity;
-			l('tooltip').innerHTML = l('tooltip').innerHTML.split(marker + '</div>').join(marker + '<br/>&bull; <b>' + multiple_quantity + '</b> left to reach <b>' + (Game.Objects[name].amount + multiple_quantity) + '</b>, <b>' + Beautify(CM.Cache.Objects[name].multiple_price, 2) + '</b> in total</div>');
+			l('tooltip').innerHTML = l('tooltip').innerHTML.split(marker + '</div>').join(marker + '<br/>&bull; <b>' + multiple_quantity + '</b> ' + (multiple_quantity == 1 ? Game.Objects[name].single : Game.Objects[name].plural)  + ' left to reach <b>' + (Game.Objects[name].amount + multiple_quantity) + '</b>, <b>' + Beautify(CM.Cache.Objects[name].multiple_price, 2) + '</b> cookies in total (' + CM.Disp.GetTimeColor(CM.Cache.Objects[name].multiple_price, (Game.cookies + CM.Disp.GetWrinkConfigBank()), CM.Disp.GetCPS()).text + ')</div>');
 		}
 
 		if (Game.buyMode == 1) {
