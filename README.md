@@ -127,7 +127,7 @@ If the bug is still here, you can submit an issue for it.
 
 All suggestions are welcome, even the smallest ones.
 
-#Contributors
+# Contributors
 
 * **[Raving_Kumquat](http://cookieclicker.wikia.com/wiki/User:Raving_Kumquat)**: Original author
 * **[Maxime Fabre](https://github.com/Anahkiasen)**: Previous maintainer
