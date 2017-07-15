@@ -197,7 +197,11 @@ CM.Sim.CalculateGains = function() {
 
 	for (var i in CM.Sim.Objects) {
 		var me = CM.Sim.Objects[i];
-		CM.Sim.cookiesPs += me.amount * (typeof(me.cps) == 'function' ? me.cps(me) : me.cps);
+		
+		var cpsThisObject = me.amount * (typeof(me.cps) == 'function' ? me.cps(me) : me.cps);
+		cpsThisObject *= (1 + me.level * 0.01);
+
+		CM.Sim.cookiesPs += cpsThisObject;
 	}
 
 	if (CM.Sim.Has('"egg"')) CM.Sim.cookiesPs += 9; // "egg"
