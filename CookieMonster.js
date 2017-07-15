@@ -2695,6 +2695,7 @@ CM.Sim.InitData = function() {
 		// Below is needed for above eval!
 		you.baseCps = me.baseCps;
 		you.name = me.name;
+		you.level = me.level;
 	}
 
 	// Upgrades
