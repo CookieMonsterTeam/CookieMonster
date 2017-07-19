@@ -2391,7 +2391,7 @@ CM.ReplaceNative = function() {
 	Game.CalculateGains = function() {
 		CM.Backup.CalculateGains();
 		CM.Sim.DoSims = 1;
-		CM.Sim.Date = new Date().getTime();
+		CM.Sim.Date = Date.now();
 	}
 	
 	CM.Backup.tooltip = {};
@@ -2585,7 +2585,7 @@ CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkB
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.0034';
-CM.VersionMinor = '2';
+CM.VersionMinor = '3';
 
 /*******
  * Sim *
