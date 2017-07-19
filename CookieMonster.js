@@ -67,6 +67,12 @@ CM.Cache.RemakeWrinkBank = function() {
 		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+		if (Game.hasGod) {
+			var godLvl = Game.hasGod('scorn');
+			if (godLvl == 1) sucked *= 1.15;
+			else if (godLvl == 2) sucked *= 1.1;
+			else if (godLvl == 3) sucked *= 1.05;
+		}
 		totalSucked += sucked;
 	}
 	CM.Cache.WrinkBank = totalSucked;
@@ -97,9 +103,9 @@ CM.Cache.RemakeUpgradePP = function() {
 	for (var i in CM.Cache.Upgrades) {
 		//CM.Cache.Upgrades[i].pp = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
 		CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
-		if (isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = 'Infinity';
+		if (isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = Infinity;
 		var color = '';
-		if (CM.Cache.Upgrades[i].pp <= 0 || CM.Cache.Upgrades[i].pp == 'Infinity') color = CM.Disp.colorGray;
+		if (CM.Cache.Upgrades[i].pp <= 0 || CM.Cache.Upgrades[i].pp == Infinity) color = CM.Disp.colorGray;
 		else if (CM.Cache.Upgrades[i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
 		else if (CM.Cache.Upgrades[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 		else if (CM.Cache.Upgrades[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
@@ -115,7 +121,7 @@ CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 		//CM.Cache[target][i].pp = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
 		CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
 		var color = '';
-		if (CM.Cache[target][i].pp <= 0 || CM.Cache[target][i].pp == 'Infinity') color = CM.Disp.colorGray;
+		if (CM.Cache[target][i].pp <= 0 || CM.Cache[target][i].pp == Infinity) color = CM.Disp.colorGray;
 		else if (CM.Cache[target][i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
 		else if (CM.Cache[target][i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 		else if (CM.Cache[target][i].pp == CM.Cache.max) color = CM.Disp.colorRed;
@@ -509,7 +515,7 @@ CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour hear
  ********/
 
 CM.Disp.FormatTime = function(time, format) {
-	if (time == 'Infinity') return time;
+	if (time == Infinity) return time;
 	if (CM.Config.TimeFormat) {
 		if (time > 3155760000) return 'XX:XX:XX:XX:XX';
 		time = Math.ceil(time);
@@ -2298,6 +2304,12 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 		if (Game.wrinklers[CM.Disp.TooltipWrinkler].type == 1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+		if (Game.hasGod) {
+			var godLvl = Game.hasGod('scorn');
+			if (godLvl == 1) sucked *= 1.15;
+			else if (godLvl == 2) sucked *= 1.1;
+			else if (godLvl == 3) sucked *= 1.05;
+		}
 		l('CMTooltipWrinkler').textContent = Beautify(sucked);
 	}
 }
@@ -2572,8 +2584,8 @@ CM.DelayInit = function() {
 CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 1, CPSMode: 1, AvgCPSHist: 2, AvgClicksHist: 2, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '2.002';
-CM.VersionMinor = '2';
+CM.VersionMajor = '2.0034';
+CM.VersionMinor = '1';
 
 /*******
  * Sim *
@@ -2594,14 +2606,9 @@ CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
 	var moni = 0;
 	for (var i = 0; i < increase; i++) {
 		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
-		if (Game.Has('Season savings')) price *= 0.99;
-		if (Game.Has('Santa\'s dominion')) price *= 0.99;
-		if (Game.Has('Faberge egg')) price *= 0.99;
-		if (Game.Has('Divine discount')) price *= 0.99;
-		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
-		if (Game.hasBuff('Everything must go')) price *= 0.95;
+		price = Game.modifyBuildingPrice(null, price);
 		price = Math.ceil(price);
-		moni+=price;
+		moni += price;
 		start++;
 	}
 	return moni;
@@ -2628,12 +2635,7 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
 	var moni=0;
 	for (var i = 0; i < amount; i++) {
 		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
-		if (Game.Has('Season savings')) price *= 0.99;
-		if (Game.Has('Santa\'s dominion')) price *= 0.99;
-		if (Game.Has('Faberge egg')) price *= 0.99;
-		if (Game.Has('Divine discount')) price *= 0.99;
-		if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
-		if (Game.hasBuff('Everything must go')) price *= 0.95;
+		price = Game.modifyBuildingPrice(null, price);
 		price = Math.ceil(price);
 		var giveBack = 0.5;
 		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.85;
@@ -2725,6 +2727,7 @@ CM.Sim.CopyData = function() {
 		var me = Game.Objects[i];
 		var you = CM.Sim.Objects[i];
 		you.amount = me.amount;
+		you.level = me.level;
 	}
 
 	// Upgrades
@@ -2770,11 +2773,41 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('An itchy sweater')) mult *= 1.01;
 	if (CM.Sim.Has('Santa\'s dominion')) mult *= 1.2;
 
+	var buildMult=1;
+	if (Game.hasGod) {
+		var godLvl = Game.hasGod('asceticism');
+		if (godLvl == 1) mult *= 1.15;
+		else if (godLvl == 2) mult *= 1.1;
+		else if (godLvl == 3) mult *= 1.05;
+
+		var godLvl = Game.hasGod('ages');
+		if (godLvl == 1) mult *= 1 + 0.15 * Math.sin((Date.now() / 1000 / (60 * 60 * 3)) * Math.PI * 2);
+		else if (godLvl == 2) mult *= 1 + 0.15 * Math.sin((Date.now() / 1000 / (60 * 60 * 12)) * Math.PI*2);
+		else if (godLvl == 3) mult *= 1 + 0.15 * Math.sin((Date.now() / 1000 / (60 * 60 * 24)) * Math.PI*2);
+
+		var godLvl = Game.hasGod('decadence');
+		if (godLvl == 1) buildMult *= 0.93;
+		else if (godLvl == 2) buildMult *= 0.95;
+		else if (godLvl == 3) buildMult *= 0.98;
+
+		var godLvl = Game.hasGod('industry');
+		if (godLvl == 1) buildMult *= 1.1;
+		else if (godLvl == 2) buildMult *= 1.05;
+		else if (godLvl == 3) buildMult *= 1.03;
+
+		var godLvl = Game.hasGod('labor');
+		if (godLvl == 1) buildMult *= 0.97;
+		else if (godLvl == 2) buildMult *= 0.98;
+		else if (godLvl == 3) buildMult *= 0.99;
+	}
+
 	if (CM.Sim.Has('Santa\'s legacy')) mult *= 1 + (Game.santaLevel + 1) * 0.03;
 
 	for (var i in CM.Sim.Objects) {
 		var me = CM.Sim.Objects[i];
-		CM.Sim.cookiesPs += me.amount * (typeof(me.cps) == 'function' ? me.cps(me) : me.cps);
+		var storedCps = (typeof(me.cps) == 'function' ? me.cps(me) : me.cps);
+		if (Game.ascensionMode != 1) storedCps *= (1 + me.level * 0.01) * buildMult;
+		CM.Sim.cookiesPs += me.amount * storedCps;
 	}
 
 	if (CM.Sim.Has('"egg"')) CM.Sim.cookiesPs += 9; // "egg"
@@ -2782,6 +2815,12 @@ CM.Sim.CalculateGains = function() {
 	var milkMult=1;
 	if (CM.Sim.Has('Santa\'s milk and cookies')) milkMult *= 1.05;
 	if (CM.Sim.hasAura('Breath of Milk')) milkMult *= 1.05;
+	if (Game.hasGod) {
+		var godLvl = Game.hasGod('mother');
+		if (godLvl == 1) milkMult *= 1.1;
+		else if (godLvl == 2) milkMult *= 1.06;
+		else if (godLvl == 3) milkMult *= 1.03;
+	}
 	if (CM.Sim.Has('Kitten helpers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
 	if (CM.Sim.Has('Kitten workers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.125 * milkMult);
 	if (CM.Sim.Has('Kitten engineers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
@@ -2833,7 +2872,7 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Golden switch [off]')) {
 		var goldenSwitchMult = 1.5;
 		if (CM.Sim.Has('Residual luck')) {
-			var upgrades = ['Get lucky', 'Lucky day', 'Serendipity', 'Heavenly luck', 'Lasting fortune', 'Decisive fate'];
+			var upgrades = ['Get lucky', 'Lucky day', 'Serendipity', 'Heavenly luck', 'Lasting fortune', 'Decisive fate', 'Lucky digit', 'Lucky number', 'Lucky payout'];
 			for (var i in upgrades) {
 				if (CM.Sim.Has(upgrades[i])) goldenSwitchMult += 0.1;
 			}
@@ -2884,11 +2923,12 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (minAmount >= 150) CM.Sim.Win('Centennial and a half');
 	if (minAmount >= 200) CM.Sim.Win('Bicentennial');
 	if (minAmount >= 250) CM.Sim.Win('Bicentennial and a half');
+	if (minAmount >= 300) CM.Sim.Win('Tricentennial');
 
 	if (buildingsOwned >= 100) CM.Sim.Win('Builder');
 	if (buildingsOwned >= 500) CM.Sim.Win('Architect');
 	if (buildingsOwned >= 1000) CM.Sim.Win('Engineer');
-	if (buildingsOwned >= 1500) CM.Sim.Win('Lord of Constructs');
+	if (buildingsOwned >= 2000) CM.Sim.Win('Lord of Constructs');
 	
 	if (CM.Sim.UpgradesOwned >= 20) CM.Sim.Win('Enhancer');
 	if (CM.Sim.UpgradesOwned >= 50) CM.Sim.Win('Augmenter');

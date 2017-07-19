@@ -47,6 +47,12 @@ CM.Cache.RemakeWrinkBank = function() {
 		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+		if (Game.hasGod) {
+			var godLvl = Game.hasGod('scorn');
+			if (godLvl == 1) sucked *= 1.15;
+			else if (godLvl == 2) sucked *= 1.1;
+			else if (godLvl == 3) sucked *= 1.05;
+		}
 		totalSucked += sucked;
 	}
 	CM.Cache.WrinkBank = totalSucked;
@@ -77,9 +83,9 @@ CM.Cache.RemakeUpgradePP = function() {
 	for (var i in CM.Cache.Upgrades) {
 		//CM.Cache.Upgrades[i].pp = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
 		CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
-		if (isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = 'Infinity';
+		if (isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = Infinity;
 		var color = '';
-		if (CM.Cache.Upgrades[i].pp <= 0 || CM.Cache.Upgrades[i].pp == 'Infinity') color = CM.Disp.colorGray;
+		if (CM.Cache.Upgrades[i].pp <= 0 || CM.Cache.Upgrades[i].pp == Infinity) color = CM.Disp.colorGray;
 		else if (CM.Cache.Upgrades[i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
 		else if (CM.Cache.Upgrades[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 		else if (CM.Cache.Upgrades[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
@@ -95,7 +101,7 @@ CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 		//CM.Cache[target][i].pp = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
 		CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
 		var color = '';
-		if (CM.Cache[target][i].pp <= 0 || CM.Cache[target][i].pp == 'Infinity') color = CM.Disp.colorGray;
+		if (CM.Cache[target][i].pp <= 0 || CM.Cache[target][i].pp == Infinity) color = CM.Disp.colorGray;
 		else if (CM.Cache[target][i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
 		else if (CM.Cache[target][i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 		else if (CM.Cache[target][i].pp == CM.Cache.max) color = CM.Disp.colorRed;

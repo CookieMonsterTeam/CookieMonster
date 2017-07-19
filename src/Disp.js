@@ -3,7 +3,7 @@
  ********/
 
 CM.Disp.FormatTime = function(time, format) {
-	if (time == 'Infinity') return time;
+	if (time == Infinity) return time;
 	if (CM.Config.TimeFormat) {
 		if (time > 3155760000) return 'XX:XX:XX:XX:XX';
 		time = Math.ceil(time);
@@ -1792,6 +1792,12 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 		if (Game.wrinklers[CM.Disp.TooltipWrinkler].type == 1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+		if (Game.hasGod) {
+			var godLvl = Game.hasGod('scorn');
+			if (godLvl == 1) sucked *= 1.15;
+			else if (godLvl == 2) sucked *= 1.1;
+			else if (godLvl == 3) sucked *= 1.05;
+		}
 		l('CMTooltipWrinkler').textContent = Beautify(sucked);
 	}
 }
