@@ -1187,6 +1187,60 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''))));
 	}
 	
+	stats.appendChild(header('Conjure Baked Goods', 'Conjure'));
+	if (CM.Config.StatsPref.Conjure) {
+		var conjureColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var conjureTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.FormatTime((CM.Cache.Conjure - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+		var conjureColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ConjureFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var conjureTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ConjureFrenzy) ? CM.Disp.FormatTime((CM.Cache.ConjureFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+		var conjureCurBase = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
+		var conjureRewardMax = CM.Cache.ConjureReward;
+		var conjureRewardMaxWrath = CM.Cache.ConjureReward;
+		var conjureRewardFrenzyMax = CM.Cache.ConjureRewardFrenzy;
+		var conjureRewardFrenzyMaxWrath = CM.Cache.ConjureRewardFrenzy;
+		var conjureCur = conjureCurBase;
+		var conjureCurWrath = conjureCurBase;		
+		if (Game.hasAura('Ancestral Metamorphosis')) {
+			conjureRewardMax *= 1.1;
+			conjureRewardFrenzyMax *= 1.1;
+			conjureCur *= 1.1;
+		}
+		if (Game.hasAura('Unholy Dominion')) {
+			conjureRewardMaxWrath *= 1.1;
+			conjureRewardFrenzyMaxWrath *= 1.1;
+			conjureCurWrath *= 1.1;
+		}
+		var conjureSplit = conjureRewardMax != conjureRewardMaxWrath;
+		
+		var conjureReqFrag = document.createDocumentFragment();
+		var conjureReqSpan = document.createElement('span');
+		conjureReqSpan.style.fontWeight = 'bold';
+		conjureReqSpan.className = CM.Disp.colorTextPre + conjureColor;
+		conjureReqSpan.textContent = Beautify(CM.Cache.Conjure);
+		conjureReqFrag.appendChild(conjureReqSpan);
+		if (conjureTime != '') {
+			var conjureReqSmall = document.createElement('small');
+			conjureReqSmall.textContent = ' (' + conjureTime + ')';
+			conjureReqFrag.appendChild(conjureReqSmall);
+		}
+		stats.appendChild(listing(listingQuest('Conjure Baked Goods Cookies Required', 'GoldCookTooltipPlaceholder'), conjureReqFrag));
+		var conjureReqFrenFrag = document.createDocumentFragment();
+		var conjureReqFrenSpan = document.createElement('span');
+		conjureReqFrenSpan.style.fontWeight = 'bold';
+		conjureReqFrenSpan.className = CM.Disp.colorTextPre + conjureColorFrenzy;
+		conjureReqFrenSpan.textContent = Beautify(CM.Cache.ConjureFrenzy);
+		conjureReqFrenFrag.appendChild(conjureReqFrenSpan);
+		if (conjureTimeFrenzy != '') {
+			var conjureReqFrenSmall = document.createElement('small');
+			conjureReqFrenSmall.textContent = ' (' + conjureTimeFrenzy + ')';
+			conjureReqFrenFrag.appendChild(conjureReqFrenSmall);
+		}
+		stats.appendChild(listing(listingQuest('Conjure Baked Goods Cookies Required (Frenzy)', 'GoldCookTooltipPlaceholder'), conjureReqFrenFrag));
+		stats.appendChild(listing(listingQuest('Conjure Baked Goods Reward (MAX)' + (conjureSplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(conjureRewardMax) + (conjureSplit ? (' / ' + Beautify(conjureRewardMaxWrath)) : ''))));
+		stats.appendChild(listing(listingQuest('Conjure Baked Goods Reward (MAX) (Frenzy)' + (conjureSplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(conjureRewardFrenzyMax) + (conjureSplit ? (' / ' + Beautify(conjureRewardFrenzyMaxWrath)) : ''))));
+		stats.appendChild(listing(listingQuest('Conjure Baked Goods Reward (CUR)' + (conjureSplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(conjureCur) + (conjureSplit ? (' / ' + Beautify(conjureCurWrath)) : ''))));
+	}
+	
 	stats.appendChild(header('Chain Cookies', 'Chain'));
 	if (CM.Config.StatsPref.Chain) {
 		var chainColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Chain) ? CM.Disp.colorRed : CM.Disp.colorGreen;
@@ -1485,9 +1539,13 @@ CM.Disp.CreateTooltipWarnCaut = function() {
 		deficitDiv.appendChild(deficitSpan);
 		return box;
 	}
-	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipWarn', CM.Disp.colorRed, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!"', 'CMDispTooltipWarnText'));
+	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipLuckyWarn', CM.Disp.colorRed, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!"', 'CMDispTooltipLuckyWarnText'));
 	CM.Disp.TooltipWarnCaut.firstChild.style.marginBottom = '4px';
-	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipCaut', CM.Disp.colorYellow, 'Caution: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)', 'CMDispTooltipCautText'));
+	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipLuckyCaut', CM.Disp.colorYellow, 'Caution: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)', 'CMDispTooltipLuckyCautText'));
+	CM.Disp.TooltipWarnCaut.children[1].style.marginBottom = '4px';
+	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipConjureWarn', CM.Disp.colorRed, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for Conjure Baked Goods!', 'CMDispTooltipConjureWarnText'));
+	CM.Disp.TooltipWarnCaut.children[2].style.marginBottom = '4px';
+	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipConjureCaut', CM.Disp.colorYellow, 'Caution: ', 'Purchase of this item will put you under the number of Cookies required for Conjure Baked Goods (Frenzy)', 'CMDispTooltipConjureCautText'));
 
 	l('tooltipAnchor').appendChild(CM.Disp.TooltipWarnCaut);
 }
@@ -1674,15 +1732,22 @@ CM.Disp.UpdateTooltip = function() {
 		}
 		
 		if (CM.Config.ToolWarnCaut == 1) {
-			var warn = CM.Cache.Lucky;
+			var luckyWarn = CM.Cache.Lucky;
 			if (CM.Config.ToolWarnCautBon == 1) {
-				var bonusNoFren = bonus;
-				bonusNoFren /= CM.Sim.getCPSBuffMult();
-				warn += ((bonusNoFren * 60 * 15) / 0.15);
+				var luckyBonusNoFren = bonus;
+				luckyBonusNoFren /= CM.Sim.getCPSBuffMult();
+				luckyWarn += ((luckyBonusNoFren * 60 * 15) / 0.15);
 			}
-			var caut = warn * 7;
+			var luckyCaut = luckyWarn * 7;
+			var conjureWarn = CM.Cache.Conjure;
+			if (CM.Config.ToolWarnCautBon == 1) {
+				var conjureBonusNoFren = bonus;
+				conjureBonusNoFren /= CM.Sim.getCPSBuffMult();
+				conjureWarn += ((conjureBonusNoFren * 60 * 15) / 0.15);
+			}
+			var conjureCaut = conjureWarn * 7;
 			var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
-			if ((amount < warn || amount < caut) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+			if ((amount < luckyWarn || amount < luckyCaut || amount < conjureWarn || amount < conjureCaut) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				if (CM.Config.ToolWarnCautPos == 0) {
 					CM.Disp.TooltipWarnCaut.style.right = '0px';
 				}
@@ -1691,25 +1756,42 @@ CM.Disp.UpdateTooltip = function() {
 				}
 				CM.Disp.TooltipWarnCaut.style.width = (l('tooltip').offsetWidth - 6) + 'px';
 			
-				if (amount < warn) {
-					l('CMDispTooltipWarn').style.display = '';
-					l('CMDispTooltipWarnText').textContent = Beautify(warn - amount) + ' (' + CM.Disp.FormatTime((warn - amount) / CM.Disp.GetCPS()) + ')';
-					l('CMDispTooltipCaut').style.display = '';
-					l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
+				if (amount < luckyWarn) {
+					l('CMDispTooltipLuckyWarn').style.display = '';
+					l('CMDispTooltipLuckyWarnText').textContent = Beautify(luckyWarn - amount) + ' (' + CM.Disp.FormatTime((luckyWarn - amount) / CM.Disp.GetCPS()) + ')';
+					l('CMDispTooltipLuckyCaut').style.display = '';
+					l('CMDispTooltipLuckyCautText').textContent = Beautify(luckyCaut - amount) + ' (' + CM.Disp.FormatTime((luckyCaut - amount) / CM.Disp.GetCPS()) + ')';
 				}
-				else if (amount < caut) {
-					l('CMDispTooltipCaut').style.display = '';
-					l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
-					l('CMDispTooltipWarn').style.display = 'none';
+				else if (amount < luckyCaut) {
+					l('CMDispTooltipLuckyCaut').style.display = '';
+					l('CMDispTooltipLuckyCautText').textContent = Beautify(luckyCaut - amount) + ' (' + CM.Disp.FormatTime((luckyCaut - amount) / CM.Disp.GetCPS()) + ')';
+					l('CMDispTooltipLuckyWarn').style.display = 'none';
 				}
 				else {
-					l('CMDispTooltipWarn').style.display = 'none';
-					l('CMDispTooltipCaut').style.display = 'none';
+					l('CMDispTooltipLuckyWarn').style.display = 'none';
+					l('CMDispTooltipLuckyCaut').style.display = 'none';
+				}
+				if (amount < conjureWarn) {
+					l('CMDispTooltipConjureWarn').style.display = '';
+					l('CMDispTooltipConjureWarnText').textContent = Beautify(conjureWarn - amount) + ' (' + CM.Disp.FormatTime((conjureWarn - amount) / CM.Disp.GetCPS()) + ')';
+					l('CMDispTooltipConjureCaut').style.display = '';
+					l('CMDispTooltipConjureCautText').textContent = Beautify(conjureCaut - amount) + ' (' + CM.Disp.FormatTime((conjureCaut - amount) / CM.Disp.GetCPS()) + ')';
+				}
+				else if (amount < conjureCaut) {
+					l('CMDispTooltipConjureCaut').style.display = '';
+					l('CMDispTooltipConjureCautText').textContent = Beautify(conjureCaut - amount) + ' (' + CM.Disp.FormatTime((conjureCaut - amount) / CM.Disp.GetCPS()) + ')';
+					l('CMDispTooltipConjureWarn').style.display = 'none';
+				}
+				else {
+					l('CMDispTooltipConjureWarn').style.display = 'none';
+					l('CMDispTooltipConjureCaut').style.display = 'none';
 				}
 			}
 			else {
-				l('CMDispTooltipWarn').style.display = 'none';
-				l('CMDispTooltipCaut').style.display = 'none';
+				l('CMDispTooltipLuckyWarn').style.display = 'none';
+				l('CMDispTooltipLuckyCaut').style.display = 'none';
+				l('CMDispTooltipConjureWarn').style.display = 'none';
+				l('CMDispTooltipConjureCaut').style.display = 'none';
 			}
 		}
 	}
@@ -1717,15 +1799,19 @@ CM.Disp.UpdateTooltip = function() {
 
 CM.Disp.DrawTooltipWarnCaut = function() {
 	if (CM.Config.ToolWarnCaut == 1) {
-		l('CMDispTooltipWarn').style.opacity = '0';
-		l('CMDispTooltipCaut').style.opacity = '0';
+		l('CMDispTooltipLuckyWarn').style.opacity = '0';
+		l('CMDispTooltipLuckyCaut').style.opacity = '0';
+		l('CMDispTooltipConjureWarn').style.opacity = '0';
+		l('CMDispTooltipConjureCaut').style.opacity = '0';
 	}
 }
 
 CM.Disp.UpdateTooltipWarnCaut = function() {
 	if (CM.Config.ToolWarnCaut == 1 && l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
-		l('CMDispTooltipWarn').style.opacity = '1';
-		l('CMDispTooltipCaut').style.opacity = '1';
+		l('CMDispTooltipLuckyWarn').style.opacity = '1';
+		l('CMDispTooltipLuckyCaut').style.opacity = '1';
+		l('CMDispTooltipConjureWarn').style.opacity = '1';
+		l('CMDispTooltipConjureCaut').style.opacity = '1';
 	}
 }
 
@@ -1866,4 +1952,3 @@ CM.Disp.TooltipWrinklerCache = [];
 for (var i in Game.wrinklers) {
 	CM.Disp.TooltipWrinklerCache[i] = 0;
 }
-
