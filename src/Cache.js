@@ -134,6 +134,14 @@ CM.Cache.RemakeLucky = function() {
 	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.15) + 13;
 }
 
+CM.Cache.RemakeConjure = function() {
+	CM.Cache.Conjure = (CM.Cache.NoGoldSwitchCookiesPS * 60 * 30) / 0.15;
+	CM.Cache.Conjure /= CM.Sim.getCPSBuffMult();
+	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
+	CM.Cache.ConjureFrenzy = CM.Cache.Conjure * 7;
+	CM.Cache.ConjureRewardFrenzy = CM.Cache.ConjureFrenzy * 0.15;
+}
+
 CM.Cache.MaxChainMoni = function(digit, maxPayout) {
 	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
 	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
@@ -306,6 +314,10 @@ CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
 CM.Cache.LuckyFrenzy = 0;
 CM.Cache.LuckyRewardFrenzy = 0;
+CM.Cache.Conjure = 0;
+CM.Cache.ConjureReward = 0;
+CM.Cache.ConjureFrenzy = 0;
+CM.Cache.ConjureRewardFrenzy = 0;
 CM.Cache.SeaSpec = 0;
 CM.Cache.Chain = 0;
 CM.Cache.ChainWrath = 0;
@@ -331,4 +343,3 @@ CM.Cache.ClicksDiff;
 CM.Cache.AvgCPS = -1;
 CM.Cache.AvgCPSChoEgg = -1;
 CM.Cache.AvgClicks = -1;
-
