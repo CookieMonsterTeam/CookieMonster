@@ -204,5 +204,5 @@ CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkB
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.0034';
-CM.VersionMinor = '3';
+CM.VersionMinor = '4';
 
