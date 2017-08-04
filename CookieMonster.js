@@ -263,7 +263,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		if (CM.Cache.lastDate != -1) {
 			var timeDiff = currDate - CM.Cache.lastDate
 			var bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
-			var wrinkDiffAvg = (CM.Cache.WrinkBank - CM.Cache.lastWrinkCookies) / timeDiff;
+			var wrinkDiffAvg = Math.max(0, (CM.Cache.WrinkBank - CM.Cache.lastWrinkCookies)) / timeDiff;
 			var choEggDiffAvg = Math.max(0,(choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
 			var clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
 			for (var i = 0; i < timeDiff; i++) {
@@ -301,8 +301,10 @@ CM.Cache.UpdateAvgCPS = function() {
 		}
 		CM.Cache.AvgCPS = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0)) / cpsLength;
 		
-		if ((Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')) || CM.Config.CalcWrink == 0) {
-			CM.Cache.AvgCPSChoEgg = (totalGainBank + totalGainWrink + totalGainChoEgg) / cpsLength;
+		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
+		
+		if (choEgg || CM.Config.CalcWrink == 0) {
+			CM.Cache.AvgCPSChoEgg = (totalGainBank + totalGainWrink + (choEgg ? totalGainChoEgg : 0)) / cpsLength;
 		}
 		else {
 			CM.Cache.AvgCPSChoEgg = CM.Cache.AvgCPS;
