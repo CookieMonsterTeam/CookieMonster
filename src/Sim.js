@@ -240,6 +240,8 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Kitten accountants')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten specialists')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten experts')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten consultants')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten assistants to the regional manager')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);	
 	if (CM.Sim.Has('Kitten angels')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
 
 	var eggMult = 1;
@@ -265,8 +267,16 @@ CM.Sim.CalculateGains = function() {
 	mult *= eggMult;
 	
 	if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;
-	
+
+	if (Game.hasAura('Dragon\'s Fortune')) {
+		var n = Game.shimmerTypes['golden'].n;
+		for (var i = 0; i < n; i++) {
+			mult *= 2.11;
+		}
+	}
+
 	var rawCookiesPs = CM.Sim.cookiesPs * mult;
+			
 	for (var i in Game.CpsAchievements) {
 		if (rawCookiesPs >= Game.CpsAchievements[i].threshold) CM.Sim.Win(Game.CpsAchievements[i].name);
 	}
@@ -298,7 +308,7 @@ CM.Sim.CalculateGains = function() {
 };
 
 CM.Sim.CheckOtherAchiev = function() {
-	var grandmas=0;
+	var grandmas = 0;
 	if (CM.Sim.Has('Farmer grandmas')) grandmas++;
 	if (CM.Sim.Has('Worker grandmas')) grandmas++;
 	if (CM.Sim.Has('Miner grandmas')) grandmas++;
@@ -311,6 +321,7 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (CM.Sim.Has('Banker grandmas')) grandmas++;
 	if (CM.Sim.Has('Priestess grandmas')) grandmas++;
 	if (CM.Sim.Has('Witch grandmas')) grandmas++;
+	if (CM.Sim.Has('Lucky grandmas')) grandmas++;
 	if (!CM.Sim.HasAchiev('Elder') && grandmas >= 7) CM.Sim.Win('Elder');
 
 	var buildingsOwned = 0;
