@@ -1515,25 +1515,29 @@ CM.Disp.ToggleToolWarnCautPos = function() {
 }
 
 CM.Disp.AddTooltipBuild = function() {
-	CM.Disp.TooltipBuildBack = [];
 	for (var i in Game.Objects) {
 		var me = Game.Objects[i];
 		if (l('product' + me.id).onmouseover != null) {
-			CM.Disp.TooltipBuildBack[i] = l('product' + me.id).onmouseover;
 			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}');
 		}
 	}
 }
 
 CM.Disp.AddTooltipUpgrade = function() {
-	CM.Disp.TooltipUpgradeBack = [];
 	for (var i in Game.UpgradesInStore) {
-		var me = Game.UpgradesInStore[i];
 		if (l('upgrade' + i).onmouseover != null) {
-			CM.Disp.TooltipUpgradeBack[i] = l('upgrade' + i).onmouseover;
 			eval('l(\'upgrade\' + i).onmouseover = function() {if (!Game.mouseDown) {Game.setOnCrate(this); Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'u\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}}');
 		}
 	}
+}
+
+CM.Disp.AddTooltipSpell = function() {
+  var grimoire = Game.Objects["Wizard tower"].minigame;
+  for (var i in grimoire.spellsById) {
+    if (l('grimoireSpell' + i).onmouseover != null) {
+      eval('l(\'grimoireSpell\' + i).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'' + i + '\');}, \'this\'); Game.tooltip.wobble();}');
+    }
+  }
 }
 
 CM.Disp.Tooltip = function(type, name) {
@@ -1570,10 +1574,43 @@ CM.Disp.Tooltip = function(type, name) {
 			}
 		}
 	}
-	else { // Upgrades
+	else if (type == 'u') { // Upgrades
 		if (!Game.UpgradesInStore[name]) return '';
 		l('tooltip').innerHTML = Game.crate(Game.UpgradesInStore[name], 'store', undefined, undefined, 1)();
 	}
+  else if (type == 's') { // Spells
+    var grimoire = Game.Objects["Wizard tower"].minigame;
+    var spell = grimoire.spellsById[name];
+    var cost = grimoire.getSpellCost(spell);
+    var content = grimoire.spellTooltip(name)();
+
+    function formatDuration(seconds) {
+      var minutes = Math.floor(seconds / 60);
+
+      if (minutes > 0) {
+        return minutes + " minutes, " + Math.floor(seconds - minutes * 60) + " seconds";
+      } else  {
+        return Math.floor(seconds) + " seconds";
+      }
+    }
+
+    if (cost <= grimoire.magicM && cost > grimoire.magic) {
+      content += "Can afford in: " + formatDuration(CM.Sim.Grimoire.estimateTimeElapsed(grimoire.magic, cost, grimoire.magicM));
+      content += "<br>";
+    }
+
+    if (cost <= grimoire.magic) {
+      content += "Recovery in: " + formatDuration(CM.Sim.Grimoire.estimateTimeElapsed(grimoire.magic - cost, grimoire.magic, grimoire.magicM));
+      content += "<br>";
+    
+      if (cost * 2 > grimoire.magic) {
+        content += "Afford again in: " + formatDuration(CM.Sim.Grimoire.estimateTimeElapsed(grimoire.magic - cost, cost, grimoire.magicM));
+        content += "<br>";
+      }
+    }
+
+    return content;
+  }
 	
 	var area = document.createElement('div');
 	area.id = 'CMTooltipArea';

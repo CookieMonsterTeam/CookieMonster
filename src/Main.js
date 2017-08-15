@@ -184,7 +184,8 @@ CM.DelayInit = function() {
 	CM.Disp.CreateTooltip('ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset', '340px');
 	CM.Disp.CreateTooltip('ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers, selling all buildings with Earth Shatterer aura, and then buying Chocolate egg', '300px');
 	CM.Disp.CreateTooltipWarnCaut();
-	CM.Disp.AddTooltipBuild();
+  CM.Disp.AddTooltipBuild();
+	CM.Disp.AddTooltipSpell();
 	CM.Disp.AddWrinklerAreaDetect();
 	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
