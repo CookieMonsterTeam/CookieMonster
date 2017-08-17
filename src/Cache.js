@@ -56,6 +56,13 @@ CM.Cache.RemakeWrinkBank = function() {
 		totalSucked += sucked;
 	}
 	CM.Cache.WrinkBank = totalSucked;
+	CM.Cache.WrinkGodBank = totalSucked;
+	if (Game.hasGod) {
+		var godLvl = Game.hasGod('scorn');
+		if (godLvl == 2) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.1;
+		else if (godLvl == 3) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.05;
+		else if (godLvl != 1) CM.Cache.WrinkGodBank *= 1.15;
+	}
 }
 
 CM.Cache.RemakeBuildingsPP = function() {
@@ -236,7 +243,7 @@ CM.Cache.UpdateAvgCPS = function() {
 	if (CM.Cache.lastDate != currDate) {	
 		var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
 		if (Game.cpsSucked > 0) {
-			choEggTotal += CM.Cache.WrinkBank;
+			choEggTotal += CM.Cache.WrinkGodBank;
 		}
 		choEggTotal *= 0.05;
 
@@ -303,6 +310,7 @@ CM.Cache.min = -1;
 CM.Cache.max = -1;
 CM.Cache.mid = -1;
 CM.Cache.WrinkBank = -1;
+CM.Cache.WrinkGodBank = -1;
 CM.Cache.NoGoldSwitchCookiesPS = 0;
 CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
