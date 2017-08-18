@@ -470,19 +470,23 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	var lastAchievementsOwned = -1;
 	
 	// Calculate CPS with all Heavenly upgrades
-	CM.Sim.CopyData();
-	
-	CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
-	CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
-	CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
-	CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
-	CM.Sim.Upgrades['Heavenly key'].bought = 1;
-	
-	CM.Sim.CalculateGains();
-	
-	var curCPS = CM.Sim.cookiesPs;
+	var curCPS = Game.cookiesPs;
 	
 	CM.Sim.CopyData();
+	
+	if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
+		CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
+		CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
+		CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
+		CM.Sim.Upgrades['Heavenly key'].bought = 1;
+
+		CM.Sim.CalculateGains();
+
+		curCPS = CM.Sim.cookiesPs;
+		
+		CM.Sim.CopyData();
+	}
 	
 	if (Game.cookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
 	if (Game.cookiesEarned >= 1000000000) CM.Sim.Win('Oblivion');
