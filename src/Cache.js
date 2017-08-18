@@ -276,22 +276,50 @@ CM.Cache.UpdateAvgCPS = function() {
 		CM.Cache.lastChoEgg = choEggTotal;
 		CM.Cache.lastClicks = Game.cookieClicks;
 		
+		var sortedGainBank = new Array();
+		var sortedGainWrink = new Array();
+		var sortedGainChoEgg = new Array();
+		
+		var cpsLength = Math.min(CM.Cache.CookiesDiff.getLength(), CM.Disp.times[CM.Config.AvgCPSHist] * 60);
+		
+		// Assumes the queues are the same length 
+		for (var i = CM.Cache.CookiesDiff.getLength() - cpsLength; i < CM.Cache.CookiesDiff.getLength(); i++) {
+			sortedGainBank.push(CM.Cache.CookiesDiff.get(i));
+			sortedGainWrink.push(CM.Cache.WrinkDiff.get(i));
+			sortedGainChoEgg.push(CM.Cache.ChoEggDiff.get(i));
+		}
+
+		sortedGainBank.sort(function(a, b) { return a - b; });
+		sortedGainWrink.sort(function(a, b) { return a - b; });
+		sortedGainChoEgg.sort(function(a, b) { return a - b; });
+		
+		var cut = Math.round(sortedGainBank.length / 10);
+		
+		while (cut > 0) {
+			sortedGainBank.shift();
+			sortedGainBank.pop();
+			sortedGainWrink.shift();
+			sortedGainWrink.pop();
+			sortedGainChoEgg.shift();
+			sortedGainChoEgg.pop();
+			cut--;
+		}
+		
 		var totalGainBank = 0;
 		var totalGainWrink = 0;
 		var totalGainChoEgg = 0;
-		var cpsLength = Math.min(CM.Cache.CookiesDiff.getLength(), CM.Disp.times[CM.Config.AvgCPSHist] * 60);
-		// Assumes the queues are the same length 
-		for (var i = CM.Cache.CookiesDiff.getLength() - cpsLength; i < CM.Cache.CookiesDiff.getLength(); i++) {
-			totalGainBank += CM.Cache.CookiesDiff.get(i);
-			totalGainWrink += CM.Cache.WrinkDiff.get(i);
-			totalGainChoEgg += CM.Cache.ChoEggDiff.get(i);
+
+		for (var i = 0; i < sortedGainBank.length; i++) {
+			totalGainBank += sortedGainBank[i];
+			totalGainWrink += sortedGainWrink[i];
+			totalGainChoEgg += sortedGainChoEgg[i];
 		}
-		CM.Cache.AvgCPS = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0)) / cpsLength;
+		CM.Cache.AvgCPS = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0)) / sortedGainBank.length;
 		
 		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 		
 		if (choEgg || CM.Config.CalcWrink == 0) {
-			CM.Cache.AvgCPSChoEgg = (totalGainBank + totalGainWrink + (choEgg ? totalGainChoEgg : 0)) / cpsLength;
+			CM.Cache.AvgCPSChoEgg = (totalGainBank + totalGainWrink + (choEgg ? totalGainChoEgg : 0)) / sortedGainBank.length;
 		}
 		else {
 			CM.Cache.AvgCPSChoEgg = CM.Cache.AvgCPS;
