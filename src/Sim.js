@@ -520,3 +520,83 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	return (CM.Sim.cookiesPs - curCPS);
 }
 
+// Grimoire Estimation
+
+CM.Sim.Grimoire = (function() {
+  var fps = 30;
+
+  function calcMagicPerSecond(current, maxMagic) {
+    return Math.max(0.002,Math.pow(current/Math.max(maxMagic,100),0.5))*0.002*fps;
+  }
+
+  /*
+
+  let z = Math.max(maxMagic, 100)
+
+  m' = k * sqrt(m / z) = k * sqrt(m) / sqrt(z) = k * sqrt(m) ; constant k absorbs other constant sqrt(z)
+  dm/dt = k * sqrt(m)
+  dm/sqrt(m) = k * dt ; separate variables
+  2 * sqrt(m) = kt + c ; integrate. now we have two unknown constants
+
+  solve m:
+  m(t) = ((kt + c) / 2)**2 = (kt + c)**2 / 4
+
+  solve t:
+  t(m) = (2 * sqrt(m) - c) / k
+
+  find k: let m = 1, maxMagic = 100
+  m'(m) = 0.006 = k * sqrt(1)
+  k = 0.006
+  OR
+  k = 0.06 / sqrt(z)
+
+  find c:
+  run simulation for how long it takes to go from m=0 to m=max
+
+  for maxMagic = 100, c is -0.004
+
+  .:. for maxMagic = 100, t(m) = (2 * sqrt(m) + 0.004) / 0.006
+
+  .:. general solution, t(m) = (2 * sqrt(m) - c) / (0.06 / sqrt(z))
+                             = 16.6667 * (2 * sqrt(m) - c) * sqrt(z)
+
+  */
+
+  var C_CACHE = {};
+  function findC(maxMagic) {
+    if (C_CACHE[maxMagic] !== undefined) {
+      return C_CACHE[maxMagic];
+    }
+
+    var m = 0;
+    var t = 0;
+
+    while (m < maxMagic) {
+      m += calcMagicPerSecond(m, maxMagic);
+      t += 1;
+    }
+
+    var z = Math.max(maxMagic, 100);
+    var k = 0.06 / Math.pow(z, 0.5);
+    var c = 2 * Math.pow(maxMagic, 0.5) - k * t;
+
+    C_CACHE[maxMagic] = c;
+
+    return c;
+  }
+
+  function timeFromZeroToM(m, maxMagic) {
+    var z = Math.max(100, maxMagic);
+    var c = findC(z);
+    return 16.6667 * (2 * Math.pow(m, 0.5) - c) * Math.pow(z, 0.5);
+  }
+
+  // this will be inaccurate if m0 = 0.
+  function timeElapsed(m0, m1, maxMagic) {
+    return timeFromZeroToM(m1, maxMagic) - timeFromZeroToM(m0, maxMagic);
+  }
+
+  return {
+    estimateTimeElapsed: timeElapsed
+  }
+})();
