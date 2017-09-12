@@ -128,7 +128,7 @@ CM.Sim.CopyData = function() {
 	CM.Sim.UpgradesOwned = Game.UpgradesOwned;
 	CM.Sim.pledges = Game.pledges;
 	CM.Sim.AchievementsOwned = Game.AchievementsOwned;
-	CM.Sim.heavenlyPower = Game.heavenlyPower;
+	CM.Sim.heavenlyPower = Game.heavenlyPower; // Unneeded?
 	CM.Sim.prestige = Game.prestige;
 	CM.Sim.dragonAura = Game.dragonAura;
 	CM.Sim.dragonAura2 = Game.dragonAura2;
@@ -471,45 +471,22 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	
 	// Calculate CPS with all Heavenly upgrades
 	var curCPS = Game.cookiesPs;
-	if (CM.Sim.Upgrades['Heavenly chip secret'].bought == 0 || CM.Sim.Upgrades['Heavenly cookie stand'].bought == 0 || CM.Sim.Upgrades['Heavenly bakery'].bought == 0 || CM.Sim.Upgrades['Heavenly confectionery'].bought == 0 || CM.Sim.Upgrades['Heavenly key'].bought == 0) {
-		CM.Sim.CopyData();
-
-		if (CM.Sim.Upgrades['Heavenly chip secret'].bought == 0) {
-			CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
-			CM.Sim.UpgradesOwned++;
-		}
-		if (CM.Sim.Upgrades['Heavenly cookie stand'].bought == 0) {
-			CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
-			CM.Sim.UpgradesOwned++;
-		}
-		if (CM.Sim.Upgrades['Heavenly bakery'].bought == 0) {
-			CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
-			CM.Sim.UpgradesOwned++;
-		}
-		if (CM.Sim.Upgrades['Heavenly confectionery'].bought == 0) {
-			CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
-			CM.Sim.UpgradesOwned++;
-		}
-		if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
-			CM.Sim.Upgrades['Heavenly key'].bought = 1;
-			CM.Sim.UpgradesOwned++;
-			CM.Sim.Win('Wholesome');
-		}
-		
-		lastAchievementsOwned = CM.Sim.AchievementsOwned;
-
-		CM.Sim.CalculateGains();
-	
-		CM.Sim.CheckOtherAchiev();
-	
-		if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
-			CM.Sim.CalculateGains();
-		}
-
-		curCPS = CM.Sim.cookiesPs;
-	}
 	
 	CM.Sim.CopyData();
+	
+	if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
+		CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
+		CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
+		CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
+		CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
+		CM.Sim.Upgrades['Heavenly key'].bought = 1;
+
+		CM.Sim.CalculateGains();
+
+		curCPS = CM.Sim.cookiesPs;
+		
+		CM.Sim.CopyData();
+	}
 	
 	if (Game.cookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
 	if (Game.cookiesEarned >= 1000000000) CM.Sim.Win('Oblivion');
@@ -522,27 +499,11 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	if (Game.cookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');
 	if (Game.cookiesEarned >= 1000000000000000000000000000000000) CM.Sim.Win('To crumbs, you say?');
 	
-	if (CM.Sim.Upgrades['Heavenly chip secret'].bought == 0) {
-		CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
-		CM.Sim.UpgradesOwned++;
-	}
-	if (CM.Sim.Upgrades['Heavenly cookie stand'].bought == 0) {
-		CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
-		CM.Sim.UpgradesOwned++;
-	}
-	if (CM.Sim.Upgrades['Heavenly bakery'].bought == 0) {
-		CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
-		CM.Sim.UpgradesOwned++;
-	}
-	if (CM.Sim.Upgrades['Heavenly confectionery'].bought == 0) {
-		CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
-		CM.Sim.UpgradesOwned++;
-	}
-	if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
-		CM.Sim.Upgrades['Heavenly key'].bought = 1;
-		CM.Sim.UpgradesOwned++;
-		CM.Sim.Win('Wholesome');
-	}
+	CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
+	CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
+	CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
+	CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
+	CM.Sim.Upgrades['Heavenly key'].bought = 1;
 	
 	CM.Sim.prestige = possiblePresMax;
 	
