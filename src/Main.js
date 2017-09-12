@@ -41,7 +41,15 @@ CM.ReplaceNative = function() {
 			CM.Backup.UpdateSpecial();
 		}
 	}
-	
+
+	// Probably better to load per minigame
+	CM.Backup.scriptLoaded = Game.scriptLoaded;
+	Game.scriptLoaded = function(who, script) {
+		CM.Backup.scriptLoaded(who, script);
+		CM.Disp.AddTooltipGrimoire()
+		CM.ReplaceNativeGrimoire();
+	}
+
 	CM.Backup.RebuildUpgrades = Game.RebuildUpgrades;
 	Game.RebuildUpgrades = function() {
 		CM.Backup.RebuildUpgrades();
@@ -76,6 +84,40 @@ CM.ReplaceNative = function() {
 		
 		// Update Title
 		CM.Disp.UpdateTitle();
+	}
+}
+
+CM.ReplaceNativeGrimoire = function() {
+	CM.ReplaceNativeGrimoireLaunch();
+	CM.ReplaceNativeGrimoireDraw();
+}
+
+CM.ReplaceNativeGrimoireLaunch = function() {
+	if (!CM.HasReplaceNativeGrimoireLaunch && Game.Objects['Wizard tower'].minigameLoaded) {
+		var minigame = Game.Objects['Wizard tower'].minigame;
+		CM.Backup.GrimoireLaunch = minigame.launch;
+		eval('CM.Backup.GrimoireLaunchMod = ' + minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame'));
+		Game.Objects['Wizard tower'].minigame.launch = function() {
+			CM.Backup.GrimoireLaunchMod();
+			CM.Disp.AddTooltipGrimoire();
+			CM.HasReplaceNativeGrimoireDraw = false;
+			CM.ReplaceNativeGrimoireDraw();
+		}
+		CM.HasReplaceNativeGrimoireLaunch = true;
+	}
+}
+
+CM.ReplaceNativeGrimoireDraw = function() {
+	if (!CM.HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
+		var minigame = Game.Objects['Wizard tower'].minigame;
+		CM.Backup.GrimoireDraw = minigame.draw;
+		Game.Objects['Wizard tower'].minigame.draw = function() {
+			CM.Backup.GrimoireDraw();
+			if (minigame.magic < minigame.magicM) {
+				minigame.magicBarTextL.innerHTML += ' (' + CM.Disp.FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM)) + ')';
+			}
+		}
+		CM.HasReplaceNativeGrimoireDraw = true;
 	}
 }
 
@@ -185,9 +227,11 @@ CM.DelayInit = function() {
 	CM.Disp.CreateTooltip('ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamind slot, selling all buildings with Earth Shatterer aura, and then buying Chocolate egg', '360px');
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
+	CM.Disp.AddTooltipGrimoire();
 	CM.Disp.AddWrinklerAreaDetect();
 	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
+	CM.ReplaceNativeGrimoire();
 	Game.CalculateGains();
 	CM.LoadConfig(); // Must be after all things are created!
 	CM.Disp.lastAscendState = Game.OnAscend;
@@ -199,6 +243,9 @@ CM.DelayInit = function() {
 
 	Game.Win('Third-party');
 }
+
+CM.HasReplaceNativeGrimoireLaunch = false;
+CM.HasReplaceNativeGrimoireDraw = false;
 
 CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 0, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'http://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'http://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
