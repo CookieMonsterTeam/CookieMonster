@@ -1047,6 +1047,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(header('Tooltip'));
 	frag.appendChild(listing('Tooltip'));
 	frag.appendChild(listing('TooltipAmor'));
+	frag.appendChild(listing('TooltipNextMultiple'));
 	frag.appendChild(listing('ToolWarnCaut'));
 	frag.appendChild(listing('ToolWarnCautPos'));
 	frag.appendChild(listing('ToolWrink'));
@@ -1565,13 +1566,23 @@ CM.Disp.AddTooltipGrimoire = function() {
 CM.Disp.Tooltip = function(type, name) {
 	if (type == 'b') {
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
+		var addedAmor = false;
+
 		if (CM.Config.TooltipAmor == 1) {
 			var buildPrice = CM.Sim.BuildingGetPrice(Game.Objects[name].basePrice, 0, Game.Objects[name].free, Game.Objects[name].amount);
 			var amortizeAmount = buildPrice - Game.Objects[name].totalCookies;
 			if (amortizeAmount > 0) {
-				l('tooltip').innerHTML = l('tooltip').innerHTML.split('so far</div>').join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) == 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor(buildPrice, Game.Objects[name].totalCookies, (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text + ')</div>');		
+				addedAmor = true;
+				l('tooltip').innerHTML = l('tooltip').innerHTML.split('so far</div>').join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) == 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor(buildPrice, Game.Objects[name].totalCookies, (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text + ')</div>');
 			}
 		}
+
+		if (CM.Config.TooltipNextMultiple == 1) {
+			var marker = addedAmor  ? ')' : 'so far';
+			var multiple_quantity = CM.Cache.Objects[name].multiple_quantity;
+			l('tooltip').innerHTML = l('tooltip').innerHTML.split(marker + '</div>').join(marker + '<br/>&bull; <b>' + multiple_quantity + '</b> ' + (multiple_quantity == 1 ? Game.Objects[name].single : Game.Objects[name].plural)  + ' left to reach <b>' + (Game.Objects[name].amount + multiple_quantity) + '</b>, <b>' + Beautify(CM.Cache.Objects[name].multiple_price, 2) + '</b> cookies in total (' + CM.Disp.GetTimeColor(CM.Cache.Objects[name].multiple_price, (Game.cookies + CM.Disp.GetWrinkConfigBank()), CM.Disp.GetCPS()).text + ')</div>');
+		}
+
 		if (Game.buyMode == 1) {
 			var target = '';
 			var change = false;
