@@ -133,14 +133,6 @@ CM.Cache.RemakePP = function() {
 	CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');	
 }
 
-CM.Cache.RemakeMultiple = function () {
-	for (var i in CM.Cache.Objects) {
-		var nextMultiple = 50 - Game.Objects[i].amount % 50;
-		CM.Cache.Objects[i].multiple_quantity = nextMultiple;
-		CM.Cache.Objects[i].multiple_price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, nextMultiple);
-	}
-}
-
 CM.Cache.RemakeLucky = function() {
 	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) / 0.15;
 	CM.Cache.Lucky /= CM.Sim.getCPSBuffMult();
