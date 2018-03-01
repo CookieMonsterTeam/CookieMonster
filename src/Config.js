@@ -9,7 +9,7 @@ CM.SaveConfig = function(config) {
 CM.LoadConfig = function() {
 	if (localStorage.getItem(CM.ConfigPrefix) != null) {
 		CM.Config = JSON.parse(localStorage.getItem(CM.ConfigPrefix));
-		
+
 		// Check values
 		var mod = false;
 		for (var i in CM.ConfigDefault) {
@@ -56,8 +56,8 @@ CM.LoadConfig = function() {
 			}
 		}
 	}
-	else { // Default values		
-		CM.RestoreDefault();	
+	else { // Default values
+		CM.RestoreDefault();
 	}
 }
 
@@ -147,4 +147,3 @@ CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics
 CM.ConfigData.TimeFormat = {label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
 CM.ConfigData.SayTime = {label: ['Format Time OFF', 'Format Time ON'], desc: 'Change how time is displayed in statistics', toggle: true, func: function() {CM.Disp.ToggleSayTime();}};
 CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
-

@@ -1,7 +1,7 @@
 /********
  * Main *
  ********/
- 
+
 CM.ReplaceNative = function() {
 	CM.Backup.Beautify = Beautify;
 	Beautify = CM.Disp.Beautify;
@@ -12,7 +12,7 @@ CM.ReplaceNative = function() {
 		CM.Sim.DoSims = 1;
 		CM.Sim.Date = Date.now();
 	}
-	
+
 	CM.Backup.tooltip = {};
 	CM.Backup.tooltip.draw = Game.tooltip.draw;
 	eval('CM.Backup.tooltip.drawMod = ' + Game.tooltip.draw.toString().split('this').join('Game.tooltip'));
@@ -20,7 +20,7 @@ CM.ReplaceNative = function() {
 		CM.Backup.tooltip.drawMod(from, text, origin);
 		CM.Disp.DrawTooltipWarnCaut();
 	}
-	
+
 	CM.Backup.tooltip.update = Game.tooltip.update;
 	eval('CM.Backup.tooltip.updateMod = ' + Game.tooltip.update.toString().split('this.').join('Game.tooltip.'));
 	Game.tooltip.update = function() {
@@ -28,7 +28,7 @@ CM.ReplaceNative = function() {
 		CM.Disp.UpdateTooltipWarnCaut();
 		CM.Disp.UpdateTooltipLocation();
 	}
-	
+
 	CM.Backup.UpdateSpecial = Game.UpdateSpecial;
 	Game.UpdateSpecial = function() {
 		if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
@@ -56,7 +56,7 @@ CM.ReplaceNative = function() {
 		CM.Disp.AddTooltipUpgrade();
 		Game.CalculateGains();
 	}
-	
+
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
 	Game.UpdateMenu = function() {
 		if (typeof jscolor.picker === 'undefined' || typeof jscolor.picker.owner === 'undefined') {
@@ -64,24 +64,24 @@ CM.ReplaceNative = function() {
 			CM.Disp.AddMenu();
 		}
 	}
-	
+
 	CM.Backup.sayTime = Game.sayTime;
 	CM.Disp.sayTime = function(time, detail) {
 		if (isNaN(time) || time <= 0) return CM.Backup.sayTime(time, detail);
 		else return CM.Disp.FormatTime(time / Game.fps, 1);
 	}
-	
+
 	CM.Backup.Loop = Game.Loop;
 	Game.Loop = function() {
 		CM.Backup.Loop();
 		CM.Loop();
 	}
-	
+
 	CM.Backup.Logic = Game.Logic;
-	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Cache.Title'));	
+	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Cache.Title'));
 	Game.Logic = function() {
 		CM.Backup.LogicMod();
-		
+
 		// Update Title
 		CM.Disp.UpdateTitle();
 	}
@@ -127,19 +127,19 @@ CM.Loop = function() {
 		CM.Disp.UpdateAscendState();
 	}
 	if (!Game.OnAscend && Game.AscendTimer == 0) {
-		if (CM.Sim.DoSims) {		
+		if (CM.Sim.DoSims) {
 			CM.Cache.RemakeIncome();
-			
+
 			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
 			CM.Cache.RemakeLucky();
 			CM.Cache.RemakeChain();
-			
+
 			CM.Cache.RemakeSeaSpec();
 			CM.Cache.RemakeSellForChoEgg();
-		
+
 			CM.Sim.DoSims = 0;
 		}
-		
+
 		// Check for aura change to recalculate buildings prices
 		var hasFierHoard = Game.hasAura('Fierce Hoarder');
 		if (!CM.Cache.HadFierHoard && hasFierHoard) {
@@ -150,15 +150,15 @@ CM.Loop = function() {
 			CM.Cache.HadFierHoard = false;
 			CM.Cache.DoRemakeBuildPrices = 1;
 		}
-		
+
 		if (CM.Cache.DoRemakeBuildPrices) {
 			CM.Cache.RemakeBuildingsPrices();
 			CM.Cache.DoRemakeBuildPrices = 0;
 		}
-		
+
 		// Update Wrinkler Bank
 		CM.Cache.RemakeWrinkBank();
-		
+
 		// Calculate PP
 		CM.Cache.RemakePP();
 
@@ -166,11 +166,11 @@ CM.Loop = function() {
 		CM.Disp.UpdateBotBarOther();
 		CM.Disp.UpdateBuildings();
 		CM.Disp.UpdateUpgrades();
-		
+
 		// Redraw timers
 		CM.Disp.UpdateBotBarTime();
 		CM.Disp.UpdateTimerBar();
-	
+
 		// Update Tooltip
 		CM.Disp.UpdateTooltip();
 
@@ -181,10 +181,10 @@ CM.Loop = function() {
 		// Change menu refresh interval
 		CM.Disp.RefreshMenu();
 	}
-	
+
 	// Check Golden Cookies
 	CM.Disp.CheckGoldenCookie();
-	
+
 	// Check Season Popup
 	CM.Disp.CheckSeasonPopup();
 
@@ -200,7 +200,7 @@ CM.Init = function() {
 	if (proceed) {
 		CM.Cache.AddQueue();
 		CM.Disp.AddJscolor();
-		
+
 		var delay = setInterval(function() {
 			if (typeof Queue !== 'undefined' && typeof jscolor !== 'undefined') {
 				CM.DelayInit();
@@ -220,11 +220,11 @@ CM.DelayInit = function() {
 	CM.Disp.CreateFavicon();
 	CM.Disp.CreateGCTimer();
 	CM.Disp.CreateTooltip('GoldCookTooltipPlaceholder', 'Calculated with Golden Switch off', '200px');
-	CM.Disp.CreateTooltip('PrestMaxTooltipPlaceholder', 'The MAX prestige is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamind slot, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '370px');
+	CM.Disp.CreateTooltip('PrestMaxTooltipPlaceholder', 'The MAX prestige is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '370px');
 	CM.Disp.CreateTooltip('NextPrestTooltipPlaceholder', 'Calculated with cookies gained from wrinklers and Chocolate egg', '200px');
-	CM.Disp.CreateTooltip('HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamind slot, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '390px');
+	CM.Disp.CreateTooltip('HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '390px');
 	CM.Disp.CreateTooltip('ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels unlocked at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset', '370px');
-	CM.Disp.CreateTooltip('ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamind slot, selling all buildings with Earth Shatterer aura, and then buying Chocolate egg', '360px');
+	CM.Disp.CreateTooltip('ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer aura, and then buying Chocolate egg', '360px');
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
 	CM.Disp.AddTooltipGrimoire();
@@ -252,4 +252,3 @@ CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.0042';
 CM.VersionMinor = '2';
-

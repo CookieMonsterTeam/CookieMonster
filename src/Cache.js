@@ -1,7 +1,7 @@
 /*********
  * Cache *
  *********/
- 
+
 CM.Cache.AddQueue = function() {
 	CM.Cache.Queue = document.createElement('script');
 	CM.Cache.Queue.type = 'text/javascript';
@@ -30,10 +30,10 @@ CM.Cache.RemakeIncome = function() {
 
 	// Simulate Upgrade Buys
 	CM.Sim.BuyUpgrades();
-	
+
 	// Simulate Building Buys for 10 amount
 	CM.Sim.BuyBuildings(10, 'Objects10');
-	
+
 	// Simulate Building Buys for 100 amount
 	CM.Sim.BuyBuildings(100, 'Objects100');
 }
@@ -122,15 +122,15 @@ CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 CM.Cache.RemakePP = function() {
 	// Buildings for 1 amount
 	CM.Cache.RemakeBuildingsPP();
-	
+
 	// Upgrades
 	CM.Cache.RemakeUpgradePP();
-	
+
 	// Buildings for 10 amount
 	CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
 
 	// Buildings for 100 amount
-	CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');	
+	CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
 }
 
 CM.Cache.RemakeLucky = function() {
@@ -156,11 +156,11 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout) {
 CM.Cache.RemakeChain = function() {
 	var maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6;
 	maxPayout /= CM.Sim.getCPSBuffMult();
-	
+
 	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout);
-	
+
 	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout);
-	
+
 	if (maxPayout < CM.Cache.ChainReward) {
 		CM.Cache.Chain = 0;
 	}
@@ -173,11 +173,11 @@ CM.Cache.RemakeChain = function() {
 	else {
 		CM.Cache.ChainWrath = CM.Cache.NextNumber(CM.Cache.ChainWrathReward) / 0.25;
 	}
-	
+
 	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7);
-	
+
 	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7);
-	
+
 	if ((maxPayout * 7) < CM.Cache.ChainFrenzyReward) {
 		CM.Cache.ChainFrenzy = 0;
 	}
@@ -196,7 +196,7 @@ CM.Cache.RemakeSeaSpec = function() {
 	if (Game.season == 'christmas') {
 		var val = Game.cookiesPs * 60;
 		if (Game.hasBuff('Elder frenzy')) val *= 0.5; // very sorry
-		if (Game.hasBuff('Frenzy')) val *= 0.75; // I sincerely apologize		
+		if (Game.hasBuff('Frenzy')) val *= 0.75; // I sincerely apologize
 		CM.Cache.SeaSpec = Math.max(25, val);
 		if (Game.Has('Ho ho ho-flavored frosting')) CM.Cache.SeaSpec *= 2;
 	}
@@ -240,7 +240,7 @@ CM.Cache.InitCookiesDiff = function() {
 
 CM.Cache.UpdateAvgCPS = function() {
 	var currDate = Math.floor(Date.now() / 1000);
-	if (CM.Cache.lastDate != currDate) {	
+	if (CM.Cache.lastDate != currDate) {
 		var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
 		if (Game.cpsSucked > 0) {
 			choEggTotal += CM.Cache.WrinkGodBank;
@@ -257,7 +257,7 @@ CM.Cache.UpdateAvgCPS = function() {
 				CM.Cache.CookiesDiff.enqueue(bankDiffAvg);
 				CM.Cache.WrinkDiff.enqueue(wrinkDiffAvg);
 				CM.Cache.ChoEggDiff.enqueue(choEggDiffAvg);
-				CM.Cache.ClicksDiff.enqueue(clicksDiffAvg);		
+				CM.Cache.ClicksDiff.enqueue(clicksDiffAvg);
 			}
 			// Assumes the queues are the same length
 			while (CM.Cache.CookiesDiff.getLength() > 1800) {
@@ -265,7 +265,7 @@ CM.Cache.UpdateAvgCPS = function() {
 				CM.Cache.WrinkDiff.dequeue();
 				CM.Cache.ClicksDiff.dequeue();
 			}
-			
+
 			while (CM.Cache.ClicksDiff.getLength() > 30) {
 				CM.Cache.ClicksDiff.dequeue();
 			}
@@ -275,14 +275,14 @@ CM.Cache.UpdateAvgCPS = function() {
 		CM.Cache.lastWrinkCookies = CM.Cache.WrinkBank;
 		CM.Cache.lastChoEgg = choEggTotal;
 		CM.Cache.lastClicks = Game.cookieClicks;
-		
+
 		var sortedGainBank = new Array();
 		var sortedGainWrink = new Array();
 		var sortedGainChoEgg = new Array();
-		
+
 		var cpsLength = Math.min(CM.Cache.CookiesDiff.getLength(), CM.Disp.times[CM.Config.AvgCPSHist] * 60);
-		
-		// Assumes the queues are the same length 
+
+		// Assumes the queues are the same length
 		for (var i = CM.Cache.CookiesDiff.getLength() - cpsLength; i < CM.Cache.CookiesDiff.getLength(); i++) {
 			sortedGainBank.push(CM.Cache.CookiesDiff.get(i));
 			sortedGainWrink.push(CM.Cache.WrinkDiff.get(i));
@@ -292,9 +292,9 @@ CM.Cache.UpdateAvgCPS = function() {
 		sortedGainBank.sort(function(a, b) { return a - b; });
 		sortedGainWrink.sort(function(a, b) { return a - b; });
 		sortedGainChoEgg.sort(function(a, b) { return a - b; });
-		
+
 		var cut = Math.round(sortedGainBank.length / 10);
-		
+
 		while (cut > 0) {
 			sortedGainBank.shift();
 			sortedGainBank.pop();
@@ -304,7 +304,7 @@ CM.Cache.UpdateAvgCPS = function() {
 			sortedGainChoEgg.pop();
 			cut--;
 		}
-		
+
 		var totalGainBank = 0;
 		var totalGainWrink = 0;
 		var totalGainChoEgg = 0;
@@ -315,9 +315,9 @@ CM.Cache.UpdateAvgCPS = function() {
 			totalGainChoEgg += sortedGainChoEgg[i];
 		}
 		CM.Cache.AvgCPS = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0)) / sortedGainBank.length;
-		
+
 		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
-		
+
 		if (choEgg || CM.Config.CalcWrink == 0) {
 			CM.Cache.AvgCPSChoEgg = (totalGainBank + totalGainWrink + (choEgg ? totalGainChoEgg : 0)) / sortedGainBank.length;
 		}
@@ -369,4 +369,3 @@ CM.Cache.ClicksDiff;
 CM.Cache.AvgCPS = -1;
 CM.Cache.AvgCPSChoEgg = -1;
 CM.Cache.AvgClicks = -1;
-
