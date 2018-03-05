@@ -17,6 +17,7 @@ CM.Data = {};
 CM.Disp = {};
 
 CM.Sim = {};
+
 /*********
  * Cache *
  *********/
@@ -388,6 +389,7 @@ CM.Cache.ClicksDiff;
 CM.Cache.AvgCPS = -1;
 CM.Cache.AvgCPSChoEgg = -1;
 CM.Cache.AvgClicks = -1;
+
 /**********
  * Config *
  **********/
@@ -527,7 +529,7 @@ CM.ConfigData.SeaSoundURL = {label: 'Season Special Sound URL:', desc: 'URL of t
 CM.ConfigData.GCTimer = {label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', toggle: true, func: function() {CM.Disp.ToggleGCTimer();}};
 CM.ConfigData.Title = {label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 CM.ConfigData.Favicon = {label: ['Favicon OFF', 'Favicon ON'], desc: 'Update favicon with Golden/Wrath Cookie', toggle: true, func: function() {CM.Disp.UpdateFavicon();}};
-CM.ConfigData.Tooltip = {label: ['Tooltip Information OFF', 'Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades', toggle: true};
+CM.ConfigData.Tooltip = {label: ['Tooltip Information OFF', 'Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades/grimoire', toggle: true};
 CM.ConfigData.TooltipAmor = {label: ['Tooltip Amortization Information OFF', 'Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
 CM.ConfigData.ToolWarnCaut = {label: ['Tooltip Warning/Caution OFF', 'Tooltip Warning/Caution ON'], desc: 'A warning/caution when buying if it will put the bank under the amount needed for max "Lucky!"/"Lucky!" (Frenzy) rewards', toggle: true, func: function() {CM.Disp.ToggleToolWarnCaut();}};
 CM.ConfigData.ToolWarnCautPos = {label: ['Tooltip Warning/Caution Position (Left)', 'Tooltip Warning/Caution Position (Bottom)'], desc: 'Placement of the warning/caution boxes', toggle: false, func: function() {CM.Disp.ToggleToolWarnCautPos();}};
@@ -537,6 +539,7 @@ CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics
 CM.ConfigData.TimeFormat = {label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
 CM.ConfigData.SayTime = {label: ['Format Time OFF', 'Format Time ON'], desc: 'Change how time is displayed in statistics', toggle: true, func: function() {CM.Disp.ToggleSayTime();}};
 CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
+
 /********
  * Data *
  ********/
@@ -544,6 +547,7 @@ CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale',
 CM.Data.HalloCookies = ['Skull cookies', 'Ghost cookies', 'Bat cookies', 'Slime cookies', 'Pumpkin cookies', 'Eyeball cookies', 'Spider cookies'];
 CM.Data.ChristCookies = ['Christmas tree biscuits', 'Snowflake biscuits', 'Snowman biscuits', 'Holly biscuits', 'Candy cane biscuits', 'Bell biscuits', 'Present biscuits'];
 CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour heart biscuits', 'Weeping heart biscuits', 'Golden heart biscuits', 'Eternal heart biscuits'];
+
 /********
  * Disp *
  ********/
@@ -580,7 +584,7 @@ CM.Disp.FormatTime = function(time, format) {
 		}
 		str += s;
 	} else {
-		if (time > 86400) return format ? 'Over 24 hours' : '>24h';
+		if (time > 777600000) return format ? 'Over 9000 days!' : '>9000d';
 		time = Math.ceil(time);
 		var d = Math.floor(time / 86400);
 		var h = Math.floor(time % 86400 / 3600);
@@ -610,7 +614,7 @@ CM.Disp.GetTimeColor = function(price, bank, cps, time) {
 			text = '00:00:00:00:00';
 		}
 		else {
-			text = 'Ready';
+			text = 'Done!';
 		}
 	}
 	else {
@@ -2493,6 +2497,7 @@ CM.Disp.TooltipWrinklerCache = [];
 for (var i in Game.wrinklers) {
 	CM.Disp.TooltipWrinklerCache[i] = 0;
 }
+
 /********
  * Main *
  ********/
@@ -2747,6 +2752,7 @@ CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.0045';
 CM.VersionMinor = '1';
+
 /*******
  * Sim *
  *******/
@@ -3271,6 +3277,7 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 
 	return (CM.Sim.cookiesPs - curCPS);
 }
+
 /**********
  * Footer *
  **********/

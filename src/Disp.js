@@ -34,7 +34,7 @@ CM.Disp.FormatTime = function(time, format) {
 		}
 		str += s;
 	} else {
-		if (time > 86400) return format ? 'Over 24 hours' : '>24h';
+		if (time > 777600000) return format ? 'Over 9000 days!' : '>9000d';
 		time = Math.ceil(time);
 		var d = Math.floor(time / 86400);
 		var h = Math.floor(time % 86400 / 3600);
@@ -64,7 +64,7 @@ CM.Disp.GetTimeColor = function(price, bank, cps, time) {
 			text = '00:00:00:00:00';
 		}
 		else {
-			text = 'Ready';
+			text = 'Done!';
 		}
 	}
 	else {
@@ -1947,3 +1947,4 @@ CM.Disp.TooltipWrinklerCache = [];
 for (var i in Game.wrinklers) {
 	CM.Disp.TooltipWrinklerCache[i] = 0;
 }
+

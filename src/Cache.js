@@ -369,3 +369,4 @@ CM.Cache.ClicksDiff;
 CM.Cache.AvgCPS = -1;
 CM.Cache.AvgCPSChoEgg = -1;
 CM.Cache.AvgClicks = -1;
+

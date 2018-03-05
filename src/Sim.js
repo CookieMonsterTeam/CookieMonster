@@ -522,3 +522,4 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 
 	return (CM.Sim.cookiesPs - curCPS);
 }
+
