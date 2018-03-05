@@ -3020,7 +3020,7 @@ CM.Sim.CalculateGains = function() {
 	mult *= eggMult;
 	
 	// TODO Store lumps?
-	if (CM.Sim.Has('Sugar baking')) mult* = (1  +Math.min(100, Game.lumps) * 0.01);
+	if (CM.Sim.Has('Sugar baking')) mult *= (1  +Math.min(100, Game.lumps) * 0.01);
 
 	if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;
 
