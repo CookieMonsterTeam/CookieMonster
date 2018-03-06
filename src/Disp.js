@@ -184,8 +184,9 @@ CM.Disp.CreateBotBar = function() {
 	table.style.width = '100%';
 	table.style.textAlign = 'center';
 	table.style.whiteSpace = 'nowrap';
-	table.style.tableLayout = 'fixed';
-	table.style.overflow = 'hidden';
+	// TODO figure a better way
+	//table.style.tableLayout = 'fixed';
+	//table.style.overflow = 'hidden';
 	var tbody = document.createElement('tbody');
 	table.appendChild(tbody);
 
