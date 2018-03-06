@@ -79,8 +79,8 @@ eval('CM.Sim.HasAchiev = ' + Game.HasAchiev.toString().split('Game').join('CM.Si
 eval('CM.Sim.GetHeavenlyMultiplier = ' + Game.GetHeavenlyMultiplier.toString().split('Game.Has').join('CM.Sim.Has').split('Game.hasAura').join('CM.Sim.hasAura'));
 
 CM.Sim.hasAura = function(what) {
-	if (Game.dragonAuras[CM.Sim.dragonAura].name == what || Game.dragonAuras[CM.Sim.dragonAura2].name == what) 
-		return true; 
+	if (Game.dragonAuras[CM.Sim.dragonAura].name == what || Game.dragonAuras[CM.Sim.dragonAura2].name == what)
+		return true;
 	else
 		return false;
 }
@@ -132,7 +132,7 @@ CM.Sim.CopyData = function() {
 	CM.Sim.prestige = Game.prestige;
 	CM.Sim.dragonAura = Game.dragonAura;
 	CM.Sim.dragonAura2 = Game.dragonAura2;
-	
+
 	// Buildings
 	for (var i in Game.Objects) {
 		var me = Game.Objects[i];
@@ -241,7 +241,7 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Kitten specialists')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten experts')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten consultants')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten assistants to the regional manager')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);	
+	if (CM.Sim.Has('Kitten assistants to the regional manager')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten angels')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
 
 	var eggMult = 1;
@@ -265,7 +265,10 @@ CM.Sim.CalculateGains = function() {
 		eggMult *= CM.Cache.CentEgg;
 	}
 	mult *= eggMult;
-	
+
+	// TODO Store lumps?
+	if (CM.Sim.Has('Sugar baking')) mult *= (1 + Math.min(100, Game.lumps) * 0.01);
+
 	if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;
 
 	if (Game.hasAura('Dragon\'s Fortune')) {
@@ -276,7 +279,7 @@ CM.Sim.CalculateGains = function() {
 	}
 
 	var rawCookiesPs = CM.Sim.cookiesPs * mult;
-			
+
 	for (var i in Game.CpsAchievements) {
 		if (rawCookiesPs >= Game.CpsAchievements[i].threshold) CM.Sim.Win(Game.CpsAchievements[i].name);
 	}
@@ -351,16 +354,16 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (buildingsOwned >= 500) CM.Sim.Win('Architect');
 	if (buildingsOwned >= 1000) CM.Sim.Win('Engineer');
 	if (buildingsOwned >= 2000) CM.Sim.Win('Lord of Constructs');
-	
+
 	if (CM.Sim.UpgradesOwned >= 20) CM.Sim.Win('Enhancer');
 	if (CM.Sim.UpgradesOwned >= 50) CM.Sim.Win('Augmenter');
 	if (CM.Sim.UpgradesOwned >= 100) CM.Sim.Win('Upgrader');
 	if (CM.Sim.UpgradesOwned >= 200) CM.Sim.Win('Lord of Progress');
-	
+
 	if (buildingsOwned >= 3000 && CM.Sim.UpgradesOwned >= 300) CM.Sim.Win('Polymath');
-	
+
 	if (CM.Sim.Objects['Cursor'].amount + CM.Sim.Objects['Grandma'].amount >= 777) CM.Sim.Win('The elder scrolls');
-	
+
 	var hasAllHalloCook = true;
 	for (var i in CM.Data.HalloCookies) {
 		if (!CM.Sim.Has(CM.Data.HalloCookies[i])) hasAllHalloCook = false;
@@ -374,13 +377,13 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (hasAllChristCook) CM.Sim.Win('Let it snow');
 }
 
-CM.Sim.BuyBuildings = function(amount, target) {	
+CM.Sim.BuyBuildings = function(amount, target) {
 	CM.Cache[target] = [];
 	for (var i in Game.Objects) {
 		CM.Sim.CopyData();
 		var me = CM.Sim.Objects[i];
 		me.amount += amount;
-		
+
 		if (i == 'Cursor') {
 			if (me.amount >= 1) CM.Sim.Win('Click');
 			if (me.amount >= 2) CM.Sim.Win('Double-click');
@@ -393,21 +396,21 @@ CM.Sim.BuyBuildings = function(amount, target) {
 		}
 		else {
 			for (var j in Game.Objects[me.name].tieredAchievs) {
-				if (me.amount >= Game.Tiers[Game.Objects[me.name].tieredAchievs[j].tier].achievUnlock) 
+				if (me.amount >= Game.Tiers[Game.Objects[me.name].tieredAchievs[j].tier].achievUnlock)
 					CM.Sim.Win(Game.Objects[me.name].tieredAchievs[j].name);
 			}
 		}
-		
+
 		var lastAchievementsOwned = CM.Sim.AchievementsOwned;
-		
+
 		CM.Sim.CalculateGains();
-		
+
 		CM.Sim.CheckOtherAchiev();
-		
+
 		if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
 			CM.Sim.CalculateGains();
 		}
-		
+
 		CM.Cache[target][i] = {};
 		CM.Cache[target][i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
 		if (amount != 1) {
@@ -439,17 +442,17 @@ CM.Sim.BuyUpgrades = function() {
 			else if (i == 'Heavenly key') {
 				CM.Sim.Win('Wholesome');
 			}
-		
+
 			var lastAchievementsOwned = CM.Sim.AchievementsOwned;
-		
+
 			CM.Sim.CalculateGains();
-		
+
 			CM.Sim.CheckOtherAchiev();
-		
+
 			if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
 				CM.Sim.CalculateGains();
 			}
-		
+
 			CM.Cache.Upgrades[i] = {};
 			CM.Cache.Upgrades[i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
 		}
@@ -468,12 +471,12 @@ CM.Sim.NoGoldSwitchCookiesPS = function() {
 
 CM.Sim.ResetBonus = function(possiblePresMax) {
 	var lastAchievementsOwned = -1;
-	
+
 	// Calculate CPS with all Heavenly upgrades
 	var curCPS = Game.cookiesPs;
-	
+
 	CM.Sim.CopyData();
-	
+
 	if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
 		CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
 		CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
@@ -484,10 +487,10 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 		CM.Sim.CalculateGains();
 
 		curCPS = CM.Sim.cookiesPs;
-		
+
 		CM.Sim.CopyData();
 	}
-	
+
 	if (Game.cookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
 	if (Game.cookiesEarned >= 1000000000) CM.Sim.Win('Oblivion');
 	if (Game.cookiesEarned >= 1000000000000) CM.Sim.Win('From scratch');
@@ -498,21 +501,21 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	if (Game.cookiesEarned >= 1000000000000000000000000000) CM.Sim.Win('Obliterate');
 	if (Game.cookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');
 	if (Game.cookiesEarned >= 1000000000000000000000000000000000) CM.Sim.Win('To crumbs, you say?');
-	
+
 	CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
 	CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
 	CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
 	CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
 	CM.Sim.Upgrades['Heavenly key'].bought = 1;
-	
+
 	CM.Sim.prestige = possiblePresMax;
-	
+
 	lastAchievementsOwned = CM.Sim.AchievementsOwned;
 
 	CM.Sim.CalculateGains();
-	
+
 	CM.Sim.CheckOtherAchiev();
-	
+
 	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
 		CM.Sim.CalculateGains();
 	}
