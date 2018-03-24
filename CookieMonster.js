@@ -2978,7 +2978,7 @@ CM.Sim.CalculateGains = function() {
 	}
 
 	if (CM.Sim.Has('"egg"')) CM.Sim.cookiesPs += 9; // "egg"
-
+	
 	var milkMult=1;
 	if (CM.Sim.Has('Santa\'s milk and cookies')) milkMult *= 1.05;
 	if (CM.Sim.hasAura('Breath of Milk')) milkMult *= 1.05;
@@ -3035,11 +3035,11 @@ CM.Sim.CalculateGains = function() {
 	}
 
 	var rawCookiesPs = CM.Sim.cookiesPs * mult;
-
+		
 	for (var i in Game.CpsAchievements) {
 		if (rawCookiesPs >= Game.CpsAchievements[i].threshold) CM.Sim.Win(Game.CpsAchievements[i].name);
 	}
-
+	
 	mult *= CM.Sim.getCPSBuffMult();
 
 	// Pointless?
@@ -3059,7 +3059,19 @@ CM.Sim.CalculateGains = function() {
 		}
 		mult *= goldenSwitchMult;
 	}
-
+	
+	//Game.customCpsMult returns a multiplicative amount of bonus income, however these customCpsMult functions may rely on Game.Has or Game.HasAchiev (or other variables). It's impossible to account for all of the potential ways the income might be boosted by a mod, however we can temporarily overwrite some of the Game functions to return the results from the CM.Sim object, which might help!
+	var cachedFuncs={};
+	cachedFuncs.Has = Game.Has;
+	cachedFuncs.HasAchiev = Game.HasAchiev;
+	Game.Has = CM.Sim.Has;
+	Game.HasAchiev = CM.Sim.HasAchiev;
+	for (var i in Game.customCps) {mult*=Game.customCps[i]();}//these are implemented the same as the customCpsMult, and multiplication commutes, so lets just put this here.
+	for (var i in Game.customCpsMult) {mult*=Game.customCpsMult[i]();}
+	Game.Has = cachedFuncs.Has;
+	Game.HasAchiev = cachedFuncs.HasAchiev;
+	
+	
 	CM.Sim.cookiesPs *= mult;
 
 	// TODO remove?
