@@ -2611,11 +2611,17 @@ CM.ReplaceNativeGrimoireLaunch = function() {
 CM.ReplaceNativeGrimoireDraw = function() {
 	if (!CM.HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
 		var minigame = Game.Objects['Wizard tower'].minigame;
+		var lastMagicBarFull = true;
 		CM.Backup.GrimoireDraw = minigame.draw;
 		Game.Objects['Wizard tower'].minigame.draw = function() {
 			CM.Backup.GrimoireDraw();
 			if (minigame.magic < minigame.magicM) {
+				lastMagicBarFull = false;
 				minigame.magicBarTextL.innerHTML += ' (' + CM.Disp.FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM)) + ')';
+			} else if (!lastMagicBarFull) {
+				lastMagicBarFull = true;
+				CM.Disp.Flash(3);
+				CM.Disp.PlaySound(CM.Config.SeaSoundURL);
 			}
 		}
 		CM.HasReplaceNativeGrimoireDraw = true;
