@@ -501,21 +501,21 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 		CM.Sim.CopyData();
 	}
 
-	if (Game.cookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
-	if (Game.cookiesEarned >= 1000000000) CM.Sim.Win('Oblivion');
-	if (Game.cookiesEarned >= 1000000000000) CM.Sim.Win('From scratch');
-	if (Game.cookiesEarned >= 1000000000000000) CM.Sim.Win('Nihilism');
-	if (Game.cookiesEarned >= 1000000000000000000) CM.Sim.Win('Dematerialize');
-	if (Game.cookiesEarned >= 1000000000000000000000) CM.Sim.Win('Nil zero zilch');
-	if (Game.cookiesEarned >= 1000000000000000000000000) CM.Sim.Win('Transcendence');
-	if (Game.cookiesEarned >= 1000000000000000000000000000) CM.Sim.Win('Obliterate');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000) CM.Sim.Win('To crumbs, you say?');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000000) CM.Sim.Win('You get nothing');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000) CM.Sim.Win('Humble rebeginnings');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000000) CM.Sim.Win('The end of the world');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000000000) CM.Sim.Win('Oh, you\'re back');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000000000000) CM.Sim.Win('Lazarus');
+	if (CM.Cache.RealCookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
+	if (CM.Cache.RealCookiesEarned >= 1000000000) CM.Sim.Win('Oblivion');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000) CM.Sim.Win('From scratch');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000) CM.Sim.Win('Nihilism');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000) CM.Sim.Win('Dematerialize');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000) CM.Sim.Win('Nil zero zilch');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000) CM.Sim.Win('Transcendence');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000) CM.Sim.Win('Obliterate');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000) CM.Sim.Win('To crumbs, you say?');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000) CM.Sim.Win('You get nothing');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000) CM.Sim.Win('Humble rebeginnings');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000000) CM.Sim.Win('The end of the world');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000000000) CM.Sim.Win('Oh, you\'re back');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000000000000) CM.Sim.Win('Lazarus');
 
 	CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
 	CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;

@@ -245,6 +245,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		if (Game.cpsSucked > 0) {
 			choEggTotal += CM.Cache.WrinkGodBank;
 		}
+		CM.Cache.RealCookiesEarned = Math.max(Game.cookiesEarned, choEggTotal);
 		choEggTotal *= 0.05;
 
 		if (CM.Cache.lastDate != -1) {
@@ -357,6 +358,7 @@ CM.Cache.CentEgg = 0;
 CM.Cache.SellForChoEgg = 0;
 CM.Cache.Title = '';
 CM.Cache.HadFierHoard = false;
+CM.Cache.RealCookiesEarned = -1;
 CM.Cache.lastDate = -1;
 CM.Cache.lastCookies = -1;
 CM.Cache.lastWrinkCookies = -1;
