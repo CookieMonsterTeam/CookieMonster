@@ -185,13 +185,13 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.Chain = 0;
 	}
 	else {
-		CM.Cache.Chain = CM.Cache.NextNumber(CM.Cache.ChainReward) / 0.25;
+		CM.Cache.Chain = CM.Cache.NextNumber(CM.Cache.ChainReward) / 0.5;
 	}
 	if (maxPayout < CM.Cache.ChainWrathReward) {
 		CM.Cache.ChainWrath = 0;
 	}
 	else {
-		CM.Cache.ChainWrath = CM.Cache.NextNumber(CM.Cache.ChainWrathReward) / 0.25;
+		CM.Cache.ChainWrath = CM.Cache.NextNumber(CM.Cache.ChainWrathReward) / 0.5;
 	}
 
 	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7);
@@ -202,13 +202,13 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.ChainFrenzy = 0;
 	}
 	else {
-		CM.Cache.ChainFrenzy = CM.Cache.NextNumber(CM.Cache.ChainFrenzyReward) / 0.25;
+		CM.Cache.ChainFrenzy = CM.Cache.NextNumber(CM.Cache.ChainFrenzyReward) / 0.5;
 	}
 	if ((maxPayout * 7) < CM.Cache.ChainFrenzyWrathReward) {
 		CM.Cache.ChainFrenzyWrath = 0;
 	}
 	else {
-		CM.Cache.ChainFrenzyWrath = CM.Cache.NextNumber(CM.Cache.ChainFrenzyWrathReward) / 0.25;
+		CM.Cache.ChainFrenzyWrath = CM.Cache.NextNumber(CM.Cache.ChainFrenzyWrathReward) / 0.5;
 	}
 }
 
@@ -1456,7 +1456,7 @@ CM.Disp.UpdateTitle = function() {
 
 CM.Disp.CollectWrinklers = function() {
 	for (var i in Game.wrinklers) {
-		if (Game.wrinklers[i].sucked > 0) {
+		if (Game.wrinklers[i].sucked > 0 && Game.wrinklers[i].type == 0) {
 			Game.wrinklers[i].hp = 0;
 		}
 	}
@@ -1760,7 +1760,7 @@ CM.Disp.AddMenuStats = function(title) {
 		var chainWrathRewardMax = CM.Cache.ChainWrathReward;
 		var chainFrenzyRewardMax = CM.Cache.ChainFrenzyReward;
 		var chainFrenzyWrathRewardMax = CM.Cache.ChainFrenzyWrathReward;
-		var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.25);
+		var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.5);
 		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax);
 		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax);
 		if (Game.hasAura('Ancestral Metamorphosis')) {
@@ -1861,7 +1861,7 @@ CM.Disp.AddMenuStats = function(title) {
 			var popAllFrag = document.createDocumentFragment();
 			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBank) + ' '));
 			var popAllA = document.createElement('a');
-			popAllA.textContent = 'Pop All';
+			popAllA.textContent = 'Pop All Normal';
 			popAllA.className = 'option';
 			popAllA.onclick = function() { CM.Disp.CollectWrinklers(); };
 			popAllFrag.appendChild(popAllA);
@@ -2050,7 +2050,7 @@ CM.Disp.CreateTooltipWarnCaut = function() {
 	l('tooltipAnchor').appendChild(CM.Disp.TooltipWarnCaut);
 }
 
-CM.Disp.ToggleToolWarnCaut = function() {
+CM.Disp.ToggleToolWarnCaut = function() { // Pointless?
 	if (CM.Config.ToolWarnCaut == 1) {
 		CM.Disp.TooltipWarnCaut.style.display = 'block';
 	}
@@ -2205,86 +2205,93 @@ CM.Disp.Tooltip = function(type, name) {
 }
 
 CM.Disp.UpdateTooltip = function() {
-	if (l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
+	if (l('tooltipAnchor').style.display != 'none') {
 
-		if (CM.Disp.tooltipType == 'b' || CM.Disp.tooltipType == 'u') {
-			// Error checking
-			if (CM.Disp.tooltipType == 'u' && (typeof Game.UpgradesInStore[CM.Disp.tooltipName] === 'undefined' || typeof CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name] === 'undefined')) {
-				return;
-			}
-			var price;
-			var bonus;
-			if (CM.Disp.tooltipType == 'b') {
-				var target = '';
-				if (Game.buyMode == 1 && Game.buyBulk == 10) {
-					target = 'Objects10';
-					price = CM.Cache[target][CM.Disp.tooltipName].price;
+		if (l('CMTooltipArea') != null) {
+			if (CM.Disp.tooltipType == 'b' || CM.Disp.tooltipType == 'u') {
+				// Error checking
+				if (CM.Disp.tooltipType == 'u' && (typeof Game.UpgradesInStore[CM.Disp.tooltipName] === 'undefined' || typeof CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name] === 'undefined')) {
+					return;
 				}
-				else if (Game.buyMode == 1 && Game.buyBulk == 100) {
-					target = 'Objects100';
-					price = CM.Cache[target][CM.Disp.tooltipName].price;
-				}
-				else {
-					target = 'Objects';
-					price = Game.Objects[CM.Disp.tooltipName].getPrice();
-				}
-				bonus = CM.Cache[target][CM.Disp.tooltipName].bonus;
-				if (CM.Config.Tooltip == 1 && Game.buyMode == 1) {
-					l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
-					l('CMTooltipPP').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].pp, 2);
-					l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
-				}
-			}
-			else { // Upgrades
-				bonus = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonus;
-				price = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
-				if (CM.Config.Tooltip == 1) {
-					l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
-					l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
-					l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
-				}
-			}
-			if (CM.Config.Tooltip == 1 && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
-				l('CMTooltipIncome').textContent = Beautify(bonus, 2);
-
-				var increase = Math.round(bonus / Game.cookiesPs * 10000);
-				if (isFinite(increase) && increase != 0) {
-					l('CMTooltipIncome').textContent += ' (' + (increase / 100) + '% of income)';
-				}
-
-				var timeColor = CM.Disp.GetTimeColor(price, (Game.cookies + CM.Disp.GetWrinkConfigBank()), CM.Disp.GetCPS());
-				l('CMTooltipTime').textContent = timeColor.text;
-				l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
-			}
-
-			if (CM.Config.ToolWarnCaut == 1) {
-				var warn = CM.Cache.Lucky;
-				if (CM.Config.ToolWarnCautBon == 1) {
-					var bonusNoFren = bonus;
-					bonusNoFren /= CM.Sim.getCPSBuffMult();
-					warn += ((bonusNoFren * 60 * 15) / 0.15);
-				}
-				var caut = warn * 7;
-				var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
-				if ((amount < warn || amount < caut) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
-					if (CM.Config.ToolWarnCautPos == 0) {
-						CM.Disp.TooltipWarnCaut.style.right = '0px';
+				var price;
+				var bonus;
+				if (CM.Disp.tooltipType == 'b') {
+					var target = '';
+					if (Game.buyMode == 1 && Game.buyBulk == 10) {
+						target = 'Objects10';
+						price = CM.Cache[target][CM.Disp.tooltipName].price;
+					}
+					else if (Game.buyMode == 1 && Game.buyBulk == 100) {
+						target = 'Objects100';
+						price = CM.Cache[target][CM.Disp.tooltipName].price;
 					}
 					else {
-						CM.Disp.TooltipWarnCaut.style.top = (l('tooltip').offsetHeight) + 'px';
+						target = 'Objects';
+						price = Game.Objects[CM.Disp.tooltipName].getPrice();
 					}
-					CM.Disp.TooltipWarnCaut.style.width = (l('tooltip').offsetWidth - 6) + 'px';
+					bonus = CM.Cache[target][CM.Disp.tooltipName].bonus;
+					if (CM.Config.Tooltip == 1 && Game.buyMode == 1) {
+						l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
+						l('CMTooltipPP').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].pp, 2);
+						l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
+					}
+				}
+				else { // Upgrades
+					bonus = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonus;
+					price = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
+					if (CM.Config.Tooltip == 1) {
+						l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+						l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
+						l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+					}
+				}
+				if (CM.Config.Tooltip == 1 && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+					l('CMTooltipIncome').textContent = Beautify(bonus, 2);
 
-					if (amount < warn) {
-						l('CMDispTooltipWarn').style.display = '';
-						l('CMDispTooltipWarnText').textContent = Beautify(warn - amount) + ' (' + CM.Disp.FormatTime((warn - amount) / CM.Disp.GetCPS()) + ')';
-						l('CMDispTooltipCaut').style.display = '';
-						l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
+					var increase = Math.round(bonus / Game.cookiesPs * 10000);
+					if (isFinite(increase) && increase != 0) {
+						l('CMTooltipIncome').textContent += ' (' + (increase / 100) + '% of income)';
 					}
-					else if (amount < caut) {
-						l('CMDispTooltipCaut').style.display = '';
-						l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
-						l('CMDispTooltipWarn').style.display = 'none';
+
+					var timeColor = CM.Disp.GetTimeColor(price, (Game.cookies + CM.Disp.GetWrinkConfigBank()), CM.Disp.GetCPS());
+					l('CMTooltipTime').textContent = timeColor.text;
+					l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
+				}
+
+				if (CM.Config.ToolWarnCaut == 1) {
+					CM.Disp.TooltipWarnCaut.style.display = 'block';
+					var warn = CM.Cache.Lucky;
+					if (CM.Config.ToolWarnCautBon == 1) {
+						var bonusNoFren = bonus;
+						bonusNoFren /= CM.Sim.getCPSBuffMult();
+						warn += ((bonusNoFren * 60 * 15) / 0.15);
+					}
+					var caut = warn * 7;
+					var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
+					if ((amount < warn || amount < caut) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+						if (CM.Config.ToolWarnCautPos == 0) {
+							CM.Disp.TooltipWarnCaut.style.right = '0px';
+						}
+						else {
+							CM.Disp.TooltipWarnCaut.style.top = (l('tooltip').offsetHeight) + 'px';
+						}
+						CM.Disp.TooltipWarnCaut.style.width = (l('tooltip').offsetWidth - 6) + 'px';
+
+						if (amount < warn) {
+							l('CMDispTooltipWarn').style.display = '';
+							l('CMDispTooltipWarnText').textContent = Beautify(warn - amount) + ' (' + CM.Disp.FormatTime((warn - amount) / CM.Disp.GetCPS()) + ')';
+							l('CMDispTooltipCaut').style.display = '';
+							l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
+						}
+						else if (amount < caut) {
+							l('CMDispTooltipCaut').style.display = '';
+							l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
+							l('CMDispTooltipWarn').style.display = 'none';
+						}
+						else {
+							l('CMDispTooltipWarn').style.display = 'none';
+							l('CMDispTooltipCaut').style.display = 'none';
+						}
 					}
 					else {
 						l('CMDispTooltipWarn').style.display = 'none';
@@ -2292,57 +2299,60 @@ CM.Disp.UpdateTooltip = function() {
 					}
 				}
 				else {
-					l('CMDispTooltipWarn').style.display = 'none';
-					l('CMDispTooltipCaut').style.display = 'none';
+					CM.Disp.TooltipWarnCaut.style.display = 'none';
+				}
+			}
+			else { // Grimoire
+				CM.Disp.TooltipWarnCaut.style.display = 'none';
+				l('CMDispTooltipWarn').style.display = 'none';
+				l('CMDispTooltipCaut').style.display = 'none';
+
+				var minigame = Game.Objects['Wizard tower'].minigame;
+				var spellCost = minigame.getSpellCost(minigame.spellsById[CM.Disp.tooltipName]);
+
+				if (CM.Config.Tooltip == 1 && spellCost <= minigame.magicM) {
+					l('CMTooltipArea').innerHTML = '';
+
+					l('tooltip').firstChild.style.paddingBottom = '4px';
+					var tooltip = document.createElement('div');
+					tooltip.style.border = '1px solid';
+					tooltip.style.padding = '4px';
+					tooltip.style.margin = '0px -4px';
+					tooltip.id = 'CMTooltipBorder';
+					tooltip.className = CM.Disp.colorTextPre + CM.Disp.colorGray;
+
+					var header = function(text) {
+						var div = document.createElement('div');
+						div.style.fontWeight = 'bold';
+						div.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
+						div.textContent = text;
+						return div;
+					}
+
+					tooltip.appendChild(header('Time Left'));
+					var time = document.createElement('div');
+					time.id = 'CMTooltipTime';
+					tooltip.appendChild(time);
+					var timeColor = CM.Disp.GetTimeColor(spellCost, minigame.magic, undefined, CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, spellCost));
+					time.textContent = timeColor.text;
+					time.className = CM.Disp.colorTextPre + timeColor.color;
+
+					if (spellCost <= minigame.magic) {
+						tooltip.appendChild(header('Recover Time'));
+						var recover = document.createElement('div');
+						recover.id = 'CMTooltipRecover';
+						tooltip.appendChild(recover);
+						var recoverColor = CM.Disp.GetTimeColor(minigame.magic, Math.max(0, minigame.magic - spellCost), undefined, CM.Disp.CalculateGrimoireRefillTime(Math.max(0, minigame.magic - spellCost), minigame.magicM, minigame.magic));
+						recover.textContent = recoverColor.text;
+						recover.className = CM.Disp.colorTextPre + recoverColor.color;
+					}
+
+					l('CMTooltipArea').appendChild(tooltip);
 				}
 			}
 		}
-		else { // Grimoire
-			l('CMDispTooltipWarn').style.display = 'none';
-			l('CMDispTooltipCaut').style.display = 'none';
-
-			var minigame = Game.Objects['Wizard tower'].minigame;
-			var spellCost = minigame.getSpellCost(minigame.spellsById[CM.Disp.tooltipName]);
-
-			if (CM.Config.Tooltip == 1 && spellCost <= minigame.magicM) {
-				l('CMTooltipArea').innerHTML = '';
-
-				l('tooltip').firstChild.style.paddingBottom = '4px';
-				var tooltip = document.createElement('div');
-				tooltip.style.border = '1px solid';
-				tooltip.style.padding = '4px';
-				tooltip.style.margin = '0px -4px';
-				tooltip.id = 'CMTooltipBorder';
-				tooltip.className = CM.Disp.colorTextPre + CM.Disp.colorGray;
-
-				var header = function(text) {
-					var div = document.createElement('div');
-					div.style.fontWeight = 'bold';
-					div.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
-					div.textContent = text;
-					return div;
-				}
-
-				tooltip.appendChild(header('Time Left'));
-				var time = document.createElement('div');
-				time.id = 'CMTooltipTime';
-				tooltip.appendChild(time);
-				var timeColor = CM.Disp.GetTimeColor(spellCost, minigame.magic, undefined, CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, spellCost));
-				time.textContent = timeColor.text;
-				time.className = CM.Disp.colorTextPre + timeColor.color;
-
-				if (spellCost <= minigame.magic) {
-					tooltip.appendChild(header('Recover Time'));
-					var recover = document.createElement('div');
-					recover.id = 'CMTooltipRecover';
-					tooltip.appendChild(recover);
-					var recoverColor = CM.Disp.GetTimeColor(minigame.magic, Math.max(0, minigame.magic - spellCost), undefined, CM.Disp.CalculateGrimoireRefillTime(Math.max(0, minigame.magic - spellCost), minigame.magicM, minigame.magic));
-					recover.textContent = recoverColor.text;
-					recover.className = CM.Disp.colorTextPre + recoverColor.color;
-				}
-
-				l('CMTooltipArea').appendChild(tooltip);
-			}
+		else {
+			CM.Disp.TooltipWarnCaut.style.display = 'none';
 		}
 	}
 }
@@ -2751,7 +2761,7 @@ CM.HasReplaceNativeGrimoireDraw = false;
 CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 0, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '2.0045';
+CM.VersionMajor = '2.0106';
 CM.VersionMinor = '1';
 
 /*******
@@ -2790,7 +2800,7 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
 	if (Game.Has('Santa\'s dominion')) price*=0.99;
 	if (Game.Has('Faberge egg')) price*=0.99;
 	if (Game.Has('Divine discount')) price*=0.99;
-	if (Game.hasAura('Fierce Hoarder')) price*=0.98;
+	if (Game.hasAura('Fierce Hoarder')) price *= 0.98;
 	if (Game.hasAura('Earth Shatterer') || emuAura) {
 		price *= 0.85;
 	}
@@ -2918,6 +2928,9 @@ CM.Sim.CalculateGains = function() {
 	var mult = 1;
 
 	if (Game.ascensionMode != 1) mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
+	
+	// TODO Store minigame buffs?
+	mult *= Game.eff('cps');
 
 	var cookieMult = 0;
 	for (var i in Game.cookieUpgrades) {
@@ -2959,7 +2972,7 @@ CM.Sim.CalculateGains = function() {
 
 		var godLvl = Game.hasGod('industry');
 		if (godLvl == 1) buildMult *= 1.1;
-		else if (godLvl == 2) buildMult *= 1.05;
+		else if (godLvl == 2) buildMult *= 1.06;
 		else if (godLvl == 3) buildMult *= 1.03;
 
 		var godLvl = Game.hasGod('labor');
@@ -2985,9 +2998,12 @@ CM.Sim.CalculateGains = function() {
 	if (Game.hasGod) {
 		var godLvl = Game.hasGod('mother');
 		if (godLvl == 1) milkMult *= 1.1;
-		else if (godLvl == 2) milkMult *= 1.06;
+		else if (godLvl == 2) milkMult *= 1.05;
 		else if (godLvl == 3) milkMult *= 1.03;
 	}
+	// TODO Store minigame buffs?
+	milkMult *= Game.eff('milk');
+	
 	if (CM.Sim.Has('Kitten helpers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
 	if (CM.Sim.Has('Kitten workers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.125 * milkMult);
 	if (CM.Sim.Has('Kitten engineers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
@@ -2997,7 +3013,8 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Kitten specialists')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten experts')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
 	if (CM.Sim.Has('Kitten consultants')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten assistants to the regional manager')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten assistants to the regional manager')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.175 * milkMult);
+	if (CM.Sim.Has('Kitten marketeers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
 	if (CM.Sim.Has('Kitten angels')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
 
 	var eggMult = 1;
@@ -3030,7 +3047,7 @@ CM.Sim.CalculateGains = function() {
 	if (Game.hasAura('Dragon\'s Fortune')) {
 		var n = Game.shimmerTypes['golden'].n;
 		for (var i = 0; i < n; i++) {
-			mult *= 2.11;
+			mult *= 2.23;
 		}
 	}
 
@@ -3105,6 +3122,9 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (minAmount >= 200) CM.Sim.Win('Bicentennial');
 	if (minAmount >= 250) CM.Sim.Win('Bicentennial and a half');
 	if (minAmount >= 300) CM.Sim.Win('Tricentennial');
+	if (minAmount >= 350) CM.Sim.Win('Tricentennial and a half');
+	if (minAmount >= 400) CM.Sim.Win('Quadricentennial');
+	if (minAmount >= 450) CM.Sim.Win('Quadricentennial and a half');
 
 	if (buildingsOwned >= 100) CM.Sim.Win('Builder');
 	if (buildingsOwned >= 500) CM.Sim.Win('Architect');
@@ -3257,6 +3277,11 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	if (Game.cookiesEarned >= 1000000000000000000000000000) CM.Sim.Win('Obliterate');
 	if (Game.cookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');
 	if (Game.cookiesEarned >= 1000000000000000000000000000000000) CM.Sim.Win('To crumbs, you say?');
+	if (Game.cookiesEarned >= 1000000000000000000000000000000000000) CM.Sim.Win('You get nothing');
+	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000) CM.Sim.Win('Humble rebeginnings');
+	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000000) CM.Sim.Win('The end of the world');
+	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000000000) CM.Sim.Win('Oh, you\'re back');
+	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000000000000) CM.Sim.Win('Lazarus');
 
 	CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
 	CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
