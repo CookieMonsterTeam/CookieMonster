@@ -906,7 +906,7 @@ CM.Disp.UpdateTitle = function() {
 
 CM.Disp.CollectWrinklers = function() {
 	for (var i in Game.wrinklers) {
-		if (Game.wrinklers[i].sucked > 0) {
+		if (Game.wrinklers[i].sucked > 0 && Game.wrinklers[i].type == 0) {
 			Game.wrinklers[i].hp = 0;
 		}
 	}
@@ -1311,7 +1311,7 @@ CM.Disp.AddMenuStats = function(title) {
 			var popAllFrag = document.createDocumentFragment();
 			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBank) + ' '));
 			var popAllA = document.createElement('a');
-			popAllA.textContent = 'Pop All';
+			popAllA.textContent = 'Pop All Normal';
 			popAllA.className = 'option';
 			popAllA.onclick = function() { CM.Disp.CollectWrinklers(); };
 			popAllFrag.appendChild(popAllA);
