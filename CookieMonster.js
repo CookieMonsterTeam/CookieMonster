@@ -1,22 +1,3 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Marketplace
-Explore
- @BONNe
-Sign out
-1
-0 36 BONNe/CookieMonster
-forked from Aktanusa/CookieMonster
- Code  Pull requests 0  Projects 0  Wiki  Insights  Settings
-CookieMonster/CookieMonster.js
-902c866  15 days ago
-@Aktanusa Aktanusa Changed 'Pop All' button to pop only normal Wrinklers (Issue #140 & #171
-@Aktanusa @redthefed @sigv @ThexXTURBOXx @DeathOfBalance @tayrayb @Alhifar
-     
-3312 lines (2954 sloc)  126 KB
 /**********
  * Header *
  **********/
@@ -3394,16 +3375,3 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
  **********/
 
 CM.Init();
-© 2018 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-API
-Training
-Shop
-Blog
-About
-Press h to open a hovercard with more details.
