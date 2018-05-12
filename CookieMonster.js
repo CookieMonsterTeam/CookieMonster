@@ -550,6 +550,9 @@ CM.Data.HalloCookies = ['Skull cookies', 'Ghost cookies', 'Bat cookies', 'Slime 
 CM.Data.ChristCookies = ['Christmas tree biscuits', 'Snowflake biscuits', 'Snowman biscuits', 'Holly biscuits', 'Candy cane biscuits', 'Bell biscuits', 'Present biscuits'];
 CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour heart biscuits', 'Weeping heart biscuits', 'Golden heart biscuits', 'Eternal heart biscuits'];
 
+CM.Data.GardenCookies = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Wheat slims'];
+CM.Data.GardenUpgrades = ['Green yeast digestives', 'Fern tea', 'Ichor syrup'];
+
 /********
  * Disp *
  ********/
@@ -1025,7 +1028,6 @@ CM.Disp.UpdateTimerBar = function() {
 		else {
 			CM.Disp.TimerBarBuff1.style.display = 'none';
 		}
-
 		if (Game.clickFrenzy > 0) {
 			CM.Disp.TimerBarBuff2.style.display = '';
 			if (Game.clickFrenzyPower == 777) {
@@ -1968,6 +1970,72 @@ CM.Disp.AddMenuStats = function(title) {
 		}
 	}
 
+	// Collect missing garden Cookies and Upgrades.
+	var gardenDisp = false;
+	var gardenCookies = [];
+	for (var i in CM.Data.GardenCookies) {
+		if (!Game.Has(CM.Data.GardenCookies[i])) {
+			gardenCookies.push(CM.Data.GardenCookies[i]);
+			gardenDisp = true;
+		}
+	}
+	var gardenUpgrades = [];
+	for (var i in CM.Data.GardenUpgrades) {
+		if (!Game.Has(CM.Data.GardenUpgrades[i])) {
+			gardenUpgrades.push(CM.Data.GardenUpgrades[i]);
+			gardenDisp = true;
+		}
+	}
+	
+	// Create new menu if necessary and create missing elements for them.
+	if (gardenDisp) {
+		stats.appendChild(header('Garden Specials', 'Gard'));
+		
+		if (CM.Config.StatsPref.Gard) {
+			var createSpecDisp = function(theSpecDisp) {
+				var frag = document.createDocumentFragment();
+				frag.appendChild(document.createTextNode(theSpecDisp.length + ' '));
+				var span = document.createElement('span');
+				span.onmouseout = function() { Game.tooltip.hide(); };
+				var placeholder = document.createElement('div');
+				var missing = document.createElement('div');
+				missing.style.minWidth = '140px';
+				missing.style.marginBottom = '4px';
+				var title = document.createElement('div');
+				title.className = 'name';
+				title.style.marginBottom = '4px';
+				title.style.textAlign = 'center';
+				title.textContent = 'Missing';
+				missing.appendChild(title);
+				for (var i in theSpecDisp) {
+					var div = document.createElement('div');
+					div.style.textAlign = 'center';
+					div.appendChild(document.createTextNode(theSpecDisp[i]));
+					missing.appendChild(div);
+				}
+				placeholder.appendChild(missing);
+				span.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML));};
+				span.style.cursor = 'default';
+				span.style.display = 'inline-block';
+				span.style.height = '10px';
+				span.style.width = '10px';
+				span.style.borderRadius = '5px';
+				span.style.textAlign = 'center';
+				span.style.backgroundColor = '#C0C0C0';
+				span.style.color = 'black';
+				span.style.fontSize = '9px';
+				span.style.verticalAlign = 'bottom';
+				span.textContent = '?';
+				frag.appendChild(span);
+				return frag;
+			}
+		
+			if (gardenCookies.length != 0) stats.appendChild(listing('Garden Cookies Left to Buy', createSpecDisp(gardenCookies)));
+			if (gardenUpgrades.length != 0) stats.appendChild(listing('Garden Upgrades Left to Buy',  createSpecDisp(gardenUpgrades)));
+			
+		}
+	}
+	
 	stats.appendChild(header('Miscellaneous', 'Misc'));
 	if (CM.Config.StatsPref.Misc) {
 		stats.appendChild(listing('Average Cookies Per Second (Past ' + CM.Disp.times[CM.Config.AvgCPSHist] + (CM.Config.AvgCPSHist == 0 ? ' minute' : ' minutes') + ')', document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))));
