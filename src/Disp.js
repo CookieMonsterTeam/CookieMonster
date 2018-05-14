@@ -966,11 +966,21 @@ CM.Disp.AddExtraGarden = function() {
                 title.textContent = value.name + " Seed Recipes";
                 missing.appendChild(title);
 
+                var listing = function(name, chance) {
+                    var div = document.createElement('div');
+                    div.className = 'listing';
+                    var b = document.createElement('b');
+                    b.appendChild(document.createTextNode(name));
+                    b.appendChild(document.createTextNode(' : '));
+                    b.appendChild(document.createTextNode(chance.toFixed(4)));
+                    div.appendChild(b);
+                    return div;
+                };
                 var recipes = document.createElement('div');
                 recipes.style.textAlign = 'center';
                 CM.Data.GardenSeedRecipes[value.id].forEach(function (recipe) {
                 	// TODO: Missing Sugar Lump Upgrade
-                    recipes.appendChild(document.createTextNode(recipe.recipe + " - " + recipe.chance * (minigame.soil === 4 ? 3 : 1)));
+                    recipes.appendChild(listing(recipe.recipe, recipe.chance * (minigame.soil === 4 ? 3 : 1)));
                 });
                 missing.appendChild(recipes);
                 placeholder.appendChild(missing);
