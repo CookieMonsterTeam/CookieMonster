@@ -943,10 +943,15 @@ CM.Disp.AddExtraGarden = function() {
             }
 
             // Populate missing seed panel with new seeds
-            CM.Data.GardenMissingSeeds.forEach(function (value) {
-                value.l.className = "gardenSeed unlocked enabled";
+            CM.Data.GardenMissingSeeds.forEach(function (value, index) {
+                var missedSeed = document.createElement('div');
+                missedSeed.id = "missingSeed-" + index;
+                missedSeed.className = "disabled";
+                missedSeed.style = "position: relative;cursor: pointer;display: inline-block;width: 40px;height: 40px;";
 
-                missingSeedPanel.appendChild(value.l);
+                missedSeed.appendChild(value.l.firstChild);
+
+                missingSeedPanel.appendChild(missedSeed);
             });
         }
     }
