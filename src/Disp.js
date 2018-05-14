@@ -914,11 +914,13 @@ CM.Disp.CollectWrinklers = function() {
 
 /* Start Extra Garden */
 
+CM.Disp.GardenMissingSeeds = [];
+
 CM.Disp.AddExtraGarden = function() {
     if (Game.Objects['Farm'].minigameLoaded) {
     	var minigame = Game.Objects['Farm'].minigame;
 
-    	if (CM.Data.GardenMissingSeeds.length !== (minigame.plantsN - minigame.plantsUnlockedN)) {
+    	if (CM.Disp.GardenMissingSeeds.length !== (minigame.plantsN - minigame.plantsUnlockedN)) {
     		CM.Disp.CollectMissingSeeds();
 
             if (l('gardenPanel').childNodes.length < 7) {
@@ -943,7 +945,7 @@ CM.Disp.AddExtraGarden = function() {
             }
 
             // Populate missing seed panel with new seeds
-            CM.Data.GardenMissingSeeds.forEach(function (value, index) {
+            CM.Disp.GardenMissingSeeds.forEach(function (value, index) {
                 var missedSeed = document.createElement('div');
                 missedSeed.id = "missingSeed-" + index;
                 missedSeed.className = "disabled";
@@ -951,6 +953,29 @@ CM.Disp.AddExtraGarden = function() {
 
                 missedSeed.appendChild(value.l.firstChild);
 
+                missedSeed.onmouseout = function() { Game.tooltip.hide(); };
+
+                var placeholder = document.createElement('div');
+                var missing = document.createElement('div');
+                missing.style.minWidth = '300px';
+                missing.style.marginBottom = '4px';
+                var title = document.createElement('div');
+                title.className = 'name';
+                title.style.marginBottom = '4px';
+                title.style.textAlign = 'center';
+                title.textContent = value.name + " Seed Recipes";
+                missing.appendChild(title);
+
+                var recipes = document.createElement('div');
+                recipes.style.textAlign = 'center';
+                CM.Data.GardenSeedRecipes[value.id].forEach(function (recipe) {
+                	// TODO: Missing Sugar Lump Upgrade
+                    recipes.appendChild(document.createTextNode(recipe.recipe + " - " + recipe.chance * (minigame.soil === 4 ? 3 : 1)));
+                });
+                missing.appendChild(recipes);
+                placeholder.appendChild(missing);
+
+                missedSeed.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML));};
                 missingSeedPanel.appendChild(missedSeed);
             });
         }
@@ -958,13 +983,13 @@ CM.Disp.AddExtraGarden = function() {
 };
 
 CM.Disp.CollectMissingSeeds = function () {
-    CM.Data.GardenMissingSeeds = [];
+    CM.Disp.GardenMissingSeeds = [];
 
     var minigame = Game.Objects['Farm'].minigame;
 
     minigame.plantsById.forEach(function (plant) {
     	if (plant.unlocked === 0) {
-    		CM.Data.GardenMissingSeeds.push(plant);
+    		CM.Disp.GardenMissingSeeds.push(plant);
 		}
 	});
 };
