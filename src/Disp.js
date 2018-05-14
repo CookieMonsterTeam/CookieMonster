@@ -912,6 +912,60 @@ CM.Disp.CollectWrinklers = function() {
 	}
 }
 
+/* Start Extra Garden */
+
+CM.Disp.AddExtraGarden = function() {
+    if (Game.Objects['Farm'].minigameLoaded) {
+    	var minigame = Game.Objects['Farm'].minigame;
+
+    	if (CM.Data.GardenMissingSeeds.length !== (minigame.plantsN - minigame.plantsUnlockedN)) {
+    		CM.Disp.CollectMissingSeeds();
+
+            if (l('gardenPanel').childNodes.length < 7) {
+                var title = document.createElement('div');
+                title.className = "title gardenPanelLabel";
+                title.innerHTML = "Missing Seeds";
+                l('gardenPanel').appendChild(title);
+
+                var line = document.createElement('div');
+                line.className = 'line';
+                l('gardenPanel').appendChild(line);
+
+                var missingSeeds = document.createElement('div');
+                missingSeeds.id = 'missingSeeds';
+                l('gardenPanel').appendChild(missingSeeds);
+            }
+
+            // Clean UP all missing seeds
+            var missingSeedPanel = l('gardenPanel').childNodes[l('gardenPanel').childNodes.length - 1];
+            while (missingSeedPanel.firstChild) {
+                missingSeedPanel.removeChild(missingSeedPanel.firstChild);
+            }
+
+            // Populate missing seed panel with new seeds
+            CM.Data.GardenMissingSeeds.forEach(function (value) {
+                value.l.className = "gardenSeed unlocked enabled";
+
+                missingSeedPanel.appendChild(value.l);
+            });
+        }
+    }
+};
+
+CM.Disp.CollectMissingSeeds = function () {
+    CM.Data.GardenMissingSeeds = [];
+
+    var minigame = Game.Objects['Farm'].minigame;
+
+    minigame.plantsById.forEach(function (plant) {
+    	if (plant.unlocked === 0) {
+    		CM.Data.GardenMissingSeeds.push(plant);
+		}
+	});
+};
+
+/* End Extra Garden */
+
 CM.Disp.CreateTooltip = function(placeholder, text, minWidth) {
 	CM.Disp[placeholder] = document.createElement('div');
 	var desc = document.createElement('div');

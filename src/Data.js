@@ -8,3 +8,5 @@ CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour hear
 
 CM.Data.GardenCookies = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Wheat slims'];
 CM.Data.GardenUpgrades = ['Green yeast digestives', 'Fern tea', 'Ichor syrup'];
+
+CM.Data.GardenMissingSeeds = [];
