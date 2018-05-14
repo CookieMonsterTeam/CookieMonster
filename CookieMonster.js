@@ -548,6 +548,8 @@ CM.Data.HalloCookies = ['Skull cookies', 'Ghost cookies', 'Bat cookies', 'Slime 
 CM.Data.ChristCookies = ['Christmas tree biscuits', 'Snowflake biscuits', 'Snowman biscuits', 'Holly biscuits', 'Candy cane biscuits', 'Bell biscuits', 'Present biscuits'];
 CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour heart biscuits', 'Weeping heart biscuits', 'Golden heart biscuits', 'Eternal heart biscuits'];
 
+CM.Data.GardenCookies = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Wheat slims'];
+CM.Data.GardenUpgrades = ['Green yeast digestives', 'Fern tea', 'Ichor syrup'];
 /********
  * Disp *
  ********/
@@ -1966,7 +1968,72 @@ CM.Disp.AddMenuStats = function(title) {
 		}
 	}
 
-	stats.appendChild(header('Miscellaneous', 'Misc'));
+    // Collect missing garden Cookies and Upgrades.
+    var gardenDisp = false;
+    var gardenCookies = [];
+    CM.Data.GardenCookies.forEach(function (element) {
+        if (!Game.Has(element)) {
+            gardenCookies.push(element);
+            gardenDisp = true;
+        }
+    });
+    var gardenUpgrades = [];
+    CM.Data.GardenUpgrades.forEach(function (element) {
+        if (!Game.Has(element)) {
+            gardenUpgrades.push(element);
+            gardenDisp = true;
+        }
+    });
+
+    // If necessary, create new Menu Item and display missing elements.
+    if (gardenDisp || Game.Objects['Farm'].minigameLoaded) {
+        stats.appendChild(header('Garden Specials', 'Gard'));
+
+        if (CM.Config.StatsPref.Gard) {
+            var createSpecDisp = function(theSpecDisp) {
+                var frag = document.createDocumentFragment();
+                frag.appendChild(document.createTextNode(theSpecDisp.length + ' '));
+                var span = document.createElement('span');
+                span.onmouseout = function() { Game.tooltip.hide(); };
+                var placeholder = document.createElement('div');
+                var missing = document.createElement('div');
+                missing.style.minWidth = '140px';
+                missing.style.marginBottom = '4px';
+                var title = document.createElement('div');
+                title.className = 'name';
+                title.style.marginBottom = '4px';
+                title.style.textAlign = 'center';
+                title.textContent = 'Missing';
+                missing.appendChild(title);
+                for (var i in theSpecDisp) {
+                    var div = document.createElement('div');
+                    div.style.textAlign = 'center';
+                    div.appendChild(document.createTextNode(theSpecDisp[i]));
+                    missing.appendChild(div);
+                }
+                placeholder.appendChild(missing);
+                span.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML));};
+                span.style.cursor = 'default';
+                span.style.display = 'inline-block';
+                span.style.height = '10px';
+                span.style.width = '10px';
+                span.style.borderRadius = '5px';
+                span.style.textAlign = 'center';
+                span.style.backgroundColor = '#C0C0C0';
+                span.style.color = 'black';
+                span.style.fontSize = '9px';
+                span.style.verticalAlign = 'bottom';
+                span.textContent = '?';
+                frag.appendChild(span);
+                return frag;
+            };
+            if (gardenCookies.length !== 0) stats.appendChild(listing('Garden Cookies Left to Buy', createSpecDisp(gardenCookies)));
+            if (gardenUpgrades.length !== 0) stats.appendChild(listing('Garden Upgrades Left to Buy',  createSpecDisp(gardenUpgrades)));
+
+        }
+    }
+
+    stats.appendChild(header('Miscellaneous', 'Misc'));
 	if (CM.Config.StatsPref.Misc) {
 		stats.appendChild(listing('Average Cookies Per Second (Past ' + CM.Disp.times[CM.Config.AvgCPSHist] + (CM.Config.AvgCPSHist == 0 ? ' minute' : ' minutes') + ')', document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))));
 		stats.appendChild(listing('Average Cookie Clicks Per Second (Past ' + CM.Disp.times[CM.Config.AvgClicksHist] + (CM.Config.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
@@ -2758,7 +2825,7 @@ CM.DelayInit = function() {
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 0, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 0, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, Tooltip: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Gard: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.0106';
