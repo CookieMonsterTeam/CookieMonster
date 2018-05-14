@@ -6,3 +6,5 @@ CM.Data.HalloCookies = ['Skull cookies', 'Ghost cookies', 'Bat cookies', 'Slime 
 CM.Data.ChristCookies = ['Christmas tree biscuits', 'Snowflake biscuits', 'Snowman biscuits', 'Holly biscuits', 'Candy cane biscuits', 'Bell biscuits', 'Present biscuits'];
 CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour heart biscuits', 'Weeping heart biscuits', 'Golden heart biscuits', 'Eternal heart biscuits'];
 
+CM.Data.GardenCookies = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Wheat slims'];
+CM.Data.GardenUpgrades = ['Green yeast digestives', 'Fern tea', 'Ichor syrup'];
