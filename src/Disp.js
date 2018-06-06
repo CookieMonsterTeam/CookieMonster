@@ -617,8 +617,12 @@ CM.Disp.CreateUpgradeBar = function() {
 }
 
 CM.Disp.ToggleUpBarColor = function() {
-	if (CM.Config.UpBarColor == 1) {
+	if (CM.Config.UpBarColor == 0) {
 		CM.Disp.UpgradeBar.style.display = '';
+		CM.Disp.UpdateUpgrades();
+	}
+	else if (CM.Config.UpBarColor == 1) {
+		CM.Disp.UpgradeBar.style.display = 'none';
 		CM.Disp.UpdateUpgrades();
 	}
 	else {
@@ -628,7 +632,7 @@ CM.Disp.ToggleUpBarColor = function() {
 }
 
 CM.Disp.UpdateUpgrades = function() {
-	if (CM.Config.UpBarColor == 1) {
+	if (CM.Config.UpBarColor == 0 || CM.Config.UpBarColor == 1) {
 		var blue = 0;
 		var green = 0;
 		var yellow = 0;
