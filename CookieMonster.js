@@ -2503,7 +2503,7 @@ CM.Disp.cookieTimes = [10, 15, 30, 60, 300, 600, 900, 1800];
 CM.Disp.clickTimes = [1, 5, 10, 15, 30];
 
 CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
-CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];
+CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec', 'Quattuordec', 'Quindec', 'Sexdec', 'Septendec', 'Octodec', 'Novemdec', 'Vigint', 'Unvigint', 'Duovigint', 'Trevigint', 'Quattuorvigint'];
 
 CM.Disp.TooltipWrinklerArea = 0;
 CM.Disp.TooltipWrinkler = -1;
