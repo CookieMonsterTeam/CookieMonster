@@ -97,17 +97,29 @@ CM.Disp.Beautify = function(num, frac) {
 			negative = true;
 		}
 
-		for (var i = (CM.Disp.shortScale.length - 1); i >= 0; i--) {
-			if (i < CM.Disp.metric.length && CM.Config.Scale == 1) {
-				if (num >= Math.pow(1000, i + 2)) {
-					answer = (Math.floor(num / Math.pow(1000, i + 1)) / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ' + CM.Disp.metric[i];
-					break;
+		if (CM.Config.Scale == 4) {
+			if (num > 9) {
+				var count = 0;
+				while (num > 9) {
+					count++;
+					num /= 10;
 				}
+				answer = Math.round(num * 1000) / 1000 + 'E+' + count;
 			}
-			else if (CM.Config.Scale > 1) {
-				if (num >= Math.pow(1000, i + 2)) {
-					answer = (Math.floor(num / Math.pow(1000, i + 1)) / 1000) + (CM.Config.Scale == 2 ? (' ' + CM.Disp.shortScale[i]) : ('e+' + ((i + 2) * 3)));
-					break;
+		}
+		else {
+			for (var i = (CM.Disp.shortScale.length - 1); i >= 0; i--) {
+				if (i < CM.Disp.metric.length && CM.Config.Scale == 1) {
+					if (num >= Math.pow(1000, i + 2)) {
+						answer = (Math.round(num / Math.pow(1000, i + 1)) / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ' + CM.Disp.metric[i];
+						break;
+					}
+				}
+				else if (CM.Config.Scale > 1) {
+					if (num >= Math.pow(1000, i + 2)) {
+						answer = (Math.round(num / Math.pow(1000, i + 1)) / 1000) + (CM.Config.Scale == 2 ? (' ' + CM.Disp.shortScale[i]) : ('E+' + ((i + 2) * 3)));
+						break;
+					}
 				}
 			}
 		}

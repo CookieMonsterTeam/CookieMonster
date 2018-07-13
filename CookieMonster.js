@@ -540,7 +540,7 @@ CM.ConfigData.Stats = {label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra 
 CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 5 seconds', toggle: false};
 CM.ConfigData.TimeFormat = {label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
 CM.ConfigData.SayTime = {label: ['Format Time OFF', 'Format Time ON'], desc: 'Change how time is displayed in statistics', toggle: true, func: function() {CM.Disp.ToggleSayTime();}};
-CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
+CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Engineering Notation', 'Scientific Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 
 /********
  * Data *
@@ -649,17 +649,29 @@ CM.Disp.Beautify = function(num, frac) {
 			negative = true;
 		}
 
-		for (var i = (CM.Disp.shortScale.length - 1); i >= 0; i--) {
-			if (i < CM.Disp.metric.length && CM.Config.Scale == 1) {
-				if (num >= Math.pow(1000, i + 2)) {
-					answer = (Math.floor(num / Math.pow(1000, i + 1)) / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ' + CM.Disp.metric[i];
-					break;
+		if (CM.Config.Scale == 4) {
+			if (num > 9) {
+				var count = 0;
+				while (num > 9) {
+					count++;
+					num /= 10;
 				}
+				answer = Math.round(num * 1000) / 1000 + 'E+' + count;
 			}
-			else if (CM.Config.Scale > 1) {
-				if (num >= Math.pow(1000, i + 2)) {
-					answer = (Math.floor(num / Math.pow(1000, i + 1)) / 1000) + (CM.Config.Scale == 2 ? (' ' + CM.Disp.shortScale[i]) : ('e+' + ((i + 2) * 3)));
-					break;
+		}
+		else {
+			for (var i = (CM.Disp.shortScale.length - 1); i >= 0; i--) {
+				if (i < CM.Disp.metric.length && CM.Config.Scale == 1) {
+					if (num >= Math.pow(1000, i + 2)) {
+						answer = (Math.round(num / Math.pow(1000, i + 1)) / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ' + CM.Disp.metric[i];
+						break;
+					}
+				}
+				else if (CM.Config.Scale > 1) {
+					if (num >= Math.pow(1000, i + 2)) {
+						answer = (Math.round(num / Math.pow(1000, i + 1)) / 1000) + (CM.Config.Scale == 2 ? (' ' + CM.Disp.shortScale[i]) : ('E+' + ((i + 2) * 3)));
+						break;
+					}
 				}
 			}
 		}
