@@ -100,7 +100,7 @@ CM.Disp.Beautify = function(num, frac) {
 		if (CM.Config.Scale == 4) {
 			if (num > 9) {
 				var count = 0;
-				while (num > 9) {
+				while (num >= 10) {
 					count++;
 					num /= 10;
 				}
