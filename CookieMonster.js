@@ -540,7 +540,7 @@ CM.ConfigData.Stats = {label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra 
 CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 5 seconds', toggle: false};
 CM.ConfigData.TimeFormat = {label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
 CM.ConfigData.SayTime = {label: ['Format Time OFF', 'Format Time ON'], desc: 'Change how time is displayed in statistics', toggle: true, func: function() {CM.Disp.ToggleSayTime();}};
-CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Engineering Notation', 'Scientific Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
+CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 
 /********
  * Data *
@@ -649,14 +649,46 @@ CM.Disp.Beautify = function(num, frac) {
 			negative = true;
 		}
 
-		if (CM.Config.Scale == 4) {
-			if (num > 9) {
+		if (CM.Config.Scale == 3) {
+			if (num >= 10) {
 				var count = 0;
 				while (num >= 10) {
 					count++;
 					num /= 10;
 				}
 				answer = Math.round(num * 1000) / 1000 + 'E+' + count;
+			}
+			else if (num < 1 && num != 0) {
+				var count = 0;
+				while (num < 1) {
+					count++;
+					num *= 10;
+				}
+				answer = Math.round(num * 1000) / 1000 + 'E-' + count;
+			}
+			else {
+				answer = Math.round(num * 1000) / 1000 + 'E+0';
+			}
+		}
+		else if (CM.Config.Scale == 4) {
+			if (num >= 1000) {
+				var count = 0;
+				while (num >= 1000) {
+					count++;
+					num /= 1000;
+				}
+				answer = Math.round(num * 1000) / 1000 + 'E+' + (count * 3);
+			}
+			else if (num < 1 && num != 0) {
+				var count = 0;
+				while (num < 1) {
+					count++;
+					num *= 1000;
+				}
+				answer = Math.round(num * 1000) / 1000 + 'E-' + (count * 3);
+			}
+			else {
+				answer = Math.round(num * 1000) / 1000 + 'E+0';
 			}
 		}
 		else {
@@ -667,9 +699,9 @@ CM.Disp.Beautify = function(num, frac) {
 						break;
 					}
 				}
-				else if (CM.Config.Scale > 1) {
+				else if (CM.Config.Scale == 2) {
 					if (num >= Math.pow(1000, i + 2)) {
-						answer = (Math.round(num / Math.pow(1000, i + 1)) / 1000) + (CM.Config.Scale == 2 ? (' ' + CM.Disp.shortScale[i]) : ('E+' + ((i + 2) * 3)));
+						answer = (Math.round(num / Math.pow(1000, i + 1)) / 1000) + ' ' + CM.Disp.shortScale[i];
 						break;
 					}
 				}
