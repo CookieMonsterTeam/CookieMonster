@@ -7,10 +7,10 @@ CM.ReplaceNative = function() {
 	Beautify = CM.Disp.Beautify;
 
 	CM.Backup.CalculateGains = Game.CalculateGains;
+	eval('CM.Backup.CalculateGainsMod = ' + Game.CalculateGains.toString().split('ages\');').join('ages\');CM.Sim.DateAges = Date.now();').split('var day').join('CM.Sim.DateCentury = Date.now();var day'));
 	Game.CalculateGains = function() {
-		CM.Backup.CalculateGains();
+		CM.Backup.CalculateGainsMod();
 		CM.Sim.DoSims = 1;
-		CM.Sim.Date = Date.now();
 	}
 
 	CM.Backup.tooltip = {};

@@ -2565,10 +2565,10 @@ CM.ReplaceNative = function() {
 	Beautify = CM.Disp.Beautify;
 
 	CM.Backup.CalculateGains = Game.CalculateGains;
+	eval('CM.Backup.CalculateGainsMod = ' + Game.CalculateGains.toString().split('ages\');').join('ages\');CM.Sim.DateAges = Date.now();').split('var day').join('CM.Sim.DateCentury = Date.now();var day'));
 	Game.CalculateGains = function() {
-		CM.Backup.CalculateGains();
+		CM.Backup.CalculateGainsMod();
 		CM.Sim.DoSims = 1;
-		CM.Sim.Date = Date.now();
 	}
 
 	CM.Backup.tooltip = {};
@@ -3008,9 +3008,9 @@ CM.Sim.CalculateGains = function() {
 		else if (godLvl == 3) mult *= 1.05;
 
 		var godLvl = Game.hasGod('ages');
-		if (godLvl == 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.Date / 1000 / (60 * 60 * 3)) * Math.PI * 2);
-		else if (godLvl == 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.Date / 1000 / (60 * 60 * 12)) * Math.PI*2);
-		else if (godLvl == 3) mult *= 1 + 0.15 * Math.sin((CM.Sim.Date / 1000 / (60 * 60 * 24)) * Math.PI*2);
+		if (godLvl == 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 3)) * Math.PI * 2);
+		else if (godLvl == 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 12)) * Math.PI*2);
+		else if (godLvl == 3) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 24)) * Math.PI*2);
 
 		var godLvl = Game.hasGod('decadence');
 		if (godLvl == 1) buildMult *= 0.93;
@@ -3079,7 +3079,7 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Ant larva')) eggMult *= 1.01;
 	if (CM.Sim.Has('Century egg')) {
 		// The boost increases a little every day, with diminishing returns up to +10% on the 100th day
-		var day = Math.floor((CM.Sim.Date - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
+		var day = Math.floor((CM.Sim.DateCentury - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
 		day = Math.min(day, 100);
 		CM.Cache.CentEgg = 1 + (1 - Math.pow(1 - day / 100, 3)) * 0.1;
 		eggMult *= CM.Cache.CentEgg;
