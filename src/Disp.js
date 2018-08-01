@@ -1092,10 +1092,11 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('Favicon'));
 
 	frag.appendChild(header('Tooltip'));
-	frag.appendChild(listing('Tooltip'));
+	frag.appendChild(listing('TooltipBuildUp'));
 	frag.appendChild(listing('TooltipAmor'));
 	frag.appendChild(listing('ToolWarnCaut'));
 	frag.appendChild(listing('ToolWarnCautPos'));
+	frag.appendChild(listing('TooltipGrim'));
 	frag.appendChild(listing('ToolWrink'));
 
 	frag.appendChild(header('Statistics'));
@@ -1655,7 +1656,7 @@ CM.Disp.Tooltip = function(type, name) {
 	area.id = 'CMTooltipArea';
 	l('tooltip').appendChild(area);
 
-	if (CM.Config.Tooltip == 1 && (type == 'u' || (type == 'b' && Game.buyMode == 1))) {
+	if (CM.Config.TooltipBuildUp == 1 && (type == 'u' || (type == 'b' && Game.buyMode == 1))) {
 		l('tooltip').firstChild.style.paddingBottom = '4px';
 		var tooltip = document.createElement('div');
 		tooltip.style.border = '1px solid';
@@ -1724,7 +1725,7 @@ CM.Disp.UpdateTooltip = function() {
 						price = Game.Objects[CM.Disp.tooltipName].getPrice();
 					}
 					bonus = CM.Cache[target][CM.Disp.tooltipName].bonus;
-					if (CM.Config.Tooltip == 1 && Game.buyMode == 1) {
+					if (CM.Config.TooltipBuildUp == 1 && Game.buyMode == 1) {
 						l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 						l('CMTooltipPP').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].pp, 2);
 						l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
@@ -1733,13 +1734,13 @@ CM.Disp.UpdateTooltip = function() {
 				else { // Upgrades
 					bonus = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonus;
 					price = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
-					if (CM.Config.Tooltip == 1) {
+					if (CM.Config.TooltipBuildUp == 1) {
 						l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
 						l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
 						l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
 					}
 				}
-				if (CM.Config.Tooltip == 1 && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+				if (CM.Config.TooltipBuildUp == 1 && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 					l('CMTooltipIncome').textContent = Beautify(bonus, 2);
 
 					var increase = Math.round(bonus / Game.cookiesPs * 10000);
@@ -1804,7 +1805,7 @@ CM.Disp.UpdateTooltip = function() {
 				var minigame = Game.Objects['Wizard tower'].minigame;
 				var spellCost = minigame.getSpellCost(minigame.spellsById[CM.Disp.tooltipName]);
 
-				if (CM.Config.Tooltip == 1 && spellCost <= minigame.magicM) {
+				if (CM.Config.TooltipGrim == 1 && spellCost <= minigame.magicM) {
 					l('CMTooltipArea').innerHTML = '';
 
 					l('tooltip').firstChild.style.paddingBottom = '4px';
