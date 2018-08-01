@@ -48,8 +48,8 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
 		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
 		price = Game.modifyBuildingPrice(null, price);
 		price = Math.ceil(price);
-		var giveBack = 0.5;
-		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.85;
+		var giveBack = 0.25;
+		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.5;
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;
@@ -195,9 +195,9 @@ CM.Sim.CalculateGains = function() {
 		else if (godLvl == 3) mult *= 1.05;
 
 		var godLvl = Game.hasGod('ages');
-		if (godLvl == 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.Date / 1000 / (60 * 60 * 3)) * Math.PI * 2);
-		else if (godLvl == 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.Date / 1000 / (60 * 60 * 12)) * Math.PI*2);
-		else if (godLvl == 3) mult *= 1 + 0.15 * Math.sin((CM.Sim.Date / 1000 / (60 * 60 * 24)) * Math.PI*2);
+		if (godLvl == 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 3)) * Math.PI * 2);
+		else if (godLvl == 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 12)) * Math.PI*2);
+		else if (godLvl == 3) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 24)) * Math.PI*2);
 
 		var godLvl = Game.hasGod('decadence');
 		if (godLvl == 1) buildMult *= 0.93;
@@ -237,19 +237,24 @@ CM.Sim.CalculateGains = function() {
 	}
 	// TODO Store minigame buffs?
 	milkMult *= Game.eff('milk');
-	
-	if (CM.Sim.Has('Kitten helpers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
-	if (CM.Sim.Has('Kitten workers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.125 * milkMult);
-	if (CM.Sim.Has('Kitten engineers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
-	if (CM.Sim.Has('Kitten overseers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.175 * milkMult);
-	if (CM.Sim.Has('Kitten managers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten accountants')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten specialists')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten experts')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten consultants')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten assistants to the regional manager')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.175 * milkMult);
-	if (CM.Sim.Has('Kitten marketeers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
-	if (CM.Sim.Has('Kitten angels')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
+
+	var catMult = 1;
+
+	if (CM.Sim.Has('Kitten helpers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
+	if (CM.Sim.Has('Kitten workers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.125 * milkMult);
+	if (CM.Sim.Has('Kitten engineers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
+	if (CM.Sim.Has('Kitten overseers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.175 * milkMult);
+	if (CM.Sim.Has('Kitten managers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten accountants')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten specialists')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten experts')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten consultants')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten assistants to the regional manager')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.175 * milkMult);
+	if (CM.Sim.Has('Kitten marketeers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
+	if (CM.Sim.Has('Kitten analysts')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.125 * milkMult);
+	if (CM.Sim.Has('Kitten angels')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
+
+	mult *= catMult;
 
 	var eggMult = 1;
 	if (CM.Sim.Has('Chicken egg')) eggMult *= 1.01;
@@ -266,7 +271,7 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Ant larva')) eggMult *= 1.01;
 	if (CM.Sim.Has('Century egg')) {
 		// The boost increases a little every day, with diminishing returns up to +10% on the 100th day
-		var day = Math.floor((CM.Sim.Date - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
+		var day = Math.floor((CM.Sim.DateCentury - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
 		day = Math.min(day, 100);
 		CM.Cache.CentEgg = 1 + (1 - Math.pow(1 - day / 100, 3)) * 0.1;
 		eggMult *= CM.Cache.CentEgg;
@@ -359,6 +364,7 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (minAmount >= 350) CM.Sim.Win('Tricentennial and a half');
 	if (minAmount >= 400) CM.Sim.Win('Quadricentennial');
 	if (minAmount >= 450) CM.Sim.Win('Quadricentennial and a half');
+	if (minAmount >= 500) CM.Sim.Win('Quincentennial');
 
 	if (buildingsOwned >= 100) CM.Sim.Win('Builder');
 	if (buildingsOwned >= 500) CM.Sim.Win('Architect');
@@ -501,21 +507,21 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 		CM.Sim.CopyData();
 	}
 
-	if (Game.cookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
-	if (Game.cookiesEarned >= 1000000000) CM.Sim.Win('Oblivion');
-	if (Game.cookiesEarned >= 1000000000000) CM.Sim.Win('From scratch');
-	if (Game.cookiesEarned >= 1000000000000000) CM.Sim.Win('Nihilism');
-	if (Game.cookiesEarned >= 1000000000000000000) CM.Sim.Win('Dematerialize');
-	if (Game.cookiesEarned >= 1000000000000000000000) CM.Sim.Win('Nil zero zilch');
-	if (Game.cookiesEarned >= 1000000000000000000000000) CM.Sim.Win('Transcendence');
-	if (Game.cookiesEarned >= 1000000000000000000000000000) CM.Sim.Win('Obliterate');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000) CM.Sim.Win('To crumbs, you say?');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000000) CM.Sim.Win('You get nothing');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000) CM.Sim.Win('Humble rebeginnings');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000000) CM.Sim.Win('The end of the world');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000000000) CM.Sim.Win('Oh, you\'re back');
-	if (Game.cookiesEarned >= 1000000000000000000000000000000000000000000000000) CM.Sim.Win('Lazarus');
+	if (CM.Cache.RealCookiesEarned >= 1000000) CM.Sim.Win('Sacrifice');
+	if (CM.Cache.RealCookiesEarned >= 1000000000) CM.Sim.Win('Oblivion');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000) CM.Sim.Win('From scratch');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000) CM.Sim.Win('Nihilism');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000) CM.Sim.Win('Dematerialize');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000) CM.Sim.Win('Nil zero zilch');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000) CM.Sim.Win('Transcendence');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000) CM.Sim.Win('Obliterate');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000) CM.Sim.Win('Negative void');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000) CM.Sim.Win('To crumbs, you say?');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000) CM.Sim.Win('You get nothing');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000) CM.Sim.Win('Humble rebeginnings');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000000) CM.Sim.Win('The end of the world');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000000000) CM.Sim.Win('Oh, you\'re back');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000000000000) CM.Sim.Win('Lazarus');
 
 	CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
 	CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;

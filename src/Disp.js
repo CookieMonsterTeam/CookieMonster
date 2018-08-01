@@ -97,17 +97,61 @@ CM.Disp.Beautify = function(num, frac) {
 			negative = true;
 		}
 
-		for (var i = (CM.Disp.shortScale.length - 1); i >= 0; i--) {
-			if (i < CM.Disp.metric.length && CM.Config.Scale == 1) {
-				if (num >= Math.pow(1000, i + 2)) {
-					answer = (Math.floor(num / Math.pow(1000, i + 1)) / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ' + CM.Disp.metric[i];
-					break;
+		if (CM.Config.Scale == 3) {
+			if (num >= 10) {
+				var count = 0;
+				while (num >= 10) {
+					count++;
+					num /= 10;
 				}
+				answer = Math.round(num * 1000) / 1000 + 'E+' + count;
 			}
-			else if (CM.Config.Scale > 1) {
-				if (num >= Math.pow(1000, i + 2)) {
-					answer = (Math.floor(num / Math.pow(1000, i + 1)) / 1000) + (CM.Config.Scale == 2 ? (' ' + CM.Disp.shortScale[i]) : ('e+' + ((i + 2) * 3)));
-					break;
+			else if (num < 1 && num != 0) {
+				var count = 0;
+				while (num < 1) {
+					count++;
+					num *= 10;
+				}
+				answer = Math.round(num * 1000) / 1000 + 'E-' + count;
+			}
+			else {
+				answer = Math.round(num * 1000) / 1000 + 'E+0';
+			}
+		}
+		else if (CM.Config.Scale == 4) {
+			if (num >= 1000) {
+				var count = 0;
+				while (num >= 1000) {
+					count++;
+					num /= 1000;
+				}
+				answer = Math.round(num * 1000) / 1000 + 'E+' + (count * 3);
+			}
+			else if (num < 1 && num != 0) {
+				var count = 0;
+				while (num < 1) {
+					count++;
+					num *= 1000;
+				}
+				answer = Math.round(num * 1000) / 1000 + 'E-' + (count * 3);
+			}
+			else {
+				answer = Math.round(num * 1000) / 1000 + 'E+0';
+			}
+		}
+		else {
+			for (var i = (CM.Disp.shortScale.length - 1); i >= 0; i--) {
+				if (i < CM.Disp.metric.length && CM.Config.Scale == 1) {
+					if (num >= Math.pow(1000, i + 2)) {
+						answer = (Math.round(num / Math.pow(1000, i + 1)) / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ' + CM.Disp.metric[i];
+						break;
+					}
+				}
+				else if (CM.Config.Scale == 2) {
+					if (num >= Math.pow(1000, i + 2)) {
+						answer = (Math.round(num / Math.pow(1000, i + 1)) / 1000) + ' ' + CM.Disp.shortScale[i];
+						break;
+					}
 				}
 			}
 		}
@@ -1048,10 +1092,11 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('Favicon'));
 
 	frag.appendChild(header('Tooltip'));
-	frag.appendChild(listing('Tooltip'));
+	frag.appendChild(listing('TooltipBuildUp'));
 	frag.appendChild(listing('TooltipAmor'));
 	frag.appendChild(listing('ToolWarnCaut'));
 	frag.appendChild(listing('ToolWarnCautPos'));
+	frag.appendChild(listing('TooltipGrim'));
 	frag.appendChild(listing('ToolWrink'));
 
 	frag.appendChild(header('Statistics'));
@@ -1282,8 +1327,8 @@ CM.Disp.AddMenuStats = function(title) {
 
 	stats.appendChild(header('Prestige', 'Prestige'));
 	if (CM.Config.StatsPref.Prestige) {
-		var possiblePresMax = Math.floor(Game.HowMuchPrestige(Game.cookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0)));
-		var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (Game.cookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0));
+		var possiblePresMax = Math.floor(Game.HowMuchPrestige(CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0)));
+		var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0));
 
 		stats.appendChild(listing(listingQuest('Prestige Level (CUR / MAX)', 'PrestMaxTooltipPlaceholder'),  document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePresMax))));
 		var cookiesNextFrag = document.createDocumentFragment();
@@ -1418,8 +1463,8 @@ CM.Disp.AddMenuStats = function(title) {
 
 	stats.appendChild(header('Miscellaneous', 'Misc'));
 	if (CM.Config.StatsPref.Misc) {
-		stats.appendChild(listing('Average Cookies Per Second (Past ' + CM.Disp.times[CM.Config.AvgCPSHist] + (CM.Config.AvgCPSHist == 0 ? ' minute' : ' minutes') + ')', document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))));
-		stats.appendChild(listing('Average Cookie Clicks Per Second (Past ' + CM.Disp.times[CM.Config.AvgClicksHist] + (CM.Config.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
+		stats.appendChild(listing('Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Config.AvgCPSHist] / 60) + (CM.Config.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))));
+		stats.appendChild(listing('Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Config.AvgClicksHist] + (CM.Config.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
 		stats.appendChild(listing('Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
 	}
 
@@ -1611,7 +1656,7 @@ CM.Disp.Tooltip = function(type, name) {
 	area.id = 'CMTooltipArea';
 	l('tooltip').appendChild(area);
 
-	if (CM.Config.Tooltip == 1 && (type == 'u' || (type == 'b' && Game.buyMode == 1))) {
+	if (CM.Config.TooltipBuildUp == 1 && (type == 'u' || (type == 'b' && Game.buyMode == 1))) {
 		l('tooltip').firstChild.style.paddingBottom = '4px';
 		var tooltip = document.createElement('div');
 		tooltip.style.border = '1px solid';
@@ -1680,7 +1725,7 @@ CM.Disp.UpdateTooltip = function() {
 						price = Game.Objects[CM.Disp.tooltipName].getPrice();
 					}
 					bonus = CM.Cache[target][CM.Disp.tooltipName].bonus;
-					if (CM.Config.Tooltip == 1 && Game.buyMode == 1) {
+					if (CM.Config.TooltipBuildUp == 1 && Game.buyMode == 1) {
 						l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 						l('CMTooltipPP').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].pp, 2);
 						l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
@@ -1689,13 +1734,13 @@ CM.Disp.UpdateTooltip = function() {
 				else { // Upgrades
 					bonus = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonus;
 					price = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
-					if (CM.Config.Tooltip == 1) {
+					if (CM.Config.TooltipBuildUp == 1) {
 						l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
 						l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
 						l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
 					}
 				}
-				if (CM.Config.Tooltip == 1 && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+				if (CM.Config.TooltipBuildUp == 1 && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 					l('CMTooltipIncome').textContent = Beautify(bonus, 2);
 
 					var increase = Math.round(bonus / Game.cookiesPs * 10000);
@@ -1760,7 +1805,7 @@ CM.Disp.UpdateTooltip = function() {
 				var minigame = Game.Objects['Wizard tower'].minigame;
 				var spellCost = minigame.getSpellCost(minigame.spellsById[CM.Disp.tooltipName]);
 
-				if (CM.Config.Tooltip == 1 && spellCost <= minigame.magicM) {
+				if (CM.Config.TooltipGrim == 1 && spellCost <= minigame.magicM) {
 					l('CMTooltipArea').innerHTML = '';
 
 					l('tooltip').firstChild.style.paddingBottom = '4px';
@@ -1947,10 +1992,11 @@ CM.Disp.goldenShimmer;
 CM.Disp.seasonPopShimmer;
 CM.Disp.lastAscendState = -1;
 
-CM.Disp.times = [1, 5, 10, 15, 30];
+CM.Disp.cookieTimes = [10, 15, 30, 60, 300, 600, 900, 1800];
+CM.Disp.clickTimes = [1, 5, 10, 15, 30];
 
 CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
-CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec'];
+CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec', 'Quattuordec', 'Quindec', 'Sexdec', 'Septendec', 'Octodec', 'Novemdec', 'Vigint', 'Unvigint', 'Duovigint', 'Trevigint', 'Quattuorvigint'];
 
 CM.Disp.TooltipWrinklerArea = 0;
 CM.Disp.TooltipWrinkler = -1;
