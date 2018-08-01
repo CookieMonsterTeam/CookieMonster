@@ -48,8 +48,8 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
 		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
 		price = Game.modifyBuildingPrice(null, price);
 		price = Math.ceil(price);
-		var giveBack = 0.5;
-		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.85;
+		var giveBack = 0.25;
+		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.5;
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;
@@ -237,19 +237,24 @@ CM.Sim.CalculateGains = function() {
 	}
 	// TODO Store minigame buffs?
 	milkMult *= Game.eff('milk');
-	
-	if (CM.Sim.Has('Kitten helpers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
-	if (CM.Sim.Has('Kitten workers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.125 * milkMult);
-	if (CM.Sim.Has('Kitten engineers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
-	if (CM.Sim.Has('Kitten overseers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.175 * milkMult);
-	if (CM.Sim.Has('Kitten managers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten accountants')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten specialists')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten experts')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten consultants')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
-	if (CM.Sim.Has('Kitten assistants to the regional manager')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.175 * milkMult);
-	if (CM.Sim.Has('Kitten marketeers')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
-	if (CM.Sim.Has('Kitten angels')) mult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
+
+	var catMult = 1;
+
+	if (CM.Sim.Has('Kitten helpers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
+	if (CM.Sim.Has('Kitten workers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.125 * milkMult);
+	if (CM.Sim.Has('Kitten engineers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
+	if (CM.Sim.Has('Kitten overseers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.175 * milkMult);
+	if (CM.Sim.Has('Kitten managers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten accountants')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten specialists')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten experts')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten consultants')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.2 * milkMult);
+	if (CM.Sim.Has('Kitten assistants to the regional manager')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.175 * milkMult);
+	if (CM.Sim.Has('Kitten marketeers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
+	if (CM.Sim.Has('Kitten analysts')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.125 * milkMult);
+	if (CM.Sim.Has('Kitten angels')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
+
+	mult *= catMult;
 
 	var eggMult = 1;
 	if (CM.Sim.Has('Chicken egg')) eggMult *= 1.01;
@@ -359,6 +364,7 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (minAmount >= 350) CM.Sim.Win('Tricentennial and a half');
 	if (minAmount >= 400) CM.Sim.Win('Quadricentennial');
 	if (minAmount >= 450) CM.Sim.Win('Quadricentennial and a half');
+	if (minAmount >= 500) CM.Sim.Win('Quincentennial');
 
 	if (buildingsOwned >= 100) CM.Sim.Win('Builder');
 	if (buildingsOwned >= 500) CM.Sim.Win('Architect');
