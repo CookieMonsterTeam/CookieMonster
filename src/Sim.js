@@ -187,7 +187,7 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('An itchy sweater')) mult *= 1.01;
 	if (CM.Sim.Has('Santa\'s dominion')) mult *= 1.2;
 
-	var buildMult=1;
+	var buildMult = 1;
 	if (Game.hasGod) {
 		var godLvl = Game.hasGod('asceticism');
 		if (godLvl == 1) mult *= 1.15;
@@ -409,6 +409,7 @@ CM.Sim.BuyBuildings = function(amount, target) {
 			if (me.amount >= 300) CM.Sim.Win('Extreme polydactyly');
 			if (me.amount >= 400) CM.Sim.Win('Dr. T');
 			if (me.amount >= 500) CM.Sim.Win('Thumbs, phalanges, metacarpals');
+			if (me.amount >= 600) CM.Sim.Win('With her finger and her thumb');
 		}
 		else {
 			for (var j in Game.Objects[me.name].tieredAchievs) {
