@@ -2810,7 +2810,7 @@ CM.HasReplaceNativeGrimoireDraw = false;
 CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 3, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, TooltipBuildUp: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, TooltipGrim:1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '2.0109';
+CM.VersionMajor = '2.012';
 CM.VersionMinor = '1';
 
 /*******
@@ -3002,7 +3002,7 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('An itchy sweater')) mult *= 1.01;
 	if (CM.Sim.Has('Santa\'s dominion')) mult *= 1.2;
 
-	var buildMult=1;
+	var buildMult = 1;
 	if (Game.hasGod) {
 		var godLvl = Game.hasGod('asceticism');
 		if (godLvl == 1) mult *= 1.15;
@@ -3224,6 +3224,7 @@ CM.Sim.BuyBuildings = function(amount, target) {
 			if (me.amount >= 300) CM.Sim.Win('Extreme polydactyly');
 			if (me.amount >= 400) CM.Sim.Win('Dr. T');
 			if (me.amount >= 500) CM.Sim.Win('Thumbs, phalanges, metacarpals');
+			if (me.amount >= 600) CM.Sim.Win('With her finger and her thumb');
 		}
 		else {
 			for (var j in Game.Objects[me.name].tieredAchievs) {
