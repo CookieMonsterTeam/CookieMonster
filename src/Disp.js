@@ -1104,6 +1104,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('UpStats'));
 	frag.appendChild(listing('TimeFormat'));
 	frag.appendChild(listing('SayTime'));
+	frag.appendChild(listing('GrimoireBar'));
 
 	frag.appendChild(header('Other'));
 	frag.appendChild(listing('Scale'));
