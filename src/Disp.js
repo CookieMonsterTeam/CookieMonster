@@ -1492,6 +1492,18 @@ CM.Disp.RefreshMenu = function() {
 	if (CM.Config.UpStats && Game.onMenu == 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps == 0) Game.UpdateMenu();
 }
 
+CM.Disp.FixMouseY = function(target) {
+	if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+		var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
+		Game.mouseY -= timerBarHeight;
+		target();
+		Game.mouseY += timerBarHeight;
+	}
+	else {
+		target();
+	}
+}
+
 CM.Disp.UpdateTooltipLocation = function() {
 	if (Game.tooltip.origin == 'store') {
 		var warnCautOffset = 0;
@@ -1881,20 +1893,9 @@ CM.Disp.AddWrinklerAreaDetect = function() {
 CM.Disp.CheckWrinklerTooltip = function() {
 	if (CM.Config.ToolWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) {
 		var showingTooltip = false;
-		var mouseInWrinkler = function (x, y, rect) {
-			var dx = x + Math.sin(-rect.r) * (-(rect.h / 2 - rect.o)), dy = y + Math.cos(-rect.r) * (-(rect.h / 2 - rect.o));
-			var h1 = Math.sqrt(dx * dx + dy * dy);
-			var currA = Math.atan2(dy, dx);
-			var newA = currA - rect.r;
-			var x2 = Math.cos(newA) * h1;
-			var y2 = Math.sin(newA) * h1;
-			if (x2 > -0.5 * rect.w && x2 < 0.5 * rect.w && y2 > -0.5 * rect.h && y2 < 0.5 * rect.h) return true;
-			return false;
-		}
 		for (var i in Game.wrinklers) {
 			var me = Game.wrinklers[i];
-			var rect = {w: 100, h: 200, r: (-me.r) * Math.PI / 180, o: 10};
-			if (me.phase > 0 && Game.LeftBackground && Game.mouseX < Game.LeftBackground.canvas.width && mouseInWrinkler(Game.mouseX - me.x, Game.mouseY - me.y, rect)) {
+			if (me.phase > 0 && me.selected) {
 				showingTooltip = true;
 				if (CM.Disp.TooltipWrinklerCache[i] == 0) {
 					var placeholder = document.createElement('div');

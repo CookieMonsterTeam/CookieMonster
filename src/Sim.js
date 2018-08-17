@@ -49,7 +49,7 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
 		price = Game.modifyBuildingPrice(null, price);
 		price = Math.ceil(price);
 		var giveBack = 0.25;
-		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.5;
+		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack = 0.5;
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;

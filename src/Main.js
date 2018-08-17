@@ -29,17 +29,14 @@ CM.ReplaceNative = function() {
 		CM.Disp.UpdateTooltipLocation();
 	}
 
+	CM.Backup.UpdateWrinklers = Game.UpdateWrinklers;
+	Game.UpdateWrinklers = function() {
+		CM.Disp.FixMouseY(CM.Backup.UpdateWrinklers);
+	}
+
 	CM.Backup.UpdateSpecial = Game.UpdateSpecial;
 	Game.UpdateSpecial = function() {
-		if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
-			var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
-			Game.mouseY -= timerBarHeight;
-			CM.Backup.UpdateSpecial();
-			Game.mouseY += timerBarHeight;
-		}
-		else {
-			CM.Backup.UpdateSpecial();
-		}
+		CM.Disp.FixMouseY(CM.Backup.UpdateSpecial);
 	}
 
 	// Probably better to load per minigame
