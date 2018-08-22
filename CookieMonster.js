@@ -1720,6 +1720,20 @@ CM.Disp.AddMenuStats = function(title) {
 		return div;
 	}
 
+	var averageCookiesListing = function(period, multiplier) {
+		if (!period) {
+			period = 'Second'
+		}
+		if (!multiplier) {
+			multiplier = 1
+		}
+
+		var name = 'Average Cookies Per ' + period + ' (Past ' + (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Config.AvgCPSHist] / 60) + (CM.Config.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')'
+		var text = document.createTextNode(Beautify(CM.Cache.AvgCPS * multiplier, 3))
+
+		return listing(name, text)
+	}
+
 	var listingQuest = function(text, placeholder) {
 		var frag = document.createDocumentFragment();
 		frag.appendChild(document.createTextNode(text + ' '));
@@ -2018,7 +2032,10 @@ CM.Disp.AddMenuStats = function(title) {
 
 	stats.appendChild(header('Miscellaneous', 'Misc'));
 	if (CM.Config.StatsPref.Misc) {
-		stats.appendChild(listing('Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Config.AvgCPSHist] / 60) + (CM.Config.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))));
+		stats.appendChild(averageCookiesListing('Second', 1))
+		stats.appendChild(averageCookiesListing('Minute', 60))
+		stats.appendChild(averageCookiesListing('Hour', 60 * 60))
+		stats.appendChild(averageCookiesListing('Day', 60 * 60 * 24))
 		stats.appendChild(listing('Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Config.AvgClicksHist] + (CM.Config.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
 		stats.appendChild(listing('Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
 	}
