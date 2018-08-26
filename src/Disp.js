@@ -945,13 +945,18 @@ CM.Disp.AddExtraGarden = function() {
             }
 
             // Populate missing seed panel with new seeds
-            CM.Disp.GardenMissingSeeds.forEach(function (value, index) {
+            CM.Disp.GardenMissingSeeds.forEach(function (plant, index) {
                 var missedSeed = document.createElement('div');
                 missedSeed.id = "missingSeed-" + index;
-                missedSeed.className = "disabled";
                 missedSeed.style = "position: relative;cursor: pointer;display: inline-block;width: 40px;height: 40px;";
 
-                missedSeed.appendChild(value.l.firstChild);
+                if (!plant.hasOwnProperty("seedIcon")) {
+                    plant.seedIcon = plant.l.firstChild.cloneNode(true);
+                    // Just to avoid multiple elements with single id, add extra -1.
+                    plant.seedIcon.id = plant.seedIcon.id + "-1";
+                }
+
+                missedSeed.appendChild(plant.seedIcon);
 
                 missedSeed.onmouseout = function() { Game.tooltip.hide(); };
 
@@ -963,7 +968,7 @@ CM.Disp.AddExtraGarden = function() {
                 title.className = 'name';
                 title.style.marginBottom = '4px';
                 title.style.textAlign = 'center';
-                title.textContent = value.name + " Seed Recipes";
+                title.textContent = plant.name + " Seed Recipes";
                 missing.appendChild(title);
 
                 var listing = function(name, chance) {
@@ -978,8 +983,8 @@ CM.Disp.AddExtraGarden = function() {
                 };
                 var recipes = document.createElement('div');
                 recipes.style.textAlign = 'center';
-                CM.Data.GardenSeedRecipes[value.id].forEach(function (recipe) {
-                	// TODO: Missing Sugar Lump Upgrade
+                CM.Data.GardenSeedRecipes[plant.id].forEach(function (recipe) {
+                    // TODO: Missing Sugar Lump Upgrade
                     recipes.appendChild(listing(recipe.recipe, recipe.chance * (minigame.soil === 4 ? 3 : 1)));
                 });
                 missing.appendChild(recipes);
