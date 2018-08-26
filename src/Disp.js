@@ -961,13 +961,13 @@ CM.Disp.CollectWrinklers = function() {
 CM.Disp.GardenMissingSeeds = [];
 
 CM.Disp.AddExtraGarden = function() {
-    if (Game.Objects['Farm'].minigameLoaded) {
+    if (CM.Config.ToolGarden === 1 && Game.Objects['Farm'].minigameLoaded) {
     	var minigame = Game.Objects['Farm'].minigame;
 
     	if (CM.Disp.GardenMissingSeeds.length !== (minigame.plantsN - minigame.plantsUnlockedN)) {
     		CM.Disp.CollectMissingSeeds();
 
-            if (l('gardenPanel').childNodes.length < 7) {
+            if (l('missingSeeds') == null) {
                 var title = document.createElement('div');
                 title.className = "title gardenPanelLabel";
                 title.innerHTML = "Missing Seeds";
@@ -1197,6 +1197,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('ToolWarnCautPos'));
 	frag.appendChild(listing('TooltipGrim'));
 	frag.appendChild(listing('ToolWrink'));
+	frag.appendChild(listing('ToolGarden'));
 
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
@@ -2107,6 +2108,16 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 		l('CMTooltipWrinkler').textContent = Beautify(sucked);
 	}
 }
+
+// This will remove missing garden seeds when user disable it in menu.
+CM.Disp.CheckGardenMenu = function () {
+    if (CM.Config.ToolGarden === 0 && Game.Objects['Farm'].minigameLoaded && l('missingSeeds') != null) {
+    	var gardenPanel = l('gardenPanel');
+        gardenPanel.removeChild(gardenPanel.lastChild);
+        gardenPanel.removeChild(gardenPanel.lastChild);
+        gardenPanel.removeChild(gardenPanel.lastChild);
+    }
+};
 
 CM.Disp.UpdateAscendState = function() {
 	if (Game.OnAscend) {

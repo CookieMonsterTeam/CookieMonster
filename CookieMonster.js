@@ -537,6 +537,7 @@ CM.ConfigData.ToolWarnCaut = {label: ['Tooltip Warning/Caution OFF', 'Tooltip Wa
 CM.ConfigData.ToolWarnCautPos = {label: ['Tooltip Warning/Caution Position (Left)', 'Tooltip Warning/Caution Position (Bottom)'], desc: 'Placement of the warning/caution boxes', toggle: false, func: function() {CM.Disp.ToggleToolWarnCautPos();}};
 CM.ConfigData.TooltipGrim = {label: ['Grimoire Tooltip Information OFF', 'Grimoire Tooltip Information ON'], desc: 'Extra information in tooltip for grimoire', toggle: true};
 CM.ConfigData.ToolWrink = {label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
+CM.ConfigData.ToolGarden = {label: ['Missing Garden Seeds OFF', 'Missing Garden Seeds ON'], desc: 'Shows missing Garden seeds under unlocked seeds in Garden Minigame', toggle: true};
 CM.ConfigData.Stats = {label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra Cookie Monster statistics!', toggle: true};
 CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 5 seconds', toggle: false};
 CM.ConfigData.TimeFormat = {label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
@@ -1552,13 +1553,13 @@ CM.Disp.CollectWrinklers = function() {
 CM.Disp.GardenMissingSeeds = [];
 
 CM.Disp.AddExtraGarden = function() {
-    if (Game.Objects['Farm'].minigameLoaded) {
+    if (CM.Config.ToolGarden === 1 && Game.Objects['Farm'].minigameLoaded) {
     	var minigame = Game.Objects['Farm'].minigame;
 
     	if (CM.Disp.GardenMissingSeeds.length !== (minigame.plantsN - minigame.plantsUnlockedN)) {
     		CM.Disp.CollectMissingSeeds();
 
-            if (l('gardenPanel').childNodes.length < 7) {
+            if (l('missingSeeds') == null) {
                 var title = document.createElement('div');
                 title.className = "title gardenPanelLabel";
                 title.innerHTML = "Missing Seeds";
@@ -1788,6 +1789,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('ToolWarnCautPos'));
 	frag.appendChild(listing('TooltipGrim'));
 	frag.appendChild(listing('ToolWrink'));
+	frag.appendChild(listing('ToolGarden'));
 
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
@@ -2699,6 +2701,16 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 	}
 }
 
+// This will remove missing garden seeds when user disable it in menu.
+CM.Disp.CheckGardenMenu = function () {
+    if (CM.Config.ToolGarden === 0 && Game.Objects['Farm'].minigameLoaded && l('missingSeeds') != null) {
+    	var gardenPanel = l('gardenPanel');
+        gardenPanel.removeChild(gardenPanel.lastChild);
+        gardenPanel.removeChild(gardenPanel.lastChild);
+        gardenPanel.removeChild(gardenPanel.lastChild);
+    }
+};
+
 CM.Disp.UpdateAscendState = function() {
 	if (Game.OnAscend) {
 		l('game').style.bottom = '0px';
@@ -2981,6 +2993,9 @@ CM.Loop = function() {
 		CM.Disp.CheckWrinklerTooltip();
 		CM.Disp.UpdateWrinklerTooltip();
 
+        // Update Garden Menu
+        CM.Disp.CheckGardenMenu();
+
 		// Change menu refresh interval
 		CM.Disp.RefreshMenu();
 	}
@@ -3054,7 +3069,7 @@ CM.HasReplaceNativeGrimoireDraw = false;
 CM.HasReplaceNativeGardenLaunch = false;
 CM.HasReplaceNativeGardenDraw = false;
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 3, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, TooltipBuildUp: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, TooltipGrim:1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, GrimoireBar: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Gard: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 3, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, TooltipBuildUp: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, TooltipGrim:1, ToolWrink: 1, ToolGarden: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, GrimoireBar: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Gard: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.012';
