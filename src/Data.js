@@ -16,7 +16,7 @@ CM.Data.GardenSeedRecipes = [[{recipe: "2x Baker’s wheat", chance: 0.2}, {reci
     [{recipe: "1x Baker’s Wheat, 1x Gildmillet", chance: 0.03},{recipe: "2x mature Clover, less than 5x total clover", chance: 0.007}],
     [{recipe: "1x Baker’s Wheat, 1x Gildmillet", chance: 0.0007},{recipe: "2x mature Clover, less than 5x total clover", chance: 0.0001},{recipe: "4x or more Clover", chance: 0.0007}],
     [{recipe: "1x Clover, 1x Gildmillet", chance: 0.02}],
-    [{recipe: "1x Shimmerlily, 1x Cronerice", chance: 0.01},{recipe: "1x Wrinklegill, 1x Cronerice)", chance: 0.002}],
+    [{recipe: "1x Shimmerlily, 1x Cronerice", chance: 0.01},{recipe: "1x Wrinklegill, 1x Cronerice", chance: 0.002}],
     [{recipe: "2x Baker’s Wheat", chance: 0.001}],
     [{recipe: "1x Baker’s Wheat, 1x Brown Mold", chance: 0.1}],
     [{recipe: "1x Chocoroot, 1x any White Mildew", chance: 0.1}],
