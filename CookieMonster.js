@@ -554,6 +554,41 @@ CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour hear
 
 CM.Data.GardenCookies = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Wheat slims'];
 CM.Data.GardenUpgrades = ['Green yeast digestives', 'Fern tea', 'Ichor syrup'];
+
+CM.Data.GardenSeedRecipes = [[{recipe: "2x Baker’s wheat", chance: 0.2}, {recipe: "2x Thumbcorn", chance: 0.05}],
+    [{recipe: "2x Baker’s wheat", chance: 0.05}, {recipe: "2x Thumbcorn", chance: 0.1}, {recipe: "2x Cronerice", chance: 0.02}],
+    [{recipe: "1x Baker’s wheat, 1x Thumbcorn", chance: 0.01}],
+    [{recipe: "1x Cronerice, 1x Thumbcorn", chance: 0.03}],
+    [{recipe: "1x Baker’s Wheat, 1x Gildmillet", chance: 0.03},{recipe: "2x mature Clover, less than 5x total clover", chance: 0.007}],
+    [{recipe: "1x Baker’s Wheat, 1x Gildmillet", chance: 0.0007},{recipe: "2x mature Clover, less than 5x total clover", chance: 0.0001},{recipe: "4x or more Clover", chance: 0.0007}],
+    [{recipe: "1x Clover, 1x Gildmillet", chance: 0.02}],
+    [{recipe: "1x Shimmerlily, 1x Cronerice", chance: 0.01},{recipe: "1x Wrinklegill, 1x Cronerice)", chance: 0.002}],
+    [{recipe: "2x Baker’s Wheat", chance: 0.001}],
+    [{recipe: "1x Baker’s Wheat, 1x Brown Mold", chance: 0.1}],
+    [{recipe: "1x Chocoroot, 1x any White Mildew", chance: 0.1}],
+    [{recipe: "1x Brown Mold, 1x or less any White Mildew", chance: 0.5}],
+    [{recipe: "1x White Mildew, 1x or less any Brown Mold", chance: 0.5}],
+    [{recipe: "1x Mature Meddleweed, no more than 3x total Meddleweed", chance: 0.15}],
+    [{recipe: "1x Shimmerlily, 1x White Chocoroot", chance: 0.01}],
+    [{recipe: "1x Shimmerlily, 1x Whiskerbloom", chance: 0.05},{recipe: "2x Chimerose", chance: 0.005}],
+    [{recipe: "2x Whiskerbloom", chance: 0.05}],
+    [{recipe: "1x Chocoroot, 1x Keenmoss", chance: 0.005}],
+    [{recipe: "1x Cronerice, 1x Keenmoss", chance: 0.005},{recipe: "1x Cronerice, 1x White Mildew", chance: 0.005},{recipe: "Exactly 1x Mature Wardlichen, 0x other Wardlichen", chance: 0.05}],
+    [{recipe: "1x Green Rot, 1x Brown Mold", chance: 0.1},{recipe: "Exactly 1x Mature Keenmoss, 0x other Keenmoss", chance: 0.05}],
+    [{recipe: "1x Bakeberry, 1x Chocoroot", chance: 0.01}],
+    [{recipe: "8x Queenbeet", chance: 0.001}],
+    [{recipe: "2x Queenbeet", chance: 0.001}],
+    [{recipe: "1x Mature Crumbspore, 0x other Crumbspore", chance: 0.07},{recipe: "2x Doughshroom", chance: 0.005}],
+    [{recipe: "2x Crumbspore", chance: 0.005},{recipe: "1x mature Doughshroom, 0x other Doughshroom", chance: 0.07}],
+    [{recipe: "1x Crumbspore, 1x Thumbcorn", chance: 0.01}],
+    [{recipe: "1x Crumbspore, 1x Shimmerlily", chance: 0.03}],
+    [{recipe: "1x Doughshroom, 1x Green Rot", chance: 0.02}],
+    [{recipe: "1x Crumbspore, 1x Brown Mold", chance: 0.06}],
+    [{recipe: "1x White Mildew, 1x Clover", chance: 0.05}],
+    [{recipe: "1 Wrinklegill, 1x Elderwort", chance: 0.001},{recipe: "5x Elderwort", chance: 0.001},{recipe: "3x Any Duketater", chance: 0.005},{recipe: "4x Any Doughshrom", chance: 0.002},{recipe: "5x Queenbeet", chance: 0.001},{recipe: "Exactly 1x Mature Shriekbulb, 0x other Shriekbulb", chance: 0.005}],
+    [{recipe: "1x Baker’s Wheat, 1x White Chocoroot", chance: 0.002}],
+    [{recipe: "3x Tidygrass, 3x Elderwort", chance: 0.002}],
+    [{recipe: "1x Elderwort, 1x Crumbspore", chance: 0.002}]];
 /********
  * Disp *
  ********/
@@ -1511,6 +1546,105 @@ CM.Disp.CollectWrinklers = function() {
 		}
 	}
 }
+
+/* Start Extra Garden */
+
+CM.Disp.GardenMissingSeeds = [];
+
+CM.Disp.AddExtraGarden = function() {
+    if (Game.Objects['Farm'].minigameLoaded) {
+    	var minigame = Game.Objects['Farm'].minigame;
+
+    	if (CM.Disp.GardenMissingSeeds.length !== (minigame.plantsN - minigame.plantsUnlockedN)) {
+    		CM.Disp.CollectMissingSeeds();
+
+            if (l('gardenPanel').childNodes.length < 7) {
+                var title = document.createElement('div');
+                title.className = "title gardenPanelLabel";
+                title.innerHTML = "Missing Seeds";
+                l('gardenPanel').appendChild(title);
+
+                var line = document.createElement('div');
+                line.className = 'line';
+                l('gardenPanel').appendChild(line);
+
+                var missingSeeds = document.createElement('div');
+                missingSeeds.id = 'missingSeeds';
+                l('gardenPanel').appendChild(missingSeeds);
+            }
+
+            // Clean UP all missing seeds
+            var missingSeedPanel = l('gardenPanel').childNodes[l('gardenPanel').childNodes.length - 1];
+            while (missingSeedPanel.firstChild) {
+                missingSeedPanel.removeChild(missingSeedPanel.firstChild);
+            }
+
+            // Populate missing seed panel with new seeds
+            CM.Disp.GardenMissingSeeds.forEach(function (plant, index) {
+                var missedSeed = document.createElement('div');
+                missedSeed.id = "missingSeed-" + index;
+                missedSeed.style = "position: relative;cursor: pointer;display: inline-block;width: 40px;height: 40px;";
+
+                if (!plant.hasOwnProperty("seedIcon")) {
+                    plant.seedIcon = plant.l.firstChild.cloneNode(true);
+                    // Just to avoid multiple elements with single id, add extra -1.
+                    plant.seedIcon.id = plant.seedIcon.id + "-1";
+                }
+
+                missedSeed.appendChild(plant.seedIcon);
+
+                missedSeed.onmouseout = function() { Game.tooltip.hide(); };
+
+                var placeholder = document.createElement('div');
+                var missing = document.createElement('div');
+                missing.style.minWidth = '300px';
+                missing.style.marginBottom = '4px';
+                var title = document.createElement('div');
+                title.className = 'name';
+                title.style.marginBottom = '4px';
+                title.style.textAlign = 'center';
+                title.textContent = plant.name + " Seed Recipes";
+                missing.appendChild(title);
+
+                var listing = function(name, chance) {
+                    var div = document.createElement('div');
+                    div.className = 'listing';
+                    var b = document.createElement('b');
+                    b.appendChild(document.createTextNode(name));
+                    b.appendChild(document.createTextNode(' : '));
+                    b.appendChild(document.createTextNode(chance.toFixed(4)));
+                    div.appendChild(b);
+                    return div;
+                };
+                var recipes = document.createElement('div');
+                recipes.style.textAlign = 'center';
+                CM.Data.GardenSeedRecipes[plant.id].forEach(function (recipe) {
+                    // TODO: Missing Sugar Lump Upgrade
+                    recipes.appendChild(listing(recipe.recipe, recipe.chance * (minigame.soil === 4 ? 3 : 1)));
+                });
+                missing.appendChild(recipes);
+                placeholder.appendChild(missing);
+
+                missedSeed.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML));};
+                missingSeedPanel.appendChild(missedSeed);
+            });
+        }
+    }
+};
+
+CM.Disp.CollectMissingSeeds = function () {
+    CM.Disp.GardenMissingSeeds = [];
+
+    var minigame = Game.Objects['Farm'].minigame;
+
+    minigame.plantsById.forEach(function (plant) {
+    	if (plant.unlocked === 0) {
+    		CM.Disp.GardenMissingSeeds.push(plant);
+		}
+	});
+};
+
+/* End Extra Garden */
 
 CM.Disp.CreateTooltip = function(placeholder, text, minWidth) {
 	CM.Disp[placeholder] = document.createElement('div');
@@ -2673,9 +2807,11 @@ CM.ReplaceNative = function() {
 	CM.Backup.scriptLoaded = Game.scriptLoaded;
 	Game.scriptLoaded = function(who, script) {
 		CM.Backup.scriptLoaded(who, script);
-		CM.Disp.AddTooltipGrimoire()
+		CM.Disp.AddTooltipGrimoire();
 		CM.ReplaceNativeGrimoire();
-	}
+        // Add Garden Information
+        CM.ReplaceNativeGarden();
+	};
 
 	CM.Backup.RebuildUpgrades = Game.RebuildUpgrades;
 	Game.RebuildUpgrades = function() {
@@ -2747,6 +2883,43 @@ CM.ReplaceNativeGrimoireDraw = function() {
 		CM.HasReplaceNativeGrimoireDraw = true;
 	}
 }
+
+
+/* Extra Garden Start */
+// Copy from Grimoire and recreated for garden.
+
+CM.ReplaceNativeGarden = function() {
+    CM.ReplaceNativeGardenLaunch();
+    CM.ReplaceNativeGardenDraw();
+};
+
+CM.ReplaceNativeGardenLaunch = function() {
+    if (!CM.HasReplaceNativeGardenLaunch && Game.Objects['Farm'].minigameLoaded) {
+        var minigame = Game.Objects['Farm'].minigame;
+        CM.Backup.GardenLaunch = minigame.launch;
+        eval('CM.Backup.GardenLaunchMod = ' + minigame.launch.toString().split('=this').join('= Game.Objects[\'Farm\'].minigame'));
+        Game.Objects['Farm'].minigame.launch = function() {
+            CM.Backup.GardenLaunchMod();
+            CM.HasReplaceNativeGardenDraw = false;
+            CM.ReplaceNativeGardenDraw();
+        };
+        CM.HasReplaceNativeGardenLaunch = true;
+    }
+};
+
+CM.ReplaceNativeGardenDraw = function() {
+    if (!CM.HasReplaceNativeGardenDraw && Game.Objects['Farm'].minigameLoaded) {
+        var minigame = Game.Objects['Farm'].minigame;
+        CM.Backup.GardenDraw = minigame.draw;
+        Game.Objects['Farm'].minigame.draw = function() {
+            CM.Backup.GardenDraw();
+            CM.Disp.AddExtraGarden();
+        };
+        CM.HasReplaceNativeGardenDraw = true;
+    }
+};
+
+/* Extra Garden End */
 
 CM.Loop = function() {
 	if (CM.Disp.lastAscendState != Game.OnAscend) {
@@ -2859,6 +3032,7 @@ CM.DelayInit = function() {
 	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
 	CM.ReplaceNativeGrimoire();
+    CM.ReplaceNativeGarden();
 	Game.CalculateGains();
 	CM.LoadConfig(); // Must be after all things are created!
 	CM.Disp.lastAscendState = Game.OnAscend;
@@ -2874,11 +3048,14 @@ CM.DelayInit = function() {
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
 
+CM.HasReplaceNativeGardenLaunch = false;
+CM.HasReplaceNativeGardenDraw = false;
+
 CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 3, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, TooltipBuildUp: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, TooltipGrim:1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, GrimoireBar: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.012';
-CM.VersionMinor = '2';
+CM.VersionMinor = '3';
 
 /*******
  * Sim *
