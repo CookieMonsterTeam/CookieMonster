@@ -1563,23 +1563,26 @@ CM.Disp.AddMenuStats = function(title) {
 
     // Collect missing garden Cookies and Upgrades.
     var gardenDisp = false;
-    var gardenCookies = [];
-    CM.Data.GardenCookies.forEach(function (element) {
-        if (!Game.Has(element)) {
-            gardenCookies.push(element);
-            gardenDisp = true;
-        }
-    });
-    var gardenUpgrades = [];
-    CM.Data.GardenUpgrades.forEach(function (element) {
-        if (!Game.Has(element)) {
-            gardenUpgrades.push(element);
-            gardenDisp = true;
-        }
-    });
+
+	if (Game.Objects['Farm'].minigameLoaded) {
+        var gardenCookies = [];
+        CM.Data.GardenCookies.forEach(function (element) {
+            if (!Game.Has(element)) {
+                gardenCookies.push(element);
+                gardenDisp = true;
+            }
+        });
+        var gardenUpgrades = [];
+        CM.Data.GardenUpgrades.forEach(function (element) {
+            if (!Game.Has(element)) {
+                gardenUpgrades.push(element);
+                gardenDisp = true;
+            }
+        });
+    }
 
     // If necessary, create new Menu Item and display missing elements.
-    if (gardenDisp || Game.Objects['Farm'].minigameLoaded) {
+    if (gardenDisp) {
         stats.appendChild(header('Garden Specials', 'Gard'));
 
         if (CM.Config.StatsPref.Gard) {
