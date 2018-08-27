@@ -2708,6 +2708,9 @@ CM.Disp.CheckGardenMenu = function () {
         gardenPanel.removeChild(gardenPanel.lastChild);
         gardenPanel.removeChild(gardenPanel.lastChild);
         gardenPanel.removeChild(gardenPanel.lastChild);
+
+        // Clean up missing seeds. Otherwise AddExtraGarden will not do anything.
+        CM.Disp.GardenMissingSeeds.length = 0;
     }
 };
 
