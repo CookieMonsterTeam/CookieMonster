@@ -537,6 +537,7 @@ CM.ConfigData.ToolWarnCaut = {label: ['Tooltip Warning/Caution OFF', 'Tooltip Wa
 CM.ConfigData.ToolWarnCautPos = {label: ['Tooltip Warning/Caution Position (Left)', 'Tooltip Warning/Caution Position (Bottom)'], desc: 'Placement of the warning/caution boxes', toggle: false, func: function() {CM.Disp.ToggleToolWarnCautPos();}};
 CM.ConfigData.TooltipGrim = {label: ['Grimoire Tooltip Information OFF', 'Grimoire Tooltip Information ON'], desc: 'Extra information in tooltip for grimoire', toggle: true};
 CM.ConfigData.ToolWrink = {label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
+CM.ConfigData.TooltipLump = {label: ['Sugar Lump Tooltip OFF', 'Sugar Lump Tooltip ON'], desc: 'Shows the current Sugar Lump type in Sugar lump tooltip.', toggle: true};
 CM.ConfigData.Stats = {label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra Cookie Monster statistics!', toggle: true};
 CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 5 seconds', toggle: false};
 CM.ConfigData.TimeFormat = {label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
@@ -1691,6 +1692,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('ToolWarnCautPos'));
 	frag.appendChild(listing('TooltipGrim'));
 	frag.appendChild(listing('ToolWrink'));
+	frag.appendChild(listing('TooltipLump'));
 
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
@@ -2412,30 +2414,32 @@ CM.Disp.UpdateTooltip = function() {
                 l('CMDispTooltipWarn').style.display = 'none';
                 l('CMDispTooltipCaut').style.display = 'none';
 
-                l('CMTooltipArea').innerHTML = '';
+                if (CM.Config.TooltipLump === 1) {
+                    l('CMTooltipArea').innerHTML = '';
 
-                l('tooltip').firstChild.style.paddingBottom = '4px';
-                var lumpTooltip = document.createElement('div');
-                lumpTooltip.style.border = '1px solid';
-                lumpTooltip.style.padding = '4px';
-                lumpTooltip.style.margin = '0px -4px';
-                lumpTooltip.id = 'CMTooltipBorder';
-                lumpTooltip.className = CM.Disp.colorTextPre + CM.Disp.colorGray;
+                    l('tooltip').firstChild.style.paddingBottom = '4px';
+                    var lumpTooltip = document.createElement('div');
+                    lumpTooltip.style.border = '1px solid';
+                    lumpTooltip.style.padding = '4px';
+                    lumpTooltip.style.margin = '0px -4px';
+                    lumpTooltip.id = 'CMTooltipBorder';
+                    lumpTooltip.className = CM.Disp.colorTextPre + CM.Disp.colorGray;
 
-                var lumpHeader = document.createElement('div');
-                lumpHeader.style.fontWeight = 'bold';
-                lumpHeader.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
-                lumpHeader.textContent = 'Current Sugar Lump';
+                    var lumpHeader = document.createElement('div');
+                    lumpHeader.style.fontWeight = 'bold';
+                    lumpHeader.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
+                    lumpHeader.textContent = 'Current Sugar Lump';
 
-                lumpTooltip.appendChild(lumpHeader);
-                var lumpType = document.createElement('div');
-                lumpType.id = 'CMTooltipTime';
-                lumpTooltip.appendChild(lumpType);
-                var lumpColor = CM.Disp.GetLumpColor(Game.lumpCurrentType);
-                lumpType.textContent = lumpColor.text;
-                lumpType.className = CM.Disp.colorTextPre + lumpColor.color;
+                    lumpTooltip.appendChild(lumpHeader);
+                    var lumpType = document.createElement('div');
+                    lumpType.id = 'CMTooltipTime';
+                    lumpTooltip.appendChild(lumpType);
+                    var lumpColor = CM.Disp.GetLumpColor(Game.lumpCurrentType);
+                    lumpType.textContent = lumpColor.text;
+                    lumpType.className = CM.Disp.colorTextPre + lumpColor.color;
 
-                l('CMTooltipArea').appendChild(lumpTooltip);
+                    l('CMTooltipArea').appendChild(lumpTooltip);
+                }
 			}
 			else { // Grimoire
 				CM.Disp.TooltipWarnCaut.style.display = 'none';
@@ -2895,7 +2899,7 @@ CM.DelayInit = function() {
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 3, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, TooltipBuildUp: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, TooltipGrim:1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 3, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, TooltipBuildUp: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, TooltipGrim:1, ToolWrink: 1, TooltipLump: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.012';

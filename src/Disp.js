@@ -1138,6 +1138,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('ToolWarnCautPos'));
 	frag.appendChild(listing('TooltipGrim'));
 	frag.appendChild(listing('ToolWrink'));
+	frag.appendChild(listing('TooltipLump'));
 
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
@@ -1859,30 +1860,32 @@ CM.Disp.UpdateTooltip = function() {
                 l('CMDispTooltipWarn').style.display = 'none';
                 l('CMDispTooltipCaut').style.display = 'none';
 
-                l('CMTooltipArea').innerHTML = '';
+                if (CM.Config.TooltipLump === 1) {
+                    l('CMTooltipArea').innerHTML = '';
 
-                l('tooltip').firstChild.style.paddingBottom = '4px';
-                var lumpTooltip = document.createElement('div');
-                lumpTooltip.style.border = '1px solid';
-                lumpTooltip.style.padding = '4px';
-                lumpTooltip.style.margin = '0px -4px';
-                lumpTooltip.id = 'CMTooltipBorder';
-                lumpTooltip.className = CM.Disp.colorTextPre + CM.Disp.colorGray;
+                    l('tooltip').firstChild.style.paddingBottom = '4px';
+                    var lumpTooltip = document.createElement('div');
+                    lumpTooltip.style.border = '1px solid';
+                    lumpTooltip.style.padding = '4px';
+                    lumpTooltip.style.margin = '0px -4px';
+                    lumpTooltip.id = 'CMTooltipBorder';
+                    lumpTooltip.className = CM.Disp.colorTextPre + CM.Disp.colorGray;
 
-                var lumpHeader = document.createElement('div');
-                lumpHeader.style.fontWeight = 'bold';
-                lumpHeader.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
-                lumpHeader.textContent = 'Current Sugar Lump';
+                    var lumpHeader = document.createElement('div');
+                    lumpHeader.style.fontWeight = 'bold';
+                    lumpHeader.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
+                    lumpHeader.textContent = 'Current Sugar Lump';
 
-                lumpTooltip.appendChild(lumpHeader);
-                var lumpType = document.createElement('div');
-                lumpType.id = 'CMTooltipTime';
-                lumpTooltip.appendChild(lumpType);
-                var lumpColor = CM.Disp.GetLumpColor(Game.lumpCurrentType);
-                lumpType.textContent = lumpColor.text;
-                lumpType.className = CM.Disp.colorTextPre + lumpColor.color;
+                    lumpTooltip.appendChild(lumpHeader);
+                    var lumpType = document.createElement('div');
+                    lumpType.id = 'CMTooltipTime';
+                    lumpTooltip.appendChild(lumpType);
+                    var lumpColor = CM.Disp.GetLumpColor(Game.lumpCurrentType);
+                    lumpType.textContent = lumpColor.text;
+                    lumpType.className = CM.Disp.colorTextPre + lumpColor.color;
 
-                l('CMTooltipArea').appendChild(lumpTooltip);
+                    l('CMTooltipArea').appendChild(lumpTooltip);
+                }
 			}
 			else { // Grimoire
 				CM.Disp.TooltipWarnCaut.style.display = 'none';
