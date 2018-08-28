@@ -242,12 +242,61 @@ CM.DelayInit = function() {
 	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
 
 	Game.Win('Third-party');
-}
+};
 
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 3, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, TooltipBuildUp: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, TooltipGrim:1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
+CM.ConfigDefault = {};
+CM.ConfigDefault.BotBar = 1;
+CM.ConfigDefault.TimerBar = 1;
+CM.ConfigDefault.TimerBarPos = 0;
+CM.ConfigDefault.BuildColor = 1;
+CM.ConfigDefault.BulkBuildColor = 0;
+CM.ConfigDefault.UpBarColor = 1;
+CM.ConfigDefault.CalcWrink = 0;
+CM.ConfigDefault.CPSMode = 1;
+CM.ConfigDefault.AvgCPSHist = 3;
+CM.ConfigDefault.AvgClicksHist = 0;
+CM.ConfigDefault.ToolWarnCautBon = 0;
+CM.ConfigDefault.Flash = 1;
+CM.ConfigDefault.Sound = 1;
+CM.ConfigDefault.Volume = 100;
+CM.ConfigDefault.GCSoundURL = 'https://freesound.org/data/previews/66/66717_931655-lq.mp3';
+CM.ConfigDefault.SeaSoundURL = 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3';
+CM.ConfigDefault.GCTimer = 1;
+CM.ConfigDefault.Title = 1;
+CM.ConfigDefault.Favicon = 1;
+CM.ConfigDefault.TooltipBuildUp = 1;
+CM.ConfigDefault.TooltipAmor = 0;
+CM.ConfigDefault.ToolWarnCaut = 1;
+CM.ConfigDefault.ToolWarnCautPos = 1;
+CM.ConfigDefault.TooltipGrim = 1;
+CM.ConfigDefault.ToolWrink = 1;
+CM.ConfigDefault.Stats = 1;
+CM.ConfigDefault.UpStats = 1;
+CM.ConfigDefault.TimeFormat = 0;
+CM.ConfigDefault.SayTime = 1;
+CM.ConfigDefault.Scale = 2;
+CM.ConfigDefault.StatsPref = {
+    Lucky: 1,
+    Chain: 1,
+    Prestige: 1,
+    Wrink: 1,
+    Sea: 1,
+    Misc: 1
+};
+CM.ConfigDefault.Colors  = {
+    Blue: '#4bb8f0',
+    Green: '#00ff00',
+    Yellow: '#ffff00',
+    Orange: '#ff7f00',
+    Red: '#ff0000',
+    Purple: '#ff00ff',
+    Gray: '#b3b3b3',
+    Pink: '#ff1493',
+    Brown: '#8b4513'
+};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.012';
