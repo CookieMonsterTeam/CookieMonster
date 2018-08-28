@@ -88,6 +88,46 @@ CM.Disp.GetTimeColor = function(price, bank, cps, time) {
 	return {text: text, color: color};
 }
 
+/**
+ * This function returns Name and Color as object for sugar lump type that is given as input param.
+ * @param type Sugar Lump Type.
+ * @returns {{text: string, color: string}}
+ * @constructor
+ */
+CM.Disp.GetLumpColor = function(type) {
+	var name = "";
+	var color = "";
+
+	switch (type) {
+		case 0:
+			name = "Normal";
+			color = CM.Disp.colorGray;
+			break;
+		case 1:
+            name = "Bifurcated";
+            color = CM.Disp.colorGreen;
+			break;
+		case 2:
+            name = "Golden";
+            color = CM.Disp.colorYellow;
+			break;
+		case 3:
+            name = "Meaty";
+            color = CM.Disp.colorOrange;
+			break;
+		case 4:
+            name = "Caramelized";
+            color = CM.Disp.colorPurple;
+			break;
+		default:
+			name = "Unknown Sugar Lump";
+			color = CM.Disp.colorRed;
+			break;
+	}
+
+    return {text: name, color: color};
+};
+
 CM.Disp.Beautify = function(num, frac) {
 	if (CM.Config.Scale != 0 && isFinite(num)) {
 		var answer = '';
@@ -1610,6 +1650,17 @@ CM.Disp.AddTooltipGrimoire = function() {
 	}
 }
 
+/**
+ * This function improves Sugar Lump tooltip by adding extra infromation.
+ * @constructor
+ */
+CM.Disp.AddTooltipLump = function() {
+	if (Game.canLumps()) {
+		CM.Disp.TooltipLumpBack = l('lumps').onmouseover;
+        eval('l(\'lumps\').onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'Lump\');}, \'this\'); Game.tooltip.wobble();}');
+	}
+};
+
 CM.Disp.Tooltip = function(type, name) {
 	if (type == 'b') {
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
@@ -1647,6 +1698,10 @@ CM.Disp.Tooltip = function(type, name) {
 	else if (type == 'u') {
 		if (!Game.UpgradesInStore[name]) return '';
 		l('tooltip').innerHTML = Game.crate(Game.UpgradesInStore[name], 'store', undefined, undefined, 1)();
+	}
+	else if (type === 's') {
+		// Sugar Lump
+        l('tooltip').innerHTML = Game.lumpTooltip();
 	}
 	else { // Grimoire
 		l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)();
@@ -1796,6 +1851,38 @@ CM.Disp.UpdateTooltip = function() {
 				else {
 					CM.Disp.TooltipWarnCaut.style.display = 'none';
 				}
+			}
+			else if (CM.Disp.tooltipType === 's') {
+                // Adding information about Sugar Lumps.
+
+                CM.Disp.TooltipWarnCaut.style.display = 'none';
+                l('CMDispTooltipWarn').style.display = 'none';
+                l('CMDispTooltipCaut').style.display = 'none';
+
+                l('CMTooltipArea').innerHTML = '';
+
+                l('tooltip').firstChild.style.paddingBottom = '4px';
+                var lumpTooltip = document.createElement('div');
+                lumpTooltip.style.border = '1px solid';
+                lumpTooltip.style.padding = '4px';
+                lumpTooltip.style.margin = '0px -4px';
+                lumpTooltip.id = 'CMTooltipBorder';
+                lumpTooltip.className = CM.Disp.colorTextPre + CM.Disp.colorGray;
+
+                var lumpHeader = document.createElement('div');
+                lumpHeader.style.fontWeight = 'bold';
+                lumpHeader.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
+                lumpHeader.textContent = 'Current Sugar Lump';
+
+                lumpTooltip.appendChild(lumpHeader);
+                var lumpType = document.createElement('div');
+                lumpType.id = 'CMTooltipTime';
+                lumpTooltip.appendChild(lumpType);
+                var lumpColor = CM.Disp.GetLumpColor(Game.lumpCurrentType);
+                lumpType.textContent = lumpColor.text;
+                lumpType.className = CM.Disp.colorTextPre + lumpColor.color;
+
+                l('CMTooltipArea').appendChild(lumpTooltip);
 			}
 			else { // Grimoire
 				CM.Disp.TooltipWarnCaut.style.display = 'none';
