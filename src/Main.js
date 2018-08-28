@@ -274,6 +274,7 @@ CM.ConfigDefault.ToolWarnCautPos = 1;
 CM.ConfigDefault.TooltipGrim = 1;
 CM.ConfigDefault.ToolWrink = 1;
 CM.ConfigDefault.Stats = 1;
+CM.ConfigDefault.MissingUpgrades = 1;
 CM.ConfigDefault.UpStats = 1;
 CM.ConfigDefault.TimeFormat = 0;
 CM.ConfigDefault.SayTime = 1;

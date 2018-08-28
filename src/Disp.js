@@ -1101,6 +1101,7 @@ CM.Disp.AddMenuPref = function(title) {
 
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
+	frag.appendChild(listing('MissingUpgrades'));
 	frag.appendChild(listing('UpStats'));
 	frag.appendChild(listing('TimeFormat'));
 	frag.appendChild(listing('SayTime'));
@@ -1477,19 +1478,110 @@ CM.Disp.AddMenu = function() {
 		div.className = 'title ' + CM.Disp.colorTextPre + CM.Disp.colorBlue;
 		div.textContent = 'Cookie Monster Goodies';
 		return div;
-	}
+	};
 
-	if (Game.onMenu == 'prefs') {
+	if (Game.onMenu === 'prefs') {
 		CM.Disp.AddMenuPref(title);
 	}
-	else if (CM.Config.Stats == 1 && Game.onMenu == 'stats') {
-		CM.Disp.AddMenuStats(title);
-	}
-}
+	else if (Game.onMenu === 'stats') {
+		// Add missing upgrades before improved stats, as it will mess with element count.
+        if (CM.Config.MissingUpgrades) {
+        	CM.Disp.AddMissingUpgrades();
+        }
+
+        if (CM.Config.Stats) {
+            CM.Disp.AddMenuStats(title);
+        }
+    }
+};
 
 CM.Disp.RefreshMenu = function() {
 	if (CM.Config.UpStats && Game.onMenu == 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps == 0) Game.UpdateMenu();
 }
+
+/**
+ * This function adds missing upgrades in Stats page under Upgrades menu.
+ * @constructor
+ */
+CM.Disp.AddMissingUpgrades = function() {
+    if (Game.UpgradesOwned != CM.Cache.UpgradesOwned) {
+        // Update cache!
+        CM.Cache.MissingUpgrades = [];
+        CM.Cache.MissingCookies = [];
+
+        // Populate Standart Upgrades
+        Game.UpgradesByPool[""].forEach(function (upgrade, index) {
+            if (!upgrade.bought) {
+                CM.Cache.MissingUpgrades.push(upgrade);
+            }
+        });
+
+        // Populate Tech Upgrades
+        Game.UpgradesByPool["tech"].forEach(function (upgrade, index) {
+            if (!upgrade.bought) {
+                CM.Cache.MissingUpgrades.push(upgrade);
+            }
+        });
+
+        // Populate Prestige Upgrades
+        Game.UpgradesByPool["prestige"].forEach(function (upgrade, index) {
+            if (!upgrade.bought) {
+                CM.Cache.MissingUpgrades.push(upgrade);
+            }
+        });
+
+        // Populate Cookies
+        Game.UpgradesByPool["cookie"].forEach(function (upgrade, index) {
+            if (!upgrade.bought) {
+                CM.Cache.MissingCookies.push(upgrade);
+            }
+        });
+
+        CM.Cache.UpgradesOwned = Game.UpgradesOwned;
+    }
+
+    var upgradesMenu = l('menu').childNodes[4];
+
+    var createHeader = function (text) {
+        var div = document.createElement('div');
+        div.className = 'listing';
+        var b = document.createElement('b');
+        b.textContent = text;
+        div.appendChild(b);
+        return div;
+    };
+
+    var createUpgradeElement = function (positionX, positionY) {
+        var div = document.createElement('div');
+
+        div.className = "crate upgrade disabled noFrame";
+        div.style = "background-position: " + (positionX * -48) + "px " + (positionY * -48) + "px;";
+
+        return div;
+    };
+
+    var createElementBox = function (elements) {
+        var div = document.createElement('div');
+        div.className = 'listing crateBox';
+
+        elements.forEach(function (element) {
+            div.appendChild(createUpgradeElement(element.icon[0], element.icon[1]));
+		});
+
+        return div;
+    };
+
+    if (CM.Cache.MissingUpgrades.length > 0) {
+        upgradesMenu.appendChild(createHeader("Missing Upgrades"));
+        upgradesMenu.appendChild(createElementBox(CM.Cache.MissingUpgrades));
+    }
+
+    if (CM.Cache.MissingCookies.length > 0) {
+        upgradesMenu.appendChild(createHeader("Missing Cookies"));
+        upgradesMenu.appendChild(createElementBox(CM.Cache.MissingCookies));
+    }
+};
+
 
 CM.Disp.UpdateTooltipLocation = function() {
 	if (Game.tooltip.origin == 'store') {

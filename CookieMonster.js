@@ -392,7 +392,9 @@ CM.Cache.AvgCPS = -1;
 CM.Cache.AvgCPSChoEgg = -1;
 CM.Cache.AvgClicks = -1;
 
-/**********
+CM.Cache.UpgradesOwned = -1;
+CM.Cache.MissingUpgrades = [];
+CM.Cache.MissingCookies = [];/**********
  * Config *
  **********/
 
@@ -538,6 +540,7 @@ CM.ConfigData.ToolWarnCautPos = {label: ['Tooltip Warning/Caution Position (Left
 CM.ConfigData.TooltipGrim = {label: ['Grimoire Tooltip Information OFF', 'Grimoire Tooltip Information ON'], desc: 'Extra information in tooltip for grimoire', toggle: true};
 CM.ConfigData.ToolWrink = {label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
 CM.ConfigData.Stats = {label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra Cookie Monster statistics!', toggle: true};
+CM.ConfigData.MissingUpgrades = {label: ['Missing Upgrades OFF', 'Missing Upgrades ON'], desc: 'Shows Missing upgrades in States Menu.', toggle: true};
 CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 5 seconds', toggle: false};
 CM.ConfigData.TimeFormat = {label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
 CM.ConfigData.SayTime = {label: ['Format Time OFF', 'Format Time ON'], desc: 'Change how time is displayed in statistics', toggle: true, func: function() {CM.Disp.ToggleSayTime();}};
@@ -1654,6 +1657,7 @@ CM.Disp.AddMenuPref = function(title) {
 
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
+	frag.appendChild(listing('MissingUpgrades'));
 	frag.appendChild(listing('UpStats'));
 	frag.appendChild(listing('TimeFormat'));
 	frag.appendChild(listing('SayTime'));
@@ -2030,19 +2034,110 @@ CM.Disp.AddMenu = function() {
 		div.className = 'title ' + CM.Disp.colorTextPre + CM.Disp.colorBlue;
 		div.textContent = 'Cookie Monster Goodies';
 		return div;
-	}
+	};
 
-	if (Game.onMenu == 'prefs') {
+	if (Game.onMenu === 'prefs') {
 		CM.Disp.AddMenuPref(title);
 	}
-	else if (CM.Config.Stats == 1 && Game.onMenu == 'stats') {
-		CM.Disp.AddMenuStats(title);
-	}
-}
+	else if (Game.onMenu === 'stats') {
+		// Add missing upgrades before improved stats, as it will mess with element count.
+        if (CM.Config.MissingUpgrades) {
+        	CM.Disp.AddMissingUpgrades();
+        }
+
+        if (CM.Config.Stats) {
+            CM.Disp.AddMenuStats(title);
+        }
+    }
+};
 
 CM.Disp.RefreshMenu = function() {
 	if (CM.Config.UpStats && Game.onMenu == 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps == 0) Game.UpdateMenu();
 }
+
+/**
+ * This function adds missing upgrades in Stats page under Upgrades menu.
+ * @constructor
+ */
+CM.Disp.AddMissingUpgrades = function() {
+    if (Game.UpgradesOwned != CM.Cache.UpgradesOwned) {
+        // Update cache!
+        CM.Cache.MissingUpgrades = [];
+        CM.Cache.MissingCookies = [];
+
+        // Populate Standart Upgrades
+        Game.UpgradesByPool[""].forEach(function (upgrade, index) {
+            if (!upgrade.bought) {
+                CM.Cache.MissingUpgrades.push(upgrade);
+            }
+        });
+
+        // Populate Tech Upgrades
+        Game.UpgradesByPool["tech"].forEach(function (upgrade, index) {
+            if (!upgrade.bought) {
+                CM.Cache.MissingUpgrades.push(upgrade);
+            }
+        });
+
+        // Populate Prestige Upgrades
+        Game.UpgradesByPool["prestige"].forEach(function (upgrade, index) {
+            if (!upgrade.bought) {
+                CM.Cache.MissingUpgrades.push(upgrade);
+            }
+        });
+
+        // Populate Cookies
+        Game.UpgradesByPool["cookie"].forEach(function (upgrade, index) {
+            if (!upgrade.bought) {
+                CM.Cache.MissingCookies.push(upgrade);
+            }
+        });
+
+        CM.Cache.UpgradesOwned = Game.UpgradesOwned;
+    }
+
+    var upgradesMenu = l('menu').childNodes[4];
+
+    var createHeader = function (text) {
+        var div = document.createElement('div');
+        div.className = 'listing';
+        var b = document.createElement('b');
+        b.textContent = text;
+        div.appendChild(b);
+        return div;
+    };
+
+    var createUpgradeElement = function (positionX, positionY) {
+        var div = document.createElement('div');
+
+        div.className = "crate upgrade disabled noFrame";
+        div.style = "background-position: " + (positionX * -48) + "px " + (positionY * -48) + "px;";
+
+        return div;
+    };
+
+    var createElementBox = function (elements) {
+        var div = document.createElement('div');
+        div.className = 'listing crateBox';
+
+        elements.forEach(function (element) {
+            div.appendChild(createUpgradeElement(element.icon[0], element.icon[1]));
+		});
+
+        return div;
+    };
+
+    if (CM.Cache.MissingUpgrades.length > 0) {
+        upgradesMenu.appendChild(createHeader("Missing Upgrades"));
+        upgradesMenu.appendChild(createElementBox(CM.Cache.MissingUpgrades));
+    }
+
+    if (CM.Cache.MissingCookies.length > 0) {
+        upgradesMenu.appendChild(createHeader("Missing Cookies"));
+        upgradesMenu.appendChild(createElementBox(CM.Cache.MissingCookies));
+    }
+};
+
 
 CM.Disp.UpdateTooltipLocation = function() {
 	if (Game.tooltip.origin == 'store') {
@@ -2802,12 +2897,62 @@ CM.DelayInit = function() {
 	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
 
 	Game.Win('Third-party');
-}
+};
 
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 3, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, TooltipBuildUp: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, TooltipGrim:1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
+CM.ConfigDefault = {};
+CM.ConfigDefault.BotBar = 1;
+CM.ConfigDefault.TimerBar = 1;
+CM.ConfigDefault.TimerBarPos = 0;
+CM.ConfigDefault.BuildColor = 1;
+CM.ConfigDefault.BulkBuildColor = 0;
+CM.ConfigDefault.UpBarColor = 1;
+CM.ConfigDefault.CalcWrink = 0;
+CM.ConfigDefault.CPSMode = 1;
+CM.ConfigDefault.AvgCPSHist = 3;
+CM.ConfigDefault.AvgClicksHist = 0;
+CM.ConfigDefault.ToolWarnCautBon = 0;
+CM.ConfigDefault.Flash = 1;
+CM.ConfigDefault.Sound = 1;
+CM.ConfigDefault.Volume = 100;
+CM.ConfigDefault.GCSoundURL = 'https://freesound.org/data/previews/66/66717_931655-lq.mp3';
+CM.ConfigDefault.SeaSoundURL = 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3';
+CM.ConfigDefault.GCTimer = 1;
+CM.ConfigDefault.Title = 1;
+CM.ConfigDefault.Favicon = 1;
+CM.ConfigDefault.TooltipBuildUp = 1;
+CM.ConfigDefault.TooltipAmor = 0;
+CM.ConfigDefault.ToolWarnCaut = 1;
+CM.ConfigDefault.ToolWarnCautPos = 1;
+CM.ConfigDefault.TooltipGrim = 1;
+CM.ConfigDefault.ToolWrink = 1;
+CM.ConfigDefault.Stats = 1;
+CM.ConfigDefault.MissingUpgrades = 1;
+CM.ConfigDefault.UpStats = 1;
+CM.ConfigDefault.TimeFormat = 0;
+CM.ConfigDefault.SayTime = 1;
+CM.ConfigDefault.Scale = 2;
+CM.ConfigDefault.StatsPref = {
+    Lucky: 1,
+    Chain: 1,
+    Prestige: 1,
+    Wrink: 1,
+    Sea: 1,
+    Misc: 1
+};
+CM.ConfigDefault.Colors  = {
+    Blue: '#4bb8f0',
+    Green: '#00ff00',
+    Yellow: '#ffff00',
+    Orange: '#ff7f00',
+    Red: '#ff0000',
+    Purple: '#ff00ff',
+    Gray: '#b3b3b3',
+    Pink: '#ff1493',
+    Brown: '#8b4513'
+};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.012';
