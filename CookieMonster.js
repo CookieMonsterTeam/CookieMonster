@@ -2098,7 +2098,15 @@ CM.Disp.AddMissingUpgrades = function() {
         CM.Cache.UpgradesOwned = Game.UpgradesOwned;
     }
 
-    var upgradesMenu = l('menu').childNodes[4];
+    var upgradesMenu;
+
+    // TODO: Probably better would be to search for each child node until Upgrades is found.
+    if (l("menu").childNodes[4].firstChild.textContent === 'Upgrades') {
+        upgradesMenu = l("menu").childNodes[4];
+    }
+    else if (l("menu").childNodes[5].firstChild.textContent === 'Upgrades') {
+        upgradesMenu = l("menu").childNodes[5];
+    }
 
     var createHeader = function (text) {
         var div = document.createElement('div');
