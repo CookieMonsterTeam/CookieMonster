@@ -1504,7 +1504,7 @@ CM.Disp.RefreshMenu = function() {
  * @constructor
  */
 CM.Disp.AddMissingUpgrades = function() {
-    if (Game.UpgradesOwned != CM.Cache.UpgradesOwned) {
+    if (Game.UpgradesOwned !== CM.Cache.UpgradesOwned) {
         // Update cache!
         CM.Cache.MissingUpgrades = [];
         CM.Cache.MissingCookies = [];
@@ -1523,19 +1523,21 @@ CM.Disp.AddMissingUpgrades = function() {
             }
         });
 
-        // Populate Prestige Upgrades
-        Game.UpgradesByPool["prestige"].forEach(function (upgrade, index) {
-            if (!upgrade.bought) {
-                CM.Cache.MissingUpgrades.push(upgrade);
-            }
-        });
-
         // Populate Cookies
         Game.UpgradesByPool["cookie"].forEach(function (upgrade, index) {
             if (!upgrade.bought) {
                 CM.Cache.MissingCookies.push(upgrade);
             }
         });
+
+        var sortMap = function(a,b) {
+            if (a.order > b.order) return 1;
+            else if (a.order < b.order) return -1;
+            else return 0;
+        };
+
+		CM.Cache.MissingUpgrades.sort(sortMap);
+		CM.Cache.MissingCookies.sort(sortMap);
 
         CM.Cache.UpgradesOwned = Game.UpgradesOwned;
     }
