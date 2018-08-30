@@ -375,3 +375,6 @@ CM.Cache.AvgClicks = -1;
 CM.Cache.UpgradesOwned = -1;
 CM.Cache.MissingUpgrades = [];
 CM.Cache.MissingCookies = [];
+
+CM.Cache.MissingUpgradesString = null;
+CM.Cache.MissingCookiesString = null;

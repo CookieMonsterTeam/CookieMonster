@@ -394,7 +394,11 @@ CM.Cache.AvgClicks = -1;
 
 CM.Cache.UpgradesOwned = -1;
 CM.Cache.MissingUpgrades = [];
-CM.Cache.MissingCookies = [];/**********
+CM.Cache.MissingCookies = [];
+
+CM.Cache.MissingUpgradesString = null;
+CM.Cache.MissingCookiesString = null;
+/**********
  * Config *
  **********/
 
@@ -2060,6 +2064,9 @@ CM.Disp.RefreshMenu = function() {
  * @constructor
  */
 CM.Disp.AddMissingUpgrades = function() {
+    // TODO: Creating missing upgrades string improves performance per loop tick, but when buying any upgrade,
+    // still freeze game a bit.
+
     if (Game.UpgradesOwned !== CM.Cache.UpgradesOwned) {
         // Update cache!
         CM.Cache.MissingUpgrades = [];
@@ -2096,6 +2103,8 @@ CM.Disp.AddMissingUpgrades = function() {
 		CM.Cache.MissingCookies.sort(sortMap);
 
         CM.Cache.UpgradesOwned = Game.UpgradesOwned;
+        CM.Cache.MissingUpgradesString = null;
+        CM.Cache.MissingCookiesString = null;
     }
 
     var upgradesMenu;
@@ -2108,6 +2117,33 @@ CM.Disp.AddMissingUpgrades = function() {
         upgradesMenu = l("menu").childNodes[5];
     }
 
+    // This function creates div element from given object. It also adds tooltip for it.
+    var createUpgradeElement = function (me) {
+        return '<div class="crate upgrade disabled noFrame" ' +
+            Game.getTooltip(
+                '<div style="padding:8px 4px;min-width:350px;">' +
+                '<div class="icon" style="float:left;margin-left:-8px;margin-top:-8px;' + (me.icon[2] ? 'background-image:url(' + me.icon[2] + ');' : '') + 'background-position:' + (-me.icon[0] * 48) + 'px ' + (-me.icon[1] * 48) + 'px;"></div>' +
+                '<div style="float:right;"><span class="price">' + Beautify(Math.round(me.getPrice())) + '</span></div>' +
+                '<div class="name">' + me.name + '</div>' +
+                '<div class="line"></div><div class="description">' + me.desc + '</div></div>',
+                'top',
+                true) +
+            ' style="background-position:' + (-me.icon[0] * 48) + 'px ' + (-me.icon[1] * 48) + 'px;"></div>';
+    };
+
+    // This function creates section of given elements and adds this elements to it.
+    var createElementBox = function (elements) {
+        var div = document.createElement('div');
+        div.className = 'listing crateBox';
+
+        elements.forEach(function (element) {
+            div.innerHTML += createUpgradeElement(element);
+		});
+
+        return div;
+    };
+
+    // This function creates header element with given text.
     var createHeader = function (text) {
         var div = document.createElement('div');
         div.className = 'listing';
@@ -2117,34 +2153,24 @@ CM.Disp.AddMissingUpgrades = function() {
         return div;
     };
 
-    var createUpgradeElement = function (positionX, positionY) {
-        var div = document.createElement('div');
-
-        div.className = "crate upgrade disabled noFrame";
-        div.style = "background-position: " + (positionX * -48) + "px " + (positionY * -48) + "px;";
-
-        return div;
-    };
-
-    var createElementBox = function (elements) {
-        var div = document.createElement('div');
-        div.className = 'listing crateBox';
-
-        elements.forEach(function (element) {
-            div.appendChild(createUpgradeElement(element.icon[0], element.icon[1]));
-		});
-
-        return div;
-    };
-
     if (CM.Cache.MissingUpgrades.length > 0) {
         upgradesMenu.appendChild(createHeader("Missing Upgrades"));
-        upgradesMenu.appendChild(createElementBox(CM.Cache.MissingUpgrades));
+
+        if (CM.Cache.MissingUpgradesString == null) {
+            CM.Cache.MissingUpgradesString = createElementBox(CM.Cache.MissingUpgrades);
+		}
+
+        upgradesMenu.appendChild(CM.Cache.MissingUpgradesString);
     }
 
     if (CM.Cache.MissingCookies.length > 0) {
         upgradesMenu.appendChild(createHeader("Missing Cookies"));
-        upgradesMenu.appendChild(createElementBox(CM.Cache.MissingCookies));
+
+        if (CM.Cache.MissingCookiesString == null) {
+            CM.Cache.MissingCookiesString = createElementBox(CM.Cache.MissingCookies);
+        }
+
+        upgradesMenu.appendChild(CM.Cache.MissingCookiesString);
     }
 };
 
@@ -2939,7 +2965,7 @@ CM.ConfigDefault.ToolWarnCautPos = 1;
 CM.ConfigDefault.TooltipGrim = 1;
 CM.ConfigDefault.ToolWrink = 1;
 CM.ConfigDefault.Stats = 1;
-CM.ConfigDefault.MissingUpgrades = 1;
+CM.ConfigDefault.MissingUpgrades = 0;
 CM.ConfigDefault.UpStats = 1;
 CM.ConfigDefault.TimeFormat = 0;
 CM.ConfigDefault.SayTime = 1;
