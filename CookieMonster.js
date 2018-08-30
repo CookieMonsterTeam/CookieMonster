@@ -548,6 +548,7 @@ CM.ConfigData.MissingUpgrades = {label: ['Missing Upgrades OFF', 'Missing Upgrad
 CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 5 seconds', toggle: false};
 CM.ConfigData.TimeFormat = {label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
 CM.ConfigData.SayTime = {label: ['Format Time OFF', 'Format Time ON'], desc: 'Change how time is displayed in statistics', toggle: true, func: function() {CM.Disp.ToggleSayTime();}};
+CM.ConfigData.GrimoireBar = {label: ['Grimoire Magic Meter Timer OFF', 'Grimoire Magic Meter Timer ON'], desc: 'A timer on how long before the Grimoire magic meter is full', toggle: true};
 CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 
 /********
@@ -1665,6 +1666,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('UpStats'));
 	frag.appendChild(listing('TimeFormat'));
 	frag.appendChild(listing('SayTime'));
+	frag.appendChild(listing('GrimoireBar'));
 
 	frag.appendChild(header('Other'));
 	frag.appendChild(listing('Scale'));
@@ -2174,6 +2176,17 @@ CM.Disp.AddMissingUpgrades = function() {
     }
 };
 
+CM.Disp.FixMouseY = function(target) {
+	if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+		var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
+		Game.mouseY -= timerBarHeight;
+		target();
+		Game.mouseY += timerBarHeight;
+	}
+	else {
+		target();
+	}
+}
 
 CM.Disp.UpdateTooltipLocation = function() {
 	if (Game.tooltip.origin == 'store') {
@@ -2564,20 +2577,9 @@ CM.Disp.AddWrinklerAreaDetect = function() {
 CM.Disp.CheckWrinklerTooltip = function() {
 	if (CM.Config.ToolWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) {
 		var showingTooltip = false;
-		var mouseInWrinkler = function (x, y, rect) {
-			var dx = x + Math.sin(-rect.r) * (-(rect.h / 2 - rect.o)), dy = y + Math.cos(-rect.r) * (-(rect.h / 2 - rect.o));
-			var h1 = Math.sqrt(dx * dx + dy * dy);
-			var currA = Math.atan2(dy, dx);
-			var newA = currA - rect.r;
-			var x2 = Math.cos(newA) * h1;
-			var y2 = Math.sin(newA) * h1;
-			if (x2 > -0.5 * rect.w && x2 < 0.5 * rect.w && y2 > -0.5 * rect.h && y2 < 0.5 * rect.h) return true;
-			return false;
-		}
 		for (var i in Game.wrinklers) {
 			var me = Game.wrinklers[i];
-			var rect = {w: 100, h: 200, r: (-me.r) * Math.PI / 180, o: 10};
-			if (me.phase > 0 && Game.LeftBackground && Game.mouseX < Game.LeftBackground.canvas.width && mouseInWrinkler(Game.mouseX - me.x, Game.mouseY - me.y, rect)) {
+			if (me.phase > 0 && me.selected) {
 				showingTooltip = true;
 				if (CM.Disp.TooltipWrinklerCache[i] == 0) {
 					var placeholder = document.createElement('div');
@@ -2720,17 +2722,14 @@ CM.ReplaceNative = function() {
 		CM.Disp.UpdateTooltipLocation();
 	}
 
+	CM.Backup.UpdateWrinklers = Game.UpdateWrinklers;
+	Game.UpdateWrinklers = function() {
+		CM.Disp.FixMouseY(CM.Backup.UpdateWrinklers);
+	}
+
 	CM.Backup.UpdateSpecial = Game.UpdateSpecial;
 	Game.UpdateSpecial = function() {
-		if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
-			var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
-			Game.mouseY -= timerBarHeight;
-			CM.Backup.UpdateSpecial();
-			Game.mouseY += timerBarHeight;
-		}
-		else {
-			CM.Backup.UpdateSpecial();
-		}
+		CM.Disp.FixMouseY(CM.Backup.UpdateSpecial);
 	}
 
 	// Probably better to load per minigame
@@ -2804,7 +2803,7 @@ CM.ReplaceNativeGrimoireDraw = function() {
 		CM.Backup.GrimoireDraw = minigame.draw;
 		Game.Objects['Wizard tower'].minigame.draw = function() {
 			CM.Backup.GrimoireDraw();
-			if (minigame.magic < minigame.magicM) {
+			if (CM.Config.GrimoireBar == 1 && minigame.magic < minigame.magicM) {
 				minigame.magicBarTextL.innerHTML += ' (' + CM.Disp.FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM)) + ')';
 			}
 		}
@@ -2989,10 +2988,11 @@ CM.ConfigDefault.Colors  = {
     Pink: '#ff1493',
     Brown: '#8b4513'
 };
+
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.012';
-CM.VersionMinor = '1';
+CM.VersionMinor = '2';
 
 /*******
  * Sim *
@@ -3045,7 +3045,7 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
 		price = Game.modifyBuildingPrice(null, price);
 		price = Math.ceil(price);
 		var giveBack = 0.25;
-		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.5;
+		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack = 0.5;
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;

@@ -29,17 +29,14 @@ CM.ReplaceNative = function() {
 		CM.Disp.UpdateTooltipLocation();
 	}
 
+	CM.Backup.UpdateWrinklers = Game.UpdateWrinklers;
+	Game.UpdateWrinklers = function() {
+		CM.Disp.FixMouseY(CM.Backup.UpdateWrinklers);
+	}
+
 	CM.Backup.UpdateSpecial = Game.UpdateSpecial;
 	Game.UpdateSpecial = function() {
-		if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
-			var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
-			Game.mouseY -= timerBarHeight;
-			CM.Backup.UpdateSpecial();
-			Game.mouseY += timerBarHeight;
-		}
-		else {
-			CM.Backup.UpdateSpecial();
-		}
+		CM.Disp.FixMouseY(CM.Backup.UpdateSpecial);
 	}
 
 	// Probably better to load per minigame
@@ -113,7 +110,7 @@ CM.ReplaceNativeGrimoireDraw = function() {
 		CM.Backup.GrimoireDraw = minigame.draw;
 		Game.Objects['Wizard tower'].minigame.draw = function() {
 			CM.Backup.GrimoireDraw();
-			if (minigame.magic < minigame.magicM) {
+			if (CM.Config.GrimoireBar == 1 && minigame.magic < minigame.magicM) {
 				minigame.magicBarTextL.innerHTML += ' (' + CM.Disp.FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM)) + ')';
 			}
 		}
@@ -298,8 +295,9 @@ CM.ConfigDefault.Colors  = {
     Pink: '#ff1493',
     Brown: '#8b4513'
 };
+
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.012';
-CM.VersionMinor = '1';
+CM.VersionMinor = '2';
 
