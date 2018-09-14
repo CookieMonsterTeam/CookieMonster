@@ -602,17 +602,17 @@ CM.Disp.UpdateBuildings = function() {
 	// build array of pointers, sort by pp, use array index (+2) as the grid row number
 	// (grid rows are 1-based indexing, and row 1 is the bulk buy/sell options)
 	var arr = Object.keys(CM.Cache.Objects).map(k =>
-		{
-			var o = CM.Cache.Objects[k];
-			o.name = k;
-			return o;
-		});
-	
-		arr.sort((a, b) => a.pp - b.pp);
-	
-		for (var x = 0; x < arr.length; x++)
-			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
-	}
+	{
+		var o = CM.Cache.Objects[k];
+		o.name = k;
+		return o;
+	});
+
+	arr.sort((a, b) => a.pp - b.pp);
+
+	for (var x = 0; x < arr.length; x++)
+		Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
+}
 
 CM.Disp.CreateUpgradeBar = function() {
 	CM.Disp.UpgradeBar = document.createElement('div');
