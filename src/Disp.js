@@ -206,6 +206,11 @@ CM.Disp.CreateCssArea = function() {
 	CM.Disp.Css.type = 'text/css';
 
 	document.head.appendChild(CM.Disp.Css);
+	
+	// given the architecture of your code, you probably want these lines somewhere else,
+	// but I stuck them here for convenience
+	l("products").style.display = "grid";
+	l("storeBulk").style.gridRow = "1/1";
 }
 
 CM.Disp.CreateBotBar = function() {
@@ -593,7 +598,21 @@ CM.Disp.UpdateBuildings = function() {
 			l('productPrice' + Game.Objects[i].id).style.color = '';
 		}
 	}
-}
+
+	// build array of pointers, sort by pp, use array index (+2) as the grid row number
+	// (grid rows are 1-based indexing, and row 1 is the bulk buy/sell options)
+	var arr = Object.keys(CM.Cache.Objects).map(k =>
+		{
+			var o = CM.Cache.Objects[k];
+			o.name = k;
+			return o;
+		});
+	
+		arr.sort((a, b) => a.pp - b.pp);
+	
+		for (var x = 0; x < arr.length; x++)
+			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
+	}
 
 CM.Disp.CreateUpgradeBar = function() {
 	CM.Disp.UpgradeBar = document.createElement('div');
