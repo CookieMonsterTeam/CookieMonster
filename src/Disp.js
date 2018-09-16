@@ -605,10 +605,14 @@ CM.Disp.UpdateBuildings = function() {
 	{
 		var o = CM.Cache.Objects[k];
 		o.name = k;
+		o.id = Game.Objects[k].id;
 		return o;
 	});
 
-	arr.sort((a, b) => a.pp - b.pp);
+	if (CM.Config.SortBuildings)
+		arr.sort((a, b) => a.pp - b.pp);
+	else
+		arr.sort((a, b) => a.id - b.id);
 
 	for (var x = 0; x < arr.length; x++)
 		Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
@@ -1053,6 +1057,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('BotBar'));
 	frag.appendChild(listing('TimerBar'));
 	frag.appendChild(listing('TimerBarPos'));
+	frag.appendChild(listing('SortBuildings'));
 	frag.appendChild(listing('BuildColor'));
 	frag.appendChild(listing('BulkBuildColor'));
 	frag.appendChild(listing('UpBarColor'));

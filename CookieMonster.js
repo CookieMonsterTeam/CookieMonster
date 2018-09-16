@@ -544,6 +544,14 @@ CM.ConfigData.SayTime = {label: ['Format Time OFF', 'Format Time ON'], desc: 'Ch
 CM.ConfigData.GrimoireBar = {label: ['Grimoire Magic Meter Timer OFF', 'Grimoire Magic Meter Timer ON'], desc: 'A timer on how long before the Grimoire magic meter is full', toggle: true};
 CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 
+CM.ConfigData.SortBuildings =
+{
+	label: ['Sort Buildings: DEFAULT', 'Sort Buildings: PPI'],
+	desc: 'Sort the display of buildings in either default order or by PP index',
+	toggle: false,
+	func: function () { CM.Disp.UpdateBuildings(); }
+};
+
 /********
  * Data *
  ********/
@@ -1156,17 +1164,21 @@ CM.Disp.UpdateBuildings = function() {
 	// build array of pointers, sort by pp, use array index (+2) as the grid row number
 	// (grid rows are 1-based indexing, and row 1 is the bulk buy/sell options)
 	var arr = Object.keys(CM.Cache.Objects).map(k =>
-		{
-			var o = CM.Cache.Objects[k];
-			o.name = k;
-			return o;
-		});
-	
+	{
+		var o = CM.Cache.Objects[k];
+		o.name = k;
+		o.id = Game.Objects[k].id;
+		return o;
+	});
+
+	if (CM.Config.SortBuildings)
 		arr.sort((a, b) => a.pp - b.pp);
-	
-		for (var x = 0; x < arr.length; x++)
-			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
-	}
+	else
+		arr.sort((a, b) => a.id - b.id);
+
+	for (var x = 0; x < arr.length; x++)
+		Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
+}
 
 CM.Disp.CreateUpgradeBar = function() {
 	CM.Disp.UpgradeBar = document.createElement('div');
@@ -1607,6 +1619,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('BotBar'));
 	frag.appendChild(listing('TimerBar'));
 	frag.appendChild(listing('TimerBarPos'));
+	frag.appendChild(listing('SortBuildings'));
 	frag.appendChild(listing('BuildColor'));
 	frag.appendChild(listing('BulkBuildColor'));
 	frag.appendChild(listing('UpBarColor'));
