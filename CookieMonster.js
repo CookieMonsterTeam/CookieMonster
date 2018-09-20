@@ -1884,8 +1884,8 @@ CM.Disp.AddMenuStats = function(title) {
 	if (CM.Config.StatsPref.Prestige) {
 		var possiblePresMax = Math.floor(Game.HowMuchPrestige(CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0)));
 		var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0));
-
 		stats.appendChild(listing(listingQuest('Prestige Level (CUR / MAX)', 'PrestMaxTooltipPlaceholder'),  document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePresMax))));
+		
 		var cookiesNextFrag = document.createDocumentFragment();
 		cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
 		var cookiesNextSmall = document.createElement('small');
@@ -1893,6 +1893,7 @@ CM.Disp.AddMenuStats = function(title) {
 		cookiesNextFrag.appendChild(cookiesNextSmall);
 		stats.appendChild(listing(listingQuest('Cookies To Next Level', 'NextPrestTooltipPlaceholder'), cookiesNextFrag));
 		stats.appendChild(listing(listingQuest('Heavenly Chips (CUR / MAX)', 'HeavenChipMaxTooltipPlaceholder'),  document.createTextNode(Beautify(Game.heavenlyChips) + ' / ' + Beautify((possiblePresMax - Game.prestige) + Game.heavenlyChips))));
+		
 		var resetBonus = CM.Sim.ResetBonus(possiblePresMax);
 		var resetFrag = document.createDocumentFragment();
 		resetFrag.appendChild(document.createTextNode(Beautify(resetBonus)));
@@ -1903,6 +1904,57 @@ CM.Disp.AddMenuStats = function(title) {
 			resetFrag.appendChild(resetSmall);
 		}
 		stats.appendChild(listing(listingQuest('Reset Bonus Income', 'ResetTooltipPlaceholder'), resetFrag));
+
+		var currentPrestige = Math.floor(Game.HowMuchPrestige(Game.cookiesReset));
+		var willHave = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
+		var willGet = willHave - currentPrestige;
+		var addCommas = (n) =>
+		{
+			var s1 = n.toString();
+			var s2 = '';
+			for (var i in s1)
+			{
+				if ((s1.length - i) % 3 == 0 && i > 0)
+					s2 += ',';
+				
+				s2 += s1[i];
+			}
+
+			return s2;
+		};
+
+		if (!Game.Has('Lucky digit'))
+		{
+			var delta7 = 7 - (willHave % 10);
+			if (delta7 < 0) delta7 += 10;
+			var next7Reset = willGet + delta7;
+			var next7Total = willHave + delta7;
+			var frag7 = document.createDocumentFragment();
+			frag7.appendChild(document.createTextNode(addCommas(next7Total) + " / " + addCommas(next7Reset) + " (+" + delta7 + ")"));
+			stats.appendChild(listing('Next "Lucky Digit" (total / reset)', frag7));
+		}
+		
+		if (!Game.Has('Lucky number'))
+		{
+			var delta777 = 777 - (willHave % 1000);
+			if (delta777 < 0) delta777 += 1000;
+			var next777Reset = willGet + delta777;
+			var next777Total = willHave + delta777;
+			var frag777 = document.createDocumentFragment();
+			frag777.appendChild(document.createTextNode(addCommas(next777Total) + " / " + addCommas(next777Reset) + " (+" + delta777 + ")"));
+			stats.appendChild(listing('Next "Lucky Number" (total / reset)', frag777));
+		}
+		
+		if (!Game.Has('Lucky payout'))
+		{
+			var delta777777 = 777777 - (willHave % 1000000);
+			if (delta777777 < 0) delta777777 += 1000000;
+			var next777777Reset = willGet + delta777777;
+			var next777777Total = willHave + delta777777;
+			var frag777777 = document.createDocumentFragment();
+			frag777777.appendChild(document.createTextNode(addCommas(next777777Total) + " / " + addCommas(next777777Reset) + " (+" + delta777777 + ")"));
+			stats.appendChild(listing('Next "Lucky Payout" (total / reset)', frag777777));
+		}
 	}
 
 	if (Game.cpsSucked > 0) {
