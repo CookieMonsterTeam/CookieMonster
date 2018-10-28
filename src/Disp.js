@@ -1665,7 +1665,7 @@ CM.Disp.Tooltip = function(type, name) {
 	}
 	else if (type == 'u') {
 		if (!Game.UpgradesInStore[name]) return '';
-		l('tooltip').innerHTML = Game.crate(Game.UpgradesInStore[name], 'store', undefined, undefined, 1)();
+		l('tooltip').innerHTML = Game.crateTooltip(Game.UpgradesInStore[name], 'store');
 	}
 	else { // Grimoire
 		l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)();
