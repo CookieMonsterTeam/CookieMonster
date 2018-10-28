@@ -541,6 +541,7 @@ CM.ConfigData.Stats = {label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra 
 CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 5 seconds', toggle: false};
 CM.ConfigData.TimeFormat = {label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
 CM.ConfigData.SayTime = {label: ['Format Time OFF', 'Format Time ON'], desc: 'Change how time is displayed in statistics', toggle: true, func: function() {CM.Disp.ToggleSayTime();}};
+CM.ConfigData.GrimoireBar = {label: ['Grimoire Magic Meter Timer OFF', 'Grimoire Magic Meter Timer ON'], desc: 'A timer on how long before the Grimoire magic meter is full', toggle: true};
 CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 
 /********
@@ -1568,14 +1569,20 @@ CM.Disp.AddMenuPref = function(title) {
 		input.id = CM.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'text';
-		input.value = CM.Config[config];
+		input.readOnly = true;
+		input.setAttribute('value', CM.Config[config]);
 		input.style.width = '300px';
 		div.appendChild(input);
 		div.appendChild(document.createTextNode(' '));
+		var inputPrompt = document.createElement('input');
+		inputPrompt.id = CM.ConfigPrefix + config + 'Prompt';
+		inputPrompt.className = 'option';
+		inputPrompt.type = 'text';
+		inputPrompt.setAttribute('value', CM.Config[config]);
 		var a = document.createElement('a');
 		a.className = 'option';
-		a.onclick = function() {CM.Config[config] = l(CM.ConfigPrefix + config).value;CM.SaveConfig(CM.Config);};
-		a.textContent = 'Save';
+		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Config[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.SaveConfig(CM.Config); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
+		a.textContent = 'Edit';
 		div.appendChild(a);
 		var label = document.createElement('label');
 		label.textContent = CM.ConfigData[config].desc;
@@ -1597,7 +1604,7 @@ CM.Disp.AddMenuPref = function(title) {
 		input.id = CM.ConfigPrefix + 'Color' + CM.Disp.colors[i];
 		input.className = 'option';
 		input.style.width = '65px';
-		input.value = CM.Config.Colors[CM.Disp.colors[i]];
+		input.setAttribute('value', CM.Config.Colors[CM.Disp.colors[i]]);
 		div.appendChild(input);
 		eval('var change = function() {CM.Config.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.SaveConfig(CM.Config);}');
 		var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
@@ -1657,6 +1664,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('UpStats'));
 	frag.appendChild(listing('TimeFormat'));
 	frag.appendChild(listing('SayTime'));
+	frag.appendChild(listing('GrimoireBar'));
 
 	frag.appendChild(header('Other'));
 	frag.appendChild(listing('Scale'));
@@ -2044,6 +2052,18 @@ CM.Disp.RefreshMenu = function() {
 	if (CM.Config.UpStats && Game.onMenu == 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps == 0) Game.UpdateMenu();
 }
 
+CM.Disp.FixMouseY = function(target) {
+	if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+		var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
+		Game.mouseY -= timerBarHeight;
+		target();
+		Game.mouseY += timerBarHeight;
+	}
+	else {
+		target();
+	}
+}
+
 CM.Disp.UpdateTooltipLocation = function() {
 	if (Game.tooltip.origin == 'store') {
 		var warnCautOffset = 0;
@@ -2199,7 +2219,7 @@ CM.Disp.Tooltip = function(type, name) {
 	}
 	else if (type == 'u') {
 		if (!Game.UpgradesInStore[name]) return '';
-		l('tooltip').innerHTML = Game.crate(Game.UpgradesInStore[name], 'store', undefined, undefined, 1)();
+		l('tooltip').innerHTML = Game.crateTooltip(Game.UpgradesInStore[name], 'store');
 	}
 	else { // Grimoire
 		l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)();
@@ -2433,20 +2453,9 @@ CM.Disp.AddWrinklerAreaDetect = function() {
 CM.Disp.CheckWrinklerTooltip = function() {
 	if (CM.Config.ToolWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) {
 		var showingTooltip = false;
-		var mouseInWrinkler = function (x, y, rect) {
-			var dx = x + Math.sin(-rect.r) * (-(rect.h / 2 - rect.o)), dy = y + Math.cos(-rect.r) * (-(rect.h / 2 - rect.o));
-			var h1 = Math.sqrt(dx * dx + dy * dy);
-			var currA = Math.atan2(dy, dx);
-			var newA = currA - rect.r;
-			var x2 = Math.cos(newA) * h1;
-			var y2 = Math.sin(newA) * h1;
-			if (x2 > -0.5 * rect.w && x2 < 0.5 * rect.w && y2 > -0.5 * rect.h && y2 < 0.5 * rect.h) return true;
-			return false;
-		}
 		for (var i in Game.wrinklers) {
 			var me = Game.wrinklers[i];
-			var rect = {w: 100, h: 200, r: (-me.r) * Math.PI / 180, o: 10};
-			if (me.phase > 0 && Game.LeftBackground && Game.mouseX < Game.LeftBackground.canvas.width && mouseInWrinkler(Game.mouseX - me.x, Game.mouseY - me.y, rect)) {
+			if (me.phase > 0 && me.selected) {
 				showingTooltip = true;
 				if (CM.Disp.TooltipWrinklerCache[i] == 0) {
 					var placeholder = document.createElement('div');
@@ -2589,17 +2598,14 @@ CM.ReplaceNative = function() {
 		CM.Disp.UpdateTooltipLocation();
 	}
 
+	CM.Backup.UpdateWrinklers = Game.UpdateWrinklers;
+	Game.UpdateWrinklers = function() {
+		CM.Disp.FixMouseY(CM.Backup.UpdateWrinklers);
+	}
+
 	CM.Backup.UpdateSpecial = Game.UpdateSpecial;
 	Game.UpdateSpecial = function() {
-		if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
-			var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
-			Game.mouseY -= timerBarHeight;
-			CM.Backup.UpdateSpecial();
-			Game.mouseY += timerBarHeight;
-		}
-		else {
-			CM.Backup.UpdateSpecial();
-		}
+		CM.Disp.FixMouseY(CM.Backup.UpdateSpecial);
 	}
 
 	// Probably better to load per minigame
@@ -2673,7 +2679,7 @@ CM.ReplaceNativeGrimoireDraw = function() {
 		CM.Backup.GrimoireDraw = minigame.draw;
 		Game.Objects['Wizard tower'].minigame.draw = function() {
 			CM.Backup.GrimoireDraw();
-			if (minigame.magic < minigame.magicM) {
+			if (CM.Config.GrimoireBar == 1 && minigame.magic < minigame.magicM) {
 				minigame.magicBarTextL.innerHTML += ' (' + CM.Disp.FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM)) + ')';
 			}
 		}
@@ -2807,10 +2813,10 @@ CM.DelayInit = function() {
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
 
-CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 3, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, TooltipBuildUp: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, TooltipGrim:1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
+CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 3, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, TooltipBuildUp: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, TooltipGrim:1, ToolWrink: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, GrimoireBar: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '2.012';
+CM.VersionMajor = '2.016';
 CM.VersionMinor = '1';
 
 /*******
@@ -2864,7 +2870,7 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
 		price = Game.modifyBuildingPrice(null, price);
 		price = Math.ceil(price);
 		var giveBack = 0.25;
-		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.5;
+		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack = 0.5;
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;
@@ -2900,9 +2906,7 @@ CM.Sim.hasAura = function(what) {
 		return false;
 }
 
-eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString().split('Game.Has').join('CM.Sim.Has').split('me.tieredUpgrades').join('Game.Objects[me.name].tieredUpgrades').split('me.synergies').join('Game.Objects[me.name].synergies').split('syn.buildingTie1.amount').join('CM.Sim.Objects[syn.buildingTie1.name].amount').split('syn.buildingTie2.amount').join('CM.Sim.Objects[syn.buildingTie2.name].amount'));
-
-eval('CM.Sim.getGrandmaSynergyUpgradeMultiplier = ' + Game.getGrandmaSynergyUpgradeMultiplier.toString().split('Game.Objects[\'Grandma\']').join('CM.Sim.Objects[\'Grandma\']'));
+eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString().split('Game.Has').join('CM.Sim.Has').split('me.tieredUpgrades').join('Game.Objects[me.name].tieredUpgrades').split('me.synergies').join('Game.Objects[me.name].synergies').split('syn.buildingTie1.amount').join('CM.Sim.Objects[syn.buildingTie1.name].amount').split('syn.buildingTie2.amount').join('CM.Sim.Objects[syn.buildingTie2.name].amount').split('me.grandma').join('Game.Objects[me.name].grandma').split('me.id').join('Game.Objects[me.name].id').split('Game.Objects[\'Grandma\']').join('CM.Sim.Objects[\'Grandma\']'));
 
 CM.Sim.getCPSBuffMult = function() {
 	var mult = 1;
@@ -2919,7 +2923,7 @@ CM.Sim.InitData = function() {
 		CM.Sim.Objects[i] = {};
 		var me = Game.Objects[i];
 		var you = CM.Sim.Objects[i];
-		eval('you.cps = ' + me.cps.toString().split('Game.Has').join('CM.Sim.Has').split('Game.hasAura').join('CM.Sim.hasAura').split('Game.Objects').join('CM.Sim.Objects').split('Game.GetTieredCpsMult').join('CM.Sim.GetTieredCpsMult').split('Game.getGrandmaSynergyUpgradeMultiplier').join('CM.Sim.getGrandmaSynergyUpgradeMultiplier'));
+		eval('you.cps = ' + me.cps.toString().split('Game.Has').join('CM.Sim.Has').split('Game.hasAura').join('CM.Sim.hasAura').split('Game.Objects').join('CM.Sim.Objects').split('Game.GetTieredCpsMult').join('CM.Sim.GetTieredCpsMult'));
 		// Below is needed for above eval!
 		you.baseCps = me.baseCps;
 		you.name = me.name;
@@ -2975,11 +2979,13 @@ CM.Sim.CopyData = function() {
 CM.Sim.CalculateGains = function() {
 	CM.Sim.cookiesPs = 0;
 	var mult = 1;
-
+	
 	if (Game.ascensionMode != 1) mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
 	
 	// TODO Store minigame buffs?
 	mult *= Game.eff('cps');
+	
+	if (CM.Sim.Has('Heralds') && Game.ascensionMode != 1) mult *= 1 + 0.01 * Game.heralds;
 
 	var cookieMult = 0;
 	for (var i in Game.cookieUpgrades) {
@@ -3123,13 +3129,17 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Golden switch [off]')) {
 		var goldenSwitchMult = 1.5;
 		if (CM.Sim.Has('Residual luck')) {
-			var upgrades = ['Get lucky', 'Lucky day', 'Serendipity', 'Heavenly luck', 'Lasting fortune', 'Decisive fate', 'Lucky digit', 'Lucky number', 'Lucky payout'];
+			var upgrades = Game.goldenCookieUpgrades;
 			for (var i in upgrades) {
 				if (CM.Sim.Has(upgrades[i])) goldenSwitchMult += 0.1;
 			}
 		}
 		mult *= goldenSwitchMult;
 	}
+	if (CM.Sim.Has('Shimmering veil [off]')) mult *= 1.5;
+	// Removed debug upgrades
+	
+	// Removed buffs
 
 	CM.Sim.cookiesPs *= mult;
 
@@ -3139,20 +3149,11 @@ CM.Sim.CalculateGains = function() {
 
 CM.Sim.CheckOtherAchiev = function() {
 	var grandmas = 0;
-	if (CM.Sim.Has('Farmer grandmas')) grandmas++;
-	if (CM.Sim.Has('Worker grandmas')) grandmas++;
-	if (CM.Sim.Has('Miner grandmas')) grandmas++;
-	if (CM.Sim.Has('Cosmic grandmas')) grandmas++;
-	if (CM.Sim.Has('Transmuted grandmas')) grandmas++;
-	if (CM.Sim.Has('Altered grandmas')) grandmas++;
-	if (CM.Sim.Has('Grandmas\' grandmas')) grandmas++;
-	if (CM.Sim.Has('Antigrandmas')) grandmas++;
-	if (CM.Sim.Has('Rainbow grandmas')) grandmas++;
-	if (CM.Sim.Has('Banker grandmas')) grandmas++;
-	if (CM.Sim.Has('Priestess grandmas')) grandmas++;
-	if (CM.Sim.Has('Witch grandmas')) grandmas++;
-	if (CM.Sim.Has('Lucky grandmas')) grandmas++;
+	for (var i in Game.GrandmaSynergies) {
+		if (CM.Sim.Has(Game.GrandmaSynergies[i])) grandmas++;
+	}
 	if (!CM.Sim.HasAchiev('Elder') && grandmas >= 7) CM.Sim.Win('Elder');
+	if (!CM.Sim.HasAchiev('Veteran') && grandmas >= 14) CM.Sim.Win('Veteran');
 
 	var buildingsOwned = 0;
 	var mathematician = 1;
@@ -3192,6 +3193,7 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (CM.Sim.UpgradesOwned >= 200) CM.Sim.Win('Lord of Progress');
 
 	if (buildingsOwned >= 3000 && CM.Sim.UpgradesOwned >= 300) CM.Sim.Win('Polymath');
+	if (buildingsOwned >= 4000 && CM.Sim.UpgradesOwned >= 400) CM.Sim.Win('Renaissance baker');
 
 	if (CM.Sim.Objects['Cursor'].amount + CM.Sim.Objects['Grandma'].amount >= 777) CM.Sim.Win('The elder scrolls');
 

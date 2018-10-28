@@ -1015,14 +1015,20 @@ CM.Disp.AddMenuPref = function(title) {
 		input.id = CM.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'text';
-		input.value = CM.Config[config];
+		input.readOnly = true;
+		input.setAttribute('value', CM.Config[config]);
 		input.style.width = '300px';
 		div.appendChild(input);
 		div.appendChild(document.createTextNode(' '));
+		var inputPrompt = document.createElement('input');
+		inputPrompt.id = CM.ConfigPrefix + config + 'Prompt';
+		inputPrompt.className = 'option';
+		inputPrompt.type = 'text';
+		inputPrompt.setAttribute('value', CM.Config[config]);
 		var a = document.createElement('a');
 		a.className = 'option';
-		a.onclick = function() {CM.Config[config] = l(CM.ConfigPrefix + config).value;CM.SaveConfig(CM.Config);};
-		a.textContent = 'Save';
+		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Config[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.SaveConfig(CM.Config); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
+		a.textContent = 'Edit';
 		div.appendChild(a);
 		var label = document.createElement('label');
 		label.textContent = CM.ConfigData[config].desc;
@@ -1044,7 +1050,7 @@ CM.Disp.AddMenuPref = function(title) {
 		input.id = CM.ConfigPrefix + 'Color' + CM.Disp.colors[i];
 		input.className = 'option';
 		input.style.width = '65px';
-		input.value = CM.Config.Colors[CM.Disp.colors[i]];
+		input.setAttribute('value', CM.Config.Colors[CM.Disp.colors[i]]);
 		div.appendChild(input);
 		eval('var change = function() {CM.Config.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.SaveConfig(CM.Config);}');
 		var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
@@ -1104,6 +1110,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('UpStats'));
 	frag.appendChild(listing('TimeFormat'));
 	frag.appendChild(listing('SayTime'));
+	frag.appendChild(listing('GrimoireBar'));
 
 	frag.appendChild(header('Other'));
 	frag.appendChild(listing('Scale'));
@@ -1491,6 +1498,18 @@ CM.Disp.RefreshMenu = function() {
 	if (CM.Config.UpStats && Game.onMenu == 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps == 0) Game.UpdateMenu();
 }
 
+CM.Disp.FixMouseY = function(target) {
+	if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+		var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
+		Game.mouseY -= timerBarHeight;
+		target();
+		Game.mouseY += timerBarHeight;
+	}
+	else {
+		target();
+	}
+}
+
 CM.Disp.UpdateTooltipLocation = function() {
 	if (Game.tooltip.origin == 'store') {
 		var warnCautOffset = 0;
@@ -1646,7 +1665,7 @@ CM.Disp.Tooltip = function(type, name) {
 	}
 	else if (type == 'u') {
 		if (!Game.UpgradesInStore[name]) return '';
-		l('tooltip').innerHTML = Game.crate(Game.UpgradesInStore[name], 'store', undefined, undefined, 1)();
+		l('tooltip').innerHTML = Game.crateTooltip(Game.UpgradesInStore[name], 'store');
 	}
 	else { // Grimoire
 		l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)();
@@ -1880,20 +1899,9 @@ CM.Disp.AddWrinklerAreaDetect = function() {
 CM.Disp.CheckWrinklerTooltip = function() {
 	if (CM.Config.ToolWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) {
 		var showingTooltip = false;
-		var mouseInWrinkler = function (x, y, rect) {
-			var dx = x + Math.sin(-rect.r) * (-(rect.h / 2 - rect.o)), dy = y + Math.cos(-rect.r) * (-(rect.h / 2 - rect.o));
-			var h1 = Math.sqrt(dx * dx + dy * dy);
-			var currA = Math.atan2(dy, dx);
-			var newA = currA - rect.r;
-			var x2 = Math.cos(newA) * h1;
-			var y2 = Math.sin(newA) * h1;
-			if (x2 > -0.5 * rect.w && x2 < 0.5 * rect.w && y2 > -0.5 * rect.h && y2 < 0.5 * rect.h) return true;
-			return false;
-		}
 		for (var i in Game.wrinklers) {
 			var me = Game.wrinklers[i];
-			var rect = {w: 100, h: 200, r: (-me.r) * Math.PI / 180, o: 10};
-			if (me.phase > 0 && Game.LeftBackground && Game.mouseX < Game.LeftBackground.canvas.width && mouseInWrinkler(Game.mouseX - me.x, Game.mouseY - me.y, rect)) {
+			if (me.phase > 0 && me.selected) {
 				showingTooltip = true;
 				if (CM.Disp.TooltipWrinklerCache[i] == 0) {
 					var placeholder = document.createElement('div');

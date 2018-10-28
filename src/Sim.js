@@ -49,7 +49,7 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
 		price = Game.modifyBuildingPrice(null, price);
 		price = Math.ceil(price);
 		var giveBack = 0.25;
-		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack=0.5;
+		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack = 0.5;
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;
@@ -85,9 +85,7 @@ CM.Sim.hasAura = function(what) {
 		return false;
 }
 
-eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString().split('Game.Has').join('CM.Sim.Has').split('me.tieredUpgrades').join('Game.Objects[me.name].tieredUpgrades').split('me.synergies').join('Game.Objects[me.name].synergies').split('syn.buildingTie1.amount').join('CM.Sim.Objects[syn.buildingTie1.name].amount').split('syn.buildingTie2.amount').join('CM.Sim.Objects[syn.buildingTie2.name].amount'));
-
-eval('CM.Sim.getGrandmaSynergyUpgradeMultiplier = ' + Game.getGrandmaSynergyUpgradeMultiplier.toString().split('Game.Objects[\'Grandma\']').join('CM.Sim.Objects[\'Grandma\']'));
+eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString().split('Game.Has').join('CM.Sim.Has').split('me.tieredUpgrades').join('Game.Objects[me.name].tieredUpgrades').split('me.synergies').join('Game.Objects[me.name].synergies').split('syn.buildingTie1.amount').join('CM.Sim.Objects[syn.buildingTie1.name].amount').split('syn.buildingTie2.amount').join('CM.Sim.Objects[syn.buildingTie2.name].amount').split('me.grandma').join('Game.Objects[me.name].grandma').split('me.id').join('Game.Objects[me.name].id').split('Game.Objects[\'Grandma\']').join('CM.Sim.Objects[\'Grandma\']'));
 
 CM.Sim.getCPSBuffMult = function() {
 	var mult = 1;
@@ -104,7 +102,7 @@ CM.Sim.InitData = function() {
 		CM.Sim.Objects[i] = {};
 		var me = Game.Objects[i];
 		var you = CM.Sim.Objects[i];
-		eval('you.cps = ' + me.cps.toString().split('Game.Has').join('CM.Sim.Has').split('Game.hasAura').join('CM.Sim.hasAura').split('Game.Objects').join('CM.Sim.Objects').split('Game.GetTieredCpsMult').join('CM.Sim.GetTieredCpsMult').split('Game.getGrandmaSynergyUpgradeMultiplier').join('CM.Sim.getGrandmaSynergyUpgradeMultiplier'));
+		eval('you.cps = ' + me.cps.toString().split('Game.Has').join('CM.Sim.Has').split('Game.hasAura').join('CM.Sim.hasAura').split('Game.Objects').join('CM.Sim.Objects').split('Game.GetTieredCpsMult').join('CM.Sim.GetTieredCpsMult'));
 		// Below is needed for above eval!
 		you.baseCps = me.baseCps;
 		you.name = me.name;
@@ -160,11 +158,13 @@ CM.Sim.CopyData = function() {
 CM.Sim.CalculateGains = function() {
 	CM.Sim.cookiesPs = 0;
 	var mult = 1;
-
+	
 	if (Game.ascensionMode != 1) mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
 	
 	// TODO Store minigame buffs?
 	mult *= Game.eff('cps');
+	
+	if (CM.Sim.Has('Heralds') && Game.ascensionMode != 1) mult *= 1 + 0.01 * Game.heralds;
 
 	var cookieMult = 0;
 	for (var i in Game.cookieUpgrades) {
@@ -308,13 +308,17 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Golden switch [off]')) {
 		var goldenSwitchMult = 1.5;
 		if (CM.Sim.Has('Residual luck')) {
-			var upgrades = ['Get lucky', 'Lucky day', 'Serendipity', 'Heavenly luck', 'Lasting fortune', 'Decisive fate', 'Lucky digit', 'Lucky number', 'Lucky payout'];
+			var upgrades = Game.goldenCookieUpgrades;
 			for (var i in upgrades) {
 				if (CM.Sim.Has(upgrades[i])) goldenSwitchMult += 0.1;
 			}
 		}
 		mult *= goldenSwitchMult;
 	}
+	if (CM.Sim.Has('Shimmering veil [off]')) mult *= 1.5;
+	// Removed debug upgrades
+	
+	// Removed buffs
 
 	CM.Sim.cookiesPs *= mult;
 
@@ -324,20 +328,11 @@ CM.Sim.CalculateGains = function() {
 
 CM.Sim.CheckOtherAchiev = function() {
 	var grandmas = 0;
-	if (CM.Sim.Has('Farmer grandmas')) grandmas++;
-	if (CM.Sim.Has('Worker grandmas')) grandmas++;
-	if (CM.Sim.Has('Miner grandmas')) grandmas++;
-	if (CM.Sim.Has('Cosmic grandmas')) grandmas++;
-	if (CM.Sim.Has('Transmuted grandmas')) grandmas++;
-	if (CM.Sim.Has('Altered grandmas')) grandmas++;
-	if (CM.Sim.Has('Grandmas\' grandmas')) grandmas++;
-	if (CM.Sim.Has('Antigrandmas')) grandmas++;
-	if (CM.Sim.Has('Rainbow grandmas')) grandmas++;
-	if (CM.Sim.Has('Banker grandmas')) grandmas++;
-	if (CM.Sim.Has('Priestess grandmas')) grandmas++;
-	if (CM.Sim.Has('Witch grandmas')) grandmas++;
-	if (CM.Sim.Has('Lucky grandmas')) grandmas++;
+	for (var i in Game.GrandmaSynergies) {
+		if (CM.Sim.Has(Game.GrandmaSynergies[i])) grandmas++;
+	}
 	if (!CM.Sim.HasAchiev('Elder') && grandmas >= 7) CM.Sim.Win('Elder');
+	if (!CM.Sim.HasAchiev('Veteran') && grandmas >= 14) CM.Sim.Win('Veteran');
 
 	var buildingsOwned = 0;
 	var mathematician = 1;
@@ -377,6 +372,7 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (CM.Sim.UpgradesOwned >= 200) CM.Sim.Win('Lord of Progress');
 
 	if (buildingsOwned >= 3000 && CM.Sim.UpgradesOwned >= 300) CM.Sim.Win('Polymath');
+	if (buildingsOwned >= 4000 && CM.Sim.UpgradesOwned >= 400) CM.Sim.Win('Renaissance baker');
 
 	if (CM.Sim.Objects['Cursor'].amount + CM.Sim.Objects['Grandma'].amount >= 777) CM.Sim.Win('The elder scrolls');
 
