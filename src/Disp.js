@@ -1055,14 +1055,20 @@ CM.Disp.AddMenuPref = function(title) {
 		input.id = CM.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'text';
-		input.value = CM.Config[config];
+		input.readOnly = true;
+		input.setAttribute('value', CM.Config[config]);
 		input.style.width = '300px';
 		div.appendChild(input);
 		div.appendChild(document.createTextNode(' '));
+		var inputPrompt = document.createElement('input');
+		inputPrompt.id = CM.ConfigPrefix + config + 'Prompt';
+		inputPrompt.className = 'option';
+		inputPrompt.type = 'text';
+		inputPrompt.setAttribute('value', CM.Config[config]);
 		var a = document.createElement('a');
 		a.className = 'option';
-		a.onclick = function() {CM.Config[config] = l(CM.ConfigPrefix + config).value;CM.SaveConfig(CM.Config);};
-		a.textContent = 'Save';
+		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Config[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.SaveConfig(CM.Config); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
+		a.textContent = 'Edit';
 		div.appendChild(a);
 		var label = document.createElement('label');
 		label.textContent = CM.ConfigData[config].desc;
@@ -1084,7 +1090,7 @@ CM.Disp.AddMenuPref = function(title) {
 		input.id = CM.ConfigPrefix + 'Color' + CM.Disp.colors[i];
 		input.className = 'option';
 		input.style.width = '65px';
-		input.value = CM.Config.Colors[CM.Disp.colors[i]];
+		input.setAttribute('value', CM.Config.Colors[CM.Disp.colors[i]]);
 		div.appendChild(input);
 		eval('var change = function() {CM.Config.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.SaveConfig(CM.Config);}');
 		var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
@@ -1711,7 +1717,7 @@ CM.Disp.Tooltip = function(type, name) {
 	}
 	else if (type == 'u') {
 		if (!Game.UpgradesInStore[name]) return '';
-		l('tooltip').innerHTML = Game.crate(Game.UpgradesInStore[name], 'store', undefined, undefined, 1)();
+		l('tooltip').innerHTML = Game.crateTooltip(Game.UpgradesInStore[name], 'store');
 	}
 	else if (type === 's') {
 		// Sugar Lump
