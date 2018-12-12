@@ -745,30 +745,30 @@ CM.Disp.CreateWhiteScreen = function() {
 	l('wrapper').appendChild(CM.Disp.WhiteScreen);
 }
 
-CM.Disp.Flash = function(mode) {
-	if ((CM.Config.Flash == 1 && mode == 3) || mode == 1) {
+CM.Disp.Flash = function(mode, config) {
+	if ((CM.Config[config] == 1 && mode == 3) || mode == 1) {
 		CM.Disp.WhiteScreen.style.opacity = '0.5';
 		if (mode == 3) {
 			CM.Disp.WhiteScreen.style.display = 'inline';
-			setTimeout(function() {CM.Disp.Flash(2);}, 1000/Game.fps);
+			setTimeout(function() {CM.Disp.Flash(2, config);}, 1000/Game.fps);
 		}
 		else {
-			setTimeout(function() {CM.Disp.Flash(0);}, 1000/Game.fps);
+			setTimeout(function() {CM.Disp.Flash(0, config);}, 1000/Game.fps);
 		}
 	}
 	else if (mode == 2) {
 		CM.Disp.WhiteScreen.style.opacity = '1';
-		setTimeout(function() {CM.Disp.Flash(1);}, 1000/Game.fps);
+		setTimeout(function() {CM.Disp.Flash(1, config);}, 1000/Game.fps);
 	}
 	else if (mode == 0) {
 		CM.Disp.WhiteScreen.style.display = 'none';
 	}
 }
 
-CM.Disp.PlaySound = function(url) {
-	if (CM.Config.Sound == 1) {
+CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
+	if (CM.Config[sndConfig] == 1) {
 		var sound = new realAudio(url);
-		sound.volume = CM.Config.Volume / 100;
+		sound.volume = CM.Config[volConfig] / 100;
 		sound.play();
 	}
 }
@@ -853,8 +853,8 @@ CM.Disp.CheckGoldenCookie = function() {
 				CM.Disp.GCTimer.style.top = CM.Disp.goldenShimmer.l.style.top;
 			}
 
-			CM.Disp.Flash(3);
-			CM.Disp.PlaySound(CM.Config.GCSoundURL);
+			CM.Disp.Flash(3, 'GCFlash');
+			CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
 		}
 		else if (CM.Config.GCTimer == 1) CM.Disp.GCTimer.style.display = 'none';
 	}
@@ -878,8 +878,8 @@ CM.Disp.CheckSeasonPopup = function() {
 				}
 			}
 
-			CM.Disp.Flash(3);
-			CM.Disp.PlaySound(CM.Config.SeaSoundURL);
+			CM.Disp.Flash(3, 'SeaFlash');
+			CM.Disp.PlaySound(CM.Config.SeaSoundURL, 'SeaSound', 'SeaVolume');
 		}
 	}
 }
@@ -1003,6 +1003,30 @@ CM.Disp.AddMenuPref = function(title) {
 		div.appendChild(label);
 		return div;
 	}
+	
+	var vol = function(config) {
+		var volConfig = config;
+		var volume = document.createElement('div');
+		volume.className = 'listing';
+		var minus = document.createElement('a');
+		minus.className = 'option';
+		minus.onclick = function() {CM.ToggleConfigDown(volConfig);};
+		minus.textContent = '-';
+		volume.appendChild(minus);
+		var volText = document.createElement('span');
+		volText.id = CM.ConfigPrefix + volConfig;
+		volText.textContent = CM.Disp.GetConfigDisplay(volConfig);
+		volume.appendChild(volText);
+		var plus = document.createElement('a');
+		plus.className = 'option';
+		plus.onclick = function() {CM.ToggleConfigUp(volConfig);};
+		plus.textContent = '+';
+		volume.appendChild(plus);
+		var volLabel = document.createElement('label');
+		volLabel.textContent = CM.ConfigData[volConfig].desc;
+		volume.appendChild(volLabel);
+		return volume;
+	}
 
 	var url = function(config) {
 		var div = document.createElement('div');
@@ -1068,34 +1092,17 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('ToolWarnCautBon'));
 
 	frag.appendChild(header('Golden Cookie/Season Popup Emphasis'));
-	frag.appendChild(listing('Flash'));
-	frag.appendChild(listing('Sound'));
-	var volConfig = 'Volume';
-	var volume = document.createElement('div');
-	volume.className = 'listing';
-	var minus = document.createElement('a');
-	minus.className = 'option';
-	minus.onclick = function() {CM.ToggleConfigDown(volConfig);};
-	minus.textContent = '-';
-	volume.appendChild(minus);
-	var volText = document.createElement('span');
-	volText.id = CM.ConfigPrefix + volConfig;
-	volText.textContent = CM.Disp.GetConfigDisplay(volConfig);
-	volume.appendChild(volText);
-	var plus = document.createElement('a');
-	plus.className = 'option';
-	plus.onclick = function() {CM.ToggleConfigUp(volConfig);};
-	plus.textContent = '+';
-	volume.appendChild(plus);
-	var volLabel = document.createElement('label');
-	volLabel.textContent = CM.ConfigData[volConfig].desc;
-	volume.appendChild(volLabel);
-	frag.appendChild(volume);
+	frag.appendChild(listing('GCFlash'));
+	frag.appendChild(listing('GCSound'));
+	frag.appendChild(vol('GCVolume'));
 	frag.appendChild(url('GCSoundURL'));
-	frag.appendChild(url('SeaSoundURL'));
 	frag.appendChild(listing('GCTimer'));
-	frag.appendChild(listing('Title'));
 	frag.appendChild(listing('Favicon'));
+	frag.appendChild(listing('SeaFlash'));
+	frag.appendChild(listing('SeaSound'));
+	frag.appendChild(vol('SeaVolume'));
+	frag.appendChild(url('SeaSoundURL'));
+	frag.appendChild(listing('Title'));
 
 	frag.appendChild(header('Tooltip'));
 	frag.appendChild(listing('TooltipBuildUp'));
@@ -1126,7 +1133,8 @@ CM.Disp.AddMenuPref = function(title) {
 	l('menu').childNodes[2].insertBefore(frag, l('menu').childNodes[2].childNodes[l('menu').childNodes[2].childNodes.length - 1]);
 
 	CM.Disp.FormatButtonOnClickBak = l('formatButton').onclick;
-	l('formatButton').onclick = function() {Game.Toggle('format', 'formatButton', 'Short numbers OFF', 'Short numbers ON', '1'); PlaySound('snd/tick.mp3'); CM.Disp.RefreshScale();};
+	eval('l(\'formatButton\').onclick = ' + l('formatButton').onclick.toString().split('mp3\');').join('mp3\'); CM.Disp.RefreshScale();'));
+	//l('formatButton').onclick = function() {Game.Toggle('format', 'formatButton', 'Short numbers OFF', 'Short numbers ON', '1'); PlaySound('snd/tick.mp3'); CM.Disp.RefreshScale();};
 }
 
 CM.Disp.AddMenuStats = function(title) {
@@ -1470,7 +1478,10 @@ CM.Disp.AddMenuStats = function(title) {
 
 	stats.appendChild(header('Miscellaneous', 'Misc'));
 	if (CM.Config.StatsPref.Misc) {
-		stats.appendChild(listing('Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Config.AvgCPSHist] / 60) + (CM.Config.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))));
+		stats.appendChild(listing(
+			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Config.AvgCPSHist] / 60) + (CM.Config.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', 
+			document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))
+		));
 		stats.appendChild(listing('Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Config.AvgClicksHist] + (CM.Config.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
 		stats.appendChild(listing('Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
 	}
@@ -1636,7 +1647,9 @@ CM.Disp.Tooltip = function(type, name) {
 			var buildPrice = CM.Sim.BuildingGetPrice(Game.Objects[name].basePrice, 0, Game.Objects[name].free, Game.Objects[name].amount);
 			var amortizeAmount = buildPrice - Game.Objects[name].totalCookies;
 			if (amortizeAmount > 0) {
-				l('tooltip').innerHTML = l('tooltip').innerHTML.split('so far</div>').join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) == 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor(buildPrice, Game.Objects[name].totalCookies, (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text + ')</div>');
+				l('tooltip').innerHTML = l('tooltip').innerHTML
+					.split('so far</div>')
+					.join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) == 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor(buildPrice, Game.Objects[name].totalCookies, (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text + ')</div>');
 			}
 		}
 		if (Game.buyMode == 1) {
@@ -2012,4 +2025,13 @@ CM.Disp.TooltipWrinklerCache = [];
 for (var i in Game.wrinklers) {
 	CM.Disp.TooltipWrinklerCache[i] = 0;
 }
+
+CM.Disp.TooltipText = [
+	['GoldCookTooltipPlaceholder', 'Calculated with Golden Switch off', '200px'], 
+	['PrestMaxTooltipPlaceholder', 'The MAX prestige is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '380px'], 
+	['NextPrestTooltipPlaceholder', 'Calculated with cookies gained from wrinklers and Chocolate egg', '200px'], 
+	['HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '390px'], 
+	['ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels unlocked at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset', '370px'], 
+	['ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer aura, and then buying Chocolate egg', '280px']
+];
 
