@@ -549,6 +549,13 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.SeaVolume.label[i] = i + '%';
 }
 CM.ConfigData.SeaSoundURL = {label: 'Season Special Sound URL:', desc: 'URL of the sound to be played when a Season Special spawns'};
+CM.ConfigData.GardFlash = {label: ['Garden Tick Flash OFF', 'Garden Tick Flash ON'], desc: 'Flash screen on Garden Tick', toggle: true};
+CM.ConfigData.GardSound = {label: ['Garden Tick Sound OFF', 'Garden Tick Sound ON'], desc: 'Play a sound on Garden Tick', toggle: true};
+CM.ConfigData.GardVolume = {label: [], desc: 'Volume of the Garden Tick sound'};
+for (var i = 0; i < 101; i++) {
+	CM.ConfigData.GardVolume.label[i] = i + '%';
+}
+CM.ConfigData.GardSoundURL = {label: 'Garden Tick Sound URL:', desc: 'URL of the sound to be played when the garden ticks'};
 CM.ConfigData.Title = {label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 CM.ConfigData.TooltipBuildUp = {label: ['Buildings/Upgrades Tooltip Information OFF', 'Buildings/Upgrades Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades', toggle: true};
 CM.ConfigData.TooltipAmor = {label: ['Buildings Tooltip Amortization Information OFF', 'Buildings Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
@@ -1457,6 +1464,16 @@ CM.Disp.CheckSeasonPopup = function() {
 	}
 }
 
+CM.Disp.CheckGardenTick = function() {
+	if (Game.Objects['Farm'].minigameLoaded && CM.Disp.lastGardenNextStep != Game.Objects['Farm'].minigame.nextStep) {
+		if (CM.Disp.lastGardenNextStep != 0 && CM.Disp.lastGardenNextStep < Date.now()) {
+			CM.Disp.Flash(3, 'GardFlash');
+			CM.Disp.PlaySound(CM.Config.GardSoundURL, 'GardSound', 'GardVolume');
+		}
+		CM.Disp.lastGardenNextStep = Game.Objects['Farm'].minigame.nextStep;
+	}
+}
+
 CM.Disp.UpdateTitle = function() {
 	if (Game.OnAscend || CM.Config.Title == 0) {
 		document.title = CM.Cache.Title;
@@ -1480,7 +1497,7 @@ CM.Disp.UpdateTitle = function() {
 		else {
 			titleGC = '[GS]'
 		}
-		if (Game.season=='christmas') {
+		if (Game.season == 'christmas') {
 			addSP = true;
 			if (CM.Disp.lastSeasonPopupState) {
 				titleSP = '[R ' +  Math.ceil(CM.Disp.seasonPopShimmer.life / Game.fps) + ']';
@@ -1509,7 +1526,7 @@ CM.Disp.UpdateTitle = function() {
 				str += '[G ' +  Math.ceil(CM.Disp.goldenShimmer.life / Game.fps) + ']';
 			}
 		}
-		if (Game.season=='christmas' && CM.Disp.lastSeasonPopupState) {
+		if (Game.season == 'christmas' && CM.Disp.lastSeasonPopupState) {
 			str += '[R ' +  Math.ceil(CM.Disp.seasonPopShimmer.life / Game.fps) + ']';
 			spawn = true;
 		}
@@ -1664,7 +1681,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('AvgClicksHist'));
 	frag.appendChild(listing('ToolWarnCautBon'));
 
-	frag.appendChild(header('Golden Cookie/Season Popup Emphasis'));
+	frag.appendChild(header('Notification'));
 	frag.appendChild(listing('GCFlash'));
 	frag.appendChild(listing('GCSound'));
 	frag.appendChild(vol('GCVolume'));
@@ -1675,6 +1692,10 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('SeaSound'));
 	frag.appendChild(vol('SeaVolume'));
 	frag.appendChild(url('SeaSoundURL'));
+	frag.appendChild(listing('GardFlash'));
+	frag.appendChild(listing('GardSound'));
+	frag.appendChild(vol('GardVolume'));
+	frag.appendChild(url('GardSoundURL'));
 	frag.appendChild(listing('Title'));
 
 	frag.appendChild(header('Tooltip'));
@@ -2582,6 +2603,7 @@ CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM
 CM.Disp.buffColors = {'Frenzy': CM.Disp.colorYellow, 'Dragon Harvest': CM.Disp.colorBrown, 'Elder frenzy': CM.Disp.colorGreen, 'Clot': CM.Disp.colorRed, 'Click frenzy': CM.Disp.colorBlue, 'Dragonflight': CM.Disp.colorPink};
 CM.Disp.lastGoldenCookieState = 0;
 CM.Disp.lastSeasonPopupState = 0;
+CM.Disp.lastGardenNextStep = 0;
 CM.Disp.goldenShimmer;
 CM.Disp.seasonPopShimmer;
 CM.Disp.lastAscendState = -1;
@@ -2795,6 +2817,9 @@ CM.Loop = function() {
 	// Check Season Popup
 	CM.Disp.CheckSeasonPopup();
 
+	// Check Garden Tick
+	CM.Disp.CheckGardenTick();
+
 	// Update Average CPS (might need to move)
 	CM.Cache.UpdateAvgCPS()
 }
@@ -2873,6 +2898,10 @@ CM.ConfigDefault = {
 	SeaSound: 1,  
 	SeaVolume: 100, 
 	SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', 
+	GardFlash: 1, 
+	GardSound: 1,  
+	GardVolume: 100, 
+	GardSoundURL: 'https://freesound.org/data/previews/103/103046_861714-lq.mp3', 
 	Title: 1, 
 	TooltipBuildUp: 1, 
 	TooltipAmor: 0, 

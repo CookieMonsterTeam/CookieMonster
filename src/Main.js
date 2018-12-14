@@ -185,6 +185,9 @@ CM.Loop = function() {
 	// Check Season Popup
 	CM.Disp.CheckSeasonPopup();
 
+	// Check Garden Tick
+	CM.Disp.CheckGardenTick();
+
 	// Update Average CPS (might need to move)
 	CM.Cache.UpdateAvgCPS()
 }
@@ -263,6 +266,10 @@ CM.ConfigDefault = {
 	SeaSound: 1,  
 	SeaVolume: 100, 
 	SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', 
+	GardFlash: 1, 
+	GardSound: 1,  
+	GardVolume: 100, 
+	GardSoundURL: 'https://freesound.org/data/previews/103/103046_861714-lq.mp3', 
 	Title: 1, 
 	TooltipBuildUp: 1, 
 	TooltipAmor: 0, 

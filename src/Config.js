@@ -155,6 +155,13 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.SeaVolume.label[i] = i + '%';
 }
 CM.ConfigData.SeaSoundURL = {label: 'Season Special Sound URL:', desc: 'URL of the sound to be played when a Season Special spawns'};
+CM.ConfigData.GardFlash = {label: ['Garden Tick Flash OFF', 'Garden Tick Flash ON'], desc: 'Flash screen on Garden Tick', toggle: true};
+CM.ConfigData.GardSound = {label: ['Garden Tick Sound OFF', 'Garden Tick Sound ON'], desc: 'Play a sound on Garden Tick', toggle: true};
+CM.ConfigData.GardVolume = {label: [], desc: 'Volume of the Garden Tick sound'};
+for (var i = 0; i < 101; i++) {
+	CM.ConfigData.GardVolume.label[i] = i + '%';
+}
+CM.ConfigData.GardSoundURL = {label: 'Garden Tick Sound URL:', desc: 'URL of the sound to be played when the garden ticks'};
 CM.ConfigData.Title = {label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 CM.ConfigData.TooltipBuildUp = {label: ['Buildings/Upgrades Tooltip Information OFF', 'Buildings/Upgrades Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades', toggle: true};
 CM.ConfigData.TooltipAmor = {label: ['Buildings Tooltip Amortization Information OFF', 'Buildings Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};

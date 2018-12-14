@@ -884,6 +884,16 @@ CM.Disp.CheckSeasonPopup = function() {
 	}
 }
 
+CM.Disp.CheckGardenTick = function() {
+	if (Game.Objects['Farm'].minigameLoaded && CM.Disp.lastGardenNextStep != Game.Objects['Farm'].minigame.nextStep) {
+		if (CM.Disp.lastGardenNextStep != 0 && CM.Disp.lastGardenNextStep < Date.now()) {
+			CM.Disp.Flash(3, 'GardFlash');
+			CM.Disp.PlaySound(CM.Config.GardSoundURL, 'GardSound', 'GardVolume');
+		}
+		CM.Disp.lastGardenNextStep = Game.Objects['Farm'].minigame.nextStep;
+	}
+}
+
 CM.Disp.UpdateTitle = function() {
 	if (Game.OnAscend || CM.Config.Title == 0) {
 		document.title = CM.Cache.Title;
@@ -907,7 +917,7 @@ CM.Disp.UpdateTitle = function() {
 		else {
 			titleGC = '[GS]'
 		}
-		if (Game.season=='christmas') {
+		if (Game.season == 'christmas') {
 			addSP = true;
 			if (CM.Disp.lastSeasonPopupState) {
 				titleSP = '[R ' +  Math.ceil(CM.Disp.seasonPopShimmer.life / Game.fps) + ']';
@@ -936,7 +946,7 @@ CM.Disp.UpdateTitle = function() {
 				str += '[G ' +  Math.ceil(CM.Disp.goldenShimmer.life / Game.fps) + ']';
 			}
 		}
-		if (Game.season=='christmas' && CM.Disp.lastSeasonPopupState) {
+		if (Game.season == 'christmas' && CM.Disp.lastSeasonPopupState) {
 			str += '[R ' +  Math.ceil(CM.Disp.seasonPopShimmer.life / Game.fps) + ']';
 			spawn = true;
 		}
@@ -1091,7 +1101,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('AvgClicksHist'));
 	frag.appendChild(listing('ToolWarnCautBon'));
 
-	frag.appendChild(header('Golden Cookie/Season Popup Emphasis'));
+	frag.appendChild(header('Notification'));
 	frag.appendChild(listing('GCFlash'));
 	frag.appendChild(listing('GCSound'));
 	frag.appendChild(vol('GCVolume'));
@@ -1102,6 +1112,10 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('SeaSound'));
 	frag.appendChild(vol('SeaVolume'));
 	frag.appendChild(url('SeaSoundURL'));
+	frag.appendChild(listing('GardFlash'));
+	frag.appendChild(listing('GardSound'));
+	frag.appendChild(vol('GardVolume'));
+	frag.appendChild(url('GardSoundURL'));
 	frag.appendChild(listing('Title'));
 
 	frag.appendChild(header('Tooltip'));
@@ -2009,6 +2023,7 @@ CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM
 CM.Disp.buffColors = {'Frenzy': CM.Disp.colorYellow, 'Dragon Harvest': CM.Disp.colorBrown, 'Elder frenzy': CM.Disp.colorGreen, 'Clot': CM.Disp.colorRed, 'Click frenzy': CM.Disp.colorBlue, 'Dragonflight': CM.Disp.colorPink};
 CM.Disp.lastGoldenCookieState = 0;
 CM.Disp.lastSeasonPopupState = 0;
+CM.Disp.lastGardenNextStep = 0;
 CM.Disp.goldenShimmer;
 CM.Disp.seasonPopShimmer;
 CM.Disp.lastAscendState = -1;
