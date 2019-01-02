@@ -2166,15 +2166,15 @@ CM.Disp.AddMissingUpgrades = function() {
         CM.Cache.MissingCookiesString = null;
     }
 
-    var upgradesMenu;
+    var upgradesMenu = null;
 
-    // TODO: Probably better would be to search for each child node until Upgrades is found.
-    if (l("menu").childNodes[4].firstChild.textContent === 'Upgrades') {
-        upgradesMenu = l("menu").childNodes[4];
-    }
-    else if (l("menu").childNodes[5].firstChild.textContent === 'Upgrades') {
-        upgradesMenu = l("menu").childNodes[5];
-    }
+	for (var i = 0; i < l("menu").getElementsByClassName("subsection").length && upgradesMenu == null; i++)
+	{
+		if (l("menu").getElementsByClassName("subsection")[i].getElementsByClassName("title")[0].textContent === "Upgrades")
+		{
+			upgradesMenu = l("menu").getElementsByClassName("subsection")[i];
+		}
+	}
 
     // This function creates div element from given object. It also adds tooltip for it.
     var createUpgradeElement = function (me) {
