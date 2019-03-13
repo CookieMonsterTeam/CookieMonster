@@ -791,7 +791,7 @@ CM.Disp.CreateFavicon = function() {
 	CM.Disp.Favicon = document.createElement('link');
 	CM.Disp.Favicon.id = 'CMFavicon';
 	CM.Disp.Favicon.rel = 'shortcut icon';
-	CM.Disp.Favicon.href = 'http://orteil.dashnet.org/cookieclicker/favicon.ico';
+	CM.Disp.Favicon.href = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
 	document.getElementsByTagName('head')[0].appendChild(CM.Disp.Favicon);
 }
 
@@ -805,7 +805,7 @@ CM.Disp.UpdateFavicon = function() {
 		}
 	}
 	else {
-		CM.Disp.Favicon.href = 'http://orteil.dashnet.org/cookieclicker/favicon.ico';
+		CM.Disp.Favicon.href = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
 	}
 }
 
