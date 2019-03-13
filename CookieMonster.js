@@ -3249,7 +3249,11 @@ CM.Sim.CalculateGains = function() {
 		}
 		mult *= goldenSwitchMult;
 	}
-	if (CM.Sim.Has('Shimmering veil [off]')) mult *= 1.5;
+	if (CM.Sim.Has('Shimmering veil [off]')) {
+		var veilMult = 0.5;
+		if (CM.Sim.Has('Reinforced membrane')) veilMult += 0.1;
+		mult *= 1 + veilMult;
+	}
 	// Removed debug upgrades
 	
 	// Removed buffs
