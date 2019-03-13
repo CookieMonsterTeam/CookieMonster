@@ -100,7 +100,7 @@ If you are using the beta, use this instead:
 // @name Cookie Monster Beta
 // @namespace Cookie
 // @include http://orteil.dashnet.org/cookieclicker/beta/
-// @include https://orteil.dashnet.org/cookieclicker/
+// @include https://orteil.dashnet.org/cookieclicker/beta/
 // @version 1
 // @grant none
 // ==/UserScript==
