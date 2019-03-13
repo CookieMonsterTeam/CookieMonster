@@ -2920,8 +2920,8 @@ CM.ConfigDefault = {
 };
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '2.016';
-CM.VersionMinor = '2';
+CM.VersionMajor = '2.018';
+CM.VersionMinor = '1';
 
 /*******
  * Sim *
