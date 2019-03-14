@@ -2675,6 +2675,10 @@ CM.ReplaceNative = function() {
 		CM.Disp.FixMouseY(CM.Backup.UpdateSpecial);
 	}
 
+	// Assumes newer browsers
+	l('bigCookie').removeEventListener('click', Game.ClickCookie, false);
+	l('bigCookie').addEventListener('click', function() { CM.Disp.FixMouseY(Game.ClickCookie); }, false);
+
 	// Probably better to load per minigame
 	CM.Backup.scriptLoaded = Game.scriptLoaded;
 	Game.scriptLoaded = function(who, script) {
