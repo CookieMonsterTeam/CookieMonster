@@ -85,7 +85,16 @@ CM.Sim.hasAura = function(what) {
 		return false;
 }
 
-eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString().split('Game.Has').join('CM.Sim.Has').split('me.tieredUpgrades').join('Game.Objects[me.name].tieredUpgrades').split('me.synergies').join('Game.Objects[me.name].synergies').split('syn.buildingTie1.amount').join('CM.Sim.Objects[syn.buildingTie1.name].amount').split('syn.buildingTie2.amount').join('CM.Sim.Objects[syn.buildingTie2.name].amount').split('me.grandma').join('Game.Objects[me.name].grandma').split('me.id').join('Game.Objects[me.name].id').split('Game.Objects[\'Grandma\']').join('CM.Sim.Objects[\'Grandma\']'));
+eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString()
+	.split('Game.Has').join('CM.Sim.Has')
+	.split('me.tieredUpgrades').join('Game.Objects[me.name].tieredUpgrades')
+	.split('me.synergies').join('Game.Objects[me.name].synergies')
+	.split('syn.buildingTie1.amount').join('CM.Sim.Objects[syn.buildingTie1.name].amount')
+	.split('syn.buildingTie2.amount').join('CM.Sim.Objects[syn.buildingTie2.name].amount')
+	.split('me.grandma').join('Game.Objects[me.name].grandma')
+	.split('me.id').join('Game.Objects[me.name].id')
+	.split('Game.Objects[\'Grandma\']').join('CM.Sim.Objects[\'Grandma\']')
+);
 
 CM.Sim.getCPSBuffMult = function() {
 	var mult = 1;
@@ -315,7 +324,11 @@ CM.Sim.CalculateGains = function() {
 		}
 		mult *= goldenSwitchMult;
 	}
-	if (CM.Sim.Has('Shimmering veil [off]')) mult *= 1.5;
+	if (CM.Sim.Has('Shimmering veil [off]')) {
+		var veilMult = 0.5;
+		if (CM.Sim.Has('Reinforced membrane')) veilMult += 0.1;
+		mult *= 1 + veilMult;
+	}
 	// Removed debug upgrades
 	
 	// Removed buffs
