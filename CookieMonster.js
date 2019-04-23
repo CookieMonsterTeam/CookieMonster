@@ -2591,6 +2591,11 @@ CM.Disp.RefreshScale = function() {
 	CM.Disp.UpdateUpgrades();
 }
 
+CM.Disp.DescribeDragonAura = function() {
+	l("")
+	// TODO
+}
+
 CM.Disp.colorTextPre = 'CMText';
 CM.Disp.colorBackPre = 'CMBack';
 CM.Disp.colorBorderPre = 'CMBorder';
@@ -2673,6 +2678,11 @@ CM.ReplaceNative = function() {
 	CM.Backup.UpdateSpecial = Game.UpdateSpecial;
 	Game.UpdateSpecial = function() {
 		CM.Disp.FixMouseY(CM.Backup.UpdateSpecial);
+	}
+	
+	CM.Backup.DescribeDragonAura = Game.DescribeDragonAura
+	Game.DescribeDragonAura = function() {
+		CM.Disp.DescribeDragonAura()
 	}
 
 	// Assumes newer browsers

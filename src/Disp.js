@@ -2011,6 +2011,11 @@ CM.Disp.RefreshScale = function() {
 	CM.Disp.UpdateUpgrades();
 }
 
+CM.Disp.DescribeDragonAura = function() {
+	l("")
+	// TODO
+}
+
 CM.Disp.colorTextPre = 'CMText';
 CM.Disp.colorBackPre = 'CMBack';
 CM.Disp.colorBorderPre = 'CMBorder';
