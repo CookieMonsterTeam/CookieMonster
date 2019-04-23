@@ -308,7 +308,7 @@ CM.Sim.CalculateGains = function() {
 	mult *= CM.Sim.getCPSBuffMult();
 
 	// Pointless?
-	name = Game.bakeryName.toLowerCase();
+	var name = Game.bakeryName.toLowerCase();
 	if (name == 'orteil') mult *= 0.99;
 	else if (name == 'ortiel') mult *= 0.98; //or so help me
 
