@@ -2593,16 +2593,35 @@ CM.Disp.RefreshScale = function() {
 
 CM.Disp.CreateAuraInfo = function(aura) {
 	var auraInfo = document.createElement("div");
+	auraInfo.id = "CMAuraInfo";
 	// TODO: Run aura sim
+	
+	var auraBorder = document.createElement("div");
+	auraBorder.style.border = "1px solid";
+	auraBorder.style.padding = "4px";
+	auraBorder.style.margin = "6px";
+	auraBorder.id = "CMAuraBorder";
+	auraBorder.className = CM.Disp.colorTextPre + CM.Disp.colorGray; // TODO: Border color?
+	auraInfo.appendChild(auraBorder);
+	
+	var changeTitle = document.createElement("div");
+	changeTitle.style.fontWeight = "bold";
+	changeTitle.className = "CMTextBlue";
+	changeTitle.innerText = "Change in Income";
+	auraBorder.appendChild(changeTitle);
+	
+	var changeValue = document.createElement("div");
+	changeValue.id = "CMAuraIncome";
+	changeValue.innerText = "0";
+	auraBorder.appendChild(changeValue);
+	
 	return auraInfo;
 }
 
 CM.Disp.DescribeDragonAura = function(aura) {
 	var auraInfo = l("dragonAuraInfo");
-	var line = document.createElement("div");
-	line.setAttribute("class", "line");
-	auraInfo.firstElementChild.appendChild(line);
-	auraInfo.firstElementChild.appendChild(CM.Disp.CreateAuraInfo(aura))
+	auraInfo.firstElementChild.appendChild(CM.Disp.CreateAuraInfo(aura));
+	// TODO: Add color tips to crates, if desired
 }
 
 CM.Disp.colorTextPre = 'CMText';
