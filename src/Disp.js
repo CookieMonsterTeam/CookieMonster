@@ -2011,9 +2011,18 @@ CM.Disp.RefreshScale = function() {
 	CM.Disp.UpdateUpgrades();
 }
 
-CM.Disp.DescribeDragonAura = function() {
-	l("")
-	// TODO
+CM.Disp.CreateAuraInfo = function(aura) {
+	var auraInfo = document.createElement("div");
+	// TODO: Run aura sim
+	return auraInfo;
+}
+
+CM.Disp.DescribeDragonAura = function(aura) {
+	var auraInfo = l("dragonAuraInfo");
+	var line = document.createElement("div");
+	line.setAttribute("class", "line");
+	auraInfo.firstElementChild.appendChild(line);
+	auraInfo.firstElementChild.appendChild(CM.Disp.CreateAuraInfo(aura))
 }
 
 CM.Disp.colorTextPre = 'CMText';
