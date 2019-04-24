@@ -2594,7 +2594,8 @@ CM.Disp.RefreshScale = function() {
 CM.Disp.CreateAuraInfo = function(aura) {
 	var auraInfo = document.createElement("div");
 	auraInfo.id = "CMAuraInfo";
-	// TODO: Run aura sim
+	
+	CM.Sim.ChangeAura(aura);
 	
 	var auraBorder = document.createElement("div");
 	auraBorder.style.border = "1px solid";
@@ -2612,7 +2613,7 @@ CM.Disp.CreateAuraInfo = function(aura) {
 	
 	var changeValue = document.createElement("div");
 	changeValue.id = "CMAuraIncome";
-	changeValue.innerText = "0";
+	changeValue.innerText = Beautify(CM.Sim.cookiesPs - Game.cookiesPs);
 	auraBorder.appendChild(changeValue);
 	
 	return auraInfo;
@@ -3455,6 +3456,40 @@ CM.Sim.BuyUpgrades = function() {
 			CM.Cache.Upgrades[i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
 		}
 	}
+}
+
+CM.Sim.ChangeAura = function(aura) {
+	CM.Sim.CopyData();
+	CM.Sim.dragonAura = aura;
+	
+	var highest = 0;
+	for (var i in CM.Sim.Objects) {
+		if (CM.Sim.Objects[i].amount > 0) {
+			highest = i;
+		}
+	}
+	if (highest != 0) {
+		CM.Sim.Objects[highest].amount -= 1;
+	}
+	
+	CM.Sim.CalculateGains();
+}
+
+CM.Sim.ChangeAura2 = function(aura) {
+	CM.Sim.CopyData();
+	CM.Sim.dragonAura2 = aura;
+
+	var highest = -1;
+	for (var i in CM.Sim.Objects) {
+		if (CM.Sim.Objects[i].amount > 0) {
+			highest = i;
+		}
+	}
+	if (highest != 0) {
+		CM.Sim.Objects[highest].amount -= 1;
+	}
+	
+	CM.Sim.CalculateGains();
 }
 
 CM.Sim.NoGoldSwitchCookiesPS = function() {

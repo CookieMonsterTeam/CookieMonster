@@ -2014,7 +2014,8 @@ CM.Disp.RefreshScale = function() {
 CM.Disp.CreateAuraInfo = function(aura) {
 	var auraInfo = document.createElement("div");
 	auraInfo.id = "CMAuraInfo";
-	// TODO: Run aura sim
+	
+	CM.Sim.ChangeAura(aura);
 	
 	var auraBorder = document.createElement("div");
 	auraBorder.style.border = "1px solid";
@@ -2032,7 +2033,7 @@ CM.Disp.CreateAuraInfo = function(aura) {
 	
 	var changeValue = document.createElement("div");
 	changeValue.id = "CMAuraIncome";
-	changeValue.innerText = "0";
+	changeValue.innerText = Beautify(CM.Sim.cookiesPs - Game.cookiesPs);
 	auraBorder.appendChild(changeValue);
 	
 	return auraInfo;

@@ -485,6 +485,40 @@ CM.Sim.BuyUpgrades = function() {
 	}
 }
 
+CM.Sim.ChangeAura = function(aura) {
+	CM.Sim.CopyData();
+	CM.Sim.dragonAura = aura;
+	
+	var highest = 0;
+	for (var i in CM.Sim.Objects) {
+		if (CM.Sim.Objects[i].amount > 0) {
+			highest = i;
+		}
+	}
+	if (highest != 0) {
+		CM.Sim.Objects[highest].amount -= 1;
+	}
+	
+	CM.Sim.CalculateGains();
+}
+
+CM.Sim.ChangeAura2 = function(aura) {
+	CM.Sim.CopyData();
+	CM.Sim.dragonAura2 = aura;
+
+	var highest = -1;
+	for (var i in CM.Sim.Objects) {
+		if (CM.Sim.Objects[i].amount > 0) {
+			highest = i;
+		}
+	}
+	if (highest != 0) {
+		CM.Sim.Objects[highest].amount -= 1;
+	}
+	
+	CM.Sim.CalculateGains();
+}
+
 CM.Sim.NoGoldSwitchCookiesPS = function() {
 	if (Game.Has('Golden switch [off]')) {
 		CM.Sim.CopyData();
