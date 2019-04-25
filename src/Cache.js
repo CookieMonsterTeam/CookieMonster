@@ -371,4 +371,9 @@ CM.Cache.ClicksDiff;
 CM.Cache.AvgCPS = -1;
 CM.Cache.AvgCPSChoEgg = -1;
 CM.Cache.AvgClicks = -1;
+CM.Cache.HighestBuilding = -1;
+CM.Cache.MinAura = 0;
+CM.Cache.MaxAura = 0;
+CM.Cache.MinAura2 = 0;
+CM.Cache.MaxAura2 = 0;
 
