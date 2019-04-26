@@ -547,22 +547,24 @@ CM.Sim.CalculateAuras = function() {
     CM.Cache.MinAura = null;
     CM.Cache.MaxAura = null;
     for (var i in CM.Cache.Auras) {
-        if (CM.Cache.MinAura == null || CM.Cache.Auras[i] < CM.Cache.MinAura) {
-            CM.Cache.MinAura = CM.Cache.Auras[i];
+        var delta = CM.Cache.Auras[i];
+        if (CM.Cache.MinAura == null || delta < CM.Cache.MinAura) {
+            CM.Cache.MinAura = delta;
         }
-        if (CM.Cache.MaxAura == null || CM.Cache.Auras[i] > CM.Cache.MaxAura) {
-            CM.Cache.MaxAura = CM.Cache.Auras[i];
+        if (CM.Cache.MaxAura == null || delta > CM.Cache.MaxAura) {
+            CM.Cache.MaxAura = delta;
         }
     }
     
     CM.Cache.MinAura2 = 0;
     CM.Cache.MaxAura2 = 0;
     for (var i in CM.Cache.Auras2) {
-        if (CM.Cache.MinAura2 == null || CM.Cache.Auras2[i] < CM.Cache.MinAura2) {
-            CM.Cache.MinAura2 = CM.Cache.Auras2[i];
+        var delta = CM.Cache.Auras2[i];
+        if (CM.Cache.MinAura2 == null || delta < CM.Cache.MinAura2) {
+            CM.Cache.MinAura2 = delta;
         }
         if (CM.Cache.MaxAura2 == null || CM.Cache.Auras2[i] > CM.Cache.MaxAura2) {
-            CM.Cache.MaxAura2 = CM.Cache.Auras2[i];
+            CM.Cache.MaxAura2 = delta;
         }
     }
 }

@@ -2014,15 +2014,17 @@ CM.Disp.RefreshScale = function() {
 CM.Disp.GetAuraColor = function(aura) {
     var borderColor = CM.Disp.colorGray;
     
-    if (aura == Game.dragonAura) {
+    var delta = CM.Cache.Auras[aura];
+    
+    if (!CM.Data.CalculableAuras.includes(Game.dragonAuras[aura].name)) {
         borderColor = CM.Disp.colorGray;
-    } else if (CM.Cache.Auras[aura] == CM.Cache.MaxAura) {
+    } else if (delta == CM.Cache.MaxAura) {
         borderColor = CM.Disp.colorBlue;
-    } else if (CM.Cache.Auras[aura] == CM.Cache.MinAura) {
+    } else if (delta == CM.Cache.MinAura) {
         borderColor = CM.Disp.colorPurple;
-    } else if (CM.Cache.Auras[aura] > 0) {
+    } else if (delta > 0) {
         borderColor = CM.Disp.colorGreen;
-    } else if (CM.Cache.Auras[aura] < 0) {
+    } else if (delta < 0) {
         borderColor = CM.Disp.colorRed;
     }
     

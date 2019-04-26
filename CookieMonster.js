@@ -582,7 +582,7 @@ CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale',
 CM.Data.HalloCookies = ['Skull cookies', 'Ghost cookies', 'Bat cookies', 'Slime cookies', 'Pumpkin cookies', 'Eyeball cookies', 'Spider cookies'];
 CM.Data.ChristCookies = ['Christmas tree biscuits', 'Snowflake biscuits', 'Snowman biscuits', 'Holly biscuits', 'Candy cane biscuits', 'Bell biscuits', 'Present biscuits'];
 CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour heart biscuits', 'Weeping heart biscuits', 'Golden heart biscuits', 'Eternal heart biscuits'];
-
+CM.Data.CalculableAuras = ['No aura', 'Breath of Milk', 'Elder Battalion', 'Dragon God', 'Radiant Appetite'];
 /********
  * Disp *
  ********/
@@ -2599,15 +2599,17 @@ CM.Disp.RefreshScale = function() {
 CM.Disp.GetAuraColor = function(aura) {
     var borderColor = CM.Disp.colorGray;
     
-    if (aura == Game.dragonAura) {
+    var delta = CM.Cache.Auras[aura];
+    
+    if (/*aura == Game.dragonAura || */!CM.Data.CalculableAuras.includes(Game.dragonAuras[aura].name)) {
         borderColor = CM.Disp.colorGray;
-    } else if (CM.Cache.Auras[aura] == CM.Cache.MaxAura) {
+    } else if (delta == CM.Cache.MaxAura) {
         borderColor = CM.Disp.colorBlue;
-    } else if (CM.Cache.Auras[aura] == CM.Cache.MinAura) {
+    } else if (delta == CM.Cache.MinAura) {
         borderColor = CM.Disp.colorPurple;
-    } else if (CM.Cache.Auras[aura] > 0) {
+    } else if (delta > 0) {
         borderColor = CM.Disp.colorGreen;
-    } else if (CM.Cache.Auras[aura] < 0) {
+    } else if (delta < 0) {
         borderColor = CM.Disp.colorRed;
     }
     
@@ -3554,22 +3556,24 @@ CM.Sim.CalculateAuras = function() {
     CM.Cache.MinAura = null;
     CM.Cache.MaxAura = null;
     for (var i in CM.Cache.Auras) {
-        if (CM.Cache.MinAura == null || CM.Cache.Auras[i] < CM.Cache.MinAura) {
-            CM.Cache.MinAura = CM.Cache.Auras[i];
+        var delta = CM.Cache.Auras[i];
+        if (CM.Cache.MinAura == null || delta < CM.Cache.MinAura) {
+            CM.Cache.MinAura = delta;
         }
-        if (CM.Cache.MaxAura == null || CM.Cache.Auras[i] > CM.Cache.MaxAura) {
-            CM.Cache.MaxAura = CM.Cache.Auras[i];
+        if (CM.Cache.MaxAura == null || delta > CM.Cache.MaxAura) {
+            CM.Cache.MaxAura = delta;
         }
     }
     
     CM.Cache.MinAura2 = 0;
     CM.Cache.MaxAura2 = 0;
     for (var i in CM.Cache.Auras2) {
-        if (CM.Cache.MinAura2 == null || CM.Cache.Auras2[i] < CM.Cache.MinAura2) {
-            CM.Cache.MinAura2 = CM.Cache.Auras2[i];
+        var delta = CM.Cache.Auras2[i];
+        if (CM.Cache.MinAura2 == null || delta < CM.Cache.MinAura2) {
+            CM.Cache.MinAura2 = delta;
         }
         if (CM.Cache.MaxAura2 == null || CM.Cache.Auras2[i] > CM.Cache.MaxAura2) {
-            CM.Cache.MaxAura2 = CM.Cache.Auras2[i];
+            CM.Cache.MaxAura2 = delta;
         }
     }
 }
