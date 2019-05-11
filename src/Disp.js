@@ -206,6 +206,14 @@ CM.Disp.CreateCssArea = function() {
 	CM.Disp.Css.type = 'text/css';
 
 	document.head.appendChild(CM.Disp.Css);
+	
+	// given the architecture of your code, you probably want these lines somewhere else,
+	// but I stuck them here for convenience
+	l("products").style.display = "grid";
+	l("storeBulk").style.gridRow = "1/1";
+
+	l("upgrades").style.display = "flex";
+	l("upgrades").style["flex-wrap"] = "wrap";
 }
 
 CM.Disp.CreateBotBar = function() {
@@ -593,6 +601,24 @@ CM.Disp.UpdateBuildings = function() {
 			l('productPrice' + Game.Objects[i].id).style.color = '';
 		}
 	}
+	
+	// Build array of pointers, sort by pp, use array index (+2) as the grid row number
+	// (grid rows are 1-based indexing, and row 1 is the bulk buy/sell options)
+	var arr = Object.keys(CM.Cache.Objects).map(k =>
+	{
+		var o = CM.Cache.Objects[k];
+		o.name = k;
+		o.id = Game.Objects[k].id;
+		return o;
+	});
+
+	if (CM.Config.SortBuildings)
+		arr.sort((a, b) => a.pp - b.pp);
+	else
+		arr.sort((a, b) => a.id - b.id);
+
+	for (var x = 0; x < arr.length; x++)
+		Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
 }
 
 CM.Disp.CreateUpgradeBar = function() {
@@ -718,6 +744,25 @@ CM.Disp.UpdateUpgrades = function() {
 		l('CMUpgradeBarRed').textContent = red;
 		l('CMUpgradeBarPurple').textContent = purple;
 		l('CMUpgradeBarGray').textContent = gray;
+	}
+	
+	// Build array of pointers, sort by pp, set flex positions
+	var arr = [];
+	for (var x = 0; x < Game.UpgradesInStore.length; x++){
+		var o = {};
+		o.name = Game.UpgradesInStore[x].name;
+		o.price = Game.UpgradesInStore[x].basePrice;
+		o.pp = CM.Cache.Upgrades[o.name].pp;
+		arr.push(o);
+	}
+
+	if (CM.Config.SortUpgrades)
+		arr.sort((a, b) => a.pp - b.pp);
+	else
+		arr.sort((a, b) => a.price - b.price);
+
+	for (var x = 0; x < Game.UpgradesInStore.length; x++){
+		l("upgrade" + x).style.order = arr.findIndex(e => e.name === Game.UpgradesInStore[x].name) + 1
 	}
 }
 
@@ -1078,6 +1123,8 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('BotBar'));
 	frag.appendChild(listing('TimerBar'));
 	frag.appendChild(listing('TimerBarPos'));
+	frag.appendChild(listing('SortBuildings'));
+	frag.appendChild(listing('SortUpgrades'));
 	frag.appendChild(listing('BuildColor'));
 	frag.appendChild(listing('BulkBuildColor'));
 	frag.appendChild(listing('UpBarColor'));
