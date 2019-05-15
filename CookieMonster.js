@@ -556,6 +556,13 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.GardVolume.label[i] = i + '%';
 }
 CM.ConfigData.GardSoundURL = {label: 'Garden Tick Sound URL:', desc: 'URL of the sound to be played when the garden ticks'};
+CM.ConfigData.MagicFlash = {label: ['Magic Max Flash OFF', 'Magic Max Flash ON'], desc: 'Flash screen when magic reaches maxium', toggle: true};
+CM.ConfigData.MagicSound = {label: ['Magic Max Sound OFF', 'Magic Max Sound ON'], desc: 'Play a sound when magic reaches maxium', toggle: true};
+CM.ConfigData.MagicVolume = {label: [], desc: 'Volume of the Max Magic sound'};
+for (var i = 0; i < 101; i++) {
+	CM.ConfigData.MagicVolume.label[i] = i + '%';
+}
+CM.ConfigData.MagicSoundURL = {label: 'Magic Max Sound URL:', desc: 'URL of the sound to be played when magic reaches maxium'};
 CM.ConfigData.Title = {label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 CM.ConfigData.TooltipBuildUp = {label: ['Buildings/Upgrades Tooltip Information OFF', 'Buildings/Upgrades Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades', toggle: true};
 CM.ConfigData.TooltipAmor = {label: ['Buildings Tooltip Amortization Information OFF', 'Buildings Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
@@ -1748,6 +1755,10 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('GardSound'));
 	frag.appendChild(vol('GardVolume'));
 	frag.appendChild(url('GardSoundURL'));
+	frag.appendChild(listing('MagicFlash'));
+	frag.appendChild(listing('MagicSound'));
+	frag.appendChild(vol('MagicVolume'));
+	frag.appendChild(url('MagicSoundURL'));
 	frag.appendChild(listing('Title'));
 
 	frag.appendChild(header('Tooltip'));
@@ -2804,8 +2815,8 @@ CM.ReplaceNativeGrimoireDraw = function() {
 				minigame.magicBarTextL.innerHTML += ' (' + CM.Disp.FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM)) + ')';
 			} else if (!lastMagicBarFull) {
 				lastMagicBarFull = true;
-				CM.Disp.Flash(3);
-				CM.Disp.PlaySound(CM.Config.SeaSoundURL);
+				CM.Disp.Flash(3, 'MagicFlash');
+				CM.Disp.PlaySound(CM.Config.MagicSoundURL, 'MagicSound', 'MagicVolume');
 			}
 		}
 		CM.HasReplaceNativeGrimoireDraw = true;
@@ -2964,6 +2975,10 @@ CM.ConfigDefault = {
 	GardSound: 1,  
 	GardVolume: 100, 
 	GardSoundURL: 'https://freesound.org/data/previews/103/103046_861714-lq.mp3', 
+	MagicFlash: 1, 
+	MagicSound: 1,  
+	MagicVolume: 100, 
+	MagicSoundURL: 'https://freesound.org/data/previews/221/221683_1015240-lq.mp3', 
 	Title: 1, 
 	TooltipBuildUp: 1, 
 	TooltipAmor: 0, 

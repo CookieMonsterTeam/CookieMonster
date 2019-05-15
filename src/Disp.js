@@ -1167,6 +1167,10 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('GardSound'));
 	frag.appendChild(vol('GardVolume'));
 	frag.appendChild(url('GardSoundURL'));
+	frag.appendChild(listing('MagicFlash'));
+	frag.appendChild(listing('MagicSound'));
+	frag.appendChild(vol('MagicVolume'));
+	frag.appendChild(url('MagicSoundURL'));
 	frag.appendChild(listing('Title'));
 
 	frag.appendChild(header('Tooltip'));
