@@ -77,6 +77,7 @@ If you'd rather use the addon as a script via per example *Greasemonkey* or *Tam
 // @name Cookie Monster
 // @namespace Cookie
 // @include http://orteil.dashnet.org/cookieclicker/
+// @include https://orteil.dashnet.org/cookieclicker/
 // @version 1
 // @grant none
 // ==/UserScript==
@@ -84,7 +85,7 @@ If you'd rather use the addon as a script via per example *Greasemonkey* or *Tam
 var code = "(" + (function() {
     var checkReady = setInterval(function() {
         if (typeof Game.ready !== 'undefined' && Game.ready) {
-            Game.LoadMod('http://aktanusa.github.io/CookieMonster/CookieMonster.js');
+            Game.LoadMod('https://aktanusa.github.io/CookieMonster/CookieMonster.js');
             clearInterval(checkReady);
         }
     }, 1000);
@@ -99,6 +100,7 @@ If you are using the beta, use this instead:
 // @name Cookie Monster Beta
 // @namespace Cookie
 // @include http://orteil.dashnet.org/cookieclicker/beta/
+// @include https://orteil.dashnet.org/cookieclicker/beta/
 // @version 1
 // @grant none
 // ==/UserScript==
