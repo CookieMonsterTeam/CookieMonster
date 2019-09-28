@@ -2843,8 +2843,8 @@ CM.Init = function() {
 
 		var delay = setInterval(function() {
 			if (typeof Queue !== 'undefined' && typeof jscolor !== 'undefined') {
+				clearInterval(delay); // was never getting hit. so switched order
 				CM.DelayInit();
-				clearInterval(delay);
 			}
 		}, 500);
 	}
@@ -2928,8 +2928,8 @@ CM.ConfigDefault = {
 };
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '2.019';
-CM.VersionMinor = '1';
+CM.VersionMajor = '2.021';
+CM.VersionMinor = '0';
 
 /*******
  * Sim *
@@ -2950,7 +2950,7 @@ CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
 	var moni = 0;
 	for (var i = 0; i < increase; i++) {
 		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
-		price = Game.modifyBuildingPrice(null, price);
+		price = Game.modifyBuildingPrice({}, price); // {} instead of null, because CC's Main.js tries to access a property
 		price = Math.ceil(price);
 		moni += price;
 		start++;
@@ -2979,7 +2979,7 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
 	var moni=0;
 	for (var i = 0; i < amount; i++) {
 		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
-		price = Game.modifyBuildingPrice(null, price);
+		price = Game.modifyBuildingPrice({}, price); // {} instead of null, because CC's Main.js tries to access a property
 		price = Math.ceil(price);
 		var giveBack = 0.25;
 		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack = 0.5;
