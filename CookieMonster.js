@@ -1502,6 +1502,7 @@ CM.Disp.UpdateTitle = function() {
 		var addSP = false;
 
 		var titleGC;
+		var titleFC = '';
 		var titleSP;
 		if (CM.Disp.lastGoldenCookieState) {
 			if (CM.Disp.goldenShimmer.wrath) {
@@ -1516,6 +1517,9 @@ CM.Disp.UpdateTitle = function() {
 		}
 		else {
 			titleGC = '[GS]'
+		}
+		if (CM.Disp.lastTickerFortuneState) {
+			titleFC = '[F]';
 		}
 		if (Game.season == 'christmas') {
 			addSP = true;
@@ -1532,11 +1536,14 @@ CM.Disp.UpdateTitle = function() {
 			str = str.substring(str.lastIndexOf(']') + 1);
 		}
 
-		document.title = titleGC + (addSP ? titleSP : '') + ' ' + str;
+		document.title = titleFC + titleGC + (addSP ? titleSP : '') + ' ' + str;
 	}
 	else if (CM.Config.Title == 2) {
 		var str = '';
 		var spawn = false;
+		if (CM.Disp.lastTickerFortuneState) {
+			str += '[F]';
+		}
 		if (CM.Disp.lastGoldenCookieState) {
 			spawn = true;
 			if (CM.Disp.goldenShimmer.wrath) {
