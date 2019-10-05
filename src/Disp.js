@@ -870,13 +870,13 @@ CM.Disp.CheckGoldenCookie = function() {
 }
 
 CM.Disp.CheckTickerFortune = function() {
-    if (CM.Disp.lastTickerFortuneState != (Game.TickerEffect && Game.TickerEffect.type == 'fortune')) {
-        CM.Disp.lastTickerFortuneState = (Game.TickerEffect && Game.TickerEffect.type == 'fortune');
-        if (CM.Disp.lastTickerFortuneState) {
-            CM.Disp.Flash(3, 'FortuneFlash');
-            CM.Disp.PlaySound(CM.Config.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
-        }
-    }
+	if (CM.Disp.lastTickerFortuneState != (Game.TickerEffect && Game.TickerEffect.type == 'fortune')) {
+		CM.Disp.lastTickerFortuneState = (Game.TickerEffect && Game.TickerEffect.type == 'fortune');
+		if (CM.Disp.lastTickerFortuneState) {
+			CM.Disp.Flash(3, 'FortuneFlash');
+			CM.Disp.PlaySound(CM.Config.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
+		}
+	}
 }
 
 CM.Disp.CheckSeasonPopup = function() {
@@ -1122,9 +1122,9 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('GCTimer'));
 	frag.appendChild(listing('Favicon'));
 	frag.appendChild(listing('FortuneFlash'));
-    frag.appendChild(listing('FortuneSound'));
-    frag.appendChild(vol('FortuneVolume'));
-    frag.appendChild(url('FortuneSoundURL'));
+	frag.appendChild(listing('FortuneSound'));
+	frag.appendChild(vol('FortuneVolume'));
+	frag.appendChild(url('FortuneSoundURL'));
 	frag.appendChild(listing('SeaFlash'));
 	frag.appendChild(listing('SeaSound'));
 	frag.appendChild(vol('SeaVolume'));
