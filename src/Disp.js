@@ -1112,6 +1112,10 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(url('GCSoundURL'));
 	frag.appendChild(listing('GCTimer'));
 	frag.appendChild(listing('Favicon'));
+	frag.appendChild(listing('FortuneFlash'));
+    frag.appendChild(listing('FortuneSound'));
+    frag.appendChild(vol('FortuneVolume'));
+    frag.appendChild(url('FortuneSoundURL'));
 	frag.appendChild(listing('SeaFlash'));
 	frag.appendChild(listing('SeaSound'));
 	frag.appendChild(vol('SeaVolume'));
