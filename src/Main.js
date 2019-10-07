@@ -142,13 +142,13 @@ CM.Loop = function() {
 		}
 
 		// Check for aura change to recalculate buildings prices
-		var hasFierHoard = Game.hasAura('Fierce Hoarder');
-		if (!CM.Cache.HadFierHoard && hasFierHoard) {
-			CM.Cache.HadFierHoard = true;
+		var hasBuildAura = Game.auraMult('Fierce Hoarder') > 0;
+		if (!CM.Cache.HadBuildAura && hasBuildAura) {
+			CM.Cache.HadBuildAura = true;
 			CM.Cache.DoRemakeBuildPrices = 1;
 		}
-		else if (CM.Cache.HadFierHoard && !hasFierHoard) {
-			CM.Cache.HadFierHoard = false;
+		else if (CM.Cache.HadBuildAura && !hasBuildAura) {
+			CM.Cache.HadBuildAura = false;
 			CM.Cache.DoRemakeBuildPrices = 1;
 		}
 
@@ -292,6 +292,6 @@ CM.ConfigDefault = {
 };
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '2.019';
+CM.VersionMajor = '2.021';
 CM.VersionMinor = '1';
 
