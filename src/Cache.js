@@ -19,8 +19,8 @@ CM.Cache.NextNumber = function(base) {
 
 CM.Cache.RemakeBuildingsPrices = function() {
 	for (var i in Game.Objects) {
-		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
-		CM.Cache.Objects100[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
+		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
+		CM.Cache.Objects100[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
 	}
 }
 
@@ -203,11 +203,11 @@ CM.Cache.RemakeSeaSpec = function() {
 }
 
 CM.Cache.RemakeSellForChoEgg = function() {
-	if (Game.hasAura('Earth Shatterer') || Game.dragonLevel < 9) {
+	if (Game.auraMult('Earth Shatterer') == 1.1) {
 		var sellTotal = 0;
 		for (var i in Game.Objects) {
 			var me = Game.Objects[i];
-			sellTotal += CM.Sim.BuildingSell(me.basePrice, me.amount, me.free, me.amount, 0);
+			sellTotal += CM.Sim.BuildingSell(me, me.basePrice, me.amount, me.free, me.amount, 0);
 		}
 	}
 	else {
@@ -215,17 +215,29 @@ CM.Cache.RemakeSellForChoEgg = function() {
 		for (var i in Game.Objects) {
 			if (Game.Objects[i].amount > 0) highestBuilding = i;
 		}
+		var secondHighBuild = '';
+		if (Game.auraMult('Earth Shatterer') == 0 && highestBuilding != '') {
+			if (Game.Objects[highestBuilding].amount > 1) {
+				secondHighBuild = highestBuilding;
+			}
+			else {
+				for (var i in Game.Objects) {
+					if (i != highestBuilding && Game.Objects[i].amount > 0) secondHighBuild = i;
+				}
+			}
+		}
+		
 		var sellTotal = 0;
 		for (var i in Game.Objects) {
 			var me = Game.Objects[i];
-			var amount = 0;
+			var amount = me.amount;
 			if (i == highestBuilding) {
-				amount = me.amount - 1;
+				amount -= 1;
 			}
-			else {
-				amount = me.amount;
+			if (i == secondHighBuild) {
+				amount -= 1;
 			}
-			sellTotal += CM.Sim.BuildingSell(me.basePrice, amount, me.free, amount, 1);
+			sellTotal += CM.Sim.BuildingSell(me, me.basePrice, amount, me.free, amount, 1);
 		}
 	}
 	CM.Cache.SellForChoEgg = sellTotal;
@@ -357,7 +369,7 @@ CM.Cache.ChainFrenzyWrathReward = 0;
 CM.Cache.CentEgg = 0;
 CM.Cache.SellForChoEgg = 0;
 CM.Cache.Title = '';
-CM.Cache.HadFierHoard = false;
+CM.Cache.HadBuildAura = false;
 CM.Cache.RealCookiesEarned = -1;
 CM.Cache.lastDate = -1;
 CM.Cache.lastCookies = -1;

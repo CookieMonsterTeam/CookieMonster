@@ -2,7 +2,7 @@
  * Sim *
  *******/
 
-CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
+CM.Sim.BuildingGetPrice = function(build, basePrice, start, free, increase) {
 	/*var price=0;
 	for (var i = Math.max(0 , start); i < Math.max(0, start + increase); i++) {
 		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
@@ -17,7 +17,7 @@ CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
 	var moni = 0;
 	for (var i = 0; i < increase; i++) {
 		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
-		price = Game.modifyBuildingPrice(null, price);
+		price = Game.modifyBuildingPrice(build, price);
 		price = Math.ceil(price);
 		moni += price;
 		start++;
@@ -25,7 +25,7 @@ CM.Sim.BuildingGetPrice = function(basePrice, start, free, increase) {
 	return moni;
 }
 
-CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
+CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, emuAura) {
 	/*var price=0;
 	for (var i = Math.max(0, start - amount); i < Math.max(0, start); i++) {
 		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
@@ -46,10 +46,15 @@ CM.Sim.BuildingSell = function(basePrice, start, free, amount, emuAura) {
 	var moni=0;
 	for (var i = 0; i < amount; i++) {
 		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
-		price = Game.modifyBuildingPrice(null, price);
+		price = Game.modifyBuildingPrice(build, price);
 		price = Math.ceil(price);
 		var giveBack = 0.25;
-		if (Game.hasAura('Earth Shatterer') || emuAura) giveBack = 0.5;
+		if (emuAura) {
+			giveBack = 0.5;
+		}
+		else {
+			giveBack *= 1 + Game.auraMult('Earth Shatterer');
+		}
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;
@@ -76,13 +81,22 @@ CM.Sim.Win = function(what) {
 
 eval('CM.Sim.HasAchiev = ' + Game.HasAchiev.toString().split('Game').join('CM.Sim'));
 
-eval('CM.Sim.GetHeavenlyMultiplier = ' + Game.GetHeavenlyMultiplier.toString().split('Game.Has').join('CM.Sim.Has').split('Game.hasAura').join('CM.Sim.hasAura'));
+eval('CM.Sim.GetHeavenlyMultiplier = ' + Game.GetHeavenlyMultiplier.toString().split('Game.Has').join('CM.Sim.Has').split('Game.hasAura').join('CM.Sim.hasAura').split('Game.auraMult').join('CM.Sim.auraMult'));
 
 CM.Sim.hasAura = function(what) {
 	if (Game.dragonAuras[CM.Sim.dragonAura].name == what || Game.dragonAuras[CM.Sim.dragonAura2].name == what)
 		return true;
 	else
 		return false;
+}
+
+CM.Sim.auraMult = function(what) {
+	var n = 0;
+	if (Game.dragonAuras[CM.Sim.dragonAura].name == what || Game.dragonAuras[CM.Sim.dragonAura2].name == what)
+		n = 1;
+	if (Game.dragonAuras[CM.Sim.dragonAura].name == 'Reality Bending' || Game.dragonAuras[CM.Sim.dragonAura2].name == 'Reality Bending')
+		n += 0.1;
+	return n;
 }
 
 eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString()
@@ -94,6 +108,7 @@ eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString()
 	.split('me.grandma').join('Game.Objects[me.name].grandma')
 	.split('me.id').join('Game.Objects[me.name].id')
 	.split('Game.Objects[\'Grandma\']').join('CM.Sim.Objects[\'Grandma\']')
+	.split('me.fortune').join('Game.Objects[me.name].fortune')
 );
 
 CM.Sim.getCPSBuffMult = function() {
@@ -111,7 +126,13 @@ CM.Sim.InitData = function() {
 		CM.Sim.Objects[i] = {};
 		var me = Game.Objects[i];
 		var you = CM.Sim.Objects[i];
-		eval('you.cps = ' + me.cps.toString().split('Game.Has').join('CM.Sim.Has').split('Game.hasAura').join('CM.Sim.hasAura').split('Game.Objects').join('CM.Sim.Objects').split('Game.GetTieredCpsMult').join('CM.Sim.GetTieredCpsMult'));
+		eval('you.cps = ' + me.cps.toString()
+			.split('Game.Has').join('CM.Sim.Has')
+			.split('Game.hasAura').join('CM.Sim.hasAura')
+			.split('Game.Objects').join('CM.Sim.Objects')
+			.split('Game.GetTieredCpsMult').join('CM.Sim.GetTieredCpsMult')
+			.split('Game.auraMult').join('CM.Sim.auraMult')
+		);
 		// Below is needed for above eval!
 		you.baseCps = me.baseCps;
 		you.name = me.name;
@@ -196,6 +217,9 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('An itchy sweater')) mult *= 1.01;
 	if (CM.Sim.Has('Santa\'s dominion')) mult *= 1.2;
 
+	if (CM.Sim.Has('Fortune #100')) mult *= 1.01;
+	if (CM.Sim.Has('Fortune #101')) mult *= 1.07;
+
 	var buildMult = 1;
 	if (Game.hasGod) {
 		var godLvl = Game.hasGod('asceticism');
@@ -237,7 +261,8 @@ CM.Sim.CalculateGains = function() {
 
 	var milkMult=1;
 	if (CM.Sim.Has('Santa\'s milk and cookies')) milkMult *= 1.05;
-	if (CM.Sim.hasAura('Breath of Milk')) milkMult *= 1.05;
+	//if (CM.Sim.hasAura('Breath of Milk')) milkMult *= 1.05;
+	milkMult *= 1 + CM.Sim.auraMult('Breath of Milk') * 0.05;
 	if (Game.hasGod) {
 		var godLvl = Game.hasGod('mother');
 		if (godLvl == 1) milkMult *= 1.1;
@@ -261,7 +286,9 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Kitten assistants to the regional manager')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.175 * milkMult);
 	if (CM.Sim.Has('Kitten marketeers')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.15 * milkMult);
 	if (CM.Sim.Has('Kitten analysts')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.125 * milkMult);
+	if (CM.Sim.Has('Kitten executives')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.115 * milkMult);
 	if (CM.Sim.Has('Kitten angels')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.1 * milkMult);
+	if (CM.Sim.Has('Fortune #103')) catMult *= (1 + (CM.Sim.AchievementsOwned / 25) * 0.05 * milkMult);
 
 	mult *= catMult;
 
@@ -290,12 +317,14 @@ CM.Sim.CalculateGains = function() {
 	// TODO Store lumps?
 	if (CM.Sim.Has('Sugar baking')) mult *= (1 + Math.min(100, Game.lumps) * 0.01);
 
-	if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;
+	//if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;
+	mult *= 1 + CM.Sim.auraMult('Radiant Appetite');
 
-	if (Game.hasAura('Dragon\'s Fortune')) {
+	if (true) { // || CM.Sim.hasAura('Dragon\'s Fortune')) {
 		var n = Game.shimmerTypes['golden'].n;
+		var auraMult = CM.Sim.auraMult('Dragon\'s Fortune');
 		for (var i = 0; i < n; i++) {
-			mult *= 2.23;
+			mult *= 1 + auraMult * 1.23;
 		}
 	}
 
@@ -400,6 +429,15 @@ CM.Sim.CheckOtherAchiev = function() {
 		if (!CM.Sim.Has(CM.Data.ChristCookies[i])) hasAllChristCook = false;
 	}
 	if (hasAllChristCook) CM.Sim.Win('Let it snow');
+
+	if (CM.Sim.Has('Fortune cookies')) {
+		var list = Game.Tiers['fortune'].upgrades;
+		var fortunes = 0;
+		for (var i in list) {
+			if (CM.Sim.Has(list[i].name)) fortunes++;
+		}
+		if (fortunes >= list.length) CM.Sim.Win('O Fortuna');
+	}
 }
 
 CM.Sim.BuyBuildings = function(amount, target) {
@@ -532,6 +570,8 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000000) CM.Sim.Win('The end of the world');
 	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000000000) CM.Sim.Win('Oh, you\'re back');
 	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000000000000) CM.Sim.Win('Lazarus');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000000000000000) CM.Sim.Win('Smurf account');
+	if (CM.Cache.RealCookiesEarned >= 1000000000000000000000000000000000000000000000000000000) CM.Sim.Win('If at first you don\'t succeed');
 
 	CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
 	CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
