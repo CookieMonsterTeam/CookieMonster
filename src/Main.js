@@ -293,5 +293,5 @@ CM.ConfigDefault = {
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.021';
-CM.VersionMinor = '1';
+CM.VersionMinor = '2';
 
