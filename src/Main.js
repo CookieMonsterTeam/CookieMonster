@@ -272,7 +272,7 @@ CM.ConfigDefault = {
 	FortuneFlash: 1, 
 	FortuneSound: 1,  
 	FortuneVolume: 100, 
-	FortuneSoundURL: 'https://freesound.org/data/previews/419/419594_7062176-lq.mp3',
+	FortuneSoundURL: 'https://freesound.org/data/previews/174/174027_3242494-lq.mp3',
 	SeaFlash: 1, 
 	SeaSound: 1,  
 	SeaVolume: 100, 
