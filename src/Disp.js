@@ -912,10 +912,11 @@ CM.Disp.UpdateTitle = function() {
 		document.title = CM.Cache.Title;
 	}
 	else if (CM.Config.Title == 1) {
+		var addFC = false;
 		var addSP = false;
 
 		var titleGC;
-		var titleFC = '';
+		var titleFC;
 		var titleSP;
 		if (CM.Disp.lastGoldenCookieState) {
 			if (CM.Disp.goldenShimmer.wrath) {
@@ -932,6 +933,7 @@ CM.Disp.UpdateTitle = function() {
 			titleGC = '[GS]'
 		}
 		if (CM.Disp.lastTickerFortuneState) {
+			addFC = true;
 			titleFC = '[F]';
 		}
 		if (Game.season == 'christmas') {
@@ -949,14 +951,11 @@ CM.Disp.UpdateTitle = function() {
 			str = str.substring(str.lastIndexOf(']') + 1);
 		}
 
-		document.title = titleFC + titleGC + (addSP ? titleSP : '') + ' ' + str;
+		document.title = titleGC + (addFC ? titleFC : '') + (addSP ? titleSP : '') + ' ' + str;
 	}
 	else if (CM.Config.Title == 2) {
 		var str = '';
 		var spawn = false;
-		if (CM.Disp.lastTickerFortuneState) {
-			str += '[F]';
-		}
 		if (CM.Disp.lastGoldenCookieState) {
 			spawn = true;
 			if (CM.Disp.goldenShimmer.wrath) {
@@ -965,6 +964,10 @@ CM.Disp.UpdateTitle = function() {
 			else {
 				str += '[G ' +  Math.ceil(CM.Disp.goldenShimmer.life / Game.fps) + ']';
 			}
+		}
+		if (CM.Disp.lastTickerFortuneState) {
+			spawn = true;
+			str += '[F]';
 		}
 		if (Game.season == 'christmas' && CM.Disp.lastSeasonPopupState) {
 			str += '[R ' +  Math.ceil(CM.Disp.seasonPopShimmer.life / Game.fps) + ']';
