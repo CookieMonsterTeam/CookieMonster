@@ -186,6 +186,9 @@ CM.Loop = function() {
 	// Check Golden Cookies
 	CM.Disp.CheckGoldenCookie();
 
+	// Check Fortune Cookies
+	CM.Disp.CheckTickerFortune();
+
 	// Check Season Popup
 	CM.Disp.CheckSeasonPopup();
 
@@ -266,6 +269,10 @@ CM.ConfigDefault = {
 	GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', 
 	GCTimer: 1, 
 	Favicon: 1, 
+	FortuneFlash: 1, 
+	FortuneSound: 1,  
+	FortuneVolume: 100, 
+	FortuneSoundURL: 'https://freesound.org/data/previews/174/174027_3242494-lq.mp3',
 	SeaFlash: 1, 
 	SeaSound: 1,  
 	SeaVolume: 100, 
@@ -293,5 +300,5 @@ CM.ConfigDefault = {
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.021';
-CM.VersionMinor = '1';
+CM.VersionMinor = '2';
 
