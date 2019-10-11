@@ -1241,6 +1241,45 @@ CM.Disp.AddMenuStats = function(title) {
 		frag.appendChild(span);
 		return frag;
 	}
+	
+	var createMissDisp = function(theMissDisp) {
+		var frag = document.createDocumentFragment();
+		frag.appendChild(document.createTextNode(theMissDisp.length + ' '));
+		var span = document.createElement('span');
+		span.onmouseout = function() { Game.tooltip.hide(); };
+		var placeholder = document.createElement('div');
+		var missing = document.createElement('div');
+		missing.style.minWidth = '140px';
+		missing.style.marginBottom = '4px';
+		var title = document.createElement('div');
+		title.className = 'name';
+		title.style.marginBottom = '4px';
+		title.style.textAlign = 'center';
+		title.textContent = 'Missing';
+		missing.appendChild(title);
+		for (var i in theMissDisp) {
+			var div = document.createElement('div');
+			div.style.textAlign = 'center';
+			div.appendChild(document.createTextNode(theMissDisp[i]));
+			missing.appendChild(div);
+		}
+		placeholder.appendChild(missing);
+		span.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML));};
+		span.style.cursor = 'default';
+		span.style.display = 'inline-block';
+		span.style.height = '10px';
+		span.style.width = '10px';
+		span.style.borderRadius = '5px';
+		span.style.textAlign = 'center';
+		span.style.backgroundColor = '#C0C0C0';
+		span.style.color = 'black';
+		span.style.fontSize = '9px';
+		span.style.verticalAlign = 'bottom';
+		span.textContent = '?';
+		frag.appendChild(span);
+		return frag;
+	}
+
 
 	stats.appendChild(header('Lucky Cookies', 'Lucky'));
 	if (CM.Config.StatsPref.Lucky) {
@@ -1468,48 +1507,11 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(header('Season Specials', 'Sea'));
 		if (CM.Config.StatsPref.Sea) {
 			if (specDisp) {
-				var createSpecDisp = function(theSpecDisp) {
-					var frag = document.createDocumentFragment();
-					frag.appendChild(document.createTextNode(theSpecDisp.length + ' '));
-					var span = document.createElement('span');
-					span.onmouseout = function() { Game.tooltip.hide(); };
-					var placeholder = document.createElement('div');
-					var missing = document.createElement('div');
-					missing.style.minWidth = '140px';
-					missing.style.marginBottom = '4px';
-					var title = document.createElement('div');
-					title.className = 'name';
-					title.style.marginBottom = '4px';
-					title.style.textAlign = 'center';
-					title.textContent = 'Missing';
-					missing.appendChild(title);
-					for (var i in theSpecDisp) {
-						var div = document.createElement('div');
-						div.style.textAlign = 'center';
-						div.appendChild(document.createTextNode(theSpecDisp[i]));
-						missing.appendChild(div);
-					}
-					placeholder.appendChild(missing);
-					span.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML));};
-					span.style.cursor = 'default';
-					span.style.display = 'inline-block';
-					span.style.height = '10px';
-					span.style.width = '10px';
-					span.style.borderRadius = '5px';
-					span.style.textAlign = 'center';
-					span.style.backgroundColor = '#C0C0C0';
-					span.style.color = 'black';
-					span.style.fontSize = '9px';
-					span.style.verticalAlign = 'bottom';
-					span.textContent = '?';
-					frag.appendChild(span);
-					return frag;
-				}
-				if (halloCook.length != 0) stats.appendChild(listing('Halloween Cookies Left to Buy', createSpecDisp(halloCook)));
-				if (christCook.length != 0) stats.appendChild(listing('Christmas Cookies Left to Buy',  createSpecDisp(christCook)));
-				if (valCook.length != 0) stats.appendChild(listing('Valentine Cookies Left to Buy',  createSpecDisp(valCook)));
-				if (normEggs.length != 0) stats.appendChild(listing('Normal Easter Eggs Left to Unlock',  createSpecDisp(normEggs)));
-				if (rareEggs.length != 0) stats.appendChild(listing('Rare Easter Eggs Left to Unlock',  createSpecDisp(rareEggs)));
+				if (halloCook.length != 0) stats.appendChild(listing('Halloween Cookies Left to Buy', createMissDisp(halloCook)));
+				if (christCook.length != 0) stats.appendChild(listing('Christmas Cookies Left to Buy',  createMissDisp(christCook)));
+				if (valCook.length != 0) stats.appendChild(listing('Valentine Cookies Left to Buy',  createMissDisp(valCook)));
+				if (normEggs.length != 0) stats.appendChild(listing('Normal Easter Eggs Left to Unlock',  createMissDisp(normEggs)));
+				if (rareEggs.length != 0) stats.appendChild(listing('Rare Easter Eggs Left to Unlock',  createMissDisp(rareEggs)));
 			}
 
 			if (Game.season == 'christmas') stats.appendChild(listing('Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
@@ -1529,6 +1531,15 @@ CM.Disp.AddMenuStats = function(title) {
 			document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))
 		));
 		stats.appendChild(listing('Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Config.AvgClicksHist] + (CM.Config.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
+		if (Game.Has('Fortune cookies')) {
+			var fortunes = [];
+			for (var i in CM.Data.Fortunes) {
+				if (!Game.Has(CM.Data.Fortunes[i])) {
+					fortunes.push(CM.Data.Fortunes[i]);
+				}
+			}
+			if (fortunes.length != 0) stats.appendChild(listing('Fortune Upgrades Left to Buy',  createMissDisp(fortunes)));
+		}
 		stats.appendChild(listing('Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
 	}
 
