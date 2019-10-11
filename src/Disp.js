@@ -869,6 +869,15 @@ CM.Disp.CheckGoldenCookie = function() {
 	}
 }
 
+CM.Disp.CheckTickerFortune = function() {
+	if (CM.Disp.lastTickerFortuneState != (Game.TickerEffect && Game.TickerEffect.type == 'fortune')) {
+		CM.Disp.lastTickerFortuneState = (Game.TickerEffect && Game.TickerEffect.type == 'fortune');
+		if (CM.Disp.lastTickerFortuneState) {
+			CM.Disp.Flash(3, 'FortuneFlash');
+			CM.Disp.PlaySound(CM.Config.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
+		}
+	}
+}
 
 CM.Disp.CheckSeasonPopup = function() {
 	if (CM.Disp.lastSeasonPopupState != Game.shimmerTypes['reindeer'].spawned) {
@@ -906,6 +915,7 @@ CM.Disp.UpdateTitle = function() {
 		var addSP = false;
 
 		var titleGC;
+		var titleFC = '';
 		var titleSP;
 		if (CM.Disp.lastGoldenCookieState) {
 			if (CM.Disp.goldenShimmer.wrath) {
@@ -920,6 +930,9 @@ CM.Disp.UpdateTitle = function() {
 		}
 		else {
 			titleGC = '[GS]'
+		}
+		if (CM.Disp.lastTickerFortuneState) {
+			titleFC = '[F]';
 		}
 		if (Game.season == 'christmas') {
 			addSP = true;
@@ -936,11 +949,14 @@ CM.Disp.UpdateTitle = function() {
 			str = str.substring(str.lastIndexOf(']') + 1);
 		}
 
-		document.title = titleGC + (addSP ? titleSP : '') + ' ' + str;
+		document.title = titleFC + titleGC + (addSP ? titleSP : '') + ' ' + str;
 	}
 	else if (CM.Config.Title == 2) {
 		var str = '';
 		var spawn = false;
+		if (CM.Disp.lastTickerFortuneState) {
+			str += '[F]';
+		}
 		if (CM.Disp.lastGoldenCookieState) {
 			spawn = true;
 			if (CM.Disp.goldenShimmer.wrath) {
@@ -1112,6 +1128,10 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(url('GCSoundURL'));
 	frag.appendChild(listing('GCTimer'));
 	frag.appendChild(listing('Favicon'));
+	frag.appendChild(listing('FortuneFlash'));
+	frag.appendChild(listing('FortuneSound'));
+	frag.appendChild(vol('FortuneVolume'));
+	frag.appendChild(url('FortuneSoundURL'));
 	frag.appendChild(listing('SeaFlash'));
 	frag.appendChild(listing('SeaSound'));
 	frag.appendChild(vol('SeaVolume'));
@@ -2031,6 +2051,7 @@ CM.Disp.colorBrown = 'Brown';
 CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
 CM.Disp.buffColors = {'Frenzy': CM.Disp.colorYellow, 'Dragon Harvest': CM.Disp.colorBrown, 'Elder frenzy': CM.Disp.colorGreen, 'Clot': CM.Disp.colorRed, 'Click frenzy': CM.Disp.colorBlue, 'Dragonflight': CM.Disp.colorPink};
 CM.Disp.lastGoldenCookieState = 0;
+CM.Disp.lastTickerFortuneState = 0;
 CM.Disp.lastSeasonPopupState = 0;
 CM.Disp.lastGardenNextStep = 0;
 CM.Disp.goldenShimmer;
