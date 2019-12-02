@@ -602,6 +602,8 @@ CM.Disp.CreateUpgradeBar = function() {
 	CM.Disp.UpgradeBar.style.backgroundColor = 'black';
 	CM.Disp.UpgradeBar.style.textAlign = 'center';
 	CM.Disp.UpgradeBar.style.fontWeight = 'bold';
+	CM.Disp.UpgradeBar.style.maxWidth = '300px';
+	CM.Disp.UpgradeBar.style.zIndex = '21';
 	CM.Disp.UpgradeBar.style.display = 'none';
 	CM.Disp.UpgradeBar.onmouseout = function() { Game.tooltip.hide(); };
 
@@ -734,6 +736,15 @@ CM.Disp.UpdateColors = function() {
 	}
 	CM.Disp.Css.textContent = str;
 	CM.Disp.UpdateBuildings(); // Class has been already set
+}
+
+CM.Disp.ToggleUpgradeBarFixedPos = function() {
+	if (CM.Config.UpgradeBarFixedPos() == 1) {
+		CM.Disp.UpgradeBar.style.position = 'fixed';
+	}
+	else {
+		CM.Disp.UpgradeBar.style.position = '';
+	}
 }
 
 CM.Disp.CreateWhiteScreen = function() {
