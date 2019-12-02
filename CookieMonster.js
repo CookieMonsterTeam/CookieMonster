@@ -588,6 +588,7 @@ CM.ConfigData.TimeFormat = {label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX
 CM.ConfigData.SayTime = {label: ['Format Time OFF', 'Format Time ON'], desc: 'Change how time is displayed in statistics', toggle: true, func: function() {CM.Disp.ToggleSayTime();}};
 CM.ConfigData.GrimoireBar = {label: ['Grimoire Magic Meter Timer OFF', 'Grimoire Magic Meter Timer ON'], desc: 'A timer on how long before the Grimoire magic meter is full', toggle: true};
 CM.ConfigData.Scale = {label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
+CM.ConfigData.UpgradeBarFixedPos = {label: ['Upgrade Bar Fixed Position OFF', 'Upgrade Bar Fixed Positione ON'], desc: 'Lock the upgrade bar in place to prevent it from moving when scrolling', toggle: true, func: function() {CM.Disp.ToggleUpgradeBarFixedPos();}};
 
 /********
  * Data *
@@ -1225,6 +1226,8 @@ CM.Disp.CreateUpgradeBar = function() {
 	CM.Disp.UpgradeBar.style.backgroundColor = 'black';
 	CM.Disp.UpgradeBar.style.textAlign = 'center';
 	CM.Disp.UpgradeBar.style.fontWeight = 'bold';
+	CM.Disp.UpgradeBar.style.maxWidth = '300px';
+	CM.Disp.UpgradeBar.style.zIndex = '21';
 	CM.Disp.UpgradeBar.style.display = 'none';
 	CM.Disp.UpgradeBar.onmouseout = function() { Game.tooltip.hide(); };
 
@@ -1357,6 +1360,15 @@ CM.Disp.UpdateColors = function() {
 	}
 	CM.Disp.Css.textContent = str;
 	CM.Disp.UpdateBuildings(); // Class has been already set
+}
+
+CM.Disp.ToggleUpgradeBarFixedPos = function() {
+	if (CM.Config.UpgradeBarFixedPos() == 1) {
+		CM.Disp.UpgradeBar.style.position = 'fixed';
+	}
+	else {
+		CM.Disp.UpgradeBar.style.position = '';
+	}
 }
 
 CM.Disp.CreateWhiteScreen = function() {
