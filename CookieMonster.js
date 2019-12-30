@@ -3019,7 +3019,7 @@ CM.ConfigDefault = {
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.022';
-CM.VersionMinor = '0';
+CM.VersionMinor = '1';
 
 /*******
  * Sim *
