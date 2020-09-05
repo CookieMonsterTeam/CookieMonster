@@ -220,6 +220,8 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Fortune #100')) mult *= 1.01;
 	if (CM.Sim.Has('Fortune #101')) mult *= 1.07;
 
+	if (CM.Sim.Has('Dragon scale')) mult *= 1.03;
+
 	var buildMult = 1;
 	if (Game.hasGod) {
 		var godLvl = Game.hasGod('asceticism');
