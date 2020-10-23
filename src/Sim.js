@@ -65,8 +65,9 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, emuAura) {
 }
 
 CM.Sim.Has = function(what) {
-	if (Game.ascensionMode == 1 && Game.Upgrades[what].pool == 'prestige') return 0;
-	return (CM.Sim.Upgrades[what] ? CM.Sim.Upgrades[what].bought : 0);
+	var it = CM.Sim.Upgrades[what];
+	if (Game.ascensionMode == 1 && (it.pool == 'prestige' || it.tier == 'fortune')) return 0;
+	return (it ? it.bought : 0);
 }
 
 
