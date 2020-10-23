@@ -1969,6 +1969,7 @@ CM.Disp.AddMenuStats = function(title) {
 
 	stats.appendChild(header('Conjure Baked Goods', 'Conjure'));
 	if (CM.Config.StatsPref.Conjure) {
+		var conjureColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var conjureCur = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
 		var conjureTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.FormatTime((CM.Cache.Conjure - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
 		var conjureRewardMax = CM.Cache.ConjureReward;
@@ -1976,7 +1977,7 @@ CM.Disp.AddMenuStats = function(title) {
 		var conjureReqFrag = document.createDocumentFragment();
 		var conjureReqSpan = document.createElement('span');
 		conjureReqSpan.style.fontWeight = 'bold';
-		conjureReqSpan.className = CM.Disp.colorTextPre + luckyColor;
+		conjureReqSpan.className = CM.Disp.colorTextPre + conjureColor;
 		conjureReqSpan.textContent = Beautify(CM.Cache.Conjure);
 		conjureReqFrag.appendChild(conjureReqSpan);
 		if (conjureTime != '') {
@@ -2275,9 +2276,9 @@ CM.Disp.CreateTooltipWarnCaut = function() {
 		return box;
 	}
 	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipWarn', CM.Disp.colorRed, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!"', 'CMDispTooltipWarnText'));
-	CM.Disp.TooltipWarnCaut.firstChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarnCaut.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipCaut2', CM.Disp.colorPurple, 'Caution: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"', 'CMDispTooltipCaut2Text'));
-	CM.Disp.TooltipWarnCaut.firstChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarnCaut.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipCaut', CM.Disp.colorYellow, 'Caution: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)', 'CMDispTooltipCautText'));
 
 	l('tooltipAnchor').appendChild(CM.Disp.TooltipWarnCaut);
