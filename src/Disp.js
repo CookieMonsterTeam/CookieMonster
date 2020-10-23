@@ -1627,6 +1627,8 @@ CM.Disp.CreateTooltipWarnCaut = function() {
 	}
 	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipWarn', CM.Disp.colorRed, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!"', 'CMDispTooltipWarnText'));
 	CM.Disp.TooltipWarnCaut.firstChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipCaut2', CM.Disp.colorPurple, 'Caution: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"', 'CMDispTooltipCaut2Text'));
+	CM.Disp.TooltipWarnCaut.firstChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipCaut', CM.Disp.colorYellow, 'Caution: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)', 'CMDispTooltipCautText'));
 
 	l('tooltipAnchor').appendChild(CM.Disp.TooltipWarnCaut);
@@ -1851,8 +1853,9 @@ CM.Disp.UpdateTooltip = function() {
 						warn += ((bonusNoFren * 60 * 15) / 0.15);
 					}
 					var caut = warn * 7;
+					var caut2 = warn * 2;
 					var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
-					if ((amount < warn || amount < caut) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+					if ((amount < warn || amount < caut2 || amount < caut) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 						if (CM.Config.ToolWarnCautPos == 0) {
 							CM.Disp.TooltipWarnCaut.style.right = '0px';
 						}
@@ -1864,21 +1867,33 @@ CM.Disp.UpdateTooltip = function() {
 						if (amount < warn) {
 							l('CMDispTooltipWarn').style.display = '';
 							l('CMDispTooltipWarnText').textContent = Beautify(warn - amount) + ' (' + CM.Disp.FormatTime((warn - amount) / CM.Disp.GetCPS()) + ')';
+							l('CMDispTooltipCaut2').style.display = '';
+							l('CMDispTooltipCaut2Text').textContent = Beautify(caut2 - amount) + ' (' + CM.Disp.FormatTime((caut2 - amount) / CM.Disp.GetCPS()) + ')';
 							l('CMDispTooltipCaut').style.display = '';
 							l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
+						}
+						else if (amount < caut2) {
+							l('CMDispTooltipCaut2').style.display = '';
+							l('CMDispTooltipCaut2Text').textContent = Beautify(caut2 - amount) + ' (' + CM.Disp.FormatTime((caut2 - amount) / CM.Disp.GetCPS()) + ')';
+							l('CMDispTooltipCaut').style.display = '';
+							l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
+							l('CMDispTooltipWarn').style.display = 'none';
 						}
 						else if (amount < caut) {
 							l('CMDispTooltipCaut').style.display = '';
 							l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
 							l('CMDispTooltipWarn').style.display = 'none';
+							l('CMDispTooltipCaut2').style.display = 'none';
 						}
 						else {
 							l('CMDispTooltipWarn').style.display = 'none';
+							l('CMDispTooltipCaut2').style.display = 'none';
 							l('CMDispTooltipCaut').style.display = 'none';
 						}
 					}
 					else {
 						l('CMDispTooltipWarn').style.display = 'none';
+						l('CMDispTooltipCaut2').style.display = 'none';
 						l('CMDispTooltipCaut').style.display = 'none';
 					}
 				}
@@ -1889,6 +1904,7 @@ CM.Disp.UpdateTooltip = function() {
 			else { // Grimoire
 				CM.Disp.TooltipWarnCaut.style.display = 'none';
 				l('CMDispTooltipWarn').style.display = 'none';
+				l('CMDispTooltipCaut2').style.display = 'none';
 				l('CMDispTooltipCaut').style.display = 'none';
 
 				var minigame = Game.Objects['Wizard tower'].minigame;
@@ -1944,6 +1960,7 @@ CM.Disp.UpdateTooltip = function() {
 CM.Disp.DrawTooltipWarnCaut = function() {
 	if (CM.Config.ToolWarnCaut == 1) {
 		l('CMDispTooltipWarn').style.opacity = '0';
+		l('CMDispTooltipCaut2').style.opacity = '0';
 		l('CMDispTooltipCaut').style.opacity = '0';
 	}
 }
@@ -1951,6 +1968,7 @@ CM.Disp.DrawTooltipWarnCaut = function() {
 CM.Disp.UpdateTooltipWarnCaut = function() {
 	if (CM.Config.ToolWarnCaut == 1 && l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
 		l('CMDispTooltipWarn').style.opacity = '1';
+		l('CMDispTooltipCaut2').style.opacity = '1';
 		l('CMDispTooltipCaut').style.opacity = '1';
 	}
 }
