@@ -139,6 +139,8 @@ CM.Cache.RemakeLucky = function() {
 	CM.Cache.LuckyReward = (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
 	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.Conjure = CM.Cache.Lucky * 2;
+	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
 }
 
 CM.Cache.MaxChainMoni = function(digit, maxPayout) {
@@ -357,6 +359,8 @@ CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
 CM.Cache.LuckyFrenzy = 0;
 CM.Cache.LuckyRewardFrenzy = 0;
+CM.Cache.Conjure = 0;
+CM.Cache.ConjureReward = 0;
 CM.Cache.SeaSpec = 0;
 CM.Cache.Chain = 0;
 CM.Cache.ChainWrath = 0;

@@ -159,6 +159,8 @@ CM.Cache.RemakeLucky = function() {
 	CM.Cache.LuckyReward = (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
 	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.Conjure = CM.Cache.Lucky * 2;
+	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
 }
 
 CM.Cache.MaxChainMoni = function(digit, maxPayout) {
@@ -377,6 +379,8 @@ CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
 CM.Cache.LuckyFrenzy = 0;
 CM.Cache.LuckyRewardFrenzy = 0;
+CM.Cache.Conjure = 0;
+CM.Cache.ConjureReward = 0;
 CM.Cache.SeaSpec = 0;
 CM.Cache.Chain = 0;
 CM.Cache.ChainWrath = 0;
@@ -1911,6 +1915,9 @@ CM.Disp.AddMenuStats = function(title) {
 		var luckyColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.LuckyFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var luckyTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
 		var luckyCurBase = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) + 13;
+		var conjureCur = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
+		var conjureTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.FormatTime((CM.Cache.Conjure - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+		var conjureRewardMax = CM.Cache.ConjureReward;
 		var luckyRewardMax = CM.Cache.LuckyReward;
 		var luckyRewardMaxWrath = CM.Cache.LuckyReward;
 		var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
@@ -1961,6 +1968,20 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : ''))));
 		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : ''))));
 		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''))));
+		var conjureReqFrag = document.createDocumentFragment();
+		var conjureReqSpan = document.createElement('span');
+		conjureReqSpan.style.fontWeight = 'bold';
+		conjureReqSpan.className = CM.Disp.colorTextPre + luckyColor;
+		conjureReqSpan.textContent = Beautify(CM.Cache.Conjure);
+		conjureReqFrag.appendChild(conjureReqSpan);
+		if (conjureTime != '') {
+			var conjureReqSmall = document.createElement('small');
+			conjureReqSmall.textContent = ' (' + conjureTime + ')';
+			conjureReqFrag.appendChild(conjureReqSmall);
+		}
+		stats.appendChild(listing(listingQuest('\"Conjure Baked Goods\" Cookies Required', 'GoldCookTooltipPlaceholder'), conjureReqFrag));
+		stats.appendChild(listing(listingQuest('\"Conjure Baked Goods\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(conjureRewardMax))));
+		stats.appendChild(listing(listingQuest('\"Conjure Baked Goods\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(luckyCur))));
 	}
 
 	stats.appendChild(header('Chain Cookies', 'Chain'));
@@ -3036,7 +3057,7 @@ CM.ConfigDefault = {
 };
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '2.022';
+CM.VersionMajor = '2.029';
 CM.VersionMinor = '1';
 
 /*******
