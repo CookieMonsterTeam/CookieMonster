@@ -20,6 +20,7 @@ CM.Data.Fortunes = [
 	'Fortune #015', 
 	'Fortune #016', 
 	'Fortune #017', 
+	'Fortune #018', 
 	'Fortune #100', 
 	'Fortune #101', 
 	'Fortune #102', 

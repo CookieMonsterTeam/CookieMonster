@@ -1542,7 +1542,7 @@ CM.Disp.AddMenuStats = function(title) {
 				stats.appendChild(listing(listingQuest('Chocolate Egg Cookies', 'ChoEggTooltipPlaceholder'), document.createTextNode(Beautify(CM.Cache.lastChoEgg))));
 			}
 			if (centEgg) {
-				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode((Math.round((CM.Cache.CentEgg - 1) * 10000) / 100) + '%')));
+				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode((Math.round(CM.Cache.CentEgg * 10000) / 100) + '%')));
 			}
 		}
 	}
