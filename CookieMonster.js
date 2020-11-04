@@ -3243,6 +3243,8 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Fortune #100')) mult *= 1.01;
 	if (CM.Sim.Has('Fortune #101')) mult *= 1.07;
 
+	if (CM.Sim.Has('Dragon scale')) mult *= 1.03;
+
 	var buildMult = 1;
 	if (Game.hasGod) {
 		var godLvl = Game.hasGod('asceticism');
@@ -3425,19 +3427,25 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (minAmount >= 400) CM.Sim.Win('Quadricentennial');
 	if (minAmount >= 450) CM.Sim.Win('Quadricentennial and a half');
 	if (minAmount >= 500) CM.Sim.Win('Quincentennial');
+	if (minAmount >= 550) CM.Sim.Win('Quincentennial and a half');
+	if (minAmount >= 600) CM.Sim.Win('Sexcentennial');
 
 	if (buildingsOwned >= 100) CM.Sim.Win('Builder');
 	if (buildingsOwned >= 500) CM.Sim.Win('Architect');
 	if (buildingsOwned >= 1000) CM.Sim.Win('Engineer');
 	if (buildingsOwned >= 2000) CM.Sim.Win('Lord of Constructs');
+	if (buildingsOwned >= 4000) CM.Sim.Win('Grand design');
+	if (buildingsOwned >= 8000) CM.Sim.Win('Ecumenopolis');
 
 	if (CM.Sim.UpgradesOwned >= 20) CM.Sim.Win('Enhancer');
 	if (CM.Sim.UpgradesOwned >= 50) CM.Sim.Win('Augmenter');
 	if (CM.Sim.UpgradesOwned >= 100) CM.Sim.Win('Upgrader');
 	if (CM.Sim.UpgradesOwned >= 200) CM.Sim.Win('Lord of Progress');
+	if (CM.Sim.UpgradesOwned >= 300) CM.Sim.Win('The full picture');
+	if (CM.Sim.UpgradesOwned >= 400) CM.Sim.Win('When there\'s nothing left to add');
 
-	if (buildingsOwned >= 3000 && CM.Sim.UpgradesOwned >= 300) CM.Sim.Win('Polymath');
-	if (buildingsOwned >= 4000 && CM.Sim.UpgradesOwned >= 400) CM.Sim.Win('Renaissance baker');
+	if (buildingsOwned >= 4000 && CM.Sim.UpgradesOwned >= 300) CM.Sim.Win('Polymath');
+	if (buildingsOwned >= 8000 && CM.Sim.UpgradesOwned >= 400) CM.Sim.Win('Renaissance baker');
 
 	if (CM.Sim.Objects['Cursor'].amount + CM.Sim.Objects['Grandma'].amount >= 777) CM.Sim.Win('The elder scrolls');
 
@@ -3480,6 +3488,8 @@ CM.Sim.BuyBuildings = function(amount, target) {
 			if (me.amount >= 400) CM.Sim.Win('Dr. T');
 			if (me.amount >= 500) CM.Sim.Win('Thumbs, phalanges, metacarpals');
 			if (me.amount >= 600) CM.Sim.Win('With her finger and her thumb');
+			if (me.amount >= 700) CM.Sim.Win('Gotta hand it to you');
+			if (me.amount >= 800) CM.Sim.Win('The devil\'s workshop');
 		}
 		else {
 			for (var j in Game.Objects[me.name].tieredAchievs) {
