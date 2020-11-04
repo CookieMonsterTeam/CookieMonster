@@ -3279,6 +3279,7 @@ CM.Sim.CalculateGains = function() {
 		var me = CM.Sim.Objects[i];
 		var storedCps = (typeof(me.cps) == 'function' ? me.cps(me) : me.cps);
 		if (Game.ascensionMode != 1) storedCps *= (1 + me.level * 0.01) * buildMult;
+		if (i == "Grandma" && CM.Sim.Has('Milkhelp&reg; lactose intolerance relief tablets')) storedCps *= 1 + 0.002 * CM.Sim.AchievementsOwned;
 		CM.Sim.cookiesPs += me.amount * storedCps;
 	}
 
