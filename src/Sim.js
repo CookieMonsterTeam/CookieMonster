@@ -512,7 +512,7 @@ CM.Sim.BuyUpgrades = function() {
 			else if (i == 'Elder Covenant') {
 				CM.Sim.Win('Elder calm')
 			}
-			else if (i == 'Eternal heart biscuits') {
+			else if (i == 'Prism heart biscuits') {
 				CM.Sim.Win('Lovely cookies');
 			}
 			else if (i == 'Heavenly key') {
