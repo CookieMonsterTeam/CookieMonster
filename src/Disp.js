@@ -1213,7 +1213,7 @@ CM.Disp.AddMenuPref = function(title) {
 		label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
 		div.appendChild(label);
 		frag.appendChild(div);
-	}
+	};
 	frag.appendChild(listing('UpgradeBarFixedPos'));
 
 	frag.appendChild(header('Calculation'));
