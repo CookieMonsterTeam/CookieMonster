@@ -603,6 +603,7 @@ CM.Disp.CreateUpgradeBar = function() {
 	CM.Disp.UpgradeBar.style.textAlign = 'center';
 	CM.Disp.UpgradeBar.style.fontWeight = 'bold';
 	CM.Disp.UpgradeBar.style.display = 'none';
+ 	CM.Disp.UpgradeBar.style.zIndex = '21';
 	CM.Disp.UpgradeBar.onmouseout = function() { Game.tooltip.hide(); };
 
 	var placeholder = document.createElement('div');
@@ -734,6 +735,16 @@ CM.Disp.UpdateColors = function() {
 	}
 	CM.Disp.Css.textContent = str;
 	CM.Disp.UpdateBuildings(); // Class has been already set
+}
+
+CM.Disp.ToggleUpgradeBarFixedPos = function() {
+	if (CM.Config.UpgradeBarFixedPos() == 1) {
+		CM.Disp.UpgradeBar.style.position = 'sticky';
+		CM.Disp.UpgradeBar.style.top = '0px';
+	}
+	else {
+		CM.Disp.UpgradeBar.style.position = '';
+	}
 }
 
 CM.Disp.CreateWhiteScreen = function() {
