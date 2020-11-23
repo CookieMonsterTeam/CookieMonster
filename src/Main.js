@@ -286,7 +286,7 @@ CM.ConfigDefault = {
 	Title: 1, 
 	TooltipBuildUp: 1, 
 	TooltipAmor: 0, 
-	ToolWarn: 1, 
+	ToolWarnLucky: 1, 
 	ToolWarnPos: 1, 
 	TooltipGrim:1, 
 	ToolWrink: 1, 
