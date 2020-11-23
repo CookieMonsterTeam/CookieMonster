@@ -583,6 +583,7 @@ CM.ConfigData.ToolWarnCaut = {label: ['Tooltip Warning/Caution OFF', 'Tooltip Wa
 CM.ConfigData.ToolWarnCautPos = {label: ['Tooltip Warning/Caution Position (Left)', 'Tooltip Warning/Caution Position (Bottom)'], desc: 'Placement of the warning/caution boxes', toggle: false, func: function() {CM.Disp.ToggleToolWarnCautPos();}};
 CM.ConfigData.TooltipGrim = {label: ['Grimoire Tooltip Information OFF', 'Grimoire Tooltip Information ON'], desc: 'Extra information in tooltip for grimoire', toggle: true};
 CM.ConfigData.ToolWrink = {label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
+CM.ConfigData.TooltipLump = {label: ['Sugar Lump Tooltip OFF', 'Sugar Lump Tooltip ON'], desc: 'Shows the current Sugar Lump type in Sugar lump tooltip.', toggle: true};
 CM.ConfigData.Stats = {label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra Cookie Monster statistics!', toggle: true};
 CM.ConfigData.UpStats = {label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 5 seconds', toggle: false};
 CM.ConfigData.TimeFormat = {label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
@@ -713,6 +714,46 @@ CM.Disp.GetTimeColor = function(price, bank, cps, time) {
 	}
 	return {text: text, color: color};
 }
+
+/**
+ * This function returns Name and Color as object for sugar lump type that is given as input param.
+ * @param type Sugar Lump Type.
+ * @returns {{text: string, color: string}}
+ * @constructor
+ */
+CM.Disp.GetLumpColor = function(type) {
+	var name = "";
+	var color = "";
+
+	switch (type) {
+		case 0:
+			name = "Normal";
+			color = CM.Disp.colorGray;
+			break;
+		case 1:
+            name = "Bifurcated";
+            color = CM.Disp.colorGreen;
+			break;
+		case 2:
+            name = "Golden";
+            color = CM.Disp.colorYellow;
+			break;
+		case 3:
+            name = "Meaty";
+            color = CM.Disp.colorOrange;
+			break;
+		case 4:
+            name = "Caramelized";
+            color = CM.Disp.colorPurple;
+			break;
+		default:
+			name = "Unknown Sugar Lump";
+			color = CM.Disp.colorRed;
+			break;
+	}
+
+    return {text: name, color: color};
+};
 
 CM.Disp.Beautify = function(num, frac) {
 	if (CM.Config.Scale != 0 && isFinite(num)) {
@@ -1836,6 +1877,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('ToolWarnCautPos'));
 	frag.appendChild(listing('TooltipGrim'));
 	frag.appendChild(listing('ToolWrink'));
+	frag.appendChild(listing('TooltipLump'));
 
 	frag.appendChild(header('Statistics'));
 	frag.appendChild(listing('Stats'));
@@ -2381,6 +2423,17 @@ CM.Disp.AddTooltipGrimoire = function() {
 	}
 }
 
+/**
+ * This function improves Sugar Lump tooltip by adding extra infromation.
+ * @constructor
+ */
+CM.Disp.AddTooltipLump = function() {
+	if (Game.canLumps()) {
+		CM.Disp.TooltipLumpBack = l('lumps').onmouseover;
+        eval('l(\'lumps\').onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'Lump\');}, \'this\'); Game.tooltip.wobble();}');
+	}
+};
+
 CM.Disp.Tooltip = function(type, name) {
 	if (type == 'b') {
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
@@ -2420,6 +2473,10 @@ CM.Disp.Tooltip = function(type, name) {
 	else if (type == 'u') {
 		if (!Game.UpgradesInStore[name]) return '';
 		l('tooltip').innerHTML = Game.crateTooltip(Game.UpgradesInStore[name], 'store');
+	}
+	else if (type === 's') {
+		// Sugar Lump
+        l('tooltip').innerHTML = Game.lumpTooltip();
 	}
 	else { // Grimoire
 		l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)();
@@ -2569,6 +2626,40 @@ CM.Disp.UpdateTooltip = function() {
 				else {
 					CM.Disp.TooltipWarnCaut.style.display = 'none';
 				}
+			}
+			else if (CM.Disp.tooltipType === 's') {
+                // Adding information about Sugar Lumps.
+
+                CM.Disp.TooltipWarnCaut.style.display = 'none';
+                l('CMDispTooltipWarn').style.display = 'none';
+                l('CMDispTooltipCaut').style.display = 'none';
+
+                if (CM.Config.TooltipLump === 1) {
+                    l('CMTooltipArea').innerHTML = '';
+
+                    l('tooltip').firstChild.style.paddingBottom = '4px';
+                    var lumpTooltip = document.createElement('div');
+                    lumpTooltip.style.border = '1px solid';
+                    lumpTooltip.style.padding = '4px';
+                    lumpTooltip.style.margin = '0px -4px';
+                    lumpTooltip.id = 'CMTooltipBorder';
+                    lumpTooltip.className = CM.Disp.colorTextPre + CM.Disp.colorGray;
+
+                    var lumpHeader = document.createElement('div');
+                    lumpHeader.style.fontWeight = 'bold';
+                    lumpHeader.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
+                    lumpHeader.textContent = 'Current Sugar Lump';
+
+                    lumpTooltip.appendChild(lumpHeader);
+                    var lumpType = document.createElement('div');
+                    lumpType.id = 'CMTooltipTime';
+                    lumpTooltip.appendChild(lumpType);
+                    var lumpColor = CM.Disp.GetLumpColor(Game.lumpCurrentType);
+                    lumpType.textContent = lumpColor.text;
+                    lumpType.className = CM.Disp.colorTextPre + lumpColor.color;
+
+                    l('CMTooltipArea').appendChild(lumpTooltip);
+                }
 			}
 			else { // Grimoire
 				CM.Disp.TooltipWarnCaut.style.display = 'none';
@@ -3012,6 +3103,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
 	CM.Disp.AddTooltipGrimoire();
+	CM.Disp.AddTooltipLump();
 	CM.Disp.AddWrinklerAreaDetect();
 	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
