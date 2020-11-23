@@ -290,6 +290,7 @@ CM.ConfigDefault = {
 	ToolWarnCautPos: 1, 
 	TooltipGrim:1, 
 	ToolWrink: 1, 
+	TooltipLump: 1,
 	Stats: 1, 
 	UpStats: 1, 
 	TimeFormat: 0, 
