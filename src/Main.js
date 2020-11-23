@@ -7,7 +7,7 @@ CM.ReplaceNative = function() {
 	Beautify = CM.Disp.Beautify;
 
 	CM.Backup.CalculateGains = Game.CalculateGains;
-	eval('CM.Backup.CalculateGainsMod = ' + Game.CalculateGains.toString().split('ages\');').join('ages\');CM.Sim.DateAges = Date.now();').split('var day').join('CM.Sim.DateCentury = Date.now();var day'));
+	eval('CM.Backup.CalculateGainsMod = ' + Game.CalculateGains.toString().split('ages\');').join('ages\');CM.Sim.DateAges = Date.now();').split('if (Game.Has(\'Century').join('CM.Sim.DateCentury = Date.now();if (Game.Has(\'Century'));
 	Game.CalculateGains = function() {
 		CM.Backup.CalculateGainsMod();
 		CM.Sim.DoSims = 1;
@@ -38,6 +38,10 @@ CM.ReplaceNative = function() {
 	Game.UpdateSpecial = function() {
 		CM.Disp.FixMouseY(CM.Backup.UpdateSpecial);
 	}
+
+	// Assumes newer browsers
+	l('bigCookie').removeEventListener('click', Game.ClickCookie, false);
+	l('bigCookie').addEventListener('click', function() { CM.Disp.FixMouseY(Game.ClickCookie); }, false);
 
 	// Probably better to load per minigame
 	CM.Backup.scriptLoaded = Game.scriptLoaded;
@@ -138,13 +142,13 @@ CM.Loop = function() {
 		}
 
 		// Check for aura change to recalculate buildings prices
-		var hasFierHoard = Game.hasAura('Fierce Hoarder');
-		if (!CM.Cache.HadFierHoard && hasFierHoard) {
-			CM.Cache.HadFierHoard = true;
+		var hasBuildAura = Game.auraMult('Fierce Hoarder') > 0;
+		if (!CM.Cache.HadBuildAura && hasBuildAura) {
+			CM.Cache.HadBuildAura = true;
 			CM.Cache.DoRemakeBuildPrices = 1;
 		}
-		else if (CM.Cache.HadFierHoard && !hasFierHoard) {
-			CM.Cache.HadFierHoard = false;
+		else if (CM.Cache.HadBuildAura && !hasBuildAura) {
+			CM.Cache.HadBuildAura = false;
 			CM.Cache.DoRemakeBuildPrices = 1;
 		}
 
@@ -182,8 +186,14 @@ CM.Loop = function() {
 	// Check Golden Cookies
 	CM.Disp.CheckGoldenCookie();
 
+	// Check Fortune Cookies
+	CM.Disp.CheckTickerFortune();
+
 	// Check Season Popup
 	CM.Disp.CheckSeasonPopup();
+
+	// Check Garden Tick
+	CM.Disp.CheckGardenTick();
 
 	// Update Average CPS (might need to move)
 	CM.Cache.UpdateAvgCPS()
@@ -216,12 +226,9 @@ CM.DelayInit = function() {
 	CM.Disp.CreateWhiteScreen();
 	CM.Disp.CreateFavicon();
 	CM.Disp.CreateGCTimer();
-	CM.Disp.CreateTooltip('GoldCookTooltipPlaceholder', 'Calculated with Golden Switch off', '200px');
-	CM.Disp.CreateTooltip('PrestMaxTooltipPlaceholder', 'The MAX prestige is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '370px');
-	CM.Disp.CreateTooltip('NextPrestTooltipPlaceholder', 'Calculated with cookies gained from wrinklers and Chocolate egg', '200px');
-	CM.Disp.CreateTooltip('HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer aura, and buying Chocolate egg', '390px');
-	CM.Disp.CreateTooltip('ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels unlocked at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset', '370px');
-	CM.Disp.CreateTooltip('ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer aura, and then buying Chocolate egg', '360px');
+	for (var i in CM.Disp.TooltipText) {
+		CM.Disp.CreateTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
+	}
 	CM.Disp.CreateTooltipWarnCaut();
 	CM.Disp.AddTooltipBuild();
 	CM.Disp.AddTooltipGrimoire();
@@ -245,10 +252,57 @@ CM.DelayInit = function() {
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
 
-
 CM.ConfigDefault = {BotBar: 1, TimerBar: 1, TimerBarPos: 0, BuildColor: 1, BulkBuildColor: 0, UpBarColor: 1, CalcWrink: 0, CPSMode: 1, AvgCPSHist: 3, AvgClicksHist: 0, ToolWarnCautBon: 0, Flash: 1, Sound: 1,  Volume: 100, GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', GCTimer: 1, Title: 1, Favicon: 1, TooltipBuildUp: 1, TooltipAmor: 0, ToolWarnCaut: 1, ToolWarnCautPos: 1, TooltipGrim:1, ToolWrink: 1, TooltipLump: 1, Stats: 1, UpStats: 1, TimeFormat: 0, SayTime: 1, Scale: 2, StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'}};
+CM.ConfigDefault = {
+	BotBar: 1, 
+	TimerBar: 1, 
+	TimerBarPos: 0, 
+	BuildColor: 1, 
+	BulkBuildColor: 0, 
+	UpBarColor: 1, 
+	CalcWrink: 0, 
+	CPSMode: 1, 
+	AvgCPSHist: 3, 
+	AvgClicksHist: 0, 
+	ToolWarnCautBon: 0, 
+	GCFlash: 1, 
+	GCSound: 1,  
+	GCVolume: 100, 
+	GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', 
+	GCTimer: 1, 
+	Favicon: 1, 
+	FortuneFlash: 1, 
+	FortuneSound: 1,  
+	FortuneVolume: 100, 
+	FortuneSoundURL: 'https://freesound.org/data/previews/174/174027_3242494-lq.mp3',
+	SeaFlash: 1, 
+	SeaSound: 1,  
+	SeaVolume: 100, 
+	SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', 
+	GardFlash: 1, 
+	GardSound: 1,  
+	GardVolume: 100, 
+	GardSoundURL: 'https://freesound.org/data/previews/103/103046_861714-lq.mp3', 
+	Title: 1, 
+	TooltipBuildUp: 1, 
+	TooltipAmor: 0, 
+	ToolWarnCaut: 1, 
+	ToolWarnCautPos: 1, 
+	TooltipGrim:1, 
+	ToolWrink: 1, 
+	Stats: 1, 
+	UpStats: 1, 
+	TimeFormat: 0, 
+	SayTime: 1, 
+	GrimoireBar: 1, 
+	Scale: 2, 
+	StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
+	Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
+	SortBuildings: 0,
+	SortUpgrades: 0
+};
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '2.016';
+CM.VersionMajor = '2.022';
 CM.VersionMinor = '1';
 
