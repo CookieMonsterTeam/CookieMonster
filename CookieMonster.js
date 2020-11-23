@@ -540,7 +540,7 @@ CM.ConfigData.Colors = {
 	}, 
 	func: function() {CM.Disp.UpdateColors();}
 };
-CM.ConfigData.UpgradeBarFixedPos = {label: ['Upgrade Bar Fixed Position OFF', 'Upgrade Bar Fixed Positione ON'], desc: 'Lock the upgrade bar at top of the screen to prevent it from moving ofscreen when scrolling', toggle: true, func: function() {CM.Disp.ToggleUpgradeBarFixedPos();}};
+CM.ConfigData.UpgradeBarFixedPos = {label: ['Upgrade Bar Fixed Position OFF', 'Upgrade Bar Fixed Position ON'], desc: 'Lock the upgrade bar at top of the screen to prevent it from moving ofscreen when scrolling', toggle: true, func: function() {CM.Disp.ToggleUpgradeBarFixedPos();}};
 CM.ConfigData.CalcWrink = {label: ['Calculate with Wrinklers OFF', 'Calculate with Wrinklers ON'], desc: 'Calculate times and average Cookies Per Second with Wrinklers', toggle: true};
 CM.ConfigData.CPSMode = {label: ['Current Cookies Per Second', 'Average Cookies Per Second'], desc: 'Calculate times using current Cookies Per Second or average Cookies Per Second', toggle: false};
 CM.ConfigData.AvgCPSHist = {label: ['Average CPS for past 10s', 'Average CPS for past 15s', 'Average CPS for past 30s', 'Average CPS for past 1m', 'Average CPS for past 5m', 'Average CPS for past 10m', 'Average CPS for past 15m', 'Average CPS for past 30m'], desc: 'How much time average Cookies Per Second should consider', toggle: false};
@@ -1450,7 +1450,7 @@ CM.Disp.UpdateColors = function() {
 }
 
 CM.Disp.ToggleUpgradeBarFixedPos = function() {
-	if (CM.Config.UpgradeBarFixedPos() == 1) {
+	if (CM.Config.UpgradeBarFixedPos == 1) {
 		CM.Disp.UpgradeBar.style.position = 'sticky';
 		CM.Disp.UpgradeBar.style.top = '0px';
 	}
@@ -1841,6 +1841,7 @@ CM.Disp.AddMenuPref = function(title) {
 		div.appendChild(label);
 		frag.appendChild(div);
 	}
+	frag.appendChild(listing('UpgradeBarFixedPos'));
 
 	frag.appendChild(header('Calculation'));
 	frag.appendChild(listing('CalcWrink'));
@@ -3182,6 +3183,7 @@ CM.ConfigDefault = {
 	BuildColor: 1, 
 	BulkBuildColor: 0, 
 	UpBarColor: 1, 
+	UpgradeBarFixedPos: 1,
 	CalcWrink: 0, 
 	CPSMode: 1, 
 	AvgCPSHist: 3, 
@@ -3212,6 +3214,7 @@ CM.ConfigDefault = {
 	ToolWarnCautPos: 1, 
 	TooltipGrim:1, 
 	ToolWrink: 1, 
+	TooltipLump: 1,
 	Stats: 1, 
 	UpStats: 1, 
 	TimeFormat: 0, 
@@ -3225,7 +3228,7 @@ CM.ConfigDefault = {
 };
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '2.022';
+CM.VersionMajor = '2.031';
 CM.VersionMinor = '1';
 
 /*******

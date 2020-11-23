@@ -823,7 +823,7 @@ CM.Disp.UpdateColors = function() {
 }
 
 CM.Disp.ToggleUpgradeBarFixedPos = function() {
-	if (CM.Config.UpgradeBarFixedPos() == 1) {
+	if (CM.Config.UpgradeBarFixedPos == 1) {
 		CM.Disp.UpgradeBar.style.position = 'sticky';
 		CM.Disp.UpgradeBar.style.top = '0px';
 	}
@@ -1214,6 +1214,7 @@ CM.Disp.AddMenuPref = function(title) {
 		div.appendChild(label);
 		frag.appendChild(div);
 	}
+	frag.appendChild(listing('UpgradeBarFixedPos'));
 
 	frag.appendChild(header('Calculation'));
 	frag.appendChild(listing('CalcWrink'));
