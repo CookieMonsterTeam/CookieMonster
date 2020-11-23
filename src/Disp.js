@@ -747,7 +747,6 @@ CM.Disp.ToggleUpgradeBarFixedPos = function() {
 	}
 }
 
-
 CM.Disp.CreateWhiteScreen = function() {
 	CM.Disp.WhiteScreen = document.createElement('div');
 	CM.Disp.WhiteScreen.id = 'CMWhiteScreen';
