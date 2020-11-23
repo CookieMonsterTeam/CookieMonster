@@ -580,6 +580,7 @@ CM.ConfigData.Title = {label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highli
 CM.ConfigData.TooltipBuildUp = {label: ['Buildings/Upgrades Tooltip Information OFF', 'Buildings/Upgrades Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades', toggle: true};
 CM.ConfigData.TooltipAmor = {label: ['Buildings Tooltip Amortization Information OFF', 'Buildings Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
 CM.ConfigData.ToolWarnLucky = {label: ['Tooltip Lucky Warning OFF', 'Tooltip Lucky Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!"/"Lucky!" (Frenzy) rewards', toggle: true};
+CM.ConfigData.ToolWarnConjure = {label: ['Tooltip Conjure Warning OFF', 'Tooltip Conjure Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Conjure Baked Goods" rewards', toggle: true};
 CM.ConfigData.ToolWarnPos = {label: ['Tooltip Warning Position (Left)', 'Tooltip Warning Position (Bottom)'], desc: 'Placement of the warning boxes', toggle: false, func: function() {CM.Disp.ToggleToolWarnPos();}};
 CM.ConfigData.TooltipGrim = {label: ['Grimoire Tooltip Information OFF', 'Grimoire Tooltip Information ON'], desc: 'Extra information in tooltip for grimoire', toggle: true};
 CM.ConfigData.ToolWrink = {label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
@@ -1875,6 +1876,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('TooltipBuildUp'));
 	frag.appendChild(listing('TooltipAmor'));
 	frag.appendChild(listing('ToolWarnLucky'));
+	frag.appendChild(listing('ToolWarnConjure'));
 	frag.appendChild(listing('ToolWarnPos'));
 	frag.appendChild(listing('TooltipGrim'));
 	frag.appendChild(listing('ToolWrink'));
@@ -2407,17 +2409,11 @@ CM.Disp.CreateTooltipWarn = function() {
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnLucky', CM.Disp.colorRed, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!"', 'CMDispTooltipWarnLuckyText'));
 	CM.Disp.TooltipWarn.firstChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnLuckyFrenzy', CM.Disp.colorYellow, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)', 'CMDispTooltipWarnLuckyFrenzyText'));
+	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjure', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"', 'CMDispTooltipWarnConjureText'));
+ 	
 
 	l('tooltipAnchor').appendChild(CM.Disp.TooltipWarn);
-}
-
-CM.Disp.ToggleToolWarn = function() { // Pointless?
-	if (CM.Config.ToolWarn == 1) {
-		CM.Disp.TooltipWarn.style.display = 'block';
-	}
-	else {
-		CM.Disp.TooltipWarn.style.display = 'none';
-	}
 }
 
 CM.Disp.ToggleToolWarnPos = function() {
@@ -2636,6 +2632,14 @@ CM.Disp.UpdateTooltip = function() {
 					l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
 				}
 
+				if (CM.Config.ToolWarnPos == 0) {
+					CM.Disp.TooltipWarn.style.right = '0px';
+				}
+				else {
+					CM.Disp.TooltipWarn.style.top = (l('tooltip').offsetHeight) + 'px';
+				}
+				CM.Disp.TooltipWarn.style.width = (l('tooltip').offsetWidth - 6) + 'px';
+
 				if (CM.Config.ToolWarnLucky == 1) {
 					CM.Disp.TooltipWarn.style.display = 'block';
 					var limitLucky = CM.Cache.Lucky;
@@ -2647,14 +2651,6 @@ CM.Disp.UpdateTooltip = function() {
 					var limitLuckyFrenzy = limitLucky * 7;
 					var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
 					if ((amount < limitLucky || amount < limitLuckyFrenzy) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
-						if (CM.Config.ToolWarnPos == 0) {
-							CM.Disp.TooltipWarn.style.right = '0px';
-						}
-						else {
-							CM.Disp.TooltipWarn.style.top = (l('tooltip').offsetHeight) + 'px';
-						}
-						CM.Disp.TooltipWarn.style.width = (l('tooltip').offsetWidth - 6) + 'px';
-
 						if (amount < limitLucky) {
 							l('CMDispTooltipWarnLucky').style.display = '';
 							l('CMDispTooltipWarnLuckyText').textContent = Beautify(limitLucky - amount) + ' (' + CM.Disp.FormatTime((limitLucky - amount) / CM.Disp.GetCPS()) + ')';
@@ -2671,21 +2667,38 @@ CM.Disp.UpdateTooltip = function() {
 							l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
 						}
 					}
-					else {
-						l('CMDispTooltipWarnLucky').style.display = 'none';
-						l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+				}
+				else {
+					l('CMDispTooltipWarnLucky').style.display = 'none';
+					l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+				}
+
+				if (CM.Config.ToolWarnConjure == 1) {
+					CM.Disp.TooltipWarn.style.display = 'block';
+					var limitLucky = CM.Cache.Lucky;
+					if (CM.Config.ToolWarnBon == 1) {
+						var bonusNoFren = bonus;
+						bonusNoFren /= CM.Sim.getCPSBuffMult();
+						limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
+					}
+					var limitConjure = limitLucky * 2;
+					var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
+					if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+						l('CMDispTooltipWarnConjure').style.display = '';
+						l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / CM.Disp.GetCPS()) + ')';
 					}
 				}
 				else {
-					CM.Disp.TooltipWarn.style.display = 'none';
+					l('CMDispTooltipWarnConjure').style.display = 'none';
 				}
 			}
 			else if (CM.Disp.tooltipType === 's') {
                 // Adding information about Sugar Lumps.
 
                 CM.Disp.TooltipWarn.style.display = 'none';
-                l('CMDispTooltipWarn').style.display = 'none';
-                l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+                l('CMDispTooltipWarnLucky').style.display = 'none';
+				l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+				l('CMDispTooltipWarnConjure').style.display = 'none';
 
                 if (CM.Config.TooltipLump === 1) {
                     l('CMTooltipArea').innerHTML = '';
@@ -2716,8 +2729,9 @@ CM.Disp.UpdateTooltip = function() {
 			}
 			else { // Grimoire
 				CM.Disp.TooltipWarn.style.display = 'none';
-				l('CMDispTooltipWarn').style.display = 'none';
+				l('CMDispTooltipWarnLucky').style.display = 'none';
 				l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+				l('CMDispTooltipWarnConjure').style.display = 'none';
 
 				var minigame = Game.Objects['Wizard tower'].minigame;
 				var spellCost = minigame.getSpellCost(minigame.spellsById[CM.Disp.tooltipName]);
@@ -2774,12 +2788,18 @@ CM.Disp.DrawTooltipWarn = function() {
 		l('CMDispTooltipWarnLucky').style.opacity = '0';
 		l('CMDispTooltipWarnLuckyFrenzy').style.opacity = '0';
 	}
+	if (CM.Config.ToolWarnConjure == 1) {
+		l('CMDispTooltipWarnConjure').style.opacity = '0';
+	}
 }
 
 CM.Disp.UpdateTooltipWarn = function() {
 	if (CM.Config.ToolWarnLucky == 1 && l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
 		l('CMDispTooltipWarnLucky').style.opacity = '1';
 		l('CMDispTooltipWarnLuckyFrenzy').style.opacity = '1';
+	}
+	if (CM.Config.ToolWarnConjure == 1 && l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
+		l('CMDispTooltipWarnConjure').style.opacity = '1';
 	}
 }
 
@@ -3210,7 +3230,8 @@ CM.ConfigDefault = {
 	Title: 1, 
 	TooltipBuildUp: 1, 
 	TooltipAmor: 0, 
-	ToolWarnLucky: 1, 
+	ToolWarnLucky: 1,
+	ToolWarnConjure: 1, 
 	ToolWarnPos: 1, 
 	TooltipGrim:1, 
 	ToolWrink: 1, 
