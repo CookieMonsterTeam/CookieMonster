@@ -304,6 +304,6 @@ CM.ConfigDefault = {
 };
 CM.ConfigPrefix = 'CMConfig';
 
-CM.VersionMajor = '2.022';
+CM.VersionMajor = '2.031';
 CM.VersionMinor = '1';
 
