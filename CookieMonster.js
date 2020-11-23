@@ -3182,6 +3182,7 @@ CM.ConfigDefault = {
 	BuildColor: 1, 
 	BulkBuildColor: 0, 
 	UpBarColor: 1, 
+	UpgradeBarFixedPos: 1,
 	CalcWrink: 0, 
 	CPSMode: 1, 
 	AvgCPSHist: 3, 
