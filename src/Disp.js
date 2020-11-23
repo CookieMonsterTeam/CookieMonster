@@ -1221,7 +1221,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('CPSMode'));
 	frag.appendChild(listing('AvgCPSHist'));
 	frag.appendChild(listing('AvgClicksHist'));
-	frag.appendChild(listing('ToolWarnCautBon'));
+	frag.appendChild(listing('ToolWarnBon'));
 
 	frag.appendChild(header('Notification'));
 	frag.appendChild(listing('GCFlash'));
@@ -1247,8 +1247,8 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(header('Tooltip'));
 	frag.appendChild(listing('TooltipBuildUp'));
 	frag.appendChild(listing('TooltipAmor'));
-	frag.appendChild(listing('ToolWarnCaut'));
-	frag.appendChild(listing('ToolWarnCautPos'));
+	frag.appendChild(listing('ToolWarn'));
+	frag.appendChild(listing('ToolWarnPos'));
 	frag.appendChild(listing('TooltipGrim'));
 	frag.appendChild(listing('ToolWrink'));
 	frag.appendChild(listing('TooltipLump'));
@@ -1732,9 +1732,9 @@ CM.Disp.FixMouseY = function(target) {
 
 CM.Disp.UpdateTooltipLocation = function() {
 	if (Game.tooltip.origin == 'store') {
-		var warnCautOffset = 0;
-		if (CM.Config.ToolWarnCaut == 1 && CM.Config.ToolWarnCautPos == 1) warnCautOffset = CM.Disp.TooltipWarnCaut.clientHeight - 4;
-		Game.tooltip.tta.style.top = Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnCautOffset - 46) + 'px';
+		var warnOffset = 0;
+		if (CM.Config.ToolWarn == 1 && CM.Config.ToolWarnPos == 1) warnOffset = CM.Disp.TooltipWarn.clientHeight - 4;
+		Game.tooltip.tta.style.top = Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnOffset - 46) + 'px';
 	}
 	// Kept for future possible use if the code changes again
 	/*else if (!Game.onCrate && !Game.OnAscend && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
@@ -1742,12 +1742,12 @@ CM.Disp.UpdateTooltipLocation = function() {
 	}*/
 }
 
-CM.Disp.CreateTooltipWarnCaut = function() {
-	CM.Disp.TooltipWarnCaut = document.createElement('div');
-	CM.Disp.TooltipWarnCaut.style.position = 'absolute';
-	CM.Disp.TooltipWarnCaut.style.display = 'none';
-	CM.Disp.TooltipWarnCaut.style.left = 'auto';
-	CM.Disp.TooltipWarnCaut.style.bottom = 'auto';
+CM.Disp.CreateTooltipWarn = function() {
+	CM.Disp.TooltipWarn = document.createElement('div');
+	CM.Disp.TooltipWarn.style.position = 'absolute';
+	CM.Disp.TooltipWarn.style.display = 'none';
+	CM.Disp.TooltipWarn.style.left = 'auto';
+	CM.Disp.TooltipWarn.style.bottom = 'auto';
 
 	var create = function(boxId, color, labelTextFront, labelTextBack, deficitId) {
 		var box = document.createElement('div');
@@ -1777,32 +1777,32 @@ CM.Disp.CreateTooltipWarnCaut = function() {
 		deficitDiv.appendChild(deficitSpan);
 		return box;
 	}
-	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipWarn', CM.Disp.colorRed, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!"', 'CMDispTooltipWarnText'));
-	CM.Disp.TooltipWarnCaut.firstChild.style.marginBottom = '4px';
-	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipCaut', CM.Disp.colorYellow, 'Caution: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)', 'CMDispTooltipCautText'));
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarn', CM.Disp.colorRed, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!"', 'CMDispTooltipWarnText'));
+	CM.Disp.TooltipWarn.firstChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipCaut', CM.Disp.colorYellow, 'Caution: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)', 'CMDispTooltipCautText'));
 
-	l('tooltipAnchor').appendChild(CM.Disp.TooltipWarnCaut);
+	l('tooltipAnchor').appendChild(CM.Disp.TooltipWarn);
 }
 
-CM.Disp.ToggleToolWarnCaut = function() { // Pointless?
-	if (CM.Config.ToolWarnCaut == 1) {
-		CM.Disp.TooltipWarnCaut.style.display = 'block';
+CM.Disp.ToggleToolWarn = function() { // Pointless?
+	if (CM.Config.ToolWarn == 1) {
+		CM.Disp.TooltipWarn.style.display = 'block';
 	}
 	else {
-		CM.Disp.TooltipWarnCaut.style.display = 'none';
+		CM.Disp.TooltipWarn.style.display = 'none';
 	}
 }
 
-CM.Disp.ToggleToolWarnCautPos = function() {
-	if (CM.Config.ToolWarnCautPos == 0) {
-		CM.Disp.TooltipWarnCaut.style.top = 'auto';
-		CM.Disp.TooltipWarnCaut.style.margin = '4px -4px';
-		CM.Disp.TooltipWarnCaut.style.padding = '3px 4px';
+CM.Disp.ToggleToolWarnPos = function() {
+	if (CM.Config.ToolWarnPos == 0) {
+		CM.Disp.TooltipWarn.style.top = 'auto';
+		CM.Disp.TooltipWarn.style.margin = '4px -4px';
+		CM.Disp.TooltipWarn.style.padding = '3px 4px';
 	}
 	else {
-		CM.Disp.TooltipWarnCaut.style.right = 'auto';
-		CM.Disp.TooltipWarnCaut.style.margin = '4px';
-		CM.Disp.TooltipWarnCaut.style.padding = '4px 3px';
+		CM.Disp.TooltipWarn.style.right = 'auto';
+		CM.Disp.TooltipWarn.style.margin = '4px';
+		CM.Disp.TooltipWarn.style.padding = '4px 3px';
 	}
 }
 
@@ -2009,10 +2009,10 @@ CM.Disp.UpdateTooltip = function() {
 					l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
 				}
 
-				if (CM.Config.ToolWarnCaut == 1) {
-					CM.Disp.TooltipWarnCaut.style.display = 'block';
+				if (CM.Config.ToolWarn == 1) {
+					CM.Disp.TooltipWarn.style.display = 'block';
 					var warn = CM.Cache.Lucky;
-					if (CM.Config.ToolWarnCautBon == 1) {
+					if (CM.Config.ToolWarnBon == 1) {
 						var bonusNoFren = bonus;
 						bonusNoFren /= CM.Sim.getCPSBuffMult();
 						warn += ((bonusNoFren * 60 * 15) / 0.15);
@@ -2020,13 +2020,13 @@ CM.Disp.UpdateTooltip = function() {
 					var caut = warn * 7;
 					var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
 					if ((amount < warn || amount < caut) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
-						if (CM.Config.ToolWarnCautPos == 0) {
-							CM.Disp.TooltipWarnCaut.style.right = '0px';
+						if (CM.Config.ToolWarnPos == 0) {
+							CM.Disp.TooltipWarn.style.right = '0px';
 						}
 						else {
-							CM.Disp.TooltipWarnCaut.style.top = (l('tooltip').offsetHeight) + 'px';
+							CM.Disp.TooltipWarn.style.top = (l('tooltip').offsetHeight) + 'px';
 						}
-						CM.Disp.TooltipWarnCaut.style.width = (l('tooltip').offsetWidth - 6) + 'px';
+						CM.Disp.TooltipWarn.style.width = (l('tooltip').offsetWidth - 6) + 'px';
 
 						if (amount < warn) {
 							l('CMDispTooltipWarn').style.display = '';
@@ -2050,13 +2050,13 @@ CM.Disp.UpdateTooltip = function() {
 					}
 				}
 				else {
-					CM.Disp.TooltipWarnCaut.style.display = 'none';
+					CM.Disp.TooltipWarn.style.display = 'none';
 				}
 			}
 			else if (CM.Disp.tooltipType === 's') {
                 // Adding information about Sugar Lumps.
 
-                CM.Disp.TooltipWarnCaut.style.display = 'none';
+                CM.Disp.TooltipWarn.style.display = 'none';
                 l('CMDispTooltipWarn').style.display = 'none';
                 l('CMDispTooltipCaut').style.display = 'none';
 
@@ -2088,7 +2088,7 @@ CM.Disp.UpdateTooltip = function() {
                 }
 			}
 			else { // Grimoire
-				CM.Disp.TooltipWarnCaut.style.display = 'none';
+				CM.Disp.TooltipWarn.style.display = 'none';
 				l('CMDispTooltipWarn').style.display = 'none';
 				l('CMDispTooltipCaut').style.display = 'none';
 
@@ -2137,20 +2137,20 @@ CM.Disp.UpdateTooltip = function() {
 			}
 		}
 		else {
-			CM.Disp.TooltipWarnCaut.style.display = 'none';
+			CM.Disp.TooltipWarn.style.display = 'none';
 		}
 	}
 }
 
-CM.Disp.DrawTooltipWarnCaut = function() {
-	if (CM.Config.ToolWarnCaut == 1) {
+CM.Disp.DrawTooltipWarn = function() {
+	if (CM.Config.ToolWarn == 1) {
 		l('CMDispTooltipWarn').style.opacity = '0';
 		l('CMDispTooltipCaut').style.opacity = '0';
 	}
 }
 
-CM.Disp.UpdateTooltipWarnCaut = function() {
-	if (CM.Config.ToolWarnCaut == 1 && l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
+CM.Disp.UpdateTooltipWarn = function() {
+	if (CM.Config.ToolWarn == 1 && l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
 		l('CMDispTooltipWarn').style.opacity = '1';
 		l('CMDispTooltipCaut').style.opacity = '1';
 	}

@@ -18,14 +18,14 @@ CM.ReplaceNative = function() {
 	eval('CM.Backup.tooltip.drawMod = ' + Game.tooltip.draw.toString().split('this').join('Game.tooltip'));
 	Game.tooltip.draw = function(from, text, origin) {
 		CM.Backup.tooltip.drawMod(from, text, origin);
-		CM.Disp.DrawTooltipWarnCaut();
+		CM.Disp.DrawTooltipWarn();
 	}
 
 	CM.Backup.tooltip.update = Game.tooltip.update;
 	eval('CM.Backup.tooltip.updateMod = ' + Game.tooltip.update.toString().split('this.').join('Game.tooltip.'));
 	Game.tooltip.update = function() {
 		CM.Backup.tooltip.updateMod();
-		CM.Disp.UpdateTooltipWarnCaut();
+		CM.Disp.UpdateTooltipWarn();
 		CM.Disp.UpdateTooltipLocation();
 	}
 
@@ -229,7 +229,7 @@ CM.DelayInit = function() {
 	for (var i in CM.Disp.TooltipText) {
 		CM.Disp.CreateTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
-	CM.Disp.CreateTooltipWarnCaut();
+	CM.Disp.CreateTooltipWarn();
 	CM.Disp.AddTooltipBuild();
 	CM.Disp.AddTooltipGrimoire();
 	CM.Disp.AddTooltipLump();
@@ -264,7 +264,7 @@ CM.ConfigDefault = {
 	CPSMode: 1, 
 	AvgCPSHist: 3, 
 	AvgClicksHist: 0, 
-	ToolWarnCautBon: 0, 
+	ToolWarnBon: 0, 
 	GCFlash: 1, 
 	GCSound: 1,  
 	GCVolume: 100, 
@@ -286,8 +286,8 @@ CM.ConfigDefault = {
 	Title: 1, 
 	TooltipBuildUp: 1, 
 	TooltipAmor: 0, 
-	ToolWarnCaut: 1, 
-	ToolWarnCautPos: 1, 
+	ToolWarn: 1, 
+	ToolWarnPos: 1, 
 	TooltipGrim:1, 
 	ToolWrink: 1, 
 	TooltipLump: 1,
