@@ -1003,6 +1003,20 @@ CM.Disp.CheckGardenTick = function() {
 	}
 }
 
+CM.Disp.CheckMagicMeter = function() {
+	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Config.GrimoireBar == 1) {
+		var minigame = Game.Objects['Wizard tower'].minigame;
+		if (minigame.magic < minigame.magicM) {
+			CM.Disp.lastMagicBarFull = false;
+		} 
+		else if (!CM.Disp.lastMagicBarFull) {
+			CM.Disp.lastMagicBarFull = true;
+			CM.Disp.Flash(3, 'MagicFlash');
+			CM.Disp.PlaySound(CM.Config.MagicSoundURL, 'MagicSound', 'MagicVolume');
+		}
+	}
+}
+
 CM.Disp.UpdateTitle = function() {
 	if (Game.OnAscend || CM.Config.Title == 0) {
 		document.title = CM.Cache.Title;
@@ -1242,6 +1256,10 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('GardSound'));
 	frag.appendChild(vol('GardVolume'));
 	frag.appendChild(url('GardSoundURL'));
+	frag.appendChild(listing('MagicFlash'));
+	frag.appendChild(listing('MagicSound'));
+	frag.appendChild(vol('MagicVolume'));
+	frag.appendChild(url('MagicSoundURL'));
 	frag.appendChild(listing('Title'));
 
 	frag.appendChild(header('Tooltip'));
@@ -2311,6 +2329,7 @@ CM.Disp.lastGoldenCookieState = 0;
 CM.Disp.lastTickerFortuneState = 0;
 CM.Disp.lastSeasonPopupState = 0;
 CM.Disp.lastGardenNextStep = 0;
+CM.Disp.lastMagicBarFull = 0;
 CM.Disp.goldenShimmer;
 CM.Disp.seasonPopShimmer;
 CM.Disp.lastAscendState = -1;
