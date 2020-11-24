@@ -462,8 +462,8 @@ CM.Sim.CheckOtherAchiev = function() {
 
 CM.Sim.BuyBuildings = function(amount, target) {
 	CM.Cache[target] = [];
-	CM.Sim.CopyData();
 	for (var i in Game.Objects) {
+		CM.Sim.CopyData();
 		var me = CM.Sim.Objects[i];
 		me.amount += amount;
 
