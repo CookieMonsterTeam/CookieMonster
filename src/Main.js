@@ -195,6 +195,9 @@ CM.Loop = function() {
 	// Check Garden Tick
 	CM.Disp.CheckGardenTick();
 
+	// Check Grimoire Meter
+	CM.Disp.CheckMagicMeter();
+
 	// Update Average CPS (might need to move)
 	CM.Cache.UpdateAvgCPS()
 }
@@ -283,6 +286,10 @@ CM.ConfigDefault = {
 	GardSound: 1,  
 	GardVolume: 100, 
 	GardSoundURL: 'https://freesound.org/data/previews/103/103046_861714-lq.mp3', 
+	MagicFlash: 1, 
+	MagicSound: 1,  
+	MagicVolume: 100, 
+	MagicSoundURL: 'https://freesound.org/data/previews/221/221683_1015240-lq.mp3', 
 	Title: 1, 
 	TooltipBuildUp: 1, 
 	TooltipAmor: 0, 
