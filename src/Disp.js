@@ -873,6 +873,13 @@ CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
 	}
 }
 
+CM.Disp.Notification = function(notifyConfig, title, message) {
+	if (CM.Config[notifyConfig] == 1 && document.visibilityState == 'hidden') {
+		var CookieIcon = 'https://orteil.dashnet.org/cookieclicker/favicon.ico'
+		var notification = new Notification(title, {body: message, badge: CookieIcon});
+	}
+}
+
 /**
  * Needed for some of the functions to use the right object
  */
@@ -955,6 +962,7 @@ CM.Disp.CheckGoldenCookie = function() {
 
 			CM.Disp.Flash(3, 'GCFlash');
 			CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
+			CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
 		}
 		else if (CM.Config.GCTimer == 1) CM.Disp.GCTimer.style.display = 'none';
 	}
@@ -971,6 +979,7 @@ CM.Disp.CheckTickerFortune = function() {
 		if (CM.Disp.lastTickerFortuneState) {
 			CM.Disp.Flash(3, 'FortuneFlash');
 			CM.Disp.PlaySound(CM.Config.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
+			CM.Disp.Notification('FortuneNotification', "Fortune Cookie found", "A Fortune Cookie has appeared on the Ticker.")
 		}
 	}
 }
@@ -989,6 +998,7 @@ CM.Disp.CheckSeasonPopup = function() {
 
 			CM.Disp.Flash(3, 'SeaFlash');
 			CM.Disp.PlaySound(CM.Config.SeaSoundURL, 'SeaSound', 'SeaVolume');
+			CM.Disp.Notification('SeaNotification',"Reindeer sighted!", "A Reindeer has spawned. Click it now!")
 		}
 	}
 }
@@ -1013,6 +1023,7 @@ CM.Disp.CheckMagicMeter = function() {
 			CM.Disp.lastMagicBarFull = true;
 			CM.Disp.Flash(3, 'MagicFlash');
 			CM.Disp.PlaySound(CM.Config.MagicSoundURL, 'MagicSound', 'MagicVolume');
+			CM.Disp.Notification('MagicNotification', "Magic Meter full", "Your Magic Meter is full. Cast a spell!")
 		}
 	}
 }
@@ -1238,16 +1249,19 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('ToolWarnBon'));
 
 	frag.appendChild(header('Notification'));
+	frag.appendChild(listing('GCNotification'));
 	frag.appendChild(listing('GCFlash'));
 	frag.appendChild(listing('GCSound'));
 	frag.appendChild(vol('GCVolume'));
 	frag.appendChild(url('GCSoundURL'));
 	frag.appendChild(listing('GCTimer'));
 	frag.appendChild(listing('Favicon'));
+	frag.appendChild(listing('FortuneNotification'));
 	frag.appendChild(listing('FortuneFlash'));
 	frag.appendChild(listing('FortuneSound'));
 	frag.appendChild(vol('FortuneVolume'));
 	frag.appendChild(url('FortuneSoundURL'));
+	frag.appendChild(listing('SeaNotification'));
 	frag.appendChild(listing('SeaFlash'));
 	frag.appendChild(listing('SeaSound'));
 	frag.appendChild(vol('SeaVolume'));
@@ -1256,6 +1270,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('GardSound'));
 	frag.appendChild(vol('GardVolume'));
 	frag.appendChild(url('GardSoundURL'));
+	frag.appendChild(listing('MagicNotification'));
 	frag.appendChild(listing('MagicFlash'));
 	frag.appendChild(listing('MagicSound'));
 	frag.appendChild(vol('MagicVolume'));
@@ -2355,4 +2370,3 @@ CM.Disp.TooltipText = [
 	['ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels unlocked at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset', '370px'], 
 	['ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer and Reality Bending auras, and then buying Chocolate egg', '300px']
 ];
-
