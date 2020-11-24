@@ -1283,9 +1283,9 @@ CM.Disp.UpdateBuildings = function() {
 	
 	// Build array of pointers, sort by pp, use array index (+2) as the grid row number
 	// (grid rows are 1-based indexing, and row 1 is the bulk buy/sell options)
-	var arr = Object.keys(CM.Cache.Objects).map(k =>
+	var arr = Object.keys(CM.Cache[target]).map(k =>
 	{
-		var o = CM.Cache.Objects[k];
+		var o = CM.Cache[target][k];
 		o.name = k;
 		o.id = Game.Objects[k].id;
 		return o;
