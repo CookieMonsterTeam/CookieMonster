@@ -166,6 +166,9 @@ CM.Sim.CopyData = function() {
 	for (var i in Game.Objects) {
 		var me = Game.Objects[i];
 		var you = CM.Sim.Objects[i];
+		if (you == undefined) {
+			CM.Sim.InitData();
+		}
 		you.amount = me.amount;
 		you.level = me.level;
 	}
@@ -174,6 +177,9 @@ CM.Sim.CopyData = function() {
 	for (var i in Game.Upgrades) {
 		var me = Game.Upgrades[i];
 		var you = CM.Sim.Upgrades[i];
+		if (you == undefined) {
+			CM.Sim.InitData();
+		}
 		you.bought = me.bought;
 	}
 
@@ -181,6 +187,9 @@ CM.Sim.CopyData = function() {
 	for (var i in Game.Achievements) {
 		var me = Game.Achievements[i];
 		var you = CM.Sim.Achievements[i];
+		if (you == undefined) {
+			CM.Sim.InitData();
+		}
 		you.won = me.won;
 	}
 };
@@ -453,8 +462,8 @@ CM.Sim.CheckOtherAchiev = function() {
 
 CM.Sim.BuyBuildings = function(amount, target) {
 	CM.Cache[target] = [];
+	CM.Sim.CopyData();
 	for (var i in Game.Objects) {
-		CM.Sim.CopyData();
 		var me = CM.Sim.Objects[i];
 		me.amount += amount;
 
