@@ -1003,6 +1003,20 @@ CM.Disp.CheckGardenTick = function() {
 	}
 }
 
+CM.Disp.CheckMagicMeter = function() {
+	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Config.GrimoireBar == 1) {
+		var minigame = Game.Objects['Wizard tower'].minigame;
+		if (minigame.magic < minigame.magicM) {
+			CM.Disp.lastMagicBarFull = false;
+		} 
+		else if (!CM.Disp.lastMagicBarFull) {
+			CM.Disp.lastMagicBarFull = true;
+			CM.Disp.Flash(3, 'MagicFlash');
+			CM.Disp.PlaySound(CM.Config.MagicSoundURL, 'MagicSound', 'MagicVolume');
+		}
+	}
+}
+
 CM.Disp.UpdateTitle = function() {
 	if (Game.OnAscend || CM.Config.Title == 0) {
 		document.title = CM.Cache.Title;
@@ -1221,7 +1235,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('CPSMode'));
 	frag.appendChild(listing('AvgCPSHist'));
 	frag.appendChild(listing('AvgClicksHist'));
-	frag.appendChild(listing('ToolWarnCautBon'));
+	frag.appendChild(listing('ToolWarnBon'));
 
 	frag.appendChild(header('Notification'));
 	frag.appendChild(listing('GCFlash'));
@@ -1242,13 +1256,18 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('GardSound'));
 	frag.appendChild(vol('GardVolume'));
 	frag.appendChild(url('GardSoundURL'));
+	frag.appendChild(listing('MagicFlash'));
+	frag.appendChild(listing('MagicSound'));
+	frag.appendChild(vol('MagicVolume'));
+	frag.appendChild(url('MagicSoundURL'));
 	frag.appendChild(listing('Title'));
 
 	frag.appendChild(header('Tooltip'));
 	frag.appendChild(listing('TooltipBuildUp'));
 	frag.appendChild(listing('TooltipAmor'));
-	frag.appendChild(listing('ToolWarnCaut'));
-	frag.appendChild(listing('ToolWarnCautPos'));
+	frag.appendChild(listing('ToolWarnLucky'));
+	frag.appendChild(listing('ToolWarnConjure'));
+	frag.appendChild(listing('ToolWarnPos'));
 	frag.appendChild(listing('TooltipGrim'));
 	frag.appendChild(listing('ToolWrink'));
 	frag.appendChild(listing('TooltipLump'));
@@ -1523,6 +1542,29 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing(listingQuest('\"Chain\" Reward (CUR) (Golden / Wrath)', 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))));
 	}
 
+	stats.appendChild(header('Conjure Baked Goods', 'Conjure'));
+	if (CM.Config.StatsPref.Conjure) {
+		var conjureColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+		var conjureCur = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
+		var conjureTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.FormatTime((CM.Cache.Conjure - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+		var conjureRewardMax = CM.Cache.ConjureReward;
+		
+		var conjureReqFrag = document.createDocumentFragment();
+ 		var conjureReqSpan = document.createElement('span');
+ 		conjureReqSpan.style.fontWeight = 'bold';
+ 		conjureReqSpan.className = CM.Disp.colorTextPre + conjureColor;
+ 		conjureReqSpan.textContent = Beautify(CM.Cache.Conjure);
+ 		conjureReqFrag.appendChild(conjureReqSpan);
+ 		if (conjureTime != '') {
+ 			var conjureReqSmall = document.createElement('small');
+ 			conjureReqSmall.textContent = ' (' + conjureTime + ')';
+ 			conjureReqFrag.appendChild(conjureReqSmall);
+ 		}
+ 		stats.appendChild(listing(listingQuest('\"Conjure Baked Goods\" Cookies Required', 'GoldCookTooltipPlaceholder'), conjureReqFrag));
+ 		stats.appendChild(listing(listingQuest('\"Conjure Baked Goods\" Reward (MAX)', 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(conjureRewardMax))));
+ 		stats.appendChild(listing(listingQuest('\"Conjure Baked Goods\" Reward (CUR)', 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(conjureCur))));
+ 	}
+	
 	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
 
 	stats.appendChild(header('Prestige', 'Prestige'));
@@ -1732,9 +1774,9 @@ CM.Disp.FixMouseY = function(target) {
 
 CM.Disp.UpdateTooltipLocation = function() {
 	if (Game.tooltip.origin == 'store') {
-		var warnCautOffset = 0;
-		if (CM.Config.ToolWarnCaut == 1 && CM.Config.ToolWarnCautPos == 1) warnCautOffset = CM.Disp.TooltipWarnCaut.clientHeight - 4;
-		Game.tooltip.tta.style.top = Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnCautOffset - 46) + 'px';
+		var warnOffset = 0;
+		if (CM.Config.ToolWarnLucky == 1 && CM.Config.ToolWarnPos == 1) warnOffset = CM.Disp.TooltipWarn.clientHeight - 4;
+		Game.tooltip.tta.style.top = Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnOffset - 46) + 'px';
 	}
 	// Kept for future possible use if the code changes again
 	/*else if (!Game.onCrate && !Game.OnAscend && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
@@ -1742,12 +1784,12 @@ CM.Disp.UpdateTooltipLocation = function() {
 	}*/
 }
 
-CM.Disp.CreateTooltipWarnCaut = function() {
-	CM.Disp.TooltipWarnCaut = document.createElement('div');
-	CM.Disp.TooltipWarnCaut.style.position = 'absolute';
-	CM.Disp.TooltipWarnCaut.style.display = 'none';
-	CM.Disp.TooltipWarnCaut.style.left = 'auto';
-	CM.Disp.TooltipWarnCaut.style.bottom = 'auto';
+CM.Disp.CreateTooltipWarn = function() {
+	CM.Disp.TooltipWarn = document.createElement('div');
+	CM.Disp.TooltipWarn.style.position = 'absolute';
+	CM.Disp.TooltipWarn.style.display = 'none';
+	CM.Disp.TooltipWarn.style.left = 'auto';
+	CM.Disp.TooltipWarn.style.bottom = 'auto';
 
 	var create = function(boxId, color, labelTextFront, labelTextBack, deficitId) {
 		var box = document.createElement('div');
@@ -1777,32 +1819,26 @@ CM.Disp.CreateTooltipWarnCaut = function() {
 		deficitDiv.appendChild(deficitSpan);
 		return box;
 	}
-	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipWarn', CM.Disp.colorRed, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!"', 'CMDispTooltipWarnText'));
-	CM.Disp.TooltipWarnCaut.firstChild.style.marginBottom = '4px';
-	CM.Disp.TooltipWarnCaut.appendChild(create('CMDispTooltipCaut', CM.Disp.colorYellow, 'Caution: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)', 'CMDispTooltipCautText'));
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnLucky', CM.Disp.colorRed, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!"', 'CMDispTooltipWarnLuckyText'));
+	CM.Disp.TooltipWarn.firstChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnLuckyFrenzy', CM.Disp.colorYellow, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)', 'CMDispTooltipWarnLuckyFrenzyText'));
+	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjure', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"', 'CMDispTooltipWarnConjureText'));
+ 	
 
-	l('tooltipAnchor').appendChild(CM.Disp.TooltipWarnCaut);
+	l('tooltipAnchor').appendChild(CM.Disp.TooltipWarn);
 }
 
-CM.Disp.ToggleToolWarnCaut = function() { // Pointless?
-	if (CM.Config.ToolWarnCaut == 1) {
-		CM.Disp.TooltipWarnCaut.style.display = 'block';
+CM.Disp.ToggleToolWarnPos = function() {
+	if (CM.Config.ToolWarnPos == 0) {
+		CM.Disp.TooltipWarn.style.top = 'auto';
+		CM.Disp.TooltipWarn.style.margin = '4px -4px';
+		CM.Disp.TooltipWarn.style.padding = '3px 4px';
 	}
 	else {
-		CM.Disp.TooltipWarnCaut.style.display = 'none';
-	}
-}
-
-CM.Disp.ToggleToolWarnCautPos = function() {
-	if (CM.Config.ToolWarnCautPos == 0) {
-		CM.Disp.TooltipWarnCaut.style.top = 'auto';
-		CM.Disp.TooltipWarnCaut.style.margin = '4px -4px';
-		CM.Disp.TooltipWarnCaut.style.padding = '3px 4px';
-	}
-	else {
-		CM.Disp.TooltipWarnCaut.style.right = 'auto';
-		CM.Disp.TooltipWarnCaut.style.margin = '4px';
-		CM.Disp.TooltipWarnCaut.style.padding = '4px 3px';
+		CM.Disp.TooltipWarn.style.right = 'auto';
+		CM.Disp.TooltipWarn.style.margin = '4px';
+		CM.Disp.TooltipWarn.style.padding = '4px 3px';
 	}
 }
 
@@ -2009,56 +2045,73 @@ CM.Disp.UpdateTooltip = function() {
 					l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
 				}
 
-				if (CM.Config.ToolWarnCaut == 1) {
-					CM.Disp.TooltipWarnCaut.style.display = 'block';
-					var warn = CM.Cache.Lucky;
-					if (CM.Config.ToolWarnCautBon == 1) {
+				if (CM.Config.ToolWarnPos == 0) {
+					CM.Disp.TooltipWarn.style.right = '0px';
+				}
+				else {
+					CM.Disp.TooltipWarn.style.top = (l('tooltip').offsetHeight) + 'px';
+				}
+				CM.Disp.TooltipWarn.style.width = (l('tooltip').offsetWidth - 6) + 'px';
+
+				if (CM.Config.ToolWarnLucky == 1) {
+					CM.Disp.TooltipWarn.style.display = 'block';
+					var limitLucky = CM.Cache.Lucky;
+					if (CM.Config.ToolWarnBon == 1) {
 						var bonusNoFren = bonus;
 						bonusNoFren /= CM.Sim.getCPSBuffMult();
-						warn += ((bonusNoFren * 60 * 15) / 0.15);
+						limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
 					}
-					var caut = warn * 7;
+					var limitLuckyFrenzy = limitLucky * 7;
 					var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
-					if ((amount < warn || amount < caut) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
-						if (CM.Config.ToolWarnCautPos == 0) {
-							CM.Disp.TooltipWarnCaut.style.right = '0px';
+					if ((amount < limitLucky || amount < limitLuckyFrenzy) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+						if (amount < limitLucky) {
+							l('CMDispTooltipWarnLucky').style.display = '';
+							l('CMDispTooltipWarnLuckyText').textContent = Beautify(limitLucky - amount) + ' (' + CM.Disp.FormatTime((limitLucky - amount) / CM.Disp.GetCPS()) + ')';
+							l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
+							l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / CM.Disp.GetCPS()) + ')';
+						}
+						else if (amount < limitLuckyFrenzy) {
+							l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
+							l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / CM.Disp.GetCPS()) + ')';
+							l('CMDispTooltipWarnLucky').style.display = 'none';
 						}
 						else {
-							CM.Disp.TooltipWarnCaut.style.top = (l('tooltip').offsetHeight) + 'px';
+							l('CMDispTooltipWarnLucky').style.display = 'none';
+							l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
 						}
-						CM.Disp.TooltipWarnCaut.style.width = (l('tooltip').offsetWidth - 6) + 'px';
-
-						if (amount < warn) {
-							l('CMDispTooltipWarn').style.display = '';
-							l('CMDispTooltipWarnText').textContent = Beautify(warn - amount) + ' (' + CM.Disp.FormatTime((warn - amount) / CM.Disp.GetCPS()) + ')';
-							l('CMDispTooltipCaut').style.display = '';
-							l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
-						}
-						else if (amount < caut) {
-							l('CMDispTooltipCaut').style.display = '';
-							l('CMDispTooltipCautText').textContent = Beautify(caut - amount) + ' (' + CM.Disp.FormatTime((caut - amount) / CM.Disp.GetCPS()) + ')';
-							l('CMDispTooltipWarn').style.display = 'none';
-						}
-						else {
-							l('CMDispTooltipWarn').style.display = 'none';
-							l('CMDispTooltipCaut').style.display = 'none';
-						}
-					}
-					else {
-						l('CMDispTooltipWarn').style.display = 'none';
-						l('CMDispTooltipCaut').style.display = 'none';
 					}
 				}
 				else {
-					CM.Disp.TooltipWarnCaut.style.display = 'none';
+					l('CMDispTooltipWarnLucky').style.display = 'none';
+					l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+				}
+
+				if (CM.Config.ToolWarnConjure == 1) {
+					CM.Disp.TooltipWarn.style.display = 'block';
+					var limitLucky = CM.Cache.Lucky;
+					if (CM.Config.ToolWarnBon == 1) {
+						var bonusNoFren = bonus;
+						bonusNoFren /= CM.Sim.getCPSBuffMult();
+						limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
+					}
+					var limitConjure = limitLucky * 2;
+					var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
+					if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+						l('CMDispTooltipWarnConjure').style.display = '';
+						l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / CM.Disp.GetCPS()) + ')';
+					}
+				}
+				else {
+					l('CMDispTooltipWarnConjure').style.display = 'none';
 				}
 			}
 			else if (CM.Disp.tooltipType === 's') {
                 // Adding information about Sugar Lumps.
 
-                CM.Disp.TooltipWarnCaut.style.display = 'none';
-                l('CMDispTooltipWarn').style.display = 'none';
-                l('CMDispTooltipCaut').style.display = 'none';
+                CM.Disp.TooltipWarn.style.display = 'none';
+                l('CMDispTooltipWarnLucky').style.display = 'none';
+				l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+				l('CMDispTooltipWarnConjure').style.display = 'none';
 
                 if (CM.Config.TooltipLump === 1) {
                     l('CMTooltipArea').innerHTML = '';
@@ -2088,9 +2141,10 @@ CM.Disp.UpdateTooltip = function() {
                 }
 			}
 			else { // Grimoire
-				CM.Disp.TooltipWarnCaut.style.display = 'none';
-				l('CMDispTooltipWarn').style.display = 'none';
-				l('CMDispTooltipCaut').style.display = 'none';
+				CM.Disp.TooltipWarn.style.display = 'none';
+				l('CMDispTooltipWarnLucky').style.display = 'none';
+				l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+				l('CMDispTooltipWarnConjure').style.display = 'none';
 
 				var minigame = Game.Objects['Wizard tower'].minigame;
 				var spellCost = minigame.getSpellCost(minigame.spellsById[CM.Disp.tooltipName]);
@@ -2137,22 +2191,28 @@ CM.Disp.UpdateTooltip = function() {
 			}
 		}
 		else {
-			CM.Disp.TooltipWarnCaut.style.display = 'none';
+			CM.Disp.TooltipWarn.style.display = 'none';
 		}
 	}
 }
 
-CM.Disp.DrawTooltipWarnCaut = function() {
-	if (CM.Config.ToolWarnCaut == 1) {
-		l('CMDispTooltipWarn').style.opacity = '0';
-		l('CMDispTooltipCaut').style.opacity = '0';
+CM.Disp.DrawTooltipWarn = function() {
+	if (CM.Config.ToolWarnLucky == 1) {
+		l('CMDispTooltipWarnLucky').style.opacity = '0';
+		l('CMDispTooltipWarnLuckyFrenzy').style.opacity = '0';
+	}
+	if (CM.Config.ToolWarnConjure == 1) {
+		l('CMDispTooltipWarnConjure').style.opacity = '0';
 	}
 }
 
-CM.Disp.UpdateTooltipWarnCaut = function() {
-	if (CM.Config.ToolWarnCaut == 1 && l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
-		l('CMDispTooltipWarn').style.opacity = '1';
-		l('CMDispTooltipCaut').style.opacity = '1';
+CM.Disp.UpdateTooltipWarn = function() {
+	if (CM.Config.ToolWarnLucky == 1 && l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
+		l('CMDispTooltipWarnLucky').style.opacity = '1';
+		l('CMDispTooltipWarnLuckyFrenzy').style.opacity = '1';
+	}
+	if (CM.Config.ToolWarnConjure == 1 && l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea') != null) {
+		l('CMDispTooltipWarnConjure').style.opacity = '1';
 	}
 }
 
@@ -2269,6 +2329,7 @@ CM.Disp.lastGoldenCookieState = 0;
 CM.Disp.lastTickerFortuneState = 0;
 CM.Disp.lastSeasonPopupState = 0;
 CM.Disp.lastGardenNextStep = 0;
+CM.Disp.lastMagicBarFull = 0;
 CM.Disp.goldenShimmer;
 CM.Disp.seasonPopShimmer;
 CM.Disp.lastAscendState = -1;
