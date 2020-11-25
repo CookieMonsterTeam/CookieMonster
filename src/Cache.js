@@ -303,6 +303,16 @@ CM.Cache.RemakeSellForChoEgg = function() {
 			sellTotal += CM.Sim.BuildingSell(me, me.basePrice, amount, me.free, amount, 1);
 		}
 	}
+	// Compute cookies earned by selling stock market goods
+	if (Game.Objects.Bank.minigameLoaded) {
+		var marketGoods = Game.Objects.Bank.minigame.goods;
+		var goodsVal = 0;
+		for (var i in marketGoods) {
+			var marketGood = marketGoods[i];
+			goodsVal += marketGood.stock * marketGood.val;
+		}
+		sellTotal += goodsVal * Game.cookiesPsRawHighest;
+	}
 	CM.Cache.SellForChoEgg = sellTotal;
 }
 

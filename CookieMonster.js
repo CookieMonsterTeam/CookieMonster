@@ -323,6 +323,16 @@ CM.Cache.RemakeSellForChoEgg = function() {
 			sellTotal += CM.Sim.BuildingSell(me, me.basePrice, amount, me.free, amount, 1);
 		}
 	}
+	// Compute cookies earned by selling stock market goods
+	if (Game.Objects.Bank.minigameLoaded) {
+		var marketGoods = Game.Objects.Bank.minigame.goods;
+		var goodsVal = 0;
+		for (var i in marketGoods) {
+			var marketGood = marketGoods[i];
+			goodsVal += marketGood.stock * marketGood.val;
+		}
+		sellTotal += goodsVal * Game.cookiesPsRawHighest;
+	}
 	CM.Cache.SellForChoEgg = sellTotal;
 }
 
@@ -3104,7 +3114,7 @@ CM.Disp.TooltipText = [
 	['NextPrestTooltipPlaceholder', 'Calculated with cookies gained from wrinklers and Chocolate egg', '200px'], 
 	['HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer and Reality Bending auras, and buying Chocolate egg', '330px'], 
 	['ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels unlocked at 100% of its potential and from reset achievements if you have the same buildings/upgrades after reset', '370px'], 
-	['ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer and Reality Bending auras, and then buying Chocolate egg', '300px']
+	['ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all buildings with Earth Shatterer and Reality Bending auras, selling all stock market goods, and then buying Chocolate egg', '300px']
 ];
 /********
  * Main *
