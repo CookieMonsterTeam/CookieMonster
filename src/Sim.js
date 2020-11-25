@@ -168,6 +168,7 @@ CM.Sim.CopyData = function() {
 		var you = CM.Sim.Objects[i];
 		if (you == undefined) {
 			CM.Sim.InitData();
+			you = CM.Sim.Objects[i]; // Not undefined anymore
 		}
 		you.amount = me.amount;
 		you.level = me.level;
@@ -179,6 +180,7 @@ CM.Sim.CopyData = function() {
 		var you = CM.Sim.Upgrades[i];
 		if (you == undefined) {
 			CM.Sim.InitData();
+			you = CM.Sim.Upgrades[i];
 		}
 		you.bought = me.bought;
 	}
@@ -189,6 +191,7 @@ CM.Sim.CopyData = function() {
 		var you = CM.Sim.Achievements[i];
 		if (you == undefined) {
 			CM.Sim.InitData();
+			you = CM.Sim.Achievements[i];
 		}
 		you.won = me.won;
 	}
