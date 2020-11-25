@@ -928,6 +928,30 @@ CM.Disp.CreateCssArea = function() {
 	l("upgrades").style["flex-wrap"] = "wrap";
 }
 
+CM.Disp.CreateBotBarBuildingColumn = function(buildingName) {
+	if(!CM.Disp.BotBar) {
+		CM.Disp.CreateBotBar(); // CreateBot
+		return;
+	}
+
+	var type  = CM.Disp.BotBar.firstChild.firstChild.childNodes[0];
+	var bonus = CM.Disp.BotBar.firstChild.firstChild.childNodes[1];
+	var pp    = CM.Disp.BotBar.firstChild.firstChild.childNodes[2];
+	var time  = CM.Disp.BotBar.firstChild.firstChild.childNodes[3];
+
+	var i = buildingName;
+	var header = type.appendChild(document.createElement('td'));
+	header.appendChild(document.createTextNode((i.indexOf(' ') != -1 ? i.substring(0, i.indexOf(' ')) : i) + ' ('));
+
+	var span = header.appendChild(document.createElement('span'));
+	span.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
+
+	header.appendChild(document.createTextNode(')'));
+	bonus.appendChild(document.createElement('td'));
+	pp.appendChild(document.createElement('td'));
+	time.appendChild(document.createElement('td'));
+}
+
 CM.Disp.CreateBotBar = function() {
 	CM.Disp.BotBar = document.createElement('div');
 	CM.Disp.BotBar.id = 'CMBotBar';
@@ -972,15 +996,7 @@ CM.Disp.CreateBotBar = function() {
 	time.appendChild(firstCol('Time Left', CM.Disp.colorBlue));
 
 	for (var i in Game.Objects) {
-		var header = type.appendChild(document.createElement('td'));
-		header.appendChild(document.createTextNode((i.indexOf(' ') != -1 ? i.substring(0, i.indexOf(' ')) : i) + ' ('));
-		var span = header.appendChild(document.createElement('span'));
-		span.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
-		header.appendChild(document.createTextNode(')'));
-		bonus.appendChild(document.createElement('td'));
-		pp.appendChild(document.createElement('td'));
-		time.appendChild(document.createElement('td'));
-
+		CM.Disp.CreateBotBarBuildingColumn(i);
 	}
 
 	l('wrapper').appendChild(CM.Disp.BotBar);
