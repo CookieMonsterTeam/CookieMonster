@@ -211,6 +211,22 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.MagicVolume.label[i] = i + '%';
 }
 CM.ConfigData.MagicSoundURL = {label: 'Magic Max Sound URL:', desc: 'URL of the sound to be played when magic reaches maxium'};
+CM.ConfigData.WrinklerNotification = {label: ['Wrinkler Notification OFF', 'Wrinkler Notification ON'], desc: 'Create a notification when a Wrinkler appears', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.WrinklerNotification);}};
+CM.ConfigData.WrinklerFlash = {label: ['Wrinkler Flash OFF', 'Wrinkler Flash ON'], desc: 'Flash screen when a Wrinkler appears', toggle: true};
+CM.ConfigData.WrinklerSound = {label: ['Wrinkler Sound OFF', 'Wrinkler Sound ON'], desc: 'Play a sound when a Wrinkler appears', toggle: true};
+CM.ConfigData.WrinklerVolume = {label: [], desc: 'Volume of the Wrinkler sound'};
+for (var i = 0; i < 101; i++) {
+	CM.ConfigData.WrinklerVolume.label[i] = i + '%';
+}
+CM.ConfigData.WrinklerSoundURL = {label: 'Wrinkler Sound URL:', desc: 'URL of the sound to be played when a Wrinkler appears'};
+CM.ConfigData.WrinklerMaxNotification = {label: ['Wrinkler Max Notification OFF', 'Wrinkler Max Notification ON'], desc: 'Create a notification when the maximum amount of Wrinklers has appeared', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.WrinklerMaxNotification);}};
+CM.ConfigData.WrinklerMaxFlash = {label: ['Wrinkler Max Flash OFF', 'Wrinkler Max Flash ON'], desc: 'Flash screen when the maximum amount of Wrinklers has appeared', toggle: true};
+CM.ConfigData.WrinklerMaxSound = {label: ['Wrinkler Max Sound OFF', 'Wrinkler Max Sound ON'], desc: 'Play a sound when the maximum amount of Wrinklers has appeared', toggle: true};
+CM.ConfigData.WrinklerMaxVolume = {label: [], desc: 'Volume of the Wrinkler Max sound'};
+for (var i = 0; i < 101; i++) {
+	CM.ConfigData.WrinklerMaxVolume.label[i] = i + '%';
+}
+CM.ConfigData.WrinklerMaxSoundURL = {label: 'Wrinkler Max Sound URL:', desc: 'URL of the sound to be played when the maximum amount of Wrinklers has appeared'};
 CM.ConfigData.Title = {label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 CM.ConfigData.TooltipBuildUp = {label: ['Buildings/Upgrades Tooltip Information OFF', 'Buildings/Upgrades Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades', toggle: true};
 CM.ConfigData.TooltipAmor = {label: ['Buildings Tooltip Amortization Information OFF', 'Buildings Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
