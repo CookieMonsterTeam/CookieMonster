@@ -1028,6 +1028,35 @@ CM.Disp.CheckMagicMeter = function() {
 	}
 }
 
+CM.Disp.CheckWrinklerCount = function() {
+	if (Game.elderWrath > 0) {
+		var CurrentWrinklers = 0;
+		for (var i in Game.wrinklers) {
+			if (Game.wrinklers[i].phase == 2) CurrentWrinklers++;
+		}
+		if (CurrentWrinklers > CM.Disp.lastWrinklerCount) {
+			CM.Disp.lastWrinklerCount = CurrentWrinklers
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxFlash) {
+				CM.Disp.Flash(3, 'WrinklerMaxFlash');
+			} else {
+				CM.Disp.Flash(3, 'WrinklerFlash');
+			}
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxSound) {
+				CM.Disp.PlaySound(CM.Config.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume');
+			} else {
+				CM.Disp.PlaySound(CM.Config.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume');
+			}
+			if (CurrentWrinklers == Game.getWrinklersMax() &&  CM.Config.WrinklerMaxNotification) {
+				CM.Disp.Notification('WrinklerMaxNotification', "Maximum Wrinklers Reached", "You have reached your maximum ammount of wrinklers")
+			} else {
+				CM.Disp.Notification('WrinklerNotification', "A Wrinkler appeared", "A new wrinkler has appeared")
+			}
+		} else {
+			CM.Disp.lastWrinklerCount = CurrentWrinklers
+		}
+	}
+}
+
 CM.Disp.UpdateTitle = function() {
 	if (Game.OnAscend || CM.Config.Title == 0) {
 		document.title = CM.Cache.Title;
@@ -1275,6 +1304,16 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('MagicSound'));
 	frag.appendChild(vol('MagicVolume'));
 	frag.appendChild(url('MagicSoundURL'));
+	frag.appendChild(listing('WrinklerNotification'));
+	frag.appendChild(listing('WrinklerFlash'));
+	frag.appendChild(listing('WrinklerSound'));
+	frag.appendChild(vol('WrinklerVolume'));
+	frag.appendChild(url('WrinklerSoundURL'));
+	frag.appendChild(listing('WrinklerMaxNotification'));
+	frag.appendChild(listing('WrinklerMaxFlash'));
+	frag.appendChild(listing('WrinklerMaxSound'));
+	frag.appendChild(vol('WrinklerMaxVolume'));
+	frag.appendChild(url('WrinklerMaxSoundURL'));
 	frag.appendChild(listing('Title'));
 
 	frag.appendChild(header('Tooltip'));
@@ -2345,6 +2384,7 @@ CM.Disp.lastTickerFortuneState = 0;
 CM.Disp.lastSeasonPopupState = 0;
 CM.Disp.lastGardenNextStep = 0;
 CM.Disp.lastMagicBarFull = 0;
+CM.Disp.lastWrinklerCount = 0;
 CM.Disp.goldenShimmer;
 CM.Disp.seasonPopShimmer;
 CM.Disp.lastAscendState = -1;

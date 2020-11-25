@@ -198,6 +198,9 @@ CM.Loop = function() {
 	// Check Grimoire Meter
 	CM.Disp.CheckMagicMeter();
 
+	// Check Wrinklers
+	CM.Disp.CheckWrinklerCount();
+
 	// Update Average CPS (might need to move)
 	CM.Cache.UpdateAvgCPS()
 }
@@ -293,7 +296,17 @@ CM.ConfigDefault = {
 	MagicFlash: 1, 
 	MagicSound: 1,  
 	MagicVolume: 100, 
-	MagicSoundURL: 'https://freesound.org/data/previews/221/221683_1015240-lq.mp3', 
+	MagicSoundURL: 'https://freesound.org/data/previews/221/221683_1015240-lq.mp3',
+	WrinklerNotification: 0,
+	WrinklerFlash: 1, 
+	WrinklerSound: 1,  
+	WrinklerVolume: 100, 
+	WrinklerSoundURL: 'https://freesound.org/data/previews/124/124186_8043-lq.mp3', 
+	WrinklerMaxNotification: 0,
+	WrinklerMaxFlash: 1, 
+	WrinklerMaxSound: 1,  
+	WrinklerMaxVolume: 100, 
+	WrinklerMaxSoundURL: 'https://freesound.org/data/previews/152/152743_15663-lq.mp3', 
 	Title: 1, 
 	TooltipBuildUp: 1, 
 	TooltipAmor: 0, 

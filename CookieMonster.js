@@ -620,6 +620,22 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.MagicVolume.label[i] = i + '%';
 }
 CM.ConfigData.MagicSoundURL = {label: 'Magic Max Sound URL:', desc: 'URL of the sound to be played when magic reaches maxium'};
+CM.ConfigData.WrinklerNotification = {label: ['Wrinkler Notification OFF', 'Wrinkler Notification ON'], desc: 'Create a notification when a Wrinkler appears', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.WrinklerNotification);}};
+CM.ConfigData.WrinklerFlash = {label: ['Wrinkler Flash OFF', 'Wrinkler Flash ON'], desc: 'Flash screen when a Wrinkler appears', toggle: true};
+CM.ConfigData.WrinklerSound = {label: ['Wrinkler Sound OFF', 'Wrinkler Sound ON'], desc: 'Play a sound when a Wrinkler appears', toggle: true};
+CM.ConfigData.WrinklerVolume = {label: [], desc: 'Volume of the Wrinkler sound'};
+for (var i = 0; i < 101; i++) {
+	CM.ConfigData.WrinklerVolume.label[i] = i + '%';
+}
+CM.ConfigData.WrinklerSoundURL = {label: 'Wrinkler Sound URL:', desc: 'URL of the sound to be played when a Wrinkler appears'};
+CM.ConfigData.WrinklerMaxNotification = {label: ['Wrinkler Max Notification OFF', 'Wrinkler Max Notification ON'], desc: 'Create a notification when the maximum amount of Wrinklers has appeared', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.WrinklerMaxNotification);}};
+CM.ConfigData.WrinklerMaxFlash = {label: ['Wrinkler Max Flash OFF', 'Wrinkler Max Flash ON'], desc: 'Flash screen when the maximum amount of Wrinklers has appeared', toggle: true};
+CM.ConfigData.WrinklerMaxSound = {label: ['Wrinkler Max Sound OFF', 'Wrinkler Max Sound ON'], desc: 'Play a sound when the maximum amount of Wrinklers has appeared', toggle: true};
+CM.ConfigData.WrinklerMaxVolume = {label: [], desc: 'Volume of the Wrinkler Max sound'};
+for (var i = 0; i < 101; i++) {
+	CM.ConfigData.WrinklerMaxVolume.label[i] = i + '%';
+}
+CM.ConfigData.WrinklerMaxSoundURL = {label: 'Wrinkler Max Sound URL:', desc: 'URL of the sound to be played when the maximum amount of Wrinklers has appeared'};
 CM.ConfigData.Title = {label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 CM.ConfigData.TooltipBuildUp = {label: ['Buildings/Upgrades Tooltip Information OFF', 'Buildings/Upgrades Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades', toggle: true};
 CM.ConfigData.TooltipAmor = {label: ['Buildings Tooltip Amortization Information OFF', 'Buildings Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
@@ -1700,6 +1716,35 @@ CM.Disp.CheckMagicMeter = function() {
 	}
 }
 
+CM.Disp.CheckWrinklerCount = function() {
+	if (Game.elderWrath > 0) {
+		var CurrentWrinklers = 0;
+		for (var i in Game.wrinklers) {
+			if (Game.wrinklers[i].phase == 2) CurrentWrinklers++;
+		}
+		if (CurrentWrinklers > CM.Disp.lastWrinklerCount) {
+			CM.Disp.lastWrinklerCount = CurrentWrinklers
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxFlash) {
+				CM.Disp.Flash(3, 'WrinklerMaxFlash');
+			} else {
+				CM.Disp.Flash(3, 'WrinklerFlash');
+			}
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxSound) {
+				CM.Disp.PlaySound(CM.Config.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume');
+			} else {
+				CM.Disp.PlaySound(CM.Config.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume');
+			}
+			if (CurrentWrinklers == Game.getWrinklersMax() &&  CM.Config.WrinklerMaxNotification) {
+				CM.Disp.Notification('WrinklerMaxNotification', "Maximum Wrinklers Reached", "You have reached your maximum ammount of wrinklers")
+			} else {
+				CM.Disp.Notification('WrinklerNotification', "A Wrinkler appeared", "A new wrinkler has appeared")
+			}
+		} else {
+			CM.Disp.lastWrinklerCount = CurrentWrinklers
+		}
+	}
+}
+
 CM.Disp.UpdateTitle = function() {
 	if (Game.OnAscend || CM.Config.Title == 0) {
 		document.title = CM.Cache.Title;
@@ -1947,6 +1992,16 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('MagicSound'));
 	frag.appendChild(vol('MagicVolume'));
 	frag.appendChild(url('MagicSoundURL'));
+	frag.appendChild(listing('WrinklerNotification'));
+	frag.appendChild(listing('WrinklerFlash'));
+	frag.appendChild(listing('WrinklerSound'));
+	frag.appendChild(vol('WrinklerVolume'));
+	frag.appendChild(url('WrinklerSoundURL'));
+	frag.appendChild(listing('WrinklerMaxNotification'));
+	frag.appendChild(listing('WrinklerMaxFlash'));
+	frag.appendChild(listing('WrinklerMaxSound'));
+	frag.appendChild(vol('WrinklerMaxVolume'));
+	frag.appendChild(url('WrinklerMaxSoundURL'));
 	frag.appendChild(listing('Title'));
 
 	frag.appendChild(header('Tooltip'));
@@ -3017,6 +3072,7 @@ CM.Disp.lastTickerFortuneState = 0;
 CM.Disp.lastSeasonPopupState = 0;
 CM.Disp.lastGardenNextStep = 0;
 CM.Disp.lastMagicBarFull = 0;
+CM.Disp.lastWrinklerCount = 0;
 CM.Disp.goldenShimmer;
 CM.Disp.seasonPopShimmer;
 CM.Disp.lastAscendState = -1;
@@ -3242,6 +3298,9 @@ CM.Loop = function() {
 	// Check Grimoire Meter
 	CM.Disp.CheckMagicMeter();
 
+	// Check Wrinklers
+	CM.Disp.CheckWrinklerCount();
+
 	// Update Average CPS (might need to move)
 	CM.Cache.UpdateAvgCPS()
 }
@@ -3337,7 +3396,17 @@ CM.ConfigDefault = {
 	MagicFlash: 1, 
 	MagicSound: 1,  
 	MagicVolume: 100, 
-	MagicSoundURL: 'https://freesound.org/data/previews/221/221683_1015240-lq.mp3', 
+	MagicSoundURL: 'https://freesound.org/data/previews/221/221683_1015240-lq.mp3',
+	WrinklerNotification: 0,
+	WrinklerFlash: 1, 
+	WrinklerSound: 1,  
+	WrinklerVolume: 100, 
+	WrinklerSoundURL: 'https://freesound.org/data/previews/124/124186_8043-lq.mp3', 
+	WrinklerMaxNotification: 0,
+	WrinklerMaxFlash: 1, 
+	WrinklerMaxSound: 1,  
+	WrinklerMaxVolume: 100, 
+	WrinklerMaxSoundURL: 'https://freesound.org/data/previews/152/152743_15663-lq.mp3', 
 	Title: 1, 
 	TooltipBuildUp: 1, 
 	TooltipAmor: 0, 
