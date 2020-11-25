@@ -39,6 +39,7 @@ CM.Cache.NextNumber = function(base) {
 
 CM.Cache.RemakeBuildingsPrices = function() {
 	for (var i in Game.Objects) {
+		CM.Cache.Objects[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 1);
 		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
 		CM.Cache.Objects100[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
 	}
@@ -89,20 +90,86 @@ CM.Cache.RemakeBuildingsPP = function() {
 	CM.Cache.min = -1;
 	CM.Cache.max = -1;
 	CM.Cache.mid = -1;
-	for (var i in CM.Cache.Objects) {
-		//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
-		CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
-		if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
-		if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
-	}
-	CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-	for (var i in CM.Cache.Objects) {
-		var color = '';
-		if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
-		else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
-		else color = CM.Disp.colorYellow;
-		CM.Cache.Objects[i].color = color;
+	// Calculate PP and colors when compared to purchase of single optimal building
+	if (CM.Config.ColorPPBulkMode == 0) {
+		for (var i in CM.Cache.Objects) {
+			//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
+			CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+			if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
+			if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
+		}
+		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
+		for (var i in CM.Cache.Objects) {
+			var color = '';
+			if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+			else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+			else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+			else color = CM.Disp.colorYellow;
+			CM.Cache.Objects[i].color = color;
+		}
+		// Buildings for 10 amount
+		CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
+
+		// Buildings for 100 amount
+		CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
+	} 
+	// Calculate PP and colors when compared to purchase of selected bulk mode
+	else {
+		if (Game.buyBulk == 1) {
+			for (var i in CM.Cache.Objects) {
+				//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
+				CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+				if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
+				if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
+			}
+			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
+			for (var i in CM.Cache.Objects) {
+				var color = '';
+				if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+				else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+				else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+				else color = CM.Disp.colorYellow;
+				CM.Cache.Objects[i].color = color;
+			}
+			CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
+			CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
+		}
+		else if (Game.buyBulk == 10) {
+			for (var i in CM.Cache.Objects) {
+				CM.Cache.Objects10[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects10[i].bonus);
+				if (CM.Cache.min == -1 || CM.Cache.Objects10[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects10[i].pp;
+				if (CM.Cache.max == -1 || CM.Cache.Objects10[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects10[i].pp;
+			}
+			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
+			for (var i in CM.Cache.Objects) {
+				var color = '';
+				if (CM.Cache.Objects10[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+				else if (CM.Cache.Objects10[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+				else if (CM.Cache.Objects10[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+				else color = CM.Disp.colorYellow;
+				CM.Cache.Objects10[i].color = color;
+			}
+			CM.Cache.RemakeBuildingsOtherPP(1, 'Objects');
+			CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
+		}
+		else if (Game.buyBulk == 100) {
+			for (var i in CM.Cache.Objects) {
+				CM.Cache.Objects100[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects100[i].bonus);
+				if (CM.Cache.min == -1 || CM.Cache.Objects100[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects100[i].pp;
+				if (CM.Cache.max == -1 || CM.Cache.Objects100[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects100[i].pp;
+			}
+			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
+			for (var i in CM.Cache.Objects) {
+				var color = '';
+				if (CM.Cache.Objects100[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+				else if (CM.Cache.Objects100[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+				else if (CM.Cache.Objects100[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+				else color = CM.Disp.colorYellow;
+				CM.Cache.Objects100[i].color = color;
+			}
+			CM.Cache.RemakeBuildingsOtherPP(1, 'Objects');
+			CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
+		}
 	}
 }
 
@@ -140,17 +207,11 @@ CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 }
 
 CM.Cache.RemakePP = function() {
-	// Buildings for 1 amount
+	// Buildings
 	CM.Cache.RemakeBuildingsPP();
 
 	// Upgrades
 	CM.Cache.RemakeUpgradePP();
-
-	// Buildings for 10 amount
-	CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
-
-	// Buildings for 100 amount
-	CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
 }
 
 CM.Cache.RemakeLucky = function() {
@@ -557,7 +618,8 @@ CM.ConfigData.BotBar = {label: ['Bottom Bar OFF', 'Bottom Bar ON'], desc: 'Build
 CM.ConfigData.TimerBar = {label: ['Timer Bar OFF', 'Timer Bar ON'], desc: 'Timers of Golden Cookie, Season Popup, Frenzy (Normal, Clot, Elder), Click Frenzy', toggle: true, func: function() {CM.Disp.ToggleTimerBar();}};
 CM.ConfigData.TimerBarPos = {label: ['Timer Bar Position (Top Left)', 'Timer Bar Position (Bottom)'], desc: 'Placement of the Timer Bar', toggle: false, func: function() {CM.Disp.ToggleTimerBarPos();}};
 CM.ConfigData.BuildColor = {label: ['Building Colors OFF', 'Building Colors ON'], desc: 'Color code buildings', toggle: true, func: function() {CM.Disp.UpdateBuildings();}};
-CM.ConfigData.BulkBuildColor = {label: ['Bulk Building Colors (Single Buildings Color)', 'Bulk Building Colors (Calculated Color)'], desc: 'Color code bulk buildings based on single buildings color or calculated bulk value color', toggle: false, func: function() {CM.Disp.UpdateBuildings();}};
+CM.ConfigData.BulkBuildColor = {label: ['Bulk Building Colors (Single Building Color)', 'Bulk Building Colors (Calculated Bulk Color)'], desc: 'Color code bulk buildings based on single buildings color or calculated bulk value color', toggle: false, func: function() {CM.Disp.UpdateBuildings();}};
+CM.ConfigData.ColorPPBulkMode = {label: ['Color of PP (Compared to Single)', 'Color of PP (Compared to Bulk)'], desc: 'Color PP-values based on comparison with single purchase or with selected bul-buy mode', toggle: false};
 CM.ConfigData.UpBarColor = {label: ['Upgrade Colors/Bar OFF', 'Upgrade Colors with Bar ON', 'Upgrade Colors without Bar ON'], desc: 'Color code upgrades and optionally add a counter bar', toggle: false, func: function() {CM.Disp.ToggleUpBarColor();}};
 CM.ConfigData.Colors = {
 	desc: {
@@ -1894,6 +1956,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('SortUpgrades'));
 	frag.appendChild(listing('BuildColor'));
 	frag.appendChild(listing('BulkBuildColor'));
+	frag.appendChild(listing('ColorPPBulkMode'));
 	frag.appendChild(listing('UpBarColor'));
 	for (var i = 0; i < CM.Disp.colors.length; i++) {
 		var div = document.createElement('div');
@@ -3306,6 +3369,7 @@ CM.ConfigDefault = {
 	TimerBarPos: 0, 
 	BuildColor: 1, 
 	BulkBuildColor: 0, 
+	ColorPPBulkMode: 0,
 	UpBarColor: 1, 
 	UpgradeBarFixedPos: 1,
 	CalcWrink: 0, 

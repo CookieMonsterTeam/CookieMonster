@@ -261,6 +261,7 @@ CM.ConfigDefault = {
 	TimerBarPos: 0, 
 	BuildColor: 1, 
 	BulkBuildColor: 0, 
+	ColorPPBulkMode: 0,
 	UpBarColor: 1, 
 	UpgradeBarFixedPos: 1,
 	CalcWrink: 0, 

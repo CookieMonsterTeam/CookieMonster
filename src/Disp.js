@@ -1222,6 +1222,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('SortUpgrades'));
 	frag.appendChild(listing('BuildColor'));
 	frag.appendChild(listing('BulkBuildColor'));
+	frag.appendChild(listing('ColorPPBulkMode'));
 	frag.appendChild(listing('UpBarColor'));
 	for (var i = 0; i < CM.Disp.colors.length; i++) {
 		var div = document.createElement('div');
