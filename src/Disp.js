@@ -2090,10 +2090,9 @@ CM.Disp.UpdateTooltip = function() {
 							l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / CM.Disp.GetCPS()) + ')';
 							l('CMDispTooltipWarnLucky').style.display = 'none';
 						}
-						else {
-							l('CMDispTooltipWarnLucky').style.display = 'none';
-							l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
-						}
+					} else {
+						l('CMDispTooltipWarnLucky').style.display = 'none';
+						l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
 					}
 				}
 				else {
@@ -2114,6 +2113,8 @@ CM.Disp.UpdateTooltip = function() {
 					if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 						l('CMDispTooltipWarnConjure').style.display = '';
 						l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / CM.Disp.GetCPS()) + ')';
+					} else {
+						l('CMDispTooltipWarnConjure').style.display = 'none';
 					}
 				}
 				else {
