@@ -2114,6 +2114,8 @@ CM.Disp.UpdateTooltip = function() {
 					if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 						l('CMDispTooltipWarnConjure').style.display = '';
 						l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / CM.Disp.GetCPS()) + ')';
+					} else {
+						l('CMDispTooltipWarnConjure').style.display = 'none';
 					}
 				}
 				else {
