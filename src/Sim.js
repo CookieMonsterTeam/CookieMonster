@@ -169,6 +169,7 @@ CM.Sim.CopyData = function() {
 		if (you == undefined) {
 			CM.Sim.InitData();
 			you = CM.Sim.Objects[i]; // Not undefined anymore
+			CM.Disp.CreateBotBarBuildingColumn(i); // New building! Add it to the bottom bar
 		}
 		you.amount = me.amount;
 		you.level = me.level;
