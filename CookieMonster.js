@@ -928,10 +928,16 @@ CM.Disp.CreateCssArea = function() {
 	l("upgrades").style["flex-wrap"] = "wrap";
 }
 
+/**
+ * Extends the bottom bar (created by CM.Disp.CreateBotBar) with a column for the given building.
+ *
+ * This function is called by CM.Disp.CreateBotBar on initialization of Cookie Monster,
+ * and also in CM.Sim.CopyData if a new building (added by another mod) is discovered.
+ */
 CM.Disp.CreateBotBarBuildingColumn = function(buildingName) {
 	if(!CM.Disp.BotBar) {
-		CM.Disp.CreateBotBar(); // CreateBot
-		return;
+		CM.Disp.CreateBotBar();
+		return; // CreateBotBar will call this function again
 	}
 
 	var type  = CM.Disp.BotBar.firstChild.firstChild.childNodes[0];
