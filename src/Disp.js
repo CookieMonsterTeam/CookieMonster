@@ -1242,6 +1242,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('UpgradeBarFixedPos'));
 
 	frag.appendChild(header('Calculation'));
+	frag.appendChild(listing('CalcPPBulkMode'));
 	frag.appendChild(listing('CalcWrink'));
 	frag.appendChild(listing('CPSMode'));
 	frag.appendChild(listing('AvgCPSHist'));

@@ -574,6 +574,7 @@ CM.ConfigData.Colors = {
 	func: function() {CM.Disp.UpdateColors();}
 };
 CM.ConfigData.UpgradeBarFixedPos = {label: ['Upgrade Bar Fixed Position OFF', 'Upgrade Bar Fixed Position ON'], desc: 'Lock the upgrade bar at top of the screen to prevent it from moving ofscreen when scrolling', toggle: true, func: function() {CM.Disp.ToggleUpgradeBarFixedPos();}};
+CM.ConfigData.CalcPPBulkMode = {label: ['Calculate Bulk PP (Compared to single)', 'Calculate Bulk PP (Compared to Bulk)'], desc: 'Calculate the PP of bulk purchases based on comparison with single purchase or with selected bulk mode', toggle: true};
 CM.ConfigData.CalcWrink = {label: ['Calculate with Wrinklers OFF', 'Calculate with Wrinklers ON'], desc: 'Calculate times and average Cookies Per Second with Wrinklers', toggle: true};
 CM.ConfigData.CPSMode = {label: ['Current Cookies Per Second', 'Average Cookies Per Second'], desc: 'Calculate times using current Cookies Per Second or average Cookies Per Second', toggle: false};
 CM.ConfigData.AvgCPSHist = {label: ['Average CPS for past 10s', 'Average CPS for past 15s', 'Average CPS for past 30s', 'Average CPS for past 1m', 'Average CPS for past 5m', 'Average CPS for past 10m', 'Average CPS for past 15m', 'Average CPS for past 30m'], desc: 'How much time average Cookies Per Second should consider', toggle: false};
@@ -1914,6 +1915,7 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(listing('UpgradeBarFixedPos'));
 
 	frag.appendChild(header('Calculation'));
+	frag.appendChild(listing('CalcPPBulkMode'));
 	frag.appendChild(listing('CalcWrink'));
 	frag.appendChild(listing('CPSMode'));
 	frag.appendChild(listing('AvgCPSHist'));
@@ -3307,6 +3309,7 @@ CM.ConfigDefault = {
 	BulkBuildColor: 0, 
 	UpBarColor: 1, 
 	UpgradeBarFixedPos: 1,
+	CalcPPBulkMode: 0,
 	CalcWrink: 0, 
 	CPSMode: 1, 
 	AvgCPSHist: 3, 
