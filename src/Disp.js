@@ -289,7 +289,7 @@ CM.Disp.CreateBotBarBuildingColumn = function(buildingName) {
 CM.Disp.CreateBotBar = function() {
 	CM.Disp.BotBar = document.createElement('div');
 	CM.Disp.BotBar.id = 'CMBotBar';
-	CM.Disp.BotBar.style.height = '55px';
+	CM.Disp.BotBar.style.height = '69px';
 	CM.Disp.BotBar.style.width = '100%';
 	CM.Disp.BotBar.style.position = 'absolute';
 	CM.Disp.BotBar.style.display = 'none';
@@ -352,11 +352,14 @@ CM.Disp.UpdateBotBarOther = function() {
 		var count = 0;
 
 		for (var i in CM.Cache.Objects) {
+			var target = 'Objects';
+			if (Game.buyBulk == 10) {target = 'Objects10';}
+			if (Game.buyBulk == 100) {target = 'Objects100';}
 			count++;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].bonus, 2);
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].className = CM.Disp.colorTextPre + CM.Cache.Objects[i].color;
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache.Objects[i].pp, 2);
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache[target][i].bonus, 2);
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].className = CM.Disp.colorTextPre + CM.Cache[target][i].color;
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache[target][i].pp, 2);
 		}
 	}
 }
@@ -610,11 +613,11 @@ CM.Disp.UpdateTimerBar = function() {
 CM.Disp.UpdateBotTimerBarDisplay = function() {
 	if (CM.Config.BotBar == 1 && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
 		CM.Disp.BotBar.style.bottom = '48px';
-		l('game').style.bottom = '104px';
+		l('game').style.bottom = '118px';
 	}
 	else if (CM.Config.BotBar == 1) {
 		CM.Disp.BotBar.style.bottom = '0px';
-		l('game').style.bottom = '56px';
+		l('game').style.bottom = '70px';
 	}
 	else if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
 		l('game').style.bottom = '48px';
