@@ -25,7 +25,7 @@ CM.Sim.BuildingGetPrice = function(build, basePrice, start, free, increase) {
 	return moni;
 }
 
-CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, emuAura) {
+CM.Sim.BuildingSell = function(build, basePrice, start, free, amount) {
 	/*var price=0;
 	for (var i = Math.max(0, start - amount); i < Math.max(0, start); i++) {
 		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
@@ -43,18 +43,13 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, emuAura) {
 	}
 	return Math.ceil(price);*/
 
-	var moni=0;
+	// Calculate money gains from selling buildings
+	var moni = 0;
 	for (var i = 0; i < amount; i++) {
 		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
-		price = Game.modifyBuildingPrice(build, price);
+		price = CM.Sim.modifyBuildingPrice(build, price);
 		price = Math.ceil(price);
-		var giveBack = 0.25;
-		if (emuAura) {
-			giveBack = 0.5;
-		}
-		else {
-			giveBack *= 1 + Game.auraMult('Earth Shatterer');
-		}
+		var giveBack = CM.Sim.getSellMultiplier();
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;
@@ -620,3 +615,76 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	return (CM.Sim.cookiesPs - curCPS);
 }
 
+CM.Sim.getSellMultiplier = function() {
+	var giveBack = 0.25;
+	giveBack *= 1 + CM.Sim.auraMult('Earth Shatterer');
+	return giveBack;
+}
+
+CM.Sim.modifyBuildingPrice = function(building,price) {	
+	if (CM.Sim.Has('Season savings')) price *= 0.99;
+	if (CM.Sim.Has('Santa\'s dominion')) price *= 0.99;
+	if (CM.Sim.Has('Faberge egg')) price *= 0.99;
+	if (CM.Sim.Has('Divine discount')) price *= 0.99;
+	if (CM.Sim.Has('Fortune #100')) price *= 0.99;
+	//if (CM.Sim.hasAura('Fierce Hoarder')) price *= 0.98;
+	price *= 1 - CM.Sim.auraMult('Fierce Hoarder') * 0.02;
+	if (Game.hasBuff('Everything must go')) price *= 0.95;
+	if (Game.hasBuff('Crafty pixies')) price *= 0.98;
+	if (Game.hasBuff('Nasty goblins')) price *= 1.02;
+	if (building.fortune && CM.Sim.Has(building.fortune.name)) price *= 0.93;
+	price *= Game.eff('buildingCost');
+	if (Game.hasGod) {
+		var godLvl = Game.hasGod('creation');
+		if (godLvl == 1) price *= 0.93;
+		else if (godLvl == 2) price *= 0.95;
+		else if (godLvl == 3) price *= 0.98;
+	}
+	return price;
+}
+
+CM.Sim.SellBuildingsForChoEgg = function() {
+	var sellTotal = 0;
+
+	CM.Sim.CopyData();
+	
+	// Change auras to Earth Shatterer + Reality bending to optimize money made by selling
+	var buildingsToSacrifice = 2;
+	if (CM.Sim.dragonAura === 5 || CM.Sim.dragonAura === 18) {
+		--buildingsToSacrifice;
+	}
+	if (CM.Sim.dragonAura2 === 5 || CM.Sim.dragonAura2 === 18) {
+		--buildingsToSacrifice;
+	}
+	CM.Sim.dragonAura = 5;
+	CM.Sim.dragonAura2 = 18;
+	// Sacrifice highest buildings for the aura switch
+	for (var i = 0; i < buildingsToSacrifice; ++i) {
+		var highestBuilding = 0;
+		for (var j in CM.Sim.Objects) {
+			if (CM.Sim.Objects[j].amount > 0) {	
+				highestBuilding = CM.Sim.Objects[j];
+			}
+		}
+		highestBuilding.amount--;
+		CM.Sim.buildingsOwned--;
+	}
+
+	// Get money made by selling all remaining buildings
+	for (var i in CM.Sim.Objects) {
+		var me = CM.Sim.Objects[i];
+		sellTotal += CM.Sim.BuildingSell(Game.Objects[me.name], Game.Objects[i].basePrice, me.amount, Game.Objects[i].free, me.amount);
+	}
+
+	// CM.Sim.CalculateGains();
+
+	// CM.Sim.CheckOtherAchiev();
+
+	// if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
+	// 	CM.Sim.CalculateGains();
+	// }
+
+	// CM.Cache.DoRemakeBuildPrices = 1;
+
+	return sellTotal;
+}
