@@ -120,35 +120,63 @@ CM.Sim.getCPSBuffMult = function() {
 	return mult;
 }
 
+/* Constructs an object with the static properties of a building,
+ * but with a 'cps' method changed to use 'CM.Sim.Has' instead of 'Game.Has'
+ * (and similar to 'hasAura', 'Objects', 'GetTieredCpsMult' and 'auraMult').
+ *
+ * The dynamic properties of the building,
+ * namely level and amount owned,
+ * are set by CM.Sim.CopyData.
+ */
+CM.Sim.InitialBuildingData = function(buildingName) {
+	var me = Game.Objects[buildingName];
+	var you = {};
+	eval('you.cps = ' + me.cps.toString()
+		.split('Game.Has').join('CM.Sim.Has')
+		.split('Game.hasAura').join('CM.Sim.hasAura')
+		.split('Game.Objects').join('CM.Sim.Objects')
+		.split('Game.GetTieredCpsMult').join('CM.Sim.GetTieredCpsMult')
+		.split('Game.auraMult').join('CM.Sim.auraMult')
+	);
+	// Below is needed for above eval!
+	you.baseCps = me.baseCps;
+	you.name = me.name;
+	return you;
+}
+
+/* Similar to the previous function, but for upgrades.
+ * Note: currently no static data is used by Cookie Monster,
+ * so this function just returns an empty object.
+ */
+CM.Sim.InitUpgrade = function(upgradeName) {
+	return {};
+}
+
+/* Similar to the previous function, but for achievements.
+ * Note: currently no static data is used by Cookie Monster,
+ * so this function just returns an empty object.
+ */
+CM.Sim.InitAchievement = function(achievementName) {
+	return {};
+}
+
 CM.Sim.InitData = function() {
 	// Buildings
 	CM.Sim.Objects = [];
 	for (var i in Game.Objects) {
-		CM.Sim.Objects[i] = {};
-		var me = Game.Objects[i];
-		var you = CM.Sim.Objects[i];
-		eval('you.cps = ' + me.cps.toString()
-			.split('Game.Has').join('CM.Sim.Has')
-			.split('Game.hasAura').join('CM.Sim.hasAura')
-			.split('Game.Objects').join('CM.Sim.Objects')
-			.split('Game.GetTieredCpsMult').join('CM.Sim.GetTieredCpsMult')
-			.split('Game.auraMult').join('CM.Sim.auraMult')
-		);
-		// Below is needed for above eval!
-		you.baseCps = me.baseCps;
-		you.name = me.name;
+		CM.Sim.Objects[i] = CM.Sim.InitialBuildingData(i);
 	}
 
 	// Upgrades
 	CM.Sim.Upgrades = [];
 	for (var i in Game.Upgrades) {
-		CM.Sim.Upgrades[i] = {};
+		CM.Sim.Upgrades[i] = CM.Sim.InitUpgrade(i);
 	}
 
 	// Achievements
 	CM.Sim.Achievements = [];
 	for (var i in Game.Achievements) {
-		CM.Sim.Achievements[i] = {};
+		CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 	}
 }
 
@@ -166,10 +194,9 @@ CM.Sim.CopyData = function() {
 	for (var i in Game.Objects) {
 		var me = Game.Objects[i];
 		var you = CM.Sim.Objects[i];
-		if (you == undefined) {
-			CM.Sim.InitData();
-			you = CM.Sim.Objects[i]; // Not undefined anymore
-			CM.Disp.CreateBotBarBuildingColumn(i); // New building! Add it to the bottom bar
+		if (you == undefined) { // New building!
+			you = CM.Sim.Objects[i] = CM.Sim.InitialBuildingData(i);
+			CM.Disp.CreateBotBarBuildingColumn(i); // Add new building to the bottom bar
 		}
 		you.amount = me.amount;
 		you.level = me.level;
@@ -180,8 +207,7 @@ CM.Sim.CopyData = function() {
 		var me = Game.Upgrades[i];
 		var you = CM.Sim.Upgrades[i];
 		if (you == undefined) {
-			CM.Sim.InitData();
-			you = CM.Sim.Upgrades[i];
+			you = CM.Sim.Upgrades[i] = CM.Sim.InitUpgrade(i);
 		}
 		you.bought = me.bought;
 	}
@@ -191,13 +217,11 @@ CM.Sim.CopyData = function() {
 		var me = Game.Achievements[i];
 		var you = CM.Sim.Achievements[i];
 		if (you == undefined) {
-			CM.Sim.InitData();
-			you = CM.Sim.Achievements[i];
+			you = CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 		}
 		you.won = me.won;
 	}
 };
-
 
 CM.Sim.CalculateGains = function() {
 	CM.Sim.cookiesPs = 0;
