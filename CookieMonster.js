@@ -216,7 +216,12 @@ CM.Cache.RemakePP = function() {
 
 CM.Cache.RemakeLucky = function() {
 	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) / 0.15;
-	CM.Cache.Lucky /= CM.Sim.getCPSBuffMult();
+	var cpsBuffMult = CM.Sim.getCPSBuffMult();
+	if (cpsBuffMult > 0) {
+		CM.Cache.Lucky /= cpsBuffMult;
+	} else {
+		CM.Cache.Lucky = 0;
+	}
 	CM.Cache.LuckyReward = (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
 	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.15) + 13;
@@ -238,7 +243,12 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout) {
 
 CM.Cache.RemakeChain = function() {
 	var maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6;
-	maxPayout /= CM.Sim.getCPSBuffMult();
+	var cpsBuffMult = CM.Sim.getCPSBuffMult();
+	if (cpsBuffMult > 0) {
+		maxPayout /= cpsBuffMult;
+	} else {
+		maxPayout = 0;
+	}
 
 	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout);
 
@@ -4164,8 +4174,7 @@ CM.Sim.SellBuildingsForChoEgg = function() {
 	// Get money made by selling all remaining buildings
 	for (var i in CM.Sim.Objects) {
 		var me = CM.Sim.Objects[i];
-		debug = CM.Sim.BuildingSell(Game.Objects[me.name], Game.Objects[i].basePrice, me.amount, Game.Objects[i].free, me.amount);
-		sellTotal += debug;
+		sellTotal += CM.Sim.BuildingSell(Game.Objects[me.name], Game.Objects[i].basePrice, me.amount, Game.Objects[i].free, me.amount);
 	}
 
 	// CM.Sim.CalculateGains();
