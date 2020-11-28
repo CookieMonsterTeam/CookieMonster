@@ -86,6 +86,8 @@ CM.Sim.hasAura = function(what) {
 		return false;
 }
 
+// Check if multiplier auras are present
+// Used as CM.Sim.auraMult('Aura') * mult, i.e. CM.Sim.auraMult('Dragon God) * 0.05
 CM.Sim.auraMult = function(what) {
 	var n = 0;
 	if (Game.dragonAuras[CM.Sim.dragonAura].name == what || Game.dragonAuras[CM.Sim.dragonAura2].name == what)
@@ -152,7 +154,7 @@ CM.Sim.CopyData = function() {
 	CM.Sim.UpgradesOwned = Game.UpgradesOwned;
 	CM.Sim.pledges = Game.pledges;
 	CM.Sim.AchievementsOwned = Game.AchievementsOwned;
-	CM.Sim.heavenlyPower = Game.heavenlyPower; // Unneeded?
+	CM.Sim.heavenlyPower = Game.heavenlyPower; // Unneeded? > Might be modded
 	CM.Sim.prestige = Game.prestige;
 	CM.Sim.dragonAura = Game.dragonAura;
 	CM.Sim.dragonAura2 = Game.dragonAura2;
@@ -197,15 +199,22 @@ CM.Sim.CopyData = function() {
 CM.Sim.CalculateGains = function() {
 	CM.Sim.cookiesPs = 0;
 	var mult = 1;
-	
+	// Include minigame effects
+	for (var i in CM.Cache.Objects) {
+		// TODO Store minigames and effects in Cache
+		// Include possibility of new/modded building and new/modded minigames
+		if (Game.Objects[i].minigameLoaded && Game.Objects[i].minigame.effs) {
+		}
+	}
+
 	if (Game.ascensionMode != 1) mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
 	
-	// TODO Store minigame buffs?
 	mult *= Game.eff('cps');
-	
+
 	if (CM.Sim.Has('Heralds') && Game.ascensionMode != 1) mult *= 1 + 0.01 * Game.heralds;
 
-	var cookieMult = 0;
+	// TODO: Make function call cached function where Game.Has is replaced with CM.Has
+	// Related to valentine cookies
 	for (var i in Game.cookieUpgrades) {
 		var me = Game.cookieUpgrades[i];
 		if (CM.Sim.Has(me.name)) {
@@ -213,7 +222,6 @@ CM.Sim.CalculateGains = function() {
 		}
 	}
 
-	mult *= (1 + 0.01 * cookieMult);
 	if (CM.Sim.Has('Specialized chocolate chips')) mult *= 1.01;
 	if (CM.Sim.Has('Designer cocoa beans')) mult *= 1.02;
 	if (CM.Sim.Has('Underworld ovens')) mult *= 1.03;
@@ -231,6 +239,8 @@ CM.Sim.CalculateGains = function() {
 
 	if (CM.Sim.Has('Dragon scale')) mult *= 1.03;
 
+	// Cached and sim temple gods
+	// TODO: Caches chosen gods
 	var buildMult = 1;
 	if (Game.hasGod) {
 		var godLvl = Game.hasGod('asceticism');
@@ -238,6 +248,7 @@ CM.Sim.CalculateGains = function() {
 		else if (godLvl == 2) mult *= 1.1;
 		else if (godLvl == 3) mult *= 1.05;
 
+		// TODO: What does DateAges do?
 		var godLvl = Game.hasGod('ages');
 		if (godLvl == 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 3)) * Math.PI * 2);
 		else if (godLvl == 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 12)) * Math.PI*2);
@@ -333,26 +344,25 @@ CM.Sim.CalculateGains = function() {
 	//if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;
 	mult *= 1 + CM.Sim.auraMult('Radiant Appetite');
 
-	if (true) { // || CM.Sim.hasAura('Dragon\'s Fortune')) {
-		var n = Game.shimmerTypes['golden'].n;
-		var auraMult = CM.Sim.auraMult('Dragon\'s Fortune');
-		for (var i = 0; i < n; i++) {
-			mult *= 1 + auraMult * 1.23;
-		}
-	}
-
 	var rawCookiesPs = CM.Sim.cookiesPs * mult;
-
 	for (var i in Game.CpsAchievements) {
 		if (rawCookiesPs >= Game.CpsAchievements[i].threshold) CM.Sim.Win(Game.CpsAchievements[i].name);
 	}
 
-	mult *= CM.Sim.getCPSBuffMult();
+	CM.Sim.cookiesPsRaw=rawCookiesPs;
 
-	// Pointless?
+	if (CM.Sim.hasAura('Dragon\'s Fortune')) {
+		var n = Game.shimmerTypes['golden'].n;
+		for (var i = 0; i < n; i++) {
+			mult *= 1.23;
+		}
+	}
+
 	var name = Game.bakeryName.toLowerCase();
 	if (name == 'orteil') mult *= 0.99;
-	else if (name == 'ortiel') mult *= 0.98; //or so help me
+	else if (name == 'ortiel') mult *= 0.98;
+
+	// TODO: Move CalcWink option and calculation here from CM.Disp
 
 	if (CM.Sim.Has('Elder Covenant')) mult *= 0.95;
 
@@ -371,13 +381,15 @@ CM.Sim.CalculateGains = function() {
 		if (CM.Sim.Has('Reinforced membrane')) veilMult += 0.1;
 		mult *= 1 + veilMult;
 	}
+
 	// Removed debug upgrades
 	
-	// Removed buffs
+	mult *= CM.Sim.getCPSBuffMult();
+
+	// TODO: Handle ModHooks, see Game code
 
 	CM.Sim.cookiesPs *= mult;
 
-	// TODO remove?
 	// if (Game.hasBuff('Cursed finger')) Game.cookiesPs = 0;
 };
 
@@ -600,6 +612,7 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
 	CM.Sim.Upgrades['Heavenly key'].bought = 1;
 
+	// TODO: Fix this reseting. 
 	CM.Sim.prestige = possiblePresMax;
 
 	lastAchievementsOwned = CM.Sim.AchievementsOwned;
