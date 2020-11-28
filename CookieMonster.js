@@ -4103,7 +4103,6 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 	CM.Sim.Upgrades['Heavenly confectionery'].bought = 1;
 	CM.Sim.Upgrades['Heavenly key'].bought = 1;
 
-	// TODO: Fix this reseting. 
 	CM.Sim.prestige = possiblePresMax;
 
 	lastAchievementsOwned = CM.Sim.AchievementsOwned;
@@ -4116,7 +4115,12 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 		CM.Sim.CalculateGains();
 	}
 
-	return (CM.Sim.cookiesPs - curCPS);
+	var ResetCPS = CM.Sim.cookiesPs - curCPS
+
+	// Reset Pretige level after calculation
+	CM.Sim.prestige = Game.prestige;
+
+	return (ResetCPS);
 }
 
 CM.Sim.getSellMultiplier = function() {
