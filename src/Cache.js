@@ -266,43 +266,7 @@ CM.Cache.RemakeSeaSpec = function() {
 }
 
 CM.Cache.RemakeSellForChoEgg = function() {
-	if (Game.auraMult('Earth Shatterer') == 1.1) {
-		var sellTotal = 0;
-		for (var i in Game.Objects) {
-			var me = Game.Objects[i];
-			sellTotal += CM.Sim.BuildingSell(me, me.basePrice, me.amount, me.free, me.amount, 0);
-		}
-	}
-	else {
-		var highestBuilding = '';
-		for (var i in Game.Objects) {
-			if (Game.Objects[i].amount > 0) highestBuilding = i;
-		}
-		var secondHighBuild = '';
-		if (Game.auraMult('Earth Shatterer') == 0 && highestBuilding != '') {
-			if (Game.Objects[highestBuilding].amount > 1) {
-				secondHighBuild = highestBuilding;
-			}
-			else {
-				for (var i in Game.Objects) {
-					if (i != highestBuilding && Game.Objects[i].amount > 0) secondHighBuild = i;
-				}
-			}
-		}
-		
-		var sellTotal = 0;
-		for (var i in Game.Objects) {
-			var me = Game.Objects[i];
-			var amount = me.amount;
-			if (i == highestBuilding) {
-				amount -= 1;
-			}
-			if (i == secondHighBuild) {
-				amount -= 1;
-			}
-			sellTotal += CM.Sim.BuildingSell(me, me.basePrice, amount, me.free, amount, 1);
-		}
-	}
+	var sellTotal = 0;
 	// Compute cookies earned by selling stock market goods
 	if (Game.Objects.Bank.minigameLoaded) {
 		var marketGoods = Game.Objects.Bank.minigame.goods;
@@ -313,6 +277,8 @@ CM.Cache.RemakeSellForChoEgg = function() {
 		}
 		sellTotal += goodsVal * Game.cookiesPsRawHighest;
 	}
+	// Compute cookies earned by selling all buildings with optimal auras (ES + RB)
+	sellTotal += CM.Sim.SellBuildingsForChoEgg();
 	CM.Cache.SellForChoEgg = sellTotal;
 }
 
