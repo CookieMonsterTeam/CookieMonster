@@ -3599,6 +3599,16 @@ CM.Sim.hasGod=function(what) {
 	return false;
 }
 
+CM.Sim.eff = function(name) {
+	if (typeof CM.Sim.effs[name]==='undefined') {
+		CM.Sim.effs[name] = 1
+		return CM.Sim.effs[name]
+	}
+	else {
+		return Game.effs[name];
+	}
+}
+
 eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString()
 	.split('Game.Has').join('CM.Sim.Has')
 	.split('me.tieredUpgrades').join('Game.Objects[me.name].tieredUpgrades')
@@ -3703,16 +3713,21 @@ CM.Sim.CalculateGains = function() {
 	CM.Sim.cookiesPs = 0;
 	var mult = 1;
 	// Include minigame effects
+	var effs={};
 	for (var i in CM.Cache.Objects) {
-		// TODO Store minigames and effects in Cache
-		// Include possibility of new/modded building and new/modded minigames
-		if (Game.Objects[i].minigameLoaded && Game.Objects[i].minigame.effs) {
+		if (CM.Sim.Objects[i].minigameLoaded && CM.Sim.Objects[i].minigame.effs) {
+			var myEffs = CM.Sim.Objects[i].minigame.effs;
+			for (var ii in myEffs) {
+				if (effs[ii]) effs[ii]*=myEffs[ii];
+                else effs[ii]=myEffs[ii];
+			}
 		}
 	}
-
+	CM.Sim.effs = effs;
+	
 	if (Game.ascensionMode != 1) mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
 	
-	mult *= Game.eff('cps');
+	mult *= CM.Sim.eff('cps');
 
 	if (CM.Sim.Has('Heralds') && Game.ascensionMode != 1) mult *= 1 + 0.01 * Game.heralds;
 
@@ -3785,8 +3800,8 @@ CM.Sim.CalculateGains = function() {
 		else if (godLvl == 2) milkMult *= 1.05;
 		else if (godLvl == 3) milkMult *= 1.03;
 	}
-	// TODO Store minigame buffs?
-	milkMult *= Game.eff('milk');
+	
+	milkMult *= CM.Sim.eff('milk');
 
 	var catMult = 1;
 
@@ -4152,7 +4167,7 @@ CM.Sim.modifyBuildingPrice = function(building,price) {
 	if (Game.hasBuff('Crafty pixies')) price *= 0.98;
 	if (Game.hasBuff('Nasty goblins')) price *= 1.02;
 	if (building.fortune && CM.Sim.Has(building.fortune.name)) price *= 0.93;
-	price *= Game.eff('buildingCost');
+	price *= CM.Sim.eff('buildingCost');
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
 		var godLvl = CM.Sim.hasGod('creation');
 		if (godLvl == 1) price *= 0.93;
