@@ -215,28 +215,30 @@ CM.Cache.RemakePP = function() {
 }
 
 CM.Cache.RemakeLucky = function() {
-	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) / 0.15;
+	var GCmult = CM.Sim.eff('goldenCookieGain')
+	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
 	var cpsBuffMult = CM.Sim.getCPSBuffMult();
 	if (cpsBuffMult > 0) {
 		CM.Cache.Lucky /= cpsBuffMult;
 	} else {
 		CM.Cache.Lucky = 0;
 	}
-	CM.Cache.LuckyReward = (CM.Cache.Lucky * 0.15) + 13;
+	CM.Cache.LuckyReward = GCmult * (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
-	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.LuckyRewardFrenzy = GCmult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
 	CM.Cache.Conjure = CM.Cache.Lucky * 2;
  	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
 }
 
 CM.Cache.MaxChainMoni = function(digit, maxPayout) {
+	var GCmult = CM.Sim.eff('goldenCookieGain')
 	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
-	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
-	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * GCmult), maxPayout));
+	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * GCmult), maxPayout));
 	while (nextMoni < maxPayout) {
 		chain++;
-		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
-		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * GCmult), maxPayout));
+		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * GCmult), maxPayout));
 	}
 	return moni;
 }
@@ -3749,6 +3751,8 @@ CM.Sim.CalculateGains = function() {
 	// Include minigame effects
 	var effs={};
 	for (var i in CM.Cache.Objects) {
+		// TODO Store minigames and effects in Cache
+		// Include possibility of new/modded building and new/modded minigames
 		if (CM.Sim.Objects[i].minigameLoaded && CM.Sim.Objects[i].minigame.effs) {
 			var myEffs = CM.Sim.Objects[i].minigame.effs;
 			for (var ii in myEffs) {
@@ -3834,7 +3838,7 @@ CM.Sim.CalculateGains = function() {
 		else if (godLvl == 2) milkMult *= 1.05;
 		else if (godLvl == 3) milkMult *= 1.03;
 	}
-	
+	// TODO Store minigame buffs?
 	milkMult *= CM.Sim.eff('milk');
 
 	var catMult = 1;
