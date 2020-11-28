@@ -68,8 +68,8 @@ CM.Cache.RemakeWrinkBank = function() {
 		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-		if (Game.hasGod) {
-			var godLvl = Game.hasGod('scorn');
+		if (CM.Sim.Objects.Temple.minigameLoaded) {
+			var godLvl = CM.Sim.hasGod('scorn');
 			if (godLvl == 1) sucked *= 1.15;
 			else if (godLvl == 2) sucked *= 1.1;
 			else if (godLvl == 3) sucked *= 1.05;
@@ -78,8 +78,8 @@ CM.Cache.RemakeWrinkBank = function() {
 	}
 	CM.Cache.WrinkBank = totalSucked;
 	CM.Cache.WrinkGodBank = totalSucked;
-	if (Game.hasGod) {
-		var godLvl = Game.hasGod('scorn');
+	if (CM.Sim.Objects.Temple.minigameLoaded) {
+		var godLvl = CM.Sim.hasGod('scorn');
 		if (godLvl == 2) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.1;
 		else if (godLvl == 3) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.05;
 		else if (godLvl != 1) CM.Cache.WrinkGodBank *= 1.15;
@@ -3076,8 +3076,8 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 		if (Game.wrinklers[CM.Disp.TooltipWrinkler].type == 1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-		if (Game.hasGod) {
-			var godLvl = Game.hasGod('scorn');
+		if (CM.Sim.Objects.Temple.minigameLoaded) {
+			var godLvl = CM.Sim.hasGod('scorn');
 			if (godLvl == 1) sucked *= 1.15;
 			else if (godLvl == 2) sucked *= 1.1;
 			else if (godLvl == 3) sucked *= 1.05;
@@ -3580,6 +3580,7 @@ eval('CM.Sim.HasAchiev = ' + Game.HasAchiev.toString().split('Game').join('CM.Si
 
 eval('CM.Sim.GetHeavenlyMultiplier = ' + Game.GetHeavenlyMultiplier.toString().split('Game.Has').join('CM.Sim.Has').split('Game.hasAura').join('CM.Sim.hasAura').split('Game.auraMult').join('CM.Sim.auraMult'));
 
+// Check for Pantheon Auras
 CM.Sim.hasAura = function(what) {
 	if (Game.dragonAuras[CM.Sim.dragonAura].name == what || Game.dragonAuras[CM.Sim.dragonAura2].name == what)
 		return true;
@@ -3587,6 +3588,8 @@ CM.Sim.hasAura = function(what) {
 		return false;
 }
 
+// Check if multiplier auras are present
+// Used as CM.Sim.auraMult('Aura') * mult, i.e. CM.Sim.auraMult('Dragon God) * 0.05
 CM.Sim.auraMult = function(what) {
 	var n = 0;
 	if (Game.dragonAuras[CM.Sim.dragonAura].name == what || Game.dragonAuras[CM.Sim.dragonAura2].name == what)
@@ -3594,6 +3597,26 @@ CM.Sim.auraMult = function(what) {
 	if (Game.dragonAuras[CM.Sim.dragonAura].name == 'Reality Bending' || Game.dragonAuras[CM.Sim.dragonAura2].name == 'Reality Bending')
 		n += 0.1;
 	return n;
+}
+
+CM.Sim.hasGod=function(what) {
+	var possibleGods = CM.Sim.Objects.Temple.minigame.gods
+	var god=possibleGods[what];
+	for (var i=0;i<3;i++)
+	{
+		if (CM.Sim.Objects.Temple.minigame.slot[i]==god.id) return (i+1);
+	}
+	return false;
+}
+
+CM.Sim.eff = function(name) {
+	if (typeof CM.Sim.effs[name]==='undefined') {
+		CM.Sim.effs[name] = 1
+		return CM.Sim.effs[name]
+	}
+	else {
+		return Game.effs[name];
+	}
 }
 
 eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString()
@@ -3653,7 +3676,7 @@ CM.Sim.CopyData = function() {
 	CM.Sim.UpgradesOwned = Game.UpgradesOwned;
 	CM.Sim.pledges = Game.pledges;
 	CM.Sim.AchievementsOwned = Game.AchievementsOwned;
-	CM.Sim.heavenlyPower = Game.heavenlyPower; // Unneeded?
+	CM.Sim.heavenlyPower = Game.heavenlyPower; // Unneeded? > Might be modded
 	CM.Sim.prestige = Game.prestige;
 	CM.Sim.dragonAura = Game.dragonAura;
 	CM.Sim.dragonAura2 = Game.dragonAura2;
@@ -3669,6 +3692,7 @@ CM.Sim.CopyData = function() {
 		}
 		you.amount = me.amount;
 		you.level = me.level;
+		if (me.minigameLoaded) you.minigameLoaded = me.minigameLoaded; you.minigame = me.minigame;
 	}
 
 	// Upgrades
@@ -3698,15 +3722,27 @@ CM.Sim.CopyData = function() {
 CM.Sim.CalculateGains = function() {
 	CM.Sim.cookiesPs = 0;
 	var mult = 1;
+	// Include minigame effects
+	var effs={};
+	for (var i in CM.Cache.Objects) {
+		if (CM.Sim.Objects[i].minigameLoaded && CM.Sim.Objects[i].minigame.effs) {
+			var myEffs = CM.Sim.Objects[i].minigame.effs;
+			for (var ii in myEffs) {
+				if (effs[ii]) effs[ii]*=myEffs[ii];
+                else effs[ii]=myEffs[ii];
+			}
+		}
+	}
+	CM.Sim.effs = effs;
 	
 	if (Game.ascensionMode != 1) mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
 	
-	// TODO Store minigame buffs?
-	mult *= Game.eff('cps');
-	
+	mult *= CM.Sim.eff('cps');
+
 	if (CM.Sim.Has('Heralds') && Game.ascensionMode != 1) mult *= 1 + 0.01 * Game.heralds;
 
-	var cookieMult = 0;
+	// TODO: Make function call cached function where Game.Has is replaced with CM.Has
+	// Related to valentine cookies
 	for (var i in Game.cookieUpgrades) {
 		var me = Game.cookieUpgrades[i];
 		if (CM.Sim.Has(me.name)) {
@@ -3714,7 +3750,6 @@ CM.Sim.CalculateGains = function() {
 		}
 	}
 
-	mult *= (1 + 0.01 * cookieMult);
 	if (CM.Sim.Has('Specialized chocolate chips')) mult *= 1.01;
 	if (CM.Sim.Has('Designer cocoa beans')) mult *= 1.02;
 	if (CM.Sim.Has('Underworld ovens')) mult *= 1.03;
@@ -3732,29 +3767,31 @@ CM.Sim.CalculateGains = function() {
 
 	if (CM.Sim.Has('Dragon scale')) mult *= 1.03;
 
+	// Check effect of chosen Gods
 	var buildMult = 1;
-	if (Game.hasGod) {
-		var godLvl = Game.hasGod('asceticism');
+	if (CM.Sim.Objects.Temple.minigameLoaded) {
+		var godLvl = CM.Sim.hasGod('asceticism');
 		if (godLvl == 1) mult *= 1.15;
 		else if (godLvl == 2) mult *= 1.1;
 		else if (godLvl == 3) mult *= 1.05;
 
-		var godLvl = Game.hasGod('ages');
+		// TODO: What does DateAges do?
+		var godLvl = CM.Sim.hasGod('ages');
 		if (godLvl == 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 3)) * Math.PI * 2);
 		else if (godLvl == 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 12)) * Math.PI*2);
 		else if (godLvl == 3) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 24)) * Math.PI*2);
 
-		var godLvl = Game.hasGod('decadence');
+		var godLvl = CM.Sim.hasGod('decadence');
 		if (godLvl == 1) buildMult *= 0.93;
 		else if (godLvl == 2) buildMult *= 0.95;
 		else if (godLvl == 3) buildMult *= 0.98;
 
-		var godLvl = Game.hasGod('industry');
+		var godLvl = CM.Sim.hasGod('industry');
 		if (godLvl == 1) buildMult *= 1.1;
 		else if (godLvl == 2) buildMult *= 1.06;
 		else if (godLvl == 3) buildMult *= 1.03;
 
-		var godLvl = Game.hasGod('labor');
+		var godLvl = CM.Sim.hasGod('labor');
 		if (godLvl == 1) buildMult *= 0.97;
 		else if (godLvl == 2) buildMult *= 0.98;
 		else if (godLvl == 3) buildMult *= 0.99;
@@ -3767,14 +3804,14 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Santa\'s milk and cookies')) milkMult *= 1.05;
 	//if (CM.Sim.hasAura('Breath of Milk')) milkMult *= 1.05;
 	milkMult *= 1 + CM.Sim.auraMult('Breath of Milk') * 0.05;
-	if (Game.hasGod) {
-		var godLvl = Game.hasGod('mother');
+	if (CM.Sim.Objects.Temple.minigameLoaded) {
+		var godLvl = CM.Sim.hasGod('mother');
 		if (godLvl == 1) milkMult *= 1.1;
 		else if (godLvl == 2) milkMult *= 1.05;
 		else if (godLvl == 3) milkMult *= 1.03;
 	}
-	// TODO Store minigame buffs?
-	milkMult *= Game.eff('milk');
+	
+	milkMult *= CM.Sim.eff('milk');
 
 	var catMult = 1;
 
@@ -3834,26 +3871,25 @@ CM.Sim.CalculateGains = function() {
 	//if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;
 	mult *= 1 + CM.Sim.auraMult('Radiant Appetite');
 
-	if (true) { // || CM.Sim.hasAura('Dragon\'s Fortune')) {
-		var n = Game.shimmerTypes['golden'].n;
-		var auraMult = CM.Sim.auraMult('Dragon\'s Fortune');
-		for (var i = 0; i < n; i++) {
-			mult *= 1 + auraMult * 1.23;
-		}
-	}
-
 	var rawCookiesPs = CM.Sim.cookiesPs * mult;
-
 	for (var i in Game.CpsAchievements) {
 		if (rawCookiesPs >= Game.CpsAchievements[i].threshold) CM.Sim.Win(Game.CpsAchievements[i].name);
 	}
 
-	mult *= CM.Sim.getCPSBuffMult();
+	CM.Sim.cookiesPsRaw=rawCookiesPs;
 
-	// Pointless?
+	if (CM.Sim.hasAura('Dragon\'s Fortune')) {
+		var n = Game.shimmerTypes['golden'].n;
+		for (var i = 0; i < n; i++) {
+			mult *= 1.23;
+		}
+	}
+
 	var name = Game.bakeryName.toLowerCase();
 	if (name == 'orteil') mult *= 0.99;
-	else if (name == 'ortiel') mult *= 0.98; //or so help me
+	else if (name == 'ortiel') mult *= 0.98;
+
+	// TODO: Move CalcWink option and calculation here from CM.Disp
 
 	if (CM.Sim.Has('Elder Covenant')) mult *= 0.95;
 
@@ -3872,13 +3908,15 @@ CM.Sim.CalculateGains = function() {
 		if (CM.Sim.Has('Reinforced membrane')) veilMult += 0.1;
 		mult *= 1 + veilMult;
 	}
+
 	// Removed debug upgrades
 	
-	// Removed buffs
+	mult *= CM.Sim.getCPSBuffMult();
+
+	// TODO: Handle ModHooks, see Game code
 
 	CM.Sim.cookiesPs *= mult;
 
-	// TODO remove?
 	// if (Game.hasBuff('Cursed finger')) Game.cookiesPs = 0;
 };
 
@@ -4113,7 +4151,12 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 		CM.Sim.CalculateGains();
 	}
 
-	return (CM.Sim.cookiesPs - curCPS);
+	var ResetCPS = CM.Sim.cookiesPs - curCPS
+
+	// Reset Pretige level after calculation
+	CM.Sim.prestige = Game.prestige;
+
+	return (ResetCPS);
 }
 
 CM.Sim.getSellMultiplier = function() {
@@ -4134,9 +4177,9 @@ CM.Sim.modifyBuildingPrice = function(building,price) {
 	if (Game.hasBuff('Crafty pixies')) price *= 0.98;
 	if (Game.hasBuff('Nasty goblins')) price *= 1.02;
 	if (building.fortune && CM.Sim.Has(building.fortune.name)) price *= 0.93;
-	price *= Game.eff('buildingCost');
-	if (Game.hasGod) {
-		var godLvl = Game.hasGod('creation');
+	price *= CM.Sim.eff('buildingCost');
+	if (CM.Sim.Objects.Temple.minigameLoaded) {
+		var godLvl = CM.Sim.hasGod('creation');
 		if (godLvl == 1) price *= 0.93;
 		else if (godLvl == 2) price *= 0.95;
 		else if (godLvl == 3) price *= 0.98;

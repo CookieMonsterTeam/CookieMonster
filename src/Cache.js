@@ -48,8 +48,8 @@ CM.Cache.RemakeWrinkBank = function() {
 		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-		if (Game.hasGod) {
-			var godLvl = Game.hasGod('scorn');
+		if (CM.Sim.Objects.Temple.minigameLoaded) {
+			var godLvl = CM.Sim.hasGod('scorn');
 			if (godLvl == 1) sucked *= 1.15;
 			else if (godLvl == 2) sucked *= 1.1;
 			else if (godLvl == 3) sucked *= 1.05;
@@ -58,8 +58,8 @@ CM.Cache.RemakeWrinkBank = function() {
 	}
 	CM.Cache.WrinkBank = totalSucked;
 	CM.Cache.WrinkGodBank = totalSucked;
-	if (Game.hasGod) {
-		var godLvl = Game.hasGod('scorn');
+	if (CM.Sim.Objects.Temple.minigameLoaded) {
+		var godLvl = CM.Sim.hasGod('scorn');
 		if (godLvl == 2) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.1;
 		else if (godLvl == 3) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.05;
 		else if (godLvl != 1) CM.Cache.WrinkGodBank *= 1.15;
