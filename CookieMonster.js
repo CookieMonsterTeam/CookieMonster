@@ -2827,12 +2827,15 @@ CM.Disp.Tooltip = function(type, name) {
 			}
 		}
 		else if (Game.buyMode == -1) {
-			if (Game.buyBulk == -1) {
-				l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + Beautify(CM.Sim.BuildingSell(Game.Objects[name], Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].free, Game.Objects[name].amount)));
-			}
-			else {
-				l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].getPrice())).join('-' + Beautify(CM.Sim.BuildingSell(Game.Objects[name], Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].free, Game.buyBulk)));
-			}
+			/*
+			 * Fix sell price displayed in the object tooltip.
+			 *
+			 * The buildings sell price displayed by the game itself (without any mod) is incorrect.
+			 * The following line of code fixes this issue, and can be safely removed when the game gets fixed.
+			 * 
+			 * This issue is extensively detailed here: https://github.com/Aktanusa/CookieMonster/issues/359#issuecomment-735658262
+			 */
+			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].bulkPrice)).join(Beautify(CM.Sim.BuildingSell(Game.Objects[name], Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].free, Game.buyBulk, 1)));
 		}
 	}
 	else if (type == 'u') {
@@ -3639,7 +3642,7 @@ CM.Sim.BuildingGetPrice = function(build, basePrice, start, free, increase) {
 	return moni;
 }
 
-CM.Sim.BuildingSell = function(build, basePrice, start, free, amount) {
+CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
 	/*var price=0;
 	for (var i = Math.max(0, start - amount); i < Math.max(0, start); i++) {
 		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
@@ -3658,12 +3661,16 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount) {
 	return Math.ceil(price);*/
 
 	// Calculate money gains from selling buildings
+	// If noSim is set, use Game methods to compute price instead of Sim ones.
+	noSim = typeof noSim === "undefined" ? 0 : noSim;
 	var moni = 0;
+	if (amount == -1) amount = start;
+	if (!amount) amount = Game.buyBulk;
 	for (var i = 0; i < amount; i++) {
 		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
-		price = CM.Sim.modifyBuildingPrice(build, price);
+		price = noSim ? Game.modifyBuildingPrice(build, price) : CM.Sim.modifyBuildingPrice(build, price);
 		price = Math.ceil(price);
-		var giveBack = CM.Sim.getSellMultiplier();
+		var giveBack = noSim ? build.getSellMultiplier() : CM.Sim.getSellMultiplier();
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;

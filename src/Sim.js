@@ -25,7 +25,7 @@ CM.Sim.BuildingGetPrice = function(build, basePrice, start, free, increase) {
 	return moni;
 }
 
-CM.Sim.BuildingSell = function(build, basePrice, start, free, amount) {
+CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
 	/*var price=0;
 	for (var i = Math.max(0, start - amount); i < Math.max(0, start); i++) {
 		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
@@ -44,12 +44,16 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount) {
 	return Math.ceil(price);*/
 
 	// Calculate money gains from selling buildings
+	// If noSim is set, use Game methods to compute price instead of Sim ones.
+	noSim = typeof noSim === "undefined" ? 0 : noSim;
 	var moni = 0;
+	if (amount == -1) amount = start;
+	if (!amount) amount = Game.buyBulk;
 	for (var i = 0; i < amount; i++) {
 		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
-		price = CM.Sim.modifyBuildingPrice(build, price);
+		price = noSim ? Game.modifyBuildingPrice(build, price) : CM.Sim.modifyBuildingPrice(build, price);
 		price = Math.ceil(price);
-		var giveBack = CM.Sim.getSellMultiplier();
+		var giveBack = noSim ? build.getSellMultiplier() : CM.Sim.getSellMultiplier();
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;
