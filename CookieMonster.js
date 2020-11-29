@@ -1398,21 +1398,32 @@ CM.Disp.UpdateBuildings = function() {
 	
 	// Build array of pointers, sort by pp, use array index (+2) as the grid row number
 	// (grid rows are 1-based indexing, and row 1 is the bulk buy/sell options)
-	var arr = Object.keys(CM.Cache[target]).map(k =>
-	{
-		var o = CM.Cache[target][k];
-		o.name = k;
-		o.id = Game.Objects[k].id;
-		return o;
-	});
-
-	if (CM.Config.SortBuildings)
+	if (Game.buyMode == 1 && CM.Config.SortBuildings) {
+		var arr = Object.keys(CM.Cache[target]).map(k =>
+		{
+			var o = CM.Cache[target][k];
+			o.name = k;
+			o.id = Game.Objects[k].id;
+			return o;
+		});
 		arr.sort((a, b) => a.pp - b.pp);
-	else
-		arr.sort((a, b) => a.id - b.id);
 
-	for (var x = 0; x < arr.length; x++)
-		Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
+		for (var x = 0; x < arr.length; x++) {
+			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
+		}
+	} else {
+		var arr = Object.keys(CM.Cache.Objects).map(k =>
+			{
+				var o = CM.Cache.Objects[k];
+				o.name = k;
+				o.id = Game.Objects[k].id;
+				return o;
+			});
+		arr.sort((a, b) => a.id - b.id);
+		for (var x = 0; x < arr.length; x++) {
+			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
+		}
+	}
 }
 
 CM.Disp.CreateUpgradeBar = function() {
@@ -3100,6 +3111,19 @@ CM.Disp.UpdateAscendState = function() {
 	}
 
 	CM.Disp.UpdateBackground();
+}
+
+CM.Disp.UpdateAuraDescription = function() {
+	return "function(aura)\
+	{\
+		l('dragonAuraInfo').innerHTML=\
+		'<div style=\"min-width:200px;text-align:center;\"><h4>'+Game.dragonAuras[aura].name+'</h4>'+\
+		'<div class=\"line\"></div>'+\
+		Game.dragonAuras[aura].desc+\
+		'<div class=\"line\"></div>'+\
+		CM.\
+		'</div>';\
+	}"
 }
 
 CM.Disp.ToggleSayTime = function() {
