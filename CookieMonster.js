@@ -94,7 +94,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 	if (CM.Config.ColorPPBulkMode == 0) {
 		for (var i in CM.Cache.Objects) {
 			//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
-			CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+			CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / (Game.cookiesPs + Game.Objects[i].cps(Game.Objects[i]))) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
 			if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
 			if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
 		}
@@ -115,10 +115,11 @@ CM.Cache.RemakeBuildingsPP = function() {
 	} 
 	// Calculate PP and colors when compared to purchase of selected bulk mode
 	else {
+		// {Game.buyBulk == 1} has the same code as {CM.Config.ColorPPBulkMode == 0}
 		if (Game.buyBulk == 1) {
 			for (var i in CM.Cache.Objects) {
 				//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
-				CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+				CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / (Game.cookiesPs + Game.Objects[i].cps(Game.Objects[i]))) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
 				if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
 				if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
 			}
@@ -136,7 +137,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 		}
 		else if (Game.buyBulk == 10) {
 			for (var i in CM.Cache.Objects) {
-				CM.Cache.Objects10[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects10[i].bonus);
+				CM.Cache.Objects10[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / (Game.cookiesPs + (Game.Objects[i].cps(Game.Objects[i]) * 10))) + (Game.Objects[i].bulkPrice / CM.Cache.Objects10[i].bonus);
 				if (CM.Cache.min == -1 || CM.Cache.Objects10[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects10[i].pp;
 				if (CM.Cache.max == -1 || CM.Cache.Objects10[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects10[i].pp;
 			}
@@ -154,7 +155,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 		}
 		else if (Game.buyBulk == 100) {
 			for (var i in CM.Cache.Objects) {
-				CM.Cache.Objects100[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects100[i].bonus);
+				CM.Cache.Objects100[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / (Game.cookiesPs + (Game.Objects[i].cps(Game.Objects[i]) * 100))) + (Game.Objects[i].bulkPrice / CM.Cache.Objects100[i].bonus);
 				if (CM.Cache.min == -1 || CM.Cache.Objects100[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects100[i].pp;
 				if (CM.Cache.max == -1 || CM.Cache.Objects100[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects100[i].pp;
 			}
