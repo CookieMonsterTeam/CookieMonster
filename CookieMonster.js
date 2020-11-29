@@ -1655,18 +1655,18 @@ CM.Disp.Notification = function(notifyConfig, title, message) {
 	}
 }
 
-/**
- * Needed for some of the functions to use the right object
- */
-CM.Disp.FindGoldenShimmer = function() {
-	if (CM.Disp.lastGoldenCookieState) {
-		for (var i in Game.shimmers) {
-			if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'golden') {
-				CM.Disp.goldenShimmer = Game.shimmers[i];
-				break;
-			}
+
+CM.Disp.FindShimmer = function() {
+	CM.Disp.currSpawnedGoldenCookieState = 0
+	CM.Disp.goldenShimmersByID = {}
+	for (var i in Game.shimmers) {
+		CM.Disp.goldenShimmersByID[Game.shimmers[i].id] = Game.shimmers[i]
+		if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'golden') {
+			CM.Disp.spawnedGoldenShimmer = Game.shimmers[i];
+			CM.Disp.currSpawnedGoldenCookieState += 1;
 		}
 	}
+
 }
 
 CM.Disp.CreateFavicon = function() {
@@ -1678,8 +1678,8 @@ CM.Disp.CreateFavicon = function() {
 }
 
 CM.Disp.UpdateFavicon = function() {
-	if (CM.Config.Favicon == 1 && CM.Disp.lastGoldenCookieState) {
-		if (CM.Disp.goldenShimmer.wrath) {
+	if (CM.Config.Favicon == 1) {
+		if (CM.Disp.spawnedGoldenShimmer.wrath) {
 			CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
 		}
 		else {
@@ -1691,60 +1691,85 @@ CM.Disp.UpdateFavicon = function() {
 	}
 }
 
-CM.Disp.CreateGCTimer = function() {
-	CM.Disp.GCTimer = document.createElement('div');
-	CM.Disp.GCTimer.style.width = '96px';
-	CM.Disp.GCTimer.style.height = '96px';
-	CM.Disp.GCTimer.style.display = 'none';
-	CM.Disp.GCTimer.style.position = 'absolute';
-	CM.Disp.GCTimer.style.zIndex = '10000000001';
-	CM.Disp.GCTimer.style.textAlign = 'center';
-	CM.Disp.GCTimer.style.lineHeight = '96px';
-	CM.Disp.GCTimer.style.fontFamily = '\"Kavoon\", Georgia, serif';
-	CM.Disp.GCTimer.style.fontSize = '35px';
-	CM.Disp.GCTimer.style.cursor = 'pointer';
-	CM.Disp.GCTimer.onclick = function () {CM.Disp.goldenShimmer.pop(); CM.Disp.GCTimer.style.display = 'none';};
-	CM.Disp.GCTimer.onmouseover = function() {CM.Disp.goldenShimmer.l.style.filter = 'brightness(125%) drop-shadow(0px 0px 3px rgba(255,255,255,1))'; CM.Disp.goldenShimmer.l.style.webkitFilter = 'brightness(125%) drop-shadow(0px 0px 3px rgba(255,255,255,1))';};
-	CM.Disp.GCTimer.onmouseout = function() {CM.Disp.goldenShimmer.l.style.filter = ''; CM.Disp.goldenShimmer.l.style.webkitFilter = '';};
+CM.Disp.CreateGCTimer = function(cookie) {
+	GCTimer = document.createElement('div');
+	GCTimer.id = 'GCTimer' + cookie.id
+	GCTimer.style.width = '96px';
+	GCTimer.style.height = '96px';
+	GCTimer.style.position = 'absolute';
+	GCTimer.style.zIndex = '10000000001';
+	GCTimer.style.textAlign = 'center';
+	GCTimer.style.lineHeight = '96px';
+	GCTimer.style.fontFamily = '\"Kavoon\", Georgia, serif';
+	GCTimer.style.fontSize = '35px';
+	GCTimer.style.cursor = 'pointer';
+	GCTimer.style.display = 'block';
+	GCTimer.style.left = cookie.l.style.left;
+	GCTimer.style.top = cookie.l.style.top;
+	GCTimer.onclick = function () {cookie.pop();};
+	GCTimer.onmouseover = function() {cookie.l.style.filter = 'brightness(125%) drop-shadow(0px 0px 3px rgba(255,255,255,1))'; cookie.l.style.webkitFilter = 'brightness(125%) drop-shadow(0px 0px 3px rgba(255,255,255,1))';};
+	GCTimer.onmouseout = function() {cookie.l.style.filter = ''; cookie.l.style.webkitFilter = '';};
 
-	l('game').appendChild(CM.Disp.GCTimer);
+	CM.Disp.GCTimers[cookie.id] = GCTimer;
+	l('shimmers').appendChild(GCTimer);
 }
 
 CM.Disp.ToggleGCTimer = function() {
 	if (CM.Config.GCTimer == 1) {
 		if (CM.Disp.lastGoldenCookieState) {
-			CM.Disp.GCTimer.style.display = 'block';
-			CM.Disp.GCTimer.style.left = CM.Disp.goldenShimmer.l.style.left;
-			CM.Disp.GCTimer.style.top = CM.Disp.goldenShimmer.l.style.top;
+			for (var i in CM.Disp.GCTimers) {
+				CM.Disp.GCTimers[i].style.display = 'block';
+				CM.Disp.GCTimers[i].style.left = CM.Disp.goldenShimmersByID[i].l.style.left;
+				CM.Disp.GCTimers[i].style.top = CM.Disp.goldenShimmersByID[i].l.style.top;
+			}
 		}
 	}
 	else {
-		CM.Disp.GCTimer.style.display = 'none';
+		for (var i in CM.Disp.GCTimers) {
+			CM.Disp.GCTimers[i].style.display = 'none';
+		}
 	}
 }
 
 CM.Disp.CheckGoldenCookie = function() {
-	if (CM.Disp.lastGoldenCookieState != Game.shimmerTypes['golden'].spawned) {
-		CM.Disp.lastGoldenCookieState = Game.shimmerTypes['golden'].spawned;
-		CM.Disp.FindGoldenShimmer();
-		CM.Disp.UpdateFavicon();
-		if (CM.Disp.lastGoldenCookieState) {
-			if (CM.Config.GCTimer == 1) {
-				CM.Disp.GCTimer.style.display = 'block';
-				CM.Disp.GCTimer.style.left = CM.Disp.goldenShimmer.l.style.left;
-				CM.Disp.GCTimer.style.top = CM.Disp.goldenShimmer.l.style.top;
-			}
-
-			CM.Disp.Flash(3, 'GCFlash');
-			CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
-			CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
+	CM.Disp.FindShimmer();
+	for (var i in CM.Disp.GCTimers) {
+		if (typeof CM.Disp.goldenShimmersByID[i] == "undefined") {
+			CM.Disp.GCTimers[i].parentNode.removeChild(CM.Disp.GCTimers[i]);
+			delete CM.Disp.GCTimers[i];
 		}
-		else if (CM.Config.GCTimer == 1) CM.Disp.GCTimer.style.display = 'none';
+	}
+	if (CM.Disp.lastGoldenCookieState != Game.shimmerTypes['golden'].n) {
+		CM.Disp.lastGoldenCookieState = Game.shimmerTypes['golden'].n;
+		if (CM.Disp.lastGoldenCookieState) {
+			if (CM.Disp.lastSpawnedGoldenCookieState < CM.Disp.currSpawnedGoldenCookieState) {
+				CM.Disp.Flash(3, 'GCFlash');
+				CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
+				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
+			}
+			CM.Disp.lastSpawnedGoldenCookieState = CM.Disp.currSpawnedGoldenCookieState
+			CM.Disp.UpdateFavicon();
+			
+			if (CM.Config.GCTimer == 1) {
+				for (var i in Game.shimmers) {
+					if (typeof CM.Disp.GCTimers[Game.shimmers[i].id] == "undefined") {
+						CM.Disp.CreateGCTimer(Game.shimmers[i]);
+					}
+				}
+			}
+		}
+		else if (CM.Config.GCTimer == 1) {
+			for (var i in CM.Disp.GCTimers) {
+				CM.Disp.GCTimers[i].style.display = 'none';
+			}
+		}
 	}
 	else if (CM.Config.GCTimer == 1 && CM.Disp.lastGoldenCookieState) {
-		CM.Disp.GCTimer.style.opacity = CM.Disp.goldenShimmer.l.style.opacity;
-		CM.Disp.GCTimer.style.transform = CM.Disp.goldenShimmer.l.style.transform;
-		CM.Disp.GCTimer.textContent = Math.ceil(CM.Disp.goldenShimmer.life / Game.fps);
+		for (var i in CM.Disp.GCTimers) {
+			CM.Disp.GCTimers[i].style.opacity = CM.Disp.goldenShimmersByID[i].l.style.opacity;
+			CM.Disp.GCTimers[i].style.transform = CM.Disp.goldenShimmersByID[i].l.style.transform;
+			CM.Disp.GCTimers[i].textContent = Math.ceil(CM.Disp.goldenShimmersByID[i].life / Game.fps);
+		}
 	}
 }
 
@@ -1844,11 +1869,11 @@ CM.Disp.UpdateTitle = function() {
 		var titleFC;
 		var titleSP;
 		if (CM.Disp.lastGoldenCookieState) {
-			if (CM.Disp.goldenShimmer.wrath) {
-				titleGC = '[W ' +  Math.ceil(CM.Disp.goldenShimmer.life / Game.fps) + ']';
+			if (CM.Disp.spawnedGoldenShimmer.wrath) {
+				titleGC = '[W ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
 			}
 			else {
-				titleGC = '[G ' +  Math.ceil(CM.Disp.goldenShimmer.life / Game.fps) + ']';
+				titleGC = '[G ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
 			}
 		}
 		else if (!Game.Has('Golden switch [off]')) {
@@ -1883,11 +1908,11 @@ CM.Disp.UpdateTitle = function() {
 		var spawn = false;
 		if (CM.Disp.lastGoldenCookieState) {
 			spawn = true;
-			if (CM.Disp.goldenShimmer.wrath) {
-				str += '[W ' +  Math.ceil(CM.Disp.goldenShimmer.life / Game.fps) + ']';
+			if (CM.Disp.spawnedGoldenShimmer.wrath) {
+				str += '[W ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
 			}
 			else {
-				str += '[G ' +  Math.ceil(CM.Disp.goldenShimmer.life / Game.fps) + ']';
+				str += '[G ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
 			}
 		}
 		if (CM.Disp.lastTickerFortuneState) {
@@ -3196,12 +3221,16 @@ CM.Disp.colorBrown = 'Brown';
 CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
 CM.Disp.buffColors = {'Frenzy': CM.Disp.colorYellow, 'Dragon Harvest': CM.Disp.colorBrown, 'Elder frenzy': CM.Disp.colorGreen, 'Clot': CM.Disp.colorRed, 'Click frenzy': CM.Disp.colorBlue, 'Dragonflight': CM.Disp.colorPink};
 CM.Disp.lastGoldenCookieState = 0;
+CM.Disp.lastSpawnedGoldenCookieState = 0;
+CM.Disp.currSpawnedGoldenCookieState
 CM.Disp.lastTickerFortuneState = 0;
 CM.Disp.lastSeasonPopupState = 0;
 CM.Disp.lastGardenNextStep = 0;
 CM.Disp.lastMagicBarFull = 0;
 CM.Disp.lastWrinklerCount = 0;
-CM.Disp.goldenShimmer;
+CM.Disp.goldenShimmersByID = {};
+CM.Disp.spawnedGoldenShimmer = 0;
+CM.Disp.GCTimers = {};
 CM.Disp.seasonPopShimmer;
 CM.Disp.lastAscendState = -1;
 
@@ -3459,7 +3488,6 @@ CM.DelayInit = function() {
 	CM.Disp.CreateUpgradeBar();
 	CM.Disp.CreateWhiteScreen();
 	CM.Disp.CreateFavicon();
-	CM.Disp.CreateGCTimer();
 	for (var i in CM.Disp.TooltipText) {
 		CM.Disp.CreateTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}

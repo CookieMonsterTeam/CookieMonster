@@ -231,7 +231,6 @@ CM.DelayInit = function() {
 	CM.Disp.CreateUpgradeBar();
 	CM.Disp.CreateWhiteScreen();
 	CM.Disp.CreateFavicon();
-	CM.Disp.CreateGCTimer();
 	for (var i in CM.Disp.TooltipText) {
 		CM.Disp.CreateTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
