@@ -51,7 +51,7 @@ CM.LoadConfig = function() {
 		if (mod) CM.SaveConfig(CM.Config);
 		CM.Loop(); // Do loop once
 		for (var i in CM.ConfigDefault) {
-			if (i != 'StatsPref' && typeof CM.ConfigData[i].func !== 'undefined') {
+			if (i != 'StatsPref' && i != 'MenuPref' && typeof CM.ConfigData[i].func !== 'undefined') {
 				CM.ConfigData[i].func();
 			}
 		}
@@ -110,6 +110,16 @@ CM.ToggleStatsConfig = function(config) {
 	}
 	else {
 		CM.Config.StatsPref[config]--;
+	}
+	CM.SaveConfig(CM.Config);
+}
+
+CM.ToggleMenuConfig = function(config) {
+	if (CM.Config.MenuPref[config] == 0) {
+		CM.Config.MenuPref[config]++;
+	}
+	else {
+		CM.Config.MenuPref[config]--;
 	}
 	CM.SaveConfig(CM.Config);
 }

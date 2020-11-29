@@ -510,7 +510,7 @@ CM.LoadConfig = function() {
 		if (mod) CM.SaveConfig(CM.Config);
 		CM.Loop(); // Do loop once
 		for (var i in CM.ConfigDefault) {
-			if (i != 'StatsPref' && typeof CM.ConfigData[i].func !== 'undefined') {
+			if (i != 'StatsPref' && i != 'MenuPref' && typeof CM.ConfigData[i].func !== 'undefined') {
 				CM.ConfigData[i].func();
 			}
 		}
@@ -569,6 +569,16 @@ CM.ToggleStatsConfig = function(config) {
 	}
 	else {
 		CM.Config.StatsPref[config]--;
+	}
+	CM.SaveConfig(CM.Config);
+}
+
+CM.ToggleMenuConfig = function(config) {
+	if (CM.Config.MenuPref[config] == 0) {
+		CM.Config.MenuPref[config]++;
+	}
+	else {
+		CM.Config.MenuPref[config]--;
 	}
 	CM.SaveConfig(CM.Config);
 }
@@ -1917,14 +1927,28 @@ CM.Disp.CreateTooltip = function(placeholder, text, minWidth) {
 }
 
 CM.Disp.AddMenuPref = function(title) {
-	var header = function(text) {
+	var header = function(text, config) {
 		var div = document.createElement('div');
 		div.className = 'listing';
 		div.style.padding = '5px 16px';
 		div.style.opacity = '0.7';
 		div.style.fontSize = '17px';
 		div.style.fontFamily = '\"Kavoon\", Georgia, serif';
-		div.textContent = text;
+		div.appendChild(document.createTextNode(text + ' '));
+		var span = document.createElement('span');
+		span.style.cursor = 'pointer';
+		span.style.display = 'inline-block';
+		span.style.height = '14px';
+		span.style.width = '14px';
+		span.style.borderRadius = '7px';
+		span.style.textAlign = 'center';
+		span.style.backgroundColor = '#C0C0C0';
+		span.style.color = 'black';
+		span.style.fontSize = '13px';
+		span.style.verticalAlign = 'middle';
+		span.textContent = CM.Config.MenuPref[config] ? '-' : '+';
+		span.onclick = function() {CM.ToggleMenuConfig(config); Game.UpdateMenu();};
+		div.appendChild(span);
 		return div;
 	}
 
@@ -2008,107 +2032,119 @@ CM.Disp.AddMenuPref = function(title) {
 		return div;
 	}
 
-	frag.appendChild(header('Bars/Colors'));
-	frag.appendChild(listing('BotBar'));
-	frag.appendChild(listing('TimerBar'));
-	frag.appendChild(listing('TimerBarPos'));
-	frag.appendChild(listing('SortBuildings'));
-	frag.appendChild(listing('SortUpgrades'));
-	frag.appendChild(listing('BuildColor'));
-	frag.appendChild(listing('BulkBuildColor'));
-	frag.appendChild(listing('ColorPPBulkMode'));
-	frag.appendChild(listing('UpBarColor'));
-	for (var i = 0; i < CM.Disp.colors.length; i++) {
-		var div = document.createElement('div');
-		div.className = 'listing';
-		var input = document.createElement('input');
-		input.id = CM.ConfigPrefix + 'Color' + CM.Disp.colors[i];
-		input.className = 'option';
-		input.style.width = '65px';
-		input.setAttribute('value', CM.Config.Colors[CM.Disp.colors[i]]);
-		div.appendChild(input);
-		eval('var change = function() {CM.Config.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.SaveConfig(CM.Config);}');
-		var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
-		var label = document.createElement('label');
-		label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
-		div.appendChild(label);
-		frag.appendChild(div);
+	frag.appendChild(header('Bars/Colors', 'BarsColors'));
+	if (CM.Config.MenuPref.BarsColors) {
+		frag.appendChild(listing('BotBar'));
+		frag.appendChild(listing('TimerBar'));
+		frag.appendChild(listing('TimerBarPos'));
+		frag.appendChild(listing('SortBuildings'));
+		frag.appendChild(listing('SortUpgrades'));
+		frag.appendChild(listing('BuildColor'));
+		frag.appendChild(listing('BulkBuildColor'));
+		frag.appendChild(listing('ColorPPBulkMode'));
+		frag.appendChild(listing('UpBarColor'));
+		for (var i = 0; i < CM.Disp.colors.length; i++) {
+			var div = document.createElement('div');
+			div.className = 'listing';
+			var input = document.createElement('input');
+			input.id = CM.ConfigPrefix + 'Color' + CM.Disp.colors[i];
+			input.className = 'option';
+			input.style.width = '65px';
+			input.setAttribute('value', CM.Config.Colors[CM.Disp.colors[i]]);
+			div.appendChild(input);
+			eval('var change = function() {CM.Config.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.SaveConfig(CM.Config);}');
+			var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
+			var label = document.createElement('label');
+			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
+			div.appendChild(label);
+			frag.appendChild(div);
+		}
+		frag.appendChild(listing('UpgradeBarFixedPos'));
 	}
-	frag.appendChild(listing('UpgradeBarFixedPos'));
 
-	frag.appendChild(header('Calculation'));
-	frag.appendChild(listing('CalcWrink'));
-	frag.appendChild(listing('CPSMode'));
-	frag.appendChild(listing('AvgCPSHist'));
-	frag.appendChild(listing('AvgClicksHist'));
-	frag.appendChild(listing('ToolWarnBon'));
+	frag.appendChild(header('Calculation', 'Calculation'));
+	if (CM.Config.MenuPref.Calculation) {
+		frag.appendChild(listing('CalcWrink'));
+		frag.appendChild(listing('CPSMode'));
+		frag.appendChild(listing('AvgCPSHist'));
+		frag.appendChild(listing('AvgClicksHist'));
+		frag.appendChild(listing('ToolWarnBon'));
+	}
 
-	frag.appendChild(header('Notification'));
-	frag.appendChild(listing('GCNotification'));
-	frag.appendChild(listing('GCFlash'));
-	frag.appendChild(listing('GCSound'));
-	frag.appendChild(vol('GCVolume'));
-	frag.appendChild(url('GCSoundURL'));
-	frag.appendChild(listing('GCTimer'));
-	frag.appendChild(listing('Favicon'));
-	frag.appendChild(listing('FortuneNotification'));
-	frag.appendChild(listing('FortuneFlash'));
-	frag.appendChild(listing('FortuneSound'));
-	frag.appendChild(vol('FortuneVolume'));
-	frag.appendChild(url('FortuneSoundURL'));
-	frag.appendChild(listing('SeaNotification'));
-	frag.appendChild(listing('SeaFlash'));
-	frag.appendChild(listing('SeaSound'));
-	frag.appendChild(vol('SeaVolume'));
-	frag.appendChild(url('SeaSoundURL'));
-	frag.appendChild(listing('GardFlash'));
-	frag.appendChild(listing('GardSound'));
-	frag.appendChild(vol('GardVolume'));
-	frag.appendChild(url('GardSoundURL'));
-	frag.appendChild(listing('MagicNotification'));
-	frag.appendChild(listing('MagicFlash'));
-	frag.appendChild(listing('MagicSound'));
-	frag.appendChild(vol('MagicVolume'));
-	frag.appendChild(url('MagicSoundURL'));
-	frag.appendChild(listing('WrinklerNotification'));
-	frag.appendChild(listing('WrinklerFlash'));
-	frag.appendChild(listing('WrinklerSound'));
-	frag.appendChild(vol('WrinklerVolume'));
-	frag.appendChild(url('WrinklerSoundURL'));
-	frag.appendChild(listing('WrinklerMaxNotification'));
-	frag.appendChild(listing('WrinklerMaxFlash'));
-	frag.appendChild(listing('WrinklerMaxSound'));
-	frag.appendChild(vol('WrinklerMaxVolume'));
-	frag.appendChild(url('WrinklerMaxSoundURL'));
-	frag.appendChild(listing('Title'));
+	frag.appendChild(header('Notification', 'Notification'));
+	if (CM.Config.MenuPref.Notification) {
+		frag.appendChild(listing('GCNotification'));
+		frag.appendChild(listing('GCFlash'));
+		frag.appendChild(listing('GCSound'));
+		frag.appendChild(vol('GCVolume'));
+		frag.appendChild(url('GCSoundURL'));
+		frag.appendChild(listing('GCTimer'));
+		frag.appendChild(listing('Favicon'));
+		frag.appendChild(listing('FortuneNotification'));
+		frag.appendChild(listing('FortuneFlash'));
+		frag.appendChild(listing('FortuneSound'));
+		frag.appendChild(vol('FortuneVolume'));
+		frag.appendChild(url('FortuneSoundURL'));
+		frag.appendChild(listing('SeaNotification'));
+		frag.appendChild(listing('SeaFlash'));
+		frag.appendChild(listing('SeaSound'));
+		frag.appendChild(vol('SeaVolume'));
+		frag.appendChild(url('SeaSoundURL'));
+		frag.appendChild(listing('GardFlash'));
+		frag.appendChild(listing('GardSound'));
+		frag.appendChild(vol('GardVolume'));
+		frag.appendChild(url('GardSoundURL'));
+		frag.appendChild(listing('MagicNotification'));
+		frag.appendChild(listing('MagicFlash'));
+		frag.appendChild(listing('MagicSound'));
+		frag.appendChild(vol('MagicVolume'));
+		frag.appendChild(url('MagicSoundURL'));
+		frag.appendChild(listing('WrinklerNotification'));
+		frag.appendChild(listing('WrinklerFlash'));
+		frag.appendChild(listing('WrinklerSound'));
+		frag.appendChild(vol('WrinklerVolume'));
+		frag.appendChild(url('WrinklerSoundURL'));
+		frag.appendChild(listing('WrinklerMaxNotification'));
+		frag.appendChild(listing('WrinklerMaxFlash'));
+		frag.appendChild(listing('WrinklerMaxSound'));
+		frag.appendChild(vol('WrinklerMaxVolume'));
+		frag.appendChild(url('WrinklerMaxSoundURL'));
+		frag.appendChild(listing('Title'));
+	}
 
-	frag.appendChild(header('Tooltip'));
-	frag.appendChild(listing('TooltipBuildUp'));
-	frag.appendChild(listing('TooltipAmor'));
-	frag.appendChild(listing('ToolWarnLucky'));
-	frag.appendChild(listing('ToolWarnConjure'));
-	frag.appendChild(listing('ToolWarnPos'));
-	frag.appendChild(listing('TooltipGrim'));
-	frag.appendChild(listing('ToolWrink'));
-	frag.appendChild(listing('TooltipLump'));
+	frag.appendChild(header('Tooltip', 'Tooltip'));
+	if (CM.Config.MenuPref.Tooltip) {
+		frag.appendChild(listing('TooltipBuildUp'));
+		frag.appendChild(listing('TooltipAmor'));
+		frag.appendChild(listing('ToolWarnLucky'));
+		frag.appendChild(listing('ToolWarnConjure'));
+		frag.appendChild(listing('ToolWarnPos'));
+		frag.appendChild(listing('TooltipGrim'));
+		frag.appendChild(listing('ToolWrink'));
+		frag.appendChild(listing('TooltipLump'));
+	}
 
-	frag.appendChild(header('Statistics'));
-	frag.appendChild(listing('Stats'));
-	frag.appendChild(listing('UpStats'));
-	frag.appendChild(listing('TimeFormat'));
-	frag.appendChild(listing('SayTime'));
-	frag.appendChild(listing('GrimoireBar'));
+	frag.appendChild(header('Statistics', 'Statistics'));
+	if (CM.Config.MenuPref.Statistics) {
+		frag.appendChild(listing('Stats'));
+		frag.appendChild(listing('UpStats'));
+		frag.appendChild(listing('TimeFormat'));
+		frag.appendChild(listing('SayTime'));
+		frag.appendChild(listing('GrimoireBar'));
+	}
 
-	frag.appendChild(header('Other'));
-	frag.appendChild(listing('Scale'));
-	var resDef = document.createElement('div');
-	resDef.className = 'listing';
-	var resDefBut = document.createElement('a');
-	resDefBut.className = 'option';
-	resDefBut.onclick = function() {CM.RestoreDefault();};
-	resDefBut.textContent = 'Restore Default';
-	resDef.appendChild(resDefBut);
-	frag.appendChild(resDef);
+	frag.appendChild(header('Other', 'Other'));
+	if (CM.Config.MenuPref.Other) {
+		frag.appendChild(listing('Scale'));
+		var resDef = document.createElement('div');
+		resDef.className = 'listing';
+		var resDefBut = document.createElement('a');
+		resDefBut.className = 'option';
+		resDefBut.onclick = function() {CM.RestoreDefault();};
+		resDefBut.textContent = 'Restore Default';
+		resDef.appendChild(resDefBut);
+		frag.appendChild(resDef);
+	}
 
 	l('menu').childNodes[2].insertBefore(frag, l('menu').childNodes[2].childNodes[l('menu').childNodes[2].childNodes.length - 1]);
 
@@ -3515,6 +3551,7 @@ CM.ConfigDefault = {
 	SayTime: 1, 
 	GrimoireBar: 1, 
 	Scale: 2, 
+	MenuPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Other: 1}, 
 	StatsPref: {Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
 	Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
 	SortBuildings: 0,
