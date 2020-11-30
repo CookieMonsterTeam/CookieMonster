@@ -1424,7 +1424,17 @@ CM.Disp.UpdateBuildings = function() {
 	}
 	else {
 		for (var i in CM.Cache.Objects) {
-			l('productPrice' + Game.Objects[i].id).style.color = '';
+			var o = Game.Objects[i];
+			l('productPrice' + o.id).style.color = '';
+			/*
+			 * Fix sell price displayed in the object in the store.
+			 *
+			 * The buildings sell price displayed by the game itself (without any mod) is incorrect.
+			 * The following line of code fixes this issue, and can be safely removed when the game gets fixed.
+			 * 
+			 * This issue is extensively detailed here: https://github.com/Aktanusa/CookieMonster/issues/359#issuecomment-735658262
+			 */
+			l('productPrice' + o.id).innerHTML = Beautify(CM.Sim.BuildingSell(o, o.basePrice, o.amount, o.free, Game.buyBulk, 1));
 		}
 	}
 	
