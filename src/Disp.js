@@ -1902,7 +1902,6 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing('Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
 		if (Game.prefs.autosave) {
 			var timeTillAutosave = Math.min((Game.fps*60 - (Game.T%(Game.fps*60))) / Game.fps, !Game.OnAscend * 60)
-			console.log(timeTillAutosave)
 			stats.appendChild(listing('Seconds till autosave', document.createTextNode(Math.floor(timeTillAutosave))));
 		}
 	}
