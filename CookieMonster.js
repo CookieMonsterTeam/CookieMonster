@@ -886,51 +886,73 @@ CM.Disp.Beautify = function(num, frac) {
 		}
 
 		if (CM.Config.Scale == 3) {
-			if (num >= 10) {
+			if (num >= 999999) {
 				var count = 0;
 				while (num >= 10) {
 					count++;
 					num /= 10;
 				}
-				answer = Math.round(num * 1000) / 1000 + 'E+' + count;
+				answer = +(Math.round(num + "e+2")  + "e-2") + 'E+' + count;
 			}
-			else if (num < 1 && num != 0) {
+			else if (num < -999999 && num != 0) {
 				var count = 0;
 				while (num < 1) {
 					count++;
 					num *= 10;
 				}
-				answer = Math.round(num * 1000) / 1000 + 'E-' + count;
+				answer = +(Math.round(num + "e+2")  + "e-2") + 'E-' + count;
 			}
 			else {
-				answer = Math.round(num * 1000) / 1000 + 'E+0';
+				answer = CM.Backup.Beautify(num, frac);
 			}
 		}
 		else if (CM.Config.Scale == 4) {
-			if (num >= 1000) {
+			if (um >= 999999) {
 				var count = 0;
 				while (num >= 1000) {
 					count++;
 					num /= 1000;
 				}
-				answer = Math.round(num * 1000) / 1000 + 'E+' + (count * 3);
+				answer = +(Math.round(num + "e+2")  + "e-2") + 'E+' + (count * 3);
 			}
-			else if (num < 1 && num != 0) {
+			else if (num < -999999 && num != 0) {
 				var count = 0;
 				while (num < 1) {
 					count++;
 					num *= 1000;
 				}
-				answer = Math.round(num * 1000) / 1000 + 'E-' + (count * 3);
+				answer = +(Math.round(num + "e+2")  + "e-2") + 'E-' + (count * 3);
 			}
 			else {
-				answer = Math.round(num * 1000) / 1000 + 'E+0';
+				answer = CM.Backup.Beautify(num, frac);
 			}
 		}
 		else {
 			for (var i = (CM.Disp.shortScale.length - 1); i >= 0; i--) {
 				if (i < CM.Disp.metric.length && CM.Config.Scale == 1) {
-					if (num >= Math.pow(1000, i + 2)) {
+					// Revert to Scientific Notation from e27
+					if (Math.log10(num) > 27) {
+						if (num >= 999999) {
+							var count = 0;
+							while (num >= 10) {
+								count++;
+								num /= 10;
+							}
+							answer = +(Math.round(num + "e+2")  + "e-2") + 'E+' + count;
+						}
+						else if (num < -999999 && num != 0) {
+							var count = 0;
+							while (num < 1) {
+								count++;
+								num *= 10;
+							}
+							answer = +(Math.round(num + "e+2")  + "e-2") + 'E-' + count;
+						}
+						else {
+							answer = CM.Backup.Beautify(num, frac);
+						}
+					}
+					else if (num >= Math.pow(1000, i + 2)) {
 						answer = (Math.round(num / Math.pow(1000, i + 1)) / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ' + CM.Disp.metric[i];
 						break;
 					}
