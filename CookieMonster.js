@@ -4027,10 +4027,11 @@ CM.Sim.CalculateGains = function() {
 	}
 
 	// Removed debug upgrades
+
+	// TODO: Check if this is handled correctly
+	CM.Sim.cookiesPs = Game.runModHookOnValue('cps', CM.Sim.cookiesPs);
 	
 	mult *= CM.Sim.getCPSBuffMult();
-
-	// TODO: Handle ModHooks, see Game code
 
 	CM.Sim.cookiesPs *= mult;
 
