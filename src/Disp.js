@@ -1900,6 +1900,11 @@ CM.Disp.AddMenuStats = function(title) {
 			if (fortunes.length != 0) stats.appendChild(listing('Fortune Upgrades Left to Buy',  createMissDisp(fortunes)));
 		}
 		stats.appendChild(listing('Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
+		if (Game.prefs.autosave) {
+			var timeTillAutosave = Math.min((Game.fps*60 - (Game.T%(Game.fps*60))) / Game.fps, !Game.OnAscend * 60)
+			console.log(timeTillAutosave)
+			stats.appendChild(listing('Seconds till autosave', document.createTextNode(Math.floor(timeTillAutosave))));
+		}
 	}
 
 	l('menu').insertBefore(stats, l('menu').childNodes[2]);
