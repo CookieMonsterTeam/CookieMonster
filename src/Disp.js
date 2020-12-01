@@ -700,7 +700,8 @@ CM.Disp.UpdateBuildings = function() {
 			o.id = Game.Objects[k].id;
 			return o;
 		});
-		arr.sort((a, b) => a.pp - b.pp);
+
+		arr.sort(function(a, b){ return (a.pp > b.pp ? 1 : (a.pp < b.pp ? -1 : 0)) });
 
 		for (var x = 0; x < arr.length; x++) {
 			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
