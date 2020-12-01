@@ -2399,7 +2399,8 @@ CM.Disp.UpdateTooltip = function() {
                     l('CMTooltipArea').appendChild(lumpTooltip);
                 }
 			}
-			else { // Grimoire
+			else if (CM.Disp.tooltipType === 'g') {
+				// Grimoire
 				CM.Disp.TooltipWarn.style.display = 'none';
 				l('CMDispTooltipWarnLucky').style.display = 'none';
 				l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
@@ -2443,6 +2444,25 @@ CM.Disp.UpdateTooltip = function() {
 						var recoverColor = CM.Disp.GetTimeColor(minigame.magic, Math.max(0, minigame.magic - spellCost), undefined, CM.Disp.CalculateGrimoireRefillTime(Math.max(0, minigame.magic - spellCost), minigame.magicM, minigame.magic));
 						recover.textContent = recoverColor.text;
 						recover.className = CM.Disp.colorTextPre + recoverColor.color;
+					}
+
+					// Extra information when spell is Conjure Baked Goods (Name == 0)
+					if (CM.Disp.tooltipName == 0) {
+						tooltip.appendChild(header('Cookies to be gained/lost'));
+						var conjure = document.createElement('div');
+						conjure.id = 'CMTooltipConjure';
+						tooltip.appendChild(conjure);
+						var reward = document.createElement('span');
+						reward.style.color = "#33FF00"
+						reward.textContent = Beautify(Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30), 2)
+						conjure.appendChild(reward)
+						var seperator = document.createElement('span');
+						seperator.textContent = ' / '
+						conjure.appendChild(seperator)
+						var loss = document.createElement('span');
+						loss.style.color = "red"
+						loss.textContent = Beautify((CM.Cache.NoGoldSwitchCookiesPS * 60 * 15), 2);
+						conjure.appendChild(loss)
 					}
 
 					l('CMTooltipArea').appendChild(tooltip);
