@@ -2210,11 +2210,11 @@ CM.Disp.Tooltip = function(type, name) {
 		tooltip.appendChild(pp);
 		tooltip.appendChild(header('Time Left'));
 		var time = document.createElement('div');
-		time.style.marginBottom = '4px';
 		time.id = 'CMTooltipTime';
 		tooltip.appendChild(time);
 		if (type == 'b') {
 			tooltip.appendChild(header('Production left till next achievement'));
+			tooltip.lastChild.id = 'CMTooltipProductionHeader';
 			var production = document.createElement('div');
 			production.id = 'CMTooltipProduction';
 			tooltip.appendChild(production);
@@ -2271,9 +2271,14 @@ CM.Disp.UpdateTooltip = function() {
 							}
 						}
 						if (typeof nextProductionAchiev != "undefined") {
+							l('CMTooltipTime').style.marginBottom = '4px';
+							l('CMTooltipProductionHeader').style.display = "";
 							l('CMTooltipProduction').className = "ProdAchievement" + CM.Disp.tooltipName;
 							l('CMTooltipProduction').textContent = Beautify(nextProductionAchiev.pow - CM.Sim.Objects[CM.Disp.tooltipName].totalCookies, 15);
 							l('CMTooltipProduction').style.color = "white";
+						} else {
+							l('CMTooltipProductionHeader').style.display = "none";
+							l('CMTooltipTime').style.marginBottom = '0px';
 						}
 					}
 				}
