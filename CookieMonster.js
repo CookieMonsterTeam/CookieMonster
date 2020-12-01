@@ -3057,6 +3057,7 @@ CM.Disp.Tooltip = function(type, name) {
 }
 
 CM.Disp.UpdateTooltip = function() {
+	CM.Sim.CopyData();
 	if (l('tooltipAnchor').style.display != 'none') {
 
 		if (l('CMTooltipArea') != null) {
@@ -3089,7 +3090,7 @@ CM.Disp.UpdateTooltip = function() {
 					}
 					if (CM.Config.TooltipBuildUp) {
 						for (var i in Game.Objects[CM.Disp.tooltipName].productionAchievs) {
-							if (!CM.Sim.Has(Game.Objects[CM.Disp.tooltipName].productionAchievs[i].achiev.name)) {
+							if (!CM.Sim.HasAchiev(Game.Objects[CM.Disp.tooltipName].productionAchievs[i].achiev.name)) {
 								var nextProductionAchiev = Game.Objects[CM.Disp.tooltipName].productionAchievs[i]
 								break
 							}
