@@ -238,8 +238,29 @@ CM.Cache.RemakePP = function() {
 	CM.Cache.RemakeUpgradePP();
 }
 
+CM.Cache.RemakeGoldenAndWrathCookiesMults = function() {
+	var goldenMult = 1;
+	var wrathMult = 1;
+	var mult = 1;
+
+	// Factor auras and upgrade in mults
+	if (CM.Sim.Has('Green yeast digestives')) mult *= 1.01;
+	if (CM.Sim.Has('Dragon fang')) mult *= 1.03;
+
+	goldenMult *= 1 + CM.Sim.auraMult('Ancestral Metamorphosis') * 0.1;
+	goldenMult *= CM.Sim.eff('goldenCookieGain');
+	wrathMult *= 1 + CM.Sim.auraMult('Unholy Dominion') * 0.1;
+	wrathMult *= CM.Sim.eff('wrathCookieGain');
+
+	// Calculate final golden and wrath multipliers
+	CM.Cache.GoldenCookiesMult = mult * goldenMult;
+	CM.Cache.WrathCookiesMult = mult * wrathMult;
+}
+
 CM.Cache.RemakeLucky = function() {
-	var GCmult = CM.Sim.eff('goldenCookieGain')
+	var goldenMult = CM.Cache.GoldenCookiesMult;
+	// TODO wrathMult
+
 	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
 	var cpsBuffMult = CM.Sim.getCPSBuffMult();
 	if (cpsBuffMult > 0) {
@@ -247,22 +268,24 @@ CM.Cache.RemakeLucky = function() {
 	} else {
 		CM.Cache.Lucky = 0;
 	}
-	CM.Cache.LuckyReward = GCmult * (CM.Cache.Lucky * 0.15) + 13;
+	CM.Cache.LuckyReward = goldenMult * (CM.Cache.Lucky * 0.15) + 13;
+	// TODO LuckyWrathReward
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
-	CM.Cache.LuckyRewardFrenzy = GCmult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.LuckyRewardFrenzy = goldenMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	// TODO LuckyWrathRewardFrenzy
 	CM.Cache.Conjure = CM.Cache.Lucky * 2;
  	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
 }
 
-CM.Cache.MaxChainMoni = function(digit, maxPayout) {
-	var GCmult = CM.Sim.eff('goldenCookieGain')
+CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
+	// TODO wrathMult
 	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
-	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * GCmult), maxPayout));
-	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * GCmult), maxPayout));
+	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
+	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
 	while (nextMoni < maxPayout) {
 		chain++;
-		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * GCmult), maxPayout));
-		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * GCmult), maxPayout));
+		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
+		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
 	}
 	return moni;
 }
@@ -276,9 +299,12 @@ CM.Cache.RemakeChain = function() {
 		maxPayout = 0;
 	}
 
-	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout);
+	var goldenMult = CM.Cache.GoldenCookiesMult;
+	var wrathMult = CM.Cache.WrathCookiesMult;
 
-	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout);
+	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout, goldenMult);
+
+	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout, wrathMult);
 
 	if (maxPayout < CM.Cache.ChainReward) {
 		CM.Cache.Chain = 0;
@@ -293,9 +319,9 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.ChainWrath = CM.Cache.NextNumber(CM.Cache.ChainWrathReward) / 0.5;
 	}
 
-	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7);
+	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7, goldenMult);
 
-	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7);
+	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7, wrathMult);
 
 	if ((maxPayout * 7) < CM.Cache.ChainFrenzyReward) {
 		CM.Cache.ChainFrenzy = 0;
@@ -465,6 +491,8 @@ CM.Cache.max = -1;
 CM.Cache.mid = -1;
 CM.Cache.WrinkBank = -1;
 CM.Cache.WrinkGodBank = -1;
+CM.Cache.GoldenCookiesMult = 1;
+CM.Cache.WrathCookiesMult = 1;
 CM.Cache.NoGoldSwitchCookiesPS = 0;
 CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
@@ -2375,23 +2403,8 @@ CM.Disp.AddMenuStats = function(title) {
 		var luckyRewardMaxWrath = CM.Cache.LuckyReward;
 		var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
 		var luckyRewardFrenzyMaxWrath = CM.Cache.LuckyRewardFrenzy;
-		var luckyCur = luckyCurBase;
-		var luckyCurWrath = luckyCurBase;
-		// Old way
-		if (Game.hasAura('Ancestral Metamorphosis')) {
-			luckyRewardMax *= 1.1;
-			luckyRewardFrenzyMax *= 1.1;
-			luckyCur *= 1.1;
-		}
-		/*luckyRewardMax *= 1 + Game.auraMult('Ancestral Metamorphosis') * 0.1;
-		luckyRewardFrenzyMax *= 1 + Game.auraMult('Ancestral Metamorphosis') * 0.1;
-		luckyCur *= 1 + Game.auraMult('Ancestral Metamorphosis') * 0.1;*/
-		// Old way
-		if (Game.hasAura('Unholy Dominion')) {
-			luckyRewardMaxWrath *= 1.1;
-			luckyRewardFrenzyMaxWrath *= 1.1;
-			luckyCurWrath *= 1.1;
-		}
+		var luckyCur = CM.Cache.GoldenCookiesMult * luckyCurBase;
+		var luckyCurWrath = CM.Cache.WrathCookiesMult * luckyCurBase;
 		var luckySplit = luckyRewardMax != luckyRewardMaxWrath;
 
 		var luckyReqFrag = document.createDocumentFragment();
@@ -2439,18 +2452,8 @@ CM.Disp.AddMenuStats = function(title) {
 		var chainFrenzyRewardMax = CM.Cache.ChainFrenzyReward;
 		var chainFrenzyWrathRewardMax = CM.Cache.ChainFrenzyWrathReward;
 		var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.5);
-		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax);
-		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax);
-		if (Game.hasAura('Ancestral Metamorphosis')) {
-			chainRewardMax *= 1.1;
-			chainFrenzyRewardMax *= 1.1;
-			chainCur *= 1.1;
-		}
-		if (Game.hasAura('Unholy Dominion')) {
-			chainWrathRewardMax *= 1.1;
-			chainFrenzyWrathRewardMax *= 1.1;
-			chainCurWrath *= 1.1;
-		}
+		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax, CM.Cache.GoldenCookiesMult);
+		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax, CM.Cache.WrathCookiesMult);
 
 		var chainReqFrag = document.createDocumentFragment();
 		var chainReqSpan = document.createElement('span');
@@ -3582,6 +3585,7 @@ CM.Loop = function() {
 			CM.Cache.RemakeIncome();
 
 			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
+			CM.Cache.RemakeGoldenAndWrathCookiesMults();
 			CM.Cache.RemakeLucky();
 			CM.Cache.RemakeChain();
 

@@ -1579,23 +1579,8 @@ CM.Disp.AddMenuStats = function(title) {
 		var luckyRewardMaxWrath = CM.Cache.LuckyReward;
 		var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
 		var luckyRewardFrenzyMaxWrath = CM.Cache.LuckyRewardFrenzy;
-		var luckyCur = luckyCurBase;
-		var luckyCurWrath = luckyCurBase;
-		// Old way
-		if (Game.hasAura('Ancestral Metamorphosis')) {
-			luckyRewardMax *= 1.1;
-			luckyRewardFrenzyMax *= 1.1;
-			luckyCur *= 1.1;
-		}
-		/*luckyRewardMax *= 1 + Game.auraMult('Ancestral Metamorphosis') * 0.1;
-		luckyRewardFrenzyMax *= 1 + Game.auraMult('Ancestral Metamorphosis') * 0.1;
-		luckyCur *= 1 + Game.auraMult('Ancestral Metamorphosis') * 0.1;*/
-		// Old way
-		if (Game.hasAura('Unholy Dominion')) {
-			luckyRewardMaxWrath *= 1.1;
-			luckyRewardFrenzyMaxWrath *= 1.1;
-			luckyCurWrath *= 1.1;
-		}
+		var luckyCur = CM.Cache.GoldenCookiesMult * luckyCurBase;
+		var luckyCurWrath = CM.Cache.WrathCookiesMult * luckyCurBase;
 		var luckySplit = luckyRewardMax != luckyRewardMaxWrath;
 
 		var luckyReqFrag = document.createDocumentFragment();
@@ -1643,18 +1628,8 @@ CM.Disp.AddMenuStats = function(title) {
 		var chainFrenzyRewardMax = CM.Cache.ChainFrenzyReward;
 		var chainFrenzyWrathRewardMax = CM.Cache.ChainFrenzyWrathReward;
 		var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.5);
-		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax);
-		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax);
-		if (Game.hasAura('Ancestral Metamorphosis')) {
-			chainRewardMax *= 1.1;
-			chainFrenzyRewardMax *= 1.1;
-			chainCur *= 1.1;
-		}
-		if (Game.hasAura('Unholy Dominion')) {
-			chainWrathRewardMax *= 1.1;
-			chainFrenzyWrathRewardMax *= 1.1;
-			chainCurWrath *= 1.1;
-		}
+		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax, CM.Cache.GoldenCookiesMult);
+		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax, CM.Cache.WrathCookiesMult);
 
 		var chainReqFrag = document.createDocumentFragment();
 		var chainReqSpan = document.createElement('span');
