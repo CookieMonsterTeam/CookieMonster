@@ -1576,9 +1576,9 @@ CM.Disp.AddMenuStats = function(title) {
 		var luckyTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
 		var luckyCurBase = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) + 13;
 		var luckyRewardMax = CM.Cache.LuckyReward;
-		var luckyRewardMaxWrath = CM.Cache.LuckyReward;
+		var luckyRewardMaxWrath = CM.Cache.LuckyWrathReward;
 		var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
-		var luckyRewardFrenzyMaxWrath = CM.Cache.LuckyRewardFrenzy;
+		var luckyRewardFrenzyMaxWrath = CM.Cache.LuckyWrathRewardFrenzy;
 		var luckyCur = CM.Cache.GoldenCookiesMult * luckyCurBase;
 		var luckyCurWrath = CM.Cache.WrathCookiesMult * luckyCurBase;
 		var luckySplit = luckyRewardMax != luckyRewardMaxWrath;

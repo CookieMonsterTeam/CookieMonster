@@ -259,7 +259,7 @@ CM.Cache.RemakeGoldenAndWrathCookiesMults = function() {
 
 CM.Cache.RemakeLucky = function() {
 	var goldenMult = CM.Cache.GoldenCookiesMult;
-	// TODO wrathMult
+	var wrathMult = CM.Cache.WrathCookiesMult;
 
 	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
 	var cpsBuffMult = CM.Sim.getCPSBuffMult();
@@ -269,16 +269,15 @@ CM.Cache.RemakeLucky = function() {
 		CM.Cache.Lucky = 0;
 	}
 	CM.Cache.LuckyReward = goldenMult * (CM.Cache.Lucky * 0.15) + 13;
-	// TODO LuckyWrathReward
+	CM.Cache.LuckyWrathReward = wrathMult * (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
 	CM.Cache.LuckyRewardFrenzy = goldenMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
-	// TODO LuckyWrathRewardFrenzy
+	CM.Cache.LuckyWrathRewardFrenzy = wrathMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
 	CM.Cache.Conjure = CM.Cache.Lucky * 2;
  	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
 }
 
 CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
-	// TODO wrathMult
 	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
 	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
 	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
@@ -496,8 +495,10 @@ CM.Cache.WrathCookiesMult = 1;
 CM.Cache.NoGoldSwitchCookiesPS = 0;
 CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
+CM.Cache.LuckyWrathReward = 0;
 CM.Cache.LuckyFrenzy = 0;
 CM.Cache.LuckyRewardFrenzy = 0;
+CM.Cache.LuckyWrathRewardFrenzy = 0;
 CM.Cache.Conjure = 0;
 CM.Cache.ConjureReward = 0;
 CM.Cache.SeaSpec = 0;
@@ -2400,9 +2401,9 @@ CM.Disp.AddMenuStats = function(title) {
 		var luckyTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
 		var luckyCurBase = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) + 13;
 		var luckyRewardMax = CM.Cache.LuckyReward;
-		var luckyRewardMaxWrath = CM.Cache.LuckyReward;
+		var luckyRewardMaxWrath = CM.Cache.LuckyWrathReward;
 		var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
-		var luckyRewardFrenzyMaxWrath = CM.Cache.LuckyRewardFrenzy;
+		var luckyRewardFrenzyMaxWrath = CM.Cache.LuckyWrathRewardFrenzy;
 		var luckyCur = CM.Cache.GoldenCookiesMult * luckyCurBase;
 		var luckyCurWrath = CM.Cache.WrathCookiesMult * luckyCurBase;
 		var luckySplit = luckyRewardMax != luckyRewardMaxWrath;
