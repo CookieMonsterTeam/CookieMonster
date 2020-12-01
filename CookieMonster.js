@@ -3035,8 +3035,15 @@ CM.Disp.Tooltip = function(type, name) {
 		tooltip.appendChild(pp);
 		tooltip.appendChild(header('Time Left'));
 		var time = document.createElement('div');
+		time.style.marginBottom = '4px';
 		time.id = 'CMTooltipTime';
 		tooltip.appendChild(time);
+		if (type == 'b') {
+			tooltip.appendChild(header('Production left till next achievement'));
+			var production = document.createElement('div');
+			production.id = 'CMTooltipProduction';
+			tooltip.appendChild(production);
+		}
 
 		area.appendChild(tooltip);
 	}
@@ -3079,6 +3086,19 @@ CM.Disp.UpdateTooltip = function() {
 						l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 						l('CMTooltipPP').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].pp, 2);
 						l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
+					}
+					if (CM.Config.TooltipBuildUp) {
+						for (var i in Game.Objects[CM.Disp.tooltipName].productionAchievs) {
+							if (!CM.Sim.Has(Game.Objects[CM.Disp.tooltipName].productionAchievs[i].achiev.name)) {
+								var nextProductionAchiev = Game.Objects[CM.Disp.tooltipName].productionAchievs[i]
+								break
+							}
+						}
+						if (typeof nextProductionAchiev != "undefined") {
+							l('CMTooltipProduction').className = "ProdAchievement" + CM.Disp.tooltipName;
+							l('CMTooltipProduction').textContent = Beautify(nextProductionAchiev.pow - CM.Sim.Objects[CM.Disp.tooltipName].totalCookies, 15);
+							l('CMTooltipProduction').style.color = "white";
+						}
 					}
 				}
 				else { // Upgrades
@@ -4013,6 +4033,7 @@ CM.Sim.CopyData = function() {
 		}
 		you.amount = me.amount;
 		you.level = me.level;
+		you.totalCookies = me.totalCookies;
 		if (me.minigameLoaded) you.minigameLoaded = me.minigameLoaded; you.minigame = me.minigame;
 	}
 

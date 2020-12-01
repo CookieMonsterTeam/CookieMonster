@@ -222,6 +222,7 @@ CM.Sim.CopyData = function() {
 		}
 		you.amount = me.amount;
 		you.level = me.level;
+		you.totalCookies = me.totalCookies;
 		if (me.minigameLoaded) you.minigameLoaded = me.minigameLoaded; you.minigame = me.minigame;
 	}
 
