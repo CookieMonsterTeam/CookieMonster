@@ -132,6 +132,7 @@ CM.Loop = function() {
 			CM.Cache.RemakeIncome();
 
 			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
+			CM.Cache.RemakeGoldenAndWrathCookiesMults();
 			CM.Cache.RemakeLucky();
 			CM.Cache.RemakeChain();
 
