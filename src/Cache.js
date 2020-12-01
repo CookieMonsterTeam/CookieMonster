@@ -422,6 +422,24 @@ CM.Cache.UpdateAvgCPS = function() {
 	}
 }
 
+CM.Cache.CalcMissingUpgrades = function() {
+	var currentMissingUpgrades = []
+	for (var i in CM.Cache.MissingUpgrades) {
+		if ((CM.Cache.MissingUpgrades[i].pool == "" || CM.Cache.MissingUpgrades[i].pool == "tech") && CM.Cache.MissingUpgrades[i].bought != 1) {
+			currentMissingUpgrades.push(CM.Cache.MissingUpgrades[i])
+		}
+	}
+	CM.Cache.MissingUpgrades = currentMissingUpgrades
+
+	var currentMissingCookies = []
+	for (var i in CM.Cache.MissingCookies) {
+		if (CM.Cache.MissingCookies[i].pool == "cookie" && CM.Cache.MissingCookies[i].bought != 1) {
+			currentMissingCookies.push(CM.Cache.MissingCookies[i])
+		}
+	}	
+	CM.Cache.MissingCookies = currentMissingCookies
+}
+
 CM.Cache.min = -1;
 CM.Cache.max = -1;
 CM.Cache.mid = -1;
@@ -460,4 +478,9 @@ CM.Cache.ClicksDiff;
 CM.Cache.AvgCPS = -1;
 CM.Cache.AvgCPSChoEgg = -1;
 CM.Cache.AvgClicks = -1;
+CM.Cache.MissingUpgrades = Game.Upgrades;
+CM.Cache.MissingCookies = Game.Upgrades;
+CM.Cache.UpgradesOwned = -1;
+CM.Cache.MissingUpgradesString = null;
+CM.Cache.MissingCookiesString = null;
 
