@@ -317,6 +317,7 @@ CM.ConfigDefault = {
 	ToolWrink: 1, 
 	TooltipLump: 1,
 	Stats: 1, 
+	MissingUpgrades: 0,
 	UpStats: 1, 
 	TimeFormat: 0, 
 	SayTime: 1, 
