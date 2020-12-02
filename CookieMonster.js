@@ -844,55 +844,30 @@ CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour hear
  * Disp *
  ********/
 
-CM.Disp.FormatTime = function(time, format) {
+// General functions to format or beautify strings
+
+CM.Disp.FormatTime = function(time, longFormat) {
 	if (time == Infinity) return time;
+	time = Math.ceil(time);
+	var y = Math.floor(time / 31557600);
+	var d = Math.floor(time % 31557600 / 86400);
+	var h = Math.floor(time % 86400 / 3600);
+	var m = Math.floor(time % 3600 / 60);
+	var s = Math.floor(time % 60);
+	var str = '';
 	if (CM.Config.TimeFormat) {
 		if (time > 3155760000) return 'XX:XX:XX:XX:XX';
-		time = Math.ceil(time);
-		var y = Math.floor(time / 31557600);
-		var d = Math.floor(time % 31557600 / 86400);
-		var h = Math.floor(time % 86400 / 3600);
-		var m = Math.floor(time % 3600 / 60);
-		var s = Math.floor(time % 60);
-		var str = '';
-		if (y < 10) {
-			str += '0';
-		}
-		str += y + ':';
-		if (d < 10) {
-			str += '0';
-		}
-		str += d + ':';
-		if (h < 10) {
-			str += '0';
-		}
-		str += h + ':';
-		if (m < 10) {
-			str += '0';
-		}
-		str += m + ':';
-		if (s < 10) {
-			str += '0';
-		}
-		str += s;
+		str += (y < 10 ? '0' : '') + y + ':';
+		str += (d < 10 ? '0' : '') + d + ':';
+		str += (h < 10 ? '0' : '') + h + ':';
+		str += (m < 10 ? '0' : '') + m + ':';
+		str += (s < 10 ? '0' : '') + s + ':';
 	} else {
-		if (time > 777600000) return format ? 'Over 9000 days!' : '>9000d';
-		time = Math.ceil(time);
-		var d = Math.floor(time / 86400);
-		var h = Math.floor(time % 86400 / 3600);
-		var m = Math.floor(time % 3600 / 60);
-		var s = Math.floor(time % 60);
-		var str = '';
-		if (d > 0) {
-			str += d + (format ? (d == 1 ? ' day' : ' days') : 'd') + ', ';
-		}
-		if (str.length > 0 || h > 0) {
-			str += h + (format ? (h == 1 ? ' hour' : ' hours') : 'h') + ', ';
-		}
-		if (str.length > 0 || m > 0) {
-			str += m + (format ? (m == 1 ? ' minute' : ' minutes') : 'm') + ', ';
-		}
-		str += s + (format ? (s == 1 ? ' second' : ' seconds') : 's');
+		if (time > 777600000) return longFormat ? 'Over 9000 days!' : '>9000d';
+		str += (d > 0 ? d + (longFormat ? (d == 1 ? ' day' : ' days') : 'd') + ', ': "");
+		if (str.length > 0 || h > 0) str += h + (longFormat ? (h == 1 ? ' hour' : ' hours') : 'h') + ', ';
+		if (str.length > 0 || m > 0) str += m + (longFormat ? (m == 1 ? ' minute' : ' minutes') : 'm') + ', ';
+		str += s + (longFormat ? (s == 1 ? ' second' : ' seconds') : 's');
 	}
 	return str;
 }
