@@ -3751,6 +3751,7 @@ CM.DelayInit = function() {
 	if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
 	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
 
+
 	Game.Win('Third-party');
 }
 
@@ -3832,7 +3833,7 @@ CM.ConfigDefault = {
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.031';
-CM.VersionMinor = '1';
+CM.VersionMinor = '2';
 
 /*******
  * Sim *
