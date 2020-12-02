@@ -235,6 +235,15 @@ CM.Cache.RemakeGoldenAndWrathCookiesMults = function() {
 	// Calculate final golden and wrath multipliers
 	CM.Cache.GoldenCookiesMult = mult * goldenMult;
 	CM.Cache.WrathCookiesMult = mult * wrathMult;
+
+	// Calculate Dragon's Fortune multiplier adjustment:
+	// If Dragon's Fortune (or Reality Bending) aura is active and there are currently no golden cookies,
+	// compute a multiplier adjustment to apply on the current CPS to simulate 1 golden cookie on screen.
+	// Otherwise, the aura effect will be factored in the base CPS making the multiplier not requiring adjustment.
+	CM.Cache.DragonsFortuneMultAdjustment = 1;
+	if (Game.shimmerTypes.golden.n === 0) {
+		CM.Cache.DragonsFortuneMultAdjustment *= 1 + CM.Sim.auraMult('Dragon\'s Fortune') * 1.23;
+	}
 }
 
 CM.Cache.RemakeLucky = function() {
@@ -242,6 +251,7 @@ CM.Cache.RemakeLucky = function() {
 	var wrathMult = CM.Cache.WrathCookiesMult;
 
 	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
+	CM.Cache.Lucky *= CM.Cache.DragonsFortuneMultAdjustment;
 	var cpsBuffMult = CM.Sim.getCPSBuffMult();
 	if (cpsBuffMult > 0) {
 		CM.Cache.Lucky /= cpsBuffMult;
@@ -271,6 +281,7 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
 
 CM.Cache.RemakeChain = function() {
 	var maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6;
+	maxPayout *= CM.Cache.DragonsFortuneMultAdjustment;
 	var cpsBuffMult = CM.Sim.getCPSBuffMult();
 	if (cpsBuffMult > 0) {
 		maxPayout /= cpsBuffMult;
@@ -472,6 +483,7 @@ CM.Cache.WrinkBank = -1;
 CM.Cache.WrinkGodBank = -1;
 CM.Cache.GoldenCookiesMult = 1;
 CM.Cache.WrathCookiesMult = 1;
+CM.Cache.DragonsFortuneMultAdjustment = 1;
 CM.Cache.NoGoldSwitchCookiesPS = 0;
 CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
