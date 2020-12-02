@@ -846,6 +846,10 @@ CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour hear
 
 // General functions to format or beautify strings
 
+/**
+ * This function returns time as a string depending on TimeFormat setting
+ * @param type Time as number, longFormat 1 or 0.
+ */
 CM.Disp.FormatTime = function(time, longFormat) {
 	if (time == Infinity) return time;
 	time = Math.ceil(time);
