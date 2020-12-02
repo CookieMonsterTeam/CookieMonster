@@ -19,6 +19,7 @@ CM.Cache.NextNumber = function(base) {
 
 CM.Cache.RemakeBuildingsPrices = function() {
 	for (var i in Game.Objects) {
+		CM.Cache.Objects[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 1);
 		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
 		CM.Cache.Objects100[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
 	}
@@ -47,8 +48,8 @@ CM.Cache.RemakeWrinkBank = function() {
 		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-		if (Game.hasGod) {
-			var godLvl = Game.hasGod('scorn');
+		if (CM.Sim.Objects.Temple.minigameLoaded) {
+			var godLvl = CM.Sim.hasGod('scorn');
 			if (godLvl == 1) sucked *= 1.15;
 			else if (godLvl == 2) sucked *= 1.1;
 			else if (godLvl == 3) sucked *= 1.05;
@@ -57,8 +58,8 @@ CM.Cache.RemakeWrinkBank = function() {
 	}
 	CM.Cache.WrinkBank = totalSucked;
 	CM.Cache.WrinkGodBank = totalSucked;
-	if (Game.hasGod) {
-		var godLvl = Game.hasGod('scorn');
+	if (CM.Sim.Objects.Temple.minigameLoaded) {
+		var godLvl = CM.Sim.hasGod('scorn');
 		if (godLvl == 2) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.1;
 		else if (godLvl == 3) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.05;
 		else if (godLvl != 1) CM.Cache.WrinkGodBank *= 1.15;
@@ -69,27 +70,113 @@ CM.Cache.RemakeBuildingsPP = function() {
 	CM.Cache.min = -1;
 	CM.Cache.max = -1;
 	CM.Cache.mid = -1;
-	for (var i in CM.Cache.Objects) {
-		//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
-		CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
-		if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
-		if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
-	}
-	CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-	for (var i in CM.Cache.Objects) {
-		var color = '';
-		if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
-		else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
-		else color = CM.Disp.colorYellow;
-		CM.Cache.Objects[i].color = color;
+	// Calculate PP and colors when compared to purchase of single optimal building
+	if (CM.Config.ColorPPBulkMode == 0) {
+		for (var i in CM.Cache.Objects) {
+			//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
+			if (Game.cookiesPs) {
+				CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+			} else {
+				CM.Cache.Objects[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+			}
+			if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
+			if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
+		}
+		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
+		for (var i in CM.Cache.Objects) {
+			var color = '';
+			if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+			else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+			else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+			else color = CM.Disp.colorYellow;
+			CM.Cache.Objects[i].color = color;
+		}
+		// Buildings for 10 amount
+		CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
+
+		// Buildings for 100 amount
+		CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
+	} 
+	// Calculate PP and colors when compared to purchase of selected bulk mode
+	else {
+		if (Game.buyBulk == 1) {
+			for (var i in CM.Cache.Objects) {
+				//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
+				if (Game.cookiesPs) {
+					CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+				} else {
+					CM.Cache.Objects[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+				}
+				if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
+				if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
+			}
+			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
+			for (var i in CM.Cache.Objects) {
+				var color = '';
+				if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+				else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+				else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+				else color = CM.Disp.colorYellow;
+				CM.Cache.Objects[i].color = color;
+			}
+			CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
+			CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
+		}
+		else if (Game.buyBulk == 10) {
+			for (var i in CM.Cache.Objects) {
+				if (Game.cookiesPs) {
+					CM.Cache.Objects10[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects10[i].bonus);
+				} else {
+					CM.Cache.Objects10[i].pp = (Game.Objects[i].bulkPrice / CM.Cache.Objects10[i].bonus);
+				}
+				if (CM.Cache.min == -1 || CM.Cache.Objects10[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects10[i].pp;
+				if (CM.Cache.max == -1 || CM.Cache.Objects10[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects10[i].pp;
+			}
+			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
+			for (var i in CM.Cache.Objects) {
+				var color = '';
+				if (CM.Cache.Objects10[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+				else if (CM.Cache.Objects10[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+				else if (CM.Cache.Objects10[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+				else color = CM.Disp.colorYellow;
+				CM.Cache.Objects10[i].color = color;
+			}
+			CM.Cache.RemakeBuildingsOtherPP(1, 'Objects');
+			CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
+		}
+		else if (Game.buyBulk == 100) {
+			for (var i in CM.Cache.Objects) {
+				if (Game.cookiesPs) {
+					CM.Cache.Objects100[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects100[i].bonus);
+				} else {
+					CM.Cache.Objects100[i].pp = (Game.Objects[i].bulkPrice / CM.Cache.Objects100[i].bonus);
+				}
+				if (CM.Cache.min == -1 || CM.Cache.Objects100[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects100[i].pp;
+				if (CM.Cache.max == -1 || CM.Cache.Objects100[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects100[i].pp;
+			}
+			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
+			for (var i in CM.Cache.Objects) {
+				var color = '';
+				if (CM.Cache.Objects100[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+				else if (CM.Cache.Objects100[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+				else if (CM.Cache.Objects100[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+				else color = CM.Disp.colorYellow;
+				CM.Cache.Objects100[i].color = color;
+			}
+			CM.Cache.RemakeBuildingsOtherPP(1, 'Objects');
+			CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
+		}
 	}
 }
 
 CM.Cache.RemakeUpgradePP = function() {
 	for (var i in CM.Cache.Upgrades) {
 		//CM.Cache.Upgrades[i].pp = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
-		CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
+		if (Game.cookiesPs) {
+			CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
+		} else {
+			CM.Cache.Upgrades[i].pp = (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
+		}
 		if (isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = Infinity;
 		var color = '';
 		if (CM.Cache.Upgrades[i].pp <= 0 || CM.Cache.Upgrades[i].pp == Infinity) color = CM.Disp.colorGray;
@@ -106,7 +193,11 @@ CM.Cache.RemakeUpgradePP = function() {
 CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 	for (var i in CM.Cache[target]) {
 		//CM.Cache[target][i].pp = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
-		CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
+		if (Game.cookiesPs) {
+			CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
+		} else {
+			CM.Cache[target][i].pp = (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
+		}
 		var color = '';
 		if (CM.Cache[target][i].pp <= 0 || CM.Cache[target][i].pp == Infinity) color = CM.Disp.colorGray;
 		else if (CM.Cache[target][i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
@@ -120,46 +211,90 @@ CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 }
 
 CM.Cache.RemakePP = function() {
-	// Buildings for 1 amount
+	// Buildings
 	CM.Cache.RemakeBuildingsPP();
 
 	// Upgrades
 	CM.Cache.RemakeUpgradePP();
+}
 
-	// Buildings for 10 amount
-	CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
+CM.Cache.RemakeGoldenAndWrathCookiesMults = function() {
+	var goldenMult = 1;
+	var wrathMult = 1;
+	var mult = 1;
 
-	// Buildings for 100 amount
-	CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
+	// Factor auras and upgrade in mults
+	if (CM.Sim.Has('Green yeast digestives')) mult *= 1.01;
+	if (CM.Sim.Has('Dragon fang')) mult *= 1.03;
+
+	goldenMult *= 1 + CM.Sim.auraMult('Ancestral Metamorphosis') * 0.1;
+	goldenMult *= CM.Sim.eff('goldenCookieGain');
+	wrathMult *= 1 + CM.Sim.auraMult('Unholy Dominion') * 0.1;
+	wrathMult *= CM.Sim.eff('wrathCookieGain');
+
+	// Calculate final golden and wrath multipliers
+	CM.Cache.GoldenCookiesMult = mult * goldenMult;
+	CM.Cache.WrathCookiesMult = mult * wrathMult;
+
+	// Calculate Dragon's Fortune multiplier adjustment:
+	// If Dragon's Fortune (or Reality Bending) aura is active and there are currently no golden cookies,
+	// compute a multiplier adjustment to apply on the current CPS to simulate 1 golden cookie on screen.
+	// Otherwise, the aura effect will be factored in the base CPS making the multiplier not requiring adjustment.
+	CM.Cache.DragonsFortuneMultAdjustment = 1;
+	if (Game.shimmerTypes.golden.n === 0) {
+		CM.Cache.DragonsFortuneMultAdjustment *= 1 + CM.Sim.auraMult('Dragon\'s Fortune') * 1.23;
+	}
 }
 
 CM.Cache.RemakeLucky = function() {
-	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 60 * 15) / 0.15;
-	CM.Cache.Lucky /= CM.Sim.getCPSBuffMult();
-	CM.Cache.LuckyReward = (CM.Cache.Lucky * 0.15) + 13;
+	var goldenMult = CM.Cache.GoldenCookiesMult;
+	var wrathMult = CM.Cache.WrathCookiesMult;
+
+	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
+	CM.Cache.Lucky *= CM.Cache.DragonsFortuneMultAdjustment;
+	var cpsBuffMult = CM.Sim.getCPSBuffMult();
+	if (cpsBuffMult > 0) {
+		CM.Cache.Lucky /= cpsBuffMult;
+	} else {
+		CM.Cache.Lucky = 0;
+	}
+	CM.Cache.LuckyReward = goldenMult * (CM.Cache.Lucky * 0.15) + 13;
+	CM.Cache.LuckyWrathReward = wrathMult * (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
-	CM.Cache.LuckyRewardFrenzy = (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.LuckyRewardFrenzy = goldenMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.LuckyWrathRewardFrenzy = wrathMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.Conjure = CM.Cache.Lucky * 2;
+ 	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
 }
 
-CM.Cache.MaxChainMoni = function(digit, maxPayout) {
+CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
 	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
-	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
-	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
+	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
 	while (nextMoni < maxPayout) {
 		chain++;
-		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit), maxPayout));
-		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit), maxPayout));
+		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
+		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
 	}
 	return moni;
 }
 
 CM.Cache.RemakeChain = function() {
 	var maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6;
-	maxPayout /= CM.Sim.getCPSBuffMult();
+	maxPayout *= CM.Cache.DragonsFortuneMultAdjustment;
+	var cpsBuffMult = CM.Sim.getCPSBuffMult();
+	if (cpsBuffMult > 0) {
+		maxPayout /= cpsBuffMult;
+	} else {
+		maxPayout = 0;
+	}
 
-	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout);
+	var goldenMult = CM.Cache.GoldenCookiesMult;
+	var wrathMult = CM.Cache.WrathCookiesMult;
 
-	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout);
+	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout, goldenMult);
+
+	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout, wrathMult);
 
 	if (maxPayout < CM.Cache.ChainReward) {
 		CM.Cache.Chain = 0;
@@ -174,9 +309,9 @@ CM.Cache.RemakeChain = function() {
 		CM.Cache.ChainWrath = CM.Cache.NextNumber(CM.Cache.ChainWrathReward) / 0.5;
 	}
 
-	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7);
+	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7, goldenMult);
 
-	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7);
+	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7, wrathMult);
 
 	if ((maxPayout * 7) < CM.Cache.ChainFrenzyReward) {
 		CM.Cache.ChainFrenzy = 0;
@@ -203,43 +338,19 @@ CM.Cache.RemakeSeaSpec = function() {
 }
 
 CM.Cache.RemakeSellForChoEgg = function() {
-	if (Game.auraMult('Earth Shatterer') == 1.1) {
-		var sellTotal = 0;
-		for (var i in Game.Objects) {
-			var me = Game.Objects[i];
-			sellTotal += CM.Sim.BuildingSell(me, me.basePrice, me.amount, me.free, me.amount, 0);
+	var sellTotal = 0;
+	// Compute cookies earned by selling stock market goods
+	if (Game.Objects.Bank.minigameLoaded) {
+		var marketGoods = Game.Objects.Bank.minigame.goods;
+		var goodsVal = 0;
+		for (var i in marketGoods) {
+			var marketGood = marketGoods[i];
+			goodsVal += marketGood.stock * marketGood.val;
 		}
+		sellTotal += goodsVal * Game.cookiesPsRawHighest;
 	}
-	else {
-		var highestBuilding = '';
-		for (var i in Game.Objects) {
-			if (Game.Objects[i].amount > 0) highestBuilding = i;
-		}
-		var secondHighBuild = '';
-		if (Game.auraMult('Earth Shatterer') == 0 && highestBuilding != '') {
-			if (Game.Objects[highestBuilding].amount > 1) {
-				secondHighBuild = highestBuilding;
-			}
-			else {
-				for (var i in Game.Objects) {
-					if (i != highestBuilding && Game.Objects[i].amount > 0) secondHighBuild = i;
-				}
-			}
-		}
-		
-		var sellTotal = 0;
-		for (var i in Game.Objects) {
-			var me = Game.Objects[i];
-			var amount = me.amount;
-			if (i == highestBuilding) {
-				amount -= 1;
-			}
-			if (i == secondHighBuild) {
-				amount -= 1;
-			}
-			sellTotal += CM.Sim.BuildingSell(me, me.basePrice, amount, me.free, amount, 1);
-		}
-	}
+	// Compute cookies earned by selling all buildings with optimal auras (ES + RB)
+	sellTotal += CM.Sim.SellBuildingsForChoEgg();
 	CM.Cache.SellForChoEgg = sellTotal;
 }
 
@@ -347,16 +458,41 @@ CM.Cache.UpdateAvgCPS = function() {
 	}
 }
 
+CM.Cache.CalcMissingUpgrades = function() {
+	var currentMissingUpgrades = []
+	for (var i in CM.Cache.MissingUpgrades) {
+		if ((CM.Cache.MissingUpgrades[i].pool == "" || CM.Cache.MissingUpgrades[i].pool == "tech") && CM.Cache.MissingUpgrades[i].bought != 1) {
+			currentMissingUpgrades.push(CM.Cache.MissingUpgrades[i])
+		}
+	}
+	CM.Cache.MissingUpgrades = currentMissingUpgrades
+
+	var currentMissingCookies = []
+	for (var i in CM.Cache.MissingCookies) {
+		if (CM.Cache.MissingCookies[i].pool == "cookie" && CM.Cache.MissingCookies[i].bought != 1) {
+			currentMissingCookies.push(CM.Cache.MissingCookies[i])
+		}
+	}	
+	CM.Cache.MissingCookies = currentMissingCookies
+}
+
 CM.Cache.min = -1;
 CM.Cache.max = -1;
 CM.Cache.mid = -1;
 CM.Cache.WrinkBank = -1;
 CM.Cache.WrinkGodBank = -1;
+CM.Cache.GoldenCookiesMult = 1;
+CM.Cache.WrathCookiesMult = 1;
+CM.Cache.DragonsFortuneMultAdjustment = 1;
 CM.Cache.NoGoldSwitchCookiesPS = 0;
 CM.Cache.Lucky = 0;
 CM.Cache.LuckyReward = 0;
+CM.Cache.LuckyWrathReward = 0;
 CM.Cache.LuckyFrenzy = 0;
 CM.Cache.LuckyRewardFrenzy = 0;
+CM.Cache.LuckyWrathRewardFrenzy = 0;
+CM.Cache.Conjure = 0;
+CM.Cache.ConjureReward = 0;
 CM.Cache.SeaSpec = 0;
 CM.Cache.Chain = 0;
 CM.Cache.ChainWrath = 0;
@@ -383,4 +519,9 @@ CM.Cache.ClicksDiff;
 CM.Cache.AvgCPS = -1;
 CM.Cache.AvgCPSChoEgg = -1;
 CM.Cache.AvgClicks = -1;
+CM.Cache.MissingUpgrades = Game.Upgrades;
+CM.Cache.MissingCookies = Game.Upgrades;
+CM.Cache.UpgradesOwned = -1;
+CM.Cache.MissingUpgradesString = null;
+CM.Cache.MissingCookiesString = null;
 

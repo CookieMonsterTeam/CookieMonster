@@ -18,14 +18,14 @@ CM.ReplaceNative = function() {
 	eval('CM.Backup.tooltip.drawMod = ' + Game.tooltip.draw.toString().split('this').join('Game.tooltip'));
 	Game.tooltip.draw = function(from, text, origin) {
 		CM.Backup.tooltip.drawMod(from, text, origin);
-		CM.Disp.DrawTooltipWarnCaut();
+		CM.Disp.DrawTooltipWarn();
 	}
 
 	CM.Backup.tooltip.update = Game.tooltip.update;
 	eval('CM.Backup.tooltip.updateMod = ' + Game.tooltip.update.toString().split('this.').join('Game.tooltip.'));
 	Game.tooltip.update = function() {
 		CM.Backup.tooltip.updateMod();
-		CM.Disp.UpdateTooltipWarnCaut();
+		CM.Disp.UpdateTooltipWarn();
 		CM.Disp.UpdateTooltipLocation();
 	}
 
@@ -132,6 +132,7 @@ CM.Loop = function() {
 			CM.Cache.RemakeIncome();
 
 			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
+			CM.Cache.RemakeGoldenAndWrathCookiesMults();
 			CM.Cache.RemakeLucky();
 			CM.Cache.RemakeChain();
 
@@ -195,6 +196,12 @@ CM.Loop = function() {
 	// Check Garden Tick
 	CM.Disp.CheckGardenTick();
 
+	// Check Grimoire Meter
+	CM.Disp.CheckMagicMeter();
+
+	// Check Wrinklers
+	CM.Disp.CheckWrinklerCount();
+
 	// Update Average CPS (might need to move)
 	CM.Cache.UpdateAvgCPS()
 }
@@ -225,11 +232,10 @@ CM.DelayInit = function() {
 	CM.Disp.CreateUpgradeBar();
 	CM.Disp.CreateWhiteScreen();
 	CM.Disp.CreateFavicon();
-	CM.Disp.CreateGCTimer();
 	for (var i in CM.Disp.TooltipText) {
 		CM.Disp.CreateTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
-	CM.Disp.CreateTooltipWarnCaut();
+	CM.Disp.CreateTooltipWarn();
 	CM.Disp.AddTooltipBuild();
 	CM.Disp.AddTooltipGrimoire();
 	CM.Disp.AddTooltipLump();
@@ -246,6 +252,7 @@ CM.DelayInit = function() {
 	if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
 	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
 
+
 	Game.Win('Third-party');
 }
 
@@ -258,23 +265,27 @@ CM.ConfigDefault = {
 	TimerBarPos: 0, 
 	BuildColor: 1, 
 	BulkBuildColor: 0, 
+	ColorPPBulkMode: 0,
 	UpBarColor: 1, 
 	UpgradeBarFixedPos: 1,
 	CalcWrink: 0, 
 	CPSMode: 1, 
 	AvgCPSHist: 3, 
 	AvgClicksHist: 0, 
-	ToolWarnCautBon: 0, 
+	ToolWarnBon: 0, 
+	GCNotification: 0,
 	GCFlash: 1, 
 	GCSound: 1,  
 	GCVolume: 100, 
 	GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', 
 	GCTimer: 1, 
 	Favicon: 1, 
+	FortuneNotification: 0,
 	FortuneFlash: 1, 
 	FortuneSound: 1,  
 	FortuneVolume: 100, 
 	FortuneSoundURL: 'https://freesound.org/data/previews/174/174027_3242494-lq.mp3',
+	SeaNotification: 0,
 	SeaFlash: 1, 
 	SeaSound: 1,  
 	SeaVolume: 100, 
@@ -283,21 +294,39 @@ CM.ConfigDefault = {
 	GardSound: 1,  
 	GardVolume: 100, 
 	GardSoundURL: 'https://freesound.org/data/previews/103/103046_861714-lq.mp3', 
+	MagicNotification: 0,
+	MagicFlash: 1, 
+	MagicSound: 1,  
+	MagicVolume: 100, 
+	MagicSoundURL: 'https://freesound.org/data/previews/221/221683_1015240-lq.mp3',
+	WrinklerNotification: 0,
+	WrinklerFlash: 1, 
+	WrinklerSound: 1,  
+	WrinklerVolume: 100, 
+	WrinklerSoundURL: 'https://freesound.org/data/previews/124/124186_8043-lq.mp3', 
+	WrinklerMaxNotification: 0,
+	WrinklerMaxFlash: 1, 
+	WrinklerMaxSound: 1,  
+	WrinklerMaxVolume: 100, 
+	WrinklerMaxSoundURL: 'https://freesound.org/data/previews/152/152743_15663-lq.mp3', 
 	Title: 1, 
 	TooltipBuildUp: 1, 
 	TooltipAmor: 0, 
-	ToolWarnCaut: 1, 
-	ToolWarnCautPos: 1, 
+	ToolWarnLucky: 1,
+	ToolWarnConjure: 1, 
+	ToolWarnPos: 1, 
 	TooltipGrim:1, 
 	ToolWrink: 1, 
 	TooltipLump: 1,
 	Stats: 1, 
+	MissingUpgrades: 0,
 	UpStats: 1, 
 	TimeFormat: 0, 
 	SayTime: 1, 
 	GrimoireBar: 1, 
 	Scale: 2, 
-	StatsPref: {Lucky: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
+	MenuPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Other: 1}, 
+	StatsPref: {Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
 	Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
 	SortBuildings: 0,
 	SortUpgrades: 0
@@ -305,5 +334,5 @@ CM.ConfigDefault = {
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.031';
-CM.VersionMinor = '1';
+CM.VersionMinor = '2';
 
