@@ -971,7 +971,7 @@ CM.Disp.CreateUpgradeBarLegend = function() {
 
 /**
  * This function creates a white square over the full screen and appends it to l('wrapper')
- * It is used (and called) by CM.Disp.Flash() to create the effect of a flash
+ * It is used by CM.Disp.Flash() to create the effect of a flash and called by CM.DelayInit()
  */
 CM.Disp.CreateWhiteScreen = function() {
 	CM.Disp.WhiteScreen = document.createElement('div');
@@ -1893,40 +1893,84 @@ CM.Disp.RefreshMenu = function() {
 }
 
 /********
- * Section: Functions related to the Options page
- * TODO: Annotate functions */
+ * Section: Functions related to the Options/Preferences page
 
-CM.Disp.AddMenuPref = function(title) {
-	var header = function(text, config) {
-		var div = document.createElement('div');
-		div.className = 'listing';
-		div.style.padding = '5px 16px';
-		div.style.opacity = '0.7';
-		div.style.fontSize = '17px';
-		div.style.fontFamily = '\"Kavoon\", Georgia, serif';
-		div.appendChild(document.createTextNode(text + ' '));
-		var span = document.createElement('span');
-		span.style.cursor = 'pointer';
-		span.style.display = 'inline-block';
-		span.style.height = '14px';
-		span.style.width = '14px';
-		span.style.borderRadius = '7px';
-		span.style.textAlign = 'center';
-		span.style.backgroundColor = '#C0C0C0';
-		span.style.color = 'black';
-		span.style.fontSize = '13px';
-		span.style.verticalAlign = 'middle';
-		span.textContent = CM.Config.MenuPref[config] ? '-' : '+';
-		span.onclick = function() {CM.ToggleMenuConfig(config); Game.UpdateMenu();};
-		div.appendChild(span);
-		return div;
-	}
-
+/**
+ * This function adds the options/settings of CookieMonster to the options page
+ * It is called by CM.Disp.AddMenu
+ * @param {function} title	A function that returns the title of CookieMonster pre-styled
+ */
+CM.Disp.AddMenuPref = function(title) {	
 	var frag = document.createDocumentFragment();
-
 	frag.appendChild(title());
 
-	var listing = function(config) {
+	for (var group in CM.ConfigGroups) {
+		groupObject = CM.Disp.CreatePrefHeader(group, CM.ConfigGroups[group]) // (group, display-name of group)
+		frag.appendChild(groupObject)
+		if (CM.Config.OptionsPref[group]) { // 0 is show, 1 is collapsed
+			for (var option in CM.ConfigData) {
+				if (CM.ConfigData[option].group == group) frag.appendChild(CM.Disp.CreatePrefOption(option))
+			}
+		}
+	}
+	
+	var resDef = document.createElement('div');
+	resDef.className = 'listing';
+	var resDefBut = document.createElement('a');
+	resDefBut.className = 'option';
+	resDefBut.onclick = function() {CM.RestoreDefault();};
+	resDefBut.textContent = 'Restore Default';
+	resDef.appendChild(resDefBut);
+	frag.appendChild(resDef);
+	
+	l('menu').childNodes[2].insertBefore(frag, l('menu').childNodes[2].childNodes[l('menu').childNodes[2].childNodes.length - 1]);
+	
+	// TODO: What does this do? @DanielNoord
+	CM.Disp.FormatButtonOnClickBak = l('formatButton').onclick;
+	eval('l(\'formatButton\').onclick = ' + l('formatButton').onclick.toString().split('mp3\');').join('mp3\'); CM.Disp.RefreshScale();'));
+	//l('formatButton').onclick = function() {Game.Toggle('format', 'formatButton', 'Short numbers OFF', 'Short numbers ON', '1'); PlaySound('snd/tick.mp3'); CM.Disp.RefreshScale();};
+}
+
+/**
+ * This function creates a header-object for the options page
+ * It is called by CM.Disp.AddMenuPref()
+ * @param {string}		config	The name of the Config-group
+ * @param {string}		text	The to-be displayed name of the header
+ * @returns	{object}	div		The header object
+ */
+CM.Disp.CreatePrefHeader = function(config, text) {
+	var div = document.createElement('div');
+	div.className = 'listing';
+	div.style.padding = '5px 16px';
+	div.style.opacity = '0.7';
+	div.style.fontSize = '17px';
+	div.style.fontFamily = '\"Kavoon\", Georgia, serif';
+	div.appendChild(document.createTextNode(text + ' '));
+	var span = document.createElement('span'); // Creates the +/- button
+	span.style.cursor = 'pointer';
+	span.style.display = 'inline-block';
+	span.style.height = '14px';
+	span.style.width = '14px';
+	span.style.borderRadius = '7px';
+	span.style.textAlign = 'center';
+	span.style.backgroundColor = '#C0C0C0';
+	span.style.color = 'black';
+	span.style.fontSize = '13px';
+	span.style.verticalAlign = 'middle';
+	span.textContent = CM.Config.OptionsPref[config] ? '-' : '+';
+	span.onclick = function() {CM.ToggleOptionsConfig(config); Game.UpdateMenu();};
+	div.appendChild(span);
+	return div;
+}
+
+/**
+ * This function creates an option-object for the options page
+ * It is called by CM.Disp.AddMenuPref()
+ * @param {string}		config	The name of the option
+ * @returns	{object}	div		The option object
+ */
+CM.Disp.CreatePrefOption = function(config) {
+	if (CM.ConfigData[config].type == "bool") {
 		var div = document.createElement('div');
 		div.className = 'listing';
 		var a = document.createElement('a');
@@ -1945,8 +1989,7 @@ CM.Disp.AddMenuPref = function(title) {
 		div.appendChild(label);
 		return div;
 	}
-	
-	var vol = function(config) {
+	else if (CM.ConfigData[config].type == "vol") {
 		var volConfig = config;
 		var volume = document.createElement('div');
 		volume.className = 'listing';
@@ -1969,8 +2012,7 @@ CM.Disp.AddMenuPref = function(title) {
 		volume.appendChild(volLabel);
 		return volume;
 	}
-
-	var url = function(config) {
+	else if (CM.ConfigData[config].type == "url") {
 		var div = document.createElement('div');
 		div.className = 'listing';
 		var span = document.createElement('span');
@@ -2001,18 +2043,7 @@ CM.Disp.AddMenuPref = function(title) {
 		div.appendChild(label);
 		return div;
 	}
-
-	frag.appendChild(header('Bars/Colors', 'BarsColors'));
-	if (CM.Config.MenuPref.BarsColors) {
-		frag.appendChild(listing('BotBar'));
-		frag.appendChild(listing('TimerBar'));
-		frag.appendChild(listing('TimerBarPos'));
-		frag.appendChild(listing('SortBuildings'));
-		frag.appendChild(listing('SortUpgrades'));
-		frag.appendChild(listing('BuildColor'));
-		frag.appendChild(listing('BulkBuildColor'));
-		frag.appendChild(listing('ColorPPBulkMode'));
-		frag.appendChild(listing('UpBarColor'));
+	else if (CM.ConfigData[config].type == "color") {
 		for (var i = 0; i < CM.Disp.colors.length; i++) {
 			var div = document.createElement('div');
 			div.className = 'listing';
@@ -2027,101 +2058,9 @@ CM.Disp.AddMenuPref = function(title) {
 			var label = document.createElement('label');
 			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
 			div.appendChild(label);
-			frag.appendChild(div);
+			return div;
 		}
-		frag.appendChild(listing('UpgradeBarFixedPos'));
 	}
-
-	frag.appendChild(header('Calculation', 'Calculation'));
-	if (CM.Config.MenuPref.Calculation) {
-		frag.appendChild(listing('CalcWrink'));
-		frag.appendChild(listing('CPSMode'));
-		frag.appendChild(listing('AvgCPSHist'));
-		frag.appendChild(listing('AvgClicksHist'));
-		frag.appendChild(listing('ToolWarnBon'));
-	}
-
-	frag.appendChild(header('Notification', 'Notification'));
-	if (CM.Config.MenuPref.Notification) {
-		frag.appendChild(listing('GCNotification'));
-		frag.appendChild(listing('GCFlash'));
-		frag.appendChild(listing('GCSound'));
-		frag.appendChild(vol('GCVolume'));
-		frag.appendChild(url('GCSoundURL'));
-		frag.appendChild(listing('GCTimer'));
-		frag.appendChild(listing('Favicon'));
-		frag.appendChild(listing('FortuneNotification'));
-		frag.appendChild(listing('FortuneFlash'));
-		frag.appendChild(listing('FortuneSound'));
-		frag.appendChild(vol('FortuneVolume'));
-		frag.appendChild(url('FortuneSoundURL'));
-		frag.appendChild(listing('SeaNotification'));
-		frag.appendChild(listing('SeaFlash'));
-		frag.appendChild(listing('SeaSound'));
-		frag.appendChild(vol('SeaVolume'));
-		frag.appendChild(url('SeaSoundURL'));
-		frag.appendChild(listing('GardFlash'));
-		frag.appendChild(listing('GardSound'));
-		frag.appendChild(vol('GardVolume'));
-		frag.appendChild(url('GardSoundURL'));
-		frag.appendChild(listing('MagicNotification'));
-		frag.appendChild(listing('MagicFlash'));
-		frag.appendChild(listing('MagicSound'));
-		frag.appendChild(vol('MagicVolume'));
-		frag.appendChild(url('MagicSoundURL'));
-		frag.appendChild(listing('WrinklerNotification'));
-		frag.appendChild(listing('WrinklerFlash'));
-		frag.appendChild(listing('WrinklerSound'));
-		frag.appendChild(vol('WrinklerVolume'));
-		frag.appendChild(url('WrinklerSoundURL'));
-		frag.appendChild(listing('WrinklerMaxNotification'));
-		frag.appendChild(listing('WrinklerMaxFlash'));
-		frag.appendChild(listing('WrinklerMaxSound'));
-		frag.appendChild(vol('WrinklerMaxVolume'));
-		frag.appendChild(url('WrinklerMaxSoundURL'));
-		frag.appendChild(listing('Title'));
-	}
-
-	frag.appendChild(header('Tooltip', 'Tooltip'));
-	if (CM.Config.MenuPref.Tooltip) {
-		frag.appendChild(listing('TooltipBuildUp'));
-		frag.appendChild(listing('TooltipAmor'));
-		frag.appendChild(listing('ToolWarnLucky'));
-		frag.appendChild(listing('ToolWarnConjure'));
-		frag.appendChild(listing('ToolWarnPos'));
-		frag.appendChild(listing('TooltipGrim'));
-		frag.appendChild(listing('ToolWrink'));
-		frag.appendChild(listing('TooltipLump'));
-	}
-
-	frag.appendChild(header('Statistics', 'Statistics'));
-	if (CM.Config.MenuPref.Statistics) {
-		frag.appendChild(listing('Stats'));
-		frag.appendChild(listing('MissingUpgrades'));
-		frag.appendChild(listing('UpStats'));
-		frag.appendChild(listing('TimeFormat'));
-		frag.appendChild(listing('SayTime'));
-		frag.appendChild(listing('GrimoireBar'));
-	}
-
-	frag.appendChild(header('Other', 'Other'));
-	if (CM.Config.MenuPref.Other) {
-		frag.appendChild(listing('Scale'));
-		var resDef = document.createElement('div');
-		resDef.className = 'listing';
-		var resDefBut = document.createElement('a');
-		resDefBut.className = 'option';
-		resDefBut.onclick = function() {CM.RestoreDefault();};
-		resDefBut.textContent = 'Restore Default';
-		resDef.appendChild(resDefBut);
-		frag.appendChild(resDef);
-	}
-
-	l('menu').childNodes[2].insertBefore(frag, l('menu').childNodes[2].childNodes[l('menu').childNodes[2].childNodes.length - 1]);
-
-	CM.Disp.FormatButtonOnClickBak = l('formatButton').onclick;
-	eval('l(\'formatButton\').onclick = ' + l('formatButton').onclick.toString().split('mp3\');').join('mp3\'); CM.Disp.RefreshScale();'));
-	//l('formatButton').onclick = function() {Game.Toggle('format', 'formatButton', 'Short numbers OFF', 'Short numbers ON', '1'); PlaySound('snd/tick.mp3'); CM.Disp.RefreshScale();};
 }
 
 /********
