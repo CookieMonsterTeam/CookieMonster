@@ -165,13 +165,14 @@ CM.Loop = function() {
 		CM.Cache.RemakePP();
 
 		// Update colors
-		CM.Disp.UpdateBotBarOther();
 		CM.Disp.UpdateBuildings();
 		CM.Disp.UpdateUpgrades();
 
 		// Redraw timers
-		CM.Disp.UpdateBotBarTime();
 		CM.Disp.UpdateTimerBar();
+
+		// Update Bottom Bar
+		CM.Disp.UpdateBotBar();
 
 		// Update Tooltip
 		CM.Disp.UpdateTooltip();

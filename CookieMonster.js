@@ -1155,13 +1155,12 @@ CM.Disp.RefreshScale = function() {
 	Game.RefreshStore();
 	Game.RebuildUpgrades();
 
-	CM.Disp.UpdateBotBarOther();
+	CM.Disp.UpdateBotBar();
 	CM.Disp.UpdateBuildings();
 	CM.Disp.UpdateUpgrades();
 }
 /********
- * Section: General functions to format or beautify strings 
- * TODO: Annotate most functions */
+ * Section: General functions to format or beautify strings */
 
 /**
  * This function returns time as a string depending on TimeFormat setting
@@ -1202,7 +1201,7 @@ CM.Disp.FormatTime = function(time, longFormat) {
  * @param	{number}	forced	Used to force (type 3) in certains cases
  * @return	{string}			Formatted number
  * TODO: Add functionality to choose amount of decimals and separators
- */
+*/
 CM.Disp.Beautify = function(num, frac, forced) {
 	var decimals = 3; // This can be used to implement function to let user choose amount of decimals
 	if (CM.Config.Scale == 0) {
@@ -1238,7 +1237,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 				i++
 			}
 			answer += (i + 1 < restOfNumber.length ? Math.round(restOfNumber[i] + '.' + restOfNumber[i + 1]) : restOfNumber[i]);
-			
+
 			// answer is now "xxx.xx" (e.g., 123456789 would be 123.46)
 			if (CM.Config.Scale == 1 && !forced || forced == 1) { // Metric scale, 123456789 => 123.457 M
 				if (timesTenToPowerThree - 1 < CM.Disp.metric.length) {
@@ -1277,14 +1276,102 @@ CM.Disp.Beautify = function(num, frac, forced) {
 }
 
 /********
- * Section: Functions related to the Bottom Bar 
- * TODO: Annotate functions */
+ * Section: Functions related to the Bottom Bar */
+
+ /**
+ * This function toggle the bottom bar
+ * It is called by CM.Disp.UpdateAscendState() and a change in CM.Config.BotBar
+ */
+CM.Disp.ToggleBotBar = function() {
+	if (CM.Config.BotBar == 1) {
+		CM.Disp.BotBar.style.display = '';
+		CM.Disp.UpdateBotBar();
+	}
+	else {
+		CM.Disp.BotBar.style.display = 'none';
+	}
+	CM.Disp.UpdateBotTimerBarPosition();
+}
+
+ /**
+ * This function creates the bottom bar and appends it to l('wrapper')
+ * It is called by CM.DelayInit and a change in CM.Config.BotBar
+ */
+CM.Disp.CreateBotBar = function() {
+	CM.Disp.BotBar = document.createElement('div');
+	CM.Disp.BotBar.id = 'CMBotBar';
+	CM.Disp.BotBar.style.height = '69px';
+	CM.Disp.BotBar.style.width = '100%';
+	CM.Disp.BotBar.style.position = 'absolute';
+	CM.Disp.BotBar.style.display = 'none';
+	CM.Disp.BotBar.style.backgroundColor = '#262224';
+	// This is old code for very old browsersand should not be needed anymore
+	//CM.Disp.BotBar.style.backgroundImage = '-moz-linear-gradient(top, #4d4548, #000000)';
+	//CM.Disp.BotBar.style.backgroundImage = '-o-linear-gradient(top, #4d4548, #000000)';
+	//CM.Disp.BotBar.style.backgroundImage = '-webkit-linear-gradient(top, #4d4548, #000000)';
+	CM.Disp.BotBar.style.backgroundImage = 'linear-gradient(to bottom, #4d4548, #000000)';
+	CM.Disp.BotBar.style.borderTop = '1px solid black';
+	CM.Disp.BotBar.style.overflow = 'auto';
+	CM.Disp.BotBar.style.textShadow = '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black';
+
+	var table = CM.Disp.BotBar.appendChild(document.createElement('table'));
+	table.style.width = '100%';
+	table.style.textAlign = 'center';
+	table.style.whiteSpace = 'nowrap';
+	var tbody = table.appendChild(document.createElement('tbody'));
+
+	var firstCol = function(text, color) {
+		var td = document.createElement('td');
+		td.style.textAlign = 'right';
+		td.className = CM.Disp.colorTextPre + color;
+		td.textContent = text;
+		return td;
+	}
+	var type = tbody.appendChild(document.createElement('tr'));
+	type.style.fontWeight = 'bold';
+	type.appendChild(firstCol(CM.VersionMajor + '.' + CM.VersionMinor, CM.Disp.colorYellow));
+	var bonus = tbody.appendChild(document.createElement('tr'));
+	bonus.appendChild(firstCol('Bonus Income', CM.Disp.colorBlue));
+	var pp = tbody.appendChild(document.createElement('tr'));
+	pp.appendChild(firstCol('Payback Period', CM.Disp.colorBlue));
+	var time = tbody.appendChild(document.createElement('tr'));
+	time.appendChild(firstCol('Time Left', CM.Disp.colorBlue));
+
+	for (var i in Game.Objects) {
+		CM.Disp.CreateBotBarBuildingColumn(i);
+	}
+
+	l('wrapper').appendChild(CM.Disp.BotBar);
+}
 
 /**
- * Extends the bottom bar (created by CM.Disp.CreateBotBar) with a column for the given building.
- *
+ * This function updates the bonus-, pp-, and time-rows in the the bottom bar
+ * It is called by CM.Loop()
+ */
+CM.Disp.UpdateBotBar = function() {
+	if (CM.Config.BotBar == 1) {
+		var count = 0;
+		for (var i in CM.Cache.Objects) {
+			var target = 'Objects';
+			if (Game.buyBulk == 10) {target = 'Objects10';}
+			if (Game.buyBulk == 100) {target = 'Objects100';}
+			count++;
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache[target][i].bonus, 2);
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].className = CM.Disp.colorTextPre + CM.Cache[target][i].color;
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache[target][i].pp, 2);
+			var timeColor = CM.Disp.GetTimeColor(Game.Objects[i].bulkPrice, (Game.cookies + CM.Disp.GetWrinkConfigBank()), CM.Disp.GetCPS());
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].className = CM.Disp.colorTextPre + timeColor.color;
+			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text;
+		}
+	}
+}
+
+/**
+ * This function extends the bottom bar (created by CM.Disp.CreateBotBar) with a column for the given building.
  * This function is called by CM.Disp.CreateBotBar on initialization of Cookie Monster,
  * and also in CM.Sim.CopyData if a new building (added by another mod) is discovered.
+ * @param	{string}	buildingName	Objectname to be added (e.g., "Cursor")
  */
 CM.Disp.CreateBotBarBuildingColumn = function(buildingName) {
 	if(!CM.Disp.BotBar) {
@@ -1308,97 +1395,6 @@ CM.Disp.CreateBotBarBuildingColumn = function(buildingName) {
 	bonus.appendChild(document.createElement('td'));
 	pp.appendChild(document.createElement('td'));
 	time.appendChild(document.createElement('td'));
-}
-
-CM.Disp.CreateBotBar = function() {
-	CM.Disp.BotBar = document.createElement('div');
-	CM.Disp.BotBar.id = 'CMBotBar';
-	CM.Disp.BotBar.style.height = '69px';
-	CM.Disp.BotBar.style.width = '100%';
-	CM.Disp.BotBar.style.position = 'absolute';
-	CM.Disp.BotBar.style.display = 'none';
-	CM.Disp.BotBar.style.backgroundColor = '#262224';
-	CM.Disp.BotBar.style.backgroundImage = '-moz-linear-gradient(top, #4d4548, #000000)';
-	CM.Disp.BotBar.style.backgroundImage = '-o-linear-gradient(top, #4d4548, #000000)';
-	CM.Disp.BotBar.style.backgroundImage = '-webkit-linear-gradient(top, #4d4548, #000000)';
-	CM.Disp.BotBar.style.backgroundImage = 'linear-gradient(to bottom, #4d4548, #000000)';
-	CM.Disp.BotBar.style.borderTop = '1px solid black';
-	CM.Disp.BotBar.style.overflow = 'auto';
-	CM.Disp.BotBar.style.textShadow = '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black';
-
-	var table = CM.Disp.BotBar.appendChild(document.createElement('table'));
-	table.style.width = '100%';
-	table.style.textAlign = 'center';
-	table.style.whiteSpace = 'nowrap';
-	// TODO figure a better way
-	//table.style.tableLayout = 'fixed';
-	//table.style.overflow = 'hidden';
-	var tbody = table.appendChild(document.createElement('tbody'));
-
-	var firstCol = function(text, color) {
-		var td = document.createElement('td');
-		td.style.textAlign = 'right';
-		td.className = CM.Disp.colorTextPre + color;
-		td.textContent = text;
-		return td;
-	}
-
-	var type = tbody.appendChild(document.createElement('tr'));
-	type.style.fontWeight = 'bold';
-	type.appendChild(firstCol(CM.VersionMajor + '.' + CM.VersionMinor, CM.Disp.colorYellow));
-	var bonus = tbody.appendChild(document.createElement('tr'));
-	bonus.appendChild(firstCol('Bonus Income', CM.Disp.colorBlue));
-	var pp = tbody.appendChild(document.createElement('tr'));
-	pp.appendChild(firstCol('Payback Period', CM.Disp.colorBlue));
-	var time = tbody.appendChild(document.createElement('tr'));
-	time.appendChild(firstCol('Time Left', CM.Disp.colorBlue));
-
-	for (var i in Game.Objects) {
-		CM.Disp.CreateBotBarBuildingColumn(i);
-	}
-
-	l('wrapper').appendChild(CM.Disp.BotBar);
-}
-
-CM.Disp.ToggleBotBar = function() {
-	if (CM.Config.BotBar == 1) {
-		CM.Disp.BotBar.style.display = '';
-		CM.Disp.UpdateBotBarOther();
-	}
-	else {
-		CM.Disp.BotBar.style.display = 'none';
-	}
-	CM.Disp.UpdateBotTimerBarDisplay();
-}
-
-CM.Disp.UpdateBotBarOther = function() {
-	if (CM.Config.BotBar == 1) {
-		var count = 0;
-
-		for (var i in CM.Cache.Objects) {
-			var target = 'Objects';
-			if (Game.buyBulk == 10) {target = 'Objects10';}
-			if (Game.buyBulk == 100) {target = 'Objects100';}
-			count++;
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache[target][i].bonus, 2);
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].className = CM.Disp.colorTextPre + CM.Cache[target][i].color;
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache[target][i].pp, 2);
-		}
-	}
-}
-
-CM.Disp.UpdateBotBarTime = function() {
-	if (CM.Config.BotBar == 1) {
-		var count = 0;
-
-		for (var i in CM.Cache.Objects) {
-			count++;
-			var timeColor = CM.Disp.GetTimeColor(Game.Objects[i].getPrice(), (Game.cookies + CM.Disp.GetWrinkConfigBank()), CM.Disp.GetCPS());
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].className = CM.Disp.colorTextPre + timeColor.color;
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text;
-		}
-	}
 }
 
 /********
@@ -1502,7 +1498,7 @@ CM.Disp.ToggleTimerBar = function() {
 	else {
 		CM.Disp.TimerBar.style.display = 'none';
 	}
-	CM.Disp.UpdateBotTimerBarDisplay();
+	CM.Disp.UpdateBotTimerBarPosition();
 }
 
 CM.Disp.ToggleTimerBarPos = function() {
@@ -1516,7 +1512,7 @@ CM.Disp.ToggleTimerBarPos = function() {
 		CM.Disp.TimerBar.style.bottom = '0px';
 		l('wrapper').appendChild(CM.Disp.TimerBar);
 	}
-	CM.Disp.UpdateBotTimerBarDisplay();
+	CM.Disp.UpdateBotTimerBarPosition();
 }
 
 CM.Disp.UpdateTimerBar = function() {
@@ -1638,7 +1634,7 @@ CM.Disp.UpdateTimerBar = function() {
 	}
 }
 
-CM.Disp.UpdateBotTimerBarDisplay = function() {
+CM.Disp.UpdateBotTimerBarPosition = function() {
 	if (CM.Config.BotBar == 1 && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
 		CM.Disp.BotBar.style.bottom = '48px';
 		l('game').style.bottom = '118px';
@@ -3680,13 +3676,14 @@ CM.Loop = function() {
 		CM.Cache.RemakePP();
 
 		// Update colors
-		CM.Disp.UpdateBotBarOther();
 		CM.Disp.UpdateBuildings();
 		CM.Disp.UpdateUpgrades();
 
 		// Redraw timers
-		CM.Disp.UpdateBotBarTime();
 		CM.Disp.UpdateTimerBar();
+
+		// Update Bottom Bar
+		CM.Disp.UpdateBotBar();
 
 		// Update Tooltip
 		CM.Disp.UpdateTooltip();
