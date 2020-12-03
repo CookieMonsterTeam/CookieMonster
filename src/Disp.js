@@ -7,39 +7,6 @@
  * TODO: Annotate most functions 
  * TODO: Sort functionsn in relevant (new) sections or files */
 
-CM.Disp.GetTimeColor = function(price, bank, cps, time) {
-	var color;
-	var text;
-	if (bank >= price) {
-		color = CM.Disp.colorGreen;
-		if (CM.Config.TimeFormat) {
-			text = '00:00:00:00:00';
-		}
-		else {
-			text = 'Done!';
-		}
-	}
-	else {
-		if (typeof time !== 'undefined') {
-			var time = time;
-		}
-		else {
-			var time = (price - bank) / cps;
-		}
-		text = CM.Disp.FormatTime(time);
-		if (time > 300) {
-			color =  CM.Disp.colorRed;
-		}
-		else if (time > 60) {
-			color =  CM.Disp.colorOrange;
-		}
-		else {
-			color =  CM.Disp.colorYellow;
-		}
-	}
-	return {text: text, color: color};
-}
-
 /**
  * This function returns Name and Color as object for sugar lump type that is given as input param.
  * @param type Sugar Lump Type.
@@ -340,6 +307,20 @@ CM.Disp.FormatTime = function(time, longFormat) {
 }
 
 /**
+ * This function returns returns the color to be used for time-strings
+ * @param	{number}			time			Time to be coloured
+ * @returns {{string, string}}	{text, color}	Both the formatted time and color as strings in an array
+ */
+CM.Disp.GetTimeColor = function(time) {
+	var color;
+	var text = CM.Disp.FormatTime(time);
+	if (time > 300) color =  CM.Disp.colorRed;
+	else if (time > 60) color =  CM.Disp.colorOrange;
+	else color =  CM.Disp.colorYellow;
+	return {text: text, color: color};
+}
+
+/**
  * This function returns formats number based on the Scale setting
  * @param	{number}	num		Number to be beautified
  * @param 	{any}		frac 	Used in some scenario's by CM.Backup.Beautify (Game's original function)
@@ -505,7 +486,7 @@ CM.Disp.UpdateBotBar = function() {
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache[target][i].bonus, 2);
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].className = CM.Disp.colorTextPre + CM.Cache[target][i].color;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache[target][i].pp, 2);
-			var timeColor = CM.Disp.GetTimeColor(Game.Objects[i].bulkPrice, (Game.cookies + CM.Disp.GetWrinkConfigBank()), CM.Disp.GetCPS());
+			var timeColor = CM.Disp.GetTimeColor((Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].className = CM.Disp.colorTextPre + timeColor.color;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text;
 		}
@@ -1469,7 +1450,7 @@ CM.Disp.Tooltip = function(type, name) {
 			if (amortizeAmount > 0) {
 				l('tooltip').innerHTML = l('tooltip').innerHTML
 					.split('so far</div>')
-					.join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) == 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor(buildPrice, Game.Objects[name].totalCookies, (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text + ')</div>');
+					.join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) == 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor((buildPrice - Game.Objects[name].totalCookies) / (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text + ')</div>');
 			}
 		}
 		if (Game.buyMode == 1) {
@@ -1633,7 +1614,7 @@ CM.Disp.UpdateTooltip = function() {
 						l('CMTooltipIncome').textContent += ' (' + (increase / 100) + '% of income)';
 					}
 
-					var timeColor = CM.Disp.GetTimeColor(price, (Game.cookies + CM.Disp.GetWrinkConfigBank()), CM.Disp.GetCPS());
+					var timeColor = CM.Disp.GetTimeColor((price - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 					l('CMTooltipTime').textContent = timeColor.text;
 					l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
 				}
@@ -1767,7 +1748,7 @@ CM.Disp.UpdateTooltip = function() {
 					var time = document.createElement('div');
 					time.id = 'CMTooltipTime';
 					tooltip.appendChild(time);
-					var timeColor = CM.Disp.GetTimeColor(spellCost, minigame.magic, undefined, CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, spellCost));
+					var timeColor = CM.Disp.GetTimeColor(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, spellCost));
 					time.textContent = timeColor.text;
 					time.className = CM.Disp.colorTextPre + timeColor.color;
 
@@ -1776,7 +1757,7 @@ CM.Disp.UpdateTooltip = function() {
 						var recover = document.createElement('div');
 						recover.id = 'CMTooltipRecover';
 						tooltip.appendChild(recover);
-						var recoverColor = CM.Disp.GetTimeColor(minigame.magic, Math.max(0, minigame.magic - spellCost), undefined, CM.Disp.CalculateGrimoireRefillTime(Math.max(0, minigame.magic - spellCost), minigame.magicM, minigame.magic));
+						var recoverColor = CM.Disp.GetTimeColor(CM.Disp.CalculateGrimoireRefillTime(Math.max(0, minigame.magic - spellCost), minigame.magicM, minigame.magic));
 						recover.textContent = recoverColor.text;
 						recover.className = CM.Disp.colorTextPre + recoverColor.color;
 					}
