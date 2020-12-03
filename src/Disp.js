@@ -313,10 +313,18 @@ CM.Disp.FormatTime = function(time, longFormat) {
  */
 CM.Disp.GetTimeColor = function(time) {
 	var color;
-	var text = CM.Disp.FormatTime(time);
-	if (time > 300) color =  CM.Disp.colorRed;
-	else if (time > 60) color =  CM.Disp.colorOrange;
-	else color =  CM.Disp.colorYellow;
+	var text;
+	if (time < 0) {
+		if (CM.Config.TimeFormat) text = '00:00:00:00:00';
+		else text = 'Done!';
+		color = CM.Disp.colorGreen;
+	} 
+	else {
+		text = CM.Disp.FormatTime(time);
+		if (time > 300) color =  CM.Disp.colorRed;
+		else if (time > 60) color =  CM.Disp.colorOrange;
+		else color =  CM.Disp.colorYellow;
+	}
 	return {text: text, color: color};
 }
 
