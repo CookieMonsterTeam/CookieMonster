@@ -2459,19 +2459,10 @@ CM.Disp.colorPink = 'Pink';
 CM.Disp.colorBrown = 'Brown';
 CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
 CM.Disp.buffColors = {'Frenzy': CM.Disp.colorYellow, 'Dragon Harvest': CM.Disp.colorBrown, 'Elder frenzy': CM.Disp.colorGreen, 'Clot': CM.Disp.colorRed, 'Click frenzy': CM.Disp.colorBlue, 'Dragonflight': CM.Disp.colorPink};
-CM.Main.lastGoldenCookieState = 0;
-CM.Main.lastSpawnedGoldenCookieState = 0;
-CM.Main.currSpawnedGoldenCookieState
-CM.Main.lastTickerFortuneState = 0;
-CM.Main.lastSeasonPopupState = 0;
-CM.Main.lastGardenNextStep = 0;
-CM.Main.lastMagicBarFull = 0;
-CM.Main.lastWrinklerCount = 0;
-CM.Cache.goldenShimmersByID = {};
-CM.Cache.spawnedGoldenShimmer = 0;
 CM.Disp.GCTimers = {};
-CM.Cache.seasonPopShimmer;
 CM.Disp.lastAscendState = -1;
+
+
 
 CM.Disp.cookieTimes = [10, 15, 30, 60, 300, 600, 900, 1800];
 CM.Disp.clickTimes = [1, 5, 10, 15, 30];

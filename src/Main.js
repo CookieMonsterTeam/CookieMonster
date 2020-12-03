@@ -411,6 +411,15 @@ CM.Main.CheckWrinklerCount = function() {
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
 
+CM.Main.lastGoldenCookieState = 0;
+CM.Main.lastSpawnedGoldenCookieState = 0;
+CM.Main.currSpawnedGoldenCookieState
+CM.Main.lastTickerFortuneState = 0;
+CM.Main.lastSeasonPopupState = 0;
+CM.Main.lastGardenNextStep = 0;
+CM.Main.lastMagicBarFull = 0;
+CM.Main.lastWrinklerCount = 0;
+
 CM.ConfigDefault = {
 	BotBar: 1, 
 	TimerBar: 1, 
