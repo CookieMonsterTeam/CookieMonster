@@ -271,7 +271,7 @@ CM.Disp.RefreshScale = function() {
  * This function returns time as a string depending on TimeFormat setting
  * @param  	{number} 	time		Time to be formatted
  * @param  	{number}	longFormat 	1 or 0
- * @returns	{string}				Formatted time`
+ * @returns	{string}				Formatted time
  */
 CM.Disp.FormatTime = function(time, longFormat) {
 	if (time == Infinity) return time;
@@ -1186,9 +1186,16 @@ CM.Disp.ToggleGCTimer = function() {
 
 /********
  * Section: Functions related to Tooltips
- * TODO: Annotate functions */
 
-CM.Disp.CreateTooltip = function(placeholder, text, minWidth) {
+/**
+ * This function creates some very basic tooltips, (e.g., the tooltips in the stats page)
+ * The tooltips are created with CM.Disp[placeholder].appendChild(desc)
+ * It is called by CM.DelayInit()
+ * @param	{string}	placeholder	The name used to later refer and spawn the tooltip
+ * @param	{string}	text		The text of the tooltip
+ * @param	{string}	minWidth	The minimum width of the tooltip
+ */
+CM.Disp.CreateSimpleTooltip = function(placeholder, text, minWidth) {
 	CM.Disp[placeholder] = document.createElement('div');
 	var desc = document.createElement('div');
 	desc.style.minWidth = minWidth;
@@ -1200,18 +1207,11 @@ CM.Disp.CreateTooltip = function(placeholder, text, minWidth) {
 	CM.Disp[placeholder].appendChild(desc);
 }
 
-CM.Disp.UpdateTooltipLocation = function() {
-	if (Game.tooltip.origin == 'store') {
-		var warnOffset = 0;
-		if (CM.Config.ToolWarnLucky == 1 && CM.Config.ToolWarnPos == 1) warnOffset = CM.Disp.TooltipWarn.clientHeight - 4;
-		Game.tooltip.tta.style.top = Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnOffset - 46) + 'px';
-	}
-	// Kept for future possible use if the code changes again
-	/*else if (!Game.onCrate && !Game.OnAscend && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
-		Game.tooltip.tta.style.top = (parseInt(Game.tooltip.tta.style.top) + parseInt(CM.Disp.TimerBar.style.height)) + 'px';
-	}*/
-}
-
+/**
+ * This function creates the tooltip extension of Lucky/Chain and other warnings for the building and upgrade tooltips
+ * It is called by CM.DelayInit() and the tooltip is appended to the l('tooltipAnchor').
+ * Visbility is then managed in CM.Disp.UpdateTooltip().
+ */
 CM.Disp.CreateTooltipWarn = function() {
 	CM.Disp.TooltipWarn = document.createElement('div');
 	CM.Disp.TooltipWarn.style.position = 'absolute';
@@ -1223,10 +1223,11 @@ CM.Disp.CreateTooltipWarn = function() {
 		var box = document.createElement('div');
 		box.id = boxId;
 		box.style.display = 'none';
-		box.style.WebkitTransition = 'opacity 0.1s ease-out';
-		box.style.MozTransition = 'opacity 0.1s ease-out';
-		box.style.MsTransition = 'opacity 0.1s ease-out';
-		box.style.OTransition = 'opacity 0.1s ease-out';
+		// TODO: This is very old code and can probably be removed
+		//box.style.WebkitTransition = 'opacity 0.1s ease-out';
+		//box.style.MozTransition = 'opacity 0.1s ease-out';
+		//box.style.MsTransition = 'opacity 0.1s ease-out';
+		//box.style.OTransition = 'opacity 0.1s ease-out';
 		box.style.transition = 'opacity 0.1s ease-out';
 		box.className = CM.Disp.colorBorderPre + color;
 		box.style.padding = '2px';
@@ -1253,51 +1254,55 @@ CM.Disp.CreateTooltipWarn = function() {
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjure', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"', 'CMDispTooltipWarnConjureText'));
  	
-
 	l('tooltipAnchor').appendChild(CM.Disp.TooltipWarn);
 }
 
-CM.Disp.ToggleToolWarnPos = function() {
-	if (CM.Config.ToolWarnPos == 0) {
-		CM.Disp.TooltipWarn.style.top = 'auto';
-		CM.Disp.TooltipWarn.style.margin = '4px -4px';
-		CM.Disp.TooltipWarn.style.padding = '3px 4px';
-	}
-	else {
-		CM.Disp.TooltipWarn.style.right = 'auto';
-		CM.Disp.TooltipWarn.style.margin = '4px';
-		CM.Disp.TooltipWarn.style.padding = '4px 3px';
-	}
-}
-
-CM.Disp.AddTooltipBuild = function() {
-	CM.Disp.TooltipBuildBack = [];
+/**
+ * This function replaces the original .onmouseover functions of buildings so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 'b'
+ * It is called by CM.DelayInit()
+ * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
+ */
+CM.Disp.ReplaceTooltipBuild = function() {
+	CM.Disp.TooltipBuildBackup = [];
 	for (var i in Game.Objects) {
 		var me = Game.Objects[i];
 		if (l('product' + me.id).onmouseover != null) {
-			CM.Disp.TooltipBuildBack[i] = l('product' + me.id).onmouseover;
+			CM.Disp.TooltipBuildBackup[i] = l('product' + me.id).onmouseover;
 			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}');
 		}
 	}
 }
 
-CM.Disp.AddTooltipUpgrade = function() {
-	CM.Disp.TooltipUpgradeBack = [];
+/**
+ * This function replaces the original .onmouseover functions of upgrades so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 'u'
+ * It is called by CM.ReplaceNative()
+ * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
+ */
+CM.Disp.ReplaceTooltipUpgrade = function() {
+	CM.Disp.TooltipUpgradeBackup = [];
 	for (var i in Game.UpgradesInStore) {
 		var me = Game.UpgradesInStore[i];
 		if (l('upgrade' + i).onmouseover != null) {
-			CM.Disp.TooltipUpgradeBack[i] = l('upgrade' + i).onmouseover;
+			CM.Disp.TooltipUpgradeBackup[i] = l('upgrade' + i).onmouseover;
 			eval('l(\'upgrade\' + i).onmouseover = function() {if (!Game.mouseDown) {Game.setOnCrate(this); Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'u\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}}');
 		}
 	}
 }
 
-CM.Disp.AddTooltipGrimoire = function() {
+/**
+ * This function replaces the original .onmouseover functions of the Grimoire minigame so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 'g'
+ * The function is called by CM.DelayInit()
+ * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
+ */
+CM.Disp.ReplaceTooltipGrimoire = function() {
 	if (Game.Objects['Wizard tower'].minigameLoaded) {
-		CM.Disp.TooltipGrimoireBack = [];
+		CM.Disp.TooltipGrimoireBackup = [];
 		for (var i in Game.Objects['Wizard tower'].minigame.spellsById) {
 			if (l('grimoireSpell' + i).onmouseover != null) {
-				CM.Disp.TooltipGrimoireBack[i] = l('grimoireSpell' + i).onmouseover;
+				CM.Disp.TooltipGrimoireBackup[i] = l('grimoireSpell' + i).onmouseover;
 				eval('l(\'grimoireSpell\' + i).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'g\', \'' + i + '\');}, \'this\'); Game.tooltip.wobble();}');
 			}
 		}
@@ -1305,16 +1310,22 @@ CM.Disp.AddTooltipGrimoire = function() {
 }
 
 /**
- * This function improves Sugar Lump tooltip by adding extra infromation.
- * @constructor
+ * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 's'
+ * The function is called by CM.DelayInit()
+ * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
  */
-CM.Disp.AddTooltipLump = function() {
+CM.Disp.ReplaceTooltipLump = function() {
 	if (Game.canLumps()) {
-		CM.Disp.TooltipLumpBack = l('lumps').onmouseover;
+		CM.Disp.TooltipLumpBackup = l('lumps').onmouseover;
         eval('l(\'lumps\').onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'Lump\');}, \'this\'); Game.tooltip.wobble();}');
 	}
 };
 
+/**
+ * This function creates tooltips by creating and changing l('tooltip')
+ * The function is called by .onmouseover events that have replaced original code to use CM.Disp.Tooltip(
+ */
 CM.Disp.Tooltip = function(type, name) {
 	if (type == 'b') {
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
@@ -1662,6 +1673,35 @@ CM.Disp.UpdateTooltip = function() {
 		else {
 			CM.Disp.TooltipWarn.style.display = 'none';
 		}
+	}
+}
+
+CM.Disp.UpdateTooltipLocation = function() {
+	if (Game.tooltip.origin == 'store') {
+		var warnOffset = 0;
+		if (CM.Config.ToolWarnLucky == 1 && CM.Config.ToolWarnPos == 1) warnOffset = CM.Disp.TooltipWarn.clientHeight - 4;
+		Game.tooltip.tta.style.top = Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnOffset - 46) + 'px';
+	}
+	// Kept for future possible use if the code changes again
+	/*else if (!Game.onCrate && !Game.OnAscend && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+		Game.tooltip.tta.style.top = (parseInt(Game.tooltip.tta.style.top) + parseInt(CM.Disp.TimerBar.style.height)) + 'px';
+	}*/
+}
+
+/**
+ * This function toggles the position of the warnings created by CM.Disp.CreateTooltipWarn()
+ * It is called by a change in CM.Config.ToolWarnPos
+ */
+CM.Disp.ToggleToolWarnPos = function() {
+	if (CM.Config.ToolWarnPos == 0) {
+		CM.Disp.TooltipWarn.style.top = 'auto';
+		CM.Disp.TooltipWarn.style.margin = '4px -4px';
+		CM.Disp.TooltipWarn.style.padding = '3px 4px';
+	}
+	else {
+		CM.Disp.TooltipWarn.style.right = 'auto';
+		CM.Disp.TooltipWarn.style.margin = '4px';
+		CM.Disp.TooltipWarn.style.padding = '4px 3px';
 	}
 }
 
@@ -2445,6 +2485,23 @@ CM.Disp.AddMissingUpgrades = function() {
  * Section: Variables used in Disp functions
  * TODO: Move certain variables to src/Data.js (e.g., CM.Disp.metric & CM.Disp.shortScale) */
 
+/**
+ * This list is used to make some very basic tooltips.
+ * It is used by CM.DelayInit() in the call of CM.Disp.CreateSimpleTooltip()
+ * @item	{string}	placeholder	
+ * @item	{string}	text		
+ * @item	{string}	minWidth	
+ */
+CM.Disp.TooltipText = [
+	['GoldCookTooltipPlaceholder', 'Calculated with Golden Switch off', '200px'],
+	['GoldCookDragonsFortuneTooltipPlaceholder', 'Calculated with Golden Switch off and at least one golden cookie on-screen', '240px'],
+	['PrestMaxTooltipPlaceholder', 'The MAX prestige is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and buying Chocolate egg', '320px'], 
+	['NextPrestTooltipPlaceholder', 'Calculated with cookies gained from wrinklers and Chocolate egg', '200px'], 
+	['HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and buying Chocolate egg', '330px'], 
+	['ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels unlocked at 100% of its potential and from ascension achievements if you have the same buildings/upgrades after reset', '370px'], 
+	['ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and then buying Chocolate egg', '300px']
+];
+
 CM.Disp.colorTextPre = 'CMText';
 CM.Disp.colorBackPre = 'CMBack';
 CM.Disp.colorBorderPre = 'CMBorder';
@@ -2477,12 +2534,3 @@ for (var i in Game.wrinklers) {
 	CM.Disp.TooltipWrinklerCache[i] = 0;
 }
 
-CM.Disp.TooltipText = [
-	['GoldCookTooltipPlaceholder', 'Calculated with Golden Switch off', '200px'],
-	['GoldCookDragonsFortuneTooltipPlaceholder', 'Calculated with Golden Switch off and at least one golden cookie on-screen', '240px'],
-	['PrestMaxTooltipPlaceholder', 'The MAX prestige is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and buying Chocolate egg', '320px'], 
-	['NextPrestTooltipPlaceholder', 'Calculated with cookies gained from wrinklers and Chocolate egg', '200px'], 
-	['HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and buying Chocolate egg', '330px'], 
-	['ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels unlocked at 100% of its potential and from ascension achievements if you have the same buildings/upgrades after reset', '370px'], 
-	['ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and then buying Chocolate egg', '300px']
-];

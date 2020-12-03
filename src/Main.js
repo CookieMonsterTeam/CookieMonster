@@ -51,10 +51,12 @@ CM.ReplaceNative = function() {
 		CM.ReplaceNativeGrimoire();
 	}
 
+	// TODO: Move this ReplaceTooltip function too other ReplaceTooltip functions
+	// OR: Move all other into this function
 	CM.Backup.RebuildUpgrades = Game.RebuildUpgrades;
 	Game.RebuildUpgrades = function() {
 		CM.Backup.RebuildUpgrades();
-		CM.Disp.AddTooltipUpgrade();
+		CM.Disp.ReplaceTooltipUpgrade();
 		Game.CalculateGains();
 	}
 
@@ -224,12 +226,12 @@ CM.DelayInit = function() {
 	CM.Disp.CreateWhiteScreen();
 	CM.Disp.CreateFavicon();
 	for (var i in CM.Disp.TooltipText) {
-		CM.Disp.CreateTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
+		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
 	CM.Disp.CreateTooltipWarn();
-	CM.Disp.AddTooltipBuild();
-	CM.Disp.AddTooltipGrimoire();
-	CM.Disp.AddTooltipLump();
+	CM.Disp.ReplaceTooltipBuild();
+	CM.Disp.ReplaceTooltipGrimoire();
+	CM.Disp.ReplaceTooltipLump();
 	CM.Disp.AddWrinklerAreaDetect();
 	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
@@ -300,6 +302,7 @@ CM.Main.CheckGoldenCookie = function() {
 			}
 		}
 		CM.Main.lastSpawnedGoldenCookieState = CM.Main.currSpawnedGoldenCookieState
+		if (CM.Main.currSpawnedGoldenCookieState == 0) CM.Cache.spawnedGoldenShimmer = 0;
 	}
 	else if (CM.Config.GCTimer == 1 && CM.Main.lastGoldenCookieState) {
 		for (var i in CM.Disp.GCTimers) {
