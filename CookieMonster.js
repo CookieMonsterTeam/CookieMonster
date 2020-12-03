@@ -1904,6 +1904,9 @@ CM.Disp.Notification = function(notifyConfig, title, message) {
  * Section: Functions related to updating the tab in the browser's tab-bar
  * TODO: Annotate functions */
 
+/**
+ * This function creates the Favicon, it is called by CM.DelayInit()
+ */
 CM.Disp.CreateFavicon = function() {
 	CM.Disp.Favicon = document.createElement('link');
 	CM.Disp.Favicon.id = 'CMFavicon';
@@ -1912,20 +1915,23 @@ CM.Disp.CreateFavicon = function() {
 	document.getElementsByTagName('head')[0].appendChild(CM.Disp.Favicon);
 }
 
+/**
+ * This function updates the Favicon depending on whether a Golden Cookie has spawned
+ * It is called on every loop by CM.Disp.CheckGoldenCookie() or by a change in CM.Config.Favicon 
+ * By relying on CM.Disp.spawnedGoldenShimmer it only changes for non-user spawned cookie
+ */
 CM.Disp.UpdateFavicon = function() {
 	if (CM.Config.Favicon == 1) {
-		if (CM.Disp.spawnedGoldenShimmer.wrath) {
-			CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
-		}
-		else {
-			CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/goldenCookie.ico';
-		}
+		if (CM.Disp.spawnedGoldenShimmer.wrath) CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
+		else CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/goldenCookie.ico';
 	}
-	else {
-		CM.Disp.Favicon.href = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
-	}
+	else CM.Disp.Favicon.href = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
 }
 
+/**
+ * This function updates the tab title
+ * It is called on every loop by Game.Logic() which also sets CM.Cache.Title to Game.cookies
+ */
 CM.Disp.UpdateTitle = function() {
 	if (Game.OnAscend || CM.Config.Title == 0) {
 		document.title = CM.Cache.Title;
@@ -1933,56 +1939,46 @@ CM.Disp.UpdateTitle = function() {
 	else if (CM.Config.Title == 1) {
 		var addFC = false;
 		var addSP = false;
-
 		var titleGC;
 		var titleFC;
 		var titleSP;
-		if (CM.Disp.lastGoldenCookieState) {
-			if (CM.Disp.spawnedGoldenShimmer.wrath) {
-				titleGC = '[W ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
-			}
-			else {
-				titleGC = '[G ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
-			}
+		
+		if (CM.Disp.spawnedGoldenShimmer) {
+			if (CM.Disp.spawnedGoldenShimmer.wrath) titleGC = '[W ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
+			else titleGC = '[G ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
 		}
 		else if (!Game.Has('Golden switch [off]')) {
 			titleGC = '[' +  Math.ceil((Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) / Game.fps) + ']';
 		}
-		else {
-			titleGC = '[GS]'
-		}
+		else titleGC = '[GS]'
+
 		if (CM.Disp.lastTickerFortuneState) {
 			addFC = true;
 			titleFC = '[F]';
 		}
+
 		if (Game.season == 'christmas') {
 			addSP = true;
-			if (CM.Disp.lastSeasonPopupState) {
-				titleSP = '[R ' +  Math.ceil(CM.Disp.seasonPopShimmer.life / Game.fps) + ']';
-			}
+			if (CM.Disp.lastSeasonPopupState) titleSP = '[R ' +  Math.ceil(CM.Disp.seasonPopShimmer.life / Game.fps) + ']';
 			else {
 				titleSP = '[' +  Math.ceil((Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) / Game.fps) + ']';
 			}
 		}
 
+		// Remove previous timers and add current cookies
 		var str = CM.Cache.Title;
 		if (str.charAt(0) == '[') {
 			str = str.substring(str.lastIndexOf(']') + 1);
 		}
-
 		document.title = titleGC + (addFC ? titleFC : '') + (addSP ? titleSP : '') + ' ' + str;
 	}
 	else if (CM.Config.Title == 2) {
 		var str = '';
 		var spawn = false;
-		if (CM.Disp.lastGoldenCookieState) {
+		if (CM.Disp.spawnedGoldenShimmer) {
 			spawn = true;
-			if (CM.Disp.spawnedGoldenShimmer.wrath) {
-				str += '[W ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
-			}
-			else {
-				str += '[G ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
-			}
+			if (CM.Disp.spawnedGoldenShimmer.wrath) str += '[W ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
+			else str += '[G ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
 		}
 		if (CM.Disp.lastTickerFortuneState) {
 			spawn = true;
