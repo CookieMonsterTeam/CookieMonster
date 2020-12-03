@@ -1049,19 +1049,6 @@ CM.Disp.UpdateColors = function() {
 	CM.Disp.UpdateBuildings(); // Class has been already set
 }
 
-CM.Disp.CreateWhiteScreen = function() {
-	CM.Disp.WhiteScreen = document.createElement('div');
-	CM.Disp.WhiteScreen.id = 'CMWhiteScreen';
-	CM.Disp.WhiteScreen.style.width = '100%';
-	CM.Disp.WhiteScreen.style.height = '100%';
-	CM.Disp.WhiteScreen.style.backgroundColor = 'white';
-	CM.Disp.WhiteScreen.style.display = 'none';
-	CM.Disp.WhiteScreen.style.zIndex = '9999999999';
-	CM.Disp.WhiteScreen.style.position = 'absolute';
-
-	l('wrapper').appendChild(CM.Disp.WhiteScreen);
-}
-
 CM.Disp.FindShimmer = function() {
 	CM.Disp.currSpawnedGoldenCookieState = 0
 	CM.Disp.goldenShimmersByID = {}
@@ -1842,8 +1829,30 @@ CM.Disp.CreateUpgradeBarLegend = function() {
 
 /********
  * Section: Functions related to the flashes/sound/notifications
- * TODO: Annotate functions */
 
+/**
+ * This function creates a white square over the full screen and appends it to l('wrapper')
+ * It is used (and called) by CM.Disp.Flash() to create the effect of a flash
+ */
+CM.Disp.CreateWhiteScreen = function() {
+	CM.Disp.WhiteScreen = document.createElement('div');
+	CM.Disp.WhiteScreen.id = 'CMWhiteScreen';
+	CM.Disp.WhiteScreen.style.width = '100%';
+	CM.Disp.WhiteScreen.style.height = '100%';
+	CM.Disp.WhiteScreen.style.backgroundColor = 'white';
+	CM.Disp.WhiteScreen.style.display = 'none';
+	CM.Disp.WhiteScreen.style.zIndex = '9999999999';
+	CM.Disp.WhiteScreen.style.position = 'absolute';
+	l('wrapper').appendChild(CM.Disp.WhiteScreen);
+}
+
+/**
+ * This function creates a flash depending on configs. It is called by all functions 
+ * that check game-events and which have settings for Flashes (e.g., Golden Cookies appearing, Magic meter being full)
+ * @param	{number}	mode	Sets the intensity of the flash, used to recursively dim flash
+ * 								All calls of function have use mode == 3
+ * @param	{string}	config	The setting in CM.Config that is checked before creating the flash
+ */
 CM.Disp.Flash = function(mode, config) {
 	if ((CM.Config[config] == 1 && mode == 3) || mode == 1) {
 		CM.Disp.WhiteScreen.style.opacity = '0.5';
@@ -1859,11 +1868,16 @@ CM.Disp.Flash = function(mode, config) {
 		CM.Disp.WhiteScreen.style.opacity = '1';
 		setTimeout(function() {CM.Disp.Flash(1, config);}, 1000/Game.fps);
 	}
-	else if (mode == 0) {
-		CM.Disp.WhiteScreen.style.display = 'none';
-	}
+	else if (mode == 0) CM.Disp.WhiteScreen.style.display = 'none';
 }
 
+/**
+ * This function plays a sound depending on configs. It is called by all functions 
+ * that check game-events and which have settings for sound (e.g., Golden Cookies appearing, Magic meter being full)
+ * @param	{variable}	url			A variable that gives the url for the sound (e.g., CM.Config.GCSoundURL)
+ * @param	{string}	sndConfig	The setting in CM.Config that is checked before creating the sound
+ * @param	{string}	volConfig	The setting in CM.Config that is checked to determine volume
+ */
 CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
 	if (CM.Config[sndConfig] == 1) {
 		var sound = new realAudio(url);
@@ -1872,10 +1886,17 @@ CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
 	}
 }
 
+/**
+ * This function creates a notifcation depending on configs. It is called by all functions 
+ * that check game-events and which have settings for notifications (e.g., Golden Cookies appearing, Magic meter being full)
+ * @param	{string}	notifyConfig	The setting in CM.Config that is checked before creating the notification
+ * @param	{string}	title			The title of the to-be created notifications
+ * @param	{string}	message			The text of the to-be created notifications
+ */
 CM.Disp.Notification = function(notifyConfig, title, message) {
 	if (CM.Config[notifyConfig] == 1 && document.visibilityState == 'hidden') {
 		var CookieIcon = 'https://orteil.dashnet.org/cookieclicker/favicon.ico'
-		var notification = new Notification(title, {body: message, badge: CookieIcon});
+		notification = new Notification(title, {body: message, badge: CookieIcon});
 	}
 }
 
