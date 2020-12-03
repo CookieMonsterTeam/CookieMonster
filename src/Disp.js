@@ -307,7 +307,7 @@ CM.Disp.FormatTime = function(time, longFormat) {
 }
 
 /**
- * This function returns returns the color to be used for time-strings
+ * This function returns the color to be used for time-strings
  * @param	{number}			time			Time to be coloured
  * @returns {{string, string}}	{text, color}	Both the formatted time and color as strings in an array
  */
