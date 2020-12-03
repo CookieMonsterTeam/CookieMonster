@@ -878,6 +878,11 @@ CM.ConfigData.Scale = {type: 'bool', group: 'Other', label: ['Game\'s Setting Sc
  ********/
 
 /********
+ * Please make sure to annotate your code correctly. See the options page section for some examples.
+ * Only put functions related to graphics and displays in this file. 
+ * All calculations and data should be put in others. */
+
+/********
  * Section: Unsorted functions
  * TODO: Annotate most functions 
  * TODO: Sort functionsn in relevant (new) sections or files */
@@ -2018,9 +2023,13 @@ CM.Disp.UpdateTitle = function() {
 }
 
 /********
- * Section: Functions related to the Golden Cookie Timers
- * TODO: Annotate functions */
+ * Section: Functions related to the Golden Cookie Timers */
 
+/**
+ * This function creates a new Golden Cookie Timer and appends it CM.Disp.GCTimers based on the id of the cookie
+ * It is called by CM.Disp.CheckGoldenCookie()
+ * @param	{object}	cookie	A Golden Cookie object
+ */
 CM.Disp.CreateGCTimer = function(cookie) {
 	GCTimer = document.createElement('div');
 	GCTimer.id = 'GCTimer' + cookie.id
@@ -2034,6 +2043,7 @@ CM.Disp.CreateGCTimer = function(cookie) {
 	GCTimer.style.fontSize = '35px';
 	GCTimer.style.cursor = 'pointer';
 	GCTimer.style.display = 'block';
+	if (CM.Config.GCTimer == 0) GCTimer.style.display = 'none';
 	GCTimer.style.left = cookie.l.style.left;
 	GCTimer.style.top = cookie.l.style.top;
 	GCTimer.onclick = function () {cookie.pop();};
@@ -2044,20 +2054,20 @@ CM.Disp.CreateGCTimer = function(cookie) {
 	l('shimmers').appendChild(GCTimer);
 }
 
+/**
+ * This function toggles GC Timers are visible 
+ * It is called by a change in CM.Config.GCTimer
+ */
 CM.Disp.ToggleGCTimer = function() {
 	if (CM.Config.GCTimer == 1) {
-		if (CM.Disp.lastGoldenCookieState) {
-			for (var i in CM.Disp.GCTimers) {
-				CM.Disp.GCTimers[i].style.display = 'block';
-				CM.Disp.GCTimers[i].style.left = CM.Disp.goldenShimmersByID[i].l.style.left;
-				CM.Disp.GCTimers[i].style.top = CM.Disp.goldenShimmersByID[i].l.style.top;
-			}
+		for (var i in CM.Disp.GCTimers) {
+			CM.Disp.GCTimers[i].style.display = 'block';
+			CM.Disp.GCTimers[i].style.left = CM.Disp.goldenShimmersByID[i].l.style.left;
+			CM.Disp.GCTimers[i].style.top = CM.Disp.goldenShimmersByID[i].l.style.top;
 		}
 	}
 	else {
-		for (var i in CM.Disp.GCTimers) {
-			CM.Disp.GCTimers[i].style.display = 'none';
-		}
+		for (var i in CM.Disp.GCTimers) CM.Disp.GCTimers[i].style.display = 'none';
 	}
 }
 
@@ -2083,22 +2093,16 @@ CM.Disp.CheckGoldenCookie = function() {
 				CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
 				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
 			}
-			CM.Disp.lastSpawnedGoldenCookieState = CM.Disp.currSpawnedGoldenCookieState
+			
 			CM.Disp.UpdateFavicon();
 			
-			if (CM.Config.GCTimer == 1) {
-				for (var i in Game.shimmers) {
-					if (typeof CM.Disp.GCTimers[Game.shimmers[i].id] == "undefined") {
-						CM.Disp.CreateGCTimer(Game.shimmers[i]);
-					}
+			for (var i in Game.shimmers) {
+				if (typeof CM.Disp.GCTimers[Game.shimmers[i].id] == "undefined") {
+					CM.Disp.CreateGCTimer(Game.shimmers[i]);
 				}
 			}
 		}
-		else if (CM.Config.GCTimer == 1) {
-			for (var i in CM.Disp.GCTimers) {
-				CM.Disp.GCTimers[i].style.display = 'none';
-			}
-		}
+		CM.Disp.lastSpawnedGoldenCookieState = CM.Disp.currSpawnedGoldenCookieState
 	}
 	else if (CM.Config.GCTimer == 1 && CM.Disp.lastGoldenCookieState) {
 		for (var i in CM.Disp.GCTimers) {
