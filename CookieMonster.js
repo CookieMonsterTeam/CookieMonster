@@ -1165,9 +1165,9 @@ CM.Disp.RefreshScale = function() {
 
 /**
  * This function returns time as a string depending on TimeFormat setting
- * @param  {number} time		Time as number
+ * @param  {number} time		Time to be formatted
  * @param  {number}	longFormat 	1 or 0
- * @return {string}
+ * @return {string}				Formatted time`
  */
 CM.Disp.FormatTime = function(time, longFormat) {
 	if (time == Infinity) return time;
@@ -1195,105 +1195,83 @@ CM.Disp.FormatTime = function(time, longFormat) {
 	return str;
 }
 
-CM.Disp.Beautify = function(num, frac) {
-	if (CM.Config.Scale != 0 && isFinite(num)) {
+/**
+ * This function returns formats number based on the Scale setting
+ * @param	{number}	num		Number to be beautified
+ * @param 	{any}		frac 	Used in some scenario's by CM.Backup.Beautify (Game's original function)
+ * @param	{number}	forced	Used to force (type 3) in certains cases
+ * @return	{string}			Formatted number
+ * TODO: Add functionality to choose amount of decimals and separators
+ */
+CM.Disp.Beautify = function(num, frac, forced) {
+	var decimals = 3; // This can be used to implement function to let user choose amount of decimals
+	if (CM.Config.Scale == 0) {
+		return CM.Backup.Beautify(num, frac);
+	}
+	else if (isFinite(num)) {
 		var answer = '';
-		var negative = false;
 		if (num < 0) {
 			num = Math.abs(num);
-			negative = true;
+			var negative = true;
 		}
-
-		if (CM.Config.Scale == 3) {
-			if (num >= 999999) {
-				var count = 0;
-				while (num >= 10) {
-					count++;
-					num /= 10;
-				}
-				answer = +(Math.round(num + "e+2")  + "e-2") + 'E+' + count;
-			}
-			else if (num < -999999 && num != 0) {
-				var count = 0;
-				while (num < 1) {
-					count++;
-					num *= 10;
-				}
-				answer = +(Math.round(num + "e+2")  + "e-2") + 'E-' + count;
-			}
-			else {
-				answer = CM.Backup.Beautify(num, frac);
-			}
+		num = num.toString();
+		var timesTenToPowerThree = Math.trunc(Math.log10(num) / 3)
+		if (timesTenToPowerThree < 2) {
+			answer = num;
 		}
-		else if (CM.Config.Scale == 4) {
-			if (um >= 999999) {
-				var count = 0;
-				while (num >= 1000) {
-					count++;
-					num /= 1000;
-				}
-				answer = +(Math.round(num + "e+2")  + "e-2") + 'E+' + (count * 3);
+		else if (CM.Config.Scale == 3 && !forced || forced == 3) { // Scientific notation, 123456789 => 1.235E+8
+			answer = num[0] + '.'
+			i = 0;
+			while (i < decimals - 1) {
+				answer += num[i + 2]; // num has a 0-based index and [1] is a '.'
+				i++;
 			}
-			else if (num < -999999 && num != 0) {
-				var count = 0;
-				while (num < 1) {
-					count++;
-					num *= 1000;
-				}
-				answer = +(Math.round(num + "e+2")  + "e-2") + 'E-' + (count * 3);
-			}
-			else {
-				answer = CM.Backup.Beautify(num, frac);
-			}
+			answer += Math.round(num[i + 2] + '.' + num[i + 3]);
+			answer += 'E+' + Math.trunc(Math.log10(num));
 		}
 		else {
-			for (var i = (CM.Disp.shortScale.length - 1); i >= 0; i--) {
-				if (i < CM.Disp.metric.length && CM.Config.Scale == 1) {
-					// Revert to Scientific Notation from e27
-					if (Math.log10(num) > 27) {
-						if (num >= 999999) {
-							var count = 0;
-							while (num >= 10) {
-								count++;
-								num /= 10;
-							}
-							answer = +(Math.round(num + "e+2")  + "e-2") + 'E+' + count;
-						}
-						else if (num < -999999 && num != 0) {
-							var count = 0;
-							while (num < 1) {
-								count++;
-								num *= 10;
-							}
-							answer = +(Math.round(num + "e+2")  + "e-2") + 'E-' + count;
-						}
-						else {
-							answer = CM.Backup.Beautify(num, frac);
-						}
-					}
-					else if (num >= Math.pow(1000, i + 2)) {
-						answer = (Math.round(num / Math.pow(1000, i + 1)) / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ' + CM.Disp.metric[i];
-						break;
-					}
+			var restOfNumber = (num / Math.pow(10, (timesTenToPowerThree * 3))).toString();
+			numbersToAdd = (restOfNumber.indexOf('.') > -1 ? restOfNumber.indexOf('.') + 1 + decimals : (restOfNumber.length))
+			i = 0
+			while (i < numbersToAdd - 1) {
+				answer += restOfNumber[i];
+				i++
+			}
+			answer += (i + 1 < restOfNumber.length ? Math.round(restOfNumber[i] + '.' + restOfNumber[i + 1]) : restOfNumber[i]);
+			
+			// answer is now "xxx.xx" (e.g., 123456789 would be 123.46)
+			if (CM.Config.Scale == 1 && !forced || forced == 1) { // Metric scale, 123456789 => 123.457 M
+				if (timesTenToPowerThree - 1 < CM.Disp.metric.length) {
+					answer += ' ' + CM.Disp.metric[timesTenToPowerThree - 1]
 				}
-				else if (CM.Config.Scale == 2) {
-					if (num >= Math.pow(1000, i + 2)) {
-						answer = (Math.round(num / Math.pow(1000, i + 1)) / 1000) + ' ' + CM.Disp.shortScale[i];
-						break;
-					}
+				else { // If number is too large, revert to scientific notation
+					return CM.Disp.Beautify(num, 0, 3);	
 				}
+			}
+			else if (CM.Config.Scale == 2 && !forced || forced == 2) { // Short scale, 123456789 => 123.457 M
+				if (timesTenToPowerThree < CM.Disp.shortScale.length + 1) {
+					answer += ' ' + CM.Disp.shortScale[timesTenToPowerThree - 1];
+				}
+				else { // If number is too large, revert to scientific notation
+					return CM.Disp.Beautify(num, 0, 3);
+				}
+			}
+			else if (CM.Config.Scale == 4 && !forced || forced == 4) { // Engineering notation, 123456789 => 123.457E+6
+				answer += 'E+' + (timesTenToPowerThree * 3);
 			}
 		}
 		if (answer == '') {
-			answer = CM.Backup.Beautify(num, frac);
+			console.log("Could not beautify number with CM.Disp.Beautify");
+			answer = CM.Backup.Beautify(num, frac); 
 		}
-
-		if (negative) {
-			answer = '-' + answer;
-		}
+		if (negative) answer = '-' + answer;
 		return answer;
 	}
+	else if (num == Infinity) {
+		return "Infinity";
+	}
 	else {
+		console.log("Could not beautify number with CM.Disp.Beautify");
 		return CM.Backup.Beautify(num, frac);
 	}
 }
@@ -3516,8 +3494,8 @@ CM.Disp.lastAscendState = -1;
 CM.Disp.cookieTimes = [10, 15, 30, 60, 300, 600, 900, 1800];
 CM.Disp.clickTimes = [1, 5, 10, 15, 30];
 
-CM.Disp.metric = ['M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
-CM.Disp.shortScale = ['M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec', 'Quattuordec', 'Quindec', 'Sexdec', 'Septendec', 'Octodec', 'Novemdec', 'Vigint', 'Unvigint', 'Duovigint', 'Trevigint', 'Quattuorvigint'];
+CM.Disp.metric = ['', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
+CM.Disp.shortScale = ['', 'M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec', 'Quattuordec', 'Quindec', 'Sexdec', 'Septendec', 'Octodec', 'Novemdec', 'Vigint', 'Unvigint', 'Duovigint', 'Trevigint', 'Quattuorvigint'];
 
 CM.Disp.TooltipWrinklerArea = 0;
 CM.Disp.TooltipWrinkler = -1;
