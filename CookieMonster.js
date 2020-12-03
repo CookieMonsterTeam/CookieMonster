@@ -27,6 +27,9 @@ if (typeof CM == "undefined") {
  * Cache *
  *********/
 
+/********
+ * Section: UNSORTED */
+
 CM.Cache.AddQueue = function() {
 	CM.Cache.Queue = document.createElement('script');
 	CM.Cache.Queue.type = 'text/javascript';
@@ -1054,18 +1057,6 @@ CM.Disp.UpdateColors = function() {
 	CM.Disp.UpdateBuildings(); // Class has been already set
 }
 
-CM.Disp.FindShimmer = function() {
-	CM.Disp.currSpawnedGoldenCookieState = 0
-	CM.Disp.goldenShimmersByID = {}
-	for (var i in Game.shimmers) {
-		CM.Disp.goldenShimmersByID[Game.shimmers[i].id] = Game.shimmers[i]
-		if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'golden') {
-			CM.Disp.spawnedGoldenShimmer = Game.shimmers[i];
-			CM.Disp.currSpawnedGoldenCookieState += 1;
-		}
-	}
-}
-
 CM.Disp.CollectWrinklers = function() {
 	for (var i in Game.wrinklers) {
 		if (Game.wrinklers[i].sucked > 0 && Game.wrinklers[i].type == 0) {
@@ -1943,12 +1934,12 @@ CM.Disp.CreateFavicon = function() {
 
 /**
  * This function updates the Favicon depending on whether a Golden Cookie has spawned
- * It is called on every loop by CM.Disp.CheckGoldenCookie() or by a change in CM.Config.Favicon 
- * By relying on CM.Disp.spawnedGoldenShimmer it only changes for non-user spawned cookie
+ * It is called on every loop by CM.Main.CheckGoldenCookie() or by a change in CM.Config.Favicon 
+ * By relying on CM.Cache.spawnedGoldenShimmer it only changes for non-user spawned cookie
  */
 CM.Disp.UpdateFavicon = function() {
 	if (CM.Config.Favicon == 1) {
-		if (CM.Disp.spawnedGoldenShimmer.wrath) CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
+		if (CM.Cache.spawnedGoldenShimmer.wrath) CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
 		else CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/goldenCookie.ico';
 	}
 	else CM.Disp.Favicon.href = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
@@ -1969,23 +1960,23 @@ CM.Disp.UpdateTitle = function() {
 		var titleFC;
 		var titleSP;
 		
-		if (CM.Disp.spawnedGoldenShimmer) {
-			if (CM.Disp.spawnedGoldenShimmer.wrath) titleGC = '[W ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
-			else titleGC = '[G ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
+		if (CM.Cache.spawnedGoldenShimmer) {
+			if (CM.Cache.spawnedGoldenShimmer.wrath) titleGC = '[W ' +  Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps) + ']';
+			else titleGC = '[G ' +  Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps) + ']';
 		}
 		else if (!Game.Has('Golden switch [off]')) {
 			titleGC = '[' +  Math.ceil((Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) / Game.fps) + ']';
 		}
 		else titleGC = '[GS]'
 
-		if (CM.Disp.lastTickerFortuneState) {
+		if (CM.Main.lastTickerFortuneState) {
 			addFC = true;
 			titleFC = '[F]';
 		}
 
 		if (Game.season == 'christmas') {
 			addSP = true;
-			if (CM.Disp.lastSeasonPopupState) titleSP = '[R ' +  Math.ceil(CM.Disp.seasonPopShimmer.life / Game.fps) + ']';
+			if (CM.Main.lastSeasonPopupState) titleSP = '[R ' +  Math.ceil(CM.Cache.seasonPopShimmer.life / Game.fps) + ']';
 			else {
 				titleSP = '[' +  Math.ceil((Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) / Game.fps) + ']';
 			}
@@ -2001,17 +1992,17 @@ CM.Disp.UpdateTitle = function() {
 	else if (CM.Config.Title == 2) {
 		var str = '';
 		var spawn = false;
-		if (CM.Disp.spawnedGoldenShimmer) {
+		if (CM.Cache.spawnedGoldenShimmer) {
 			spawn = true;
-			if (CM.Disp.spawnedGoldenShimmer.wrath) str += '[W ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
-			else str += '[G ' +  Math.ceil(CM.Disp.spawnedGoldenShimmer.life / Game.fps) + ']';
+			if (CM.Cache.spawnedGoldenShimmer.wrath) str += '[W ' +  Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps) + ']';
+			else str += '[G ' +  Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps) + ']';
 		}
-		if (CM.Disp.lastTickerFortuneState) {
+		if (CM.Main.lastTickerFortuneState) {
 			spawn = true;
 			str += '[F]';
 		}
-		if (Game.season == 'christmas' && CM.Disp.lastSeasonPopupState) {
-			str += '[R ' +  Math.ceil(CM.Disp.seasonPopShimmer.life / Game.fps) + ']';
+		if (Game.season == 'christmas' && CM.Main.lastSeasonPopupState) {
+			str += '[R ' +  Math.ceil(CM.Cache.seasonPopShimmer.life / Game.fps) + ']';
 			spawn = true;
 		}
 		if (spawn) str += ' - ';
@@ -2023,11 +2014,11 @@ CM.Disp.UpdateTitle = function() {
 }
 
 /********
- * Section: Functions related to the Golden Cookie Timers */
+ * Section: Functions related to the Golden Cookie Timers
 
 /**
  * This function creates a new Golden Cookie Timer and appends it CM.Disp.GCTimers based on the id of the cookie
- * It is called by CM.Disp.CheckGoldenCookie()
+ * It is called by CM.Main.CheckGoldenCookie()
  * @param	{object}	cookie	A Golden Cookie object
  */
 CM.Disp.CreateGCTimer = function(cookie) {
@@ -2062,138 +2053,12 @@ CM.Disp.ToggleGCTimer = function() {
 	if (CM.Config.GCTimer == 1) {
 		for (var i in CM.Disp.GCTimers) {
 			CM.Disp.GCTimers[i].style.display = 'block';
-			CM.Disp.GCTimers[i].style.left = CM.Disp.goldenShimmersByID[i].l.style.left;
-			CM.Disp.GCTimers[i].style.top = CM.Disp.goldenShimmersByID[i].l.style.top;
+			CM.Disp.GCTimers[i].style.left = CM.Cache.goldenShimmersByID[i].l.style.left;
+			CM.Disp.GCTimers[i].style.top = CM.Cache.goldenShimmersByID[i].l.style.top;
 		}
 	}
 	else {
 		for (var i in CM.Disp.GCTimers) CM.Disp.GCTimers[i].style.display = 'none';
-	}
-}
-
-/********
- * Section: Functions related to checking for changes in Minigames/GC's/Ticker
- * TODO: Annotate functions 
- * TODO: Possibly move this section */
-
-CM.Disp.CheckGoldenCookie = function() {
-	CM.Disp.FindShimmer();
-	for (var i in CM.Disp.GCTimers) {
-		if (typeof CM.Disp.goldenShimmersByID[i] == "undefined") {
-			CM.Disp.GCTimers[i].parentNode.removeChild(CM.Disp.GCTimers[i]);
-			// TODO remove delete here
-			delete CM.Disp.GCTimers[i];
-		}
-	}
-	if (CM.Disp.lastGoldenCookieState != Game.shimmerTypes['golden'].n) {
-		CM.Disp.lastGoldenCookieState = Game.shimmerTypes['golden'].n;
-		if (CM.Disp.lastGoldenCookieState) {
-			if (CM.Disp.lastSpawnedGoldenCookieState < CM.Disp.currSpawnedGoldenCookieState) {
-				CM.Disp.Flash(3, 'GCFlash');
-				CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
-				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
-			}
-			
-			CM.Disp.UpdateFavicon();
-			
-			for (var i in Game.shimmers) {
-				if (typeof CM.Disp.GCTimers[Game.shimmers[i].id] == "undefined") {
-					CM.Disp.CreateGCTimer(Game.shimmers[i]);
-				}
-			}
-		}
-		CM.Disp.lastSpawnedGoldenCookieState = CM.Disp.currSpawnedGoldenCookieState
-	}
-	else if (CM.Config.GCTimer == 1 && CM.Disp.lastGoldenCookieState) {
-		for (var i in CM.Disp.GCTimers) {
-			CM.Disp.GCTimers[i].style.opacity = CM.Disp.goldenShimmersByID[i].l.style.opacity;
-			CM.Disp.GCTimers[i].style.transform = CM.Disp.goldenShimmersByID[i].l.style.transform;
-			CM.Disp.GCTimers[i].textContent = Math.ceil(CM.Disp.goldenShimmersByID[i].life / Game.fps);
-		}
-	}
-}
-
-CM.Disp.CheckTickerFortune = function() {
-	if (CM.Disp.lastTickerFortuneState != (Game.TickerEffect && Game.TickerEffect.type == 'fortune')) {
-		CM.Disp.lastTickerFortuneState = (Game.TickerEffect && Game.TickerEffect.type == 'fortune');
-		if (CM.Disp.lastTickerFortuneState) {
-			CM.Disp.Flash(3, 'FortuneFlash');
-			CM.Disp.PlaySound(CM.Config.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
-			CM.Disp.Notification('FortuneNotification', "Fortune Cookie found", "A Fortune Cookie has appeared on the Ticker.")
-		}
-	}
-}
-
-CM.Disp.CheckSeasonPopup = function() {
-	if (CM.Disp.lastSeasonPopupState != Game.shimmerTypes['reindeer'].spawned) {
-		CM.Disp.lastSeasonPopupState = Game.shimmerTypes['reindeer'].spawned;
-		if (CM.Disp.lastSeasonPopupState && Game.season=='christmas') {
-			// Needed for some of the functions to use the right object
-			for (var i in Game.shimmers) {
-				if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'reindeer') {
-					CM.Disp.seasonPopShimmer = Game.shimmers[i];
-					break;
-				}
-			}
-
-			CM.Disp.Flash(3, 'SeaFlash');
-			CM.Disp.PlaySound(CM.Config.SeaSoundURL, 'SeaSound', 'SeaVolume');
-			CM.Disp.Notification('SeaNotification',"Reindeer sighted!", "A Reindeer has spawned. Click it now!")
-		}
-	}
-}
-
-CM.Disp.CheckGardenTick = function() {
-	if (Game.Objects['Farm'].minigameLoaded && CM.Disp.lastGardenNextStep != Game.Objects['Farm'].minigame.nextStep) {
-		if (CM.Disp.lastGardenNextStep != 0 && CM.Disp.lastGardenNextStep < Date.now()) {
-			CM.Disp.Flash(3, 'GardFlash');
-			CM.Disp.PlaySound(CM.Config.GardSoundURL, 'GardSound', 'GardVolume');
-		}
-		CM.Disp.lastGardenNextStep = Game.Objects['Farm'].minigame.nextStep;
-	}
-}
-
-CM.Disp.CheckMagicMeter = function() {
-	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Config.GrimoireBar == 1) {
-		var minigame = Game.Objects['Wizard tower'].minigame;
-		if (minigame.magic < minigame.magicM) {
-			CM.Disp.lastMagicBarFull = false;
-		} 
-		else if (!CM.Disp.lastMagicBarFull) {
-			CM.Disp.lastMagicBarFull = true;
-			CM.Disp.Flash(3, 'MagicFlash');
-			CM.Disp.PlaySound(CM.Config.MagicSoundURL, 'MagicSound', 'MagicVolume');
-			CM.Disp.Notification('MagicNotification', "Magic Meter full", "Your Magic Meter is full. Cast a spell!")
-		}
-	}
-}
-
-CM.Disp.CheckWrinklerCount = function() {
-	if (Game.elderWrath > 0) {
-		var CurrentWrinklers = 0;
-		for (var i in Game.wrinklers) {
-			if (Game.wrinklers[i].phase == 2) CurrentWrinklers++;
-		}
-		if (CurrentWrinklers > CM.Disp.lastWrinklerCount) {
-			CM.Disp.lastWrinklerCount = CurrentWrinklers
-			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxFlash) {
-				CM.Disp.Flash(3, 'WrinklerMaxFlash');
-			} else {
-				CM.Disp.Flash(3, 'WrinklerFlash');
-			}
-			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxSound) {
-				CM.Disp.PlaySound(CM.Config.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume');
-			} else {
-				CM.Disp.PlaySound(CM.Config.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume');
-			}
-			if (CurrentWrinklers == Game.getWrinklersMax() &&  CM.Config.WrinklerMaxNotification) {
-				CM.Disp.Notification('WrinklerMaxNotification', "Maximum Wrinklers Reached", "You have reached your maximum ammount of wrinklers")
-			} else {
-				CM.Disp.Notification('WrinklerNotification', "A Wrinkler appeared", "A new wrinkler has appeared")
-			}
-		} else {
-			CM.Disp.lastWrinklerCount = CurrentWrinklers
-		}
 	}
 }
 
@@ -3472,18 +3337,18 @@ CM.Disp.colorPink = 'Pink';
 CM.Disp.colorBrown = 'Brown';
 CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
 CM.Disp.buffColors = {'Frenzy': CM.Disp.colorYellow, 'Dragon Harvest': CM.Disp.colorBrown, 'Elder frenzy': CM.Disp.colorGreen, 'Clot': CM.Disp.colorRed, 'Click frenzy': CM.Disp.colorBlue, 'Dragonflight': CM.Disp.colorPink};
-CM.Disp.lastGoldenCookieState = 0;
-CM.Disp.lastSpawnedGoldenCookieState = 0;
-CM.Disp.currSpawnedGoldenCookieState
-CM.Disp.lastTickerFortuneState = 0;
-CM.Disp.lastSeasonPopupState = 0;
-CM.Disp.lastGardenNextStep = 0;
-CM.Disp.lastMagicBarFull = 0;
-CM.Disp.lastWrinklerCount = 0;
-CM.Disp.goldenShimmersByID = {};
-CM.Disp.spawnedGoldenShimmer = 0;
+CM.Main.lastGoldenCookieState = 0;
+CM.Main.lastSpawnedGoldenCookieState = 0;
+CM.Main.currSpawnedGoldenCookieState
+CM.Main.lastTickerFortuneState = 0;
+CM.Main.lastSeasonPopupState = 0;
+CM.Main.lastGardenNextStep = 0;
+CM.Main.lastMagicBarFull = 0;
+CM.Main.lastWrinklerCount = 0;
+CM.Cache.goldenShimmersByID = {};
+CM.Cache.spawnedGoldenShimmer = 0;
 CM.Disp.GCTimers = {};
-CM.Disp.seasonPopShimmer;
+CM.Cache.seasonPopShimmer;
 CM.Disp.lastAscendState = -1;
 
 CM.Disp.cookieTimes = [10, 15, 30, 60, 300, 600, 900, 1800];
@@ -3695,23 +3560,13 @@ CM.Loop = function() {
 		CM.Disp.RefreshMenu();
 	}
 
-	// Check Golden Cookies
-	CM.Disp.CheckGoldenCookie();
-
-	// Check Fortune Cookies
-	CM.Disp.CheckTickerFortune();
-
-	// Check Season Popup
-	CM.Disp.CheckSeasonPopup();
-
-	// Check Garden Tick
-	CM.Disp.CheckGardenTick();
-
-	// Check Grimoire Meter
-	CM.Disp.CheckMagicMeter();
-
-	// Check Wrinklers
-	CM.Disp.CheckWrinklerCount();
+	// Check all changing minigames and game-states
+	CM.Main.CheckGoldenCookie();
+	CM.Main.CheckTickerFortune();
+	CM.Main.CheckSeasonPopup();
+	CM.Main.CheckGardenTick();
+	CM.Main.CheckMagicMeter();
+	CM.Main.CheckWrinklerCount();
 
 	// Update Average CPS (might need to move)
 	CM.Cache.UpdateAvgCPS()
@@ -3765,6 +3620,167 @@ CM.DelayInit = function() {
 
 
 	Game.Win('Third-party');
+}
+
+/********
+ * Section: Functions related to checking for changes in Minigames/GC's/Ticker
+ * TODO: Annotate functions 
+ * TODO: Possibly move this section */
+
+/**
+ * Auxilirary function that finds all currently spawned shimmers. 
+ * CM.Cache.spawnedGoldenShimmer stores the non-user spawned cookie to later determine data for the favicon and tab-title
+ * It is called by CM.CM.Main.CheckGoldenCookie
+ */
+CM.Main.FindShimmer = function() {
+	CM.Main.currSpawnedGoldenCookieState = 0;
+	CM.Cache.goldenShimmersByID = {}
+	for (var i in Game.shimmers) {
+		CM.Cache.goldenShimmersByID[Game.shimmers[i].id] = Game.shimmers[i]
+		if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'golden') {
+			CM.Cache.spawnedGoldenShimmer = Game.shimmers[i];
+			CM.Main.currSpawnedGoldenCookieState += 1;
+		}
+	}
+}
+
+/**
+ * This function checks for changes in the amount of Golden Cookies
+ * It is called by CM.Loop
+ * TODO: Remove the delete function, as it does not delete correctly and crowds CM.Disp.GCTimers
+ */
+CM.Main.CheckGoldenCookie = function() {
+	CM.Main.FindShimmer();
+	for (var i in CM.Disp.GCTimers) {
+		if (typeof CM.Cache.goldenShimmersByID[i] == "undefined") {
+			CM.Disp.GCTimers[i].parentNode.removeChild(CM.Disp.GCTimers[i]);
+			// TODO remove delete here
+			delete CM.Disp.GCTimers[i];
+		}
+	}
+	if (CM.Main.lastGoldenCookieState != Game.shimmerTypes['golden'].n) {
+		CM.Main.lastGoldenCookieState = Game.shimmerTypes['golden'].n;
+		if (CM.Main.lastGoldenCookieState) {
+			if (CM.Main.lastSpawnedGoldenCookieState < CM.Main.currSpawnedGoldenCookieState) {
+				CM.Disp.Flash(3, 'GCFlash');
+				CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
+				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
+			}
+			CM.Disp.UpdateFavicon();
+			
+			for (var i in Game.shimmers) {
+				if (typeof CM.Disp.GCTimers[Game.shimmers[i].id] == "undefined") {
+					CM.Disp.CreateGCTimer(Game.shimmers[i]);
+				}
+			}
+		}
+		CM.Main.lastSpawnedGoldenCookieState = CM.Main.currSpawnedGoldenCookieState
+	}
+	else if (CM.Config.GCTimer == 1 && CM.Main.lastGoldenCookieState) {
+		for (var i in CM.Disp.GCTimers) {
+			CM.Disp.GCTimers[i].style.opacity = CM.Cache.goldenShimmersByID[i].l.style.opacity;
+			CM.Disp.GCTimers[i].style.transform = CM.Cache.goldenShimmersByID[i].l.style.transform;
+			CM.Disp.GCTimers[i].textContent = Math.ceil(CM.Cache.goldenShimmersByID[i].life / Game.fps);
+		}
+	}
+}
+
+/**
+ * This function checks if there is reindeer that has spawned
+ * It is called by CM.Loop
+ */
+CM.Main.CheckSeasonPopup = function() {
+	if (CM.Main.lastSeasonPopupState != Game.shimmerTypes['reindeer'].spawned) {
+		CM.Main.lastSeasonPopupState = Game.shimmerTypes['reindeer'].spawned;
+		for (var i in Game.shimmers) {
+			if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'reindeer') {
+				CM.Cache.seasonPopShimmer = Game.shimmers[i];
+				break;
+			}
+		}
+		CM.Disp.Flash(3, 'SeaFlash');
+		CM.Disp.PlaySound(CM.Config.SeaSoundURL, 'SeaSound', 'SeaVolume');
+		CM.Disp.Notification('SeaNotification',"Reindeer sighted!", "A Reindeer has spawned. Click it now!")
+	}
+}
+
+/**
+ * This function checks if there is a fortune cookie on the ticker
+ * It is called by CM.Loop
+ */
+CM.Main.CheckTickerFortune = function() {
+	if (CM.Main.lastTickerFortuneState != (Game.TickerEffect && Game.TickerEffect.type == 'fortune')) {
+		CM.Main.lastTickerFortuneState = (Game.TickerEffect && Game.TickerEffect.type == 'fortune');
+		if (CM.Main.lastTickerFortuneState) {
+			CM.Disp.Flash(3, 'FortuneFlash');
+			CM.Disp.PlaySound(CM.Config.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
+			CM.Disp.Notification('FortuneNotification', "Fortune Cookie found", "A Fortune Cookie has appeared on the Ticker.")
+		}
+	}
+}
+
+/**
+ * This function checks if a garden tick has happened
+ * It is called by CM.Loop
+ */
+CM.Main.CheckGardenTick = function() {
+	if (Game.Objects['Farm'].minigameLoaded && CM.Main.lastGardenNextStep != Game.Objects['Farm'].minigame.nextStep) {
+		if (CM.Main.lastGardenNextStep != 0 && CM.Main.lastGardenNextStep < Date.now()) {
+			CM.Disp.Flash(3, 'GardFlash');
+			CM.Disp.PlaySound(CM.Config.GardSoundURL, 'GardSound', 'GardVolume');
+		}
+		CM.Main.lastGardenNextStep = Game.Objects['Farm'].minigame.nextStep;
+	}
+}
+
+/**
+ * This function checks if the magic meter is full
+ * It is called by CM.Loop
+ */
+CM.Main.CheckMagicMeter = function() {
+	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Config.GrimoireBar == 1) {
+		var minigame = Game.Objects['Wizard tower'].minigame;
+		if (minigame.magic < minigame.magicM) CM.Main.lastMagicBarFull = false;
+		else if (!CM.Main.lastMagicBarFull) {
+			CM.Main.lastMagicBarFull = true;
+			CM.Disp.Flash(3, 'MagicFlash');
+			CM.Disp.PlaySound(CM.Config.MagicSoundURL, 'MagicSound', 'MagicVolume');
+			CM.Disp.Notification('MagicNotification', "Magic Meter full", "Your Magic Meter is full. Cast a spell!")
+		}
+	}
+}
+
+/**
+ * This function checks if any new Wrinklers have popped up
+ * It is called by CM.Loop
+ */
+CM.Main.CheckWrinklerCount = function() {
+	if (Game.elderWrath > 0) {
+		var CurrentWrinklers = 0;
+		for (var i in Game.wrinklers) {
+			if (Game.wrinklers[i].phase == 2) CurrentWrinklers++;
+		}
+		if (CurrentWrinklers > CM.Main.lastWrinklerCount) {
+			CM.Main.lastWrinklerCount = CurrentWrinklers
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxFlash) {
+				CM.Disp.Flash(3, 'WrinklerMaxFlash');
+			} else {
+				CM.Disp.Flash(3, 'WrinklerFlash');
+			}
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxSound) {
+				CM.Disp.PlaySound(CM.Config.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume');
+			} else {
+				CM.Disp.PlaySound(CM.Config.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume');
+			}
+			if (CurrentWrinklers == Game.getWrinklersMax() &&  CM.Config.WrinklerMaxNotification) {
+				CM.Disp.Notification('WrinklerMaxNotification', "Maximum Wrinklers Reached", "You have reached your maximum ammount of wrinklers")
+			} else {
+				CM.Disp.Notification('WrinklerNotification', "A Wrinkler appeared", "A new wrinkler has appeared")
+			}
+		} else {
+			CM.Main.lastWrinklerCount = CurrentWrinklers
+		}
+	}
 }
 
 CM.HasReplaceNativeGrimoireLaunch = false;
