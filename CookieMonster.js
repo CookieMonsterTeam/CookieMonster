@@ -1902,7 +1902,6 @@ CM.Disp.Notification = function(notifyConfig, title, message) {
 
 /********
  * Section: Functions related to updating the tab in the browser's tab-bar
- * TODO: Annotate functions */
 
 /**
  * This function creates the Favicon, it is called by CM.DelayInit()
