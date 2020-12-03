@@ -1001,7 +1001,7 @@ CM.Disp.Beautify = function(num, frac) {
 			}
 		}
 		else if (CM.Config.Scale == 4) {
-			if (um >= 999999) {
+			if (num >= 999999) {
 				var count = 0;
 				while (num >= 1000) {
 					count++;
