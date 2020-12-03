@@ -322,9 +322,9 @@ CM.Disp.RefreshScale = function() {
 
 /**
  * This function returns time as a string depending on TimeFormat setting
- * @param  {number} time		Time to be formatted
- * @param  {number}	longFormat 	1 or 0
- * @return {string}				Formatted time`
+ * @param  	{number} 	time		Time to be formatted
+ * @param  	{number}	longFormat 	1 or 0
+ * @returns	{string}				Formatted time`
  */
 CM.Disp.FormatTime = function(time, longFormat) {
 	if (time == Infinity) return time;
@@ -357,9 +357,9 @@ CM.Disp.FormatTime = function(time, longFormat) {
  * @param	{number}	num		Number to be beautified
  * @param 	{any}		frac 	Used in some scenario's by CM.Backup.Beautify (Game's original function)
  * @param	{number}	forced	Used to force (type 3) in certains cases
- * @return	{string}			Formatted number
+ * @returns	{string}			Formatted number
  * TODO: Add functionality to choose amount of decimals and separators
-*/
+ */
 CM.Disp.Beautify = function(num, frac, forced) {
 	var decimals = 3; // This can be used to implement function to let user choose amount of decimals
 	if (CM.Config.Scale == 0) {
@@ -436,7 +436,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 /********
  * Section: Functions related to the Bottom Bar */
 
- /**
+/**
  * This function toggle the bottom bar
  * It is called by CM.Disp.UpdateAscendState() and a change in CM.Config.BotBar
  */
@@ -451,7 +451,7 @@ CM.Disp.ToggleBotBar = function() {
 	CM.Disp.UpdateBotTimerBarPosition();
 }
 
- /**
+/**
  * This function creates the bottom bar and appends it to l('wrapper')
  * It is called by CM.DelayInit and a change in CM.Config.BotBar
  */
@@ -887,8 +887,44 @@ CM.Disp.UpdateBuildings = function() {
 
 /********
  * Section: Functions related to the Upgrade Bar
- * TODO: Annotate functions */
 
+/**
+ * This function toggles the upgrade bar and the colours of upgrades
+ * It is called by a change in CM.Config.UpBarColor
+ */
+CM.Disp.ToggleUpgradeBarAndColor = function() {
+	if (CM.Config.UpBarColor == 1) { // Colours and bar on
+		CM.Disp.UpgradeBar.style.display = '';
+		CM.Disp.UpdateUpgrades();
+	}
+	else if (CM.Config.UpBarColor == 2) {// Colours on and bar off
+		CM.Disp.UpgradeBar.style.display = 'none';
+		CM.Disp.UpdateUpgrades();
+	}
+	else { // Colours and bar off
+		CM.Disp.UpgradeBar.style.display = 'none';
+		Game.RebuildUpgrades();
+	}
+}
+
+/**
+ * This function toggles the position of the upgrade bar from fixed or non-fixed mode
+ * It is called by a change in CM.Config.UpgradeBarFixedPos
+ */
+CM.Disp.ToggleUpgradeBarFixedPos = function() {
+	if (CM.Config.UpgradeBarFixedPos == 1) { // Fix to top of screen when scrolling
+		CM.Disp.UpgradeBar.style.position = 'sticky';
+		CM.Disp.UpgradeBar.style.top = '0px';
+	}
+	else {
+		CM.Disp.UpgradeBar.style.position = ''; // Possible to scroll offscreen
+	}
+}
+
+/**
+ * This function creates the upgrade bar above the upgrade-section in the right section of the screen
+ * The number (.textContent) of upgrades gets updated by CM.Disp.UpdateUpgrades()
+ */
 CM.Disp.CreateUpgradeBar = function() {
 	CM.Disp.UpgradeBar = document.createElement('div');
 	CM.Disp.UpgradeBar.id = 'CMUpgradeBar';
@@ -901,6 +937,34 @@ CM.Disp.CreateUpgradeBar = function() {
 	CM.Disp.UpgradeBar.onmouseout = function() { Game.tooltip.hide(); };
 
 	var placeholder = document.createElement('div');
+	placeholder.appendChild(CM.Disp.CreateUpgradeBarLegend());
+	CM.Disp.UpgradeBar.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML), 'store');};
+
+	var upgradeNumber = function(id, color) {
+		var span = document.createElement('span');
+		span.id = id;
+		span.className = CM.Disp.colorTextPre + color;
+		span.style.width = '14.28571428571429%';
+		span.style.display = 'inline-block';
+		span.textContent = '0';
+		return span;
+	}
+	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarBlue', CM.Disp.colorBlue));
+	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarGreen', CM.Disp.colorGreen));
+	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarYellow', CM.Disp.colorYellow));
+	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarOrange', CM.Disp.colorOrange));
+	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarRed', CM.Disp.colorRed));
+	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarPurple', CM.Disp.colorPurple));
+	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarGray', CM.Disp.colorGray));
+
+	l('upgrades').parentNode.insertBefore(CM.Disp.UpgradeBar, l('upgrades').parentNode.childNodes[3]);
+}
+
+/**
+ * This function creates the legend for the upgrade bar, it is called by CM.Disp.CreateUpgradeBar
+ * @returns	{object}	legend	The legend-object to be added
+ */
+CM.Disp.CreateUpgradeBarLegend = function() {
 	var legend = document.createElement('div');
 	legend.style.minWidth = '330px';
 	legend.style.marginBottom = '4px';
@@ -931,53 +995,7 @@ CM.Disp.CreateUpgradeBar = function() {
 	legend.appendChild(legendLine(CM.Disp.colorRed, 'Same as worst PP building'));
 	legend.appendChild(legendLine(CM.Disp.colorPurple, 'Worse than worst PP building'));
 	legend.appendChild(legendLine(CM.Disp.colorGray, 'Negative or infinity PP'));
-	placeholder.appendChild(legend);
-
-	CM.Disp.UpgradeBar.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML), 'store');};
-
-	var upgradeNumber = function(id, color) {
-		var span = document.createElement('span');
-		span.id = id;
-		span.className = CM.Disp.colorTextPre + color;
-		span.style.width = '14.28571428571429%';
-		span.style.display = 'inline-block';
-		span.textContent = '0';
-		return span;
-	}
-	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarBlue', CM.Disp.colorBlue));
-	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarGreen', CM.Disp.colorGreen));
-	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarYellow', CM.Disp.colorYellow));
-	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarOrange', CM.Disp.colorOrange));
-	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarRed', CM.Disp.colorRed));
-	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarPurple', CM.Disp.colorPurple));
-	CM.Disp.UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarGray', CM.Disp.colorGray));
-
-	l('upgrades').parentNode.insertBefore(CM.Disp.UpgradeBar, l('upgrades').parentNode.childNodes[3]);
-}
-
-CM.Disp.ToggleUpBarColor = function() {
-	if (CM.Config.UpBarColor == 1) {
-		CM.Disp.UpgradeBar.style.display = '';
-		CM.Disp.UpdateUpgrades();
-	}
-	else if (CM.Config.UpBarColor == 2) {
-		CM.Disp.UpgradeBar.style.display = 'none';
-		CM.Disp.UpdateUpgrades();
-	}
-	else {
-		CM.Disp.UpgradeBar.style.display = 'none';
-		Game.RebuildUpgrades();
-	}
-}
-
-CM.Disp.ToggleUpgradeBarFixedPos = function() {
-	if (CM.Config.UpgradeBarFixedPos == 1) {
-		CM.Disp.UpgradeBar.style.position = 'sticky';
-		CM.Disp.UpgradeBar.style.top = '0px';
-	}
-	else {
-		CM.Disp.UpgradeBar.style.position = '';
-	}
+	return legend;
 }
 
 /********
