@@ -1224,8 +1224,11 @@ CM.Disp.Beautify = function(num, frac, forced) {
 		}
 		num = num.toString();
 		var timesTenToPowerThree = Math.trunc(Math.log10(num) / 3)
-		if (timesTenToPowerThree < 2) {
-			answer = num;
+		if (num == "0") {
+			return num
+		}
+		else if (timesTenToPowerThree < 2) {
+			answer = Math.round(num * 100) / 100;
 		}
 		else if (CM.Config.Scale == 3 && !forced || forced == 3) { // Scientific notation, 123456789 => 1.235E+8
 			answer = num[0] + '.'
