@@ -1153,7 +1153,7 @@ CM.Disp.RefreshScale = function() {
  * This function returns time as a string depending on TimeFormat setting
  * @param  	{number} 	time		Time to be formatted
  * @param  	{number}	longFormat 	1 or 0
- * @returns	{string}				Formatted time`
+ * @returns	{string}				Formatted time
  */
 CM.Disp.FormatTime = function(time, longFormat) {
 	if (time == Infinity) return time;
@@ -4038,7 +4038,7 @@ CM.Sim.eff = function(name) {
 		return CM.Sim.effs[name]
 	}
 	else {
-		return Game.effs[name];
+		return CM.Sim.effs[name];
 	}
 }
 

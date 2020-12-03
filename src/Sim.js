@@ -118,7 +118,7 @@ CM.Sim.eff = function(name) {
 		return CM.Sim.effs[name]
 	}
 	else {
-		return Game.effs[name];
+		return CM.Sim.effs[name];
 	}
 }
 
