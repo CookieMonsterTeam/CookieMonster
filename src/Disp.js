@@ -1034,7 +1034,7 @@ CM.Disp.CheckGoldenCookie = function() {
 				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
 			}
 			CM.Disp.lastSpawnedGoldenCookieState = CM.Disp.currSpawnedGoldenCookieState
-			if (CM.Main.currSpawnedGoldenCookieState == 0) CM.Disp.spawnedGoldenShimmer = 0;
+			if (CM.Disp.currSpawnedGoldenCookieState == 0) CM.Disp.spawnedGoldenShimmer = 0;
 			CM.Disp.UpdateFavicon();
 			
 			if (CM.Config.GCTimer == 1) {
