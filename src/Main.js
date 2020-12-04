@@ -18,14 +18,12 @@ CM.ReplaceNative = function() {
 	eval('CM.Backup.tooltip.drawMod = ' + Game.tooltip.draw.toString().split('this').join('Game.tooltip'));
 	Game.tooltip.draw = function(from, text, origin) {
 		CM.Backup.tooltip.drawMod(from, text, origin);
-		CM.Disp.DrawTooltipWarn();
 	}
 
 	CM.Backup.tooltip.update = Game.tooltip.update;
 	eval('CM.Backup.tooltip.updateMod = ' + Game.tooltip.update.toString().split('this.').join('Game.tooltip.'));
 	Game.tooltip.update = function() {
 		CM.Backup.tooltip.updateMod();
-		CM.Disp.UpdateTooltipWarn();
 		CM.Disp.UpdateTooltipLocation();
 	}
 
@@ -228,11 +226,10 @@ CM.DelayInit = function() {
 	for (var i in CM.Disp.TooltipText) {
 		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
-	CM.Disp.CreateTooltipWarn();
 	CM.Disp.ReplaceTooltipBuild();
 	CM.Disp.ReplaceTooltipGrimoire();
 	CM.Disp.ReplaceTooltipLump();
-	CM.Disp.AddWrinklerAreaDetect();
+	CM.Main.AddWrinklerAreaDetect();
 	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
 	CM.ReplaceNativeGrimoire();
@@ -409,6 +406,23 @@ CM.Main.CheckWrinklerCount = function() {
 			CM.Main.lastWrinklerCount = CurrentWrinklers
 		}
 	}
+}
+
+/**
+ * This function creates .onmouseover/out events that determine if the mouse is hovering-over a Wrinkler
+ * It is called by CM.DelayInit
+ * TODO: The system for displaying wrinklers should ideally use a similar system as other tooltips
+ * Thus, writing a CM.Disp.ReplaceTooltipWrinkler function etc.
+ */
+CM.Main.AddWrinklerAreaDetect = function() {
+	l('backgroundLeftCanvas').onmouseover = function() {CM.Disp.TooltipWrinklerArea = 1;};
+	l('backgroundLeftCanvas').onmouseout = function() {
+		CM.Disp.TooltipWrinklerArea = 0;
+		Game.tooltip.hide();
+		for (var i in Game.wrinklers) {
+			CM.Disp.TooltipWrinklerCache[i] = 0;
+		}
+	};
 }
 
 CM.HasReplaceNativeGrimoireLaunch = false;
