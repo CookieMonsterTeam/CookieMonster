@@ -1033,9 +1033,7 @@ CM.Disp.CheckGoldenCookie = function() {
 				CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
 				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
 			}
-			CM.Disp.lastSpawnedGoldenCookieState = CM.Disp.currSpawnedGoldenCookieState
-			if (CM.Disp.currSpawnedGoldenCookieState == 0) CM.Disp.spawnedGoldenShimmer = 0;
-			CM.Disp.UpdateFavicon();
+			
 			
 			if (CM.Config.GCTimer == 1) {
 				for (var i in Game.shimmers) {
@@ -1050,6 +1048,10 @@ CM.Disp.CheckGoldenCookie = function() {
 				CM.Disp.GCTimers[i].style.display = 'none';
 			}
 		}
+		CM.Disp.lastSpawnedGoldenCookieState = CM.Disp.currSpawnedGoldenCookieState
+		if (CM.Disp.currSpawnedGoldenCookieState == 0) CM.Disp.spawnedGoldenShimmer = 0;
+		CM.Disp.UpdateFavicon();
+		
 	}
 	else if (CM.Config.GCTimer == 1 && CM.Disp.lastGoldenCookieState) {
 		for (var i in CM.Disp.GCTimers) {
