@@ -2264,7 +2264,7 @@ CM.Disp.UpdateTooltip = function() {
 						l('CMTooltipPP').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].pp, 2);
 						l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 					}
-					if (CM.Config.TooltipBuildUp) {
+					if (CM.Config.TooltipBuildUp && Game.buyMode == 1) {
 						for (var i in Game.Objects[CM.Disp.tooltipName].productionAchievs) {
 							if (!CM.Sim.HasAchiev(Game.Objects[CM.Disp.tooltipName].productionAchievs[i].achiev.name)) {
 								var nextProductionAchiev = Game.Objects[CM.Disp.tooltipName].productionAchievs[i]
