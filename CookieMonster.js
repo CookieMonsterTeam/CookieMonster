@@ -1402,8 +1402,11 @@ CM.Disp.CreateBotBarBuildingColumn = function(buildingName) {
 
 /********
  * Section: Functions related to the Timer Bar 
- * TODO: Annotate functions */
 
+/**
+ * This function creates the TimerBar and appends it to l('wrapper')
+ * It is called by CM.DelayInit()
+ */
 CM.Disp.CreateTimerBar = function() {
 	CM.Disp.TimerBar = document.createElement('div');
 	CM.Disp.TimerBar.id = 'CMTimerBar';
@@ -1414,96 +1417,177 @@ CM.Disp.CreateTimerBar = function() {
 	CM.Disp.TimerBar.style.fontWeight = 'bold';
 	CM.Disp.TimerBar.style.backgroundColor = 'black';
 
-	var bar = function(name, bars, time) {
-		var div = document.createElement('div');
-		div.style.width = '100%';
-		div.style.height = '10px';
-		div.style.margin = 'auto';
-		div.style.position = 'absolute';
-		div.style.left = '0px';
-		div.style.top = '0px';
-		div.style.right = '0px';
-		div.style.bottom = '0px';
+	CM.Disp.TimerBars = {};
+	CM.Disp.BuffTimerBars = {};
 
-		var type = document.createElement('span');
-		type.style.display = 'inline-block';
-		type.style.textAlign = 'right';
-		type.style.width = '108px';
-		type.style.marginRight = '5px';
-		type.style.verticalAlign = 'text-top';
-		type.textContent = name;
-		div.appendChild(type);
+	// Create standard Golden Cookie bar
+	CM.Disp.TimerBars['CMTimerBarGC'] = CM.Disp.TimerBarCreateBar('CMTimerBarGC', 
+		'Next Cookie', 
+		[{id: 'CMTimerBarGCMinBar', color: CM.Disp.colorGray}, {id: 'CMTimerBarGCBar', color: CM.Disp.colorPurple}]
+		);
+	CM.Disp.TimerBar.appendChild(CM.Disp.TimerBars['CMTimerBarGC'])
 
-		for (var i = 0; i < bars.length; i++) {
-			var colorBar = document.createElement('span');
-			colorBar.id = bars[i].id
-			colorBar.style.display = 'inline-block';
-			colorBar.style.height = '10px';
-			if (bars.length - 1 == i) {
-				colorBar.style.borderTopRightRadius = '10px';
-				colorBar.style.borderBottomRightRadius = '10px';
-			}
-			if (typeof bars[i].color !== 'undefined') {
-				colorBar.className = CM.Disp.colorBackPre + bars[i].color;
-			}
-			div.appendChild(colorBar);
-		}
-
-		var timer = document.createElement('span');
-		timer.id = time;
-		timer.style.marginLeft = '5px';
-		timer.style.verticalAlign = 'text-top';
-		div.appendChild(timer);
-		return div
-	}
-
-	CM.Disp.TimerBarGC = document.createElement('div');
-	CM.Disp.TimerBarGC.id = 'CMTimerBarGC';
-	CM.Disp.TimerBarGC.style.height = '12px';
-	CM.Disp.TimerBarGC.style.margin = '0px 10px';
-	CM.Disp.TimerBarGC.style.position = 'relative';
-	CM.Disp.TimerBarGC.appendChild(bar('Next Cookie', [{id: 'CMTimerBarGCMinBar', color: CM.Disp.colorGray}, {id: 'CMTimerBarGCBar', color: CM.Disp.colorPurple}], 'CMTimerBarGCTime'));
-	CM.Disp.TimerBar.appendChild(CM.Disp.TimerBarGC);
-
-	CM.Disp.TimerBarRen = document.createElement('div');
-	CM.Disp.TimerBarRen.id = 'CMTimerBarRen';
-	CM.Disp.TimerBarRen.style.height = '12px';
-	CM.Disp.TimerBarRen.style.margin = '0px 10px';
-	CM.Disp.TimerBarRen.style.position = 'relative';
-	CM.Disp.TimerBarRen.appendChild(bar('Next Reindeer', [{id: 'CMTimerBarRenMinBar', color: CM.Disp.colorGray}, {id: 'CMTimerBarRenBar', color: CM.Disp.colorOrange}], 'CMTimerBarRenTime'));
-	CM.Disp.TimerBar.appendChild(CM.Disp.TimerBarRen);
-
-	CM.Disp.TimerBarBuff1 = document.createElement('div');
-	CM.Disp.TimerBarBuff1.id = 'CMTimerBarBuff1';
-	CM.Disp.TimerBarBuff1.style.height = '12px';
-	CM.Disp.TimerBarBuff1.style.margin = '0px 10px';
-	CM.Disp.TimerBarBuff1.style.position = 'relative';
-	CM.Disp.TimerBarBuff1.appendChild(bar('', [{id: 'CMTimerBarBuff1Bar'}], 'CMTimerBarBuff1Time'));
-	CM.Disp.TimerBarBuff1.firstChild.firstChild.id = 'CMTimerBarBuff1Type';
-	CM.Disp.TimerBar.appendChild(CM.Disp.TimerBarBuff1);
-
-	CM.Disp.TimerBarBuff2 = document.createElement('div');
-	CM.Disp.TimerBarBuff2.id = 'CMTimerBarBuff2';
-	CM.Disp.TimerBarBuff2.style.height = '12px';
-	CM.Disp.TimerBarBuff2.style.margin = '0px 10px';
-	CM.Disp.TimerBarBuff2.style.position = 'relative';
-	CM.Disp.TimerBarBuff2.appendChild(bar('', [{id: 'CMTimerBarBuff2Bar'}], 'CMTimerBarBuff2Time'));
-	CM.Disp.TimerBarBuff2.firstChild.firstChild.id = 'CMTimerBarBuff2Type';
-	CM.Disp.TimerBar.appendChild(CM.Disp.TimerBarBuff2);
+	// Create standard Reindeer bar
+	CM.Disp.TimerBars['CMTimerBarRen'] = CM.Disp.TimerBarCreateBar('CMTimerBarRen', 
+		'Next Reindeer', 
+		[{id: 'CMTimerBarRenMinBar', color: CM.Disp.colorGray}, {id: 'CMTimerBarRenBar', color: CM.Disp.colorOrange}]
+		);
+	CM.Disp.TimerBar.appendChild(CM.Disp.TimerBars['CMTimerBarRen'])
 
 	l('wrapper').appendChild(CM.Disp.TimerBar);
 }
 
-CM.Disp.ToggleTimerBar = function() {
+/**
+ * This function creates an indivudual timer for the timer bar
+ * It is called by CM.DelayInit()
+ * @param	{string}					id					An id to identify the timer
+ * @param	{string}					name				The title of the timer
+ * @param	[{{string}, {string}}, ...]	bars ([id, color])	The id and colours of individual parts of the timer
+ */
+CM.Disp.TimerBarCreateBar = function(id, name, bars) {
+	timerBar = document.createElement('div');
+	timerBar.id = 'CMTimerBarGC';
+	timerBar.style.height = '12px';
+	timerBar.style.margin = '0px 10px';
+	timerBar.style.position = 'relative';
+
+	var div = document.createElement('div');
+	div.style.width = '100%';
+	div.style.height = '10px';
+	div.style.margin = 'auto';
+	div.style.position = 'absolute';
+	div.style.left = '0px';
+	div.style.top = '0px';
+	div.style.right = '0px';
+	div.style.bottom = '0px';
+
+	var type = document.createElement('span');
+	type.style.display = 'inline-block';
+	type.style.textAlign = 'right';
+	type.style.width = '108px';
+	type.style.marginRight = '5px';
+	type.style.verticalAlign = 'text-top';
+	type.textContent = name;
+	div.appendChild(type);
+
+	for (var i = 0; i < bars.length; i++) {
+		var colorBar = document.createElement('span');
+		colorBar.id = bars[i].id
+		colorBar.style.display = 'inline-block';
+		colorBar.style.height = '10px';
+		if (bars.length - 1 == i) {
+			colorBar.style.borderTopRightRadius = '10px';
+			colorBar.style.borderBottomRightRadius = '10px';
+		}
+		if (typeof bars[i].color !== 'undefined') {
+			colorBar.className = CM.Disp.colorBackPre + bars[i].color;
+		}
+		div.appendChild(colorBar);
+	}
+
+	var timer = document.createElement('span');
+	timer.id = id + 'Time';
+	timer.style.marginLeft = '5px';
+	timer.style.verticalAlign = 'text-top';
+	div.appendChild(timer);
+	
+	timerBar.appendChild(div);
+
+	return timerBar;
+}
+
+/**
+ * This function creates an indivudual timer for the timer bar
+ * It is called by CM.Loop()
+ */
+CM.Disp.UpdateTimerBar = function() {
 	if (CM.Config.TimerBar == 1) {
-		CM.Disp.TimerBar.style.display = '';
+		// label width: 113, timer width: 26, div margin: 20
+		var maxWidth = CM.Disp.TimerBar.offsetWidth - 159;
+		var numberOfTimers = 0;
+
+		// Regulates visibility of Golden Cookie timer
+		if (Game.shimmerTypes['golden'].spawned == 0 && !Game.Has('Golden switch [off]')) {
+			CM.Disp.TimerBars['CMTimerBarGC'].style.display = '';
+			l('CMTimerBarGCMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes['golden'].minTime - Game.shimmerTypes['golden'].time) * maxWidth / Game.shimmerTypes['golden'].maxTime) + 'px';
+			if (Game.shimmerTypes['golden'].minTime == Game.shimmerTypes['golden'].maxTime) {
+				l('CMTimerBarGCMinBar').style.borderTopRightRadius = '10px';
+				l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '10px';
+			}
+			else {
+				l('CMTimerBarGCMinBar').style.borderTopRightRadius = '';
+				l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '';
+			}
+			l('CMTimerBarGCBar').style.width = Math.round(Math.min(Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].minTime, Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) * maxWidth / Game.shimmerTypes['golden'].maxTime) + 'px';
+			l('CMTimerBarGCTime').textContent = Math.ceil((Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) / Game.fps);
+			numberOfTimers++;
+		}
+		else CM.Disp.TimerBars['CMTimerBarGC'].style.display = 'none';
+
+		// Regulates visibility of Reinder timer
+		if (Game.season == 'christmas' && Game.shimmerTypes['reindeer'].spawned == 0) {
+			CM.Disp.TimerBars['CMTimerBarRen'].style.display = '';
+			l('CMTimerBarRenMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes['reindeer'].minTime - Game.shimmerTypes['reindeer'].time) * maxWidth / Game.shimmerTypes['reindeer'].maxTime) + 'px';
+			l('CMTimerBarRenBar').style.width = Math.round(Math.min(Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].minTime, Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) * maxWidth / Game.shimmerTypes['reindeer'].maxTime) + 'px';
+			l('CMTimerBarRenTime').textContent = Math.ceil((Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) / Game.fps);
+			numberOfTimers++;
+		}
+		else {
+			CM.Disp.TimerBars['CMTimerBarRen'].style.display = 'none';
+		}
+
+		// On every frame all buff-timers are deleted and re-created
+		for (var i in CM.Disp.BuffTimerBars) {
+			CM.Disp.BuffTimerBars[i].remove()
+		}
+		CM.Disp.BuffTimerBars = {}
+		for (var i in Game.buffs) {
+			if (Game.buffs[i]) {
+				timer = CM.Disp.TimerBarCreateBar(Game.buffs[i].name, Game.buffs[i].name, [{id: Game.buffs[i].name + 'Bar'}])
+				timer.style.display = '';
+				var classColor = '';
+				// Gives specific timers specific colors
+				if (typeof CM.Disp.buffColors[Game.buffs[i].name] !== 'undefined') {
+					classColor = CM.Disp.buffColors[Game.buffs[i].name];
+				}
+				else classColor = CM.Disp.colorPurple;
+				timer.lastChild.children[1].className = CM.Disp.colorBackPre + classColor;
+				timer.lastChild.children[1].style.width = Math.round(Game.buffs[i].time * maxWidth / Game.buffs[i].maxTime) + 'px';
+				timer.lastChild.children[2].textContent = Math.ceil(Game.buffs[i].time / Game.fps);
+				numberOfTimers++;
+				CM.Disp.BuffTimerBars[Game.buffs[i].name] = timer
+			}
+		}
+		for (var i in CM.Disp.BuffTimerBars) {
+			CM.Disp.TimerBar.appendChild(CM.Disp.BuffTimerBars[i])
+		}
+
+		if (numberOfTimers != 0) {
+			var height = 48 / numberOfTimers;
+			for (var i in CM.Disp.TimerBars) {
+				CM.Disp.TimerBars[i].style.height = height + 'px';
+			}
+			for (var i in CM.Disp.BuffTimerBars) {
+				CM.Disp.BuffTimerBars[i].style.height = height + 'px';
+			}
+		}
 	}
-	else {
-		CM.Disp.TimerBar.style.display = 'none';
-	}
+}
+
+/**
+ * This function changes the visibility of the timer bar
+ * It is called by CM.Disp.UpdateAscendState() or a change in CM.Config.TimerBar
+ */
+CM.Disp.ToggleTimerBar = function() {
+	if (CM.Config.TimerBar == 1) CM.Disp.TimerBar.style.display = '';
+	else CM.Disp.TimerBar.style.display = 'none';
 	CM.Disp.UpdateBotTimerBarPosition();
 }
 
+/**
+ * This function changes the position of the timer bar
+ * It is called by a change in CM.Config.TimerBarPos
+ */
 CM.Disp.ToggleTimerBarPos = function() {
 	if (CM.Config.TimerBarPos == 0) {
 		CM.Disp.TimerBar.style.width = '30%';
@@ -1518,125 +1602,13 @@ CM.Disp.ToggleTimerBarPos = function() {
 	CM.Disp.UpdateBotTimerBarPosition();
 }
 
-CM.Disp.UpdateTimerBar = function() {
-	if (CM.Config.TimerBar == 1) {
-		// label width: 113, timer width: 26, div margin: 20
-		var maxWidth = CM.Disp.TimerBar.offsetWidth - 159;
-		var count = 0;
+/********
+ * Section: Functions related to the both the bottom and timer bar
 
-		if (Game.shimmerTypes['golden'].spawned == 0 && !Game.Has('Golden switch [off]')) {
-			CM.Disp.TimerBarGC.style.display = '';
-			l('CMTimerBarGCMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes['golden'].minTime - Game.shimmerTypes['golden'].time) * maxWidth / Game.shimmerTypes['golden'].maxTime) + 'px';
-			if (Game.shimmerTypes['golden'].minTime == Game.shimmerTypes['golden'].maxTime) {
-				l('CMTimerBarGCMinBar').style.borderTopRightRadius = '10px';
-				l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '10px';
-			}
-			else {
-				l('CMTimerBarGCMinBar').style.borderTopRightRadius = '';
-				l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '';
-			}
-			l('CMTimerBarGCBar').style.width = Math.round(Math.min(Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].minTime, Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) * maxWidth / Game.shimmerTypes['golden'].maxTime) + 'px';
-			l('CMTimerBarGCTime').textContent = Math.ceil((Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) / Game.fps);
-			count++;
-		}
-		else {
-			CM.Disp.TimerBarGC.style.display = 'none';
-		}
-
-		if (Game.season == 'christmas' && Game.shimmerTypes['reindeer'].spawned == 0) {
-			CM.Disp.TimerBarRen.style.display = '';
-			l('CMTimerBarRenMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes['reindeer'].minTime - Game.shimmerTypes['reindeer'].time) * maxWidth / Game.shimmerTypes['reindeer'].maxTime) + 'px';
-			l('CMTimerBarRenBar').style.width = Math.round(Math.min(Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].minTime, Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) * maxWidth / Game.shimmerTypes['reindeer'].maxTime) + 'px';
-			l('CMTimerBarRenTime').textContent = Math.ceil((Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) / Game.fps);
-			count++;
-		}
-		else {
-			CM.Disp.TimerBarRen.style.display = 'none';
-		}
-
-		var buffCount = 0;
-		for (var i in Game.buffs) {
-			if (Game.buffs[i]) {
-				buffCount++;
-				CM.Disp['TimerBarBuff' + buffCount].style.display = '';
-				l('CMTimerBarBuff' + buffCount + 'Type').textContent = Game.buffs[i].name;
-				var classColor = '';
-				if (typeof CM.Disp.buffColors[Game.buffs[i].name] !== 'undefined') {
-					classColor = CM.Disp.buffColors[Game.buffs[i].name];
-				}
-				else {
-					classColor = CM.Disp.colorPurple;
-				}
-				l('CMTimerBarBuff' + buffCount + 'Bar').className = CM.Disp.colorBackPre + classColor;
-				l('CMTimerBarBuff' + buffCount + 'Bar').style.width = Math.round(Game.buffs[i].time * maxWidth / Game.buffs[i].maxTime) + 'px';
-				l('CMTimerBarBuff' + buffCount + 'Time').textContent = Math.ceil(Game.buffs[i].time / Game.fps);
-				count++;
-				if (buffCount == 2) {
-					break;
-				}
-			}
-		}
-		if (buffCount < 2) {
-			CM.Disp.TimerBarBuff2.style.display = 'none';
-			if (buffCount < 1) {
-				CM.Disp.TimerBarBuff1.style.display = 'none';
-			}
-		}
-
-		/*if (Game.frenzy > 0) {
-			CM.Disp.TimerBarBuff1.style.display = '';
-			if (Game.frenzyPower == 7) {
-				l('CMTimerBarBuff1Type').textContent = 'Frenzy';
-				l('CMTimerBarBuff1Bar').className = CM.Disp.colorBackPre + CM.Disp.colorYellow;
-			}
-			else if (Game.frenzyPower == 0.5) {
-				l('CMTimerBarBuff1Type').textContent = 'Clot';
-				l('CMTimerBarBuff1Bar').className = CM.Disp.colorBackPre + CM.Disp.colorRed;
-			}
-			else if (Game.frenzyPower == 15) {
-				l('CMTimerBarBuff1Type').textContent = 'Dragon Harvest';
-				l('CMTimerBarBuff1Bar').className = CM.Disp.colorBackPre + CM.Disp.colorBrown;
-			}
-			else {
-				l('CMTimerBarBuff1Type').textContent = 'Blood Frenzy';
-				l('CMTimerBarBuff1Bar').className = CM.Disp.colorBackPre + CM.Disp.colorGreen;
-			}
-			l('CMTimerBarBuff1Bar').style.width = Math.round(Game.frenzy * maxWidth / Game.frenzyMax) + 'px';
-			l('CMTimerBarBuff1Time').textContent = Math.ceil(Game.frenzy / Game.fps);
-			count++;
-		}
-		else {
-			CM.Disp.TimerBarBuff1.style.display = 'none';
-		}
-
-		if (Game.clickFrenzy > 0) {
-			CM.Disp.TimerBarBuff2.style.display = '';
-			if (Game.clickFrenzyPower == 777) {
-				l('CMTimerBarBuff2Type').textContent = 'Click Frenzy';
-				l('CMTimerBarBuff2Bar').className = CM.Disp.colorBackPre + CM.Disp.colorBlue;
-			}
-			else {
-				l('CMTimerBarBuff2Type').textContent = 'Dragonflight';
-				l('CMTimerBarBuff2Bar').className = CM.Disp.colorBackPre + CM.Disp.colorPink;
-			}
-			l('CMTimerBarBuff2Bar').style.width = Math.round(Game.clickFrenzy * maxWidth / Game.clickFrenzyMax) + 'px';
-			l('CMTimerBarBuff2Time').textContent = Math.ceil(Game.clickFrenzy / Game.fps);
-			count++;
-		}
-		else {
-			CM.Disp.TimerBarBuff2.style.display = 'none';
-		}*/
-
-		if (count != 0) {
-			var height = 48 / count;
-			CM.Disp.TimerBarGC.style.height = height + 'px';
-			CM.Disp.TimerBarRen.style.height = height + 'px';
-			CM.Disp.TimerBarBuff1.style.height = height + 'px';
-			CM.Disp.TimerBarBuff2.style.height = height + 'px';
-		}
-	}
-}
-
+/**
+ * This function changes the position of both the bottom and timer bar
+ * It is called by CM.Disp.ToggleTimerBar(), CM.Disp.ToggleTimerBarPos() and CM.Disp.ToggleBotBar()
+ */
 CM.Disp.UpdateBotTimerBarPosition = function() {
 	if (CM.Config.BotBar == 1 && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
 		CM.Disp.BotBar.style.bottom = '48px';
