@@ -252,7 +252,7 @@ CM.Sim.CalculateGains = function() {
 	var mult = 1;
 	// Include minigame effects
 	var effs={};
-	for (var i in CM.Cache.Objects) {
+	for (var i in Game.Objects) {
 		// TODO Store minigames and effects in Cache
 		// Include possibility of new/modded building and new/modded minigames
 		if (CM.Sim.Objects[i].minigameLoaded && CM.Sim.Objects[i].minigame.effs) {
