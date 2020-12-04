@@ -1,20 +1,25 @@
 /**********
  * Header *
  **********/
+RunCookieMonsterHeader = function() {
+    CM = {};
 
-CM = {};
+    CM.Backup = {};
 
-CM.Backup = {};
+    CM.Cache = {};
 
-CM.Cache = {};
+    CM.Config = {};
 
-CM.Config = {};
+    CM.ConfigData = {};
 
-CM.ConfigData = {};
+    CM.Data = {};
 
-CM.Data = {};
+    CM.Disp = {};
 
-CM.Disp = {};
+    CM.Sim = {};
+}
 
-CM.Sim = {};
+if (typeof CM == "undefined") {
+    RunCookieMonsterHeader();
+}
 
