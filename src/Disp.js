@@ -12,11 +12,15 @@
  * TODO: Annotate most functions 
  * TODO: Sort functionsn in relevant (new) sections or files */
 
+CM.Disp.TooltipWrinklerCache = [];
+for (var i in Game.wrinklers) {
+	CM.Disp.TooltipWrinklerCache[i] = 0;
+}
+
 /**
  * This function returns Name and Color as object for sugar lump type that is given as input param.
  * @param type Sugar Lump Type.
  * @returns {{text: string, color: string}}
- * @constructor
  */
 CM.Disp.GetLumpColor = function(type) {
 	var name = "";
@@ -84,20 +88,7 @@ CM.Disp.AddJscolor = function() {
 	document.head.appendChild(CM.Disp.Jscolor);
 }
 
-CM.Disp.CreateCssArea = function() {
-	CM.Disp.Css = document.createElement('style');
-	CM.Disp.Css.type = 'text/css';
 
-	document.head.appendChild(CM.Disp.Css);
-	
-	// given the architecture of your code, you probably want these lines somewhere else,
-	// but I stuck them here for convenience
-	l("products").style.display = "grid";
-	l("storeBulk").style.gridRow = "1/1";
-
-	l("upgrades").style.display = "flex";
-	l("upgrades").style["flex-wrap"] = "wrap";
-}
 
 CM.Disp.UpdateUpgrades = function() {
 	if (CM.Config.UpBarColor > 0) {
@@ -255,6 +246,22 @@ CM.Disp.RefreshScale = function() {
 	CM.Disp.UpdateBuildings();
 	CM.Disp.UpdateUpgrades();
 }
+
+CM.Disp.CreateCssArea = function() {
+	CM.Disp.Css = document.createElement('style');
+	CM.Disp.Css.type = 'text/css';
+
+	document.head.appendChild(CM.Disp.Css);
+	
+	// given the architecture of your code, you probably want these lines somewhere else,
+	// but I stuck them here for convenience
+	l("products").style.display = "grid";
+	l("storeBulk").style.gridRow = "1/1";
+
+	l("upgrades").style.display = "flex";
+	l("upgrades").style["flex-wrap"] = "wrap";
+}
+
 /********
  * Section: General functions to format or beautify strings */
 
@@ -361,16 +368,16 @@ CM.Disp.Beautify = function(num, frac, forced) {
 
 			// answer is now "xxx.xx" (e.g., 123456789 would be 123.46)
 			if (CM.Config.Scale == 1 && !forced || forced == 1) { // Metric scale, 123456789 => 123.457 M
-				if (timesTenToPowerThree - 1 < CM.Disp.metric.length) {
-					answer += ' ' + CM.Disp.metric[timesTenToPowerThree - 1]
+				if (timesTenToPowerThree - 1 < CM.Data.metric.length) {
+					answer += ' ' + CM.Data.metric[timesTenToPowerThree - 1]
 				}
 				else { // If number is too large, revert to scientific notation
 					return CM.Disp.Beautify(num, 0, 3);	
 				}
 			}
 			else if (CM.Config.Scale == 2 && !forced || forced == 2) { // Short scale, 123456789 => 123.457 M
-				if (timesTenToPowerThree < CM.Disp.shortScale.length + 1) {
-					answer += ' ' + CM.Disp.shortScale[timesTenToPowerThree - 1];
+				if (timesTenToPowerThree < CM.Data.shortScale.length + 1) {
+					answer += ' ' + CM.Data.shortScale[timesTenToPowerThree - 1];
 				}
 				else { // If number is too large, revert to scientific notation
 					return CM.Disp.Beautify(num, 0, 3);
@@ -755,20 +762,19 @@ CM.Disp.UpdateBotTimerBarPosition = function() {
 
 /********
  * Section: Functions related to column of buildings/objects
- * TODO: Annotate functions */
 
+/**
+ * This function adjusts some things in the column of buildings.
+ * It colours them, helps display the correct sell-price and shuffles the order when CM.Config.SortBuildings is set
+ * The function is called by CM.Loop(), CM.Disp.UpdateColors() & CM.Disp.RefreshScale()
+ * And by changes in CM.Config.BuildColor, CM.Config.SortBuild & CM.ConfigData.BulkBuildColor
+ */
 CM.Disp.UpdateBuildings = function() {
 	if (CM.Config.BuildColor == 1 && Game.buyMode == 1) {
 		var target = '';
-		if (Game.buyBulk == 10 && CM.Config.BulkBuildColor == 1) {
-			target = 'Objects10';
-		}
-		else if (Game.buyBulk == 100 && CM.Config.BulkBuildColor == 1) {
-			target = 'Objects100';
-		}
-		else {
-			target = 'Objects';
-		}
+		if (Game.buyBulk == 10 && CM.Config.BulkBuildColor == 1) target = 'Objects10';
+		else if (Game.buyBulk == 100 && CM.Config.BulkBuildColor == 1) target = 'Objects100';
+		else target = 'Objects';
 		for (var i in CM.Cache[target]) {
 			l('productPrice' + Game.Objects[i].id).style.color = CM.Config.Colors[CM.Cache[target][i].color];
 		}
@@ -1770,6 +1776,10 @@ CM.Disp.UpdateWrinklerTooltip = function() {
  * Section: General functions related to the Options/Stats pages
  * TODO: Annotate functions */
 
+/**
+ * This function adds the calll the functions to add extra info to the stats and options pages
+ * It is called by Game.UpdateMenu()
+ */
 CM.Disp.AddMenu = function() {
 	var title = function() {
 		var div = document.createElement('div');
@@ -1785,13 +1795,13 @@ CM.Disp.AddMenu = function() {
 		if (CM.Config.Stats) {
 			CM.Disp.AddMenuStats(title);
 		}
-
-		if (CM.Config.MissingUpgrades) {
-			CM.Disp.AddMissingUpgrades();
-		}
 	}
 }
 
+/**
+ * This function refreshes the stats page, CM.Config.UpStats determines the rate at which that happens
+ * It is called by CM.Loop()
+ */
 CM.Disp.RefreshMenu = function() {
 	if (CM.Config.UpStats && Game.onMenu == 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps == 0) Game.UpdateMenu();
 }
@@ -1838,9 +1848,9 @@ CM.Disp.AddMenuPref = function(title) {
 /**
  * This function creates a header-object for the options page
  * It is called by CM.Disp.AddMenuPref()
- * @param {string}		config	The name of the Config-group
- * @param {string}		text	The to-be displayed name of the header
- * @returns	{object}	div		The header object
+ * @param 	{string}		config	The name of the Config-group
+ * @param 	{string}		text	The to-be displayed name of the header
+ * @returns	{object}		div		The header object
  */
 CM.Disp.CreatePrefHeader = function(config, text) {
 	var div = document.createElement('div');
@@ -1870,8 +1880,8 @@ CM.Disp.CreatePrefHeader = function(config, text) {
 /**
  * This function creates an option-object for the options page
  * It is called by CM.Disp.AddMenuPref()
- * @param {string}		config	The name of the option
- * @returns	{object}	div		The option object
+ * @param 	{string}		config	The name of the option
+ * @returns	{object}		div		The option object
  */
 CM.Disp.CreatePrefOption = function(config) {
 	if (CM.ConfigData[config].type == "bool") {
@@ -1972,34 +1982,8 @@ CM.Disp.CreatePrefOption = function(config) {
  * TODO: Annotate functions */
 
 CM.Disp.AddMenuStats = function(title) {
-	var header = function(text, config) {
-		var div = document.createElement('div');
-		div.className = 'listing';
-		div.style.padding = '5px 16px';
-		div.style.opacity = '0.7';
-		div.style.fontSize = '17px';
-		div.style.fontFamily = '\"Kavoon\", Georgia, serif';
-		div.appendChild(document.createTextNode(text + ' '));
-		var span = document.createElement('span');
-		span.style.cursor = 'pointer';
-		span.style.display = 'inline-block';
-		span.style.height = '14px';
-		span.style.width = '14px';
-		span.style.borderRadius = '7px';
-		span.style.textAlign = 'center';
-		span.style.backgroundColor = '#C0C0C0';
-		span.style.color = 'black';
-		span.style.fontSize = '13px';
-		span.style.verticalAlign = 'middle';
-		span.textContent = CM.Config.StatsPref[config] ? '-' : '+';
-		span.onclick = function() {CM.ToggleStatsConfig(config); Game.UpdateMenu();};
-		div.appendChild(span);
-		return div;
-	}
-
 	var stats = document.createElement('div');
 	stats.className = 'subsection';
-
 	stats.appendChild(title());
 
 	var listing = function(name, text) {
@@ -2075,7 +2059,7 @@ CM.Disp.AddMenuStats = function(title) {
 
 	var goldCookTooltip = CM.Sim.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
 
-	stats.appendChild(header('Lucky Cookies', 'Lucky'));
+	stats.appendChild(CreateStatsHeader('Lucky Cookies', 'Lucky'));
 	if (CM.Config.StatsPref.Lucky) {
 		var luckyColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Lucky) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var luckyTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Lucky) ? CM.Disp.FormatTime((CM.Cache.Lucky - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
@@ -2119,7 +2103,7 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), goldCookTooltip),  document.createTextNode(Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''))));
 	}
 
-	stats.appendChild(header('Chain Cookies', 'Chain'));
+	stats.appendChild(CreateStatsHeader('Chain Cookies', 'Chain'));
 	if (CM.Config.StatsPref.Chain) {
 		var chainColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Chain) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var chainTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Chain - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
@@ -2192,7 +2176,7 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(listing(listingQuest('\"Chain\" Reward (CUR) (Golden / Wrath)', goldCookTooltip),  document.createTextNode(Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))));
 	}
 
-	stats.appendChild(header('Conjure Baked Goods', 'Conjure'));
+	stats.appendChild(CreateStatsHeader('Conjure Baked Goods', 'Conjure'));
 	if (CM.Config.StatsPref.Conjure) {
 		var conjureColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 		var conjureCur = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
@@ -2217,7 +2201,7 @@ CM.Disp.AddMenuStats = function(title) {
 	
 	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
 
-	stats.appendChild(header('Prestige', 'Prestige'));
+	stats.appendChild(CreateStatsHeader('Prestige', 'Prestige'));
 	if (CM.Config.StatsPref.Prestige) {
 		var possiblePresMax = Math.floor(Game.HowMuchPrestige(CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0)));
 		var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0));
@@ -2295,7 +2279,7 @@ CM.Disp.AddMenuStats = function(title) {
 	}
 
 	if (Game.cpsSucked > 0) {
-		stats.appendChild(header('Wrinklers', 'Wrink'));
+		stats.appendChild(CreateStatsHeader('Wrinklers', 'Wrink'));
 		if (CM.Config.StatsPref.Wrink) {
 			var popAllFrag = document.createDocumentFragment();
 			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBank) + ' '));
@@ -2348,7 +2332,7 @@ CM.Disp.AddMenuStats = function(title) {
 	var centEgg = Game.Has('Century egg');
 
 	if (Game.season == 'christmas' || specDisp || choEgg || centEgg) {
-		stats.appendChild(header('Season Specials', 'Sea'));
+		stats.appendChild(CreateStatsHeader('Season Specials', 'Sea'));
 		if (CM.Config.StatsPref.Sea) {
 			if (specDisp) {
 				if (halloCook.length != 0) stats.appendChild(listing('Halloween Cookies Left to Buy', createMissDisp(halloCook)));
@@ -2368,7 +2352,7 @@ CM.Disp.AddMenuStats = function(title) {
 		}
 	}
 
-	stats.appendChild(header('Miscellaneous', 'Misc'));
+	stats.appendChild(CreateStatsHeader('Miscellaneous', 'Misc'));
 	if (CM.Config.StatsPref.Misc) {
 		stats.appendChild(listing(
 			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Config.AvgCPSHist] / 60) + (CM.Config.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', 
@@ -2392,6 +2376,42 @@ CM.Disp.AddMenuStats = function(title) {
 	}
 
 	l('menu').insertBefore(stats, l('menu').childNodes[2]);
+
+	if (CM.Config.MissingUpgrades) {
+		CM.Disp.AddMissingUpgrades();
+	}
+}
+
+/**
+ * This function creates a header-object for the stats page
+ * It is called by CM.Disp.AddMenuStats()
+ * @param 	{string}		config	The name of the Config-group
+ * @param 	{string}		text	The to-be displayed name of the header
+ * @returns	{object}		div		The header object
+ */
+CM.Disp.CreateStatsHeader = function(text, config) {
+	var div = document.createElement('div');
+	div.className = 'listing';
+	div.style.padding = '5px 16px';
+	div.style.opacity = '0.7';
+	div.style.fontSize = '17px';
+	div.style.fontFamily = '\"Kavoon\", Georgia, serif';
+	div.appendChild(document.createTextNode(text + ' '));
+	var span = document.createElement('span');
+	span.style.cursor = 'pointer';
+	span.style.display = 'inline-block';
+	span.style.height = '14px';
+	span.style.width = '14px';
+	span.style.borderRadius = '7px';
+	span.style.textAlign = 'center';
+	span.style.backgroundColor = '#C0C0C0';
+	span.style.color = 'black';
+	span.style.fontSize = '13px';
+	span.style.verticalAlign = 'middle';
+	span.textContent = CM.Config.StatsPref[config] ? '-' : '+';
+	span.onclick = function() {CM.ToggleStatsConfig(config); Game.UpdateMenu();};
+	div.appendChild(span);
+	return div;
 }
 
 CM.Disp.AddMissingUpgrades = function() {
@@ -2473,7 +2493,7 @@ CM.Disp.AddMissingUpgrades = function() {
 
 /********
  * Section: Variables used in Disp functions
- * TODO: Move certain variables to src/Data.js (e.g., CM.Disp.metric & CM.Disp.shortScale) */
+ */
 
 /**
  * This list is used to make some very basic tooltips.
@@ -2492,9 +2512,16 @@ CM.Disp.TooltipText = [
 	['ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and then buying Chocolate egg', '300px']
 ];
 
+/**
+ * These are variables used to create DOM object names and id (e.g., 'CMTextTooltip)
+ */
 CM.Disp.colorTextPre = 'CMText';
 CM.Disp.colorBackPre = 'CMBack';
 CM.Disp.colorBorderPre = 'CMBorder';
+
+/**
+ * These are variables which can be set in the options by the user to standardize colours throughout CookieMonster
+ */
 CM.Disp.colorBlue = 'Blue';
 CM.Disp.colorGreen = 'Green';
 CM.Disp.colorYellow = 'Yellow';
@@ -2505,22 +2532,25 @@ CM.Disp.colorGray = 'Gray';
 CM.Disp.colorPink = 'Pink';
 CM.Disp.colorBrown = 'Brown';
 CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
+
+
+/**
+ * This array is used to give certain timers specific colours
+ */
 CM.Disp.buffColors = {'Frenzy': CM.Disp.colorYellow, 'Dragon Harvest': CM.Disp.colorBrown, 'Elder frenzy': CM.Disp.colorGreen, 'Clot': CM.Disp.colorRed, 'Click frenzy': CM.Disp.colorBlue, 'Dragonflight': CM.Disp.colorPink};
 CM.Disp.GCTimers = {};
 CM.Disp.lastAscendState = -1;
 
-
-
+/**
+ * These lists are used in the stats page to show 
+ * average cookies per {CM.Disp.cookieTimes/CM.Disp.clickTimes} seconds
+ */
 CM.Disp.cookieTimes = [10, 15, 30, 60, 300, 600, 900, 1800];
 CM.Disp.clickTimes = [1, 5, 10, 15, 30];
 
-CM.Disp.metric = ['', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
-CM.Disp.shortScale = ['', 'M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec', 'Quattuordec', 'Quindec', 'Sexdec', 'Septendec', 'Octodec', 'Novemdec', 'Vigint', 'Unvigint', 'Duovigint', 'Trevigint', 'Quattuorvigint'];
-
+/**
+ * These are variables with base-values that get initalized when initliazing CookieMonster 
+ * TODO: See if these can be removed or moved
+ */
 CM.Disp.TooltipWrinklerArea = 0;
 CM.Disp.TooltipWrinkler = -1;
-CM.Disp.TooltipWrinklerCache = [];
-for (var i in Game.wrinklers) {
-	CM.Disp.TooltipWrinklerCache[i] = 0;
-}
-

@@ -32,6 +32,10 @@ CM.Data.ChristCookies = ['Christmas tree biscuits', 'Snowflake biscuits', 'Snowm
 CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour heart biscuits', 'Weeping heart biscuits', 'Golden heart biscuits', 'Eternal heart biscuits', 'Prism heart biscuits'];
 
 
+/********
+ * Section: Data for the various scales used by CookieMonster */
+CM.Data.metric = ['', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
+CM.Data.shortScale = ['', 'M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec', 'Quattuordec', 'Quindec', 'Sexdec', 'Septendec', 'Octodec', 'Novemdec', 'Vigint', 'Unvigint', 'Duovigint', 'Trevigint', 'Quattuorvigint'];
 
 /********
  * Section: An array containing all Config groups and their to-be displayed title */
