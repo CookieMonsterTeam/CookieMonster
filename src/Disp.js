@@ -336,7 +336,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 		if (num == "0") {
 			return num
 		}
-		else if (-1 < timesTenToPowerThree < 2) {
+		else if (-1 < timesTenToPowerThree && timesTenToPowerThree < 2) {
 			answer = Math.round(num * 100) / 100;
 		}
 		else if (CM.Config.Scale == 3 && !forced || forced == 3) { // Scientific notation, 123456789 => 1.235E+8
@@ -385,7 +385,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 			answer = CM.Backup.Beautify(num, frac); 
 		}
 		if (negative) answer = '-' + answer;
-		return answer;
+		return answer.toString();
 	}
 	else if (num == Infinity) {
 		return "Infinity";
