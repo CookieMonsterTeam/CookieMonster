@@ -1876,6 +1876,7 @@ CM.Disp.CheckGoldenCookie = function() {
 				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
 			}
 			CM.Disp.lastSpawnedGoldenCookieState = CM.Disp.currSpawnedGoldenCookieState
+			if (CM.Main.currSpawnedGoldenCookieState == 0) CM.Disp.spawnedGoldenShimmer = 0;
 			CM.Disp.UpdateFavicon();
 			
 			if (CM.Config.GCTimer == 1) {
@@ -3106,7 +3107,7 @@ CM.Disp.UpdateTooltip = function() {
 						l('CMTooltipPP').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].pp, 2);
 						l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 					}
-					if (CM.Config.TooltipBuildUp) {
+					if (CM.Config.TooltipBuildUp && Game.buyMode == 1) {
 						for (var i in Game.Objects[CM.Disp.tooltipName].productionAchievs) {
 							if (!CM.Sim.HasAchiev(Game.Objects[CM.Disp.tooltipName].productionAchievs[i].achiev.name)) {
 								var nextProductionAchiev = Game.Objects[CM.Disp.tooltipName].productionAchievs[i]
@@ -3951,11 +3952,11 @@ CM.Sim.hasGod=function(what) {
 
 CM.Sim.eff = function(name) {
 	if (typeof CM.Sim.effs[name]==='undefined') {
-		CM.Sim.effs[name] = 1
-		return CM.Sim.effs[name]
+		CM.Sim.effs[name] = 1;
+		return CM.Sim.effs[name];
 	}
 	else {
-		return Game.effs[name];
+		return CM.Sim.effs[name];
 	}
 }
 
@@ -4089,7 +4090,7 @@ CM.Sim.CalculateGains = function() {
 	var mult = 1;
 	// Include minigame effects
 	var effs={};
-	for (var i in CM.Cache.Objects) {
+	for (var i in Game.Objects) {
 		// TODO Store minigames and effects in Cache
 		// Include possibility of new/modded building and new/modded minigames
 		if (CM.Sim.Objects[i].minigameLoaded && CM.Sim.Objects[i].minigame.effs) {
