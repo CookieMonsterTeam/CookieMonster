@@ -387,7 +387,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 				answer += 'E+' + (timesTenToPowerThree * 3);
 			}
 		}
-		if (answer == '') {
+		if (answer === '') {
 			console.log("Could not beautify number with CM.Disp.Beautify");
 			answer = CM.Backup.Beautify(num, frac); 
 		}
@@ -1443,6 +1443,11 @@ CM.Disp.UpdateTooltip = function() {
 		}
 		CM.Disp.UpdateTooltipWarnings();
 	}
+	else if (l('CMTooltipArea') == null) { // Remove warnings if its a basic tooltip
+		if (l('CMDispTooltipWarningParent') != null) {
+			l('CMDispTooltipWarningParent').remove();
+		}
+	}
 }
 
 /**
@@ -1461,7 +1466,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 		else if (Game.buyMode == 1 && Game.buyBulk == 100) target = 'Objects100';
 		else target = 'Objects';
 
-		var price = Game.Objects[CM.Disp.tooltipName].bulkPrice
+		CM.Disp.TooltipPrice = Game.Objects[CM.Disp.tooltipName].bulkPrice
 		CM.Disp.TooltipBonusIncome = CM.Cache[target][CM.Disp.tooltipName].bonus;
 		
 
@@ -1474,7 +1479,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 			l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 			l('CMTooltipPP').textContent = Beautify(CM.Cache[target][CM.Disp.tooltipName].pp, 2);
 			l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
-			var timeColor = CM.Disp.GetTimeColor((price - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
+			var timeColor = CM.Disp.GetTimeColor((CM.Disp.TooltipPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 			l('CMTooltipTime').textContent = timeColor.text;
 			l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
 		}
@@ -1508,7 +1513,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 	CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
 	CM.Disp.TooltipBonusIncome = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonus;
-	price = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
+	CM.Disp.TooltipPrice = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
 
 	if (CM.Config.TooltipBuildUp == 1) {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
@@ -1519,7 +1524,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 		l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
 		l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
 		l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
-		var timeColor = CM.Disp.GetTimeColor((price - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
+		var timeColor = CM.Disp.GetTimeColor((CM.Disp.TooltipPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 		l('CMTooltipTime').textContent = timeColor.text;
 		l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
 	}
@@ -1606,9 +1611,10 @@ CM.Disp.UpdateTooltipGrimoire = function() {
  */
 CM.Disp.UpdateTooltipWarnings = function() {
 	if (CM.Disp.tooltipType == "b" || CM.Disp.tooltipType == "u") {
-		if (document.getElementById("tooltipWarn") == null) {
+		if (document.getElementById("CMDispTooltipWarningParent") == null) {
 			warningTooltip = CM.Disp.TooltipCreateWarningSection();
 			l('tooltipAnchor').appendChild(warningTooltip);
+			CM.Disp.ToggleToolWarnPos();
 		}
 
 		if (CM.Config.ToolWarnPos == 0) CM.Disp.TooltipWarn.style.right = '0px';
@@ -1624,7 +1630,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 				limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
 			}
 			var limitLuckyFrenzy = limitLucky * 7;
-			var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
+			var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - CM.Disp.TooltipPrice;
 			if ((amount < limitLucky || amount < limitLuckyFrenzy) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				if (amount < limitLucky) {
 					l('CMDispTooltipWarnLucky').style.display = '';
@@ -1655,7 +1661,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 				limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
 			}
 			var limitConjure = limitLucky * 2;
-			var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - price;
+			var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - CM.Disp.TooltipPrice;
 			if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnConjure').style.display = '';
 				l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / CM.Disp.GetCPS()) + ')';
@@ -1694,7 +1700,8 @@ CM.Disp.UpdateTooltipLocation = function() {
 
 /**
  * This function toggles the position of the warnings created by CM.Disp.TooltipCreateWarningSection()
- * It is called by a change in CM.Config.ToolWarnPos
+ * It is called by a change in CM.Config.ToolWarnPos 
+ * and upon creation of the warning tooltip by CM.Disp.UpdateTooltipWarnings()
  */
 CM.Disp.ToggleToolWarnPos = function() {
 	if (typeof CM.Disp.TooltipWarn != "undefined") {
