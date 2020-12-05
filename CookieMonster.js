@@ -1894,7 +1894,7 @@ CM.Disp.CreateFavicon = function() {
  * By relying on CM.Cache.spawnedGoldenShimmer it only changes for non-user spawned cookie
  */
 CM.Disp.UpdateFavicon = function() {
-	if (CM.Config.Favicon == 1) {
+	if (CM.Config.Favicon == 1 && CM.Main.lastGoldenCookieState > 0) {
 		if (CM.Cache.spawnedGoldenShimmer.wrath) CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
 		else CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/goldenCookie.ico';
 	}
@@ -3784,7 +3784,6 @@ CM.Main.CheckGoldenCookie = function() {
 				CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
 				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
 			}
-			CM.Disp.UpdateFavicon();
 			
 			for (var i in Game.shimmers) {
 				if (typeof CM.Disp.GCTimers[Game.shimmers[i].id] == "undefined") {
@@ -3792,7 +3791,8 @@ CM.Main.CheckGoldenCookie = function() {
 				}
 			}
 		}
-		CM.Main.lastSpawnedGoldenCookieState = CM.Main.currSpawnedGoldenCookieState
+		CM.Disp.UpdateFavicon();
+		CM.Main.lastSpawnedGoldenCookieState = CM.Main.currSpawnedGoldenCookieState;
 		if (CM.Main.currSpawnedGoldenCookieState == 0) CM.Cache.spawnedGoldenShimmer = 0;
 	}
 	else if (CM.Config.GCTimer == 1 && CM.Main.lastGoldenCookieState) {

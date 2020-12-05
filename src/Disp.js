@@ -1006,7 +1006,7 @@ CM.Disp.CreateFavicon = function() {
  * By relying on CM.Cache.spawnedGoldenShimmer it only changes for non-user spawned cookie
  */
 CM.Disp.UpdateFavicon = function() {
-	if (CM.Config.Favicon == 1) {
+	if (CM.Config.Favicon == 1 && CM.Main.lastGoldenCookieState > 0) {
 		if (CM.Cache.spawnedGoldenShimmer.wrath) CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
 		else CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/goldenCookie.ico';
 	}
