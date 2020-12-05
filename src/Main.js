@@ -18,14 +18,12 @@ CM.ReplaceNative = function() {
 	eval('CM.Backup.tooltip.drawMod = ' + Game.tooltip.draw.toString().split('this').join('Game.tooltip'));
 	Game.tooltip.draw = function(from, text, origin) {
 		CM.Backup.tooltip.drawMod(from, text, origin);
-		CM.Disp.DrawTooltipWarn();
 	}
 
 	CM.Backup.tooltip.update = Game.tooltip.update;
 	eval('CM.Backup.tooltip.updateMod = ' + Game.tooltip.update.toString().split('this.').join('Game.tooltip.'));
 	Game.tooltip.update = function() {
 		CM.Backup.tooltip.updateMod();
-		CM.Disp.UpdateTooltipWarn();
 		CM.Disp.UpdateTooltipLocation();
 	}
 
@@ -51,10 +49,12 @@ CM.ReplaceNative = function() {
 		CM.ReplaceNativeGrimoire();
 	}
 
+	// TODO: Move this ReplaceTooltip function too other ReplaceTooltip functions
+	// OR: Move all other into this function
 	CM.Backup.RebuildUpgrades = Game.RebuildUpgrades;
 	Game.RebuildUpgrades = function() {
 		CM.Backup.RebuildUpgrades();
-		CM.Disp.AddTooltipUpgrade();
+		CM.Disp.ReplaceTooltipUpgrade();
 		Game.CalculateGains();
 	}
 
@@ -165,13 +165,14 @@ CM.Loop = function() {
 		CM.Cache.RemakePP();
 
 		// Update colors
-		CM.Disp.UpdateBotBarOther();
 		CM.Disp.UpdateBuildings();
 		CM.Disp.UpdateUpgrades();
 
 		// Redraw timers
-		CM.Disp.UpdateBotBarTime();
 		CM.Disp.UpdateTimerBar();
+
+		// Update Bottom Bar
+		CM.Disp.UpdateBotBar();
 
 		// Update Tooltip
 		CM.Disp.UpdateTooltip();
@@ -184,23 +185,13 @@ CM.Loop = function() {
 		CM.Disp.RefreshMenu();
 	}
 
-	// Check Golden Cookies
-	CM.Disp.CheckGoldenCookie();
-
-	// Check Fortune Cookies
-	CM.Disp.CheckTickerFortune();
-
-	// Check Season Popup
-	CM.Disp.CheckSeasonPopup();
-
-	// Check Garden Tick
-	CM.Disp.CheckGardenTick();
-
-	// Check Grimoire Meter
-	CM.Disp.CheckMagicMeter();
-
-	// Check Wrinklers
-	CM.Disp.CheckWrinklerCount();
+	// Check all changing minigames and game-states
+	CM.Main.CheckGoldenCookie();
+	CM.Main.CheckTickerFortune();
+	CM.Main.CheckSeasonPopup();
+	CM.Main.CheckGardenTick();
+	CM.Main.CheckMagicMeter();
+	CM.Main.CheckWrinklerCount();
 
 	// Update Average CPS (might need to move)
 	CM.Cache.UpdateAvgCPS()
@@ -233,13 +224,12 @@ CM.DelayInit = function() {
 	CM.Disp.CreateWhiteScreen();
 	CM.Disp.CreateFavicon();
 	for (var i in CM.Disp.TooltipText) {
-		CM.Disp.CreateTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
+		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
-	CM.Disp.CreateTooltipWarn();
-	CM.Disp.AddTooltipBuild();
-	CM.Disp.AddTooltipGrimoire();
-	CM.Disp.AddTooltipLump();
-	CM.Disp.AddWrinklerAreaDetect();
+	CM.Disp.ReplaceTooltipBuild();
+	CM.Disp.ReplaceTooltipGrimoire();
+	CM.Disp.ReplaceTooltipLump();
+	CM.Main.AddWrinklerAreaDetect();
 	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
 	CM.ReplaceNativeGrimoire();
@@ -256,8 +246,196 @@ CM.DelayInit = function() {
 	Game.Win('Third-party');
 }
 
+/********
+ * Section: Functions related to checking for changes in Minigames/GC's/Ticker
+ * TODO: Annotate functions 
+ * TODO: Possibly move this section */
+
+/**
+ * Auxilirary function that finds all currently spawned shimmers. 
+ * CM.Cache.spawnedGoldenShimmer stores the non-user spawned cookie to later determine data for the favicon and tab-title
+ * It is called by CM.CM.Main.CheckGoldenCookie
+ */
+CM.Main.FindShimmer = function() {
+	CM.Main.currSpawnedGoldenCookieState = 0;
+	CM.Cache.goldenShimmersByID = {}
+	for (var i in Game.shimmers) {
+		CM.Cache.goldenShimmersByID[Game.shimmers[i].id] = Game.shimmers[i]
+		if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'golden') {
+			CM.Cache.spawnedGoldenShimmer = Game.shimmers[i];
+			CM.Main.currSpawnedGoldenCookieState += 1;
+		}
+	}
+}
+
+/**
+ * This function checks for changes in the amount of Golden Cookies
+ * It is called by CM.Loop
+ * TODO: Remove the delete function, as it does not delete correctly and crowds CM.Disp.GCTimers
+ */
+CM.Main.CheckGoldenCookie = function() {
+	CM.Main.FindShimmer();
+	for (var i in CM.Disp.GCTimers) {
+		if (typeof CM.Cache.goldenShimmersByID[i] == "undefined") {
+			CM.Disp.GCTimers[i].parentNode.removeChild(CM.Disp.GCTimers[i]);
+			// TODO remove delete here
+			delete CM.Disp.GCTimers[i];
+		}
+	}
+	if (CM.Main.lastGoldenCookieState != Game.shimmerTypes['golden'].n) {
+		CM.Main.lastGoldenCookieState = Game.shimmerTypes['golden'].n;
+		if (CM.Main.lastGoldenCookieState) {
+			if (CM.Main.lastSpawnedGoldenCookieState < CM.Main.currSpawnedGoldenCookieState) {
+				CM.Disp.Flash(3, 'GCFlash');
+				CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
+				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
+			}
+			CM.Disp.UpdateFavicon();
+			
+			for (var i in Game.shimmers) {
+				if (typeof CM.Disp.GCTimers[Game.shimmers[i].id] == "undefined") {
+					CM.Disp.CreateGCTimer(Game.shimmers[i]);
+				}
+			}
+		}
+		CM.Main.lastSpawnedGoldenCookieState = CM.Main.currSpawnedGoldenCookieState
+		if (CM.Main.currSpawnedGoldenCookieState == 0) CM.Cache.spawnedGoldenShimmer = 0;
+	}
+	else if (CM.Config.GCTimer == 1 && CM.Main.lastGoldenCookieState) {
+		for (var i in CM.Disp.GCTimers) {
+			CM.Disp.GCTimers[i].style.opacity = CM.Cache.goldenShimmersByID[i].l.style.opacity;
+			CM.Disp.GCTimers[i].style.transform = CM.Cache.goldenShimmersByID[i].l.style.transform;
+			CM.Disp.GCTimers[i].textContent = Math.ceil(CM.Cache.goldenShimmersByID[i].life / Game.fps);
+		}
+	}
+}
+
+/**
+ * This function checks if there is reindeer that has spawned
+ * It is called by CM.Loop
+ */
+CM.Main.CheckSeasonPopup = function() {
+	if (CM.Main.lastSeasonPopupState != Game.shimmerTypes['reindeer'].spawned) {
+		CM.Main.lastSeasonPopupState = Game.shimmerTypes['reindeer'].spawned;
+		for (var i in Game.shimmers) {
+			if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'reindeer') {
+				CM.Cache.seasonPopShimmer = Game.shimmers[i];
+				break;
+			}
+		}
+		CM.Disp.Flash(3, 'SeaFlash');
+		CM.Disp.PlaySound(CM.Config.SeaSoundURL, 'SeaSound', 'SeaVolume');
+		CM.Disp.Notification('SeaNotification',"Reindeer sighted!", "A Reindeer has spawned. Click it now!")
+	}
+}
+
+/**
+ * This function checks if there is a fortune cookie on the ticker
+ * It is called by CM.Loop
+ */
+CM.Main.CheckTickerFortune = function() {
+	if (CM.Main.lastTickerFortuneState != (Game.TickerEffect && Game.TickerEffect.type == 'fortune')) {
+		CM.Main.lastTickerFortuneState = (Game.TickerEffect && Game.TickerEffect.type == 'fortune');
+		if (CM.Main.lastTickerFortuneState) {
+			CM.Disp.Flash(3, 'FortuneFlash');
+			CM.Disp.PlaySound(CM.Config.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
+			CM.Disp.Notification('FortuneNotification', "Fortune Cookie found", "A Fortune Cookie has appeared on the Ticker.")
+		}
+	}
+}
+
+/**
+ * This function checks if a garden tick has happened
+ * It is called by CM.Loop
+ */
+CM.Main.CheckGardenTick = function() {
+	if (Game.Objects['Farm'].minigameLoaded && CM.Main.lastGardenNextStep != Game.Objects['Farm'].minigame.nextStep) {
+		if (CM.Main.lastGardenNextStep != 0 && CM.Main.lastGardenNextStep < Date.now()) {
+			CM.Disp.Flash(3, 'GardFlash');
+			CM.Disp.PlaySound(CM.Config.GardSoundURL, 'GardSound', 'GardVolume');
+		}
+		CM.Main.lastGardenNextStep = Game.Objects['Farm'].minigame.nextStep;
+	}
+}
+
+/**
+ * This function checks if the magic meter is full
+ * It is called by CM.Loop
+ */
+CM.Main.CheckMagicMeter = function() {
+	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Config.GrimoireBar == 1) {
+		var minigame = Game.Objects['Wizard tower'].minigame;
+		if (minigame.magic < minigame.magicM) CM.Main.lastMagicBarFull = false;
+		else if (!CM.Main.lastMagicBarFull) {
+			CM.Main.lastMagicBarFull = true;
+			CM.Disp.Flash(3, 'MagicFlash');
+			CM.Disp.PlaySound(CM.Config.MagicSoundURL, 'MagicSound', 'MagicVolume');
+			CM.Disp.Notification('MagicNotification', "Magic Meter full", "Your Magic Meter is full. Cast a spell!")
+		}
+	}
+}
+
+/**
+ * This function checks if any new Wrinklers have popped up
+ * It is called by CM.Loop
+ */
+CM.Main.CheckWrinklerCount = function() {
+	if (Game.elderWrath > 0) {
+		var CurrentWrinklers = 0;
+		for (var i in Game.wrinklers) {
+			if (Game.wrinklers[i].phase == 2) CurrentWrinklers++;
+		}
+		if (CurrentWrinklers > CM.Main.lastWrinklerCount) {
+			CM.Main.lastWrinklerCount = CurrentWrinklers
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxFlash) {
+				CM.Disp.Flash(3, 'WrinklerMaxFlash');
+			} else {
+				CM.Disp.Flash(3, 'WrinklerFlash');
+			}
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxSound) {
+				CM.Disp.PlaySound(CM.Config.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume');
+			} else {
+				CM.Disp.PlaySound(CM.Config.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume');
+			}
+			if (CurrentWrinklers == Game.getWrinklersMax() &&  CM.Config.WrinklerMaxNotification) {
+				CM.Disp.Notification('WrinklerMaxNotification', "Maximum Wrinklers Reached", "You have reached your maximum ammount of wrinklers")
+			} else {
+				CM.Disp.Notification('WrinklerNotification', "A Wrinkler appeared", "A new wrinkler has appeared")
+			}
+		} else {
+			CM.Main.lastWrinklerCount = CurrentWrinklers
+		}
+	}
+}
+
+/**
+ * This function creates .onmouseover/out events that determine if the mouse is hovering-over a Wrinkler
+ * It is called by CM.DelayInit
+ * TODO: The system for displaying wrinklers should ideally use a similar system as other tooltips
+ * Thus, writing a CM.Disp.ReplaceTooltipWrinkler function etc.
+ */
+CM.Main.AddWrinklerAreaDetect = function() {
+	l('backgroundLeftCanvas').onmouseover = function() {CM.Disp.TooltipWrinklerArea = 1;};
+	l('backgroundLeftCanvas').onmouseout = function() {
+		CM.Disp.TooltipWrinklerArea = 0;
+		Game.tooltip.hide();
+		for (var i in Game.wrinklers) {
+			CM.Disp.TooltipWrinklerCache[i] = 0;
+		}
+	};
+}
+
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
+
+CM.Main.lastGoldenCookieState = 0;
+CM.Main.lastSpawnedGoldenCookieState = 0;
+CM.Main.currSpawnedGoldenCookieState
+CM.Main.lastTickerFortuneState = 0;
+CM.Main.lastSeasonPopupState = 0;
+CM.Main.lastGardenNextStep = 0;
+CM.Main.lastMagicBarFull = 0;
+CM.Main.lastWrinklerCount = 0;
 
 CM.ConfigDefault = {
 	BotBar: 1, 
@@ -325,7 +503,7 @@ CM.ConfigDefault = {
 	SayTime: 1, 
 	GrimoireBar: 1, 
 	Scale: 2, 
-	MenuPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Other: 1}, 
+	OptionsPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Other: 1}, 
 	StatsPref: {Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
 	Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
 	SortBuildings: 0,

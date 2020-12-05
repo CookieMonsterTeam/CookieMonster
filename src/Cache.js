@@ -2,6 +2,9 @@
  * Cache *
  *********/
 
+/********
+ * Section: UNSORTED */
+
 CM.Cache.AddQueue = function() {
 	CM.Cache.Queue = document.createElement('script');
 	CM.Cache.Queue.type = 'text/javascript';
@@ -524,4 +527,6 @@ CM.Cache.MissingCookies = Game.Upgrades;
 CM.Cache.UpgradesOwned = -1;
 CM.Cache.MissingUpgradesString = null;
 CM.Cache.MissingCookiesString = null;
-
+CM.Cache.seasonPopShimmer;
+CM.Cache.goldenShimmersByID = {};
+CM.Cache.spawnedGoldenShimmer = 0;
