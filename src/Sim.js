@@ -171,7 +171,11 @@ CM.Sim.InitialBuildingData = function(buildingName) {
  * so this function just returns an empty object.
  */
 CM.Sim.InitUpgrade = function(upgradeName) {
-	return {};
+	var me = Game.Upgrades[upgradeName];
+	var you = {};
+	you.pool = me.pool;
+	you.name = me.name;
+	return you;
 }
 
 /* Similar to the previous function, but for achievements.
