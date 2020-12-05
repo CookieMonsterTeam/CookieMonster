@@ -891,7 +891,7 @@ CM.ConfigData.Scale = {type: 'bool', group: 'Other', label: ['Game\'s Setting Sc
  ********/
 
 /********
- * Please make sure to annotate your code correctly using JSDoc. See the options page section for some examples.
+ * Please make sure to annotate your code correctly using JSDoc.
  * Only put functions related to graphics and displays in this file. 
  * All calculations and data should preferrably be put in other files. */
 
@@ -2889,7 +2889,6 @@ CM.Disp.AddMenuStats = function(title) {
 	var stats = document.createElement('div');
 	stats.className = 'subsection';
 	stats.appendChild(title());
-
 	var listing = function(name, text) {
 		var div = document.createElement('div');
 		div.className = 'listing';
@@ -2900,65 +2899,6 @@ CM.Disp.AddMenuStats = function(title) {
 		div.appendChild(b);
 		div.appendChild(text);
 		return div;
-	}
-
-	var listingQuest = function(text, placeholder) {
-		var frag = document.createDocumentFragment();
-		frag.appendChild(document.createTextNode(text + ' '));
-		var span = document.createElement('span');
-		span.onmouseout = function() { Game.tooltip.hide(); };
-		span.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp[placeholder].innerHTML));};
-		span.style.cursor = 'default';
-		span.style.display = 'inline-block';
-		span.style.height = '10px';
-		span.style.width = '10px';
-		span.style.borderRadius = '5px';
-		span.style.textAlign = 'center';
-		span.style.backgroundColor = '#C0C0C0';
-		span.style.color = 'black';
-		span.style.fontSize = '9px';
-		span.style.verticalAlign = 'bottom';
-		span.textContent = '?';
-		frag.appendChild(span);
-		return frag;
-	}
-	
-	var createMissDisp = function(theMissDisp) {
-		var frag = document.createDocumentFragment();
-		frag.appendChild(document.createTextNode(theMissDisp.length + ' '));
-		var span = document.createElement('span');
-		span.onmouseout = function() { Game.tooltip.hide(); };
-		var placeholder = document.createElement('div');
-		var missing = document.createElement('div');
-		missing.style.minWidth = '140px';
-		missing.style.marginBottom = '4px';
-		var title = document.createElement('div');
-		title.className = 'name';
-		title.style.marginBottom = '4px';
-		title.style.textAlign = 'center';
-		title.textContent = 'Missing';
-		missing.appendChild(title);
-		for (var i in theMissDisp) {
-			var div = document.createElement('div');
-			div.style.textAlign = 'center';
-			div.appendChild(document.createTextNode(theMissDisp[i]));
-			missing.appendChild(div);
-		}
-		placeholder.appendChild(missing);
-		span.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML));};
-		span.style.cursor = 'default';
-		span.style.display = 'inline-block';
-		span.style.height = '10px';
-		span.style.width = '10px';
-		span.style.borderRadius = '5px';
-		span.style.textAlign = 'center';
-		span.style.backgroundColor = '#C0C0C0';
-		span.style.color = 'black';
-		span.style.fontSize = '9px';
-		span.style.verticalAlign = 'bottom';
-		span.textContent = '?';
-		frag.appendChild(span);
-		return frag;
 	}
 
 	var goldCookTooltip = CM.Sim.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
@@ -2989,7 +2929,10 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyReqSmall.textContent = ' (' + luckyTime + ')';
 			luckyReqFrag.appendChild(luckyReqSmall);
 		}
-		stats.appendChild(listing(listingQuest('\"Lucky!\" Cookies Required', goldCookTooltip), luckyReqFrag));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Cookies Required', Beautify(CM.Cache.Lucky), goldCookTooltip));
+
+
+
 		var luckyReqFrenFrag = document.createDocumentFragment();
 		var luckyReqFrenSpan = document.createElement('span');
 		luckyReqFrenSpan.style.fontWeight = 'bold';
@@ -3001,10 +2944,10 @@ CM.Disp.AddMenuStats = function(title) {
 			luckyReqFrenSmall.textContent = ' (' + luckyTimeFrenzy + ')';
 			luckyReqFrenFrag.appendChild(luckyReqFrenSmall);
 		}
-		stats.appendChild(listing(listingQuest('\"Lucky!\" Cookies Required (Frenzy)', goldCookTooltip), luckyReqFrenFrag));
-		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''), goldCookTooltip),  document.createTextNode(Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : ''))));
-		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''), goldCookTooltip),  document.createTextNode(Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : ''))));
-		stats.appendChild(listing(listingQuest('\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), goldCookTooltip),  document.createTextNode(Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''))));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Cookies Required (Frenzy)', luckyReqFrenFrag, goldCookTooltip));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''), Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : ''), goldCookTooltip));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''), Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : ''), goldCookTooltip));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''), goldCookTooltip));
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Chain Cookies', 'Chain'));
@@ -3037,7 +2980,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainReqSmall.textContent = ' (' + chainTime + ')';
 			chainReqFrag.appendChild(chainReqSmall);
 		}
-		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required', goldCookTooltip), chainReqFrag));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required', chainReqFrag, goldCookTooltip));
 		var chainWrathReqFrag = document.createDocumentFragment();
 		var chainWrathReqSpan = document.createElement('span');
 		chainWrathReqSpan.style.fontWeight = 'bold';
@@ -3049,7 +2992,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainWrathReqSmall.textContent = ' (' + chainWrathTime + ')';
 			chainWrathReqFrag.appendChild(chainWrathReqSmall);
 		}
-		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required (Wrath)', goldCookTooltip), chainWrathReqFrag));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Wrath)', chainWrathReqFrag, goldCookTooltip));
 		var chainReqFrenFrag = document.createDocumentFragment();
 		var chainReqFrenSpan = document.createElement('span');
 		chainReqFrenSpan.style.fontWeight = 'bold';
@@ -3061,7 +3004,7 @@ CM.Disp.AddMenuStats = function(title) {
 			chainReqFrenSmall.textContent = ' (' + chainTimeFrenzy + ')';
 			chainReqFrenFrag.appendChild(chainReqFrenSmall);
 		}
-		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required (Frenzy)', goldCookTooltip), chainReqFrenFrag));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Frenzy)', chainReqFrenFrag, goldCookTooltip));
 		var chainWrathReqFrenFrag = document.createDocumentFragment();
 		var chainWrathReqFrenFrag = document.createDocumentFragment();
 		var chainWrathReqFrenSpan = document.createElement('span');
@@ -3074,10 +3017,10 @@ CM.Disp.AddMenuStats = function(title) {
 			chainWrathReqFrenSmall.textContent = ' (' + chainWrathTimeFrenzy + ')';
 			chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSmall);
 		}
-		stats.appendChild(listing(listingQuest('\"Chain\" Cookies Required (Frenzy) (Wrath)', goldCookTooltip), chainWrathReqFrenFrag));
-		stats.appendChild(listing(listingQuest('\"Chain\" Reward (MAX) (Golden / Wrath)', goldCookTooltip),  document.createTextNode(Beautify(chainRewardMax) + ' / ' + Beautify(chainWrathRewardMax))));
-		stats.appendChild(listing(listingQuest('\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)', goldCookTooltip),  document.createTextNode(Beautify(chainFrenzyRewardMax) + ' / ' + Beautify(chainFrenzyWrathRewardMax))));
-		stats.appendChild(listing(listingQuest('\"Chain\" Reward (CUR) (Golden / Wrath)', goldCookTooltip),  document.createTextNode(Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Frenzy) (Wrath)', chainWrathReqFrenFrag, goldCookTooltip));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (MAX) (Golden / Wrath)', Beautify(chainRewardMax) + ' / ' + Beautify(chainWrathRewardMax), goldCookTooltip));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)', Beautify(chainFrenzyRewardMax) + ' / ' + Beautify(chainFrenzyWrathRewardMax), goldCookTooltip));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (CUR) (Golden / Wrath)', Beautify(chainCur) + ' / ' + Beautify(chainCurWrath), goldCookTooltip));
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Conjure Baked Goods', 'Conjure'));
@@ -3098,9 +3041,9 @@ CM.Disp.AddMenuStats = function(title) {
  			conjureReqSmall.textContent = ' (' + conjureTime + ')';
  			conjureReqFrag.appendChild(conjureReqSmall);
  		}
- 		stats.appendChild(listing(listingQuest('\"Conjure Baked Goods\" Cookies Required', 'GoldCookTooltipPlaceholder'), conjureReqFrag));
- 		stats.appendChild(listing(listingQuest('\"Conjure Baked Goods\" Reward (MAX)', 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(conjureRewardMax))));
- 		stats.appendChild(listing(listingQuest('\"Conjure Baked Goods\" Reward (CUR)', 'GoldCookTooltipPlaceholder'),  document.createTextNode(Beautify(conjureCur))));
+ 		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Cookies Required', conjureReqFrag, 'GoldCookTooltipPlaceholder'));
+ 		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (MAX)', conjureRewardMax, 'GoldCookTooltipPlaceholder'));
+ 		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (CUR)', conjureCur, 'GoldCookTooltipPlaceholder'));
  	}
 	
 	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
@@ -3109,15 +3052,15 @@ CM.Disp.AddMenuStats = function(title) {
 	if (CM.Config.StatsPref.Prestige) {
 		var possiblePresMax = Math.floor(Game.HowMuchPrestige(CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0)));
 		var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0));
-		stats.appendChild(listing(listingQuest('Prestige Level (CUR / MAX)', 'PrestMaxTooltipPlaceholder'),  document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePresMax))));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Prestige Level (CUR / MAX)', Beautify(Game.prestige) + ' / ' + Beautify(possiblePresMax), 'PrestMaxTooltipPlaceholder'));
 		
 		var cookiesNextFrag = document.createDocumentFragment();
 		cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
 		var cookiesNextSmall = document.createElement('small');
 		cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / CM.Cache.AvgCPSChoEgg, 1)) + ')';
 		cookiesNextFrag.appendChild(cookiesNextSmall);
-		stats.appendChild(listing(listingQuest('Cookies To Next Level', 'NextPrestTooltipPlaceholder'), cookiesNextFrag));
-		stats.appendChild(listing(listingQuest('Heavenly Chips (CUR / MAX)', 'HeavenChipMaxTooltipPlaceholder'),  document.createTextNode(Beautify(Game.heavenlyChips) + ' / ' + Beautify((possiblePresMax - Game.prestige) + Game.heavenlyChips))));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Cookies To Next Level', cookiesNextFrag, 'NextPrestTooltipPlaceholder'));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Heavenly Chips (CUR / MAX)', Beautify(Game.heavenlyChips) + ' / ' + Beautify((possiblePresMax - Game.prestige) + Game.heavenlyChips), 'HeavenChipMaxTooltipPlaceholder'));
 		
 		var resetBonus = CM.Sim.ResetBonus(possiblePresMax);
 		var resetFrag = document.createDocumentFragment();
@@ -3128,7 +3071,7 @@ CM.Disp.AddMenuStats = function(title) {
 			resetSmall.textContent = ' (' + (increase / 100) + '% of income)';
 			resetFrag.appendChild(resetSmall);
 		}
-		stats.appendChild(listing(listingQuest('Reset Bonus Income', 'ResetTooltipPlaceholder'), resetFrag));
+		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Reset Bonus Income', resetFrag, 'ResetTooltipPlaceholder'));
 
 		var currentPrestige = Math.floor(Game.HowMuchPrestige(Game.cookiesReset));
 		var willHave = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
@@ -3248,16 +3191,16 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Season Specials', 'Sea'));
 		if (CM.Config.StatsPref.Sea) {
 			if (specDisp) {
-				if (halloCook.length != 0) stats.appendChild(listing('Halloween Cookies Left to Buy', createMissDisp(halloCook)));
-				if (christCook.length != 0) stats.appendChild(listing('Christmas Cookies Left to Buy',  createMissDisp(christCook)));
-				if (valCook.length != 0) stats.appendChild(listing('Valentine Cookies Left to Buy',  createMissDisp(valCook)));
-				if (normEggs.length != 0) stats.appendChild(listing('Normal Easter Eggs Left to Unlock',  createMissDisp(normEggs)));
-				if (rareEggs.length != 0) stats.appendChild(listing('Rare Easter Eggs Left to Unlock',  createMissDisp(rareEggs)));
+				if (halloCook.length != 0) stats.appendChild(listing('Halloween Cookies Left to Buy', CM.Disp.CreateStatsMissDisp(halloCook)));
+				if (christCook.length != 0) stats.appendChild(listing('Christmas Cookies Left to Buy',  CM.Disp.CreateStatsMissDisp(christCook)));
+				if (valCook.length != 0) stats.appendChild(listing('Valentine Cookies Left to Buy',  CM.Disp.CreateStatsMissDisp(valCook)));
+				if (normEggs.length != 0) stats.appendChild(listing('Normal Easter Eggs Left to Unlock',  CM.Disp.CreateStatsMissDisp(normEggs)));
+				if (rareEggs.length != 0) stats.appendChild(listing('Rare Easter Eggs Left to Unlock',  CM.Disp.CreateStatsMissDisp(rareEggs)));
 			}
 
 			if (Game.season == 'christmas') stats.appendChild(listing('Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
 			if (choEgg) {
-				stats.appendChild(listing(listingQuest('Chocolate Egg Cookies', 'ChoEggTooltipPlaceholder'), document.createTextNode(Beautify(CM.Cache.lastChoEgg))));
+				stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Chocolate Egg Cookies', Beautify(CM.Cache.lastChoEgg), 'ChoEggTooltipPlaceholder'));
 			}
 			if (centEgg) {
 				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode((Math.round((CM.Cache.CentEgg - 1) * 10000) / 100) + '%')));
@@ -3279,7 +3222,7 @@ CM.Disp.AddMenuStats = function(title) {
 					fortunes.push(CM.Data.Fortunes[i]);
 				}
 			}
-			if (fortunes.length != 0) stats.appendChild(listing('Fortune Upgrades Left to Buy',  createMissDisp(fortunes)));
+			if (fortunes.length != 0) stats.appendChild(listing('Fortune Upgrades Left to Buy',  CM.Disp.CreateStatsMissDisp(fortunes)));
 		}
 		stats.appendChild(listing('Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
 		if (Game.prefs.autosave) {
@@ -3328,6 +3271,97 @@ CM.Disp.CreateStatsHeader = function(text, config) {
 	div.appendChild(span);
 	return div;
 }
+
+/**
+ * This function creates an stats-listing-object for the stats page
+ * It is called by CM.Disp.AddMenuStats()
+ * @param 	{string}		type		The type fo the listing
+ * @param 	{string}		name		The name of the option
+ * @param 	{object}		text		The text-object of the option
+ * @param 	{string}		placeholder	The id of the to-be displayed tooltip if applicable
+ * @returns	{object}		div			The option object
+ */
+CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
+	if (type == "withTooltip")  {
+		var div = document.createElement('div');
+		div.className = 'listingWithTooltip';
+
+		
+
+		var listingName = document.createElement('span');
+		listingName.textContent = name + ' '
+		div.appendChild(listingName);
+		
+		var frag = document.createDocumentFragment();
+		var tooltip = document.createElement('span');
+		tooltip.onmouseout = function() { Game.tooltip.hide(); };
+		tooltip.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp[placeholder].innerHTML));};
+		tooltip.style.cursor = 'default';
+		tooltip.style.display = 'inline-block';
+		tooltip.style.height = '10px';
+		tooltip.style.width = '10px';
+		tooltip.style.borderRadius = '5px';
+		tooltip.style.textAlign = 'center';
+		tooltip.style.backgroundColor = '#C0C0C0';
+		tooltip.style.color = 'black';
+		tooltip.style.fontSize = '9px';
+		tooltip.style.verticalAlign = 'bottom';
+		tooltip.textContent = '?';
+		frag.appendChild(tooltip);
+		frag.appendChild(document.createTextNode(' : '));
+		div.appendChild(frag);
+
+		div.appendChild(text);
+		return div;
+	}
+	
+}
+
+
+/**
+ * This function ?
+ * @param 	{string}		theMissDisp		The type fo the listing
+ * @returns	{object}		frag			The option object
+ */
+CM.Disp.CreateStatsMissDisp = function(theMissDisp) {
+	var frag = document.createDocumentFragment();
+	frag.appendChild(document.createTextNode(theMissDisp.length + ' '));
+	var span = document.createElement('span');
+	span.onmouseout = function() { Game.tooltip.hide(); };
+	var placeholder = document.createElement('div');
+	var missing = document.createElement('div');
+	missing.style.minWidth = '140px';
+	missing.style.marginBottom = '4px';
+	var title = document.createElement('div');
+	title.className = 'name';
+	title.style.marginBottom = '4px';
+	title.style.textAlign = 'center';
+	title.textContent = 'Missing';
+	missing.appendChild(title);
+	for (var i in theMissDisp) {
+		var div = document.createElement('div');
+		div.style.textAlign = 'center';
+		div.appendChild(document.createTextNode(theMissDisp[i]));
+		missing.appendChild(div);
+	}
+	placeholder.appendChild(missing);
+	span.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML));};
+	span.style.cursor = 'default';
+	span.style.display = 'inline-block';
+	span.style.height = '10px';
+	span.style.width = '10px';
+	span.style.borderRadius = '5px';
+	span.style.textAlign = 'center';
+	span.style.backgroundColor = '#C0C0C0';
+	span.style.color = 'black';
+	span.style.fontSize = '9px';
+	span.style.verticalAlign = 'bottom';
+	span.textContent = '?';
+	frag.appendChild(span);
+	return frag;
+}
+
+
 
 CM.Disp.AddMissingUpgrades = function() {
 	if (CM.Cache.UpgradesOwned != Game.UpgradesOwned) {
