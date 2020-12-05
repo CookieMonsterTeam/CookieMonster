@@ -29,17 +29,17 @@ CM.ReplaceNative = function() {
 
 	CM.Backup.UpdateWrinklers = Game.UpdateWrinklers;
 	Game.UpdateWrinklers = function() {
-		CM.Disp.FixMouseY(CM.Backup.UpdateWrinklers);
+		CM.Main.FixMouseY(CM.Backup.UpdateWrinklers);
 	}
 
 	CM.Backup.UpdateSpecial = Game.UpdateSpecial;
 	Game.UpdateSpecial = function() {
-		CM.Disp.FixMouseY(CM.Backup.UpdateSpecial);
+		CM.Main.FixMouseY(CM.Backup.UpdateSpecial);
 	}
 
 	// Assumes newer browsers
 	l('bigCookie').removeEventListener('click', Game.ClickCookie, false);
-	l('bigCookie').addEventListener('click', function() { CM.Disp.FixMouseY(Game.ClickCookie); }, false);
+	l('bigCookie').addEventListener('click', function() { CM.Main.FixMouseY(Game.ClickCookie); }, false);
 
 	// Probably better to load per minigame
 	CM.Backup.scriptLoaded = Game.scriptLoaded;
@@ -242,13 +242,19 @@ CM.DelayInit = function() {
 	if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
 	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
 
+	// given the architecture of your code, you probably want these lines somewhere else,
+	// but I stuck them here for convenience
+	l("products").style.display = "grid";
+	l("storeBulk").style.gridRow = "1/1";
+
+	l("upgrades").style.display = "flex";
+	l("upgrades").style["flex-wrap"] = "wrap";
 
 	Game.Win('Third-party');
 }
 
 /********
  * Section: Functions related to checking for changes in Minigames/GC's/Ticker
- * TODO: Annotate functions 
  * TODO: Possibly move this section */
 
 /**
@@ -420,9 +426,29 @@ CM.Main.AddWrinklerAreaDetect = function() {
 		CM.Disp.TooltipWrinklerArea = 0;
 		Game.tooltip.hide();
 		for (var i in Game.wrinklers) {
-			CM.Disp.TooltipWrinklerCache[i] = 0;
+			CM.Disp.TooltipWrinklerBeingShown[i] = 0;
 		}
 	};
+}
+
+/********
+ * Section: Functions related to the mouse */
+
+/**
+ * This function fixes Game.mouseY as a result of bars that are added by CookieMonster
+ * It is called by Game.UpdateWrinklers(), Game.UpdateSpecial() and the .onmousover of the BigCookie
+ * before execution of their actual function
+ */
+CM.Main.FixMouseY = function(target) {
+	if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+		var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
+		Game.mouseY -= timerBarHeight;
+		target();
+		Game.mouseY += timerBarHeight;
+	}
+	else {
+		target();
+	}
 }
 
 CM.HasReplaceNativeGrimoireLaunch = false;
@@ -500,7 +526,7 @@ CM.ConfigDefault = {
 	MissingUpgrades: 0,
 	UpStats: 1, 
 	TimeFormat: 0, 
-	SayTime: 1, 
+	DetailedTime: 1, 
 	GrimoireBar: 1, 
 	Scale: 2, 
 	OptionsPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Other: 1}, 
