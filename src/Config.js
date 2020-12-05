@@ -88,7 +88,7 @@ CM.ToggleConfigUp = function(config) {
 	if (typeof CM.ConfigData[config].func !== 'undefined') {
 		CM.ConfigData[config].func();
 	}
-	l(CM.ConfigPrefix + config).innerHTML = CM.Disp.GetConfigDisplay(config);
+	l(CM.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Config[config]];
 	CM.SaveConfig(CM.Config);
 }
 
@@ -100,7 +100,7 @@ CM.ToggleConfigDown = function(config) {
 	if (typeof CM.ConfigData[config].func !== 'undefined') {
 		CM.ConfigData[config].func();
 	}
-	l(CM.ConfigPrefix + config).innerHTML = CM.Disp.GetConfigDisplay(config);
+	l(CM.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Config[config]];
 	CM.SaveConfig(CM.Config);
 }
 
