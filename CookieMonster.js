@@ -3282,17 +3282,15 @@ CM.Disp.CreateStatsHeader = function(text, config) {
  * @returns	{object}		div			The option object
  */
 CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
+	var div = document.createElement('div');
+	div.className = 'listing';
+
+	var listingName = document.createElement('span');
+	listingName.textContent = name + ' '
+	div.appendChild(listingName);
 	if (type == "withTooltip")  {
-		var div = document.createElement('div');
 		div.className = 'listingWithTooltip';
-
 		
-
-		var listingName = document.createElement('span');
-		listingName.textContent = name + ' '
-		div.appendChild(listingName);
-		
-		var frag = document.createDocumentFragment();
 		var tooltip = document.createElement('span');
 		tooltip.onmouseout = function() { Game.tooltip.hide(); };
 		tooltip.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp[placeholder].innerHTML));};
@@ -3307,14 +3305,12 @@ CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
 		tooltip.style.fontSize = '9px';
 		tooltip.style.verticalAlign = 'bottom';
 		tooltip.textContent = '?';
-		frag.appendChild(tooltip);
-		frag.appendChild(document.createTextNode(' : '));
-		div.appendChild(frag);
-
-		div.appendChild(text);
-		return div;
+		div.appendChild(tooltip);
+		div.appendChild(document.createTextNode(' '));
 	}
-	
+	div.appendChild(document.createTextNode(': '));
+	div.appendChild(text);
+	return div;
 }
 
 
@@ -4235,7 +4231,11 @@ CM.Sim.InitialBuildingData = function(buildingName) {
  * so this function just returns an empty object.
  */
 CM.Sim.InitUpgrade = function(upgradeName) {
-	return {};
+	var me = Game.Upgrades[upgradeName];
+	var you = {};
+	you.pool = me.pool;
+	you.name = me.name;
+	return you;
 }
 
 /* Similar to the previous function, but for achievements.
