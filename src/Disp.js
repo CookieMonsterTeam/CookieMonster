@@ -287,6 +287,26 @@ CM.Disp.UpdateBackground = function() {
 }
 
 /**
+ * This function handles custom drawing for the Game.Draw() function.
+ * It is hooked on 'draw' by CM.RegisterHooks()
+ */
+CM.Disp.Draw = function () {
+	// Draw autosave timer in stats menu
+	if (
+		(Game.prefs.autosave && Game.drawT % 10 == 0) && // with autosave ON and every 10 ticks
+		(Game.onMenu == 'stats' && CM.Config.Stats) // while being on the stats menu only
+	) {
+		var timer = document.getElementById('CMStatsAutosaveTimer');
+		if (timer) {
+			timer.innerText = Game.sayTime(Game.fps * 60 - (Game.T % (Game.fps * 60)), 4);
+		}
+	}
+}
+
+/********
+ * Section: Functions related to the Bottom Bar */
+
+/**
  * This function toggle the bottom bar
  * It is called by CM.Disp.UpdateAscendState() and a change in CM.Config.BotBar
  */
@@ -403,23 +423,6 @@ CM.Disp.CreateBotBarBuildingColumn = function(buildingName) {
 	bonus.appendChild(document.createElement('td'));
 	pp.appendChild(document.createElement('td'));
 	time.appendChild(document.createElement('td'));
-}
-
-/**
- * This function handles custom drawing for the Game.Draw() function.
- * It is hooked on 'draw' by CM.RegisterHooks()
- */
-CM.Disp.Draw = function () {
-	// Draw autosave timer in stats menu
-	if (
-		(Game.prefs.autosave && Game.drawT % 10 == 0) && // with autosave ON and every 10 ticks
-		(Game.onMenu == 'stats' && CM.Config.Stats) // while being on the stats menu only
-	) {
-		var timer = document.getElementById('CMStatsAutosaveTimer');
-		if (timer) {
-			timer.innerText = Game.sayTime(Game.fps * 60 - (Game.T % (Game.fps * 60)), 4);
-		}
-	}
 }
 
 /********
