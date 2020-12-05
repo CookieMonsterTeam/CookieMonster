@@ -1121,7 +1121,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 }
 
 /********
- * Section: Functions related to display of the full page and initialization of the page */
+ * Section: General functions related to display, drawing and initialization of the page */
 
 /**
  * This function disables and shows the bars created by CookieMonster when the game is "ascending"
@@ -1291,6 +1291,23 @@ CM.Disp.CreateBotBarBuildingColumn = function(buildingName) {
 	bonus.appendChild(document.createElement('td'));
 	pp.appendChild(document.createElement('td'));
 	time.appendChild(document.createElement('td'));
+}
+
+/**
+ * This function handles custom drawing for the Game.Draw() function.
+ * It is hooked on 'draw' by CM.RegisterHooks()
+ */
+CM.Disp.Draw = function () {
+	// Draw autosave timer in stats menu
+	if (
+		(Game.prefs.autosave && Game.drawT % 10 == 0) && // with autosave ON and every 10 ticks
+		(Game.onMenu == 'stats' && CM.Config.Stats) // while being on the stats menu only
+	) {
+		var timer = document.getElementById('CMStatsAutosaveTimer');
+		if (timer) {
+			timer.innerText = Game.sayTime(Game.fps * 60 - (Game.T % (Game.fps * 60)), 4);
+		}
+	}
 }
 
 /********
@@ -3263,8 +3280,10 @@ CM.Disp.AddMenuStats = function(title) {
 		}
 		stats.appendChild(listing('Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
 		if (Game.prefs.autosave) {
-			var timeTillAutosave = Math.min((Game.fps*60 - (Game.T%(Game.fps*60))) / Game.fps, !Game.OnAscend * 60)
-			stats.appendChild(listing('Seconds till autosave', document.createTextNode(Math.floor(timeTillAutosave))));
+			var timer = document.createElement('span');
+			timer.id = 'CMStatsAutosaveTimer';
+			timer.innerText = Game.sayTime(Game.fps * 60 - (Game.OnAscend ? 0 : (Game.T % (Game.fps * 60))), 4);
+			stats.appendChild(listing('Time till autosave', timer));
 		}
 	}
 
@@ -3707,7 +3726,16 @@ CM.DelayInit = function() {
 	l("upgrades").style.display = "flex";
 	l("upgrades").style["flex-wrap"] = "wrap";
 
+	CM.Main.RegisterHooks();
+
 	Game.Win('Third-party');
+}
+
+/**
+ * Hook custom methods into the game
+ */
+CM.Main.RegisterHooks = function() {
+	Game.registerHook('draw', CM.Disp.Draw);
 }
 
 /********

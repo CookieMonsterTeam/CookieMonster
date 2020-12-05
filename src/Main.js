@@ -250,7 +250,16 @@ CM.DelayInit = function() {
 	l("upgrades").style.display = "flex";
 	l("upgrades").style["flex-wrap"] = "wrap";
 
+	CM.Main.RegisterHooks();
+
 	Game.Win('Third-party');
+}
+
+/**
+ * Hook custom methods into the game
+ */
+CM.Main.RegisterHooks = function() {
+	Game.registerHook('draw', CM.Disp.Draw);
 }
 
 /********
