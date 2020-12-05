@@ -387,7 +387,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 				answer += 'E+' + (timesTenToPowerThree * 3);
 			}
 		}
-		if (answer == '') {
+		if (answer === '') {
 			console.log("Could not beautify number with CM.Disp.Beautify");
 			answer = CM.Backup.Beautify(num, frac); 
 		}
