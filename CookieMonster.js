@@ -1516,8 +1516,8 @@ CM.Disp.UpdateBuildings = function() {
 			l('productPrice' + Game.Objects[i].id).style.color = CM.Config.Colors[CM.Cache[target][i].color];
 		}
 	}
-	else {
-		for (var i in CM.Cache.Objects) {
+	else if (Game.buyMode == -1) {
+		for (var i in CM.Cache.Objects ) {
 			var o = Game.Objects[i];
 			l('productPrice' + o.id).style.color = '';
 			/*
