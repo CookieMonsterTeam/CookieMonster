@@ -2001,65 +2001,10 @@ CM.Disp.AddMenuStats = function(title) {
 	var stats = document.createElement('div');
 	stats.className = 'subsection';
 	stats.appendChild(title());
-	var listing = function(name, text) {
-		var div = document.createElement('div');
-		div.className = 'listing';
-		var b = document.createElement('b');
-		if (typeof name == 'string') b.appendChild(document.createTextNode(name));
-		else b.appendChild(name); // fragment
-		b.appendChild(document.createTextNode(' : '));
-		div.appendChild(b);
-		div.appendChild(text);
-		return div;
-	}
-
-	var goldCookTooltip = CM.Sim.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Lucky Cookies', 'Lucky'));
 	if (CM.Config.StatsPref.Lucky) {
-		var luckyColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Lucky) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var luckyTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Lucky) ? CM.Disp.FormatTime((CM.Cache.Lucky - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
-		var luckyColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.LuckyFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var luckyTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
-		var luckyCurBase = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * CM.Cache.DragonsFortuneMultAdjustment * 60 * 15) + 13;
-		var luckyRewardMax = CM.Cache.LuckyReward;
-		var luckyRewardMaxWrath = CM.Cache.LuckyWrathReward;
-		var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
-		var luckyRewardFrenzyMaxWrath = CM.Cache.LuckyWrathRewardFrenzy;
-		var luckyCur = CM.Cache.GoldenCookiesMult * luckyCurBase;
-		var luckyCurWrath = CM.Cache.WrathCookiesMult * luckyCurBase;
-		var luckySplit = luckyRewardMax != luckyRewardMaxWrath;
-
-		var luckyReqFrag = document.createDocumentFragment();
-		var luckyReqSpan = document.createElement('span');
-		luckyReqSpan.style.fontWeight = 'bold';
-		luckyReqSpan.className = CM.Disp.colorTextPre + luckyColor;
-		luckyReqSpan.textContent = Beautify(CM.Cache.Lucky);
-		luckyReqFrag.appendChild(luckyReqSpan);
-		if (luckyTime != '') {
-			var luckyReqSmall = document.createElement('small');
-			luckyReqSmall.textContent = ' (' + luckyTime + ')';
-			luckyReqFrag.appendChild(luckyReqSmall);
-		}
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Cookies Required', Beautify(CM.Cache.Lucky), goldCookTooltip));
-
-
-
-		var luckyReqFrenFrag = document.createDocumentFragment();
-		var luckyReqFrenSpan = document.createElement('span');
-		luckyReqFrenSpan.style.fontWeight = 'bold';
-		luckyReqFrenSpan.className = CM.Disp.colorTextPre + luckyColorFrenzy;
-		luckyReqFrenSpan.textContent = Beautify(CM.Cache.LuckyFrenzy);
-		luckyReqFrenFrag.appendChild(luckyReqFrenSpan);
-		if (luckyTimeFrenzy != '') {
-			var luckyReqFrenSmall = document.createElement('small');
-			luckyReqFrenSmall.textContent = ' (' + luckyTimeFrenzy + ')';
-			luckyReqFrenFrag.appendChild(luckyReqFrenSmall);
-		}
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Cookies Required (Frenzy)', luckyReqFrenFrag, goldCookTooltip));
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''), Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : ''), goldCookTooltip));
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''), Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : ''), goldCookTooltip));
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : ''), goldCookTooltip));
+		stats.appendChild(CM.Disp.CreateStatsLuckySection());
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Chain Cookies', 'Chain'));
@@ -2397,11 +2342,11 @@ CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
 	var div = document.createElement('div');
 	div.className = 'listing';
 
-	var listingName = document.createElement('span');
-	listingName.textContent = name + ' '
+	var listingName = document.createElement('b');
+	listingName.textContent = name + ' ';
 	div.appendChild(listingName);
 	if (type == "withTooltip")  {
-		div.className = 'listingWithTooltip';
+		div.className = 'listing';
 		
 		var tooltip = document.createElement('span');
 		tooltip.onmouseout = function() { Game.tooltip.hide(); };
@@ -2424,7 +2369,6 @@ CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
 	div.appendChild(text);
 	return div;
 }
-
 
 /**
  * This function ?
@@ -2469,6 +2413,75 @@ CM.Disp.CreateStatsMissDisp = function(theMissDisp) {
 	return frag;
 }
 
+/**
+ * This function creates the "Lucky" section of the stats page
+ * @returns	{object}	section		The object contating the Lucky section
+ */
+CM.Disp.CreateStatsLuckySection = function() {
+	// TODO: Remove this and creater better tooltip!!
+	var goldCookTooltip = CM.Sim.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
+	var section = document.createElement('div');
+	section.className = 'CMStatsLuckySection';
+	
+	var luckyColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Lucky) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var luckyTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Lucky) ? CM.Disp.FormatTime((CM.Cache.Lucky - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	var luckyReqFrag = document.createDocumentFragment();
+	var luckyReqSpan = document.createElement('span');
+	luckyReqSpan.style.fontWeight = 'bold';
+	luckyReqSpan.className = CM.Disp.colorTextPre + luckyColor;
+	luckyReqSpan.textContent = Beautify(CM.Cache.Lucky);
+	luckyReqFrag.appendChild(luckyReqSpan);
+	if (luckyTime != '') {
+		var luckyReqSmall = document.createElement('small');
+		luckyReqSmall.textContent = ' (' + luckyTime + ')';
+		luckyReqFrag.appendChild(luckyReqSmall);
+	}
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Cookies Required', luckyReqFrag, goldCookTooltip));
+
+
+	var luckyColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.LuckyFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var luckyTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.LuckyFrenzy) ? CM.Disp.FormatTime((CM.Cache.LuckyFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	var luckyReqFrenFrag = document.createDocumentFragment();
+	var luckyReqFrenSpan = document.createElement('span');
+	luckyReqFrenSpan.style.fontWeight = 'bold';
+	luckyReqFrenSpan.className = CM.Disp.colorTextPre + luckyColorFrenzy;
+	luckyReqFrenSpan.textContent = Beautify(CM.Cache.LuckyFrenzy);
+	luckyReqFrenFrag.appendChild(luckyReqFrenSpan);
+	if (luckyTimeFrenzy != '') {
+		var luckyReqFrenSmall = document.createElement('small');
+		luckyReqFrenSmall.textContent = ' (' + luckyTimeFrenzy + ')';
+		luckyReqFrenFrag.appendChild(luckyReqFrenSmall);
+	}
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Cookies Required (Frenzy)', luckyReqFrenFrag, goldCookTooltip));
+	
+	var luckySplit = luckyRewardMax != luckyRewardMaxWrath;
+
+	var luckyRewardMax = CM.Cache.LuckyReward;
+	var luckyRewardMaxWrath = CM.Cache.LuckyWrathReward;
+	var luckyRewardMaxSpan = document.createElement('span');
+	luckyRewardMaxSpan.style.fontWeight = 'bold';
+	luckyRewardMaxSpan.className = CM.Disp.colorTextPre + luckyRewardMax;
+	luckyRewardMaxSpan.textContent = Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : '');
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyRewardMaxSpan, goldCookTooltip));
+
+	var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
+	var luckyRewardFrenzyMaxWrath = CM.Cache.LuckyWrathRewardFrenzy;	
+	var luckyRewardFrenzyMaxSpan = document.createElement('span');
+	luckyRewardFrenzyMaxSpan.style.fontWeight = 'bold';
+	luckyRewardFrenzyMaxSpan.className = CM.Disp.colorTextPre + luckyRewardFrenzyMaxSpan;
+	luckyRewardFrenzyMaxSpan.textContent = Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : '');
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyRewardFrenzyMaxSpan , goldCookTooltip));
+	
+	var luckyCurBase = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * CM.Cache.DragonsFortuneMultAdjustment * 60 * 15) + 13;
+	var luckyCur = CM.Cache.GoldenCookiesMult * luckyCurBase;
+	var luckyCurWrath = CM.Cache.WrathCookiesMult * luckyCurBase;
+	var luckyCurSpan = document.createElement('span');
+	luckyCurSpan.style.fontWeight = 'bold';
+	luckyCurSpan.className = CM.Disp.colorTextPre + luckyCurSpan;
+	luckyCurSpan.textContent = Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : '')
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyCurSpan, goldCookTooltip));
+	return section;
+}
 
 
 CM.Disp.AddMissingUpgrades = function() {
