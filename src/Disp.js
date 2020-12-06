@@ -963,7 +963,7 @@ CM.Disp.CreateFavicon = function() {
 }
 
 CM.Disp.UpdateFavicon = function() {
-	if (CM.Config.Favicon == 1) {
+	if (CM.Config.Favicon == 1 && CM.Disp.lastGoldenCookieState > 0) {
 		if (CM.Disp.spawnedGoldenShimmer.wrath) {
 			CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
 		}
