@@ -4248,13 +4248,12 @@ CM.Sim.CalculateGains = function() {
 		if (rawCookiesPs >= Game.CpsAchievements[i].threshold) CM.Sim.Win(Game.CpsAchievements[i].name);
 	}
 
-	CM.Sim.cookiesPsRaw=rawCookiesPs;
+	CM.Sim.cookiesPsRaw = rawCookiesPs;	
 
-	if (CM.Sim.hasAura('Dragon\'s Fortune')) {
-		var n = Game.shimmerTypes['golden'].n;
-		for (var i = 0; i < n; i++) {
-			mult *= 1.23;
-		}
+	var n = Game.shimmerTypes['golden'].n;
+	var auraMult = CM.Sim.auraMult('Dragon\'s Fortune');
+	for (var i = 0; i < n; i++){
+		mult *= 1 + auraMult * 1.23;
 	}
 
 	var name = Game.bakeryName.toLowerCase();
