@@ -23,6 +23,18 @@ CM.Disp.GetWrinkConfigBank = function() {
 }
 
 /**
+ * This function pops all normal wrinklers 
+ * It is called by a click of the 'pop all' button created by CM.Disp.AddMenuStats()
+ */
+CM.Disp.PopAllNormalWrinklers = function() {
+	for (var i in Game.wrinklers) {
+		if (Game.wrinklers[i].sucked > 0 && Game.wrinklers[i].type == 0) {
+			Game.wrinklers[i].hp = 0;
+		}
+	}
+}
+
+/**
  * This function returns the cps as either current or average CPS depending on CM.Config.CPSMode
  * @returns	{number}	The average or current cps
  */
@@ -187,9 +199,10 @@ CM.Disp.Beautify = function(num, frac, forced) {
 		}
 		else {
 			var restOfNumber = (num / Math.pow(10, (timesTenToPowerThree * 3))).toString();
+			// Check if number contains decimals
 			numbersToAdd = (restOfNumber.indexOf('.') > -1 ? restOfNumber.indexOf('.') + 1 + decimals : (restOfNumber.length))
 			i = 0
-			while (i < numbersToAdd - 1) {
+			while (i < numbersToAdd - 1 && i < restOfNumber.length - 1) {
 				answer += restOfNumber[i];
 				i++
 			}
@@ -217,7 +230,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 			}
 		}
 		if (answer === '') {
-			console.log("Could not beautify number with CM.Disp.Beautify");
+			console.log("Could not beautify number with CM.Disp.Beautify:" + num);
 			answer = CM.Backup.Beautify(num, frac); 
 		}
 		if (negative) answer = '-' + answer;
@@ -227,7 +240,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 		return "Infinity";
 	}
 	else {
-		console.log("Could not beautify number with CM.Disp.Beautify");
+		console.log("Could not beautify number with CM.Disp.Beautify:" + num);
 		return CM.Backup.Beautify(num, frac);
 	}
 }
@@ -1995,8 +2008,13 @@ CM.Disp.UpdateColors = function() {
 
 /********
  * Section: Functions related to the Stats page
- * TODO: Annotate functions */
+ * TODO: Annotate last functions */
 
+/**
+ * This function adds stats created by CookieMonster to the stats page
+ * It is called by CM.Disp.AddMenu
+ * @param {function} title	A function that returns the title of CookieMonster pre-styled
+ */
 CM.Disp.AddMenuStats = function(title) {
 	var stats = document.createElement('div');
 	stats.className = 'subsection';
@@ -2009,186 +2027,17 @@ CM.Disp.AddMenuStats = function(title) {
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Chain Cookies', 'Chain'));
 	if (CM.Config.StatsPref.Chain) {
-		var chainColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Chain) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var chainTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Chain - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
-		var chainColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var chainTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzy) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
-		var chainWrathColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var chainWrathTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrath) ? CM.Disp.FormatTime((CM.Cache.ChainWrath - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
-		var chainWrathColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var chainWrathTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrath) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzyWrath - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
-
-		var chainRewardMax = CM.Cache.ChainReward;
-		var chainWrathRewardMax = CM.Cache.ChainWrathReward;
-		var chainFrenzyRewardMax = CM.Cache.ChainFrenzyReward;
-		var chainFrenzyWrathRewardMax = CM.Cache.ChainFrenzyWrathReward;
-		var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * CM.Cache.DragonsFortuneMultAdjustment * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.5);
-		var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax, CM.Cache.GoldenCookiesMult);
-		var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax, CM.Cache.WrathCookiesMult);
-
-		var chainReqFrag = document.createDocumentFragment();
-		var chainReqSpan = document.createElement('span');
-		chainReqSpan.style.fontWeight = 'bold';
-		chainReqSpan.className = CM.Disp.colorTextPre + chainColor;
-		chainReqSpan.textContent = Beautify(CM.Cache.Chain);
-		chainReqFrag.appendChild(chainReqSpan);
-		if (chainTime != '') {
-			var chainReqSmall = document.createElement('small');
-			chainReqSmall.textContent = ' (' + chainTime + ')';
-			chainReqFrag.appendChild(chainReqSmall);
-		}
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required', chainReqFrag, goldCookTooltip));
-		var chainWrathReqFrag = document.createDocumentFragment();
-		var chainWrathReqSpan = document.createElement('span');
-		chainWrathReqSpan.style.fontWeight = 'bold';
-		chainWrathReqSpan.className = CM.Disp.colorTextPre + chainWrathColor;
-		chainWrathReqSpan.textContent = Beautify(CM.Cache.ChainWrath);
-		chainWrathReqFrag.appendChild(chainWrathReqSpan);
-		if (chainWrathTime != '') {
-			var chainWrathReqSmall = document.createElement('small');
-			chainWrathReqSmall.textContent = ' (' + chainWrathTime + ')';
-			chainWrathReqFrag.appendChild(chainWrathReqSmall);
-		}
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Wrath)', chainWrathReqFrag, goldCookTooltip));
-		var chainReqFrenFrag = document.createDocumentFragment();
-		var chainReqFrenSpan = document.createElement('span');
-		chainReqFrenSpan.style.fontWeight = 'bold';
-		chainReqFrenSpan.className = CM.Disp.colorTextPre + chainColorFrenzy;
-		chainReqFrenSpan.textContent = Beautify(CM.Cache.ChainFrenzy);
-		chainReqFrenFrag.appendChild(chainReqFrenSpan);
-		if (chainTimeFrenzy != '') {
-			var chainReqFrenSmall = document.createElement('small');
-			chainReqFrenSmall.textContent = ' (' + chainTimeFrenzy + ')';
-			chainReqFrenFrag.appendChild(chainReqFrenSmall);
-		}
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Frenzy)', chainReqFrenFrag, goldCookTooltip));
-		var chainWrathReqFrenFrag = document.createDocumentFragment();
-		var chainWrathReqFrenFrag = document.createDocumentFragment();
-		var chainWrathReqFrenSpan = document.createElement('span');
-		chainWrathReqFrenSpan.style.fontWeight = 'bold';
-		chainWrathReqFrenSpan.className = CM.Disp.colorTextPre + chainWrathColorFrenzy;
-		chainWrathReqFrenSpan.textContent = Beautify(CM.Cache.ChainFrenzyWrath);
-		chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSpan);
-		if (chainWrathTimeFrenzy != '') {
-			var chainWrathReqFrenSmall = document.createElement('small');
-			chainWrathReqFrenSmall.textContent = ' (' + chainWrathTimeFrenzy + ')';
-			chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSmall);
-		}
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Frenzy) (Wrath)', chainWrathReqFrenFrag, goldCookTooltip));
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (MAX) (Golden / Wrath)', Beautify(chainRewardMax) + ' / ' + Beautify(chainWrathRewardMax), goldCookTooltip));
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)', Beautify(chainFrenzyRewardMax) + ' / ' + Beautify(chainFrenzyWrathRewardMax), goldCookTooltip));
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (CUR) (Golden / Wrath)', Beautify(chainCur) + ' / ' + Beautify(chainCurWrath), goldCookTooltip));
+		stats.appendChild(CM.Disp.CreateStatsChainSection());
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Conjure Baked Goods', 'Conjure'));
 	if (CM.Config.StatsPref.Conjure) {
-		var conjureColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-		var conjureCur = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
-		var conjureTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.FormatTime((CM.Cache.Conjure - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
-		var conjureRewardMax = CM.Cache.ConjureReward;
-		
-		var conjureReqFrag = document.createDocumentFragment();
- 		var conjureReqSpan = document.createElement('span');
- 		conjureReqSpan.style.fontWeight = 'bold';
- 		conjureReqSpan.className = CM.Disp.colorTextPre + conjureColor;
- 		conjureReqSpan.textContent = Beautify(CM.Cache.Conjure);
- 		conjureReqFrag.appendChild(conjureReqSpan);
- 		if (conjureTime != '') {
- 			var conjureReqSmall = document.createElement('small');
- 			conjureReqSmall.textContent = ' (' + conjureTime + ')';
- 			conjureReqFrag.appendChild(conjureReqSmall);
- 		}
- 		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Cookies Required', conjureReqFrag, 'GoldCookTooltipPlaceholder'));
- 		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (MAX)', conjureRewardMax, 'GoldCookTooltipPlaceholder'));
- 		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (CUR)', conjureCur, 'GoldCookTooltipPlaceholder'));
+		stats.appendChild(CM.Disp.CreateStatsConjureSection());
  	}
-	
-	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')); // Needs to be done for the checking below
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Prestige', 'Prestige'));
 	if (CM.Config.StatsPref.Prestige) {
-		var possiblePresMax = Math.floor(Game.HowMuchPrestige(CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0)));
-		var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + (choEgg ? CM.Cache.lastChoEgg : 0));
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Prestige Level (CUR / MAX)', Beautify(Game.prestige) + ' / ' + Beautify(possiblePresMax), 'PrestMaxTooltipPlaceholder'));
-		
-		var cookiesNextFrag = document.createDocumentFragment();
-		cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
-		var cookiesNextSmall = document.createElement('small');
-		cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / CM.Cache.AvgCPSChoEgg, 1)) + ')';
-		cookiesNextFrag.appendChild(cookiesNextSmall);
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Cookies To Next Level', cookiesNextFrag, 'NextPrestTooltipPlaceholder'));
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Heavenly Chips (CUR / MAX)', Beautify(Game.heavenlyChips) + ' / ' + Beautify((possiblePresMax - Game.prestige) + Game.heavenlyChips), 'HeavenChipMaxTooltipPlaceholder'));
-		
-		var resetBonus = CM.Sim.ResetBonus(possiblePresMax);
-		var resetFrag = document.createDocumentFragment();
-		resetFrag.appendChild(document.createTextNode(Beautify(resetBonus)));
-		var increase = Math.round(resetBonus / Game.cookiesPs * 10000);
-		if (isFinite(increase) && increase != 0) {
-			var resetSmall = document.createElement('small');
-			resetSmall.textContent = ' (' + (increase / 100) + '% of income)';
-			resetFrag.appendChild(resetSmall);
-		}
-		stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Reset Bonus Income', resetFrag, 'ResetTooltipPlaceholder'));
-
-		var currentPrestige = Math.floor(Game.HowMuchPrestige(Game.cookiesReset));
-		var willHave = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
-		var willGet = willHave - currentPrestige;
-		var addCommas = (n) =>
-		{
-			var s1 = n.toString();
-			var s2 = '';
-			for (var i in s1)
-			{
-				if ((s1.length - i) % 3 == 0 && i > 0)
-					s2 += ',';
-				
-				s2 += s1[i];
-			}
-
-			return s2;
-		};
-
-		if (!Game.Has('Lucky digit'))
-		{
-			var delta7 = 7 - (willHave % 10);
-			if (delta7 < 0) delta7 += 10;
-			var next7Reset = willGet + delta7;
-			var next7Total = willHave + delta7;
-			var frag7 = document.createDocumentFragment();
-			frag7.appendChild(document.createTextNode(addCommas(next7Total) + " / " + addCommas(next7Reset) + " (+" + delta7 + ")"));
-			stats.appendChild(listing('Next "Lucky Digit" (total / reset)', frag7));
-		}
-		
-		if (!Game.Has('Lucky number'))
-		{
-			var delta777 = 777 - (willHave % 1000);
-			if (delta777 < 0) delta777 += 1000;
-			var next777Reset = willGet + delta777;
-			var next777Total = willHave + delta777;
-			var frag777 = document.createDocumentFragment();
-			frag777.appendChild(document.createTextNode(addCommas(next777Total) + " / " + addCommas(next777Reset) + " (+" + delta777 + ")"));
-			stats.appendChild(listing('Next "Lucky Number" (total / reset)', frag777));
-		}
-		
-		if (!Game.Has('Lucky payout'))
-		{
-			var delta777777 = 777777 - (willHave % 1000000);
-			if (delta777777 < 0) delta777777 += 1000000;
-			var next777777Reset = willGet + delta777777;
-			var next777777Total = willHave + delta777777;
-			var frag777777 = document.createDocumentFragment();
-			frag777777.appendChild(document.createTextNode(addCommas(next777777Total) + " / " + addCommas(next777777Reset) + " (+" + delta777777 + ")"));
-			stats.appendChild(listing('Next "Lucky Payout" (total / reset)', frag777777));
-		}
-	}
-
-	// TODO: Collapse this function and just write it as code
-	CM.Disp.CollectWrinklers = function() {
-		for (var i in Game.wrinklers) {
-			if (Game.wrinklers[i].sucked > 0 && Game.wrinklers[i].type == 0) {
-				Game.wrinklers[i].hp = 0;
-			}
-		}
+		stats.appendChild(CM.Disp.CreateStatsPrestigeSection());
 	}
 
 	if (Game.cpsSucked > 0) {
@@ -2201,77 +2050,78 @@ CM.Disp.AddMenuStats = function(title) {
 			popAllA.className = 'option';
 			popAllA.onclick = function() { CM.Disp.CollectWrinklers(); };
 			popAllFrag.appendChild(popAllA);
-			stats.appendChild(listing('Rewards of Popping',  popAllFrag));
+			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping',  popAllFrag));
 		}
 	}
+
 
 	var specDisp = false;
-	var halloCook = [];
+	var missingHalloweenCookies = [];
 	for (var i in CM.Data.HalloCookies) {
 		if (!Game.Has(CM.Data.HalloCookies[i])) {
-			halloCook.push(CM.Data.HalloCookies[i]);
+			missingHalloweenCookies.push(CM.Data.HalloCookies[i]);
 			specDisp = true;
 		}
 	}
-	var christCook = [];
+	var missingChristmasCookies = [];
 	for (var i in CM.Data.ChristCookies) {
 		if (!Game.Has(CM.Data.ChristCookies[i])) {
-			christCook.push(CM.Data.ChristCookies[i]);
+			missingChristmasCookies.push(CM.Data.ChristCookies[i]);
 			specDisp = true;
 		}
 	}
-	var valCook = [];
+	var missingValentineCookies = [];
 	for (var i in CM.Data.ValCookies) {
 		if (!Game.Has(CM.Data.ValCookies[i])) {
-			valCook.push(CM.Data.ValCookies[i]);
+			missingValentineCookies.push(CM.Data.ValCookies[i]);
 			specDisp = true;
 		}
 	}
-	var normEggs = [];
+	var missingNormalEggs = [];
 	for (var i in Game.eggDrops) {
 		if (!Game.HasUnlocked(Game.eggDrops[i])) {
-			normEggs.push(Game.eggDrops[i]);
+			missingNormalEggs.push(Game.eggDrops[i]);
 			specDisp = true;
 		}
 	}
-	var rareEggs = [];
+	var missingRareEggs = [];
 	for (var i in Game.rareEggDrops) {
 		if (!Game.HasUnlocked(Game.rareEggDrops[i])) {
-			rareEggs.push(Game.rareEggDrops[i]);
+			missingRareEggs.push(Game.rareEggDrops[i]);
 			specDisp = true;
 		}
 	}
-
+	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 	var centEgg = Game.Has('Century egg');
-
+	
 	if (Game.season == 'christmas' || specDisp || choEgg || centEgg) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Season Specials', 'Sea'));
 		if (CM.Config.StatsPref.Sea) {
 			if (specDisp) {
-				if (halloCook.length != 0) stats.appendChild(listing('Halloween Cookies Left to Buy', CM.Disp.CreateStatsMissDisp(halloCook)));
-				if (christCook.length != 0) stats.appendChild(listing('Christmas Cookies Left to Buy',  CM.Disp.CreateStatsMissDisp(christCook)));
-				if (valCook.length != 0) stats.appendChild(listing('Valentine Cookies Left to Buy',  CM.Disp.CreateStatsMissDisp(valCook)));
-				if (normEggs.length != 0) stats.appendChild(listing('Normal Easter Eggs Left to Unlock',  CM.Disp.CreateStatsMissDisp(normEggs)));
-				if (rareEggs.length != 0) stats.appendChild(listing('Rare Easter Eggs Left to Unlock',  CM.Disp.CreateStatsMissDisp(rareEggs)));
+				if (missingHalloweenCookies.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Halloween Cookies Left to Buy', CM.Disp.CreateStatsMissDisp(missingHalloweenCookies)));
+				if (missingChristmasCookies.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Christmas Cookies Left to Buy',  CM.Disp.CreateStatsMissDisp(missingChristmasCookies)));
+				if (missingValentineCookies.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Valentine Cookies Left to Buy',  CM.Disp.CreateStatsMissDisp(missingValentineCookies)));
+				if (missingNormalEggs.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Normal Easter Eggs Left to Unlock',  CM.Disp.CreateStatsMissDisp(missingNormalEggs)));
+				if (missingRareEggs.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rare Easter Eggs Left to Unlock',  CM.Disp.CreateStatsMissDisp(missingRareEggs)));
 			}
 
-			if (Game.season == 'christmas') stats.appendChild(listing('Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
+			if (Game.season == 'christmas') stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
 			if (choEgg) {
-				stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Chocolate Egg Cookies', Beautify(CM.Cache.lastChoEgg), 'ChoEggTooltipPlaceholder'));
+				stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Chocolate Egg Cookies', document.createTextNode(Beautify(CM.Cache.lastChoEgg)), 'ChoEggTooltipPlaceholder'));
 			}
 			if (centEgg) {
-				stats.appendChild(listing('Century Egg Multiplier', document.createTextNode((Math.round((CM.Cache.CentEgg - 1) * 10000) / 100) + '%')));
+				stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Century Egg Multiplier', document.createTextNode((Math.round((CM.Cache.CentEgg - 1) * 10000) / 100) + '%')));
 			}
 		}
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Miscellaneous', 'Misc'));
 	if (CM.Config.StatsPref.Misc) {
-		stats.appendChild(listing(
+		stats.appendChild(CM.Disp.CreateStatsListing("basic", 
 			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Config.AvgCPSHist] / 60) + (CM.Config.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', 
 			document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))
 		));
-		stats.appendChild(listing('Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Config.AvgClicksHist] + (CM.Config.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
+		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Config.AvgClicksHist] + (CM.Config.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
 		if (Game.Has('Fortune cookies')) {
 			var fortunes = [];
 			for (var i in CM.Data.Fortunes) {
@@ -2279,14 +2129,14 @@ CM.Disp.AddMenuStats = function(title) {
 					fortunes.push(CM.Data.Fortunes[i]);
 				}
 			}
-			if (fortunes.length != 0) stats.appendChild(listing('Fortune Upgrades Left to Buy',  CM.Disp.CreateStatsMissDisp(fortunes)));
+			if (fortunes.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Fortune Upgrades Left to Buy',  CM.Disp.CreateStatsMissDisp(fortunes)));
 		}
-		stats.appendChild(listing('Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
+		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
 		if (Game.prefs.autosave) {
 			var timer = document.createElement('span');
 			timer.id = 'CMStatsAutosaveTimer';
 			timer.innerText = Game.sayTime(Game.fps * 60 - (Game.OnAscend ? 0 : (Game.T % (Game.fps * 60))), 4);
-			stats.appendChild(listing('Time till autosave', timer));
+			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Time till autosave', timer));
 		}
 	}
 
@@ -2343,7 +2193,7 @@ CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
 	div.className = 'listing';
 
 	var listingName = document.createElement('b');
-	listingName.textContent = name + ' ';
+	listingName.textContent = name;
 	div.appendChild(listingName);
 	if (type == "withTooltip")  {
 		div.className = 'listing';
@@ -2371,9 +2221,9 @@ CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
 }
 
 /**
- * This function ?
- * @param 	{string}		theMissDisp		The type fo the listing
- * @returns	{object}		frag			The option object
+ * This function creates a tooltip containing all missing holiday items contained in the list theMissDisp
+ * @param 	{list}			theMissDisp		A list of the missing holiday items
+ * @returns	{object}		frag			The tooltip object
  */
 CM.Disp.CreateStatsMissDisp = function(theMissDisp) {
 	var frag = document.createDocumentFragment();
@@ -2417,9 +2267,10 @@ CM.Disp.CreateStatsMissDisp = function(theMissDisp) {
  * This function creates the "Lucky" section of the stats page
  * @returns	{object}	section		The object contating the Lucky section
  */
-CM.Disp.CreateStatsLuckySection = function() {
+CM.Disp.CreateStatsLuckySection = function() {	
 	// TODO: Remove this and creater better tooltip!!
 	var goldCookTooltip = CM.Sim.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
+	
 	var section = document.createElement('div');
 	section.className = 'CMStatsLuckySection';
 	
@@ -2454,36 +2305,213 @@ CM.Disp.CreateStatsLuckySection = function() {
 	}
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Cookies Required (Frenzy)', luckyReqFrenFrag, goldCookTooltip));
 	
-	var luckySplit = luckyRewardMax != luckyRewardMaxWrath;
+	var luckySplit = CM.Cache.LuckyReward != CM.Cache.LuckyWrathReward;
 
-	var luckyRewardMax = CM.Cache.LuckyReward;
-	var luckyRewardMaxWrath = CM.Cache.LuckyWrathReward;
 	var luckyRewardMaxSpan = document.createElement('span');
 	luckyRewardMaxSpan.style.fontWeight = 'bold';
-	luckyRewardMaxSpan.className = CM.Disp.colorTextPre + luckyRewardMax;
-	luckyRewardMaxSpan.textContent = Beautify(luckyRewardMax) + (luckySplit ? (' / ' + Beautify(luckyRewardMaxWrath)) : '');
+	luckyRewardMaxSpan.className = CM.Disp.colorTextPre + CM.Cache.LuckyReward;
+	luckyRewardMaxSpan.textContent = Beautify(CM.Cache.LuckyReward) + (luckySplit ? (' / ' + Beautify(CM.Cache.LuckyWrathReward)) : '');
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyRewardMaxSpan, goldCookTooltip));
 
-	var luckyRewardFrenzyMax = CM.Cache.LuckyRewardFrenzy;
-	var luckyRewardFrenzyMaxWrath = CM.Cache.LuckyWrathRewardFrenzy;	
 	var luckyRewardFrenzyMaxSpan = document.createElement('span');
 	luckyRewardFrenzyMaxSpan.style.fontWeight = 'bold';
 	luckyRewardFrenzyMaxSpan.className = CM.Disp.colorTextPre + luckyRewardFrenzyMaxSpan;
-	luckyRewardFrenzyMaxSpan.textContent = Beautify(luckyRewardFrenzyMax) + (luckySplit ? (' / ' + Beautify(luckyRewardFrenzyMaxWrath)) : '');
+	luckyRewardFrenzyMaxSpan.textContent = Beautify(CM.Cache.LuckyRewardFrenzy) + (luckySplit ? (' / ' + Beautify(CM.Cache.LuckyWrathRewardFrenzy)) : '');
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyRewardFrenzyMaxSpan , goldCookTooltip));
 	
 	var luckyCurBase = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * CM.Cache.DragonsFortuneMultAdjustment * 60 * 15) + 13;
-	var luckyCur = CM.Cache.GoldenCookiesMult * luckyCurBase;
-	var luckyCurWrath = CM.Cache.WrathCookiesMult * luckyCurBase;
 	var luckyCurSpan = document.createElement('span');
 	luckyCurSpan.style.fontWeight = 'bold';
 	luckyCurSpan.className = CM.Disp.colorTextPre + luckyCurSpan;
-	luckyCurSpan.textContent = Beautify(luckyCur) + (luckySplit ? (' / ' + Beautify(luckyCurWrath)) : '')
+	luckyCurSpan.textContent = Beautify(CM.Cache.GoldenCookiesMult * luckyCurBase) + (luckySplit ? (' / ' + Beautify(CM.Cache.WrathCookiesMult * luckyCurBase)) : '')
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyCurSpan, goldCookTooltip));
 	return section;
 }
 
+/**
+ * This function creates the "Chain" section of the stats page
+ * @returns	{object}	section		The object contating the Chain section
+ */
+CM.Disp.CreateStatsChainSection = function() {
+	// TODO: Remove this and creater better tooltip!!
+	var goldCookTooltip = CM.Sim.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
+	
+	var section = document.createElement('div');
+	section.className = 'CMStatsChainSection';
 
+	var chainColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Chain) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var chainTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Chain - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	var chainReqFrag = document.createDocumentFragment();
+	var chainReqSpan = document.createElement('span');
+	chainReqSpan.style.fontWeight = 'bold';
+	chainReqSpan.className = CM.Disp.colorTextPre + chainColor;
+	chainReqSpan.textContent = Beautify(CM.Cache.Chain);
+	chainReqFrag.appendChild(chainReqSpan);
+	if (chainTime != '') {
+		var chainReqSmall = document.createElement('small');
+		chainReqSmall.textContent = ' (' + chainTime + ')';
+		chainReqFrag.appendChild(chainReqSmall);
+	}
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required', chainReqFrag, goldCookTooltip));
+	
+	var chainWrathColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var chainWrathTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrath) ? CM.Disp.FormatTime((CM.Cache.ChainWrath - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	var chainWrathReqFrag = document.createDocumentFragment();
+	var chainWrathReqSpan = document.createElement('span');
+	chainWrathReqSpan.style.fontWeight = 'bold';
+	chainWrathReqSpan.className = CM.Disp.colorTextPre + chainWrathColor;
+	chainWrathReqSpan.textContent = Beautify(CM.Cache.ChainWrath);
+	chainWrathReqFrag.appendChild(chainWrathReqSpan);
+	if (chainWrathTime != '') {
+		var chainWrathReqSmall = document.createElement('small');
+		chainWrathReqSmall.textContent = ' (' + chainWrathTime + ')';
+		chainWrathReqFrag.appendChild(chainWrathReqSmall);
+	}
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Wrath)', chainWrathReqFrag, goldCookTooltip));
+	
+	var chainColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var chainTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzy) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	var chainReqFrenFrag = document.createDocumentFragment();
+	var chainReqFrenSpan = document.createElement('span');
+	chainReqFrenSpan.style.fontWeight = 'bold';
+	chainReqFrenSpan.className = CM.Disp.colorTextPre + chainColorFrenzy;
+	chainReqFrenSpan.textContent = Beautify(CM.Cache.ChainFrenzy);
+	chainReqFrenFrag.appendChild(chainReqFrenSpan);
+	if (chainTimeFrenzy != '') {
+		var chainReqFrenSmall = document.createElement('small');
+		chainReqFrenSmall.textContent = ' (' + chainTimeFrenzy + ')';
+		chainReqFrenFrag.appendChild(chainReqFrenSmall);
+	}
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Frenzy)', chainReqFrenFrag, goldCookTooltip));
+	
+	var chainWrathColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var chainWrathTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrath) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzyWrath - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	var chainWrathReqFrenFrag = document.createDocumentFragment();
+	var chainWrathReqFrenSpan = document.createElement('span');
+	chainWrathReqFrenSpan.style.fontWeight = 'bold';
+	chainWrathReqFrenSpan.className = CM.Disp.colorTextPre + chainWrathColorFrenzy;
+	chainWrathReqFrenSpan.textContent = Beautify(CM.Cache.ChainFrenzyWrath);
+	chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSpan);
+	if (chainWrathTimeFrenzy != '') {
+		var chainWrathReqFrenSmall = document.createElement('small');
+		chainWrathReqFrenSmall.textContent = ' (' + chainWrathTimeFrenzy + ')';
+		chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSmall);
+	}
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Frenzy) (Wrath)', chainWrathReqFrenFrag, goldCookTooltip));
+
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (MAX) (Golden / Wrath)', document.createTextNode(Beautify(CM.Cache.ChainReward) + ' / ' + Beautify(CM.Cache.ChainWrathReward)), goldCookTooltip));
+
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyReward) + ' / ' + Beautify(CM.Cache.ChainFrenzyWrathReward))), goldCookTooltip));
+
+	// TODO: Place MaxChainMoni function into CM.Cache.RemakeChain and create global variables to store it
+	var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * CM.Cache.DragonsFortuneMultAdjustment * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.5);
+	var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax, CM.Cache.GoldenCookiesMult);
+	var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax, CM.Cache.WrathCookiesMult);
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (CUR) (Golden / Wrath)', document.createTextNode((Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))), goldCookTooltip));
+	return section;
+}
+
+/**
+ * This function creates the "Conjure" section of the stats page
+ * @returns	{object}	section		The object contating the Conjure section
+ */
+CM.Disp.CreateStatsConjureSection = function() {
+	var section = document.createElement('div');
+	section.className = 'CMStatsConjureSection';
+
+	var conjureColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var conjureCur = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
+	var conjureTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.FormatTime((CM.Cache.Conjure - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	
+	var conjureReqFrag = document.createDocumentFragment();
+	var conjureReqSpan = document.createElement('span');
+	conjureReqSpan.style.fontWeight = 'bold';
+	conjureReqSpan.className = CM.Disp.colorTextPre + conjureColor;
+	conjureReqSpan.textContent = Beautify(CM.Cache.Conjure);
+	conjureReqFrag.appendChild(conjureReqSpan);
+	if (conjureTime != '') {
+		var conjureReqSmall = document.createElement('small');
+		conjureReqSmall.textContent = ' (' + conjureTime + ')';
+		conjureReqFrag.appendChild(conjureReqSmall);
+	}
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Cookies Required', conjureReqFrag, 'GoldCookTooltipPlaceholder'));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (MAX)', document.createTextNode(CM.Disp.Beautify(CM.Cache.ConjureReward)), 'GoldCookTooltipPlaceholder'));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (CUR)', document.createTextNode(CM.Disp.Beautify(conjureCur)), 'GoldCookTooltipPlaceholder'));
+	return section;
+}
+
+/**
+ * This function creates the "Prestige" section of the stats page
+ * @returns	{object}	section		The object contating the Prestige section
+ */
+CM.Disp.CreateStatsPrestigeSection = function() {
+	var section = document.createElement('div');
+	section.className = 'CMStatsPrestigeSection';
+
+	var possiblePresMax = Math.floor(Game.HowMuchPrestige(CM.Cache.RealCookiesEarned + 
+		Game.cookiesReset + CM.Cache.WrinkGodBank + 
+		(Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg') ? CM.Cache.lastChoEgg : 0)));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Prestige Level (CUR / MAX)', document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePresMax)), 'PrestMaxTooltipPlaceholder'));
+	
+	var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + ((Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg') ? CM.Cache.lastChoEgg : 0) ? CM.Cache.lastChoEgg : 0));
+	var cookiesNextFrag = document.createDocumentFragment();
+	cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
+	var cookiesNextSmall = document.createElement('small');
+	cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / CM.Cache.AvgCPSChoEgg, 1)) + ')';
+	cookiesNextFrag.appendChild(cookiesNextSmall);
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Cookies To Next Level', cookiesNextFrag, 'NextPrestTooltipPlaceholder'));
+	
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Heavenly Chips (CUR / MAX)', document.createTextNode(Beautify(Game.heavenlyChips) + ' / ' + Beautify((possiblePresMax - Game.prestige) + Game.heavenlyChips)), 'HeavenChipMaxTooltipPlaceholder'));
+	
+	var resetBonus = CM.Sim.ResetBonus(possiblePresMax);
+	var resetFrag = document.createDocumentFragment();
+	resetFrag.appendChild(document.createTextNode(Beautify(resetBonus)));
+	var increase = Math.round(resetBonus / Game.cookiesPs * 10000);
+	if (isFinite(increase) && increase != 0) {
+		var resetSmall = document.createElement('small');
+		resetSmall.textContent = ' (' + (increase / 100) + '% of income)';
+		resetFrag.appendChild(resetSmall);
+	}
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Reset Bonus Income', resetFrag, 'ResetTooltipPlaceholder'));
+
+	var currentPrestige = Math.floor(Game.HowMuchPrestige(Game.cookiesReset));
+	var willHave = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
+	var willGet = willHave - currentPrestige;
+	if (!Game.Has('Lucky digit')) {
+		var delta7 = 7 - (willHave % 10);
+		if (delta7 < 0) delta7 += 10;
+		var next7Reset = willGet + delta7;
+		var next7Total = willHave + delta7;
+		var frag7 = document.createDocumentFragment();
+		frag7.appendChild(document.createTextNode(next7Total.toLocaleString() + " / " + next7Reset.toLocaleString() + " (+" + delta7 + ")"));
+		section.appendChild(CM.Disp.CreateStatsListing("basic", 'Next "Lucky Digit" (total / reset)', frag7));
+	}
+	
+	if (!Game.Has('Lucky number')) {
+		var delta777 = 777 - (willHave % 1000);
+		if (delta777 < 0) delta777 += 1000;
+		var next777Reset = willGet + delta777;
+		var next777Total = willHave + delta777;
+		var frag777 = document.createDocumentFragment();
+		frag777.appendChild(document.createTextNode(next777Total.toLocaleString() + " / " + next777Reset.toLocaleString() + " (+" + delta777 + ")"));
+		section.appendChild(CM.Disp.CreateStatsListing("basic", 'Next "Lucky Number" (total / reset)', frag777));
+	}
+	
+	if (!Game.Has('Lucky payout')) {
+		var delta777777 = 777777 - (willHave % 1000000);
+		if (delta777777 < 0) delta777777 += 1000000;
+		var next777777Reset = willGet + delta777777;
+		var next777777Total = willHave + delta777777;
+		var frag777777 = document.createDocumentFragment();
+		frag777777.appendChild(document.createTextNode(next777777Total.toLocaleString() + " / " + next777777Reset.toLocaleString() + " (+" + delta777777 + ")"));
+		section.appendChild(CM.Disp.CreateStatsListing("basic", 'Next "Lucky Payout" (total / reset)', frag777777));
+	}
+
+	return section;
+}
+
+// TODO: Fix and annotate this function.
+/**
 CM.Disp.AddMissingUpgrades = function() {
 	if (CM.Cache.UpgradesOwned != Game.UpgradesOwned) {
 		CM.Cache.CalcMissingUpgrades();
@@ -2559,7 +2587,7 @@ CM.Disp.AddMissingUpgrades = function() {
 		}
 		upgradesMenu.appendChild(CM.Cache.MissingCookiesString);
 	}
-}
+} */
 
 /********
  * Section: Variables used in Disp functions
