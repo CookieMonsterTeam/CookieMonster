@@ -874,6 +874,7 @@ CM.ConfigData.ToolWarnPos = {type: 'bool', group: 'Tooltip', label: ['Tooltip Wa
 CM.ConfigData.TooltipGrim = {type: 'bool', group: 'Tooltip', label: ['Grimoire Tooltip Information OFF', 'Grimoire Tooltip Information ON'], desc: 'Extra information in tooltip for grimoire', toggle: true};
 CM.ConfigData.ToolWrink = {type: 'bool', group: 'Tooltip', label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
 CM.ConfigData.TooltipLump = {type: 'bool', group: 'Tooltip', label: ['Sugar Lump Tooltip OFF', 'Sugar Lump Tooltip ON'], desc: 'Shows the current Sugar Lump type in Sugar lump tooltip.', toggle: true};
+CM.ConfigData.DragonAuraInfo = {type: 'bool', group: 'Tooltip', label: ['Extra Dragon Aura OFF', 'Extra Dragon Aura ON'], desc: 'Shows information about changes in CPS and costs in the dragon aura interface.', toggle: true};
 
 // Statistics
 CM.ConfigData.Stats = {type: 'bool', group: 'Statistics', label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra Cookie Monster statistics!', toggle: true};
@@ -2655,6 +2656,17 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 }
 
 /********
+ * Section: Functions related to the dragon aura interface */
+
+CM.Disp.AddAuraInfo = function() {
+	if (CM.Config.DragonAuraInfo == 1) {
+		console.log("Yes!")
+	} else {
+		console.log("No!")
+	}
+}
+
+/********
  * Section: General functions related to the Options/Stats pages
 
 /**
@@ -3608,6 +3620,18 @@ CM.ReplaceNative = function() {
 		Game.CalculateGains();
 	}
 
+	
+	CM.Backup.DescribeDragonAura = Game.DescribeDragonAura;
+	/**
+	 * This functions adds the function CM.Disp.AddAuraInfo() to Game.DescribeDragonAura()
+	 * This adds information about CPS differences and costs to the aura choosing interface
+	 * @param	{number}	aura	The number of the aura current selected by the mouse/user
+	 */
+	Game.DescribeDragonAura = function(aura) {
+		CM.Backup.DescribeDragonAura(aura);
+		CM.Disp.AddAuraInfo();
+	}
+
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
 	Game.UpdateMenu = function() {
 		if (typeof jscolor.picker === 'undefined' || typeof jscolor.picker.owner === 'undefined') {
@@ -4081,6 +4105,7 @@ CM.ConfigDefault = {
 	TooltipGrim:1, 
 	ToolWrink: 1, 
 	TooltipLump: 1,
+	DragonAuraInfo: 1,
 	Stats: 1, 
 	MissingUpgrades: 0,
 	UpStats: 1, 

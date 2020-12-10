@@ -58,6 +58,18 @@ CM.ReplaceNative = function() {
 		Game.CalculateGains();
 	}
 
+	
+	CM.Backup.DescribeDragonAura = Game.DescribeDragonAura;
+	/**
+	 * This functions adds the function CM.Disp.AddAuraInfo() to Game.DescribeDragonAura()
+	 * This adds information about CPS differences and costs to the aura choosing interface
+	 * @param	{number}	aura	The number of the aura current selected by the mouse/user
+	 */
+	Game.DescribeDragonAura = function(aura) {
+		CM.Backup.DescribeDragonAura(aura);
+		CM.Disp.AddAuraInfo();
+	}
+
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
 	Game.UpdateMenu = function() {
 		if (typeof jscolor.picker === 'undefined' || typeof jscolor.picker.owner === 'undefined') {
@@ -531,6 +543,7 @@ CM.ConfigDefault = {
 	TooltipGrim:1, 
 	ToolWrink: 1, 
 	TooltipLump: 1,
+	DragonAuraInfo: 1,
 	Stats: 1, 
 	MissingUpgrades: 0,
 	UpStats: 1, 

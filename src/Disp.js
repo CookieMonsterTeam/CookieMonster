@@ -1767,6 +1767,17 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 }
 
 /********
+ * Section: Functions related to the dragon aura interface */
+
+CM.Disp.AddAuraInfo = function() {
+	if (CM.Config.DragonAuraInfo == 1) {
+		console.log("Yes!")
+	} else {
+		console.log("No!")
+	}
+}
+
+/********
  * Section: General functions related to the Options/Stats pages
 
 /**
