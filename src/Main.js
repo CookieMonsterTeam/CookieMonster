@@ -63,11 +63,11 @@ CM.ReplaceNative = function() {
 	/**
 	 * This functions adds the function CM.Disp.AddAuraInfo() to Game.DescribeDragonAura()
 	 * This adds information about CPS differences and costs to the aura choosing interface
-	 * @param	{number}	aura	The number of the aura current selected by the mouse/user
+	 * @param	{number}	aura	The number of the aura currently selected by the mouse/user
 	 */
 	Game.DescribeDragonAura = function(aura) {
 		CM.Backup.DescribeDragonAura(aura);
-		CM.Disp.AddAuraInfo();
+		CM.Disp.AddAuraInfo(aura);
 	}
 
 	CM.Backup.UpdateMenu = Game.UpdateMenu;

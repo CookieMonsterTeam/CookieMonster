@@ -2657,12 +2657,24 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 
 /********
  * Section: Functions related to the dragon aura interface */
-
+/**
+ * This functions adds the two extra lines about CPS and time to recover to the aura picker infoscreen
+ * This adds information about CPS differences and costs to the aura choosing interface
+ * @param	{number}	aura	The number of the aura currently selected by the mouse/user
+ */
 CM.Disp.AddAuraInfo = function() {
 	if (CM.Config.DragonAuraInfo == 1) {
-		console.log("Yes!")
-	} else {
-		console.log("No!")
+		console.log("called")
+		var bonusCPS = "TESTCPS";
+		var bonusCPSPercentage = "TESTCPS%";
+		var timeToRecover = "TESTTIME";
+		l('dragonAuraInfo').style.minHeight = "90px"
+		l('dragonAuraInfo').appendChild(document.createElement("div")).className = "line"
+		var div = document.createElement("div");
+		div.style.minWidth = "200px";
+		div.style.textAlign = "center";
+		div.textContent = "Picking this aura will change CPS by " + bonusCPS + " (" + bonusCPSPercentage + "% of current cps). It will take " + timeToRecover + " to recover the cost.";
+		l('dragonAuraInfo').appendChild(div);
 	}
 }
 
@@ -3625,11 +3637,11 @@ CM.ReplaceNative = function() {
 	/**
 	 * This functions adds the function CM.Disp.AddAuraInfo() to Game.DescribeDragonAura()
 	 * This adds information about CPS differences and costs to the aura choosing interface
-	 * @param	{number}	aura	The number of the aura current selected by the mouse/user
+	 * @param	{number}	aura	The number of the aura currently selected by the mouse/user
 	 */
 	Game.DescribeDragonAura = function(aura) {
 		CM.Backup.DescribeDragonAura(aura);
-		CM.Disp.AddAuraInfo();
+		CM.Disp.AddAuraInfo(aura);
 	}
 
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
