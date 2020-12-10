@@ -4280,7 +4280,8 @@ CM.Sim.getCPSBuffMult = function() {
 	return mult;
 }
 
-/* Constructs an object with the static properties of a building,
+/**
+ * Constructs an object with the static properties of a building,
  * but with a 'cps' method changed to use 'CM.Sim.Has' instead of 'Game.Has'
  * (and similar to 'hasAura', 'Objects', 'GetTieredCpsMult' and 'auraMult').
  *
@@ -4304,7 +4305,8 @@ CM.Sim.InitialBuildingData = function(buildingName) {
 	return you;
 }
 
-/* Similar to the previous function, but for upgrades.
+/**
+ *  Similar to the previous function, but for upgrades.
  * Note: currently no static data is used by Cookie Monster,
  * so this function just returns an empty object.
  */
@@ -4316,7 +4318,8 @@ CM.Sim.InitUpgrade = function(upgradeName) {
 	return you;
 }
 
-/* Similar to the previous function, but for achievements.
+/**
+ * Similar to the previous function, but for achievements.
  * Note: currently no static data is used by Cookie Monster,
  * so this function just returns an empty object.
  */
