@@ -4789,6 +4789,12 @@ CM.Sim.BuyUpgrades = function() {
 	}
 }
 
+/**
+ * This functions calculates the cps and cost of changing a Dragon Aura
+ * It is called by CM.Disp.AddAuraInfo()
+ * @param	{number}			aura										The number of the aura currently selected by the mouse/user
+ * @returns {[number, number]} 	[CM.Sim.cookiesPs - Game.cookiesPs, price]	The bonus cps and the price of the change
+ */
 CM.Sim.CalculateChangeAura = function(aura) {
 	CM.Sim.CopyData();
 
