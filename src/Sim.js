@@ -207,6 +207,9 @@ CM.Sim.InitData = function() {
 	for (var i in Game.Achievements) {
 		CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 	}
+
+	// Auras
+	CM.Cache.CacheDragonAuras();
 }
 
 CM.Sim.CopyData = function() {
@@ -216,8 +219,6 @@ CM.Sim.CopyData = function() {
 	CM.Sim.AchievementsOwned = Game.AchievementsOwned;
 	CM.Sim.heavenlyPower = Game.heavenlyPower; // Unneeded? > Might be modded
 	CM.Sim.prestige = Game.prestige;
-	CM.Sim.dragonAura = Game.dragonAura;
-	CM.Sim.dragonAura2 = Game.dragonAura2;
 
 	// Buildings
 	for (var i in Game.Objects) {
@@ -230,6 +231,8 @@ CM.Sim.CopyData = function() {
 		you.amount = me.amount;
 		you.level = me.level;
 		you.totalCookies = me.totalCookies;
+		you.basePrice = me.basePrice;
+		you.free = me.free;
 		if (me.minigameLoaded) you.minigameLoaded = me.minigameLoaded; you.minigame = me.minigame;
 	}
 
@@ -252,6 +255,11 @@ CM.Sim.CopyData = function() {
 		}
 		you.won = me.won;
 	}
+
+	// Auras
+	CM.Cache.CacheDragonAuras();
+	CM.Sim.dragonAura = CM.Cache.dragonAura;
+	CM.Sim.dragonAura2 = CM.Cache.dragonAura2;
 };
 
 CM.Sim.CalculateGains = function() {
@@ -618,6 +626,40 @@ CM.Sim.BuyUpgrades = function() {
 			CM.Cache.Upgrades[i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
 		}
 	}
+}
+
+CM.Sim.CalculateChangeAura = function(aura) {
+	CM.Sim.CopyData();
+
+	// Check if aura being changed is first or second aura
+	var auraToBeChanged = l('promptContent').children[0].innerHTML.includes("secondary")
+	if (auraToBeChanged) CM.Sim.dragonAura2 = aura;
+	else CM.Sim.dragonAura = aura;
+
+	// Sell highest building but only if aura is different
+	if (CM.Sim.dragonAura != CM.Cache.dragonAura || CM.Sim.dragonAura2 != CM.Cache.dragonAura2) {
+		for (var i = Game.ObjectsById.length; i > -1, --i;) {
+			if (Game.ObjectsById[i].amount > 0) {	
+				var highestBuilding = CM.Sim.Objects[Game.ObjectsById[i].name].name;
+				CM.Sim.Objects[highestBuilding].amount -=1;
+				CM.Sim.buildingsOwned -= 1;
+				break
+			}
+		}
+		// This calculates price of highest building
+		var price = CM.Sim.Objects[highestBuilding].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[highestBuilding].amount - 1 -CM.Sim.Objects[highestBuilding].free));
+		price = Game.modifyBuildingPrice(CM.Sim.Objects[highestBuilding], price);
+		price = Math.ceil(price);
+	} else var price = 0;
+
+	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
+	CM.Sim.CalculateGains();
+
+	CM.Sim.CheckOtherAchiev();
+	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
+		CM.Sim.CalculateGains();
+	}
+	return [CM.Sim.cookiesPs - Game.cookiesPs, price]
 }
 
 CM.Sim.NoGoldSwitchCookiesPS = function() {

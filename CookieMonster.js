@@ -29,6 +29,16 @@ if (typeof CM == "undefined") {
  * Cache *
  *********/
 
+/**
+ * This functions caches the currently selected Dragon Auras
+ * It is called by CM.Sim.CopyData() and CM.Sim.InitData()
+ * Uncapitalized dragon follows Game-naming
+ */
+CM.Cache.CacheDragonAuras = function() {
+	CM.Cache.dragonAura = Game.dragonAura;
+	CM.Cache.dragonAura2 = Game.dragonAura2;
+}
+
 /********
  * Section: UNSORTED */
 
@@ -557,7 +567,12 @@ CM.Cache.MissingCookiesString = null;
 CM.Cache.seasonPopShimmer;
 CM.Cache.goldenShimmersByID = {};
 CM.Cache.spawnedGoldenShimmer = 0;
-/**********
+
+/**
+ * This variables are used by CM.Cache.CacheDragonAuras(), naming follows naming in Game
+ */
+CM.Cache.dragonAura = 0;
+CM.Cache.dragonAura2 = 0;/**********
  * Config *
  **********/
 
@@ -2657,24 +2672,32 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 
 /********
  * Section: Functions related to the dragon aura interface */
+
 /**
  * This functions adds the two extra lines about CPS and time to recover to the aura picker infoscreen
- * This adds information about CPS differences and costs to the aura choosing interface
+ * It is called by Game.DescribeDragonAura() after CM.ReplaceNative()
  * @param	{number}	aura	The number of the aura currently selected by the mouse/user
  */
-CM.Disp.AddAuraInfo = function() {
+CM.Disp.AddAuraInfo = function(aura) {
 	if (CM.Config.DragonAuraInfo == 1) {
-		console.log("called")
-		var bonusCPS = "TESTCPS";
-		var bonusCPSPercentage = "TESTCPS%";
-		var timeToRecover = "TESTTIME";
-		l('dragonAuraInfo').style.minHeight = "90px"
+		var [bonusCPS, priceOfChange] = CM.Sim.CalculateChangeAura(aura);
+		var timeToRecover = CM.Disp.FormatTime(priceOfChange / (bonusCPS + Game.cookiesPs));
+		var bonusCPSPercentage = CM.Disp.Beautify(bonusCPS / Game.cookiesPs);
+		bonusCPS = CM.Disp.Beautify(bonusCPS);
+
+		l('dragonAuraInfo').style.minHeight = "60px"
+		l('dragonAuraInfo').style.margin = "8px"
 		l('dragonAuraInfo').appendChild(document.createElement("div")).className = "line"
 		var div = document.createElement("div");
 		div.style.minWidth = "200px";
 		div.style.textAlign = "center";
-		div.textContent = "Picking this aura will change CPS by " + bonusCPS + " (" + bonusCPSPercentage + "% of current cps). It will take " + timeToRecover + " to recover the cost.";
+		div.textContent = "Picking this aura will change CPS by " + bonusCPS + " (" + bonusCPSPercentage + "% of current CPS).";
 		l('dragonAuraInfo').appendChild(div);
+		var div2 = document.createElement("div");
+		div2.style.minWidth = "200px";
+		div2.style.textAlign = "center";
+		div2.textContent = "It will take " + timeToRecover + " to recover the cost.";
+		l('dragonAuraInfo').appendChild(div2);
 	}
 }
 
@@ -4345,6 +4368,9 @@ CM.Sim.InitData = function() {
 	for (var i in Game.Achievements) {
 		CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 	}
+
+	// Auras
+	CM.Cache.CacheDragonAuras();
 }
 
 CM.Sim.CopyData = function() {
@@ -4354,8 +4380,6 @@ CM.Sim.CopyData = function() {
 	CM.Sim.AchievementsOwned = Game.AchievementsOwned;
 	CM.Sim.heavenlyPower = Game.heavenlyPower; // Unneeded? > Might be modded
 	CM.Sim.prestige = Game.prestige;
-	CM.Sim.dragonAura = Game.dragonAura;
-	CM.Sim.dragonAura2 = Game.dragonAura2;
 
 	// Buildings
 	for (var i in Game.Objects) {
@@ -4368,6 +4392,8 @@ CM.Sim.CopyData = function() {
 		you.amount = me.amount;
 		you.level = me.level;
 		you.totalCookies = me.totalCookies;
+		you.basePrice = me.basePrice;
+		you.free = me.free;
 		if (me.minigameLoaded) you.minigameLoaded = me.minigameLoaded; you.minigame = me.minigame;
 	}
 
@@ -4390,6 +4416,11 @@ CM.Sim.CopyData = function() {
 		}
 		you.won = me.won;
 	}
+
+	// Auras
+	CM.Cache.CacheDragonAuras();
+	CM.Sim.dragonAura = CM.Cache.dragonAura;
+	CM.Sim.dragonAura2 = CM.Cache.dragonAura2;
 };
 
 CM.Sim.CalculateGains = function() {
@@ -4756,6 +4787,40 @@ CM.Sim.BuyUpgrades = function() {
 			CM.Cache.Upgrades[i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
 		}
 	}
+}
+
+CM.Sim.CalculateChangeAura = function(aura) {
+	CM.Sim.CopyData();
+
+	// Check if aura being changed is first or second aura
+	var auraToBeChanged = l('promptContent').children[0].innerHTML.includes("secondary")
+	if (auraToBeChanged) CM.Sim.dragonAura2 = aura;
+	else CM.Sim.dragonAura = aura;
+
+	// Sell highest building but only if aura is different
+	if (CM.Sim.dragonAura != CM.Cache.dragonAura || CM.Sim.dragonAura2 != CM.Cache.dragonAura2) {
+		for (var i = Game.ObjectsById.length; i > -1, --i;) {
+			if (Game.ObjectsById[i].amount > 0) {	
+				var highestBuilding = CM.Sim.Objects[Game.ObjectsById[i].name].name;
+				CM.Sim.Objects[highestBuilding].amount -=1;
+				CM.Sim.buildingsOwned -= 1;
+				break
+			}
+		}
+		// This calculates price of highest building
+		var price = CM.Sim.Objects[highestBuilding].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[highestBuilding].amount - 1 -CM.Sim.Objects[highestBuilding].free));
+		price = Game.modifyBuildingPrice(CM.Sim.Objects[highestBuilding], price);
+		price = Math.ceil(price);
+	} else var price = 0;
+
+	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
+	CM.Sim.CalculateGains();
+
+	CM.Sim.CheckOtherAchiev();
+	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
+		CM.Sim.CalculateGains();
+	}
+	return [CM.Sim.cookiesPs - Game.cookiesPs, price]
 }
 
 CM.Sim.NoGoldSwitchCookiesPS = function() {

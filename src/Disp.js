@@ -1768,24 +1768,32 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 
 /********
  * Section: Functions related to the dragon aura interface */
+
 /**
  * This functions adds the two extra lines about CPS and time to recover to the aura picker infoscreen
- * This adds information about CPS differences and costs to the aura choosing interface
+ * It is called by Game.DescribeDragonAura() after CM.ReplaceNative()
  * @param	{number}	aura	The number of the aura currently selected by the mouse/user
  */
-CM.Disp.AddAuraInfo = function() {
+CM.Disp.AddAuraInfo = function(aura) {
 	if (CM.Config.DragonAuraInfo == 1) {
-		console.log("called")
-		var bonusCPS = "TESTCPS";
-		var bonusCPSPercentage = "TESTCPS%";
-		var timeToRecover = "TESTTIME";
-		l('dragonAuraInfo').style.minHeight = "90px"
+		var [bonusCPS, priceOfChange] = CM.Sim.CalculateChangeAura(aura);
+		var timeToRecover = CM.Disp.FormatTime(priceOfChange / (bonusCPS + Game.cookiesPs));
+		var bonusCPSPercentage = CM.Disp.Beautify(bonusCPS / Game.cookiesPs);
+		bonusCPS = CM.Disp.Beautify(bonusCPS);
+
+		l('dragonAuraInfo').style.minHeight = "60px"
+		l('dragonAuraInfo').style.margin = "8px"
 		l('dragonAuraInfo').appendChild(document.createElement("div")).className = "line"
 		var div = document.createElement("div");
 		div.style.minWidth = "200px";
 		div.style.textAlign = "center";
-		div.textContent = "Picking this aura will change CPS by " + bonusCPS + " (" + bonusCPSPercentage + "% of current cps). It will take " + timeToRecover + " to recover the cost.";
+		div.textContent = "Picking this aura will change CPS by " + bonusCPS + " (" + bonusCPSPercentage + "% of current CPS).";
 		l('dragonAuraInfo').appendChild(div);
+		var div2 = document.createElement("div");
+		div2.style.minWidth = "200px";
+		div2.style.textAlign = "center";
+		div2.textContent = "It will take " + timeToRecover + " to recover the cost.";
+		l('dragonAuraInfo').appendChild(div2);
 	}
 }
 

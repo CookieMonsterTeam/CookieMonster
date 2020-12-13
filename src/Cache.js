@@ -2,6 +2,16 @@
  * Cache *
  *********/
 
+/**
+ * This functions caches the currently selected Dragon Auras
+ * It is called by CM.Sim.CopyData() and CM.Sim.InitData()
+ * Uncapitalized dragon follows Game-naming
+ */
+CM.Cache.CacheDragonAuras = function() {
+	CM.Cache.dragonAura = Game.dragonAura;
+	CM.Cache.dragonAura2 = Game.dragonAura2;
+}
+
 /********
  * Section: UNSORTED */
 
@@ -530,3 +540,9 @@ CM.Cache.MissingCookiesString = null;
 CM.Cache.seasonPopShimmer;
 CM.Cache.goldenShimmersByID = {};
 CM.Cache.spawnedGoldenShimmer = 0;
+
+/**
+ * This variables are used by CM.Cache.CacheDragonAuras(), naming follows naming in Game
+ */
+CM.Cache.dragonAura = 0;
+CM.Cache.dragonAura2 = 0;
