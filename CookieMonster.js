@@ -1884,8 +1884,7 @@ CM.Disp.Flash = function(mode, config) {
 CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
 	if (CM.Config[sndConfig] == 1) {
 		var sound = new realAudio(url);
-		// * 2 as the standard Game volume is 50%, which is quite low
-		sound.volume = (CM.Config[volConfig] / 100) * Game.volume * 2; 
+		sound.volume = (CM.Config[volConfig] / 100) * (Game.volume / 100); 
 		sound.play();
 	}
 }
