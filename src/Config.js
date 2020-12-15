@@ -104,6 +104,19 @@ CM.ToggleConfigDown = function(config) {
 	CM.SaveConfig(CM.Config);
 }
 
+/**
+ * This function sets the value of the specified volume-option and updates the display in the options menu
+ * It is called by CM.Disp.CreatePrefOption()
+ * @param 	{string}		config	The name of the option
+ */
+CM.ToggleConfigVolume = function(config) {
+	if (l("slider" + config) != null) {
+		l("slider" + config + "right").innerHTML = l("slider" + config).value + "%";
+		CM.Config[config] = Math.round(l("slider" + config).value);
+	} 
+	CM.SaveConfig(CM.Config);
+}
+
 CM.ToggleStatsConfig = function(config) {
 	if (CM.Config.StatsPref[config] == 0) {
 		CM.Config.StatsPref[config]++;

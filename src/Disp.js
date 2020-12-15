@@ -1923,26 +1923,33 @@ CM.Disp.CreatePrefOption = function(config) {
 		return div;
 	}
 	else if (CM.ConfigData[config].type == "vol") {
+		var div = document.createElement('div');
+		div.className = 'listing';
 		var volume = document.createElement('div');
-		volume.className = 'listing';
-		var minus = document.createElement('a');
-		minus.className = 'option';
-		minus.onclick = function() {CM.ToggleConfigDown(config);};
-		minus.textContent = '-';
-		volume.appendChild(minus);
-		var volText = document.createElement('span');
-		volText.id = CM.ConfigPrefix + config;
-		volText.textContent = CM.ConfigData[config].label[CM.Config[config]];
-		volume.appendChild(volText);
-		var plus = document.createElement('a');
-		plus.className = 'option';
-		plus.onclick = function() {CM.ToggleConfigUp(config);};
-		plus.textContent = '+';
-		volume.appendChild(plus);
-		var volLabel = document.createElement('label');
-		volLabel.textContent = CM.ConfigData[config].desc;
-		volume.appendChild(volLabel);
-		return volume;
+		volume.className = 'sliderBox';
+		var title = document.createElement('div');
+		title.style.float = "left";
+		title.innerHTML = CM.ConfigData[config].desc;
+		volume.appendChild(title);
+		var percent = title = document.createElement('div');
+		percent.id = "slider" + config + "right";
+		percent.style.float = "right";
+		percent.innerHTML = CM.Config[config] + "%";
+		volume.appendChild(percent);
+		var slider = document.createElement('input');
+		slider.className = "slider";
+		slider.id = "slider" + config;
+		slider.style.clear = "both";
+		slider.type = "range";
+		slider.min = "0";
+		slider.max = "100";
+		slider.step = "1";
+		slider.value = CM.Config[config];
+		slider.oninput = function() {CM.ToggleConfigVolume(config)};
+		slider.onchange = function() {CM.ToggleConfigVolume(config)};
+		volume.appendChild(slider);
+		div.appendChild(volume);
+		return div;
 	}
 	else if (CM.ConfigData[config].type == "url") {
 		var div = document.createElement('div');
