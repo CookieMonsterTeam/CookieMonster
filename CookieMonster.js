@@ -678,6 +678,19 @@ CM.ToggleConfigDown = function(config) {
 	CM.SaveConfig(CM.Config);
 }
 
+/**
+ * This function sets the value of the specified volume-option and updates the display in the options menu
+ * It is called by CM.Disp.CreatePrefOption()
+ * @param 	{string}		config	The name of the option
+ */
+CM.ToggleConfigVolume = function(config) {
+	if (l("slider" + config) != null) {
+		l("slider" + config + "right").innerHTML = l("slider" + config).value + "%";
+		CM.Config[config] = Math.round(l("slider" + config).value);
+	} 
+	CM.SaveConfig(CM.Config);
+}
+
 CM.ToggleStatsConfig = function(config) {
 	if (CM.Config.StatsPref[config] == 0) {
 		CM.Config.StatsPref[config]++;
@@ -824,7 +837,7 @@ CM.ConfigData.ToolWarnBon = {type: 'bool', group: 'Calculation', label: ['Calcul
 CM.ConfigData.GCNotification = {type: 'bool', group: 'Notification', label: ['Golden Cookie Notification OFF', 'Golden Cookie Notification ON'], desc: 'Create a notification when Golden Cookie spawns', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.GCNotification);}};
 CM.ConfigData.GCFlash = {type: 'bool', group: 'Notification', label: ['Golden Cookie Flash OFF', 'Golden Cookie Flash ON'], desc: 'Flash screen on Golden Cookie', toggle: true};
 CM.ConfigData.GCSound = {type: 'bool', group: 'Notification', label: ['Golden Cookie Sound OFF', 'Golden Cookie Sound ON'], desc: 'Play a sound on Golden Cookie', toggle: true};
-CM.ConfigData.GCVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of the Golden Cookie sound'};
+CM.ConfigData.GCVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Golden Cookie'};
 for (var i = 0; i < 101; i++) {
 	CM.ConfigData.GCVolume.label[i] = i + '%';
 }
@@ -834,7 +847,7 @@ CM.ConfigData.Favicon = {type: 'bool', group: 'Notification', label: ['Favicon O
 CM.ConfigData.FortuneNotification = {type: 'bool', group: 'Notification', label: ['Fortune Cookie Notification OFF', 'Fortune Cookie Notification ON'], desc: 'Create a notification when Fortune Cookie is on the Ticker', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.FortuneNotification);}};
 CM.ConfigData.FortuneFlash = {type: 'bool', group: 'Notification', label: ['Fortune Cookie Flash OFF', 'Fortune Cookie Flash ON'], desc: 'Flash screen on Fortune Cookie', toggle: true};
 CM.ConfigData.FortuneSound = {type: 'bool', group: 'Notification', label: ['Fortune Cookie Sound OFF', 'Fortune Cookie Sound ON'], desc: 'Play a sound on Fortune Cookie', toggle: true};
-CM.ConfigData.FortuneVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of the Fortune Cookie sound'};
+CM.ConfigData.FortuneVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Fortune Cookie'};
 for (var i = 0; i < 101; i++) {
 	CM.ConfigData.FortuneVolume.label[i] = i + '%';
 }
@@ -842,14 +855,14 @@ CM.ConfigData.FortuneSoundURL = {type: 'url', group: 'Notification', label: 'For
 CM.ConfigData.SeaNotification = {type: 'bool', group: 'Notification', label: ['Season Special Notification OFF', 'Season Special Notification ON'], desc: 'Create a notification on Season Popup', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.SeaNotification);}};
 CM.ConfigData.SeaFlash = {type: 'bool', group: 'Notification', label: ['Season Special Flash OFF', 'Season Special Flash ON'], desc: 'Flash screen on Season Popup', toggle: true};
 CM.ConfigData.SeaSound = {type: 'bool', group: 'Notification', label: ['Season Special Sound OFF', 'Season Special Sound ON'], desc: 'Play a sound on Season Popup', toggle: true};
-CM.ConfigData.SeaVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of the Season Special sound'};
+CM.ConfigData.SeaVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Season Special'};
 for (var i = 0; i < 101; i++) {
 	CM.ConfigData.SeaVolume.label[i] = i + '%';
 }
 CM.ConfigData.SeaSoundURL = {type: 'url', group: 'Notification', label: 'Season Special Sound URL:', desc: 'URL of the sound to be played when a Season Special spawns'};
 CM.ConfigData.GardFlash = {type: 'bool', group: 'Notification', label: ['Garden Tick Flash OFF', 'Garden Tick Flash ON'], desc: 'Flash screen on Garden Tick', toggle: true};
 CM.ConfigData.GardSound = {type: 'bool', group: 'Notification', label: ['Garden Tick Sound OFF', 'Garden Tick Sound ON'], desc: 'Play a sound on Garden Tick', toggle: true};
-CM.ConfigData.GardVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of the Garden Tick sound'};
+CM.ConfigData.GardVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Garden Tick'};
 for (var i = 0; i < 101; i++) {
 	CM.ConfigData.GardVolume.label[i] = i + '%';
 }
@@ -857,7 +870,7 @@ CM.ConfigData.GardSoundURL = {type: 'url', group: 'Notification', label: 'Garden
 CM.ConfigData.MagicNotification = {type: 'bool', group: 'Notification', label: ['Magic Max Notification OFF', 'Magic Max Notification ON'], desc: 'Create a notification when magic reaches maximum', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.MagicNotification);}};
 CM.ConfigData.MagicFlash = {type: 'bool', group: 'Notification', label: ['Magic Max Flash OFF', 'Magic Max Flash ON'], desc: 'Flash screen when magic reaches maximum', toggle: true};
 CM.ConfigData.MagicSound = {type: 'bool', group: 'Notification', label: ['Magic Max Sound OFF', 'Magic Max Sound ON'], desc: 'Play a sound when magic reaches maximum', toggle: true};
-CM.ConfigData.MagicVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of the Max Magic sound'};
+CM.ConfigData.MagicVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Max Magic'};
 for (var i = 0; i < 101; i++) {
 	CM.ConfigData.MagicVolume.label[i] = i + '%';
 }
@@ -865,7 +878,7 @@ CM.ConfigData.MagicSoundURL = {type: 'url', group: 'Notification', label: 'Magic
 CM.ConfigData.WrinklerNotification = {type: 'bool', group: 'Notification', label: ['Wrinkler Notification OFF', 'Wrinkler Notification ON'], desc: 'Create a notification when a Wrinkler appears', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.WrinklerNotification);}};
 CM.ConfigData.WrinklerFlash = {type: 'bool', group: 'Notification', label: ['Wrinkler Flash OFF', 'Wrinkler Flash ON'], desc: 'Flash screen when a Wrinkler appears', toggle: true};
 CM.ConfigData.WrinklerSound = {type: 'bool', group: 'Notification', label: ['Wrinkler Sound OFF', 'Wrinkler Sound ON'], desc: 'Play a sound when a Wrinkler appears', toggle: true};
-CM.ConfigData.WrinklerVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of the Wrinkler sound'};
+CM.ConfigData.WrinklerVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Wrinkler'};
 for (var i = 0; i < 101; i++) {
 	CM.ConfigData.WrinklerVolume.label[i] = i + '%';
 }
@@ -873,7 +886,7 @@ CM.ConfigData.WrinklerSoundURL = {type: 'url', group: 'Notification', label: 'Wr
 CM.ConfigData.WrinklerMaxNotification = {type: 'bool', group: 'Notification', label: ['Wrinkler Max Notification OFF', 'Wrinkler Max Notification ON'], desc: 'Create a notification when the maximum amount of Wrinklers has appeared', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.WrinklerMaxNotification);}};
 CM.ConfigData.WrinklerMaxFlash = {type: 'bool', group: 'Notification', label: ['Wrinkler Max Flash OFF', 'Wrinkler Max Flash ON'], desc: 'Flash screen when the maximum amount of Wrinklers has appeared', toggle: true};
 CM.ConfigData.WrinklerMaxSound = {type: 'bool', group: 'Notification', label: ['Wrinkler Max Sound OFF', 'Wrinkler Max Sound ON'], desc: 'Play a sound when the maximum amount of Wrinklers has appeared', toggle: true};
-CM.ConfigData.WrinklerMaxVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of the Wrinkler Max sound'};
+CM.ConfigData.WrinklerMaxVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Wrinkler Max'};
 for (var i = 0; i < 101; i++) {
 	CM.ConfigData.WrinklerMaxVolume.label[i] = i + '%';
 }
@@ -2827,27 +2840,35 @@ CM.Disp.CreatePrefOption = function(config) {
 		return div;
 	}
 	else if (CM.ConfigData[config].type == "vol") {
+		var div = document.createElement('div');
+		div.className = 'listing';
 		var volume = document.createElement('div');
-		volume.className = 'listing';
-		var minus = document.createElement('a');
-		minus.className = 'option';
-		minus.onclick = function() {CM.ToggleConfigDown(config);};
-		minus.textContent = '-';
-		volume.appendChild(minus);
-		var volText = document.createElement('span');
-		volText.id = CM.ConfigPrefix + config;
-		volText.textContent = CM.ConfigData[config].label[CM.Config[config]];
-		volume.appendChild(volText);
-		var plus = document.createElement('a');
-		plus.className = 'option';
-		plus.onclick = function() {CM.ToggleConfigUp(config);};
-		plus.textContent = '+';
-		volume.appendChild(plus);
-		var volLabel = document.createElement('label');
-		volLabel.textContent = CM.ConfigData[config].desc;
-		volume.appendChild(volLabel);
-		return volume;
+		volume.className = 'sliderBox';
+		var title = document.createElement('div');
+		title.style.float = "left";
+		title.innerHTML = CM.ConfigData[config].desc;
+		volume.appendChild(title);
+		var percent = title = document.createElement('div');
+		percent.id = "slider" + config + "right";
+		percent.style.float = "right";
+		percent.innerHTML = CM.Config[config] + "%";
+		volume.appendChild(percent);
+		var slider = document.createElement('input');
+		slider.className = "slider";
+		slider.id = "slider" + config;
+		slider.style.clear = "both";
+		slider.type = "range";
+		slider.min = "0";
+		slider.max = "100";
+		slider.step = "1";
+		slider.value = CM.Config[config];
+		slider.oninput = function() {CM.ToggleConfigVolume(config)};
+		slider.onchange = function() {CM.ToggleConfigVolume(config)};
+		volume.appendChild(slider);
+		div.appendChild(volume);
+		return div;
 	}
+
 	else if (CM.ConfigData[config].type == "url") {
 		var div = document.createElement('div');
 		div.className = 'listing';
