@@ -2868,7 +2868,6 @@ CM.Disp.CreatePrefOption = function(config) {
 		div.appendChild(volume);
 		return div;
 	}
-
 	else if (CM.ConfigData[config].type == "url") {
 		var div = document.createElement('div');
 		div.className = 'listing';
