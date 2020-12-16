@@ -914,7 +914,7 @@ CM.ConfigData.GrimoireBar = {type: 'bool', group: 'Statistics', label: ['Grimoir
 
 // Statistics
 CM.ConfigData.Scale = {type: 'bool', group: 'Other', label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
-CM.ConfigData.ScaleDecimals = {type: 'bool', group: 'Other', label: ['0 decimals', '1 decimals', '2 decimals', '3 decimals'], desc: 'Set the number of decimals used when applicable', toggle: false, func: function() {CM.Disp.RefreshScale();}};
+CM.ConfigData.ScaleDecimals = {type: 'bool', group: 'Other', label: ['1 decimals', '2 decimals', '3 decimals'], desc: 'Set the number of decimals used when applicable', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 
 /********
  * Disp *
@@ -1087,7 +1087,7 @@ CM.Disp.GetTimeColor = function(time) {
  * TODO: Add functionality to choose amount of decimals and separators
  */
 CM.Disp.Beautify = function(num, frac, forced) {
-	var decimals = 3; // This can be used to implement function to let user choose amount of decimals
+	var decimals = CM.Config.ScaleDecimals + 1;
 	if (CM.Config.Scale == 0) {
 		return CM.Backup.Beautify(num, frac);
 	}
@@ -1112,7 +1112,17 @@ CM.Disp.Beautify = function(num, frac, forced) {
 				answer += num[i + 2]; // num has a 0-based index and [1] is a '.'
 				i++;
 			}
-			answer += Math.round(num[i + 2] + '.' + num[i + 3]);
+			lastNumber = Math.round(num[i + 2] + '.' + num[i + 3]);
+			while (lastNumber >= 10) {
+				if (answer[answer.length - 1] != ".") {
+					lastNumber = Math.round((answer[answer.length - 1] * 10) + lastNumber) / 10;
+					answer = answer.slice(0,-1)
+				} else {
+					lastNumber = Math.round((answer[answer.length - 2] * 10) + lastNumber) / 10;
+					answer = answer.slice(0,-2)
+				}
+			}
+			answer += lastNumber;
 			answer += 'E+' + Math.trunc(Math.log10(num));
 		}
 		else {

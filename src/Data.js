@@ -174,5 +174,5 @@ CM.ConfigData.GrimoireBar = {type: 'bool', group: 'Statistics', label: ['Grimoir
 
 // Statistics
 CM.ConfigData.Scale = {type: 'bool', group: 'Other', label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
-CM.ConfigData.ScaleDecimals = {type: 'bool', group: 'Other', label: ['0 decimals', '1 decimals', '2 decimals', '3 decimals'], desc: 'Set the number of decimals used when applicable', toggle: false, func: function() {CM.Disp.RefreshScale();}};
+CM.ConfigData.ScaleDecimals = {type: 'bool', group: 'Other', label: ['1 decimals', '2 decimals', '3 decimals'], desc: 'Set the number of decimals used when applicable', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 
