@@ -2013,7 +2013,7 @@ CM.Disp.ToggleDetailedTime = function() {
 
 /**
  * This function refreshes all numbers after a change in scale-setting
- * It is therefore called by a change in CM.Config.Scale
+ * It is therefore called by a change in CM.Config.Scale and CM.Config.ScaleDecimals
  */
 CM.Disp.RefreshScale = function() {
 	BeautifyAll();

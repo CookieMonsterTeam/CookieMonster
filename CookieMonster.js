@@ -914,6 +914,7 @@ CM.ConfigData.GrimoireBar = {type: 'bool', group: 'Statistics', label: ['Grimoir
 
 // Statistics
 CM.ConfigData.Scale = {type: 'bool', group: 'Other', label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
+CM.ConfigData.ScaleDecimals = {type: 'bool', group: 'Other', label: ['0 decimals', '1 decimals', '2 decimals', '3 decimals'], desc: 'Set the number of decimals used when applicable', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 
 /********
  * Disp *
@@ -2930,7 +2931,7 @@ CM.Disp.ToggleDetailedTime = function() {
 
 /**
  * This function refreshes all numbers after a change in scale-setting
- * It is therefore called by a change in CM.Config.Scale
+ * It is therefore called by a change in CM.Config.Scale and CM.Config.ScaleDecimals
  */
 CM.Disp.RefreshScale = function() {
 	BeautifyAll();
@@ -4168,6 +4169,7 @@ CM.ConfigDefault = {
 	DetailedTime: 1, 
 	GrimoireBar: 1, 
 	Scale: 2, 
+	ScaleDecimals: 2,
 	OptionsPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Other: 1}, 
 	StatsPref: {Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
 	Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
