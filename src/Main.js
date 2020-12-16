@@ -551,6 +551,7 @@ CM.ConfigDefault = {
 	DetailedTime: 1, 
 	GrimoireBar: 1, 
 	Scale: 2, 
+	ScaleDecimals: 2,
 	OptionsPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Other: 1}, 
 	StatsPref: {Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
 	Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},

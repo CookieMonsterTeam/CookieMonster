@@ -914,6 +914,7 @@ CM.ConfigData.GrimoireBar = {type: 'bool', group: 'Statistics', label: ['Grimoir
 
 // Statistics
 CM.ConfigData.Scale = {type: 'bool', group: 'Other', label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
+CM.ConfigData.ScaleDecimals = {type: 'bool', group: 'Other', label: ['1 decimals', '2 decimals', '3 decimals'], desc: 'Set the number of decimals used when applicable', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 
 /********
  * Disp *
@@ -1086,7 +1087,7 @@ CM.Disp.GetTimeColor = function(time) {
  * TODO: Add functionality to choose amount of decimals and separators
  */
 CM.Disp.Beautify = function(num, frac, forced) {
-	var decimals = 3; // This can be used to implement function to let user choose amount of decimals
+	var decimals = CM.Config.ScaleDecimals + 1;
 	if (CM.Config.Scale == 0) {
 		return CM.Backup.Beautify(num, frac);
 	}
@@ -1111,7 +1112,17 @@ CM.Disp.Beautify = function(num, frac, forced) {
 				answer += num[i + 2]; // num has a 0-based index and [1] is a '.'
 				i++;
 			}
-			answer += Math.round(num[i + 2] + '.' + num[i + 3]);
+			lastNumber = Math.round(num[i + 2] + '.' + num[i + 3]);
+			while (lastNumber >= 10) {
+				if (answer[answer.length - 1] != ".") {
+					lastNumber = Math.round((answer[answer.length - 1] * 10) + lastNumber) / 10;
+					answer = answer.slice(0,-1)
+				} else {
+					lastNumber = Math.round((answer[answer.length - 2] * 10) + lastNumber) / 10;
+					answer = answer.slice(0,-2)
+				}
+			}
+			answer += lastNumber;
 			answer += 'E+' + Math.trunc(Math.log10(num));
 		}
 		else {
@@ -2930,7 +2941,7 @@ CM.Disp.ToggleDetailedTime = function() {
 
 /**
  * This function refreshes all numbers after a change in scale-setting
- * It is therefore called by a change in CM.Config.Scale
+ * It is therefore called by a change in CM.Config.Scale and CM.Config.ScaleDecimals
  */
 CM.Disp.RefreshScale = function() {
 	BeautifyAll();
@@ -4168,6 +4179,7 @@ CM.ConfigDefault = {
 	DetailedTime: 1, 
 	GrimoireBar: 1, 
 	Scale: 2, 
+	ScaleDecimals: 2,
 	OptionsPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Other: 1}, 
 	StatsPref: {Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
 	Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},

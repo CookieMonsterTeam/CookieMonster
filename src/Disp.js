@@ -169,7 +169,7 @@ CM.Disp.GetTimeColor = function(time) {
  * TODO: Add functionality to choose amount of decimals and separators
  */
 CM.Disp.Beautify = function(num, frac, forced) {
-	var decimals = 3; // This can be used to implement function to let user choose amount of decimals
+	var decimals = CM.Config.ScaleDecimals + 1;
 	if (CM.Config.Scale == 0) {
 		return CM.Backup.Beautify(num, frac);
 	}
@@ -194,7 +194,17 @@ CM.Disp.Beautify = function(num, frac, forced) {
 				answer += num[i + 2]; // num has a 0-based index and [1] is a '.'
 				i++;
 			}
-			answer += Math.round(num[i + 2] + '.' + num[i + 3]);
+			lastNumber = Math.round(num[i + 2] + '.' + num[i + 3]);
+			while (lastNumber >= 10) {
+				if (answer[answer.length - 1] != ".") {
+					lastNumber = Math.round((answer[answer.length - 1] * 10) + lastNumber) / 10;
+					answer = answer.slice(0,-1)
+				} else {
+					lastNumber = Math.round((answer[answer.length - 2] * 10) + lastNumber) / 10;
+					answer = answer.slice(0,-2)
+				}
+			}
+			answer += lastNumber;
 			answer += 'E+' + Math.trunc(Math.log10(num));
 		}
 		else {
@@ -2013,7 +2023,7 @@ CM.Disp.ToggleDetailedTime = function() {
 
 /**
  * This function refreshes all numbers after a change in scale-setting
- * It is therefore called by a change in CM.Config.Scale
+ * It is therefore called by a change in CM.Config.Scale and CM.Config.ScaleDecimals
  */
 CM.Disp.RefreshScale = function() {
 	BeautifyAll();
