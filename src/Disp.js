@@ -166,7 +166,6 @@ CM.Disp.GetTimeColor = function(time) {
  * @param 	{any}		frac 	Used in some scenario's by CM.Backup.Beautify (Game's original function)
  * @param	{number}	forced	Used to force (type 3) in certains cases
  * @returns	{string}			Formatted number
- * TODO: Add functionality to choose amount of decimals and separators
  */
 CM.Disp.Beautify = function(num, frac, forced) {
 	var decimals = CM.Config.ScaleDecimals + 1;
@@ -185,10 +184,11 @@ CM.Disp.Beautify = function(num, frac, forced) {
 			return num
 		}
 		else if (-1 < timesTenToPowerThree && timesTenToPowerThree < 2) {
+			// TODO: Add changing separators of thousands and making this cut-off user configurable
 			answer = Math.round(num * 100) / 100;
 		}
 		else if (CM.Config.Scale == 3 && !forced || forced == 3) { // Scientific notation, 123456789 => 1.235E+8
-			answer = num[0] + '.'
+			answer = num[0] + (CM.Config.ScaleSeparator ? ',' : '.');
 			i = 0;
 			while (i < decimals - 1) {
 				answer += num[i + 2]; // num has a 0-based index and [1] is a '.'
@@ -213,7 +213,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 			numbersToAdd = (restOfNumber.indexOf('.') > -1 ? restOfNumber.indexOf('.') + 1 + decimals : (restOfNumber.length))
 			i = 0
 			while (i < numbersToAdd - 1 && i < restOfNumber.length - 1) {
-				answer += restOfNumber[i];
+				answer += (CM.Config.ScaleSeparator && restOfNumber[i] == '.' ? ',' : restOfNumber[i]);
 				i++
 			}
 			answer += (i + 1 < restOfNumber.length ? Math.round(restOfNumber[i] + '.' + restOfNumber[i + 1]) : restOfNumber[i]);
