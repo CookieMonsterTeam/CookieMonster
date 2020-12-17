@@ -586,45 +586,45 @@ CM.LoadConfig = function() {
 
 		// Check values
 		var mod = false;
-		for (var i in CM.ConfigDefault) {
+		for (var i in CM.Data.ConfigDefault) {
 			if (typeof CM.Config[i] === 'undefined') {
 				mod = true;
-				CM.Config[i] = CM.ConfigDefault[i];
+				CM.Config[i] = CM.Data.ConfigDefault[i];
 			}
 			else if (i != 'StatsPref' && i != 'Colors') {
 				if (i.indexOf('SoundURL') == -1) {
 					if (!(CM.Config[i] > -1 && CM.Config[i] < CM.ConfigData[i].label.length)) {
 						mod = true;
-						CM.Config[i] = CM.ConfigDefault[i];
+						CM.Config[i] = CM.Data.ConfigDefault[i];
 					}
 				}
 				else {  // Sound URLs
 					if (typeof CM.Config[i] != 'string') {
 						mod = true;
-						CM.Config[i] = CM.ConfigDefault[i];
+						CM.Config[i] = CM.Data.ConfigDefault[i];
 					}
 				}
 			}
 			else if (i == 'StatsPref') {
-				for (var j in CM.ConfigDefault.StatsPref) {
+				for (var j in CM.Data.ConfigDefault.StatsPref) {
 					if (typeof CM.Config[i][j] === 'undefined' || !(CM.Config[i][j] > -1 && CM.Config[i][j] < 2)) {
 						mod = true;
-						CM.Config[i][j] = CM.ConfigDefault[i][j];
+						CM.Config[i][j] = CM.Data.ConfigDefault[i][j];
 					}
 				}
 			}
 			else { // Colors
-				for (var j in CM.ConfigDefault.Colors) {
+				for (var j in CM.Data.ConfigDefault.Colors) {
 					if (typeof CM.Config[i][j] === 'undefined' || typeof CM.Config[i][j] != 'string') {
 						mod = true;
-						CM.Config[i][j] = CM.ConfigDefault[i][j];
+						CM.Config[i][j] = CM.Data.ConfigDefault[i][j];
 					}
 				}
 			}
 		}
 		if (mod) CM.SaveConfig(CM.Config);
 		CM.Loop(); // Do loop once
-		for (var i in CM.ConfigDefault) {
+		for (var i in CM.Data.ConfigDefault) {
 			if (i != 'StatsPref' && i != 'OptionsPref' && typeof CM.ConfigData[i].func !== 'undefined') {
 				CM.ConfigData[i].func();
 			}
@@ -637,7 +637,7 @@ CM.LoadConfig = function() {
 
 CM.RestoreDefault = function() {
 	CM.Config = {};
-	CM.SaveConfig(CM.ConfigDefault);
+	CM.SaveConfig(CM.Data.ConfigDefault);
 	CM.LoadConfig();
 	Game.UpdateMenu();
 }
@@ -774,6 +774,7 @@ CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour hear
 
 /********
  * Section: Data for the various scales used by CookieMonster */
+
 CM.Data.metric = ['', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Data.shortScale = ['', 'M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec', 'Quattuordec', 'Quindec', 'Sexdec', 'Septendec', 'Octodec', 'Novemdec', 'Vigint', 'Unvigint', 'Duovigint', 'Trevigint', 'Quattuorvigint'];
 
@@ -789,9 +790,11 @@ CM.ConfigGroups = {
 	Notation: "Notation"}, 
 
 /********
- * Section: An array (CM.ConfigData) containing all Config options
- * 
- * Each array has the following items
+ * Section: An array (CM.ConfigData) containing all Config options and an array of default settings */
+
+/**
+ * This includes all options of CookieMonster and relevant data
+ * Each individual option-array in the has the following items
  * @item {string}			type	The type of option (bool(ean), vol(ume), url or color)
  * @item {string}			group	The options-group the option belongs to
  * @item {[string, ...]}	label	A list of the various configurations of the option
@@ -799,7 +802,6 @@ CM.ConfigGroups = {
  * @item {boolean}			toggle	Whether it should be displayed as a grey/white toggle in the options menu
  * @item {function}			func	A function to be called when the option is toggled
  */
-
 // Barscolors
 CM.ConfigData.BotBar = {type: 'bool', group: 'BarsColors', label: ['Bottom Bar OFF', 'Bottom Bar ON'], desc: 'Building Information', toggle: true, func: function() {CM.Disp.ToggleBotBar();}};
 CM.ConfigData.TimerBar = {type: 'bool', group: 'BarsColors', label: ['Timer Bar OFF', 'Timer Bar ON'], desc: 'Timers of Golden Cookie, Season Popup, Frenzy (Normal, Clot, Elder), Click Frenzy', toggle: true, func: function() {CM.Disp.ToggleTimerBar();}};
@@ -917,7 +919,85 @@ CM.ConfigData.Scale = {type: 'bool', group: 'Notation', label: ['Game\'s Setting
 CM.ConfigData.ScaleDecimals = {type: 'bool', group: 'Notation', label: ['1 decimals', '2 decimals', '3 decimals'], desc: 'Set the number of decimals used when applicable', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 CM.ConfigData.ScaleSeparator = {type: 'bool', group: 'Notation', label: ['. for decimals (Standard)', '. for thousands'], desc: 'Set the separator used for decimals and thousands', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 
-/********
+/**
+ * This array describes all default settings
+ * It is used by CM.LoadConfig() and CM.RestoreDefault()
+ */
+CM.Data.ConfigDefault = {
+	BotBar: 1, 
+	TimerBar: 1, 
+	TimerBarPos: 0, 
+	BuildColor: 1, 
+	BulkBuildColor: 0, 
+	ColorPPBulkMode: 0,
+	UpBarColor: 1, 
+	UpgradeBarFixedPos: 1,
+	CalcWrink: 0, 
+	CPSMode: 1, 
+	AvgCPSHist: 3, 
+	AvgClicksHist: 0, 
+	ToolWarnBon: 0, 
+	GCNotification: 0,
+	GCFlash: 1, 
+	GCSound: 1,  
+	GCVolume: 100, 
+	GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', 
+	GCTimer: 1, 
+	Favicon: 1, 
+	FortuneNotification: 0,
+	FortuneFlash: 1, 
+	FortuneSound: 1,  
+	FortuneVolume: 100, 
+	FortuneSoundURL: 'https://freesound.org/data/previews/174/174027_3242494-lq.mp3',
+	SeaNotification: 0,
+	SeaFlash: 1, 
+	SeaSound: 1,  
+	SeaVolume: 100, 
+	SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', 
+	GardFlash: 1, 
+	GardSound: 1,  
+	GardVolume: 100, 
+	GardSoundURL: 'https://freesound.org/data/previews/103/103046_861714-lq.mp3', 
+	MagicNotification: 0,
+	MagicFlash: 1, 
+	MagicSound: 1,  
+	MagicVolume: 100, 
+	MagicSoundURL: 'https://freesound.org/data/previews/221/221683_1015240-lq.mp3',
+	WrinklerNotification: 0,
+	WrinklerFlash: 1, 
+	WrinklerSound: 1,  
+	WrinklerVolume: 100, 
+	WrinklerSoundURL: 'https://freesound.org/data/previews/124/124186_8043-lq.mp3', 
+	WrinklerMaxNotification: 0,
+	WrinklerMaxFlash: 1, 
+	WrinklerMaxSound: 1,  
+	WrinklerMaxVolume: 100, 
+	WrinklerMaxSoundURL: 'https://freesound.org/data/previews/152/152743_15663-lq.mp3', 
+	Title: 1, 
+	TooltipBuildUp: 1, 
+	TooltipAmor: 0, 
+	ToolWarnLucky: 1,
+	ToolWarnConjure: 1, 
+	ToolWarnPos: 1, 
+	TooltipGrim:1, 
+	ToolWrink: 1, 
+	TooltipLump: 1,
+	DragonAuraInfo: 1,
+	Stats: 1, 
+	MissingUpgrades: 0,
+	UpStats: 1, 
+	TimeFormat: 0, 
+	DetailedTime: 1, 
+	GrimoireBar: 1, 
+	Scale: 2, 
+	ScaleDecimals: 2,
+	ScaleSeparator: 0,
+	OptionsPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Notation: 1}, 
+	StatsPref: {Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
+	Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
+	SortBuildings: 0,
+	SortUpgrades: 0
+};/********
  * Disp *
  ********/
 
@@ -4113,81 +4193,6 @@ CM.Main.lastGardenNextStep = 0;
 CM.Main.lastMagicBarFull = 0;
 CM.Main.lastWrinklerCount = 0;
 
-CM.ConfigDefault = {
-	BotBar: 1, 
-	TimerBar: 1, 
-	TimerBarPos: 0, 
-	BuildColor: 1, 
-	BulkBuildColor: 0, 
-	ColorPPBulkMode: 0,
-	UpBarColor: 1, 
-	UpgradeBarFixedPos: 1,
-	CalcWrink: 0, 
-	CPSMode: 1, 
-	AvgCPSHist: 3, 
-	AvgClicksHist: 0, 
-	ToolWarnBon: 0, 
-	GCNotification: 0,
-	GCFlash: 1, 
-	GCSound: 1,  
-	GCVolume: 100, 
-	GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', 
-	GCTimer: 1, 
-	Favicon: 1, 
-	FortuneNotification: 0,
-	FortuneFlash: 1, 
-	FortuneSound: 1,  
-	FortuneVolume: 100, 
-	FortuneSoundURL: 'https://freesound.org/data/previews/174/174027_3242494-lq.mp3',
-	SeaNotification: 0,
-	SeaFlash: 1, 
-	SeaSound: 1,  
-	SeaVolume: 100, 
-	SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3', 
-	GardFlash: 1, 
-	GardSound: 1,  
-	GardVolume: 100, 
-	GardSoundURL: 'https://freesound.org/data/previews/103/103046_861714-lq.mp3', 
-	MagicNotification: 0,
-	MagicFlash: 1, 
-	MagicSound: 1,  
-	MagicVolume: 100, 
-	MagicSoundURL: 'https://freesound.org/data/previews/221/221683_1015240-lq.mp3',
-	WrinklerNotification: 0,
-	WrinklerFlash: 1, 
-	WrinklerSound: 1,  
-	WrinklerVolume: 100, 
-	WrinklerSoundURL: 'https://freesound.org/data/previews/124/124186_8043-lq.mp3', 
-	WrinklerMaxNotification: 0,
-	WrinklerMaxFlash: 1, 
-	WrinklerMaxSound: 1,  
-	WrinklerMaxVolume: 100, 
-	WrinklerMaxSoundURL: 'https://freesound.org/data/previews/152/152743_15663-lq.mp3', 
-	Title: 1, 
-	TooltipBuildUp: 1, 
-	TooltipAmor: 0, 
-	ToolWarnLucky: 1,
-	ToolWarnConjure: 1, 
-	ToolWarnPos: 1, 
-	TooltipGrim:1, 
-	ToolWrink: 1, 
-	TooltipLump: 1,
-	DragonAuraInfo: 1,
-	Stats: 1, 
-	MissingUpgrades: 0,
-	UpStats: 1, 
-	TimeFormat: 0, 
-	DetailedTime: 1, 
-	GrimoireBar: 1, 
-	Scale: 2, 
-	ScaleDecimals: 2,
-	ScaleSeparator: 0,
-	OptionsPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Notation: 1}, 
-	StatsPref: {Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
-	Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
-	SortBuildings: 0,
-	SortUpgrades: 0
-};
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.031';
