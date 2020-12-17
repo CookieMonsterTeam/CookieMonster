@@ -12,45 +12,45 @@ CM.LoadConfig = function() {
 
 		// Check values
 		var mod = false;
-		for (var i in CM.ConfigDefault) {
+		for (var i in CM.Data.ConfigDefault) {
 			if (typeof CM.Config[i] === 'undefined') {
 				mod = true;
-				CM.Config[i] = CM.ConfigDefault[i];
+				CM.Config[i] = CM.Data.ConfigDefault[i];
 			}
 			else if (i != 'StatsPref' && i != 'Colors') {
 				if (i.indexOf('SoundURL') == -1) {
 					if (!(CM.Config[i] > -1 && CM.Config[i] < CM.ConfigData[i].label.length)) {
 						mod = true;
-						CM.Config[i] = CM.ConfigDefault[i];
+						CM.Config[i] = CM.Data.ConfigDefault[i];
 					}
 				}
 				else {  // Sound URLs
 					if (typeof CM.Config[i] != 'string') {
 						mod = true;
-						CM.Config[i] = CM.ConfigDefault[i];
+						CM.Config[i] = CM.Data.ConfigDefault[i];
 					}
 				}
 			}
 			else if (i == 'StatsPref') {
-				for (var j in CM.ConfigDefault.StatsPref) {
+				for (var j in CM.Data.ConfigDefault.StatsPref) {
 					if (typeof CM.Config[i][j] === 'undefined' || !(CM.Config[i][j] > -1 && CM.Config[i][j] < 2)) {
 						mod = true;
-						CM.Config[i][j] = CM.ConfigDefault[i][j];
+						CM.Config[i][j] = CM.Data.ConfigDefault[i][j];
 					}
 				}
 			}
 			else { // Colors
-				for (var j in CM.ConfigDefault.Colors) {
+				for (var j in CM.Data.ConfigDefault.Colors) {
 					if (typeof CM.Config[i][j] === 'undefined' || typeof CM.Config[i][j] != 'string') {
 						mod = true;
-						CM.Config[i][j] = CM.ConfigDefault[i][j];
+						CM.Config[i][j] = CM.Data.ConfigDefault[i][j];
 					}
 				}
 			}
 		}
 		if (mod) CM.SaveConfig(CM.Config);
 		CM.Loop(); // Do loop once
-		for (var i in CM.ConfigDefault) {
+		for (var i in CM.Data.ConfigDefault) {
 			if (i != 'StatsPref' && i != 'OptionsPref' && typeof CM.ConfigData[i].func !== 'undefined') {
 				CM.ConfigData[i].func();
 			}
@@ -63,7 +63,7 @@ CM.LoadConfig = function() {
 
 CM.RestoreDefault = function() {
 	CM.Config = {};
-	CM.SaveConfig(CM.ConfigDefault);
+	CM.SaveConfig(CM.Data.ConfigDefault);
 	CM.LoadConfig();
 	Game.UpdateMenu();
 }
