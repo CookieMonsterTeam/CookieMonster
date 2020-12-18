@@ -80,6 +80,8 @@ CM.Cache.RemakeIncome = function() {
 }
 
 CM.Cache.RemakeWrinkBank = function() {
+	CM.Cache.WrinkBankTotal = 0;
+	CM.Cache.WrinkBankNormal = 0;
 	var totalSucked = 0;
 	for (var i in Game.wrinklers) {
 		var sucked = Game.wrinklers[i].sucked;
@@ -94,10 +96,10 @@ CM.Cache.RemakeWrinkBank = function() {
 			else if (godLvl == 2) sucked *= 1.1;
 			else if (godLvl == 3) sucked *= 1.05;
 		}
-		totalSucked += sucked;
+		CM.Cache.WrinkBankTotal += sucked;
+		if (Game.wrinklers[i].type == 0) CM.Cache.WrinkBankNormal += sucked;
 	}
-	CM.Cache.WrinkBank = totalSucked;
-	CM.Cache.WrinkGodBank = totalSucked;
+	CM.Cache.WrinkGodBank = CM.Cache.WrinkBankTotal;
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
 		var godLvl = CM.Sim.hasGod('scorn');
 		if (godLvl == 2) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.1;
@@ -414,7 +416,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		if (CM.Cache.lastDate != -1) {
 			var timeDiff = currDate - CM.Cache.lastDate
 			var bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
-			var wrinkDiffAvg = Math.max(0, (CM.Cache.WrinkBank - CM.Cache.lastWrinkCookies)) / timeDiff;
+			var wrinkDiffAvg = Math.max(0, (CM.Cache.WrinkBankTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
 			var choEggDiffAvg = Math.max(0,(choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
 			var clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
 			for (var i = 0; i < timeDiff; i++) {
@@ -436,7 +438,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		}
 		CM.Cache.lastDate = currDate;
 		CM.Cache.lastCookies = Game.cookies;
-		CM.Cache.lastWrinkCookies = CM.Cache.WrinkBank;
+		CM.Cache.lastWrinkCookies = CM.Cache.WrinkBankTotal;
 		CM.Cache.lastChoEgg = choEggTotal;
 		CM.Cache.lastClicks = Game.cookieClicks;
 
@@ -519,7 +521,8 @@ CM.Cache.CalcMissingUpgrades = function() {
 CM.Cache.min = -1;
 CM.Cache.max = -1;
 CM.Cache.mid = -1;
-CM.Cache.WrinkBank = -1;
+CM.Cache.WrinkBankTotal = -1;
+CM.Cache.WrinkBankNormal = -1;
 CM.Cache.WrinkGodBank = -1;
 CM.Cache.GoldenCookiesMult = 1;
 CM.Cache.WrathCookiesMult = 1;
@@ -1012,11 +1015,11 @@ CM.Data.ConfigDefault = {
 /**
  * This function returns the total amount stored in the Wrinkler Bank 
  * as calculated by CM.Cache.RemakeWrinkBank() if CM.Config.CalcWrink is set
- * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinkBank)
+ * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinkBankTotal)
  */
 CM.Disp.GetWrinkConfigBank = function() {
 	if (CM.Config.CalcWrink)
-		return CM.Cache.WrinkBank;
+		return CM.Cache.WrinkBankTotal;
 	else
 		return 0;
 }
@@ -3091,13 +3094,13 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Wrinklers', 'Wrink'));
 		if (CM.Config.StatsPref.Wrink) {
 			var popAllFrag = document.createDocumentFragment();
-			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBank) + ' '));
+			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBankTotal) + ' / ' + Beautify(CM.Cache.WrinkBankNormal) + ' '));
 			var popAllA = document.createElement('a');
 			popAllA.textContent = 'Pop All Normal';
 			popAllA.className = 'option';
-			popAllA.onclick = function() { CM.Disp.CollectWrinklers(); };
+			popAllA.onclick = function() { CM.Disp.PopAllNormalWrinklers(); };
 			popAllFrag.appendChild(popAllA);
-			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping',  popAllFrag));
+			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping (All/Normal)',  popAllFrag));
 		}
 	}
 
