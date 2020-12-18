@@ -1893,11 +1893,9 @@ CM.Disp.AddMenuPref = function(title) {
  */
 CM.Disp.CreatePrefHeader = function(config, text) {
 	var div = document.createElement('div');
-	div.className = 'listing';
-	div.style.padding = '5px 16px';
+	div.className = 'title';
 	div.style.opacity = '0.7';
 	div.style.fontSize = '17px';
-	div.style.fontFamily = '\"Kavoon\", Georgia, serif';
 	div.appendChild(document.createTextNode(text + ' '));
 	var span = document.createElement('span'); // Creates the +/- button
 	span.style.cursor = 'pointer';

@@ -575,14 +575,29 @@ CM.Cache.spawnedGoldenShimmer = 0;
  * This variables are used by CM.Cache.CacheDragonAuras(), naming follows naming in Game
  */
 CM.Cache.dragonAura = 0;
-CM.Cache.dragonAura2 = 0;/**********
+CM.Cache.dragonAura2 = 0;
+
+/**********
  * Config *
  **********/
 
+/********
+ * Section: Functions related to saving, loading and restoring configs */
+
+/**
+ * This function saves the config of CookieMonster to localStorage
+ * It is called by CM.LoadConfig(), CM.RestoreDefault(), 
+ * any of the CM.ToggleConfig() functions and upon changes to URL or volume settings
+ * @param 	{object}	config	The Config to be saved (normally CM.Config)
+ */
 CM.SaveConfig = function(config) {
 	localStorage.setItem(CM.ConfigPrefix, JSON.stringify(config));
 }
 
+/**
+ * This function loads the config of CookieMonster saved in localStorage and loads it into CM.Config
+ * It is called by CM.DelayInit() and CM.RestoreDefault()
+ */
 CM.LoadConfig = function() {
 	if (localStorage.getItem(CM.ConfigPrefix) != null) {
 		CM.Config = JSON.parse(localStorage.getItem(CM.ConfigPrefix));
@@ -638,6 +653,10 @@ CM.LoadConfig = function() {
 	}
 }
 
+/**
+ * This function reloads and resaves the default config as stored in CM.Data.ConfigDefault
+ * It is called by resDefBut.onclick loaded in the options page or by CM.LoadConfig is no localStorage is found
+ */
 CM.RestoreDefault = function() {
 	CM.Config = {};
 	CM.SaveConfig(CM.Data.ConfigDefault);
@@ -645,6 +664,15 @@ CM.RestoreDefault = function() {
 	Game.UpdateMenu();
 }
 
+/********
+ * Section: Functions related to toggling or changing configs */
+
+/**
+ * This function toggles options which are considered "toggles"
+ * These have off (1) and on (1) states
+ * It is called by the onclick event of options of the "bool" type
+ * @param 	{string}	config	The name of the option
+ */
 CM.ToggleConfig = function(config) {
 	CM.ToggleConfigUp(config);
 	if (CM.ConfigData[config].toggle) {
@@ -669,22 +697,10 @@ CM.ToggleConfigUp = function(config) {
 	CM.SaveConfig(CM.Config);
 }
 
-CM.ToggleConfigDown = function(config) {
-	CM.Config[config]--;
-	if (CM.Config[config] < 0) {
-		CM.Config[config] = CM.ConfigData[config].label.length - 1;
-	}
-	if (typeof CM.ConfigData[config].func !== 'undefined') {
-		CM.ConfigData[config].func();
-	}
-	l(CM.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Config[config]];
-	CM.SaveConfig(CM.Config);
-}
-
 /**
  * This function sets the value of the specified volume-option and updates the display in the options menu
  * It is called by CM.Disp.CreatePrefOption()
- * @param 	{string}		config	The name of the option
+ * @param 	{string}	config	The name of the option
  */
 CM.ToggleConfigVolume = function(config) {
 	if (l("slider" + config) != null) {
@@ -2895,11 +2911,9 @@ CM.Disp.AddMenuPref = function(title) {
  */
 CM.Disp.CreatePrefHeader = function(config, text) {
 	var div = document.createElement('div');
-	div.className = 'listing';
-	div.style.padding = '5px 16px';
+	div.className = 'title';
 	div.style.opacity = '0.7';
 	div.style.fontSize = '17px';
-	div.style.fontFamily = '\"Kavoon\", Georgia, serif';
 	div.appendChild(document.createTextNode(text + ' '));
 	var span = document.createElement('span'); // Creates the +/- button
 	span.style.cursor = 'pointer';

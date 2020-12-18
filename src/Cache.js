@@ -549,3 +549,4 @@ CM.Cache.spawnedGoldenShimmer = 0;
  */
 CM.Cache.dragonAura = 0;
 CM.Cache.dragonAura2 = 0;
+
