@@ -1524,6 +1524,16 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 		var timeColor = CM.Disp.GetTimeColor((CM.Disp.TooltipPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 		l('CMTooltipTime').textContent = timeColor.text;
 		l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
+		
+		// Add extra info to Chocolate egg tooltip
+		if (Game.UpgradesInStore[CM.Disp.tooltipName].name == "Chocolate egg") {
+			l('CMTooltipBorder').lastChild.style.marginBottom = '4px';
+			l('CMTooltipBorder').appendChild(CM.Disp.TooltipCreateHeader('Cookies to be gained (Currently/Max)'));
+			var chocolate = document.createElement('div');
+			chocolate.style.color = 'white';
+			chocolate.textContent = CM.Disp.Beautify(Game.cookies * 0.05) + " / " + CM.Disp.Beautify(CM.Cache.lastChoEgg);
+			l('CMTooltipBorder').appendChild(chocolate);
+		}
 	}
 }
 
