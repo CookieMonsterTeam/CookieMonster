@@ -1319,6 +1319,15 @@ CM.Disp.TooltipCreateCalculationSection = function(tooltip) {
 	income.id = 'CMTooltipIncome';
 	tooltip.appendChild(income);
 
+	tooltip.appendChild(CM.Disp.TooltipCreateHeader('Bonus Cookies per Click'));
+	tooltip.lastChild.style.display = "none";
+	var click = document.createElement('div');
+	click.style.marginBottom = '4px';
+	click.style.color = 'white';
+	click.style.display = "none";
+	click.id = 'CMTooltipCookiePerClick';
+	tooltip.appendChild(click);
+
 	tooltip.appendChild(CM.Disp.TooltipCreateHeader('Payback Period'));
 	var pp = document.createElement('div');
 	pp.style.marginBottom = '4px';
@@ -1487,6 +1496,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 
 	CM.Disp.TooltipBonusIncome = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonus;
 	CM.Disp.TooltipPrice = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
+	CM.Disp.TooltipBonusMouse = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonusMouse
 
 	if (CM.Options.TooltipBuildUp == 1) {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
@@ -1495,8 +1505,21 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 			l('CMTooltipIncome').textContent += ' (' + (increase / 100) + '% of income)';
 		}
 		l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
-		l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
-		l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+		// If clicking power upgrade
+		if (CM.Disp.TooltipBonusMouse) {
+			l('CMTooltipCookiePerClick').textContent = Beautify(CM.Disp.TooltipBonusMouse)
+			l('CMTooltipCookiePerClick').style.display = "block";
+			l('CMTooltipCookiePerClick').previousSibling.style.display = "block";
+		}
+		// If only a clicking power upgrade change PP to click-based period
+		if (CM.Disp.TooltipBonusIncome == 0 && CM.Disp.TooltipBonusMouse) {	
+			l('CMTooltipPP').textContent = Beautify(CM.Disp.TooltipPrice / CM.Disp.TooltipBonusMouse) + ' Clicks'
+			l('CMTooltipPP').style.color = "white";
+		}
+		else {
+			l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
+			l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+		}
 		var timeColor = CM.Disp.GetTimeColor((CM.Disp.TooltipPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 		l('CMTooltipTime').textContent = timeColor.text;
 		l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
