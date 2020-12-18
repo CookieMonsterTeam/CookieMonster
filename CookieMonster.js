@@ -791,6 +791,17 @@ CM.Data.PlantDrops = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cook
 
 CM.Data.metric = ['', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 CM.Data.shortScale = ['', 'M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec', 'Quattuordec', 'Quindec', 'Sexdec', 'Septendec', 'Octodec', 'Novemdec', 'Vigint', 'Unvigint', 'Duovigint', 'Trevigint', 'Quattuorvigint'];
+CM.Data.shortScaleAbbreviated = ['K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'De', 
+'UDe', 'DDe', 'TDe', 'QaDe', 'QiDe', 'SxDe', 'SpDe', 'ODe', 'NDe', 'Vi', 
+'UVi', 'DVi', 'TVi', 'QaVi', 'QiVi', 'SxVi', 'SpVi', 'OVi', 'NVi', 'Tr', 
+'UTr', 'DTr', 'TTr', 'QaTr', 'QiTr', 'SxTr', 'SpTr', 'OTr', 'NTr', 'Qaa', 
+'UQa', 'DQa', 'TQa', 'QaQa', 'QiQa', 'SxQa', 'SpQa', 'OQa', 'NQa', 'Qia', 
+'UQi', 'DQi', 'TQi', 'QaQi', 'QiQi', 'SxQi', 'SpQi', 'OQi', 'NQi', 'Sxa',
+'USx', 'DSx', 'TSx', 'QaSx', 'QiSx', 'SxSx', 'SpSx', 'OSx', 'NSx', 'Spa', 
+'USp', 'DSp', 'TSp', 'QaSp', 'QiSp', 'SxSp', 'SpSp', 'OSp', 'NSp', 'Oco', 
+'UOc', 'DOc', 'TOc', 'QaOc', 'QiOc', 'SxOc', 'SpOc', 'OOc', 'NOc', 'Noa',
+'UNo', 'DNo', 'TNo', 'QaNo', 'QiNo', 'SxNo', 'SpNo', 'ONo', 'NNo', 'Ct', 
+'UCt']
 
 /********
  * Section: An array containing all Config groups and their to-be displayed title */
@@ -930,7 +941,7 @@ CM.ConfigData.DetailedTime = {type: 'bool', group: 'Statistics', label: ['Detail
 CM.ConfigData.GrimoireBar = {type: 'bool', group: 'Statistics', label: ['Grimoire Magic Meter Timer OFF', 'Grimoire Magic Meter Timer ON'], desc: 'A timer on how long before the Grimoire magic meter is full', toggle: true};
 
 // Notation
-CM.ConfigData.Scale = {type: 'bool', group: 'Notation', label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
+CM.ConfigData.Scale = {type: 'bool', group: 'Notation', label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Short Scale (Abbreviated)', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 CM.ConfigData.ScaleDecimals = {type: 'bool', group: 'Notation', label: ['1 decimals', '2 decimals', '3 decimals'], desc: 'Set the number of decimals used when applicable', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 CM.ConfigData.ScaleSeparator = {type: 'bool', group: 'Notation', label: ['. for decimals (Standard)', '. for thousands'], desc: 'Set the separator used for decimals and thousands', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 
@@ -1196,7 +1207,7 @@ CM.Disp.Beautify = function(num, floats, forced) {
 			// TODO: Add changing separators of thousands and making this cut-off user configurable
 			answer = Math.round(num * 100) / 100;
 		}
-		else if (CM.Options.Scale == 3 && !forced || forced == 3) { // Scientific notation, 123456789 => 1.235E+8
+		else if (CM.Options.Scale == 4 && !forced || forced == 4) { // Scientific notation, 123456789 => 1.235E+8
 			answer = num.toExponential(decimals).toString().replace("e", "E"); 
 		}
 		else {
@@ -1209,16 +1220,23 @@ CM.Disp.Beautify = function(num, floats, forced) {
 					answer += ' ' + CM.Data.metric[AmountOfTenPowerThree - 1]
 				}
 				// If number is too large or little, revert to scientific notation
-				else answer = CM.Disp.Beautify(num, 0, 3);
+				else answer = CM.Disp.Beautify(num, 0, 4);
 			}
 			else if (CM.Options.Scale == 2 && !forced || forced == 2) { // Short scale, 123456789 => 123.457 M
 				if (num >= 0.01 && num < Number("1e" + CM.Data.shortScale.length * 3)) {
 					answer += ' ' + CM.Data.shortScale[AmountOfTenPowerThree - 1];
 				}
 				// If number is too large or little, revert to scientific notation
-				else answer = CM.Disp.Beautify(num, 0, 3);
+				else answer = CM.Disp.Beautify(num, 0, 4);
 			}
-			else if (CM.Options.Scale == 4 && !forced || forced == 4) { // Engineering notation, 123456789 => 123.457E+6
+			else if (CM.Options.Scale == 3 && !forced || forced == 3) { // Short scale, 123456789 => 123.457 M
+				if (num >= 0.01 && num < Number("1e" + CM.Data.shortScaleAbbreviated.length * 3)) {
+					answer += ' ' + CM.Data.shortScaleAbbreviated[AmountOfTenPowerThree - 1];
+				}
+				// If number is too large or little, revert to scientific notation
+				else answer = CM.Disp.Beautify(num, 0, 4);
+			}
+			else if (CM.Options.Scale == 5 && !forced || forced == 5) { // Engineering notation, 123456789 => 123.457E+6
 				answer += 'E' + AmountOfTenPowerThree * 3;
 			}
 		}

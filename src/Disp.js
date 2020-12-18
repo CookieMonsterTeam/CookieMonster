@@ -182,7 +182,7 @@ CM.Disp.Beautify = function(num, floats, forced) {
 			// TODO: Add changing separators of thousands and making this cut-off user configurable
 			answer = Math.round(num * 100) / 100;
 		}
-		else if (CM.Options.Scale == 3 && !forced || forced == 3) { // Scientific notation, 123456789 => 1.235E+8
+		else if (CM.Options.Scale == 4 && !forced || forced == 4) { // Scientific notation, 123456789 => 1.235E+8
 			answer = num.toExponential(decimals).toString().replace("e", "E"); 
 		}
 		else {
@@ -195,16 +195,23 @@ CM.Disp.Beautify = function(num, floats, forced) {
 					answer += ' ' + CM.Data.metric[AmountOfTenPowerThree - 1]
 				}
 				// If number is too large or little, revert to scientific notation
-				else answer = CM.Disp.Beautify(num, 0, 3);
+				else answer = CM.Disp.Beautify(num, 0, 4);
 			}
 			else if (CM.Options.Scale == 2 && !forced || forced == 2) { // Short scale, 123456789 => 123.457 M
 				if (num >= 0.01 && num < Number("1e" + CM.Data.shortScale.length * 3)) {
 					answer += ' ' + CM.Data.shortScale[AmountOfTenPowerThree - 1];
 				}
 				// If number is too large or little, revert to scientific notation
-				else answer = CM.Disp.Beautify(num, 0, 3);
+				else answer = CM.Disp.Beautify(num, 0, 4);
 			}
-			else if (CM.Options.Scale == 4 && !forced || forced == 4) { // Engineering notation, 123456789 => 123.457E+6
+			else if (CM.Options.Scale == 3 && !forced || forced == 3) { // Short scale, 123456789 => 123.457 M
+				if (num >= 0.01 && num < Number("1e" + CM.Data.shortScaleAbbreviated.length * 3)) {
+					answer += ' ' + CM.Data.shortScaleAbbreviated[AmountOfTenPowerThree - 1];
+				}
+				// If number is too large or little, revert to scientific notation
+				else answer = CM.Disp.Beautify(num, 0, 4);
+			}
+			else if (CM.Options.Scale == 5 && !forced || forced == 5) { // Engineering notation, 123456789 => 123.457E+6
 				answer += 'E' + AmountOfTenPowerThree * 3;
 			}
 		}
