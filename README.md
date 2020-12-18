@@ -4,15 +4,15 @@
 
 This is a helper, and it is here to help you at *whichever* degree you want, if you only need some help shortening long numbers, it does that. If you need to be accompanied by hand to pick the best buildings to buy, it does that, but **everything is an option**.
 
-## Current version
-
+### Current version
 You can see the current version, and a full history of all versions and what they changed by consulting the [releases page](https://github.com/Aktanusa/CookieMonster/releases).
 
 ## What it does
 
-At its core, Cookie Monster computes an index on both buildings and upgrades:
-
-* **Payback Period (PP)**: Indicates how much a building is worth by using the formula max(cost - cookies in bank, 0)/cps + cost/Δ cps
+At its core, Cookie Monster computes an index for both buildings and upgrades: the **Payback Period (PP)**. This indicates how much a building is worth by using the following formula: 
+```
+max(cost - cookies in bank, 0)/cps + cost/Δ cps
+```
 
 Cookie Monster also indicates the time left before being able to buy an upgrade or building, and takes it into consideration. It will take *everything* in consideration, meaning if buying a building also unlocks an achievement which boosts your income, which unlocks an achievement, it will know and highlight that building's value.
 
@@ -60,14 +60,6 @@ javascript: (function () {
 
 If (for some reason) the above doesn't work, trying pasting everything after the <code>javascript:</code> bit into your browser's console.
 
-For beta, use the following instead:
-
-```javascript
-javascript: (function () {
-	Game.LoadMod('https://aktanusa.github.io/CookieMonster/CookieMonsterBeta.js');
-}());
-```
-
 ## Userscript
 
 If you'd rather use the addon as a script via per example *Greasemonkey* or *Tampermonkey*, you can use the following script, which will automatically load *Cookie Monster* every time the original game loads. You may need to specify <code>http://orteil.dashnet.org/cookieclicker/</code> when asked for a *namespace* or *includes*. For how to add an userscript to your browser, refer to your browser/plugin's documentation as the method changes for each one.
@@ -91,31 +83,10 @@ If you'd rather use the addon as a script via per example *Greasemonkey* or *Tam
     }, 1000);
 })();
 ```
-If you are using the beta, use this instead:
-
-```javascript
-// ==UserScript==
-// @name Cookie Monster Beta
-// @namespace Cookie
-// @include http://orteil.dashnet.org/cookieclicker/beta/
-// @include https://orteil.dashnet.org/cookieclicker/beta/
-// @version 1
-// @grant none
-// ==/UserScript==
-
-(function() {
-    const checkReady = setInterval(function() {
-        if (typeof Game.ready !== 'undefined' && Game.ready) {
-            Game.LoadMod('https://aktanusa.github.io/CookieMonster/CookieMonsterBeta.js');
-            clearInterval(checkReady);
-        }
-    }, 1000);
-})();
-```
 
 # Bugs and suggestions
 
-Any bug or suggestion should be **opened as an issue** [in the repository](https://github.com/Aktanusa/CookieMonster/issues) for easier tracking. This allows me to close issues once they're fixed.
+Any bug or suggestion should be **opened as an issue** [in the repository](https://github.com/Aktanusa/CookieMonster/issues) for easier tracking. This allows us to close issues once they're fixed.
 
 Before submitting a bug, make sure to give a shot at the latest version of the addon on the <code>dev</code> branch. For this, use the following bookmarklet:
 
@@ -138,3 +109,5 @@ All suggestions are welcome, even the smallest ones.
 * **[BlackenedGem](https://github.com/BlackenedGem)**: Golden/Wrath Cookie Favicons
 * **[Sandworm](https://github.com/svschouw)**: Modified PP calculation
 * **[Aktanusa](https://github.com/Aktanusa)**: Current maintainer
+* **[DanielNoord](https://github.com/DanielNoord)**: Current maintainer
+* **[bitsandbytes1708](https://github.com/bitsandbytes1708)**: Current maintainer
