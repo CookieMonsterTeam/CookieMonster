@@ -1172,95 +1172,64 @@ CM.Disp.GetTimeColor = function(time) {
 /**
  * This function returns formats number based on the Scale setting
  * @param	{number}	num		Number to be beautified
- * @param 	{any}		frac 	Used in some scenario's by CM.Backup.Beautify (Game's original function)
+ * @param 	{any}		floats 	Used in some scenario's by CM.Backup.Beautify (Game's original function)
  * @param	{number}	forced	Used to force (type 3) in certains cases
  * @returns	{string}			Formatted number
  */
-CM.Disp.Beautify = function(num, frac, forced) {
+CM.Disp.Beautify = function(num, floats, forced) {
 	var decimals = CM.Options.ScaleDecimals + 1;
 	if (CM.Options.Scale == 0) {
-		return CM.Backup.Beautify(num, frac);
+		return CM.Backup.Beautify(num, floats);
 	}
 	else if (isFinite(num)) {
 		var answer = '';
-		if (num < 0) {
-			num = Math.abs(num);
-			var negative = true;
-		}
-		num = num.toString();
 		var timesTenToPowerThree = Math.trunc(Math.log10(num) / 3)
-		if (num == "0") {
-			return num
+		if (num == 0) {
+			return num.toString()
 		}
 		else if (-1 < timesTenToPowerThree && timesTenToPowerThree < 2) {
 			// TODO: Add changing separators of thousands and making this cut-off user configurable
 			answer = Math.round(num * 100) / 100;
 		}
 		else if (CM.Options.Scale == 3 && !forced || forced == 3) { // Scientific notation, 123456789 => 1.235E+8
-			answer = num[0] + (CM.Options.ScaleSeparator ? ',' : '.');
-			i = 0;
-			while (i < decimals - 1) {
-				answer += num[i + 2]; // num has a 0-based index and [1] is a '.'
-				i++;
-			}
-			lastNumber = Math.round(num[i + 2] + '.' + num[i + 3]);
-			while (lastNumber >= 10) {
-				if (answer[answer.length - 1] != ".") {
-					lastNumber = Math.round((answer[answer.length - 1] * 10) + lastNumber) / 10;
-					answer = answer.slice(0,-1)
-				} else {
-					lastNumber = Math.round((answer[answer.length - 2] * 10) + lastNumber) / 10;
-					answer = answer.slice(0,-2)
-				}
-			}
-			answer += lastNumber;
-			answer += 'E+' + Math.trunc(Math.log10(num));
+			answer = num.toExponential(decimals).toString().replace("e", "E"); 
 		}
 		else {
-			var restOfNumber = (num / Math.pow(10, (timesTenToPowerThree * 3))).toString();
-			// Check if number contains decimals
-			numbersToAdd = (restOfNumber.indexOf('.') > -1 ? restOfNumber.indexOf('.') + 1 + decimals : (restOfNumber.length))
-			i = 0
-			while (i < numbersToAdd - 1 && i < restOfNumber.length - 1) {
-				answer += (CM.Options.ScaleSeparator && restOfNumber[i] == '.' ? ',' : restOfNumber[i]);
-				i++
-			}
-			answer += (i + 1 < restOfNumber.length ? Math.round(restOfNumber[i] + '.' + restOfNumber[i + 1]) : restOfNumber[i]);
-
+			exponential = num.toExponential().toString();
+			AmountOfTenPowerThree = Math.floor(exponential.slice(exponential.indexOf("e") + 1) / 3);
+			answer = (num / Number("1e" + (AmountOfTenPowerThree * 3))).toFixed(decimals)
 			// answer is now "xxx.xx" (e.g., 123456789 would be 123.46)
 			if (CM.Options.Scale == 1 && !forced || forced == 1) { // Metric scale, 123456789 => 123.457 M
-				if (timesTenToPowerThree - 1 < CM.Data.metric.length) {
-					answer += ' ' + CM.Data.metric[timesTenToPowerThree - 1]
+				if (num >= 0.01 && num < Number("1e" + CM.Data.metric.length * 3)) {
+					answer += ' ' + CM.Data.metric[AmountOfTenPowerThree - 1]
 				}
-				else { // If number is too large, revert to scientific notation
-					return CM.Disp.Beautify(num, 0, 3);	
-				}
+				// If number is too large or little, revert to scientific notation
+				else answer = CM.Disp.Beautify(num, 0, 3);
 			}
 			else if (CM.Options.Scale == 2 && !forced || forced == 2) { // Short scale, 123456789 => 123.457 M
-				if (timesTenToPowerThree < CM.Data.shortScale.length + 1) {
-					answer += ' ' + CM.Data.shortScale[timesTenToPowerThree - 1];
+				if (num >= 0.01 && num < Number("1e" + CM.Data.shortScale.length * 3)) {
+					answer += ' ' + CM.Data.shortScale[AmountOfTenPowerThree - 1];
 				}
-				else { // If number is too large, revert to scientific notation
-					return CM.Disp.Beautify(num, 0, 3);
-				}
+				// If number is too large or little, revert to scientific notation
+				else answer = CM.Disp.Beautify(num, 0, 3);
 			}
 			else if (CM.Options.Scale == 4 && !forced || forced == 4) { // Engineering notation, 123456789 => 123.457E+6
-				answer += 'E+' + (timesTenToPowerThree * 3);
+				answer += 'E' + AmountOfTenPowerThree * 3;
 			}
 		}
 		if (answer === '') {
 			console.log("Could not beautify number with CM.Disp.Beautify:" + num);
-			answer = CM.Backup.Beautify(num, frac); 
+			answer = CM.Backup.Beautify(num, floats); 
 		}
-		if (negative) answer = '-' + answer;
-		return answer.toString();
+		if (CM.Options.ScaleSeparator) answer = answer.replace('.', ',');
+		return answer;
 	}
 	else if (num == Infinity) {
 		return "Infinity";
 	}
 	else {
 		console.log("Could not beautify number with CM.Disp.Beautify:" + num);
-		return CM.Backup.Beautify(num, frac);
+		return CM.Backup.Beautify(num, floats);
 	}
 }
 
