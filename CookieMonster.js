@@ -2344,6 +2344,15 @@ CM.Disp.TooltipCreateCalculationSection = function(tooltip) {
 	income.id = 'CMTooltipIncome';
 	tooltip.appendChild(income);
 
+	tooltip.appendChild(CM.Disp.TooltipCreateHeader('Bonus Cookies per Click'));
+	tooltip.lastChild.style.display = "none";
+	var click = document.createElement('div');
+	click.style.marginBottom = '4px';
+	click.style.color = 'white';
+	click.style.display = "none";
+	click.id = 'CMTooltipCookiePerClick';
+	tooltip.appendChild(click);
+
 	tooltip.appendChild(CM.Disp.TooltipCreateHeader('Payback Period'));
 	var pp = document.createElement('div');
 	pp.style.marginBottom = '4px';
@@ -2512,6 +2521,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 
 	CM.Disp.TooltipBonusIncome = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonus;
 	CM.Disp.TooltipPrice = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
+	CM.Disp.TooltipBonusMouse = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonusMouse
 
 	if (CM.Options.TooltipBuildUp == 1) {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
@@ -2520,8 +2530,21 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 			l('CMTooltipIncome').textContent += ' (' + (increase / 100) + '% of income)';
 		}
 		l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
-		l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
-		l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+		// If clicking power upgrade
+		if (CM.Disp.TooltipBonusMouse) {
+			l('CMTooltipCookiePerClick').textContent = Beautify(CM.Disp.TooltipBonusMouse)
+			l('CMTooltipCookiePerClick').style.display = "block";
+			l('CMTooltipCookiePerClick').previousSibling.style.display = "block";
+		}
+		// If only a clicking power upgrade change PP to click-based period
+		if (CM.Disp.TooltipBonusIncome == 0 && CM.Disp.TooltipBonusMouse) {	
+			l('CMTooltipPP').textContent = Beautify(CM.Disp.TooltipPrice / CM.Disp.TooltipBonusMouse) + ' clicks'
+			l('CMTooltipPP').style.color = "white";
+		}
+		else {
+			l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
+			l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+		}
 		var timeColor = CM.Disp.GetTimeColor((CM.Disp.TooltipPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 		l('CMTooltipTime').textContent = timeColor.text;
 		l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
@@ -4828,6 +4851,9 @@ CM.Sim.BuyUpgrades = function() {
 
 			CM.Cache.Upgrades[i] = {};
 			CM.Cache.Upgrades[i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
+
+			var diffMouseCPS = CM.Sim.mouseCps() - Game.computedMouseCps;
+			if (diffMouseCPS) CM.Cache.Upgrades[i].bonusMouse = diffMouseCPS;
 		}
 	}
 }
@@ -5020,6 +5046,87 @@ CM.Sim.SellBuildingsForChoEgg = function() {
 	// CM.Cache.DoRemakeBuildPrices = 1;
 
 	return sellTotal;
+}
+
+/********
+ * Section: Functions used to calculate clicking power */
+
+/**
+ * This function calculates the cookies per click
+ * It is called by CM.Sim.BuyUpgrades() when an upgrades has no bonus-income (and is thus a clicking-upgrade)
+ */
+CM.Sim.mouseCps = function() {
+	var add=0;
+	if (CM.Sim.Has('Thousand fingers')) add += 0.1;
+	if (CM.Sim.Has('Million fingers')) add *= 5;
+	if (CM.Sim.Has('Billion fingers')) add *= 10;
+	if (CM.Sim.Has('Trillion fingers')) add *= 20;
+	if (CM.Sim.Has('Quadrillion fingers')) add *= 20;
+	if (CM.Sim.Has('Quintillion fingers')) add *= 20;
+	if (CM.Sim.Has('Sextillion fingers')) add *= 20;
+	if (CM.Sim.Has('Septillion fingers')) add *= 20;
+	if (CM.Sim.Has('Octillion fingers')) add *= 20;
+	if (CM.Sim.Has('Nonillion fingers')) add *= 20;
+	var num=0;
+	for (var i in CM.Sim.Objects) {num+=CM.Sim.Objects[i].amount;}
+	num -= CM.Sim.Objects['Cursor'].amount;
+	add = add * num;
+
+	// Use CM.Sim.cookiesPs as function is always called after CM.Sim.CalculateGains()
+	if (CM.Sim.Has('Plastic mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Iron mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Titanium mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Adamantium mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Unobtainium mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Eludium mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Wishalloy mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Fantasteel mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Nevercrack mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Armythril mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Technobsidian mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Plasmarble mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Miraculite mouse')) add += CM.Sim.cookiesPs * 0.01;
+
+	if (CM.Sim.Has('Fortune #104')) add += CM.Sim.cookiesPs * 0.01;
+	
+	
+	var mult=1;
+	if (CM.Sim.Has('Santa\'s helpers')) mult *= 1.1;
+	if (CM.Sim.Has('Cookie egg')) mult *= 1.1;
+	if (CM.Sim.Has('Halo gloves')) mult *= 1.1;
+	if (CM.Sim.Has('Dragon claw')) mult *= 1.03;
+	
+	if (CM.Sim.Has('Aura gloves'))
+	{
+		mult *= 1 + 0.05 * Math.min(Game.Objects['Cursor'].level, CM.Sim.Has('Luminous gloves') ? 20 : 10);
+	}
+	
+	mult *= CM.Sim.eff('click');
+	
+	if (CM.Sim.hasGod)
+	{
+		var godLvl = CM.Sim.hasGod('labor');
+		if (godLvl == 1) mult *= 1.15;
+		else if (godLvl == 2) mult *= 1.1;
+		else if (godLvl == 3) mult *= 1.05;
+	}
+	
+	for (var i in Game.buffs)
+	{
+		if (typeof Game.buffs[i].multClick != 'undefined') mult*=Game.buffs[i].multClick;
+	}
+	
+	//if (CM.Sim.auraMult('Dragon Cursor')) mult*=1.05;
+	mult *= 1 + CM.Sim.auraMult('Dragon Cursor') * 0.05;
+	
+	// No need to make this function a CM function
+	var out = mult * Game.ComputeCps(1, CM.Sim.Has('Reinforced index finger') + CM.Sim.Has('Carpal tunnel prevention cream') + CM.Sim.Has('Ambidextrous'), add);
+	
+	out = Game.runModHookOnValue('cookiesPerClick', out);
+	
+	if (Game.hasBuff('Cursed finger')) out = Game.buffs['Cursed finger'].power;
+	
+	return out;
 }
 /**********
  * Footer *
