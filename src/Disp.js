@@ -1597,47 +1597,34 @@ CM.Disp.UpdateTooltipWarnings = function() {
 		else CM.Disp.TooltipWarn.style.top = (l('tooltip').offsetHeight) + 'px';
 
 		CM.Disp.TooltipWarn.style.width = (l('tooltip').offsetWidth - 6) + 'px';
-		
+
+		var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - CM.Disp.TooltipPrice;
+		var limitLucky = CM.Cache.Lucky;
+		if (CM.Options.ToolWarnBon == 1) {
+			var bonusNoFren = CM.Disp.TooltipBonusIncome;
+			bonusNoFren /= CM.Sim.getCPSBuffMult();
+			limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
+		}
+
 		if (CM.Options.ToolWarnLucky == 1) {
-			var limitLucky = CM.Cache.Lucky;
-			if (CM.Options.ToolWarnBon == 1) {
-				var bonusNoFren = CM.Disp.TooltipBonusIncome;
-				bonusNoFren /= CM.Sim.getCPSBuffMult();
-				limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
-			}
-			var limitLuckyFrenzy = limitLucky * 7;
-			var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - CM.Disp.TooltipPrice;
-			if ((amount < limitLucky || amount < limitLuckyFrenzy) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
-				if (amount < limitLucky) {
-					l('CMDispTooltipWarnLucky').style.display = '';
-					l('CMDispTooltipWarnLuckyText').textContent = Beautify(limitLucky - amount) + ' (' + CM.Disp.FormatTime((limitLucky - amount) / CM.Disp.GetCPS()) + ')';
-					l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
-					l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / CM.Disp.GetCPS()) + ')';
-				}
-				else if (amount < limitLuckyFrenzy) {
-					l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
-					l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / CM.Disp.GetCPS()) + ')';
-					l('CMDispTooltipWarnLucky').style.display = 'none';
-				}
-			} else {
-				l('CMDispTooltipWarnLucky').style.display = 'none';
-				l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
-			}
+			if (amount < limitLucky && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+				l('CMDispTooltipWarnLucky').style.display = '';
+				l('CMDispTooltipWarnLuckyText').textContent = Beautify(limitLucky - amount) + ' (' + CM.Disp.FormatTime((limitLucky - amount) / CM.Disp.GetCPS()) + ')';
+			} else l('CMDispTooltipWarnLucky').style.display = 'none';
 		}
-		else {
-			l('CMDispTooltipWarnLucky').style.display = 'none';
-			l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
-		}
+		else l('CMDispTooltipWarnLucky').style.display = 'none';
 		
+		if (CM.Options.ToolWarnLuckyFrenzy == 1) {
+			limitLuckyFrenzy = limitLucky * 7;
+			if (amount < limitLuckyFrenzy && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+				l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
+				l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / CM.Disp.GetCPS()) + ')';
+			} else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+		}
+		else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+
 		if (CM.Options.ToolWarnConjure == 1) {
-			var limitLucky = CM.Cache.Lucky;
-			if (CM.Options.ToolWarnBon == 1) {
-				var bonusNoFren = CM.Disp.TooltipBonusIncome;
-				bonusNoFren /= CM.Sim.getCPSBuffMult();
-				limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
-			}
 			var limitConjure = limitLucky * 2;
-			var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - CM.Disp.TooltipPrice;
 			if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnConjure').style.display = '';
 				l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / CM.Disp.GetCPS()) + ')';

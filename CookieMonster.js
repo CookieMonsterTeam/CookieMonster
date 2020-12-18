@@ -909,7 +909,8 @@ CM.ConfigData.Title = {type: 'bool', group: 'Notification', label: ['Title OFF',
 // Tooltip
 CM.ConfigData.TooltipBuildUp = {type: 'bool', group: 'Tooltip', label: ['Buildings/Upgrades Tooltip Information OFF', 'Buildings/Upgrades Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades', toggle: true};
 CM.ConfigData.TooltipAmor = {type: 'bool', group: 'Tooltip', label: ['Buildings Tooltip Amortization Information OFF', 'Buildings Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
-CM.ConfigData.ToolWarnLucky = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Warning OFF', 'Tooltip Lucky Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!"/"Lucky!" (Frenzy) rewards', toggle: true};
+CM.ConfigData.ToolWarnLucky = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Warning OFF', 'Tooltip Lucky Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" rewards', toggle: true};
+CM.ConfigData.ToolWarnLuckyFrenzy = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Frenzy Warning OFF', 'Tooltip Lucky Frenzy Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" (Frenzy) rewards', toggle: true};
 CM.ConfigData.ToolWarnConjure = {type: 'bool', group: 'Tooltip', label: ['Tooltip Conjure Warning OFF', 'Tooltip Conjure Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Conjure Baked Goods" rewards', toggle: true};
 CM.ConfigData.ToolWarnPos = {type: 'bool', group: 'Tooltip', label: ['Tooltip Warning Position (Left)', 'Tooltip Warning Position (Bottom)'], desc: 'Placement of the warning boxes', toggle: false, func: function() {CM.Disp.ToggleToolWarnPos();}};
 CM.ConfigData.TooltipGrim = {type: 'bool', group: 'Tooltip', label: ['Grimoire Tooltip Information OFF', 'Grimoire Tooltip Information ON'], desc: 'Extra information in tooltip for grimoire', toggle: true};
@@ -988,6 +989,7 @@ CM.Data.ConfigDefault = {
 	TooltipBuildUp: 1, 
 	TooltipAmor: 0, 
 	ToolWarnLucky: 1,
+	ToolWarnLuckyFrenzy: 1,
 	ToolWarnConjure: 1, 
 	ToolWarnPos: 1, 
 	TooltipGrim:1, 
@@ -2606,47 +2608,34 @@ CM.Disp.UpdateTooltipWarnings = function() {
 		else CM.Disp.TooltipWarn.style.top = (l('tooltip').offsetHeight) + 'px';
 
 		CM.Disp.TooltipWarn.style.width = (l('tooltip').offsetWidth - 6) + 'px';
-		
+
+		var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - CM.Disp.TooltipPrice;
+		var limitLucky = CM.Cache.Lucky;
+		if (CM.Options.ToolWarnBon == 1) {
+			var bonusNoFren = CM.Disp.TooltipBonusIncome;
+			bonusNoFren /= CM.Sim.getCPSBuffMult();
+			limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
+		}
+
 		if (CM.Options.ToolWarnLucky == 1) {
-			var limitLucky = CM.Cache.Lucky;
-			if (CM.Options.ToolWarnBon == 1) {
-				var bonusNoFren = CM.Disp.TooltipBonusIncome;
-				bonusNoFren /= CM.Sim.getCPSBuffMult();
-				limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
-			}
-			var limitLuckyFrenzy = limitLucky * 7;
-			var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - CM.Disp.TooltipPrice;
-			if ((amount < limitLucky || amount < limitLuckyFrenzy) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
-				if (amount < limitLucky) {
-					l('CMDispTooltipWarnLucky').style.display = '';
-					l('CMDispTooltipWarnLuckyText').textContent = Beautify(limitLucky - amount) + ' (' + CM.Disp.FormatTime((limitLucky - amount) / CM.Disp.GetCPS()) + ')';
-					l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
-					l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / CM.Disp.GetCPS()) + ')';
-				}
-				else if (amount < limitLuckyFrenzy) {
-					l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
-					l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / CM.Disp.GetCPS()) + ')';
-					l('CMDispTooltipWarnLucky').style.display = 'none';
-				}
-			} else {
-				l('CMDispTooltipWarnLucky').style.display = 'none';
-				l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
-			}
+			if (amount < limitLucky && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+				l('CMDispTooltipWarnLucky').style.display = '';
+				l('CMDispTooltipWarnLuckyText').textContent = Beautify(limitLucky - amount) + ' (' + CM.Disp.FormatTime((limitLucky - amount) / CM.Disp.GetCPS()) + ')';
+			} else l('CMDispTooltipWarnLucky').style.display = 'none';
 		}
-		else {
-			l('CMDispTooltipWarnLucky').style.display = 'none';
-			l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
-		}
+		else l('CMDispTooltipWarnLucky').style.display = 'none';
 		
+		if (CM.Options.ToolWarnLuckyFrenzy == 1) {
+			limitLuckyFrenzy = limitLucky * 7;
+			if (amount < limitLuckyFrenzy && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+				l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
+				l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / CM.Disp.GetCPS()) + ')';
+			} else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+		}
+		else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
+
 		if (CM.Options.ToolWarnConjure == 1) {
-			var limitLucky = CM.Cache.Lucky;
-			if (CM.Options.ToolWarnBon == 1) {
-				var bonusNoFren = CM.Disp.TooltipBonusIncome;
-				bonusNoFren /= CM.Sim.getCPSBuffMult();
-				limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
-			}
 			var limitConjure = limitLucky * 2;
-			var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - CM.Disp.TooltipPrice;
 			if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnConjure').style.display = '';
 				l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / CM.Disp.GetCPS()) + ')';
