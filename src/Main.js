@@ -246,7 +246,7 @@ CM.DelayInit = function() {
 	CM.ReplaceNative();
 	CM.ReplaceNativeGrimoire();
 	Game.CalculateGains();
-	CM.LoadConfig(); // Must be after all things are created!
+	CM.Config.LoadConfig(); // Must be after all things are created!
 	CM.Disp.lastAscendState = Game.OnAscend;
 	CM.Disp.lastBuyMode = Game.buyMode;
 	CM.Disp.lastBuyBulk = Game.buyBulk;

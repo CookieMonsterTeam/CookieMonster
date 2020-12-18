@@ -1865,7 +1865,7 @@ CM.Disp.AddMenuPref = function(title) {
 	for (var group in CM.ConfigGroups) {
 		groupObject = CM.Disp.CreatePrefHeader(group, CM.ConfigGroups[group]) // (group, display-name of group)
 		frag.appendChild(groupObject)
-		if (CM.Options.OptionsPref[group]) { // 0 is show, 1 is collapsed
+		if (CM.Options.Header[group]) { // 0 is show, 1 is collapsed
 			for (var option in CM.ConfigData) {
 				if (CM.ConfigData[option].group == group) frag.appendChild(CM.Disp.CreatePrefOption(option))
 			}
@@ -1876,7 +1876,7 @@ CM.Disp.AddMenuPref = function(title) {
 	resDef.className = 'listing';
 	var resDefBut = document.createElement('a');
 	resDefBut.className = 'option';
-	resDefBut.onclick = function() {CM.RestoreDefault();};
+	resDefBut.onclick = function() {CM.Config.RestoreDefault();};
 	resDefBut.textContent = 'Restore Default';
 	resDef.appendChild(resDefBut);
 	frag.appendChild(resDef);
@@ -1909,8 +1909,8 @@ CM.Disp.CreatePrefHeader = function(config, text) {
 	span.style.color = 'black';
 	span.style.fontSize = '13px';
 	span.style.verticalAlign = 'middle';
-	span.textContent = CM.Options.OptionsPref[config] ? '-' : '+';
-	span.onclick = function() {CM.ToggleOptionsConfig(config); Game.UpdateMenu();};
+	span.textContent = CM.Options.Header[config] ? '-' : '+';
+	span.onclick = function() {CM.Config.ToggleHeader(config); Game.UpdateMenu();};
 	div.appendChild(span);
 	return div;
 }
@@ -1933,7 +1933,7 @@ CM.Disp.CreatePrefOption = function(config) {
 			a.className = 'option';
 		}
 		a.id = CM.ConfigPrefix + config;
-		a.onclick = function() {CM.ToggleConfig(config);};
+		a.onclick = function() {CM.Config.ToggleConfig(config);};
 		a.textContent = CM.ConfigData[config].label[CM.Options[config]];
 		div.appendChild(a);
 		var label = document.createElement('label');
@@ -1964,8 +1964,8 @@ CM.Disp.CreatePrefOption = function(config) {
 		slider.max = "100";
 		slider.step = "1";
 		slider.value = CM.Options[config];
-		slider.oninput = function() {CM.ToggleConfigVolume(config)};
-		slider.onchange = function() {CM.ToggleConfigVolume(config)};
+		slider.oninput = function() {CM.Config.ToggleConfigVolume(config)};
+		slider.onchange = function() {CM.Config.ToggleConfigVolume(config)};
 		volume.appendChild(slider);
 		div.appendChild(volume);
 		return div;
@@ -1993,7 +1993,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		inputPrompt.setAttribute('value', CM.Options[config]);
 		var a = document.createElement('a');
 		a.className = 'option';
-		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.SaveConfig(CM.Options); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
+		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(CM.Options); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
 		a.textContent = 'Edit';
 		div.appendChild(a);
 		var label = document.createElement('label');
@@ -2011,7 +2011,7 @@ CM.Disp.CreatePrefOption = function(config) {
 			input.style.width = '65px';
 			input.setAttribute('value', CM.Options.Colors[CM.Disp.colors[i]]);
 			div.appendChild(input);
-			eval('var change = function() {CM.Options.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.SaveConfig(CM.Options);}');
+			eval('var change = function() {CM.Options.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.Config.SaveConfig(CM.Options);}');
 			var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
 			var label = document.createElement('label');
 			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
@@ -2078,28 +2078,28 @@ CM.Disp.AddMenuStats = function(title) {
 	stats.appendChild(title());
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Lucky Cookies', 'Lucky'));
-	if (CM.Options.StatsPref.Lucky) {
+	if (CM.Options.Header.Lucky) {
 		stats.appendChild(CM.Disp.CreateStatsLuckySection());
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Chain Cookies', 'Chain'));
-	if (CM.Options.StatsPref.Chain) {
+	if (CM.Options.Header.Chain) {
 		stats.appendChild(CM.Disp.CreateStatsChainSection());
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Conjure Baked Goods', 'Conjure'));
-	if (CM.Options.StatsPref.Conjure) {
+	if (CM.Options.Header.Conjure) {
 		stats.appendChild(CM.Disp.CreateStatsConjureSection());
  	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Prestige', 'Prestige'));
-	if (CM.Options.StatsPref.Prestige) {
+	if (CM.Options.Header.Prestige) {
 		stats.appendChild(CM.Disp.CreateStatsPrestigeSection());
 	}
 
 	if (Game.cpsSucked > 0) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Wrinklers', 'Wrink'));
-		if (CM.Options.StatsPref.Wrink) {
+		if (CM.Options.Header.Wrink) {
 			var popAllFrag = document.createDocumentFragment();
 			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBankTotal) + ' / ' + Beautify(CM.Cache.WrinkBankNormal) + ' '));
 			var popAllA = document.createElement('a');
@@ -2153,7 +2153,7 @@ CM.Disp.AddMenuStats = function(title) {
 	
 	if (Game.season == 'christmas' || specDisp || choEgg || centEgg) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Season Specials', 'Sea'));
-		if (CM.Options.StatsPref.Sea) {
+		if (CM.Options.Header.Sea) {
 			if (specDisp) {
 				if (missingHalloweenCookies.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Halloween Cookies Left to Buy', CM.Disp.CreateStatsMissDisp(missingHalloweenCookies)));
 				if (missingChristmasCookies.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Christmas Cookies Left to Buy',  CM.Disp.CreateStatsMissDisp(missingChristmasCookies)));
@@ -2173,7 +2173,7 @@ CM.Disp.AddMenuStats = function(title) {
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Miscellaneous', 'Misc'));
-	if (CM.Options.StatsPref.Misc) {
+	if (CM.Options.Header.Misc) {
 		stats.appendChild(CM.Disp.CreateStatsListing("basic", 
 			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Options.AvgCPSHist] / 60) + (CM.Options.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', 
 			document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))
@@ -2230,8 +2230,8 @@ CM.Disp.CreateStatsHeader = function(text, config) {
 	span.style.color = 'black';
 	span.style.fontSize = '13px';
 	span.style.verticalAlign = 'middle';
-	span.textContent = CM.Options.StatsPref[config] ? '-' : '+';
-	span.onclick = function() {CM.ToggleStatsConfig(config); Game.UpdateMenu();};
+	span.textContent = CM.Options.Header[config] ? '-' : '+';
+	span.onclick = function() {CM.Config.ToggleHeader(config); Game.UpdateMenu();};
 	div.appendChild(span);
 	return div;
 }

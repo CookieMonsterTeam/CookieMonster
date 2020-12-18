@@ -588,19 +588,19 @@ CM.Cache.dragonAura2 = 0;
 
 /**
  * This function saves the config of CookieMonster to localStorage
- * It is called by CM.LoadConfig(), CM.RestoreDefault(), 
- * any of the CM.ToggleConfig() functions and upon changes to URL or volume settings
+ * It is called by CM.Config.LoadConfig(), CM.Config.RestoreDefault(), CM.Config.ToggleConfig(), 
+ * CM.ToggleConfigVolume() and changes in options with type "url" or "color"
  * @param 	{object}	config	The Config to be saved (normally CM.Options)
  */
-CM.SaveConfig = function(config) {
+CM.Config.SaveConfig = function(config) {
 	localStorage.setItem(CM.ConfigPrefix, JSON.stringify(config));
 }
 
 /**
  * This function loads the config of CookieMonster saved in localStorage and loads it into CM.Options
- * It is called by CM.DelayInit() and CM.RestoreDefault()
+ * It is called by CM.DelayInit() and CM.Config.RestoreDefault()
  */
-CM.LoadConfig = function() {
+CM.Config.LoadConfig = function() {
 	if (localStorage.getItem(CM.ConfigPrefix) != null) {
 		CM.Options = JSON.parse(localStorage.getItem(CM.ConfigPrefix));
 
@@ -611,7 +611,7 @@ CM.LoadConfig = function() {
 				mod = true;
 				CM.Options[i] = CM.Data.ConfigDefault[i];
 			}
-			else if (i != 'StatsPref' && i != 'Colors') {
+			else if (i != 'Header' && i != 'Colors') {
 				if (i.indexOf('SoundURL') == -1) {
 					if (!(CM.Options[i] > -1 && CM.Options[i] < CM.ConfigData[i].label.length)) {
 						mod = true;
@@ -625,8 +625,8 @@ CM.LoadConfig = function() {
 					}
 				}
 			}
-			else if (i == 'StatsPref') {
-				for (var j in CM.Data.ConfigDefault.StatsPref) {
+			else if (i == 'Header') {
+				for (var j in CM.Data.ConfigDefault.Header) {
 					if (typeof CM.Options[i][j] === 'undefined' || !(CM.Options[i][j] > -1 && CM.Options[i][j] < 2)) {
 						mod = true;
 						CM.Options[i][j] = CM.Data.ConfigDefault[i][j];
@@ -642,27 +642,27 @@ CM.LoadConfig = function() {
 				}
 			}
 		}
-		if (mod) CM.SaveConfig(CM.Options);
+		if (mod) CM.Config.SaveConfig(CM.Options);
 		CM.Loop(); // Do loop once
 		for (var i in CM.Data.ConfigDefault) {
-			if (i != 'StatsPref' && i != 'OptionsPref' && typeof CM.ConfigData[i].func !== 'undefined') {
+			if (i != 'Header' && typeof CM.ConfigData[i].func !== 'undefined') {
 				CM.ConfigData[i].func();
 			}
 		}
 	}
 	else { // Default values
-		CM.RestoreDefault();
+		CM.Config.RestoreDefault();
 	}
 }
 
 /**
  * This function reloads and resaves the default config as stored in CM.Data.ConfigDefault
- * It is called by resDefBut.onclick loaded in the options page or by CM.LoadConfig is no localStorage is found
+ * It is called by resDefBut.onclick loaded in the options page or by CM.Config.LoadConfig if no localStorage is found
  */
-CM.RestoreDefault = function() {
+CM.Config.RestoreDefault = function() {
 	CM.Options = {};
-	CM.SaveConfig(CM.Data.ConfigDefault);
-	CM.LoadConfig();
+	CM.Config.SaveConfig(CM.Data.ConfigDefault);
+	CM.Config.LoadConfig();
 	Game.UpdateMenu();
 }
 
@@ -670,71 +670,61 @@ CM.RestoreDefault = function() {
  * Section: Functions related to toggling or changing configs */
 
 /**
- * This function toggles options which are considered "toggles"
- * These have off (1) and on (1) states
+ * This function toggles options by incrementing them with 1 and handling changes
  * It is called by the onclick event of options of the "bool" type
  * @param 	{string}	config	The name of the option
  */
-CM.ToggleConfig = function(config) {
-	CM.ToggleConfigUp(config);
-	if (CM.ConfigData[config].toggle) {
-		if (CM.Options[config] == 0) {
-			l(CM.ConfigPrefix + config).className = 'option off';
-		}
-		else {
-			l(CM.ConfigPrefix + config).className = 'option';
-		}
-	}
-}
-
-CM.ToggleConfigUp = function(config) {
+CM.Config.ToggleConfig = function(config) {
 	CM.Options[config]++;
+
 	if (CM.Options[config] == CM.ConfigData[config].label.length) {
 		CM.Options[config] = 0;
+		if (CM.ConfigData[config].toggle) l(CM.ConfigPrefix + config).className = 'option off';
 	}
+	else l(CM.ConfigPrefix + config).className = 'option';
+
 	if (typeof CM.ConfigData[config].func !== 'undefined') {
 		CM.ConfigData[config].func();
 	}
+
 	l(CM.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Options[config]];
-	CM.SaveConfig(CM.Options);
+	CM.Config.SaveConfig(CM.Options);
 }
 
 /**
  * This function sets the value of the specified volume-option and updates the display in the options menu
- * It is called by CM.Disp.CreatePrefOption()
+ * It is called by the oninput and onchange event of "vol" type options
  * @param 	{string}	config	The name of the option
  */
-CM.ToggleConfigVolume = function(config) {
+CM.Config.ToggleConfigVolume = function(config) {
 	if (l("slider" + config) != null) {
 		l("slider" + config + "right").innerHTML = l("slider" + config).value + "%";
 		CM.Options[config] = Math.round(l("slider" + config).value);
 	} 
-	CM.SaveConfig(CM.Options);
+	CM.Config.SaveConfig(CM.Options);
 }
 
-CM.ToggleStatsConfig = function(config) {
-	if (CM.Options.StatsPref[config] == 0) {
-		CM.Options.StatsPref[config]++;
-	}
-	else {
-		CM.Options.StatsPref[config]--;
-	}
-	CM.SaveConfig(CM.Options);
+/**
+ * This function toggles header options by incrementing them with 1 and handling changes
+ * It is called by the onclick event of the +/- next to headers
+ * @param 	{string}	config	The name of the header
+ */
+CM.Config.ToggleHeader = function(config) {
+	CM.Options.Header[config]++;
+	if (CM.Options.Header[config] > 1) CM.Options.Header[config] = 0;
+	CM.Config.SaveConfig(CM.Options);
 }
 
-CM.ToggleOptionsConfig = function(config) {
-	if (CM.Options.OptionsPref[config] == 0) {
-		CM.Options.OptionsPref[config]++;
-	}
-	else {
-		CM.Options.OptionsPref[config]--;
-	}
-	CM.SaveConfig(CM.Options);
-}
+/********
+ * Section: Functions related to notifications */
 
-// Checks if the browsers has permissions to produce notifications
-// Should be triggered when Config related to Notifications is toggled on
-CM.CheckNotificationPermissions = function(ToggleOnOff) {
+/**
+ * This function checks if the user has given permissions for notifications
+ * It is called by a change in any of the notification options
+ * Note that most browsers will stop asking if the user has ignored the prompt around 6 times
+ * @param 	{number}	ToggleOnOff		A number indicating whether the option has been turned off (0) or on (1)
+ */
+CM.Config.CheckNotificationPermissions = function(ToggleOnOff) {
 	if (ToggleOnOff == 1)	{
 		// Check if browser support Promise version of Notification Permissions
 		function checkNotificationPromise() {
@@ -857,7 +847,7 @@ CM.ConfigData.AvgClicksHist = {type: 'bool', group: 'Calculation', label: ['Aver
 CM.ConfigData.ToolWarnBon = {type: 'bool', group: 'Calculation', label: ['Calculate Tooltip Warning With Bonus CPS OFF', 'Calculate Tooltip Warning With Bonus CPS ON'], desc: 'Calculate the warning with or without the bonus CPS you get from buying', toggle: true};
 
 // Notification
-CM.ConfigData.GCNotification = {type: 'bool', group: 'Notification', label: ['Golden Cookie Notification OFF', 'Golden Cookie Notification ON'], desc: 'Create a notification when Golden Cookie spawns', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Options.GCNotification);}};
+CM.ConfigData.GCNotification = {type: 'bool', group: 'Notification', label: ['Golden Cookie Notification OFF', 'Golden Cookie Notification ON'], desc: 'Create a notification when Golden Cookie spawns', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.GCNotification);}};
 CM.ConfigData.GCFlash = {type: 'bool', group: 'Notification', label: ['Golden Cookie Flash OFF', 'Golden Cookie Flash ON'], desc: 'Flash screen on Golden Cookie', toggle: true};
 CM.ConfigData.GCSound = {type: 'bool', group: 'Notification', label: ['Golden Cookie Sound OFF', 'Golden Cookie Sound ON'], desc: 'Play a sound on Golden Cookie', toggle: true};
 CM.ConfigData.GCVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Golden Cookie'};
@@ -867,7 +857,7 @@ for (var i = 0; i < 101; i++) {
 CM.ConfigData.GCSoundURL = {type: 'url', group: 'Notification', label: 'Golden Cookie Sound URL:', desc: 'URL of the sound to be played when a Golden Cookie spawns'};
 CM.ConfigData.GCTimer = {type: 'bool', group: 'Notification', label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', toggle: true, func: function() {CM.Disp.ToggleGCTimer();}};
 CM.ConfigData.Favicon = {type: 'bool', group: 'Notification', label: ['Favicon OFF', 'Favicon ON'], desc: 'Update favicon with Golden/Wrath Cookie', toggle: true, func: function() {CM.Disp.UpdateFavicon();}};
-CM.ConfigData.FortuneNotification = {type: 'bool', group: 'Notification', label: ['Fortune Cookie Notification OFF', 'Fortune Cookie Notification ON'], desc: 'Create a notification when Fortune Cookie is on the Ticker', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Options.FortuneNotification);}};
+CM.ConfigData.FortuneNotification = {type: 'bool', group: 'Notification', label: ['Fortune Cookie Notification OFF', 'Fortune Cookie Notification ON'], desc: 'Create a notification when Fortune Cookie is on the Ticker', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.FortuneNotification);}};
 CM.ConfigData.FortuneFlash = {type: 'bool', group: 'Notification', label: ['Fortune Cookie Flash OFF', 'Fortune Cookie Flash ON'], desc: 'Flash screen on Fortune Cookie', toggle: true};
 CM.ConfigData.FortuneSound = {type: 'bool', group: 'Notification', label: ['Fortune Cookie Sound OFF', 'Fortune Cookie Sound ON'], desc: 'Play a sound on Fortune Cookie', toggle: true};
 CM.ConfigData.FortuneVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Fortune Cookie'};
@@ -875,7 +865,7 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.FortuneVolume.label[i] = i + '%';
 }
 CM.ConfigData.FortuneSoundURL = {type: 'url', group: 'Notification', label: 'Fortune Cookie Sound URL:', desc: 'URL of the sound to be played when the Ticker has a Fortune Cookie'};
-CM.ConfigData.SeaNotification = {type: 'bool', group: 'Notification', label: ['Season Special Notification OFF', 'Season Special Notification ON'], desc: 'Create a notification on Season Popup', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Options.SeaNotification);}};
+CM.ConfigData.SeaNotification = {type: 'bool', group: 'Notification', label: ['Season Special Notification OFF', 'Season Special Notification ON'], desc: 'Create a notification on Season Popup', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.SeaNotification);}};
 CM.ConfigData.SeaFlash = {type: 'bool', group: 'Notification', label: ['Season Special Flash OFF', 'Season Special Flash ON'], desc: 'Flash screen on Season Popup', toggle: true};
 CM.ConfigData.SeaSound = {type: 'bool', group: 'Notification', label: ['Season Special Sound OFF', 'Season Special Sound ON'], desc: 'Play a sound on Season Popup', toggle: true};
 CM.ConfigData.SeaVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Season Special'};
@@ -890,7 +880,7 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.GardVolume.label[i] = i + '%';
 }
 CM.ConfigData.GardSoundURL = {type: 'url', group: 'Notification', label: 'Garden Tick Sound URL:', desc: 'URL of the sound to be played when the garden ticks'};
-CM.ConfigData.MagicNotification = {type: 'bool', group: 'Notification', label: ['Magic Max Notification OFF', 'Magic Max Notification ON'], desc: 'Create a notification when magic reaches maximum', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Options.MagicNotification);}};
+CM.ConfigData.MagicNotification = {type: 'bool', group: 'Notification', label: ['Magic Max Notification OFF', 'Magic Max Notification ON'], desc: 'Create a notification when magic reaches maximum', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.MagicNotification);}};
 CM.ConfigData.MagicFlash = {type: 'bool', group: 'Notification', label: ['Magic Max Flash OFF', 'Magic Max Flash ON'], desc: 'Flash screen when magic reaches maximum', toggle: true};
 CM.ConfigData.MagicSound = {type: 'bool', group: 'Notification', label: ['Magic Max Sound OFF', 'Magic Max Sound ON'], desc: 'Play a sound when magic reaches maximum', toggle: true};
 CM.ConfigData.MagicVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Max Magic'};
@@ -898,7 +888,7 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.MagicVolume.label[i] = i + '%';
 }
 CM.ConfigData.MagicSoundURL = {type: 'url', group: 'Notification', label: 'Magic Max Sound URL:', desc: 'URL of the sound to be played when magic reaches maxium'};
-CM.ConfigData.WrinklerNotification = {type: 'bool', group: 'Notification', label: ['Wrinkler Notification OFF', 'Wrinkler Notification ON'], desc: 'Create a notification when a Wrinkler appears', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Options.WrinklerNotification);}};
+CM.ConfigData.WrinklerNotification = {type: 'bool', group: 'Notification', label: ['Wrinkler Notification OFF', 'Wrinkler Notification ON'], desc: 'Create a notification when a Wrinkler appears', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.WrinklerNotification);}};
 CM.ConfigData.WrinklerFlash = {type: 'bool', group: 'Notification', label: ['Wrinkler Flash OFF', 'Wrinkler Flash ON'], desc: 'Flash screen when a Wrinkler appears', toggle: true};
 CM.ConfigData.WrinklerSound = {type: 'bool', group: 'Notification', label: ['Wrinkler Sound OFF', 'Wrinkler Sound ON'], desc: 'Play a sound when a Wrinkler appears', toggle: true};
 CM.ConfigData.WrinklerVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Wrinkler'};
@@ -906,7 +896,7 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.WrinklerVolume.label[i] = i + '%';
 }
 CM.ConfigData.WrinklerSoundURL = {type: 'url', group: 'Notification', label: 'Wrinkler Sound URL:', desc: 'URL of the sound to be played when a Wrinkler appears'};
-CM.ConfigData.WrinklerMaxNotification = {type: 'bool', group: 'Notification', label: ['Wrinkler Max Notification OFF', 'Wrinkler Max Notification ON'], desc: 'Create a notification when the maximum amount of Wrinklers has appeared', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Options.WrinklerMaxNotification);}};
+CM.ConfigData.WrinklerMaxNotification = {type: 'bool', group: 'Notification', label: ['Wrinkler Max Notification OFF', 'Wrinkler Max Notification ON'], desc: 'Create a notification when the maximum amount of Wrinklers has appeared', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.WrinklerMaxNotification);}};
 CM.ConfigData.WrinklerMaxFlash = {type: 'bool', group: 'Notification', label: ['Wrinkler Max Flash OFF', 'Wrinkler Max Flash ON'], desc: 'Flash screen when the maximum amount of Wrinklers has appeared', toggle: true};
 CM.ConfigData.WrinklerMaxSound = {type: 'bool', group: 'Notification', label: ['Wrinkler Max Sound OFF', 'Wrinkler Max Sound ON'], desc: 'Play a sound when the maximum amount of Wrinklers has appeared', toggle: true};
 CM.ConfigData.WrinklerMaxVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Wrinkler Max'};
@@ -942,7 +932,7 @@ CM.ConfigData.ScaleSeparator = {type: 'bool', group: 'Notation', label: ['. for 
 
 /**
  * This array describes all default settings
- * It is used by CM.LoadConfig() and CM.RestoreDefault()
+ * It is used by CM.LoadConfig() and CM.Config.RestoreDefault()
  */
 CM.Data.ConfigDefault = {
 	BotBar: 1, 
@@ -1013,11 +1003,10 @@ CM.Data.ConfigDefault = {
 	Scale: 2, 
 	ScaleDecimals: 2,
 	ScaleSeparator: 0,
-	OptionsPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Notation: 1}, 
-	StatsPref: {Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
-	Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
+	Colors: {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
 	SortBuildings: 0,
-	SortUpgrades: 0
+	SortUpgrades: 0,
+	Header: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Notation: 1, Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
 };/********
  * Disp *
  ********/
@@ -2885,7 +2874,7 @@ CM.Disp.AddMenuPref = function(title) {
 	for (var group in CM.ConfigGroups) {
 		groupObject = CM.Disp.CreatePrefHeader(group, CM.ConfigGroups[group]) // (group, display-name of group)
 		frag.appendChild(groupObject)
-		if (CM.Options.OptionsPref[group]) { // 0 is show, 1 is collapsed
+		if (CM.Options.Header[group]) { // 0 is show, 1 is collapsed
 			for (var option in CM.ConfigData) {
 				if (CM.ConfigData[option].group == group) frag.appendChild(CM.Disp.CreatePrefOption(option))
 			}
@@ -2896,7 +2885,7 @@ CM.Disp.AddMenuPref = function(title) {
 	resDef.className = 'listing';
 	var resDefBut = document.createElement('a');
 	resDefBut.className = 'option';
-	resDefBut.onclick = function() {CM.RestoreDefault();};
+	resDefBut.onclick = function() {CM.Config.RestoreDefault();};
 	resDefBut.textContent = 'Restore Default';
 	resDef.appendChild(resDefBut);
 	frag.appendChild(resDef);
@@ -2929,8 +2918,8 @@ CM.Disp.CreatePrefHeader = function(config, text) {
 	span.style.color = 'black';
 	span.style.fontSize = '13px';
 	span.style.verticalAlign = 'middle';
-	span.textContent = CM.Options.OptionsPref[config] ? '-' : '+';
-	span.onclick = function() {CM.ToggleOptionsConfig(config); Game.UpdateMenu();};
+	span.textContent = CM.Options.Header[config] ? '-' : '+';
+	span.onclick = function() {CM.Config.ToggleHeader(config); Game.UpdateMenu();};
 	div.appendChild(span);
 	return div;
 }
@@ -2953,7 +2942,7 @@ CM.Disp.CreatePrefOption = function(config) {
 			a.className = 'option';
 		}
 		a.id = CM.ConfigPrefix + config;
-		a.onclick = function() {CM.ToggleConfig(config);};
+		a.onclick = function() {CM.Config.ToggleConfig(config);};
 		a.textContent = CM.ConfigData[config].label[CM.Options[config]];
 		div.appendChild(a);
 		var label = document.createElement('label');
@@ -2984,8 +2973,8 @@ CM.Disp.CreatePrefOption = function(config) {
 		slider.max = "100";
 		slider.step = "1";
 		slider.value = CM.Options[config];
-		slider.oninput = function() {CM.ToggleConfigVolume(config)};
-		slider.onchange = function() {CM.ToggleConfigVolume(config)};
+		slider.oninput = function() {CM.Config.ToggleConfigVolume(config)};
+		slider.onchange = function() {CM.Config.ToggleConfigVolume(config)};
 		volume.appendChild(slider);
 		div.appendChild(volume);
 		return div;
@@ -3013,7 +3002,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		inputPrompt.setAttribute('value', CM.Options[config]);
 		var a = document.createElement('a');
 		a.className = 'option';
-		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.SaveConfig(CM.Options); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
+		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(CM.Options); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
 		a.textContent = 'Edit';
 		div.appendChild(a);
 		var label = document.createElement('label');
@@ -3031,7 +3020,7 @@ CM.Disp.CreatePrefOption = function(config) {
 			input.style.width = '65px';
 			input.setAttribute('value', CM.Options.Colors[CM.Disp.colors[i]]);
 			div.appendChild(input);
-			eval('var change = function() {CM.Options.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.SaveConfig(CM.Options);}');
+			eval('var change = function() {CM.Options.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.Config.SaveConfig(CM.Options);}');
 			var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
 			var label = document.createElement('label');
 			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
@@ -3098,28 +3087,28 @@ CM.Disp.AddMenuStats = function(title) {
 	stats.appendChild(title());
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Lucky Cookies', 'Lucky'));
-	if (CM.Options.StatsPref.Lucky) {
+	if (CM.Options.Header.Lucky) {
 		stats.appendChild(CM.Disp.CreateStatsLuckySection());
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Chain Cookies', 'Chain'));
-	if (CM.Options.StatsPref.Chain) {
+	if (CM.Options.Header.Chain) {
 		stats.appendChild(CM.Disp.CreateStatsChainSection());
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Conjure Baked Goods', 'Conjure'));
-	if (CM.Options.StatsPref.Conjure) {
+	if (CM.Options.Header.Conjure) {
 		stats.appendChild(CM.Disp.CreateStatsConjureSection());
  	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Prestige', 'Prestige'));
-	if (CM.Options.StatsPref.Prestige) {
+	if (CM.Options.Header.Prestige) {
 		stats.appendChild(CM.Disp.CreateStatsPrestigeSection());
 	}
 
 	if (Game.cpsSucked > 0) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Wrinklers', 'Wrink'));
-		if (CM.Options.StatsPref.Wrink) {
+		if (CM.Options.Header.Wrink) {
 			var popAllFrag = document.createDocumentFragment();
 			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBankTotal) + ' / ' + Beautify(CM.Cache.WrinkBankNormal) + ' '));
 			var popAllA = document.createElement('a');
@@ -3173,7 +3162,7 @@ CM.Disp.AddMenuStats = function(title) {
 	
 	if (Game.season == 'christmas' || specDisp || choEgg || centEgg) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Season Specials', 'Sea'));
-		if (CM.Options.StatsPref.Sea) {
+		if (CM.Options.Header.Sea) {
 			if (specDisp) {
 				if (missingHalloweenCookies.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Halloween Cookies Left to Buy', CM.Disp.CreateStatsMissDisp(missingHalloweenCookies)));
 				if (missingChristmasCookies.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Christmas Cookies Left to Buy',  CM.Disp.CreateStatsMissDisp(missingChristmasCookies)));
@@ -3193,7 +3182,7 @@ CM.Disp.AddMenuStats = function(title) {
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Miscellaneous', 'Misc'));
-	if (CM.Options.StatsPref.Misc) {
+	if (CM.Options.Header.Misc) {
 		stats.appendChild(CM.Disp.CreateStatsListing("basic", 
 			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Options.AvgCPSHist] / 60) + (CM.Options.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', 
 			document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))
@@ -3250,8 +3239,8 @@ CM.Disp.CreateStatsHeader = function(text, config) {
 	span.style.color = 'black';
 	span.style.fontSize = '13px';
 	span.style.verticalAlign = 'middle';
-	span.textContent = CM.Options.StatsPref[config] ? '-' : '+';
-	span.onclick = function() {CM.ToggleStatsConfig(config); Game.UpdateMenu();};
+	span.textContent = CM.Options.Header[config] ? '-' : '+';
+	span.onclick = function() {CM.Config.ToggleHeader(config); Game.UpdateMenu();};
 	div.appendChild(span);
 	return div;
 }
@@ -3985,7 +3974,7 @@ CM.DelayInit = function() {
 	CM.ReplaceNative();
 	CM.ReplaceNativeGrimoire();
 	Game.CalculateGains();
-	CM.LoadConfig(); // Must be after all things are created!
+	CM.Config.LoadConfig(); // Must be after all things are created!
 	CM.Disp.lastAscendState = Game.OnAscend;
 	CM.Disp.lastBuyMode = Game.buyMode;
 	CM.Disp.lastBuyBulk = Game.buyBulk;
