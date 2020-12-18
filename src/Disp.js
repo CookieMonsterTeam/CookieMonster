@@ -13,11 +13,11 @@
 /**
  * This function returns the total amount stored in the Wrinkler Bank 
  * as calculated by CM.Cache.RemakeWrinkBank() if CM.Config.CalcWrink is set
- * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinkBank)
+ * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinkBankTotal)
  */
 CM.Disp.GetWrinkConfigBank = function() {
 	if (CM.Config.CalcWrink)
-		return CM.Cache.WrinkBank;
+		return CM.Cache.WrinkBankTotal;
 	else
 		return 0;
 }
@@ -2092,13 +2092,13 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Wrinklers', 'Wrink'));
 		if (CM.Config.StatsPref.Wrink) {
 			var popAllFrag = document.createDocumentFragment();
-			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBank) + ' '));
+			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBankTotal) + ' / ' + Beautify(CM.Cache.WrinkBankNormal) + ' '));
 			var popAllA = document.createElement('a');
 			popAllA.textContent = 'Pop All Normal';
 			popAllA.className = 'option';
-			popAllA.onclick = function() { CM.Disp.CollectWrinklers(); };
+			popAllA.onclick = function() { CM.Disp.PopAllNormalWrinklers(); };
 			popAllFrag.appendChild(popAllA);
-			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping',  popAllFrag));
+			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping (All/Normal)',  popAllFrag));
 		}
 	}
 
