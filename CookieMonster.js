@@ -2538,7 +2538,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 		}
 		// If only a clicking power upgrade change PP to click-based period
 		if (CM.Disp.TooltipBonusIncome == 0 && CM.Disp.TooltipBonusMouse) {	
-			l('CMTooltipPP').textContent = Beautify(CM.Disp.TooltipPrice / CM.Disp.TooltipBonusMouse) + ' clicks'
+			l('CMTooltipPP').textContent = Beautify(CM.Disp.TooltipPrice / CM.Disp.TooltipBonusMouse) + ' Clicks'
 			l('CMTooltipPP').style.color = "white";
 		}
 		else {
