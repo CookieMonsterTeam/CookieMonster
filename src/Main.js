@@ -126,7 +126,7 @@ CM.ReplaceNativeGrimoireDraw = function() {
 		CM.Backup.GrimoireDraw = minigame.draw;
 		Game.Objects['Wizard tower'].minigame.draw = function() {
 			CM.Backup.GrimoireDraw();
-			if (CM.Config.GrimoireBar == 1 && minigame.magic < minigame.magicM) {
+			if (CM.Options.GrimoireBar == 1 && minigame.magic < minigame.magicM) {
 				minigame.magicBarTextL.innerHTML += ' (' + CM.Disp.FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM)) + ')';
 			}
 		}
@@ -246,7 +246,7 @@ CM.DelayInit = function() {
 	CM.ReplaceNative();
 	CM.ReplaceNativeGrimoire();
 	Game.CalculateGains();
-	CM.LoadConfig(); // Must be after all things are created!
+	CM.Config.LoadConfig(); // Must be after all things are created!
 	CM.Disp.lastAscendState = Game.OnAscend;
 	CM.Disp.lastBuyMode = Game.buyMode;
 	CM.Disp.lastBuyBulk = Game.buyBulk;
@@ -314,7 +314,7 @@ CM.Main.CheckGoldenCookie = function() {
 		if (CM.Main.lastGoldenCookieState) {
 			if (CM.Main.lastSpawnedGoldenCookieState < CM.Main.currSpawnedGoldenCookieState) {
 				CM.Disp.Flash(3, 'GCFlash');
-				CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
+				CM.Disp.PlaySound(CM.Options.GCSoundURL, 'GCSound', 'GCVolume');
 				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
 			}
 			
@@ -328,7 +328,7 @@ CM.Main.CheckGoldenCookie = function() {
 		CM.Main.lastSpawnedGoldenCookieState = CM.Main.currSpawnedGoldenCookieState;
 		if (CM.Main.currSpawnedGoldenCookieState == 0) CM.Cache.spawnedGoldenShimmer = 0;
 	}
-	else if (CM.Config.GCTimer == 1 && CM.Main.lastGoldenCookieState) {
+	else if (CM.Options.GCTimer == 1 && CM.Main.lastGoldenCookieState) {
 		for (var i in CM.Disp.GCTimers) {
 			CM.Disp.GCTimers[i].style.opacity = CM.Cache.goldenShimmersByID[i].l.style.opacity;
 			CM.Disp.GCTimers[i].style.transform = CM.Cache.goldenShimmersByID[i].l.style.transform;
@@ -351,7 +351,7 @@ CM.Main.CheckSeasonPopup = function() {
 			}
 		}
 		CM.Disp.Flash(3, 'SeaFlash');
-		CM.Disp.PlaySound(CM.Config.SeaSoundURL, 'SeaSound', 'SeaVolume');
+		CM.Disp.PlaySound(CM.Options.SeaSoundURL, 'SeaSound', 'SeaVolume');
 		CM.Disp.Notification('SeaNotification',"Reindeer sighted!", "A Reindeer has spawned. Click it now!")
 	}
 }
@@ -365,7 +365,7 @@ CM.Main.CheckTickerFortune = function() {
 		CM.Main.lastTickerFortuneState = (Game.TickerEffect && Game.TickerEffect.type == 'fortune');
 		if (CM.Main.lastTickerFortuneState) {
 			CM.Disp.Flash(3, 'FortuneFlash');
-			CM.Disp.PlaySound(CM.Config.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
+			CM.Disp.PlaySound(CM.Options.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
 			CM.Disp.Notification('FortuneNotification', "Fortune Cookie found", "A Fortune Cookie has appeared on the Ticker.")
 		}
 	}
@@ -379,7 +379,7 @@ CM.Main.CheckGardenTick = function() {
 	if (Game.Objects['Farm'].minigameLoaded && CM.Main.lastGardenNextStep != Game.Objects['Farm'].minigame.nextStep) {
 		if (CM.Main.lastGardenNextStep != 0 && CM.Main.lastGardenNextStep < Date.now()) {
 			CM.Disp.Flash(3, 'GardFlash');
-			CM.Disp.PlaySound(CM.Config.GardSoundURL, 'GardSound', 'GardVolume');
+			CM.Disp.PlaySound(CM.Options.GardSoundURL, 'GardSound', 'GardVolume');
 		}
 		CM.Main.lastGardenNextStep = Game.Objects['Farm'].minigame.nextStep;
 	}
@@ -390,13 +390,13 @@ CM.Main.CheckGardenTick = function() {
  * It is called by CM.Loop
  */
 CM.Main.CheckMagicMeter = function() {
-	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Config.GrimoireBar == 1) {
+	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Options.GrimoireBar == 1) {
 		var minigame = Game.Objects['Wizard tower'].minigame;
 		if (minigame.magic < minigame.magicM) CM.Main.lastMagicBarFull = false;
 		else if (!CM.Main.lastMagicBarFull) {
 			CM.Main.lastMagicBarFull = true;
 			CM.Disp.Flash(3, 'MagicFlash');
-			CM.Disp.PlaySound(CM.Config.MagicSoundURL, 'MagicSound', 'MagicVolume');
+			CM.Disp.PlaySound(CM.Options.MagicSoundURL, 'MagicSound', 'MagicVolume');
 			CM.Disp.Notification('MagicNotification', "Magic Meter full", "Your Magic Meter is full. Cast a spell!")
 		}
 	}
@@ -414,17 +414,17 @@ CM.Main.CheckWrinklerCount = function() {
 		}
 		if (CurrentWrinklers > CM.Main.lastWrinklerCount) {
 			CM.Main.lastWrinklerCount = CurrentWrinklers
-			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxFlash) {
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Options.WrinklerMaxFlash) {
 				CM.Disp.Flash(3, 'WrinklerMaxFlash');
 			} else {
 				CM.Disp.Flash(3, 'WrinklerFlash');
 			}
-			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxSound) {
-				CM.Disp.PlaySound(CM.Config.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume');
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Options.WrinklerMaxSound) {
+				CM.Disp.PlaySound(CM.Options.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume');
 			} else {
-				CM.Disp.PlaySound(CM.Config.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume');
+				CM.Disp.PlaySound(CM.Options.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume');
 			}
-			if (CurrentWrinklers == Game.getWrinklersMax() &&  CM.Config.WrinklerMaxNotification) {
+			if (CurrentWrinklers == Game.getWrinklersMax() &&  CM.Options.WrinklerMaxNotification) {
 				CM.Disp.Notification('WrinklerMaxNotification', "Maximum Wrinklers Reached", "You have reached your maximum ammount of wrinklers")
 			} else {
 				CM.Disp.Notification('WrinklerNotification', "A Wrinkler appeared", "A new wrinkler has appeared")
@@ -461,7 +461,7 @@ CM.Main.AddWrinklerAreaDetect = function() {
  * before execution of their actual function
  */
 CM.Main.FixMouseY = function(target) {
-	if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+	if (CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 0) {
 		var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
 		Game.mouseY -= timerBarHeight;
 		target();

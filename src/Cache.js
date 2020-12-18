@@ -86,7 +86,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 	CM.Cache.max = -1;
 	CM.Cache.mid = -1;
 	// Calculate PP and colors when compared to purchase of single optimal building
-	if (CM.Config.ColorPPBulkMode == 0) {
+	if (CM.Options.ColorPPBulkMode == 0) {
 		for (var i in CM.Cache.Objects) {
 			//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
 			if (Game.cookiesPs) {
@@ -419,7 +419,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		var sortedGainWrink = new Array();
 		var sortedGainChoEgg = new Array();
 
-		var cpsLength = Math.min(CM.Cache.CookiesDiff.getLength(), CM.Disp.cookieTimes[CM.Config.AvgCPSHist]);
+		var cpsLength = Math.min(CM.Cache.CookiesDiff.getLength(), CM.Disp.cookieTimes[CM.Options.AvgCPSHist]);
 
 		// Assumes the queues are the same length
 		for (var i = CM.Cache.CookiesDiff.getLength() - cpsLength; i < CM.Cache.CookiesDiff.getLength(); i++) {
@@ -453,11 +453,11 @@ CM.Cache.UpdateAvgCPS = function() {
 			totalGainWrink += sortedGainWrink[i];
 			totalGainChoEgg += sortedGainChoEgg[i];
 		}
-		CM.Cache.AvgCPS = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0)) / sortedGainBank.length;
+		CM.Cache.AvgCPS = (totalGainBank + (CM.Options.CalcWrink ? totalGainWrink : 0)) / sortedGainBank.length;
 
 		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 
-		if (choEgg || CM.Config.CalcWrink == 0) {
+		if (choEgg || CM.Options.CalcWrink == 0) {
 			CM.Cache.AvgCPSChoEgg = (totalGainBank + totalGainWrink + (choEgg ? totalGainChoEgg : 0)) / sortedGainBank.length;
 		}
 		else {
@@ -465,7 +465,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		}
 
 		var totalClicks = 0;
-		var clicksLength = Math.min(CM.Cache.ClicksDiff.getLength(), CM.Disp.clickTimes[CM.Config.AvgClicksHist]);
+		var clicksLength = Math.min(CM.Cache.ClicksDiff.getLength(), CM.Disp.clickTimes[CM.Options.AvgClicksHist]);
 		for (var i = CM.Cache.ClicksDiff.getLength() - clicksLength; i < CM.Cache.ClicksDiff.getLength(); i++) {
 			totalClicks += CM.Cache.ClicksDiff.get(i);
 		}
@@ -549,3 +549,4 @@ CM.Cache.spawnedGoldenShimmer = 0;
  */
 CM.Cache.dragonAura = 0;
 CM.Cache.dragonAura2 = 0;
+

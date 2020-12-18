@@ -18,6 +18,8 @@ RunCookieMonsterHeader = function() {
 
     CM.Main = {};
 
+    CM.Options = {};
+
     CM.Sim = {};
 }
 

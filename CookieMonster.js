@@ -18,6 +18,8 @@ RunCookieMonsterHeader = function() {
 
     CM.Main = {};
 
+    CM.Options = {};
+
     CM.Sim = {};
 }
 
@@ -113,7 +115,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 	CM.Cache.max = -1;
 	CM.Cache.mid = -1;
 	// Calculate PP and colors when compared to purchase of single optimal building
-	if (CM.Config.ColorPPBulkMode == 0) {
+	if (CM.Options.ColorPPBulkMode == 0) {
 		for (var i in CM.Cache.Objects) {
 			//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
 			if (Game.cookiesPs) {
@@ -446,7 +448,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		var sortedGainWrink = new Array();
 		var sortedGainChoEgg = new Array();
 
-		var cpsLength = Math.min(CM.Cache.CookiesDiff.getLength(), CM.Disp.cookieTimes[CM.Config.AvgCPSHist]);
+		var cpsLength = Math.min(CM.Cache.CookiesDiff.getLength(), CM.Disp.cookieTimes[CM.Options.AvgCPSHist]);
 
 		// Assumes the queues are the same length
 		for (var i = CM.Cache.CookiesDiff.getLength() - cpsLength; i < CM.Cache.CookiesDiff.getLength(); i++) {
@@ -480,11 +482,11 @@ CM.Cache.UpdateAvgCPS = function() {
 			totalGainWrink += sortedGainWrink[i];
 			totalGainChoEgg += sortedGainChoEgg[i];
 		}
-		CM.Cache.AvgCPS = (totalGainBank + (CM.Config.CalcWrink ? totalGainWrink : 0)) / sortedGainBank.length;
+		CM.Cache.AvgCPS = (totalGainBank + (CM.Options.CalcWrink ? totalGainWrink : 0)) / sortedGainBank.length;
 
 		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 
-		if (choEgg || CM.Config.CalcWrink == 0) {
+		if (choEgg || CM.Options.CalcWrink == 0) {
 			CM.Cache.AvgCPSChoEgg = (totalGainBank + totalGainWrink + (choEgg ? totalGainChoEgg : 0)) / sortedGainBank.length;
 		}
 		else {
@@ -492,7 +494,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		}
 
 		var totalClicks = 0;
-		var clicksLength = Math.min(CM.Cache.ClicksDiff.getLength(), CM.Disp.clickTimes[CM.Config.AvgClicksHist]);
+		var clicksLength = Math.min(CM.Cache.ClicksDiff.getLength(), CM.Disp.clickTimes[CM.Options.AvgClicksHist]);
 		for (var i = CM.Cache.ClicksDiff.getLength() - clicksLength; i < CM.Cache.ClicksDiff.getLength(); i++) {
 			totalClicks += CM.Cache.ClicksDiff.get(i);
 		}
@@ -575,148 +577,154 @@ CM.Cache.spawnedGoldenShimmer = 0;
  * This variables are used by CM.Cache.CacheDragonAuras(), naming follows naming in Game
  */
 CM.Cache.dragonAura = 0;
-CM.Cache.dragonAura2 = 0;/**********
+CM.Cache.dragonAura2 = 0;
+
+/**********
  * Config *
  **********/
 
-CM.SaveConfig = function(config) {
+/********
+ * Section: Functions related to saving, loading and restoring configs */
+
+/**
+ * This function saves the config of CookieMonster to localStorage
+ * It is called by CM.Config.LoadConfig(), CM.Config.RestoreDefault(), CM.Config.ToggleConfig(), 
+ * CM.ToggleConfigVolume() and changes in options with type "url" or "color"
+ * @param 	{object}	config	The Config to be saved (normally CM.Options)
+ */
+CM.Config.SaveConfig = function(config) {
 	localStorage.setItem(CM.ConfigPrefix, JSON.stringify(config));
 }
 
-CM.LoadConfig = function() {
+/**
+ * This function loads the config of CookieMonster saved in localStorage and loads it into CM.Options
+ * It is called by CM.DelayInit() and CM.Config.RestoreDefault()
+ */
+CM.Config.LoadConfig = function() {
 	if (localStorage.getItem(CM.ConfigPrefix) != null) {
-		CM.Config = JSON.parse(localStorage.getItem(CM.ConfigPrefix));
+		CM.Options = JSON.parse(localStorage.getItem(CM.ConfigPrefix));
 
 		// Check values
 		var mod = false;
 		for (var i in CM.Data.ConfigDefault) {
-			if (typeof CM.Config[i] === 'undefined') {
+			if (typeof CM.Options[i] === 'undefined') {
 				mod = true;
-				CM.Config[i] = CM.Data.ConfigDefault[i];
+				CM.Options[i] = CM.Data.ConfigDefault[i];
 			}
-			else if (i != 'StatsPref' && i != 'Colors') {
+			else if (i != 'Header' && i != 'Colors') {
 				if (i.indexOf('SoundURL') == -1) {
-					if (!(CM.Config[i] > -1 && CM.Config[i] < CM.ConfigData[i].label.length)) {
+					if (!(CM.Options[i] > -1 && CM.Options[i] < CM.ConfigData[i].label.length)) {
 						mod = true;
-						CM.Config[i] = CM.Data.ConfigDefault[i];
+						CM.Options[i] = CM.Data.ConfigDefault[i];
 					}
 				}
 				else {  // Sound URLs
-					if (typeof CM.Config[i] != 'string') {
+					if (typeof CM.Options[i] != 'string') {
 						mod = true;
-						CM.Config[i] = CM.Data.ConfigDefault[i];
+						CM.Options[i] = CM.Data.ConfigDefault[i];
 					}
 				}
 			}
-			else if (i == 'StatsPref') {
-				for (var j in CM.Data.ConfigDefault.StatsPref) {
-					if (typeof CM.Config[i][j] === 'undefined' || !(CM.Config[i][j] > -1 && CM.Config[i][j] < 2)) {
+			else if (i == 'Header') {
+				for (var j in CM.Data.ConfigDefault.Header) {
+					if (typeof CM.Options[i][j] === 'undefined' || !(CM.Options[i][j] > -1 && CM.Options[i][j] < 2)) {
 						mod = true;
-						CM.Config[i][j] = CM.Data.ConfigDefault[i][j];
+						CM.Options[i][j] = CM.Data.ConfigDefault[i][j];
 					}
 				}
 			}
 			else { // Colors
 				for (var j in CM.Data.ConfigDefault.Colors) {
-					if (typeof CM.Config[i][j] === 'undefined' || typeof CM.Config[i][j] != 'string') {
+					if (typeof CM.Options[i][j] === 'undefined' || typeof CM.Options[i][j] != 'string') {
 						mod = true;
-						CM.Config[i][j] = CM.Data.ConfigDefault[i][j];
+						CM.Options[i][j] = CM.Data.ConfigDefault[i][j];
 					}
 				}
 			}
 		}
-		if (mod) CM.SaveConfig(CM.Config);
+		if (mod) CM.Config.SaveConfig(CM.Options);
 		CM.Loop(); // Do loop once
 		for (var i in CM.Data.ConfigDefault) {
-			if (i != 'StatsPref' && i != 'OptionsPref' && typeof CM.ConfigData[i].func !== 'undefined') {
+			if (i != 'Header' && typeof CM.ConfigData[i].func !== 'undefined') {
 				CM.ConfigData[i].func();
 			}
 		}
 	}
 	else { // Default values
-		CM.RestoreDefault();
+		CM.Config.RestoreDefault();
 	}
 }
 
-CM.RestoreDefault = function() {
-	CM.Config = {};
-	CM.SaveConfig(CM.Data.ConfigDefault);
-	CM.LoadConfig();
+/**
+ * This function reloads and resaves the default config as stored in CM.Data.ConfigDefault
+ * It is called by resDefBut.onclick loaded in the options page or by CM.Config.LoadConfig if no localStorage is found
+ */
+CM.Config.RestoreDefault = function() {
+	CM.Options = {};
+	CM.Config.SaveConfig(CM.Data.ConfigDefault);
+	CM.Config.LoadConfig();
 	Game.UpdateMenu();
 }
 
-CM.ToggleConfig = function(config) {
-	CM.ToggleConfigUp(config);
-	if (CM.ConfigData[config].toggle) {
-		if (CM.Config[config] == 0) {
-			l(CM.ConfigPrefix + config).className = 'option off';
-		}
-		else {
-			l(CM.ConfigPrefix + config).className = 'option';
-		}
-	}
-}
+/********
+ * Section: Functions related to toggling or changing configs */
 
-CM.ToggleConfigUp = function(config) {
-	CM.Config[config]++;
-	if (CM.Config[config] == CM.ConfigData[config].label.length) {
-		CM.Config[config] = 0;
+/**
+ * This function toggles options by incrementing them with 1 and handling changes
+ * It is called by the onclick event of options of the "bool" type
+ * @param 	{string}	config	The name of the option
+ */
+CM.Config.ToggleConfig = function(config) {
+	CM.Options[config]++;
+
+	if (CM.Options[config] == CM.ConfigData[config].label.length) {
+		CM.Options[config] = 0;
+		if (CM.ConfigData[config].toggle) l(CM.ConfigPrefix + config).className = 'option off';
 	}
+	else l(CM.ConfigPrefix + config).className = 'option';
+
 	if (typeof CM.ConfigData[config].func !== 'undefined') {
 		CM.ConfigData[config].func();
 	}
-	l(CM.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Config[config]];
-	CM.SaveConfig(CM.Config);
-}
 
-CM.ToggleConfigDown = function(config) {
-	CM.Config[config]--;
-	if (CM.Config[config] < 0) {
-		CM.Config[config] = CM.ConfigData[config].label.length - 1;
-	}
-	if (typeof CM.ConfigData[config].func !== 'undefined') {
-		CM.ConfigData[config].func();
-	}
-	l(CM.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Config[config]];
-	CM.SaveConfig(CM.Config);
+	l(CM.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Options[config]];
+	CM.Config.SaveConfig(CM.Options);
 }
 
 /**
  * This function sets the value of the specified volume-option and updates the display in the options menu
- * It is called by CM.Disp.CreatePrefOption()
- * @param 	{string}		config	The name of the option
+ * It is called by the oninput and onchange event of "vol" type options
+ * @param 	{string}	config	The name of the option
  */
-CM.ToggleConfigVolume = function(config) {
+CM.Config.ToggleConfigVolume = function(config) {
 	if (l("slider" + config) != null) {
 		l("slider" + config + "right").innerHTML = l("slider" + config).value + "%";
-		CM.Config[config] = Math.round(l("slider" + config).value);
+		CM.Options[config] = Math.round(l("slider" + config).value);
 	} 
-	CM.SaveConfig(CM.Config);
+	CM.Config.SaveConfig(CM.Options);
 }
 
-CM.ToggleStatsConfig = function(config) {
-	if (CM.Config.StatsPref[config] == 0) {
-		CM.Config.StatsPref[config]++;
-	}
-	else {
-		CM.Config.StatsPref[config]--;
-	}
-	CM.SaveConfig(CM.Config);
+/**
+ * This function toggles header options by incrementing them with 1 and handling changes
+ * It is called by the onclick event of the +/- next to headers
+ * @param 	{string}	config	The name of the header
+ */
+CM.Config.ToggleHeader = function(config) {
+	CM.Options.Header[config]++;
+	if (CM.Options.Header[config] > 1) CM.Options.Header[config] = 0;
+	CM.Config.SaveConfig(CM.Options);
 }
 
-CM.ToggleOptionsConfig = function(config) {
-	if (CM.Config.OptionsPref[config] == 0) {
-		CM.Config.OptionsPref[config]++;
-	}
-	else {
-		CM.Config.OptionsPref[config]--;
-	}
-	CM.SaveConfig(CM.Config);
-}
+/********
+ * Section: Functions related to notifications */
 
-// Checks if the browsers has permissions to produce notifications
-// Should be triggered when Config related to Notifications is toggled on
-CM.CheckNotificationPermissions = function(ToggleOnOff) {
+/**
+ * This function checks if the user has given permissions for notifications
+ * It is called by a change in any of the notification options
+ * Note that most browsers will stop asking if the user has ignored the prompt around 6 times
+ * @param 	{number}	ToggleOnOff		A number indicating whether the option has been turned off (0) or on (1)
+ */
+CM.Config.CheckNotificationPermissions = function(ToggleOnOff) {
 	if (ToggleOnOff == 1)	{
 		// Check if browser support Promise version of Notification Permissions
 		function checkNotificationPromise() {
@@ -839,7 +847,7 @@ CM.ConfigData.AvgClicksHist = {type: 'bool', group: 'Calculation', label: ['Aver
 CM.ConfigData.ToolWarnBon = {type: 'bool', group: 'Calculation', label: ['Calculate Tooltip Warning With Bonus CPS OFF', 'Calculate Tooltip Warning With Bonus CPS ON'], desc: 'Calculate the warning with or without the bonus CPS you get from buying', toggle: true};
 
 // Notification
-CM.ConfigData.GCNotification = {type: 'bool', group: 'Notification', label: ['Golden Cookie Notification OFF', 'Golden Cookie Notification ON'], desc: 'Create a notification when Golden Cookie spawns', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.GCNotification);}};
+CM.ConfigData.GCNotification = {type: 'bool', group: 'Notification', label: ['Golden Cookie Notification OFF', 'Golden Cookie Notification ON'], desc: 'Create a notification when Golden Cookie spawns', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.GCNotification);}};
 CM.ConfigData.GCFlash = {type: 'bool', group: 'Notification', label: ['Golden Cookie Flash OFF', 'Golden Cookie Flash ON'], desc: 'Flash screen on Golden Cookie', toggle: true};
 CM.ConfigData.GCSound = {type: 'bool', group: 'Notification', label: ['Golden Cookie Sound OFF', 'Golden Cookie Sound ON'], desc: 'Play a sound on Golden Cookie', toggle: true};
 CM.ConfigData.GCVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Golden Cookie'};
@@ -849,7 +857,7 @@ for (var i = 0; i < 101; i++) {
 CM.ConfigData.GCSoundURL = {type: 'url', group: 'Notification', label: 'Golden Cookie Sound URL:', desc: 'URL of the sound to be played when a Golden Cookie spawns'};
 CM.ConfigData.GCTimer = {type: 'bool', group: 'Notification', label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', toggle: true, func: function() {CM.Disp.ToggleGCTimer();}};
 CM.ConfigData.Favicon = {type: 'bool', group: 'Notification', label: ['Favicon OFF', 'Favicon ON'], desc: 'Update favicon with Golden/Wrath Cookie', toggle: true, func: function() {CM.Disp.UpdateFavicon();}};
-CM.ConfigData.FortuneNotification = {type: 'bool', group: 'Notification', label: ['Fortune Cookie Notification OFF', 'Fortune Cookie Notification ON'], desc: 'Create a notification when Fortune Cookie is on the Ticker', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.FortuneNotification);}};
+CM.ConfigData.FortuneNotification = {type: 'bool', group: 'Notification', label: ['Fortune Cookie Notification OFF', 'Fortune Cookie Notification ON'], desc: 'Create a notification when Fortune Cookie is on the Ticker', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.FortuneNotification);}};
 CM.ConfigData.FortuneFlash = {type: 'bool', group: 'Notification', label: ['Fortune Cookie Flash OFF', 'Fortune Cookie Flash ON'], desc: 'Flash screen on Fortune Cookie', toggle: true};
 CM.ConfigData.FortuneSound = {type: 'bool', group: 'Notification', label: ['Fortune Cookie Sound OFF', 'Fortune Cookie Sound ON'], desc: 'Play a sound on Fortune Cookie', toggle: true};
 CM.ConfigData.FortuneVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Fortune Cookie'};
@@ -857,7 +865,7 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.FortuneVolume.label[i] = i + '%';
 }
 CM.ConfigData.FortuneSoundURL = {type: 'url', group: 'Notification', label: 'Fortune Cookie Sound URL:', desc: 'URL of the sound to be played when the Ticker has a Fortune Cookie'};
-CM.ConfigData.SeaNotification = {type: 'bool', group: 'Notification', label: ['Season Special Notification OFF', 'Season Special Notification ON'], desc: 'Create a notification on Season Popup', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.SeaNotification);}};
+CM.ConfigData.SeaNotification = {type: 'bool', group: 'Notification', label: ['Season Special Notification OFF', 'Season Special Notification ON'], desc: 'Create a notification on Season Popup', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.SeaNotification);}};
 CM.ConfigData.SeaFlash = {type: 'bool', group: 'Notification', label: ['Season Special Flash OFF', 'Season Special Flash ON'], desc: 'Flash screen on Season Popup', toggle: true};
 CM.ConfigData.SeaSound = {type: 'bool', group: 'Notification', label: ['Season Special Sound OFF', 'Season Special Sound ON'], desc: 'Play a sound on Season Popup', toggle: true};
 CM.ConfigData.SeaVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Season Special'};
@@ -872,7 +880,7 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.GardVolume.label[i] = i + '%';
 }
 CM.ConfigData.GardSoundURL = {type: 'url', group: 'Notification', label: 'Garden Tick Sound URL:', desc: 'URL of the sound to be played when the garden ticks'};
-CM.ConfigData.MagicNotification = {type: 'bool', group: 'Notification', label: ['Magic Max Notification OFF', 'Magic Max Notification ON'], desc: 'Create a notification when magic reaches maximum', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.MagicNotification);}};
+CM.ConfigData.MagicNotification = {type: 'bool', group: 'Notification', label: ['Magic Max Notification OFF', 'Magic Max Notification ON'], desc: 'Create a notification when magic reaches maximum', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.MagicNotification);}};
 CM.ConfigData.MagicFlash = {type: 'bool', group: 'Notification', label: ['Magic Max Flash OFF', 'Magic Max Flash ON'], desc: 'Flash screen when magic reaches maximum', toggle: true};
 CM.ConfigData.MagicSound = {type: 'bool', group: 'Notification', label: ['Magic Max Sound OFF', 'Magic Max Sound ON'], desc: 'Play a sound when magic reaches maximum', toggle: true};
 CM.ConfigData.MagicVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Max Magic'};
@@ -880,7 +888,7 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.MagicVolume.label[i] = i + '%';
 }
 CM.ConfigData.MagicSoundURL = {type: 'url', group: 'Notification', label: 'Magic Max Sound URL:', desc: 'URL of the sound to be played when magic reaches maxium'};
-CM.ConfigData.WrinklerNotification = {type: 'bool', group: 'Notification', label: ['Wrinkler Notification OFF', 'Wrinkler Notification ON'], desc: 'Create a notification when a Wrinkler appears', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.WrinklerNotification);}};
+CM.ConfigData.WrinklerNotification = {type: 'bool', group: 'Notification', label: ['Wrinkler Notification OFF', 'Wrinkler Notification ON'], desc: 'Create a notification when a Wrinkler appears', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.WrinklerNotification);}};
 CM.ConfigData.WrinklerFlash = {type: 'bool', group: 'Notification', label: ['Wrinkler Flash OFF', 'Wrinkler Flash ON'], desc: 'Flash screen when a Wrinkler appears', toggle: true};
 CM.ConfigData.WrinklerSound = {type: 'bool', group: 'Notification', label: ['Wrinkler Sound OFF', 'Wrinkler Sound ON'], desc: 'Play a sound when a Wrinkler appears', toggle: true};
 CM.ConfigData.WrinklerVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Wrinkler'};
@@ -888,7 +896,7 @@ for (var i = 0; i < 101; i++) {
 	CM.ConfigData.WrinklerVolume.label[i] = i + '%';
 }
 CM.ConfigData.WrinklerSoundURL = {type: 'url', group: 'Notification', label: 'Wrinkler Sound URL:', desc: 'URL of the sound to be played when a Wrinkler appears'};
-CM.ConfigData.WrinklerMaxNotification = {type: 'bool', group: 'Notification', label: ['Wrinkler Max Notification OFF', 'Wrinkler Max Notification ON'], desc: 'Create a notification when the maximum amount of Wrinklers has appeared', toggle: true, func: function () {CM.CheckNotificationPermissions(CM.Config.WrinklerMaxNotification);}};
+CM.ConfigData.WrinklerMaxNotification = {type: 'bool', group: 'Notification', label: ['Wrinkler Max Notification OFF', 'Wrinkler Max Notification ON'], desc: 'Create a notification when the maximum amount of Wrinklers has appeared', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.WrinklerMaxNotification);}};
 CM.ConfigData.WrinklerMaxFlash = {type: 'bool', group: 'Notification', label: ['Wrinkler Max Flash OFF', 'Wrinkler Max Flash ON'], desc: 'Flash screen when the maximum amount of Wrinklers has appeared', toggle: true};
 CM.ConfigData.WrinklerMaxSound = {type: 'bool', group: 'Notification', label: ['Wrinkler Max Sound OFF', 'Wrinkler Max Sound ON'], desc: 'Play a sound when the maximum amount of Wrinklers has appeared', toggle: true};
 CM.ConfigData.WrinklerMaxVolume = {type: 'vol', group: 'Notification', label: [], desc: 'Volume of Wrinkler Max'};
@@ -924,7 +932,7 @@ CM.ConfigData.ScaleSeparator = {type: 'bool', group: 'Notation', label: ['. for 
 
 /**
  * This array describes all default settings
- * It is used by CM.LoadConfig() and CM.RestoreDefault()
+ * It is used by CM.LoadConfig() and CM.Config.RestoreDefault()
  */
 CM.Data.ConfigDefault = {
 	BotBar: 1, 
@@ -995,11 +1003,10 @@ CM.Data.ConfigDefault = {
 	Scale: 2, 
 	ScaleDecimals: 2,
 	ScaleSeparator: 0,
-	OptionsPref: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Notation: 1}, 
-	StatsPref: {Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1}, 
-	Colors : {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
+	Colors: {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
 	SortBuildings: 0,
-	SortUpgrades: 0
+	SortUpgrades: 0,
+	Header: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Notation: 1, Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
 };/********
  * Disp *
  ********/
@@ -1014,11 +1021,11 @@ CM.Data.ConfigDefault = {
 
 /**
  * This function returns the total amount stored in the Wrinkler Bank 
- * as calculated by CM.Cache.RemakeWrinkBank() if CM.Config.CalcWrink is set
+ * as calculated by CM.Cache.RemakeWrinkBank() if CM.Options.CalcWrink is set
  * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinkBankTotal)
  */
 CM.Disp.GetWrinkConfigBank = function() {
-	if (CM.Config.CalcWrink)
+	if (CM.Options.CalcWrink)
 		return CM.Cache.WrinkBankTotal;
 	else
 		return 0;
@@ -1037,11 +1044,11 @@ CM.Disp.PopAllNormalWrinklers = function() {
 }
 
 /**
- * This function returns the cps as either current or average CPS depending on CM.Config.CPSMode
+ * This function returns the cps as either current or average CPS depending on CM.Options.CPSMode
  * @returns	{number}	The average or current cps
  */
 CM.Disp.GetCPS = function() {
-	if (CM.Config.CPSMode)
+	if (CM.Options.CPSMode)
 		return CM.Cache.AvgCPS;
 	else
 		return (Game.cookiesPs * (1 - Game.cpsSucked));
@@ -1123,7 +1130,7 @@ CM.Disp.FormatTime = function(time, longFormat) {
 	var m = Math.floor(time % 3600 / 60);
 	var s = Math.floor(time % 60);
 	var str = '';
-	if (CM.Config.TimeFormat) {
+	if (CM.Options.TimeFormat) {
 		if (time > 3155760000) return 'XX:XX:XX:XX:XX';
 		str += (y < 10 ? '0' : '') + y + ':';
 		str += (d < 10 ? '0' : '') + d + ':';
@@ -1149,7 +1156,7 @@ CM.Disp.GetTimeColor = function(time) {
 	var color;
 	var text;
 	if (time < 0) {
-		if (CM.Config.TimeFormat) text = '00:00:00:00:00';
+		if (CM.Options.TimeFormat) text = '00:00:00:00:00';
 		else text = 'Done!';
 		color = CM.Disp.colorGreen;
 	} 
@@ -1170,8 +1177,8 @@ CM.Disp.GetTimeColor = function(time) {
  * @returns	{string}			Formatted number
  */
 CM.Disp.Beautify = function(num, frac, forced) {
-	var decimals = CM.Config.ScaleDecimals + 1;
-	if (CM.Config.Scale == 0) {
+	var decimals = CM.Options.ScaleDecimals + 1;
+	if (CM.Options.Scale == 0) {
 		return CM.Backup.Beautify(num, frac);
 	}
 	else if (isFinite(num)) {
@@ -1189,8 +1196,8 @@ CM.Disp.Beautify = function(num, frac, forced) {
 			// TODO: Add changing separators of thousands and making this cut-off user configurable
 			answer = Math.round(num * 100) / 100;
 		}
-		else if (CM.Config.Scale == 3 && !forced || forced == 3) { // Scientific notation, 123456789 => 1.235E+8
-			answer = num[0] + (CM.Config.ScaleSeparator ? ',' : '.');
+		else if (CM.Options.Scale == 3 && !forced || forced == 3) { // Scientific notation, 123456789 => 1.235E+8
+			answer = num[0] + (CM.Options.ScaleSeparator ? ',' : '.');
 			i = 0;
 			while (i < decimals - 1) {
 				answer += num[i + 2]; // num has a 0-based index and [1] is a '.'
@@ -1215,13 +1222,13 @@ CM.Disp.Beautify = function(num, frac, forced) {
 			numbersToAdd = (restOfNumber.indexOf('.') > -1 ? restOfNumber.indexOf('.') + 1 + decimals : (restOfNumber.length))
 			i = 0
 			while (i < numbersToAdd - 1 && i < restOfNumber.length - 1) {
-				answer += (CM.Config.ScaleSeparator && restOfNumber[i] == '.' ? ',' : restOfNumber[i]);
+				answer += (CM.Options.ScaleSeparator && restOfNumber[i] == '.' ? ',' : restOfNumber[i]);
 				i++
 			}
 			answer += (i + 1 < restOfNumber.length ? Math.round(restOfNumber[i] + '.' + restOfNumber[i + 1]) : restOfNumber[i]);
 
 			// answer is now "xxx.xx" (e.g., 123456789 would be 123.46)
-			if (CM.Config.Scale == 1 && !forced || forced == 1) { // Metric scale, 123456789 => 123.457 M
+			if (CM.Options.Scale == 1 && !forced || forced == 1) { // Metric scale, 123456789 => 123.457 M
 				if (timesTenToPowerThree - 1 < CM.Data.metric.length) {
 					answer += ' ' + CM.Data.metric[timesTenToPowerThree - 1]
 				}
@@ -1229,7 +1236,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 					return CM.Disp.Beautify(num, 0, 3);	
 				}
 			}
-			else if (CM.Config.Scale == 2 && !forced || forced == 2) { // Short scale, 123456789 => 123.457 M
+			else if (CM.Options.Scale == 2 && !forced || forced == 2) { // Short scale, 123456789 => 123.457 M
 				if (timesTenToPowerThree < CM.Data.shortScale.length + 1) {
 					answer += ' ' + CM.Data.shortScale[timesTenToPowerThree - 1];
 				}
@@ -1237,7 +1244,7 @@ CM.Disp.Beautify = function(num, frac, forced) {
 					return CM.Disp.Beautify(num, 0, 3);
 				}
 			}
-			else if (CM.Config.Scale == 4 && !forced || forced == 4) { // Engineering notation, 123456789 => 123.457E+6
+			else if (CM.Options.Scale == 4 && !forced || forced == 4) { // Engineering notation, 123456789 => 123.457E+6
 				answer += 'E+' + (timesTenToPowerThree * 3);
 			}
 		}
@@ -1267,8 +1274,8 @@ CM.Disp.Beautify = function(num, frac, forced) {
 CM.Disp.UpdateAscendState = function() {
 	if (Game.OnAscend) {
 		l('game').style.bottom = '0px';
-		if (CM.Config.BotBar == 1) CM.Disp.BotBar.style.display = 'none';
-		if (CM.Config.TimerBar == 1) CM.Disp.TimerBar.style.display = 'none';
+		if (CM.Options.BotBar == 1) CM.Disp.BotBar.style.display = 'none';
+		if (CM.Options.TimerBar == 1) CM.Disp.TimerBar.style.display = 'none';
 	}
 	else {
 		CM.Disp.ToggleBotBar();
@@ -1319,7 +1326,7 @@ CM.Disp.Draw = function () {
 	// Draw autosave timer in stats menu
 	if (
 		(Game.prefs.autosave && Game.drawT % 10 == 0) && // with autosave ON and every 10 ticks
-		(Game.onMenu == 'stats' && CM.Config.Stats) // while being on the stats menu only
+		(Game.onMenu == 'stats' && CM.Options.Stats) // while being on the stats menu only
 	) {
 		var timer = document.getElementById('CMStatsAutosaveTimer');
 		if (timer) {
@@ -1333,10 +1340,10 @@ CM.Disp.Draw = function () {
 
 /**
  * This function toggle the bottom bar
- * It is called by CM.Disp.UpdateAscendState() and a change in CM.Config.BotBar
+ * It is called by CM.Disp.UpdateAscendState() and a change in CM.Options.BotBar
  */
 CM.Disp.ToggleBotBar = function() {
-	if (CM.Config.BotBar == 1) {
+	if (CM.Options.BotBar == 1) {
 		CM.Disp.BotBar.style.display = '';
 		CM.Disp.UpdateBotBar();
 	}
@@ -1348,7 +1355,7 @@ CM.Disp.ToggleBotBar = function() {
 
 /**
  * This function creates the bottom bar and appends it to l('wrapper')
- * It is called by CM.DelayInit and a change in CM.Config.BotBar
+ * It is called by CM.DelayInit and a change in CM.Options.BotBar
  */
 CM.Disp.CreateBotBar = function() {
 	CM.Disp.BotBar = document.createElement('div');
@@ -1402,7 +1409,7 @@ CM.Disp.CreateBotBar = function() {
  * It is called by CM.Loop()
  */
 CM.Disp.UpdateBotBar = function() {
-	if (CM.Config.BotBar == 1) {
+	if (CM.Options.BotBar == 1) {
 		var count = 0;
 		for (var i in CM.Cache.Objects) {
 			var target = 'Objects';
@@ -1551,7 +1558,7 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
  * It is called by CM.Loop()
  */
 CM.Disp.UpdateTimerBar = function() {
-	if (CM.Config.TimerBar == 1) {
+	if (CM.Options.TimerBar == 1) {
 		// label width: 113, timer width: 26, div margin: 20
 		var maxWidth = CM.Disp.TimerBar.offsetWidth - 159;
 		var numberOfTimers = 0;
@@ -1626,20 +1633,20 @@ CM.Disp.UpdateTimerBar = function() {
 
 /**
  * This function changes the visibility of the timer bar
- * It is called by CM.Disp.UpdateAscendState() or a change in CM.Config.TimerBar
+ * It is called by CM.Disp.UpdateAscendState() or a change in CM.Options.TimerBar
  */
 CM.Disp.ToggleTimerBar = function() {
-	if (CM.Config.TimerBar == 1) CM.Disp.TimerBar.style.display = '';
+	if (CM.Options.TimerBar == 1) CM.Disp.TimerBar.style.display = '';
 	else CM.Disp.TimerBar.style.display = 'none';
 	CM.Disp.UpdateBotTimerBarPosition();
 }
 
 /**
  * This function changes the position of the timer bar
- * It is called by a change in CM.Config.TimerBarPos
+ * It is called by a change in CM.Options.TimerBarPos
  */
 CM.Disp.ToggleTimerBarPos = function() {
-	if (CM.Config.TimerBarPos == 0) {
+	if (CM.Options.TimerBarPos == 0) {
 		CM.Disp.TimerBar.style.width = '30%';
 		CM.Disp.TimerBar.style.bottom = '';
 		l('game').insertBefore(CM.Disp.TimerBar, l('sectionLeft'));
@@ -1660,22 +1667,22 @@ CM.Disp.ToggleTimerBarPos = function() {
  * It is called by CM.Disp.ToggleTimerBar(), CM.Disp.ToggleTimerBarPos() and CM.Disp.ToggleBotBar()
  */
 CM.Disp.UpdateBotTimerBarPosition = function() {
-	if (CM.Config.BotBar == 1 && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
+	if (CM.Options.BotBar == 1 && CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 1) {
 		CM.Disp.BotBar.style.bottom = '48px';
 		l('game').style.bottom = '118px';
 	}
-	else if (CM.Config.BotBar == 1) {
+	else if (CM.Options.BotBar == 1) {
 		CM.Disp.BotBar.style.bottom = '0px';
 		l('game').style.bottom = '70px';
 	}
-	else if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 1) {
+	else if (CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 1) {
 		l('game').style.bottom = '48px';
 	}
 	else { // No bars
 		l('game').style.bottom = '0px';
 	}
 
-	if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+	if (CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 0) {
 		l('sectionLeft').style.top = '48px';
 	}
 	else {
@@ -1690,18 +1697,18 @@ CM.Disp.UpdateBotTimerBarPosition = function() {
 
 /**
  * This function adjusts some things in the column of buildings.
- * It colours them, helps display the correct sell-price and shuffles the order when CM.Config.SortBuildings is set
+ * It colours them, helps display the correct sell-price and shuffles the order when CM.Options.SortBuildings is set
  * The function is called by CM.Loop(), CM.Disp.UpdateColors() & CM.Disp.RefreshScale()
- * And by changes in CM.Config.BuildColor, CM.Config.SortBuild & CM.ConfigData.BulkBuildColor
+ * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.ConfigData.BulkBuildColor
  */
 CM.Disp.UpdateBuildings = function() {
-	if (CM.Config.BuildColor == 1 && Game.buyMode == 1) {
+	if (CM.Options.BuildColor == 1 && Game.buyMode == 1) {
 		var target = '';
-		if (Game.buyBulk == 10 && CM.Config.BulkBuildColor == 1) target = 'Objects10';
-		else if (Game.buyBulk == 100 && CM.Config.BulkBuildColor == 1) target = 'Objects100';
+		if (Game.buyBulk == 10 && CM.Options.BulkBuildColor == 1) target = 'Objects10';
+		else if (Game.buyBulk == 100 && CM.Options.BulkBuildColor == 1) target = 'Objects100';
 		else target = 'Objects';
 		for (var i in CM.Cache[target]) {
-			l('productPrice' + Game.Objects[i].id).style.color = CM.Config.Colors[CM.Cache[target][i].color];
+			l('productPrice' + Game.Objects[i].id).style.color = CM.Options.Colors[CM.Cache[target][i].color];
 		}
 	}
 	else if (Game.buyMode == -1) {
@@ -1723,7 +1730,7 @@ CM.Disp.UpdateBuildings = function() {
 	// Build array of pointers, sort by pp, use array index (+2) as the grid row number
 	// (grid rows are 1-based indexing, and row 1 is the bulk buy/sell options)
 	// This regulates sorting of buildings
-	if (Game.buyMode == 1 && CM.Config.SortBuildings) {
+	if (Game.buyMode == 1 && CM.Options.SortBuildings) {
 		var arr = Object.keys(CM.Cache[target]).map(k =>
 		{
 			var o = CM.Cache[target][k];
@@ -1754,13 +1761,13 @@ CM.Disp.UpdateBuildings = function() {
 
 /**
  * This function adjusts some things in the upgrades section
- * It colours them and shuffles the order when CM.Config.SortBuildings is set
+ * It colours them and shuffles the order when CM.Options.SortBuildings is set
  * The function is called by CM.Loop(), CM.Disp.ToggleUpgradeBarAndColor & CM.Disp.RefreshScale()
- * And by changes in CM.Config.SortUpgrades
+ * And by changes in CM.Options.SortUpgrades
  */
 CM.Disp.UpdateUpgrades = function() {
 	// This counts the amount of upgrades for each pp group and updates the Upgrade Bar
-	if (CM.Config.UpBarColor > 0) {
+	if (CM.Options.UpBarColor > 0) {
 		var blue = 0;
 		var green = 0;
 		var yellow = 0;
@@ -1815,7 +1822,7 @@ CM.Disp.UpdateUpgrades = function() {
 		arr.push(o);
 	}
 
-	if (CM.Config.SortUpgrades)
+	if (CM.Options.SortUpgrades)
 		arr.sort((a, b) => a.pp - b.pp);
 	else
 		arr.sort((a, b) => a.price - b.price);
@@ -1830,14 +1837,14 @@ CM.Disp.UpdateUpgrades = function() {
 
 /**
  * This function toggles the upgrade bar and the colours of upgrades
- * It is called by a change in CM.Config.UpBarColor
+ * It is called by a change in CM.Options.UpBarColor
  */
 CM.Disp.ToggleUpgradeBarAndColor = function() {
-	if (CM.Config.UpBarColor == 1) { // Colours and bar on
+	if (CM.Options.UpBarColor == 1) { // Colours and bar on
 		CM.Disp.UpgradeBar.style.display = '';
 		CM.Disp.UpdateUpgrades();
 	}
-	else if (CM.Config.UpBarColor == 2) {// Colours on and bar off
+	else if (CM.Options.UpBarColor == 2) {// Colours on and bar off
 		CM.Disp.UpgradeBar.style.display = 'none';
 		CM.Disp.UpdateUpgrades();
 	}
@@ -1849,10 +1856,10 @@ CM.Disp.ToggleUpgradeBarAndColor = function() {
 
 /**
  * This function toggles the position of the upgrade bar from fixed or non-fixed mode
- * It is called by a change in CM.Config.UpgradeBarFixedPos
+ * It is called by a change in CM.Options.UpgradeBarFixedPos
  */
 CM.Disp.ToggleUpgradeBarFixedPos = function() {
-	if (CM.Config.UpgradeBarFixedPos == 1) { // Fix to top of screen when scrolling
+	if (CM.Options.UpgradeBarFixedPos == 1) { // Fix to top of screen when scrolling
 		CM.Disp.UpgradeBar.style.position = 'sticky';
 		CM.Disp.UpgradeBar.style.top = '0px';
 	}
@@ -1962,10 +1969,10 @@ CM.Disp.CreateWhiteScreen = function() {
  * that check game-events and which have settings for Flashes (e.g., Golden Cookies appearing, Magic meter being full)
  * @param	{number}	mode	Sets the intensity of the flash, used to recursively dim flash
  * 								All calls of function have use mode == 3
- * @param	{string}	config	The setting in CM.Config that is checked before creating the flash
+ * @param	{string}	config	The setting in CM.Options that is checked before creating the flash
  */
 CM.Disp.Flash = function(mode, config) {
-	if ((CM.Config[config] == 1 && mode == 3) || mode == 1) {
+	if ((CM.Options[config] == 1 && mode == 3) || mode == 1) {
 		CM.Disp.WhiteScreen.style.opacity = '0.5';
 		if (mode == 3) {
 			CM.Disp.WhiteScreen.style.display = 'inline';
@@ -1985,14 +1992,14 @@ CM.Disp.Flash = function(mode, config) {
 /**
  * This function plays a sound depending on configs. It is called by all functions 
  * that check game-events and which have settings for sound (e.g., Golden Cookies appearing, Magic meter being full)
- * @param	{variable}	url			A variable that gives the url for the sound (e.g., CM.Config.GCSoundURL)
- * @param	{string}	sndConfig	The setting in CM.Config that is checked before creating the sound
- * @param	{string}	volConfig	The setting in CM.Config that is checked to determine volume
+ * @param	{variable}	url			A variable that gives the url for the sound (e.g., CM.Options.GCSoundURL)
+ * @param	{string}	sndConfig	The setting in CM.Options that is checked before creating the sound
+ * @param	{string}	volConfig	The setting in CM.Options that is checked to determine volume
  */
 CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
-	if (CM.Config[sndConfig] == 1) {
+	if (CM.Options[sndConfig] == 1) {
 		var sound = new realAudio(url);
-		sound.volume = (CM.Config[volConfig] / 100) * (Game.volume / 100); 
+		sound.volume = (CM.Options[volConfig] / 100) * (Game.volume / 100); 
 		sound.play();
 	}
 }
@@ -2000,12 +2007,12 @@ CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
 /**
  * This function creates a notifcation depending on configs. It is called by all functions 
  * that check game-events and which have settings for notifications (e.g., Golden Cookies appearing, Magic meter being full)
- * @param	{string}	notifyConfig	The setting in CM.Config that is checked before creating the notification
+ * @param	{string}	notifyConfig	The setting in CM.Options that is checked before creating the notification
  * @param	{string}	title			The title of the to-be created notifications
  * @param	{string}	message			The text of the to-be created notifications
  */
 CM.Disp.Notification = function(notifyConfig, title, message) {
-	if (CM.Config[notifyConfig] == 1 && document.visibilityState == 'hidden') {
+	if (CM.Options[notifyConfig] == 1 && document.visibilityState == 'hidden') {
 		var CookieIcon = 'https://orteil.dashnet.org/cookieclicker/favicon.ico'
 		notification = new Notification(title, {body: message, badge: CookieIcon});
 	}
@@ -2027,11 +2034,11 @@ CM.Disp.CreateFavicon = function() {
 
 /**
  * This function updates the Favicon depending on whether a Golden Cookie has spawned
- * It is called on every loop by CM.Main.CheckGoldenCookie() or by a change in CM.Config.Favicon 
+ * It is called on every loop by CM.Main.CheckGoldenCookie() or by a change in CM.Options.Favicon 
  * By relying on CM.Cache.spawnedGoldenShimmer it only changes for non-user spawned cookie
  */
 CM.Disp.UpdateFavicon = function() {
-	if (CM.Config.Favicon == 1 && CM.Main.lastGoldenCookieState > 0) {
+	if (CM.Options.Favicon == 1 && CM.Main.lastGoldenCookieState > 0) {
 		if (CM.Cache.spawnedGoldenShimmer.wrath) CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
 		else CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/goldenCookie.ico';
 	}
@@ -2043,10 +2050,10 @@ CM.Disp.UpdateFavicon = function() {
  * It is called on every loop by Game.Logic() which also sets CM.Cache.Title to Game.cookies
  */
 CM.Disp.UpdateTitle = function() {
-	if (Game.OnAscend || CM.Config.Title == 0) {
+	if (Game.OnAscend || CM.Options.Title == 0) {
 		document.title = CM.Cache.Title;
 	}
-	else if (CM.Config.Title == 1) {
+	else if (CM.Options.Title == 1) {
 		var addFC = false;
 		var addSP = false;
 		var titleGC;
@@ -2082,7 +2089,7 @@ CM.Disp.UpdateTitle = function() {
 		}
 		document.title = titleGC + (addFC ? titleFC : '') + (addSP ? titleSP : '') + ' ' + str;
 	}
-	else if (CM.Config.Title == 2) {
+	else if (CM.Options.Title == 2) {
 		var str = '';
 		var spawn = false;
 		if (CM.Cache.spawnedGoldenShimmer) {
@@ -2127,7 +2134,7 @@ CM.Disp.CreateGCTimer = function(cookie) {
 	GCTimer.style.fontSize = '35px';
 	GCTimer.style.cursor = 'pointer';
 	GCTimer.style.display = 'block';
-	if (CM.Config.GCTimer == 0) GCTimer.style.display = 'none';
+	if (CM.Options.GCTimer == 0) GCTimer.style.display = 'none';
 	GCTimer.style.left = cookie.l.style.left;
 	GCTimer.style.top = cookie.l.style.top;
 	GCTimer.onclick = function () {cookie.pop();};
@@ -2140,10 +2147,10 @@ CM.Disp.CreateGCTimer = function(cookie) {
 
 /**
  * This function toggles GC Timers are visible 
- * It is called by a change in CM.Config.GCTimer
+ * It is called by a change in CM.Options.GCTimer
  */
 CM.Disp.ToggleGCTimer = function() {
-	if (CM.Config.GCTimer == 1) {
+	if (CM.Options.GCTimer == 1) {
 		for (var i in CM.Disp.GCTimers) {
 			CM.Disp.GCTimers[i].style.display = 'block';
 			CM.Disp.GCTimers[i].style.left = CM.Cache.goldenShimmersByID[i].l.style.left;
@@ -2259,7 +2266,7 @@ CM.Disp.Tooltip = function(type, name) {
 	if (type == 'b') { // Buildings
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
 		// Adds amortization info to the list of info per building
-		if (CM.Config.TooltipAmor == 1) {
+		if (CM.Options.TooltipAmor == 1) {
 			var buildPrice = CM.Sim.BuildingGetPrice(Game.Objects[name], Game.Objects[name].basePrice, 0, Game.Objects[name].free, Game.Objects[name].amount);
 			var amortizeAmount = buildPrice - Game.Objects[name].totalCookies;
 			if (amortizeAmount > 0) {
@@ -2454,7 +2461,7 @@ CM.Disp.UpdateTooltip = function() {
  * It is called when Building tooltips are created or refreshed by CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateTooltipBuilding = function() {
-	if (CM.Config.TooltipBuildUp == 1 && Game.buyMode == 1) {
+	if (CM.Options.TooltipBuildUp == 1 && Game.buyMode == 1) {
 		tooltipBox = l('CMTooltipBorder');
 		CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
@@ -2469,7 +2476,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 		CM.Disp.TooltipBonusIncome = CM.Cache[target][CM.Disp.tooltipName].bonus;
 		
 
-		if (CM.Config.TooltipBuildUp == 1 && Game.buyMode == 1) {
+		if (CM.Options.TooltipBuildUp == 1 && Game.buyMode == 1) {
 			l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 			var increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 			if (isFinite(increase) && increase != 0) {
@@ -2514,7 +2521,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 	CM.Disp.TooltipBonusIncome = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonus;
 	CM.Disp.TooltipPrice = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
 
-	if (CM.Config.TooltipBuildUp == 1) {
+	if (CM.Options.TooltipBuildUp == 1) {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 		var increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 		if (isFinite(increase) && increase != 0) {
@@ -2545,7 +2552,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
  * It adds to the additional information to l('CMTooltipArea')
  */
 CM.Disp.UpdateTooltipSugarLump = function() {
-	if (CM.Config.TooltipLump === 1) {
+	if (CM.Options.TooltipLump === 1) {
 		tooltipBox = l('CMTooltipBorder');
 
 		tooltipBox.appendChild(CM.Disp.TooltipCreateHeader('Current Sugar Lump'));
@@ -2568,7 +2575,7 @@ CM.Disp.UpdateTooltipGrimoire = function() {
 	var minigame = Game.Objects['Wizard tower'].minigame;
 	var spellCost = minigame.getSpellCost(minigame.spellsById[CM.Disp.tooltipName]);
 
-	if (CM.Config.TooltipGrim == 1 && spellCost <= minigame.magicM) {
+	if (CM.Options.TooltipGrim == 1 && spellCost <= minigame.magicM) {
 		tooltipBox = l('CMTooltipBorder');
 
 		// Time left till enough magic for spell
@@ -2626,14 +2633,14 @@ CM.Disp.UpdateTooltipWarnings = function() {
 			CM.Disp.ToggleToolWarnPos();
 		}
 
-		if (CM.Config.ToolWarnPos == 0) CM.Disp.TooltipWarn.style.right = '0px';
+		if (CM.Options.ToolWarnPos == 0) CM.Disp.TooltipWarn.style.right = '0px';
 		else CM.Disp.TooltipWarn.style.top = (l('tooltip').offsetHeight) + 'px';
 
 		CM.Disp.TooltipWarn.style.width = (l('tooltip').offsetWidth - 6) + 'px';
 		
-		if (CM.Config.ToolWarnLucky == 1) {
+		if (CM.Options.ToolWarnLucky == 1) {
 			var limitLucky = CM.Cache.Lucky;
-			if (CM.Config.ToolWarnBon == 1) {
+			if (CM.Options.ToolWarnBon == 1) {
 				var bonusNoFren = CM.Disp.TooltipBonusIncome;
 				bonusNoFren /= CM.Sim.getCPSBuffMult();
 				limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
@@ -2662,9 +2669,9 @@ CM.Disp.UpdateTooltipWarnings = function() {
 			l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
 		}
 		
-		if (CM.Config.ToolWarnConjure == 1) {
+		if (CM.Options.ToolWarnConjure == 1) {
 			var limitLucky = CM.Cache.Lucky;
-			if (CM.Config.ToolWarnBon == 1) {
+			if (CM.Options.ToolWarnBon == 1) {
 				var bonusNoFren = CM.Disp.TooltipBonusIncome;
 				bonusNoFren /= CM.Sim.getCPSBuffMult();
 				limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
@@ -2696,25 +2703,25 @@ CM.Disp.UpdateTooltipWarnings = function() {
 CM.Disp.UpdateTooltipLocation = function() {
 	if (Game.tooltip.origin == 'store') {
 		var warnOffset = 0;
-		if (CM.Config.ToolWarnLucky == 1 && CM.Config.ToolWarnPos == 1 && typeof CM.Disp.TooltipWarn != "undefined") {
+		if (CM.Options.ToolWarnLucky == 1 && CM.Options.ToolWarnPos == 1 && typeof CM.Disp.TooltipWarn != "undefined") {
 			warnOffset = CM.Disp.TooltipWarn.clientHeight - 4;
 		}
 		Game.tooltip.tta.style.top = Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnOffset - 46) + 'px';
 	}
 	// Kept for future possible use if the code changes again
-	/*else if (!Game.onCrate && !Game.OnAscend && CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+	/*else if (!Game.onCrate && !Game.OnAscend && CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 0) {
 		Game.tooltip.tta.style.top = (parseInt(Game.tooltip.tta.style.top) + parseInt(CM.Disp.TimerBar.style.height)) + 'px';
 	}*/
 }
 
 /**
  * This function toggles the position of the warnings created by CM.Disp.TooltipCreateWarningSection()
- * It is called by a change in CM.Config.ToolWarnPos 
+ * It is called by a change in CM.Options.ToolWarnPos 
  * and upon creation of the warning tooltip by CM.Disp.UpdateTooltipWarnings()
  */
 CM.Disp.ToggleToolWarnPos = function() {
 	if (typeof CM.Disp.TooltipWarn != "undefined") {
-		if (CM.Config.ToolWarnPos == 0) {
+		if (CM.Options.ToolWarnPos == 0) {
 			CM.Disp.TooltipWarn.style.top = 'auto';
 			CM.Disp.TooltipWarn.style.margin = '4px -4px';
 			CM.Disp.TooltipWarn.style.padding = '3px 4px';
@@ -2733,7 +2740,7 @@ CM.Disp.ToggleToolWarnPos = function() {
  * TODO: Change this code to be the same as other tooltips. (i.d., create tooltip with type "w")
  */
 CM.Disp.CheckWrinklerTooltip = function() {
-	if (CM.Config.ToolWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) { // Latter is set by CM.Main.AddWrinklerAreaDetect
+	if (CM.Options.ToolWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) { // Latter is set by CM.Main.AddWrinklerAreaDetect
 		var showingTooltip = false;
 		for (var i in Game.wrinklers) {
 			var me = Game.wrinklers[i];
@@ -2771,7 +2778,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
  * TODO: Change this code to be the same as other tooltips. Fit this into CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateWrinklerTooltip = function() {
-	if (CM.Config.ToolWrink == 1 && l('CMTooltipWrinkler') != null) {
+	if (CM.Options.ToolWrink == 1 && l('CMTooltipWrinkler') != null) {
 		var sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
 		var toSuck = 1.1;
 		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
@@ -2797,7 +2804,7 @@ CM.Disp.UpdateWrinklerTooltip = function() {
  * @param	{number}	aura	The number of the aura currently selected by the mouse/user
  */
 CM.Disp.AddAuraInfo = function(aura) {
-	if (CM.Config.DragonAuraInfo == 1) {
+	if (CM.Options.DragonAuraInfo == 1) {
 		var [bonusCPS, priceOfChange] = CM.Sim.CalculateChangeAura(aura);
 		var timeToRecover = CM.Disp.FormatTime(priceOfChange / (bonusCPS + Game.cookiesPs));
 		var bonusCPSPercentage = CM.Disp.Beautify(bonusCPS / Game.cookiesPs);
@@ -2838,18 +2845,18 @@ CM.Disp.AddMenu = function() {
 		CM.Disp.AddMenuPref(title);
 	}
 	else if (Game.onMenu == 'stats') {
-		if (CM.Config.Stats) {
+		if (CM.Options.Stats) {
 			CM.Disp.AddMenuStats(title);
 		}
 	}
 }
 
 /**
- * This function refreshes the stats page, CM.Config.UpStats determines the rate at which that happens
+ * This function refreshes the stats page, CM.Options.UpStats determines the rate at which that happens
  * It is called by CM.Loop()
  */
 CM.Disp.RefreshMenu = function() {
-	if (CM.Config.UpStats && Game.onMenu == 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps == 0) Game.UpdateMenu();
+	if (CM.Options.UpStats && Game.onMenu == 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps == 0) Game.UpdateMenu();
 }
 
 /********
@@ -2867,7 +2874,7 @@ CM.Disp.AddMenuPref = function(title) {
 	for (var group in CM.ConfigGroups) {
 		groupObject = CM.Disp.CreatePrefHeader(group, CM.ConfigGroups[group]) // (group, display-name of group)
 		frag.appendChild(groupObject)
-		if (CM.Config.OptionsPref[group]) { // 0 is show, 1 is collapsed
+		if (CM.Options.Header[group]) { // 0 is show, 1 is collapsed
 			for (var option in CM.ConfigData) {
 				if (CM.ConfigData[option].group == group) frag.appendChild(CM.Disp.CreatePrefOption(option))
 			}
@@ -2878,7 +2885,7 @@ CM.Disp.AddMenuPref = function(title) {
 	resDef.className = 'listing';
 	var resDefBut = document.createElement('a');
 	resDefBut.className = 'option';
-	resDefBut.onclick = function() {CM.RestoreDefault();};
+	resDefBut.onclick = function() {CM.Config.RestoreDefault();};
 	resDefBut.textContent = 'Restore Default';
 	resDef.appendChild(resDefBut);
 	frag.appendChild(resDef);
@@ -2895,11 +2902,10 @@ CM.Disp.AddMenuPref = function(title) {
  */
 CM.Disp.CreatePrefHeader = function(config, text) {
 	var div = document.createElement('div');
-	div.className = 'listing';
-	div.style.padding = '5px 16px';
+	div.className = 'title';
+
 	div.style.opacity = '0.7';
 	div.style.fontSize = '17px';
-	div.style.fontFamily = '\"Kavoon\", Georgia, serif';
 	div.appendChild(document.createTextNode(text + ' '));
 	var span = document.createElement('span'); // Creates the +/- button
 	span.style.cursor = 'pointer';
@@ -2912,8 +2918,8 @@ CM.Disp.CreatePrefHeader = function(config, text) {
 	span.style.color = 'black';
 	span.style.fontSize = '13px';
 	span.style.verticalAlign = 'middle';
-	span.textContent = CM.Config.OptionsPref[config] ? '-' : '+';
-	span.onclick = function() {CM.ToggleOptionsConfig(config); Game.UpdateMenu();};
+	span.textContent = CM.Options.Header[config] ? '-' : '+';
+	span.onclick = function() {CM.Config.ToggleHeader(config); Game.UpdateMenu();};
 	div.appendChild(span);
 	return div;
 }
@@ -2929,15 +2935,15 @@ CM.Disp.CreatePrefOption = function(config) {
 		var div = document.createElement('div');
 		div.className = 'listing';
 		var a = document.createElement('a');
-		if (CM.ConfigData[config].toggle && CM.Config[config] == 0) {
+		if (CM.ConfigData[config].toggle && CM.Options[config] == 0) {
 			a.className = 'option off';
 		}
 		else {
 			a.className = 'option';
 		}
 		a.id = CM.ConfigPrefix + config;
-		a.onclick = function() {CM.ToggleConfig(config);};
-		a.textContent = CM.ConfigData[config].label[CM.Config[config]];
+		a.onclick = function() {CM.Config.ToggleConfig(config);};
+		a.textContent = CM.ConfigData[config].label[CM.Options[config]];
 		div.appendChild(a);
 		var label = document.createElement('label');
 		label.textContent = CM.ConfigData[config].desc;
@@ -2956,7 +2962,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		var percent = title = document.createElement('div');
 		percent.id = "slider" + config + "right";
 		percent.style.float = "right";
-		percent.innerHTML = CM.Config[config] + "%";
+		percent.innerHTML = CM.Options[config] + "%";
 		volume.appendChild(percent);
 		var slider = document.createElement('input');
 		slider.className = "slider";
@@ -2966,9 +2972,9 @@ CM.Disp.CreatePrefOption = function(config) {
 		slider.min = "0";
 		slider.max = "100";
 		slider.step = "1";
-		slider.value = CM.Config[config];
-		slider.oninput = function() {CM.ToggleConfigVolume(config)};
-		slider.onchange = function() {CM.ToggleConfigVolume(config)};
+		slider.value = CM.Options[config];
+		slider.oninput = function() {CM.Config.ToggleConfigVolume(config)};
+		slider.onchange = function() {CM.Config.ToggleConfigVolume(config)};
 		volume.appendChild(slider);
 		div.appendChild(volume);
 		return div;
@@ -2985,7 +2991,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		input.className = 'option';
 		input.type = 'text';
 		input.readOnly = true;
-		input.setAttribute('value', CM.Config[config]);
+		input.setAttribute('value', CM.Options[config]);
 		input.style.width = '300px';
 		div.appendChild(input);
 		div.appendChild(document.createTextNode(' '));
@@ -2993,10 +2999,10 @@ CM.Disp.CreatePrefOption = function(config) {
 		inputPrompt.id = CM.ConfigPrefix + config + 'Prompt';
 		inputPrompt.className = 'option';
 		inputPrompt.type = 'text';
-		inputPrompt.setAttribute('value', CM.Config[config]);
+		inputPrompt.setAttribute('value', CM.Options[config]);
 		var a = document.createElement('a');
 		a.className = 'option';
-		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Config[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.SaveConfig(CM.Config); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
+		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(CM.Options); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
 		a.textContent = 'Edit';
 		div.appendChild(a);
 		var label = document.createElement('label');
@@ -3012,9 +3018,9 @@ CM.Disp.CreatePrefOption = function(config) {
 			input.id = CM.ConfigPrefix + 'Color' + CM.Disp.colors[i];
 			input.className = 'option';
 			input.style.width = '65px';
-			input.setAttribute('value', CM.Config.Colors[CM.Disp.colors[i]]);
+			input.setAttribute('value', CM.Options.Colors[CM.Disp.colors[i]]);
 			div.appendChild(input);
-			eval('var change = function() {CM.Config.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.SaveConfig(CM.Config);}');
+			eval('var change = function() {CM.Options.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.Config.SaveConfig(CM.Options);}');
 			var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
 			var label = document.createElement('label');
 			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
@@ -3026,16 +3032,16 @@ CM.Disp.CreatePrefOption = function(config) {
 
 /**
  * This function changes some of the time-displays in the game to be more detailed
- * It is called by a change in CM.Config.DetailedTime
+ * It is called by a change in CM.Options.DetailedTime
  */
 CM.Disp.ToggleDetailedTime = function() {
-	if (CM.Config.DetailedTime == 1) Game.sayTime = CM.Disp.sayTime;
+	if (CM.Options.DetailedTime == 1) Game.sayTime = CM.Disp.sayTime;
 	else Game.sayTime = CM.Backup.sayTime;
 }
 
 /**
  * This function refreshes all numbers after a change in scale-setting
- * It is therefore called by a change in CM.Config.Scale and CM.Config.ScaleDecimals
+ * It is therefore called by a change in CM.Options.Scale and CM.Options.ScaleDecimals
  */
 CM.Disp.RefreshScale = function() {
 	BeautifyAll();
@@ -3049,18 +3055,18 @@ CM.Disp.RefreshScale = function() {
 
 /**
  * This function changes/refreshes colours if the user has set new standard colours
- * The function is therefore called by a change in CM.Config.Colors
+ * The function is therefore called by a change in CM.Options.Colors
  */
 CM.Disp.UpdateColors = function() {
 	var str = '';
 	for (var i = 0; i < CM.Disp.colors.length; i++) {
-		str += '.' + CM.Disp.colorTextPre + CM.Disp.colors[i] + ' { color: ' + CM.Config.Colors[CM.Disp.colors[i]] + '; }\n';
+		str += '.' + CM.Disp.colorTextPre + CM.Disp.colors[i] + ' { color: ' + CM.Options.Colors[CM.Disp.colors[i]] + '; }\n';
 	}
 	for (var i = 0; i < CM.Disp.colors.length; i++) {
-		str += '.' + CM.Disp.colorBackPre + CM.Disp.colors[i] + ' { background-color: ' + CM.Config.Colors[CM.Disp.colors[i]] + '; }\n';
+		str += '.' + CM.Disp.colorBackPre + CM.Disp.colors[i] + ' { background-color: ' + CM.Options.Colors[CM.Disp.colors[i]] + '; }\n';
 	}
 	for (var i = 0; i < CM.Disp.colors.length; i++) {
-		str += '.' + CM.Disp.colorBorderPre + CM.Disp.colors[i] + ' { border: 1px solid ' + CM.Config.Colors[CM.Disp.colors[i]] + '; }\n';
+		str += '.' + CM.Disp.colorBorderPre + CM.Disp.colors[i] + ' { border: 1px solid ' + CM.Options.Colors[CM.Disp.colors[i]] + '; }\n';
 	}
 	CM.Disp.Css.textContent = str;
 	CM.Disp.UpdateBuildings(); // Class has been already set
@@ -3081,28 +3087,28 @@ CM.Disp.AddMenuStats = function(title) {
 	stats.appendChild(title());
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Lucky Cookies', 'Lucky'));
-	if (CM.Config.StatsPref.Lucky) {
+	if (CM.Options.Header.Lucky) {
 		stats.appendChild(CM.Disp.CreateStatsLuckySection());
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Chain Cookies', 'Chain'));
-	if (CM.Config.StatsPref.Chain) {
+	if (CM.Options.Header.Chain) {
 		stats.appendChild(CM.Disp.CreateStatsChainSection());
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Conjure Baked Goods', 'Conjure'));
-	if (CM.Config.StatsPref.Conjure) {
+	if (CM.Options.Header.Conjure) {
 		stats.appendChild(CM.Disp.CreateStatsConjureSection());
  	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Prestige', 'Prestige'));
-	if (CM.Config.StatsPref.Prestige) {
+	if (CM.Options.Header.Prestige) {
 		stats.appendChild(CM.Disp.CreateStatsPrestigeSection());
 	}
 
 	if (Game.cpsSucked > 0) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Wrinklers', 'Wrink'));
-		if (CM.Config.StatsPref.Wrink) {
+		if (CM.Options.Header.Wrink) {
 			var popAllFrag = document.createDocumentFragment();
 			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBankTotal) + ' / ' + Beautify(CM.Cache.WrinkBankNormal) + ' '));
 			var popAllA = document.createElement('a');
@@ -3156,7 +3162,7 @@ CM.Disp.AddMenuStats = function(title) {
 	
 	if (Game.season == 'christmas' || specDisp || choEgg || centEgg) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Season Specials', 'Sea'));
-		if (CM.Config.StatsPref.Sea) {
+		if (CM.Options.Header.Sea) {
 			if (specDisp) {
 				if (missingHalloweenCookies.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Halloween Cookies Left to Buy', CM.Disp.CreateStatsMissDisp(missingHalloweenCookies)));
 				if (missingChristmasCookies.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Christmas Cookies Left to Buy',  CM.Disp.CreateStatsMissDisp(missingChristmasCookies)));
@@ -3176,12 +3182,12 @@ CM.Disp.AddMenuStats = function(title) {
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Miscellaneous', 'Misc'));
-	if (CM.Config.StatsPref.Misc) {
+	if (CM.Options.Header.Misc) {
 		stats.appendChild(CM.Disp.CreateStatsListing("basic", 
-			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Config.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Config.AvgCPSHist] / 60) + (CM.Config.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', 
+			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Options.AvgCPSHist] / 60) + (CM.Options.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', 
 			document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))
 		));
-		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Config.AvgClicksHist] + (CM.Config.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
+		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Options.AvgClicksHist] + (CM.Options.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
 		if (Game.Has('Fortune cookies')) {
 			var fortunes = [];
 			for (var i in CM.Data.Fortunes) {
@@ -3202,7 +3208,7 @@ CM.Disp.AddMenuStats = function(title) {
 
 	l('menu').insertBefore(stats, l('menu').childNodes[2]);
 
-	if (CM.Config.MissingUpgrades) {
+	if (CM.Options.MissingUpgrades) {
 		CM.Disp.AddMissingUpgrades();
 	}
 }
@@ -3233,8 +3239,8 @@ CM.Disp.CreateStatsHeader = function(text, config) {
 	span.style.color = 'black';
 	span.style.fontSize = '13px';
 	span.style.verticalAlign = 'middle';
-	span.textContent = CM.Config.StatsPref[config] ? '-' : '+';
-	span.onclick = function() {CM.ToggleStatsConfig(config); Game.UpdateMenu();};
+	span.textContent = CM.Options.Header[config] ? '-' : '+';
+	span.onclick = function() {CM.Config.ToggleHeader(config); Game.UpdateMenu();};
 	div.appendChild(span);
 	return div;
 }
@@ -3848,7 +3854,7 @@ CM.ReplaceNativeGrimoireDraw = function() {
 		CM.Backup.GrimoireDraw = minigame.draw;
 		Game.Objects['Wizard tower'].minigame.draw = function() {
 			CM.Backup.GrimoireDraw();
-			if (CM.Config.GrimoireBar == 1 && minigame.magic < minigame.magicM) {
+			if (CM.Options.GrimoireBar == 1 && minigame.magic < minigame.magicM) {
 				minigame.magicBarTextL.innerHTML += ' (' + CM.Disp.FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM)) + ')';
 			}
 		}
@@ -3968,7 +3974,7 @@ CM.DelayInit = function() {
 	CM.ReplaceNative();
 	CM.ReplaceNativeGrimoire();
 	Game.CalculateGains();
-	CM.LoadConfig(); // Must be after all things are created!
+	CM.Config.LoadConfig(); // Must be after all things are created!
 	CM.Disp.lastAscendState = Game.OnAscend;
 	CM.Disp.lastBuyMode = Game.buyMode;
 	CM.Disp.lastBuyBulk = Game.buyBulk;
@@ -4036,7 +4042,7 @@ CM.Main.CheckGoldenCookie = function() {
 		if (CM.Main.lastGoldenCookieState) {
 			if (CM.Main.lastSpawnedGoldenCookieState < CM.Main.currSpawnedGoldenCookieState) {
 				CM.Disp.Flash(3, 'GCFlash');
-				CM.Disp.PlaySound(CM.Config.GCSoundURL, 'GCSound', 'GCVolume');
+				CM.Disp.PlaySound(CM.Options.GCSoundURL, 'GCSound', 'GCVolume');
 				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
 			}
 			
@@ -4050,7 +4056,7 @@ CM.Main.CheckGoldenCookie = function() {
 		CM.Main.lastSpawnedGoldenCookieState = CM.Main.currSpawnedGoldenCookieState;
 		if (CM.Main.currSpawnedGoldenCookieState == 0) CM.Cache.spawnedGoldenShimmer = 0;
 	}
-	else if (CM.Config.GCTimer == 1 && CM.Main.lastGoldenCookieState) {
+	else if (CM.Options.GCTimer == 1 && CM.Main.lastGoldenCookieState) {
 		for (var i in CM.Disp.GCTimers) {
 			CM.Disp.GCTimers[i].style.opacity = CM.Cache.goldenShimmersByID[i].l.style.opacity;
 			CM.Disp.GCTimers[i].style.transform = CM.Cache.goldenShimmersByID[i].l.style.transform;
@@ -4073,7 +4079,7 @@ CM.Main.CheckSeasonPopup = function() {
 			}
 		}
 		CM.Disp.Flash(3, 'SeaFlash');
-		CM.Disp.PlaySound(CM.Config.SeaSoundURL, 'SeaSound', 'SeaVolume');
+		CM.Disp.PlaySound(CM.Options.SeaSoundURL, 'SeaSound', 'SeaVolume');
 		CM.Disp.Notification('SeaNotification',"Reindeer sighted!", "A Reindeer has spawned. Click it now!")
 	}
 }
@@ -4087,7 +4093,7 @@ CM.Main.CheckTickerFortune = function() {
 		CM.Main.lastTickerFortuneState = (Game.TickerEffect && Game.TickerEffect.type == 'fortune');
 		if (CM.Main.lastTickerFortuneState) {
 			CM.Disp.Flash(3, 'FortuneFlash');
-			CM.Disp.PlaySound(CM.Config.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
+			CM.Disp.PlaySound(CM.Options.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
 			CM.Disp.Notification('FortuneNotification', "Fortune Cookie found", "A Fortune Cookie has appeared on the Ticker.")
 		}
 	}
@@ -4101,7 +4107,7 @@ CM.Main.CheckGardenTick = function() {
 	if (Game.Objects['Farm'].minigameLoaded && CM.Main.lastGardenNextStep != Game.Objects['Farm'].minigame.nextStep) {
 		if (CM.Main.lastGardenNextStep != 0 && CM.Main.lastGardenNextStep < Date.now()) {
 			CM.Disp.Flash(3, 'GardFlash');
-			CM.Disp.PlaySound(CM.Config.GardSoundURL, 'GardSound', 'GardVolume');
+			CM.Disp.PlaySound(CM.Options.GardSoundURL, 'GardSound', 'GardVolume');
 		}
 		CM.Main.lastGardenNextStep = Game.Objects['Farm'].minigame.nextStep;
 	}
@@ -4112,13 +4118,13 @@ CM.Main.CheckGardenTick = function() {
  * It is called by CM.Loop
  */
 CM.Main.CheckMagicMeter = function() {
-	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Config.GrimoireBar == 1) {
+	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Options.GrimoireBar == 1) {
 		var minigame = Game.Objects['Wizard tower'].minigame;
 		if (minigame.magic < minigame.magicM) CM.Main.lastMagicBarFull = false;
 		else if (!CM.Main.lastMagicBarFull) {
 			CM.Main.lastMagicBarFull = true;
 			CM.Disp.Flash(3, 'MagicFlash');
-			CM.Disp.PlaySound(CM.Config.MagicSoundURL, 'MagicSound', 'MagicVolume');
+			CM.Disp.PlaySound(CM.Options.MagicSoundURL, 'MagicSound', 'MagicVolume');
 			CM.Disp.Notification('MagicNotification', "Magic Meter full", "Your Magic Meter is full. Cast a spell!")
 		}
 	}
@@ -4136,17 +4142,17 @@ CM.Main.CheckWrinklerCount = function() {
 		}
 		if (CurrentWrinklers > CM.Main.lastWrinklerCount) {
 			CM.Main.lastWrinklerCount = CurrentWrinklers
-			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxFlash) {
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Options.WrinklerMaxFlash) {
 				CM.Disp.Flash(3, 'WrinklerMaxFlash');
 			} else {
 				CM.Disp.Flash(3, 'WrinklerFlash');
 			}
-			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Config.WrinklerMaxSound) {
-				CM.Disp.PlaySound(CM.Config.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume');
+			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Options.WrinklerMaxSound) {
+				CM.Disp.PlaySound(CM.Options.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume');
 			} else {
-				CM.Disp.PlaySound(CM.Config.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume');
+				CM.Disp.PlaySound(CM.Options.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume');
 			}
-			if (CurrentWrinklers == Game.getWrinklersMax() &&  CM.Config.WrinklerMaxNotification) {
+			if (CurrentWrinklers == Game.getWrinklersMax() &&  CM.Options.WrinklerMaxNotification) {
 				CM.Disp.Notification('WrinklerMaxNotification', "Maximum Wrinklers Reached", "You have reached your maximum ammount of wrinklers")
 			} else {
 				CM.Disp.Notification('WrinklerNotification', "A Wrinkler appeared", "A new wrinkler has appeared")
@@ -4183,7 +4189,7 @@ CM.Main.AddWrinklerAreaDetect = function() {
  * before execution of their actual function
  */
 CM.Main.FixMouseY = function(target) {
-	if (CM.Config.TimerBar == 1 && CM.Config.TimerBarPos == 0) {
+	if (CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 0) {
 		var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
 		Game.mouseY -= timerBarHeight;
 		target();
