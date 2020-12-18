@@ -2,6 +2,9 @@
  * Data *
  ********/
 
+/********
+ * Section: Data used in the stats page to show not yet purchased updates. See CM.Disp.CreateStatsMissDisp() */
+
 CM.Data.Fortunes = [
 	'Fortune #001', 
 	'Fortune #002', 
@@ -30,7 +33,7 @@ CM.Data.Fortunes = [
 CM.Data.HalloCookies = ['Skull cookies', 'Ghost cookies', 'Bat cookies', 'Slime cookies', 'Pumpkin cookies', 'Eyeball cookies', 'Spider cookies'];
 CM.Data.ChristCookies = ['Christmas tree biscuits', 'Snowflake biscuits', 'Snowman biscuits', 'Holly biscuits', 'Candy cane biscuits', 'Bell biscuits', 'Present biscuits'];
 CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour heart biscuits', 'Weeping heart biscuits', 'Golden heart biscuits', 'Eternal heart biscuits', 'Prism heart biscuits'];
-
+CM.Data.PlantDrops = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Green yeast digestives', 'Wheat slims', 'Fern tea', 'Ichor syrup']
 
 /********
  * Section: Data for the various scales used by CookieMonster */
