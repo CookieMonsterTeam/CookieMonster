@@ -2,14 +2,67 @@
  * Cache *
  *********/
 
+/********
+ * Section: General Cache related functions */
+
+/**
+ * This functions runs all cache-functions to generate all "full" cache
+ * The declaration follows the structure of the CM.Cache.js file
+ * It is called by CM.DelayInit
+ * TODO: Add all functions that should be here and remove them from CM.Loop()
+ */
+CM.Cache.InitCache = function() {
+	CM.Cache.CacheDragonAuras();
+	CM.Cache.CacheWrinklers();
+}
+
+/********
+ * Section: Functions related to Dragon Auras */
+
 /**
  * This functions caches the currently selected Dragon Auras
- * It is called by CM.Sim.CopyData() and CM.Sim.InitData()
+ * It is called by CM.Sim.CopyData() and CM.Cache.InitCache()
  * Uncapitalized dragon follows Game-naming
+ * @global	{number}	CM.Cache.dragonAura		The number of the first (right) Aura
+ * @global	{number}	CM.Cache.dragonAura2	The number of the second (left) Aura
  */
 CM.Cache.CacheDragonAuras = function() {
+	/** @global	*/
 	CM.Cache.dragonAura = Game.dragonAura;
 	CM.Cache.dragonAura2 = Game.dragonAura2;
+}
+
+/********
+ * Section: Functions related to Wrinklers */
+
+/**
+ * This functions caches data related to Wrinklers
+ * It is called by CM.Loop() and CM.Cache.InitCache()
+ * @global	{number}				CM.Cache.WrinklersTotal		The cookies of all wrinklers
+ * @global	{number}				CM.Cache.WrinklersNormal	The cookies of all normal wrinklers
+ * @global	{[{number}, {number}]}	CM.Cache.WrinklersFattest	A list containing the cookies and the id of the fattest wrinkler
+ */
+CM.Cache.CacheWrinklers = function() {
+	CM.Cache.WrinklersTotal = 0;
+	CM.Cache.WrinklersNormal = 0;
+	CM.Cache.WrinklersFattest = [0, null];
+	for (var i in Game.wrinklers) {
+		var sucked = Game.wrinklers[i].sucked;
+		var toSuck = 1.1;
+		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
+		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
+		sucked *= toSuck;
+		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+		if (CM.Sim.Objects.Temple.minigameLoaded) {
+			var godLvl = CM.Sim.hasGod('scorn');
+			if (godLvl == 1) sucked *= 1.15;
+			else if (godLvl == 2) sucked *= 1.1;
+			else if (godLvl == 3) sucked *= 1.05;
+		}
+		CM.Cache.WrinklersTotal += sucked;
+		if (Game.wrinklers[i].type == 0) CM.Cache.WrinklersNormal += sucked;
+		if (sucked > CM.Cache.WrinklersFattest[0]) CM.Cache.WrinklersFattest = [sucked, i];
+	}
 }
 
 /********
@@ -50,35 +103,6 @@ CM.Cache.RemakeIncome = function() {
 
 	// Simulate Building Buys for 100 amount
 	CM.Sim.BuyBuildings(100, 'Objects100');
-}
-
-CM.Cache.RemakeWrinkBank = function() {
-	CM.Cache.WrinkBankTotal = 0;
-	CM.Cache.WrinkBankNormal = 0;
-	var totalSucked = 0;
-	for (var i in Game.wrinklers) {
-		var sucked = Game.wrinklers[i].sucked;
-		var toSuck = 1.1;
-		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
-		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
-		sucked *= toSuck;
-		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-		if (CM.Sim.Objects.Temple.minigameLoaded) {
-			var godLvl = CM.Sim.hasGod('scorn');
-			if (godLvl == 1) sucked *= 1.15;
-			else if (godLvl == 2) sucked *= 1.1;
-			else if (godLvl == 3) sucked *= 1.05;
-		}
-		CM.Cache.WrinkBankTotal += sucked;
-		if (Game.wrinklers[i].type == 0) CM.Cache.WrinkBankNormal += sucked;
-	}
-	CM.Cache.WrinkGodBank = CM.Cache.WrinkBankTotal;
-	if (CM.Sim.Objects.Temple.minigameLoaded) {
-		var godLvl = CM.Sim.hasGod('scorn');
-		if (godLvl == 2) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.1;
-		else if (godLvl == 3) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.05;
-		else if (godLvl != 1) CM.Cache.WrinkGodBank *= 1.15;
-	}
 }
 
 CM.Cache.RemakeBuildingsPP = function() {
@@ -381,7 +405,7 @@ CM.Cache.UpdateAvgCPS = function() {
 	if (CM.Cache.lastDate != currDate) {
 		var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
 		if (Game.cpsSucked > 0) {
-			choEggTotal += CM.Cache.WrinkGodBank;
+			choEggTotal += CM.Cache.WrinklersTotal;
 		}
 		CM.Cache.RealCookiesEarned = Math.max(Game.cookiesEarned, choEggTotal);
 		choEggTotal *= 0.05;
@@ -389,7 +413,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		if (CM.Cache.lastDate != -1) {
 			var timeDiff = currDate - CM.Cache.lastDate
 			var bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
-			var wrinkDiffAvg = Math.max(0, (CM.Cache.WrinkBankTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
+			var wrinkDiffAvg = Math.max(0, (CM.Cache.WrinklersTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
 			var choEggDiffAvg = Math.max(0,(choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
 			var clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
 			for (var i = 0; i < timeDiff; i++) {
@@ -411,7 +435,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		}
 		CM.Cache.lastDate = currDate;
 		CM.Cache.lastCookies = Game.cookies;
-		CM.Cache.lastWrinkCookies = CM.Cache.WrinkBankTotal;
+		CM.Cache.lastWrinkCookies = CM.Cache.WrinklersTotal;
 		CM.Cache.lastChoEgg = choEggTotal;
 		CM.Cache.lastClicks = Game.cookieClicks;
 
@@ -453,7 +477,8 @@ CM.Cache.UpdateAvgCPS = function() {
 			totalGainWrink += sortedGainWrink[i];
 			totalGainChoEgg += sortedGainChoEgg[i];
 		}
-		CM.Cache.AvgCPS = (totalGainBank + (CM.Options.CalcWrink ? totalGainWrink : 0)) / sortedGainBank.length;
+		// TODO: Incorporate situation if CM.Options.CalcWrink == 2
+		CM.Cache.AvgCPS = (totalGainBank + (CM.Options.CalcWrink == 1 ? totalGainWrink : 0)) / sortedGainBank.length;
 
 		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 
@@ -494,9 +519,6 @@ CM.Cache.CalcMissingUpgrades = function() {
 CM.Cache.min = -1;
 CM.Cache.max = -1;
 CM.Cache.mid = -1;
-CM.Cache.WrinkBankTotal = -1;
-CM.Cache.WrinkBankNormal = -1;
-CM.Cache.WrinkGodBank = -1;
 CM.Cache.GoldenCookiesMult = 1;
 CM.Cache.WrathCookiesMult = 1;
 CM.Cache.DragonsFortuneMultAdjustment = 1;
@@ -543,10 +565,4 @@ CM.Cache.MissingCookiesString = null;
 CM.Cache.seasonPopShimmer;
 CM.Cache.goldenShimmersByID = {};
 CM.Cache.spawnedGoldenShimmer = 0;
-
-/**
- * This variables are used by CM.Cache.CacheDragonAuras(), naming follows naming in Game
- */
-CM.Cache.dragonAura = 0;
-CM.Cache.dragonAura2 = 0;
 

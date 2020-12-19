@@ -207,9 +207,6 @@ CM.Sim.InitData = function() {
 	for (var i in Game.Achievements) {
 		CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 	}
-
-	// Auras
-	CM.Cache.CacheDragonAuras();
 }
 
 CM.Sim.CopyData = function() {

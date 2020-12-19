@@ -171,7 +171,7 @@ CM.Loop = function() {
 		}
 
 		// Update Wrinkler Bank
-		CM.Cache.RemakeWrinkBank();
+		CM.Cache.CacheWrinklers();
 
 		// Calculate PP
 		CM.Cache.RemakePP();
@@ -229,6 +229,7 @@ CM.Init = function() {
 
 CM.DelayInit = function() {
 	CM.Sim.InitData();
+	CM.Cache.InitCache();
 	CM.Disp.CreateCssArea();
 	CM.Disp.CreateBotBar();
 	CM.Disp.CreateTimerBar();
