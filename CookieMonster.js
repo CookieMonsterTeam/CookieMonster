@@ -1696,13 +1696,19 @@ CM.Disp.UpdateBotTimerBarPosition = function() {
  * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.ConfigData.BulkBuildColor
  */
 CM.Disp.UpdateBuildings = function() {
-	if (CM.Options.BuildColor == 1 && Game.buyMode == 1) {
-		var target = '';
-		if (Game.buyBulk == 10 && CM.Options.BulkBuildColor == 1) target = 'Objects10';
-		else if (Game.buyBulk == 100 && CM.Options.BulkBuildColor == 1) target = 'Objects100';
-		else target = 'Objects';
-		for (var i in CM.Cache[target]) {
-			l('productPrice' + Game.Objects[i].id).style.color = CM.Options.Colors[CM.Cache[target][i].color];
+	if  (Game.buyMode == 1) {
+		if (CM.Options.BuildColor == 1) {
+			var target = '';
+			if (Game.buyBulk == 10 && CM.Options.BulkBuildColor == 1) target = 'Objects10';
+			else if (Game.buyBulk == 100 && CM.Options.BulkBuildColor == 1) target = 'Objects100';
+			else target = 'Objects';
+			for (var i in CM.Cache[target]) {
+				l('productPrice' + Game.Objects[i].id).style.color = CM.Options.Colors[CM.Cache[target][i].color];
+			}
+		} else {
+			for (var i in Game.Objects) {
+				l('productPrice' + Game.Objects[i].id).style.removeProperty("color");
+			}
 		}
 	}
 	else if (Game.buyMode == -1) {
