@@ -42,6 +42,7 @@ if (typeof CM == "undefined") {
  */
 CM.Cache.InitCache = function() {
 	CM.Cache.CacheDragonAuras();
+	CM.Cache.CacheWrinklers();
 }
 
 /********
@@ -49,10 +50,13 @@ CM.Cache.InitCache = function() {
 
 /**
  * This functions caches the currently selected Dragon Auras
- * It is called by CM.Sim.CopyData() and CM.Sim.InitData()
+ * It is called by CM.Sim.CopyData() and CM.Cache.InitCache()
  * Uncapitalized dragon follows Game-naming
+ * @global	{number}	CM.Cache.dragonAura		The number of the first (right) Aura
+ * @global	{number}	CM.Cache.dragonAura2	The number of the second (left) Aura
  */
 CM.Cache.CacheDragonAuras = function() {
+	/** @global	*/
 	CM.Cache.dragonAura = Game.dragonAura;
 	CM.Cache.dragonAura2 = Game.dragonAura2;
 }
@@ -62,12 +66,15 @@ CM.Cache.CacheDragonAuras = function() {
 
 /**
  * This functions caches data related to Wrinklers
- * It is called by CM.Loop()
+ * It is called by CM.Loop() and CM.Cache.InitCache()
+ * @global	{number}				CM.Cache.WrinklersTotal		The cookies of all wrinklers
+ * @global	{number}				CM.Cache.WrinklersNormal	The cookies of all normal wrinklers
+ * @global	{[{number}, {number}]}	CM.Cache.WrinklersFattest	A list containing the cookies and the id of the fattest wrinkler
  */
-CM.Cache.RemakeWrinkBank = function() {
-	CM.Cache.WrinkBankTotal = 0;
-	CM.Cache.WrinkBankNormal = 0;
-	var totalSucked = 0;
+CM.Cache.CacheWrinklers = function() {
+	CM.Cache.WrinklersTotal = 0;
+	CM.Cache.WrinklersNormal = 0;
+	CM.Cache.WrinklersFattest = [0, null];
 	for (var i in Game.wrinklers) {
 		var sucked = Game.wrinklers[i].sucked;
 		var toSuck = 1.1;
@@ -81,18 +88,11 @@ CM.Cache.RemakeWrinkBank = function() {
 			else if (godLvl == 2) sucked *= 1.1;
 			else if (godLvl == 3) sucked *= 1.05;
 		}
-		CM.Cache.WrinkBankTotal += sucked;
-		if (Game.wrinklers[i].type == 0) CM.Cache.WrinkBankNormal += sucked;
-	}
-	CM.Cache.WrinkGodBank = CM.Cache.WrinkBankTotal;
-	if (CM.Sim.Objects.Temple.minigameLoaded) {
-		var godLvl = CM.Sim.hasGod('scorn');
-		if (godLvl == 2) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.1;
-		else if (godLvl == 3) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.05;
-		else if (godLvl != 1) CM.Cache.WrinkGodBank *= 1.15;
+		CM.Cache.WrinklersTotal += sucked;
+		if (Game.wrinklers[i].type == 0) CM.Cache.WrinklersNormal += sucked;
+		if (sucked > CM.Cache.WrinklersFattest[0]) CM.Cache.WrinklersFattest = [sucked, i];
 	}
 }
-
 
 /********
  * Section: UNSORTED */
@@ -434,7 +434,7 @@ CM.Cache.UpdateAvgCPS = function() {
 	if (CM.Cache.lastDate != currDate) {
 		var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
 		if (Game.cpsSucked > 0) {
-			choEggTotal += CM.Cache.WrinkGodBank;
+			choEggTotal += CM.Cache.WrinklersTotal;
 		}
 		CM.Cache.RealCookiesEarned = Math.max(Game.cookiesEarned, choEggTotal);
 		choEggTotal *= 0.05;
@@ -442,7 +442,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		if (CM.Cache.lastDate != -1) {
 			var timeDiff = currDate - CM.Cache.lastDate
 			var bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
-			var wrinkDiffAvg = Math.max(0, (CM.Cache.WrinkBankTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
+			var wrinkDiffAvg = Math.max(0, (CM.Cache.WrinklersTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
 			var choEggDiffAvg = Math.max(0,(choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
 			var clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
 			for (var i = 0; i < timeDiff; i++) {
@@ -464,7 +464,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		}
 		CM.Cache.lastDate = currDate;
 		CM.Cache.lastCookies = Game.cookies;
-		CM.Cache.lastWrinkCookies = CM.Cache.WrinkBankTotal;
+		CM.Cache.lastWrinkCookies = CM.Cache.WrinklersTotal;
 		CM.Cache.lastChoEgg = choEggTotal;
 		CM.Cache.lastClicks = Game.cookieClicks;
 
@@ -547,9 +547,6 @@ CM.Cache.CalcMissingUpgrades = function() {
 CM.Cache.min = -1;
 CM.Cache.max = -1;
 CM.Cache.mid = -1;
-CM.Cache.WrinkBankTotal = -1;
-CM.Cache.WrinkBankNormal = -1;
-CM.Cache.WrinkGodBank = -1;
 CM.Cache.GoldenCookiesMult = 1;
 CM.Cache.WrathCookiesMult = 1;
 CM.Cache.DragonsFortuneMultAdjustment = 1;
@@ -1058,11 +1055,11 @@ CM.Data.ConfigDefault = {
 /**
  * This function returns the total amount stored in the Wrinkler Bank 
  * as calculated by CM.Cache.RemakeWrinkBank() if CM.Options.CalcWrink is set
- * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinkBankTotal)
+ * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinklersTotal)
  */
 CM.Disp.GetWrinkConfigBank = function() {
 	if (CM.Options.CalcWrink)
-		return CM.Cache.WrinkBankTotal;
+		return CM.Cache.WrinklersTotal;
 	else
 		return 0;
 }
@@ -3164,13 +3161,21 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Wrinklers', 'Wrink'));
 		if (CM.Options.Header.Wrink) {
 			var popAllFrag = document.createDocumentFragment();
-			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBankTotal) + ' / ' + Beautify(CM.Cache.WrinkBankNormal) + ' '));
+			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinklersTotal) + ' / ' + Beautify(CM.Cache.WrinklersNormal) + ' '));
 			var popAllA = document.createElement('a');
 			popAllA.textContent = 'Pop All Normal';
 			popAllA.className = 'option';
 			popAllA.onclick = function() { CM.Disp.PopAllNormalWrinklers(); };
 			popAllFrag.appendChild(popAllA);
 			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping (All/Normal)',  popAllFrag));
+			var popFattestFrag = document.createDocumentFragment();
+			popFattestFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinklersFattest[0]) + ' '));
+			var popFattestA = document.createElement('a');
+			popFattestA.textContent = 'Pop single fattest';
+			popFattestA.className = 'option';
+			popFattestA.onclick = function() { Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
+			popFattestFrag.appendChild(popFattestA);
+			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping Single Fattest Wrinkler (id: ' + CM.Cache.WrinklersFattest[1] + ")",  popFattestFrag));
 		}
 	}
 
@@ -3575,11 +3580,11 @@ CM.Disp.CreateStatsPrestigeSection = function() {
 	section.className = 'CMStatsPrestigeSection';
 
 	var possiblePresMax = Math.floor(Game.HowMuchPrestige(CM.Cache.RealCookiesEarned + 
-		Game.cookiesReset + CM.Cache.WrinkGodBank + 
+		Game.cookiesReset + CM.Cache.WrinklersTotal + 
 		(Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg') ? CM.Cache.lastChoEgg : 0)));
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Prestige Level (CUR / MAX)', document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePresMax)), 'PrestMaxTooltipPlaceholder'));
 	
-	var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + ((Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg') ? CM.Cache.lastChoEgg : 0) ? CM.Cache.lastChoEgg : 0));
+	var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinklersTotal + ((Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg') ? CM.Cache.lastChoEgg : 0) ? CM.Cache.lastChoEgg : 0));
 	var cookiesNextFrag = document.createDocumentFragment();
 	cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
 	var cookiesNextSmall = document.createElement('small');
@@ -3959,7 +3964,7 @@ CM.Loop = function() {
 		}
 
 		// Update Wrinkler Bank
-		CM.Cache.RemakeWrinkBank();
+		CM.Cache.CacheWrinklers();
 
 		// Calculate PP
 		CM.Cache.RemakePP();

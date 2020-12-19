@@ -171,7 +171,7 @@ CM.Loop = function() {
 		}
 
 		// Update Wrinkler Bank
-		CM.Cache.RemakeWrinkBank();
+		CM.Cache.CacheWrinklers();
 
 		// Calculate PP
 		CM.Cache.RemakePP();

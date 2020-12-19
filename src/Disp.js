@@ -13,11 +13,11 @@
 /**
  * This function returns the total amount stored in the Wrinkler Bank 
  * as calculated by CM.Cache.RemakeWrinkBank() if CM.Options.CalcWrink is set
- * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinkBankTotal)
+ * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinklersTotal)
  */
 CM.Disp.GetWrinkConfigBank = function() {
 	if (CM.Options.CalcWrink)
-		return CM.Cache.WrinkBankTotal;
+		return CM.Cache.WrinklersTotal;
 	else
 		return 0;
 }
@@ -2119,13 +2119,21 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Wrinklers', 'Wrink'));
 		if (CM.Options.Header.Wrink) {
 			var popAllFrag = document.createDocumentFragment();
-			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinkBankTotal) + ' / ' + Beautify(CM.Cache.WrinkBankNormal) + ' '));
+			popAllFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinklersTotal) + ' / ' + Beautify(CM.Cache.WrinklersNormal) + ' '));
 			var popAllA = document.createElement('a');
 			popAllA.textContent = 'Pop All Normal';
 			popAllA.className = 'option';
 			popAllA.onclick = function() { CM.Disp.PopAllNormalWrinklers(); };
 			popAllFrag.appendChild(popAllA);
 			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping (All/Normal)',  popAllFrag));
+			var popFattestFrag = document.createDocumentFragment();
+			popFattestFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinklersFattest[0]) + ' '));
+			var popFattestA = document.createElement('a');
+			popFattestA.textContent = 'Pop single fattest';
+			popFattestA.className = 'option';
+			popFattestA.onclick = function() { Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
+			popFattestFrag.appendChild(popFattestA);
+			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping Single Fattest Wrinkler (id: ' + CM.Cache.WrinklersFattest[1] + ")",  popFattestFrag));
 		}
 	}
 
@@ -2530,11 +2538,11 @@ CM.Disp.CreateStatsPrestigeSection = function() {
 	section.className = 'CMStatsPrestigeSection';
 
 	var possiblePresMax = Math.floor(Game.HowMuchPrestige(CM.Cache.RealCookiesEarned + 
-		Game.cookiesReset + CM.Cache.WrinkGodBank + 
+		Game.cookiesReset + CM.Cache.WrinklersTotal + 
 		(Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg') ? CM.Cache.lastChoEgg : 0)));
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Prestige Level (CUR / MAX)', document.createTextNode(Beautify(Game.prestige) + ' / ' + Beautify(possiblePresMax)), 'PrestMaxTooltipPlaceholder'));
 	
-	var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinkGodBank + ((Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg') ? CM.Cache.lastChoEgg : 0) ? CM.Cache.lastChoEgg : 0));
+	var neededCook = Game.HowManyCookiesReset(possiblePresMax + 1) - (CM.Cache.RealCookiesEarned + Game.cookiesReset + CM.Cache.WrinklersTotal + ((Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg') ? CM.Cache.lastChoEgg : 0) ? CM.Cache.lastChoEgg : 0));
 	var cookiesNextFrag = document.createDocumentFragment();
 	cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
 	var cookiesNextSmall = document.createElement('small');
