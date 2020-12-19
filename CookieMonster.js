@@ -31,6 +31,9 @@ if (typeof CM == "undefined") {
  * Cache *
  *********/
 
+/********
+ * Section: Functions related to Dragon Auras */
+
 /**
  * This functions caches the currently selected Dragon Auras
  * It is called by CM.Sim.CopyData() and CM.Sim.InitData()
@@ -40,6 +43,39 @@ CM.Cache.CacheDragonAuras = function() {
 	CM.Cache.dragonAura = Game.dragonAura;
 	CM.Cache.dragonAura2 = Game.dragonAura2;
 }
+
+/********
+ * Section: Functions related to Wrinklers */
+
+CM.Cache.RemakeWrinkBank = function() {
+	CM.Cache.WrinkBankTotal = 0;
+	CM.Cache.WrinkBankNormal = 0;
+	var totalSucked = 0;
+	for (var i in Game.wrinklers) {
+		var sucked = Game.wrinklers[i].sucked;
+		var toSuck = 1.1;
+		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
+		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
+		sucked *= toSuck;
+		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
+		if (CM.Sim.Objects.Temple.minigameLoaded) {
+			var godLvl = CM.Sim.hasGod('scorn');
+			if (godLvl == 1) sucked *= 1.15;
+			else if (godLvl == 2) sucked *= 1.1;
+			else if (godLvl == 3) sucked *= 1.05;
+		}
+		CM.Cache.WrinkBankTotal += sucked;
+		if (Game.wrinklers[i].type == 0) CM.Cache.WrinkBankNormal += sucked;
+	}
+	CM.Cache.WrinkGodBank = CM.Cache.WrinkBankTotal;
+	if (CM.Sim.Objects.Temple.minigameLoaded) {
+		var godLvl = CM.Sim.hasGod('scorn');
+		if (godLvl == 2) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.1;
+		else if (godLvl == 3) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.05;
+		else if (godLvl != 1) CM.Cache.WrinkGodBank *= 1.15;
+	}
+}
+
 
 /********
  * Section: UNSORTED */
@@ -79,35 +115,6 @@ CM.Cache.RemakeIncome = function() {
 
 	// Simulate Building Buys for 100 amount
 	CM.Sim.BuyBuildings(100, 'Objects100');
-}
-
-CM.Cache.RemakeWrinkBank = function() {
-	CM.Cache.WrinkBankTotal = 0;
-	CM.Cache.WrinkBankNormal = 0;
-	var totalSucked = 0;
-	for (var i in Game.wrinklers) {
-		var sucked = Game.wrinklers[i].sucked;
-		var toSuck = 1.1;
-		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
-		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
-		sucked *= toSuck;
-		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-		if (CM.Sim.Objects.Temple.minigameLoaded) {
-			var godLvl = CM.Sim.hasGod('scorn');
-			if (godLvl == 1) sucked *= 1.15;
-			else if (godLvl == 2) sucked *= 1.1;
-			else if (godLvl == 3) sucked *= 1.05;
-		}
-		CM.Cache.WrinkBankTotal += sucked;
-		if (Game.wrinklers[i].type == 0) CM.Cache.WrinkBankNormal += sucked;
-	}
-	CM.Cache.WrinkGodBank = CM.Cache.WrinkBankTotal;
-	if (CM.Sim.Objects.Temple.minigameLoaded) {
-		var godLvl = CM.Sim.hasGod('scorn');
-		if (godLvl == 2) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.1;
-		else if (godLvl == 3) CM.Cache.WrinkGodBank = CM.Cache.WrinkGodBank * 1.15 / 1.05;
-		else if (godLvl != 1) CM.Cache.WrinkGodBank *= 1.15;
-	}
 }
 
 CM.Cache.RemakeBuildingsPP = function() {
@@ -572,12 +579,6 @@ CM.Cache.MissingCookiesString = null;
 CM.Cache.seasonPopShimmer;
 CM.Cache.goldenShimmersByID = {};
 CM.Cache.spawnedGoldenShimmer = 0;
-
-/**
- * This variables are used by CM.Cache.CacheDragonAuras(), naming follows naming in Game
- */
-CM.Cache.dragonAura = 0;
-CM.Cache.dragonAura2 = 0;
 
 /**********
  * Config *
