@@ -3,6 +3,19 @@
  *********/
 
 /********
+ * Section: General Cache related functions */
+
+/**
+ * This functions runs all cache-functions to generate all "full" cache
+ * The declaration follows the structure of the CM.Cache.js file
+ * It is called by CM.DelayInit
+ * TODO: Add all functions that should be here and remove them from CM.Loop()
+ */
+CM.Cache.InitCache = function() {
+	CM.Cache.CacheDragonAuras();
+}
+
+/********
  * Section: Functions related to Dragon Auras */
 
 /**
@@ -18,6 +31,10 @@ CM.Cache.CacheDragonAuras = function() {
 /********
  * Section: Functions related to Wrinklers */
 
+/**
+ * This functions caches data related to Wrinklers
+ * It is called by CM.Loop()
+ */
 CM.Cache.RemakeWrinkBank = function() {
 	CM.Cache.WrinkBankTotal = 0;
 	CM.Cache.WrinkBankNormal = 0;

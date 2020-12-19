@@ -229,6 +229,7 @@ CM.Init = function() {
 
 CM.DelayInit = function() {
 	CM.Sim.InitData();
+	CM.Cache.InitCache();
 	CM.Disp.CreateCssArea();
 	CM.Disp.CreateBotBar();
 	CM.Disp.CreateTimerBar();
