@@ -1,4 +1,4 @@
-# Cookie Monster
+## Cookie Monster
 
 **Cookie Monster** is an addon you can load into Cookie Clicker, that offers a wide range of tools and statistics to enhance the game. **It is not a cheat interface** – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.
 
@@ -7,7 +7,7 @@ This is a helper, and it is here to help you at *whichever* degree you want, if 
 ### Current version
 You can see the current version, and a full history of all versions and what they changed by consulting the [releases page](https://github.com/Aktanusa/CookieMonster/releases).
 
-## What it does
+### What it does
 
 At its core, Cookie Monster computes an index for both buildings and upgrades: the **Payback Period (PP)**. This indicates how much a building is worth by using the following formula: 
 ```
@@ -28,27 +28,15 @@ This index is computed for buildings and upgrades. If the relevant option is ena
 
 Note: For this index, **lower is better**, meaning a building with a PP of 1 is more interesting than one with a PP of 3.
 
-## What it doesn't do
+### What it doesn't do
 
-Most likely you'll find items in gray like Golden Cookie upgrades, clicking upgrades, season upgrades – everything that doesn't earn you a direct bonus to your income will display as gray. This means the following upgrades are **not** taken into account by Cookie Monster:
-
-* Plastic mouse
-* Iron mouse
-* Titanium mouse
-* Adamantium mouse
-* Unobtainium mouse
-* Lucky day
-* Serendipity
-* Get lucky
-* Elder Pledge
-* Sacrificial rolling pins
-* **etc.**
+Some upgrades do not give a direct bonus to your income and will display as gray. These are mainly Golden Cookie upgrades and season upgrades.
 
 Do note though that, although these upgrades have no direct value, if buying them earns you an achievement of some sort which in return gives you milk and income, Cookie Monster **will** display that value.
 
-# Using
+## Using
 
-## Bookmarklet
+### Bookmarklet
 
 Copy this code and save it as a bookmark. Paste it in the URL section. To activate, click the bookmark when the game's open.
 
@@ -60,7 +48,7 @@ javascript: (function () {
 
 If (for some reason) the above doesn't work, trying pasting everything after the <code>javascript:</code> bit into your browser's console.
 
-## Userscript
+### Userscript
 
 If you'd rather use the addon as a script via per example *Greasemonkey* or *Tampermonkey*, you can use the following script, which will automatically load *Cookie Monster* every time the original game loads. You may need to specify <code>http://orteil.dashnet.org/cookieclicker/</code> when asked for a *namespace* or *includes*. For how to add an userscript to your browser, refer to your browser/plugin's documentation as the method changes for each one.
 
@@ -84,23 +72,17 @@ If you'd rather use the addon as a script via per example *Greasemonkey* or *Tam
 })();
 ```
 
-# Bugs and suggestions
+## Bugs and suggestions
 
 Any bug or suggestion should be **opened as an issue** [in the repository](https://github.com/Aktanusa/CookieMonster/issues) for easier tracking. This allows us to close issues once they're fixed.
 
-Before submitting a bug, make sure to give a shot at the latest version of the addon on the <code>dev</code> branch. For this, use the following bookmarklet:
+Before submitting a bug, make sure to give a shot at the latest version of the addon on the <code>dev</code> branch. This version can be tested by copying the `CookieMonster.js` file of the dev branch into your console.
 
-```javascript
-javascript: (function () {
-	Game.LoadMod('https://cdn.rawgit.com/Aktanusa/CookieMonster/dev/CookieMonster.js');
-}());
-```
-
-If the bug is still here, you can submit an issue for it.
+If the bug is still here, you can submit an issue for it. Please do so by using the bug report template.
 
 All suggestions are welcome, even the smallest ones.
 
-# Contributors
+## Contributors
 
 * **[Raving_Kumquat](https://cookieclicker.wikia.com/wiki/User:Raving_Kumquat)**: Original author
 * **[Maxime Fabre](https://github.com/Anahkiasen)**: Previous maintainer
