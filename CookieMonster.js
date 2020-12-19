@@ -506,7 +506,8 @@ CM.Cache.UpdateAvgCPS = function() {
 			totalGainWrink += sortedGainWrink[i];
 			totalGainChoEgg += sortedGainChoEgg[i];
 		}
-		CM.Cache.AvgCPS = (totalGainBank + (CM.Options.CalcWrink ? totalGainWrink : 0)) / sortedGainBank.length;
+		// TODO: Incorporate situation if CM.Options.CalcWrink == 2
+		CM.Cache.AvgCPS = (totalGainBank + (CM.Options.CalcWrink == 1 ? totalGainWrink : 0)) / sortedGainBank.length;
 
 		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 
@@ -869,7 +870,7 @@ CM.ConfigData.Colors = { type: 'color', group: 'BarsColors',
 CM.ConfigData.UpgradeBarFixedPos = {type: 'bool', group: 'BarsColors', label: ['Upgrade Bar Fixed Position OFF', 'Upgrade Bar Fixed Position ON'], desc: 'Lock the upgrade bar at top of the screen to prevent it from moving ofscreen when scrolling', toggle: true, func: function() {CM.Disp.ToggleUpgradeBarFixedPos();}};
 
 // Calculation
-CM.ConfigData.CalcWrink = {type: 'bool', group: 'Calculation', label: ['Calculate with Wrinklers OFF', 'Calculate with Wrinklers ON'], desc: 'Calculate times and average Cookies Per Second with Wrinklers', toggle: true};
+CM.ConfigData.CalcWrink = {type: 'bool', group: 'Calculation', label: ['Calculate with Wrinklers OFF', 'Calculate with Wrinklers ON', 'Calculate with Single Fattest Wrinkler ON'], desc: 'Calculate times and average Cookies Per Second with (only the single fattest) Wrinklers', toggle: true};
 CM.ConfigData.CPSMode = {type: 'bool', group: 'Calculation', label: ['Current Cookies Per Second', 'Average Cookies Per Second'], desc: 'Calculate times using current Cookies Per Second or average Cookies Per Second', toggle: false};
 CM.ConfigData.AvgCPSHist = {type: 'bool', group: 'Calculation', label: ['Average CPS for past 10s', 'Average CPS for past 15s', 'Average CPS for past 30s', 'Average CPS for past 1m', 'Average CPS for past 5m', 'Average CPS for past 10m', 'Average CPS for past 15m', 'Average CPS for past 30m'], desc: 'How much time average Cookies Per Second should consider', toggle: false};
 CM.ConfigData.AvgClicksHist = {type: 'bool', group: 'Calculation', label: ['Average Cookie Clicks for past 1s', 'Average Cookie Clicks for past 5s', 'Average Cookie Clicks for past 10s', 'Average Cookie Clicks for past 15s', 'Average Cookie Clicks for past 30s'], desc: 'How much time average Cookie Clicks should consider', toggle: false};
@@ -1054,14 +1055,16 @@ CM.Data.ConfigDefault = {
 
 /**
  * This function returns the total amount stored in the Wrinkler Bank 
- * as calculated by CM.Cache.RemakeWrinkBank() if CM.Options.CalcWrink is set
+ * as calculated by  CM.Cache.CacheWrinklers() if CM.Options.CalcWrink is set
  * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinklersTotal)
  */
 CM.Disp.GetWrinkConfigBank = function() {
-	if (CM.Options.CalcWrink)
-		return CM.Cache.WrinklersTotal;
-	else
-		return 0;
+	if (CM.Options.CalcWrink == 1) {
+		return CM.Cache.WrinklersTotal;}
+	else if (CM.Options.CalcWrink == 2) {
+		return CM.Cache.WrinklersFattest[0];}
+	else {
+		return 0;}
 }
 
 /**

@@ -12,14 +12,16 @@
 
 /**
  * This function returns the total amount stored in the Wrinkler Bank 
- * as calculated by CM.Cache.RemakeWrinkBank() if CM.Options.CalcWrink is set
+ * as calculated by  CM.Cache.CacheWrinklers() if CM.Options.CalcWrink is set
  * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinklersTotal)
  */
 CM.Disp.GetWrinkConfigBank = function() {
-	if (CM.Options.CalcWrink)
-		return CM.Cache.WrinklersTotal;
-	else
-		return 0;
+	if (CM.Options.CalcWrink == 1) {
+		return CM.Cache.WrinklersTotal;}
+	else if (CM.Options.CalcWrink == 2) {
+		return CM.Cache.WrinklersFattest[0];}
+	else {
+		return 0;}
 }
 
 /**

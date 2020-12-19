@@ -477,7 +477,8 @@ CM.Cache.UpdateAvgCPS = function() {
 			totalGainWrink += sortedGainWrink[i];
 			totalGainChoEgg += sortedGainChoEgg[i];
 		}
-		CM.Cache.AvgCPS = (totalGainBank + (CM.Options.CalcWrink ? totalGainWrink : 0)) / sortedGainBank.length;
+		// TODO: Incorporate situation if CM.Options.CalcWrink == 2
+		CM.Cache.AvgCPS = (totalGainBank + (CM.Options.CalcWrink == 1 ? totalGainWrink : 0)) / sortedGainBank.length;
 
 		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 
