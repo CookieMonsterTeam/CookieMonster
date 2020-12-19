@@ -8,7 +8,7 @@
 /**
  * This function saves the config of CookieMonster to localStorage
  * It is called by CM.Config.LoadConfig(), CM.Config.RestoreDefault(), CM.Config.ToggleConfig(), 
- * CM.ToggleConfigVolume() and changes in options with type "url" or "color"
+ * CM.ToggleConfigVolume() and changes in options with type "url", "color" or "numscale"
  * @param 	{object}	config	The Config to be saved (normally CM.Options)
  */
 CM.Config.SaveConfig = function(config) {

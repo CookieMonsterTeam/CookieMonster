@@ -174,13 +174,13 @@ CM.Disp.Beautify = function(num, floats, forced) {
 	}
 	else if (isFinite(num)) {
 		var answer = '';
-		var timesTenToPowerThree = Math.trunc(Math.log10(num) / 3)
 		if (num == 0) {
 			return num.toString()
 		}
-		else if (-1 < timesTenToPowerThree && timesTenToPowerThree < 2) {
-			// TODO: Add changing separators of thousands and making this cut-off user configurable
-			answer = Math.round(num * 100) / 100;
+		else if (0.001 < num && num < CM.Options.ScaleCutoff) {
+			answer = num.toFixed(0);
+			if (CM.Options.ScaleSeparator) answer = answer.toLocaleString('nl');
+			return answer;
 		}
 		else if (CM.Options.Scale == 4 && !forced || forced == 4) { // Scientific notation, 123456789 => 1.235E+8
 			answer = num.toExponential(decimals).toString().replace("e", "E"); 
@@ -192,21 +192,21 @@ CM.Disp.Beautify = function(num, floats, forced) {
 			// answer is now "xxx.xx" (e.g., 123456789 would be 123.46)
 			if (CM.Options.Scale == 1 && !forced || forced == 1) { // Metric scale, 123456789 => 123.457 M
 				if (num >= 0.01 && num < Number("1e" + CM.Data.metric.length * 3)) {
-					answer += ' ' + CM.Data.metric[AmountOfTenPowerThree - 1]
+					answer += ' ' + CM.Data.metric[AmountOfTenPowerThree]
 				}
 				// If number is too large or little, revert to scientific notation
 				else answer = CM.Disp.Beautify(num, 0, 4);
 			}
 			else if (CM.Options.Scale == 2 && !forced || forced == 2) { // Short scale, 123456789 => 123.457 M
 				if (num >= 0.01 && num < Number("1e" + CM.Data.shortScale.length * 3)) {
-					answer += ' ' + CM.Data.shortScale[AmountOfTenPowerThree - 1];
+					answer += ' ' + CM.Data.shortScale[AmountOfTenPowerThree];
 				}
 				// If number is too large or little, revert to scientific notation
 				else answer = CM.Disp.Beautify(num, 0, 4);
 			}
 			else if (CM.Options.Scale == 3 && !forced || forced == 3) { // Short scale, 123456789 => 123.457 M
 				if (num >= 0.01 && num < Number("1e" + CM.Data.shortScaleAbbreviated.length * 3)) {
-					answer += ' ' + CM.Data.shortScaleAbbreviated[AmountOfTenPowerThree - 1];
+					answer += ' ' + CM.Data.shortScaleAbbreviated[AmountOfTenPowerThree];
 				}
 				// If number is too large or little, revert to scientific notation
 				else answer = CM.Disp.Beautify(num, 0, 4);
@@ -2005,6 +2005,32 @@ CM.Disp.CreatePrefOption = function(config) {
 			return div;
 		}
 	}
+	else if (CM.ConfigData[config].type == "numscale") {
+		var div = document.createElement('div');
+		div.className = 'listing';
+		var span = document.createElement('span');
+		span.className = 'option';
+		span.textContent = CM.ConfigData[config].label + ' ';
+		div.appendChild(span);
+		var input = document.createElement('input');
+		input.id = CM.ConfigPrefix + config;
+		input.className = 'option';
+		input.type = 'number';
+		input.value = (CM.Options[config]);
+		input.min = CM.ConfigData[config].min;
+		input.max = CM.ConfigData[config].max;
+		input.oninput = function() {if (this.value > this.max) console.log("TEST");
+			 CM.Options[config] = this.value; 
+			 CM.Config.SaveConfig(CM.Options); 
+			 CM.Disp.RefreshScale()
+			}
+		div.appendChild(input);
+		div.appendChild(document.createTextNode(' '));
+		var label = document.createElement('label');
+		label.textContent = CM.ConfigData[config].desc;
+		div.appendChild(label);
+		return div;
+	}
 }
 
 /**
@@ -2018,7 +2044,7 @@ CM.Disp.ToggleDetailedTime = function() {
 
 /**
  * This function refreshes all numbers after a change in scale-setting
- * It is therefore called by a change in CM.Options.Scale and CM.Options.ScaleDecimals
+ * It is therefore called by a changes in CM.Options.Scale, CM.Options.ScaleDecimals, CM.Options.ScaleSeparator and CM.Options.ScaleCutoff 
  */
 CM.Disp.RefreshScale = function() {
 	BeautifyAll();
