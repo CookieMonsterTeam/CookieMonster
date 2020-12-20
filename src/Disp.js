@@ -1404,7 +1404,9 @@ CM.Disp.TooltipCreateWarningSection = function() {
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnLuckyFrenzy', CM.Disp.colorYellow, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)', 'CMDispTooltipWarnLuckyFrenzyText'));
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjure', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"', 'CMDispTooltipWarnConjureText'));
-	 
+	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnEdifice', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies needed for "Spontaneous Edifice" to possibly give you your most expensive building"', 'CMDispTooltipWarnEdificeText'));
+	
 	return CM.Disp.TooltipWarn;
 }
 
@@ -1666,13 +1668,31 @@ CM.Disp.UpdateTooltipWarnings = function() {
 			if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnConjure').style.display = '';
 				l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / CM.Disp.GetCPS()) + ')';
-			} else {
-				l('CMDispTooltipWarnConjure').style.display = 'none';
+			} else l('CMDispTooltipWarnConjure').style.display = 'none';
+		}
+		else l('CMDispTooltipWarnConjure').style.display = 'none';
+
+		if (CM.Options.ToolWarnEdifice == 1) {
+			var limitEdifice = 0;
+			var max = 0;
+			var n = 0;
+			for (var i in Game.Objects) {
+				if (Game.Objects[i].amount > max) max = Game.Objects[i].amount;
+				if (Game.Objects[i].amount > 0) n++;
 			}
+			for (var i in Game.Objects) {
+				if ((Game.Objects[i].amount < max || n == 1) &&
+					Game.Objects[i].amount < 400 &&
+					Game.Objects[i].price * 2 > limitEdifice) {
+					limitEdifice = Game.Objects[i].price * 2;
+				}
+			}
+			if (limitEdifice && amount < limitEdifice && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+				l('CMDispTooltipWarnEdifice').style.display = '';
+				l('CMDispTooltipWarnEdificeText').textContent = Beautify(limitEdifice - amount) + ' (' + CM.Disp.FormatTime((limitEdifice - amount) / CM.Disp.GetCPS()) + ')';
+			} else l('CMDispTooltipWarnEdifice').style.display = 'none';
 		}
-		else {
-			l('CMDispTooltipWarnConjure').style.display = 'none';
-		}
+		else l('CMDispTooltipWarnEdifice').style.display = 'none';
 	}
 	else {
 		if (l('CMDispTooltipWarningParent') != null) {
