@@ -1675,23 +1675,9 @@ CM.Disp.UpdateTooltipWarnings = function() {
 		else l('CMDispTooltipWarnConjure').style.display = 'none';
 
 		if (CM.Options.ToolWarnEdifice == 1) {
-			var limitEdifice = 0;
-			var max = 0;
-			var n = 0;
-			for (var i in Game.Objects) {
-				if (Game.Objects[i].amount > max) max = Game.Objects[i].amount;
-				if (Game.Objects[i].amount > 0) n++;
-			}
-			for (var i in Game.Objects) {
-				if ((Game.Objects[i].amount < max || n == 1) &&
-					Game.Objects[i].amount < 400 &&
-					Game.Objects[i].price * 2 > limitEdifice) {
-					limitEdifice = Game.Objects[i].price * 2;
-				}
-			}
-			if (limitEdifice && amount < limitEdifice && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+			if (CM.Cache.Edifice && amount < CM.Cache.Edifice && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnEdifice').style.display = '';
-				l('CMDispTooltipWarnEdificeText').textContent = Beautify(limitEdifice - amount) + ' (' + CM.Disp.FormatTime((limitEdifice - amount) / CM.Disp.GetCPS()) + ')';
+				l('CMDispTooltipWarnEdificeText').textContent = Beautify(CM.Cache.Edifice - amount) + ' (' + CM.Disp.FormatTime((CM.Cache.Edifice - amount) / CM.Disp.GetCPS()) + ')';
 			} else l('CMDispTooltipWarnEdifice').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnEdifice').style.display = 'none';
@@ -2129,9 +2115,9 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(CM.Disp.CreateStatsChainSection());
 	}
 
-	stats.appendChild(CM.Disp.CreateStatsHeader('Conjure Baked Goods', 'Conjure'));
-	if (CM.Options.Header.Conjure) {
-		stats.appendChild(CM.Disp.CreateStatsConjureSection());
+	stats.appendChild(CM.Disp.CreateStatsHeader('Spells', 'Spells'));
+	if (CM.Options.Header.Spells) {
+		stats.appendChild(CM.Disp.CreateStatsSpellsSection());
  	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Prestige', 'Prestige'));
@@ -2525,12 +2511,12 @@ CM.Disp.CreateStatsChainSection = function() {
 }
 
 /**
- * This function creates the "Conjure" section of the stats page
- * @returns	{object}	section		The object contating the Conjure section
+ * This function creates the "Spells" section of the stats page
+ * @returns	{object}	section		The object contating the Spells section
  */
-CM.Disp.CreateStatsConjureSection = function() {
+CM.Disp.CreateStatsSpellsSection = function() {
 	var section = document.createElement('div');
-	section.className = 'CMStatsConjureSection';
+	section.className = 'CMStatsSpellsSection';
 
 	var conjureColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 	var conjureCur = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
@@ -2550,6 +2536,9 @@ CM.Disp.CreateStatsConjureSection = function() {
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Cookies Required', conjureReqFrag, 'GoldCookTooltipPlaceholder'));
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (MAX)', document.createTextNode(CM.Disp.Beautify(CM.Cache.ConjureReward)), 'GoldCookTooltipPlaceholder'));
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (CUR)', document.createTextNode(CM.Disp.Beautify(conjureCur)), 'GoldCookTooltipPlaceholder'));
+	if (CM.Cache.Edifice) {
+		section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Spontaneous Edifice\" Cookies Required (most expensive building)', document.createTextNode(CM.Disp.Beautify(CM.Cache.Edifice) + ' (' + CM.Cache.EdificeBuilding + ")"), 'GoldCookTooltipPlaceholder'));
+	}
 	return section;
 }
 

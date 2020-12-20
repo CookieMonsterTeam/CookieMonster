@@ -275,6 +275,6 @@ CM.Data.ConfigDefault = {
 	Colors: {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
 	SortBuildings: 0,
 	SortUpgrades: 0,
-	Header: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Notation: 1, Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
+	Header: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Notation: 1, Lucky: 1, Spells: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
 };
 

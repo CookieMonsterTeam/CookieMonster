@@ -43,6 +43,7 @@ if (typeof CM == "undefined") {
 CM.Cache.InitCache = function() {
 	CM.Cache.CacheDragonAuras();
 	CM.Cache.CacheWrinklers();
+	CM.Cache.CacheStats();
 }
 
 /********
@@ -91,6 +92,60 @@ CM.Cache.CacheWrinklers = function() {
 		CM.Cache.WrinklersTotal += sucked;
 		if (Game.wrinklers[i].type == 0) CM.Cache.WrinklersNormal += sucked;
 		if (sucked > CM.Cache.WrinklersFattest[0]) CM.Cache.WrinklersFattest = [sucked, i];
+	}
+}
+
+/********
+ * Section: Functions related to Cachining stats */
+
+/**
+ * This functions caches variables related to the stats apge
+ * It is called by CM.Loop() upon changes to cps and CM.Cache.InitCache()
+ * @global	{number}	CM.Cache.Lucky					Cookies required for max Lucky
+ * @global	{number}	CM.Cache.LuckyReward			Reward for max normal Lucky
+ * @global	{number}	CM.Cache.LuckyWrathReward		Reward for max normal Lucky from Wrath cookie
+ * @global	{number}	CM.Cache.LuckyFrenzy			Cookies required for max Lucky Frenzy
+ * @global	{number}	CM.Cache.LuckyRewardFrenzy		Reward for max Lucky Frenzy
+ * @global	{number}	CM.Cache.LuckyWrathRewardFrenzy	Reward for max Lucky Frenzy from Wrath cookie
+ * @global	{number}	CM.Cache.Conjure				Cookies required for max Conjure Baked Goods
+ * @global	{number}	CM.Cache.ConjureReward			Reward for max Conjure Baked Goods
+ * @global	{number}	CM.Cache.Edifice				Cookies required for most expensive building through Spontaneous Edifice
+ * @global	{string}	CM.Cache.EdificeBuilding		Name of most expensive building possible with Spontaneous Edifice
+ */
+CM.Cache.CacheStats = function() {
+	var goldenMult = CM.Cache.GoldenCookiesMult;
+	var wrathMult = CM.Cache.WrathCookiesMult;
+
+	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
+	CM.Cache.Lucky *= CM.Cache.DragonsFortuneMultAdjustment;
+	var cpsBuffMult = CM.Sim.getCPSBuffMult();
+	if (cpsBuffMult > 0) {
+		CM.Cache.Lucky /= cpsBuffMult;
+	} else {
+		CM.Cache.Lucky = 0;
+	}
+	CM.Cache.LuckyReward = goldenMult * (CM.Cache.Lucky * 0.15) + 13;
+	CM.Cache.LuckyWrathReward = wrathMult * (CM.Cache.Lucky * 0.15) + 13;
+	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
+	CM.Cache.LuckyRewardFrenzy = goldenMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.LuckyWrathRewardFrenzy = wrathMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.Conjure = CM.Cache.Lucky * 2;
+	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
+	 
+	CM.Cache.Edifice = 0;
+	var max = 0;
+	var n = 0;
+	for (var i in Game.Objects) {
+		if (Game.Objects[i].amount > max) max = Game.Objects[i].amount;
+		if (Game.Objects[i].amount > 0) n++;
+	}
+	for (var i in Game.Objects) {
+		if ((Game.Objects[i].amount < max || n == 1) &&
+			Game.Objects[i].amount < 400 &&
+			Game.Objects[i].price * 2 > CM.Cache.Edifice) {
+			CM.Cache.Edifice = Game.Objects[i].price * 2;
+			CM.Cache.EdificeBuilding = i;
+		}
 	}
 }
 
@@ -314,27 +369,6 @@ CM.Cache.RemakeGoldenAndWrathCookiesMults = function() {
 	}
 }
 
-CM.Cache.RemakeLucky = function() {
-	var goldenMult = CM.Cache.GoldenCookiesMult;
-	var wrathMult = CM.Cache.WrathCookiesMult;
-
-	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
-	CM.Cache.Lucky *= CM.Cache.DragonsFortuneMultAdjustment;
-	var cpsBuffMult = CM.Sim.getCPSBuffMult();
-	if (cpsBuffMult > 0) {
-		CM.Cache.Lucky /= cpsBuffMult;
-	} else {
-		CM.Cache.Lucky = 0;
-	}
-	CM.Cache.LuckyReward = goldenMult * (CM.Cache.Lucky * 0.15) + 13;
-	CM.Cache.LuckyWrathReward = wrathMult * (CM.Cache.Lucky * 0.15) + 13;
-	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
-	CM.Cache.LuckyRewardFrenzy = goldenMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
-	CM.Cache.LuckyWrathRewardFrenzy = wrathMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
-	CM.Cache.Conjure = CM.Cache.Lucky * 2;
- 	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
-}
-
 CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
 	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
 	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
@@ -552,14 +586,6 @@ CM.Cache.GoldenCookiesMult = 1;
 CM.Cache.WrathCookiesMult = 1;
 CM.Cache.DragonsFortuneMultAdjustment = 1;
 CM.Cache.NoGoldSwitchCookiesPS = 0;
-CM.Cache.Lucky = 0;
-CM.Cache.LuckyReward = 0;
-CM.Cache.LuckyWrathReward = 0;
-CM.Cache.LuckyFrenzy = 0;
-CM.Cache.LuckyRewardFrenzy = 0;
-CM.Cache.LuckyWrathRewardFrenzy = 0;
-CM.Cache.Conjure = 0;
-CM.Cache.ConjureReward = 0;
 CM.Cache.SeaSpec = 0;
 CM.Cache.Chain = 0;
 CM.Cache.ChainWrath = 0;
@@ -1042,7 +1068,7 @@ CM.Data.ConfigDefault = {
 	Colors: {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
 	SortBuildings: 0,
 	SortUpgrades: 0,
-	Header: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Notation: 1, Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
+	Header: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Notation: 1, Lucky: 1, Spells: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
 };
 
 /********
@@ -2722,23 +2748,9 @@ CM.Disp.UpdateTooltipWarnings = function() {
 		else l('CMDispTooltipWarnConjure').style.display = 'none';
 
 		if (CM.Options.ToolWarnEdifice == 1) {
-			var limitEdifice = 0;
-			var max = 0;
-			var n = 0;
-			for (var i in Game.Objects) {
-				if (Game.Objects[i].amount > max) max = Game.Objects[i].amount;
-				if (Game.Objects[i].amount > 0) n++;
-			}
-			for (var i in Game.Objects) {
-				if ((Game.Objects[i].amount < max || n == 1) &&
-					Game.Objects[i].amount < 400 &&
-					Game.Objects[i].price * 2 > limitEdifice) {
-					limitEdifice = Game.Objects[i].price * 2;
-				}
-			}
-			if (limitEdifice && amount < limitEdifice && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+			if (CM.Cache.Edifice && amount < CM.Cache.Edifice && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnEdifice').style.display = '';
-				l('CMDispTooltipWarnEdificeText').textContent = Beautify(limitEdifice - amount) + ' (' + CM.Disp.FormatTime((limitEdifice - amount) / CM.Disp.GetCPS()) + ')';
+				l('CMDispTooltipWarnEdificeText').textContent = Beautify(CM.Cache.Edifice - amount) + ' (' + CM.Disp.FormatTime((CM.Cache.Edifice - amount) / CM.Disp.GetCPS()) + ')';
 			} else l('CMDispTooltipWarnEdifice').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnEdifice').style.display = 'none';
@@ -3176,9 +3188,9 @@ CM.Disp.AddMenuStats = function(title) {
 		stats.appendChild(CM.Disp.CreateStatsChainSection());
 	}
 
-	stats.appendChild(CM.Disp.CreateStatsHeader('Conjure Baked Goods', 'Conjure'));
-	if (CM.Options.Header.Conjure) {
-		stats.appendChild(CM.Disp.CreateStatsConjureSection());
+	stats.appendChild(CM.Disp.CreateStatsHeader('Spells', 'Spells'));
+	if (CM.Options.Header.Spells) {
+		stats.appendChild(CM.Disp.CreateStatsSpellsSection());
  	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Prestige', 'Prestige'));
@@ -3572,12 +3584,12 @@ CM.Disp.CreateStatsChainSection = function() {
 }
 
 /**
- * This function creates the "Conjure" section of the stats page
- * @returns	{object}	section		The object contating the Conjure section
+ * This function creates the "Spells" section of the stats page
+ * @returns	{object}	section		The object contating the Spells section
  */
-CM.Disp.CreateStatsConjureSection = function() {
+CM.Disp.CreateStatsSpellsSection = function() {
 	var section = document.createElement('div');
-	section.className = 'CMStatsConjureSection';
+	section.className = 'CMStatsSpellsSection';
 
 	var conjureColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 	var conjureCur = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
@@ -3597,6 +3609,9 @@ CM.Disp.CreateStatsConjureSection = function() {
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Cookies Required', conjureReqFrag, 'GoldCookTooltipPlaceholder'));
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (MAX)', document.createTextNode(CM.Disp.Beautify(CM.Cache.ConjureReward)), 'GoldCookTooltipPlaceholder'));
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (CUR)', document.createTextNode(CM.Disp.Beautify(conjureCur)), 'GoldCookTooltipPlaceholder'));
+	if (CM.Cache.Edifice) {
+		section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Spontaneous Edifice\" Cookies Required (most expensive building)', document.createTextNode(CM.Disp.Beautify(CM.Cache.Edifice) + ' (' + CM.Cache.EdificeBuilding + ")"), 'GoldCookTooltipPlaceholder'));
+	}
 	return section;
 }
 
@@ -3962,12 +3977,13 @@ CM.Loop = function() {
 		CM.Disp.UpdateAscendState();
 	}
 	if (!Game.OnAscend && Game.AscendTimer == 0) {
+		// CM.Sim.DoSims is set whenever CPS has changed
 		if (CM.Sim.DoSims) {
 			CM.Cache.RemakeIncome();
 
 			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
 			CM.Cache.RemakeGoldenAndWrathCookiesMults();
-			CM.Cache.RemakeLucky();
+			CM.Cache.CacheStats();
 			CM.Cache.RemakeChain();
 
 			CM.Cache.RemakeSeaSpec();
