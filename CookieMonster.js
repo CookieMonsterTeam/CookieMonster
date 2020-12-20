@@ -119,11 +119,8 @@ CM.Cache.CacheStats = function() {
 	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
 	CM.Cache.Lucky *= CM.Cache.DragonsFortuneMultAdjustment;
 	var cpsBuffMult = CM.Sim.getCPSBuffMult();
-	if (cpsBuffMult > 0) {
-		CM.Cache.Lucky /= cpsBuffMult;
-	} else {
-		CM.Cache.Lucky = 0;
-	}
+	if (cpsBuffMult > 0) CM.Cache.Lucky /= cpsBuffMult;
+	else CM.Cache.Lucky = 0;
 	CM.Cache.LuckyReward = goldenMult * (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyWrathReward = wrathMult * (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
