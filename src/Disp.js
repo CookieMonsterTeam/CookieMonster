@@ -1270,9 +1270,11 @@ CM.Disp.Tooltip = function(type, name) {
 	else if (type === 'g') l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)(); // Grimoire
 
 	// Adds area for extra tooltip-sections
-	var area = document.createElement('div');
-	area.id = 'CMTooltipArea';
-	l('tooltip').appendChild(area);
+	if ((type == 'b' && Game.buyMode == 1) || type == 'u' || type == 's' || type == 'g') {
+		var area = document.createElement('div');
+		area.id = 'CMTooltipArea';
+		l('tooltip').appendChild(area);
+	}
 	
 	// Sets global variables used by CM.Disp.UpdateTooltip()
 	CM.Disp.tooltipType = type;
