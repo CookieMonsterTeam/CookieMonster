@@ -942,6 +942,7 @@ CM.ConfigData.TooltipAmor = {type: 'bool', group: 'Tooltip', label: ['Buildings 
 CM.ConfigData.ToolWarnLucky = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Warning OFF', 'Tooltip Lucky Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" rewards', toggle: true};
 CM.ConfigData.ToolWarnLuckyFrenzy = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Frenzy Warning OFF', 'Tooltip Lucky Frenzy Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" (Frenzy) rewards', toggle: true};
 CM.ConfigData.ToolWarnConjure = {type: 'bool', group: 'Tooltip', label: ['Tooltip Conjure Warning OFF', 'Tooltip Conjure Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Conjure Baked Goods" rewards', toggle: true};
+CM.ConfigData.ToolWarnEdifice = {type: 'bool', group: 'Tooltip', label: ['Tooltip Edifice Warning OFF', 'Tooltip Edifice Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for "Spontaneous Edifice" to possibly give you your most expensive building', toggle: true};
 CM.ConfigData.ToolWarnPos = {type: 'bool', group: 'Tooltip', label: ['Tooltip Warning Position (Left)', 'Tooltip Warning Position (Bottom)'], desc: 'Placement of the warning boxes', toggle: false, func: function() {CM.Disp.ToggleToolWarnPos();}};
 CM.ConfigData.TooltipGrim = {type: 'bool', group: 'Tooltip', label: ['Grimoire Tooltip Information OFF', 'Grimoire Tooltip Information ON'], desc: 'Extra information in tooltip for grimoire', toggle: true};
 CM.ConfigData.ToolWrink = {type: 'bool', group: 'Tooltip', label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
@@ -1022,6 +1023,7 @@ CM.Data.ConfigDefault = {
 	ToolWarnLucky: 1,
 	ToolWarnLuckyFrenzy: 1,
 	ToolWarnConjure: 1, 
+	ToolWarnEdifice: 1,
 	ToolWarnPos: 1, 
 	TooltipGrim:1, 
 	ToolWrink: 1, 
@@ -1041,7 +1043,9 @@ CM.Data.ConfigDefault = {
 	SortBuildings: 0,
 	SortUpgrades: 0,
 	Header: {BarsColors: 1, Calculation: 1, Notification: 1, Tooltip: 1, Statistics: 1, Notation: 1, Lucky: 1, Conjure: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
-};/********
+};
+
+/********
  * Disp *
  ********/
 
@@ -2313,9 +2317,11 @@ CM.Disp.Tooltip = function(type, name) {
 	else if (type === 'g') l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)(); // Grimoire
 
 	// Adds area for extra tooltip-sections
-	var area = document.createElement('div');
-	area.id = 'CMTooltipArea';
-	l('tooltip').appendChild(area);
+	if ((type == 'b' && Game.buyMode == 1) || type == 'u' || type == 's' || type == 'g') {
+		var area = document.createElement('div');
+		area.id = 'CMTooltipArea';
+		l('tooltip').appendChild(area);
+	}
 	
 	// Sets global variables used by CM.Disp.UpdateTooltip()
 	CM.Disp.tooltipType = type;
@@ -2447,7 +2453,9 @@ CM.Disp.TooltipCreateWarningSection = function() {
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnLuckyFrenzy', CM.Disp.colorYellow, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)', 'CMDispTooltipWarnLuckyFrenzyText'));
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjure', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"', 'CMDispTooltipWarnConjureText'));
-	 
+	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnEdifice', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies needed for "Spontaneous Edifice" to possibly give you your most expensive building"', 'CMDispTooltipWarnEdificeText'));
+	
 	return CM.Disp.TooltipWarn;
 }
 
@@ -2709,13 +2717,31 @@ CM.Disp.UpdateTooltipWarnings = function() {
 			if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnConjure').style.display = '';
 				l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / CM.Disp.GetCPS()) + ')';
-			} else {
-				l('CMDispTooltipWarnConjure').style.display = 'none';
+			} else l('CMDispTooltipWarnConjure').style.display = 'none';
+		}
+		else l('CMDispTooltipWarnConjure').style.display = 'none';
+
+		if (CM.Options.ToolWarnEdifice == 1) {
+			var limitEdifice = 0;
+			var max = 0;
+			var n = 0;
+			for (var i in Game.Objects) {
+				if (Game.Objects[i].amount > max) max = Game.Objects[i].amount;
+				if (Game.Objects[i].amount > 0) n++;
 			}
+			for (var i in Game.Objects) {
+				if ((Game.Objects[i].amount < max || n == 1) &&
+					Game.Objects[i].amount < 400 &&
+					Game.Objects[i].price * 2 > limitEdifice) {
+					limitEdifice = Game.Objects[i].price * 2;
+				}
+			}
+			if (limitEdifice && amount < limitEdifice && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+				l('CMDispTooltipWarnEdifice').style.display = '';
+				l('CMDispTooltipWarnEdificeText').textContent = Beautify(limitEdifice - amount) + ' (' + CM.Disp.FormatTime((limitEdifice - amount) / CM.Disp.GetCPS()) + ')';
+			} else l('CMDispTooltipWarnEdifice').style.display = 'none';
 		}
-		else {
-			l('CMDispTooltipWarnConjure').style.display = 'none';
-		}
+		else l('CMDispTooltipWarnEdifice').style.display = 'none';
 	}
 	else {
 		if (l('CMDispTooltipWarningParent') != null) {
