@@ -140,12 +140,13 @@ CM.Loop = function() {
 		CM.Disp.UpdateAscendState();
 	}
 	if (!Game.OnAscend && Game.AscendTimer == 0) {
+		// CM.Sim.DoSims is set whenever CPS has changed
 		if (CM.Sim.DoSims) {
 			CM.Cache.RemakeIncome();
 
 			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
 			CM.Cache.RemakeGoldenAndWrathCookiesMults();
-			CM.Cache.RemakeLucky();
+			CM.Cache.CacheStats();
 			CM.Cache.RemakeChain();
 
 			CM.Cache.RemakeSeaSpec();

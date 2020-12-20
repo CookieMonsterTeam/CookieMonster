@@ -14,6 +14,7 @@
 CM.Cache.InitCache = function() {
 	CM.Cache.CacheDragonAuras();
 	CM.Cache.CacheWrinklers();
+	CM.Cache.CacheStats();
 }
 
 /********
@@ -62,6 +63,60 @@ CM.Cache.CacheWrinklers = function() {
 		CM.Cache.WrinklersTotal += sucked;
 		if (Game.wrinklers[i].type == 0) CM.Cache.WrinklersNormal += sucked;
 		if (sucked > CM.Cache.WrinklersFattest[0]) CM.Cache.WrinklersFattest = [sucked, i];
+	}
+}
+
+/********
+ * Section: Functions related to Cachining stats */
+
+/**
+ * This functions caches variables related to the stats apge
+ * It is called by CM.Loop() upon changes to cps and CM.Cache.InitCache()
+ * @global	{number}	CM.Cache.Lucky					Cookies required for max Lucky
+ * @global	{number}	CM.Cache.LuckyReward			Reward for max normal Lucky
+ * @global	{number}	CM.Cache.LuckyWrathReward		Reward for max normal Lucky from Wrath cookie
+ * @global	{number}	CM.Cache.LuckyFrenzy			Cookies required for max Lucky Frenzy
+ * @global	{number}	CM.Cache.LuckyRewardFrenzy		Reward for max Lucky Frenzy
+ * @global	{number}	CM.Cache.LuckyWrathRewardFrenzy	Reward for max Lucky Frenzy from Wrath cookie
+ * @global	{number}	CM.Cache.Conjure				Cookies required for max Conjure Baked Goods
+ * @global	{number}	CM.Cache.ConjureReward			Reward for max Conjure Baked Goods
+ * @global	{number}	CM.Cache.Edifice				Cookies required for most expensive building through Spontaneous Edifice
+ * @global	{string}	CM.Cache.EdificeBuilding		Name of most expensive building possible with Spontaneous Edifice
+ */
+CM.Cache.CacheStats = function() {
+	var goldenMult = CM.Cache.GoldenCookiesMult;
+	var wrathMult = CM.Cache.WrathCookiesMult;
+
+	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
+	CM.Cache.Lucky *= CM.Cache.DragonsFortuneMultAdjustment;
+	var cpsBuffMult = CM.Sim.getCPSBuffMult();
+	if (cpsBuffMult > 0) {
+		CM.Cache.Lucky /= cpsBuffMult;
+	} else {
+		CM.Cache.Lucky = 0;
+	}
+	CM.Cache.LuckyReward = goldenMult * (CM.Cache.Lucky * 0.15) + 13;
+	CM.Cache.LuckyWrathReward = wrathMult * (CM.Cache.Lucky * 0.15) + 13;
+	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
+	CM.Cache.LuckyRewardFrenzy = goldenMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.LuckyWrathRewardFrenzy = wrathMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.Conjure = CM.Cache.Lucky * 2;
+	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
+	 
+	CM.Cache.Edifice = 0;
+	var max = 0;
+	var n = 0;
+	for (var i in Game.Objects) {
+		if (Game.Objects[i].amount > max) max = Game.Objects[i].amount;
+		if (Game.Objects[i].amount > 0) n++;
+	}
+	for (var i in Game.Objects) {
+		if ((Game.Objects[i].amount < max || n == 1) &&
+			Game.Objects[i].amount < 400 &&
+			Game.Objects[i].price * 2 > CM.Cache.Edifice) {
+			CM.Cache.Edifice = Game.Objects[i].price * 2;
+			CM.Cache.EdificeBuilding = i;
+		}
 	}
 }
 
@@ -285,27 +340,6 @@ CM.Cache.RemakeGoldenAndWrathCookiesMults = function() {
 	}
 }
 
-CM.Cache.RemakeLucky = function() {
-	var goldenMult = CM.Cache.GoldenCookiesMult;
-	var wrathMult = CM.Cache.WrathCookiesMult;
-
-	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
-	CM.Cache.Lucky *= CM.Cache.DragonsFortuneMultAdjustment;
-	var cpsBuffMult = CM.Sim.getCPSBuffMult();
-	if (cpsBuffMult > 0) {
-		CM.Cache.Lucky /= cpsBuffMult;
-	} else {
-		CM.Cache.Lucky = 0;
-	}
-	CM.Cache.LuckyReward = goldenMult * (CM.Cache.Lucky * 0.15) + 13;
-	CM.Cache.LuckyWrathReward = wrathMult * (CM.Cache.Lucky * 0.15) + 13;
-	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
-	CM.Cache.LuckyRewardFrenzy = goldenMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
-	CM.Cache.LuckyWrathRewardFrenzy = wrathMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
-	CM.Cache.Conjure = CM.Cache.Lucky * 2;
- 	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
-}
-
 CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
 	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
 	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
@@ -523,14 +557,6 @@ CM.Cache.GoldenCookiesMult = 1;
 CM.Cache.WrathCookiesMult = 1;
 CM.Cache.DragonsFortuneMultAdjustment = 1;
 CM.Cache.NoGoldSwitchCookiesPS = 0;
-CM.Cache.Lucky = 0;
-CM.Cache.LuckyReward = 0;
-CM.Cache.LuckyWrathReward = 0;
-CM.Cache.LuckyFrenzy = 0;
-CM.Cache.LuckyRewardFrenzy = 0;
-CM.Cache.LuckyWrathRewardFrenzy = 0;
-CM.Cache.Conjure = 0;
-CM.Cache.ConjureReward = 0;
 CM.Cache.SeaSpec = 0;
 CM.Cache.Chain = 0;
 CM.Cache.ChainWrath = 0;
