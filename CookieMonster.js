@@ -16,6 +16,8 @@ RunCookieMonsterHeader = function() {
 
     CM.Disp = {};
 
+    CM.Footer = {};
+
     CM.Main = {};
 
     CM.Options = {};
@@ -186,13 +188,6 @@ CM.Cache.CacheMissingUpgrades = function() {
 
 /********
  * Section: UNSORTED */
-
-CM.Cache.AddQueue = function() {
-	CM.Cache.Queue = document.createElement('script');
-	CM.Cache.Queue.type = 'text/javascript';
-	CM.Cache.Queue.src = 'https://aktanusa.github.io/CookieMonster/queue/queue.js';
-	document.head.appendChild(CM.Cache.Queue);
-}
 
 CM.Cache.NextNumber = function(base) {
 	var count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
@@ -676,10 +671,12 @@ CM.Cache.spawnedGoldenShimmer = 0;
  * Section: Functions related to saving, loading and restoring configs */
 
 /**
- * This function saves the config of CookieMonster to localStorage
+ * @deprecated
+ * This function (used to) save the config of CookieMonster
  * It is called by CM.Config.LoadConfig(), CM.Config.RestoreDefault(), CM.Config.ToggleConfig(), 
  * CM.ToggleConfigVolume() and changes in options with type "url", "color" or "numscale"
- * @param 	{object}	config	The Config to be saved (normally CM.Options)
+ * TODO: See if there is a way to force Cookie CLICKER to save only the mod-data and not also Save-data.
+ * Otherwise this can be removed
  */
 CM.Config.SaveConfig = function(config) {
 	CM.save();
@@ -750,7 +747,7 @@ CM.Config.LoadConfig = function(settings) {
  */
 CM.Config.RestoreDefault = function() {
 	CM.Config.LoadConfig(CM.Data.ConfigDefault);
-	CM.Config.SaveConfig();
+	CM.Config.SaveConfig(CM.Options);
 	Game.UpdateMenu();
 }
 
@@ -1381,17 +1378,6 @@ CM.Disp.CreateCssArea = function() {
 	CM.Disp.Css.type = 'text/css';
 
 	document.head.appendChild(CM.Disp.Css);
-}
-
-/**
- * TODO: What does this do? @Aktanusa
- * It is called by CM.init, which is called by Game.registerMod
- */
-CM.Disp.AddJscolor = function() {
-	CM.Disp.Jscolor = document.createElement('script');
-	CM.Disp.Jscolor.type = 'text/javascript';
-	CM.Disp.Jscolor.setAttribute('src', 'https://aktanusa.github.io/CookieMonster/jscolor/jscolor.js');
-	document.head.appendChild(CM.Disp.Jscolor);
 }
 
 /**
@@ -5252,7 +5238,10 @@ CM.Sim.mouseCps = function() {
  * Section: Functions related to base game modding API */
 
 /**
- * TODO: This should at one point be used to register hooks
+ * This register a init function to the CM object. Per Game code/comments:
+ * "this function is called as soon as the mod is registered
+ * declare hooks here"
+ * It starts the further initialization of CookieMonster and registers hooks
  */
 CM.init = function() {
     var proceed = true;
@@ -5266,7 +5255,7 @@ CM.init = function() {
 }
 
 /**
- * This registers a save function. Per Game code/comments:
+ * This registers a save function to the CM object. Per Game code/comments:
  * "use this to store persistent data associated with your mod
  * return 'a string to be saved';"
  */
@@ -5278,7 +5267,7 @@ CM.save = function() {
 }
 
 /**
- * This registers a load function. Per Game code/comments:
+ * This registers a load function to the CM object. Per Game code/comments:
  * "do stuff with the string data you saved previously"
  */
 CM.load = function(str) {
@@ -5286,9 +5275,39 @@ CM.load = function(str) {
     CM.Config.LoadConfig(save.settings);
 }
 
+/********
+ * Section: Functions related to the initialization of CookieMonster */
+
+/**
+ * This functions loads an external script (on the same repository) that creates a Queue() function
+ * It is called by the last function in the footer
+ */
+CM.Footer.AddQueue = function() {
+	CM.Footer.Queue = document.createElement('script');
+	CM.Footer.Queue.type = 'text/javascript';
+	CM.Footer.Queue.src = 'https://aktanusa.github.io/CookieMonster/queue/queue.js';
+	document.head.appendChild(CM.Footer.Queue);
+}
+
+/**
+ * This functions loads an external script (on the same repository) that creates the 
+ * functionality needed to dynamiccaly change colours
+ * It is called by the last function in the footer
+ */
+CM.Footer.AddJscolor = function() {
+	CM.Footer.Jscolor = document.createElement('script');
+	CM.Footer.Jscolor.type = 'text/javascript';
+	CM.Footer.Jscolor.setAttribute('src', 'https://aktanusa.github.io/CookieMonster/jscolor/jscolor.js');
+	document.head.appendChild(CM.Footer.Jscolor);
+}
+
+/**
+ * This functions starts the initizialization and register CookieMonster
+ * It is called as the last function in this script's execution
+ */
 if (!CM.isRunning) {
-    CM.Cache.AddQueue();
-    CM.Disp.AddJscolor();
+    CM.Footer.AddQueue();
+    CM.Footer.AddJscolor();
     var delay = setInterval(function() {
         if (typeof Queue !== 'undefined' && typeof jscolor !== 'undefined') {
             Game.registerMod('CookieMonster', CM);
