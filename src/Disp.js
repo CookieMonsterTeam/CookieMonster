@@ -1857,8 +1857,23 @@ CM.Disp.AddMenuPref = function(title) {
 		groupObject = CM.Disp.CreatePrefHeader(group, CM.ConfigGroups[group]) // (group, display-name of group)
 		frag.appendChild(groupObject)
 		if (CM.Options.Header[group]) { // 0 is show, 1 is collapsed
-			for (var option in CM.ConfigData) {
-				if (CM.ConfigData[option].group == group) frag.appendChild(CM.Disp.CreatePrefOption(option))
+			// Make sub-sections of Notification section
+			if (group == "Notification") {
+				for (var subGroup in CM.ConfigGroupsNotification) {
+					subGroupObject = CM.Disp.CreatePrefHeader(subGroup, CM.ConfigGroupsNotification[subGroup]) // (group, display-name of group)
+					subGroupObject.style.fontSize = "15px";
+					subGroupObject.style.opacity = "0.5";
+					frag.appendChild(subGroupObject)
+					if (CM.Options.Header[subGroup]) {
+						for (var option in CM.ConfigData) {
+							if (CM.ConfigData[option].group == subGroup) frag.appendChild(CM.Disp.CreatePrefOption(option))
+						}
+					}
+				}
+			} else {
+				for (var option in CM.ConfigData) {
+					if (CM.ConfigData[option].group == group) frag.appendChild(CM.Disp.CreatePrefOption(option))
+				}
 			}
 		}
 	}
