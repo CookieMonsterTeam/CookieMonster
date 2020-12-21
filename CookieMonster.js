@@ -687,6 +687,10 @@ CM.Config.SaveConfig = function(config) {
  * It is called by CM.DelayInit() and CM.Config.RestoreDefault()
  */
 CM.Config.LoadConfig = function(settings) {
+	// This removes cookies left from earlier versions of CookieMonster
+	if (typeof localStorage.CMConfig != "undefined") {
+		delete localStorage.CMConfig;
+	}
 	if (settings != null) {
 		CM.Options = settings;
 
