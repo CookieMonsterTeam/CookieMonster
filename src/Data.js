@@ -60,7 +60,7 @@ CM.ConfigGroups = {
 	Calculation: "Calculation",
 	Notification: "Notification",
 	Tooltip: "Tooltips",
-	Statistics: "Statitics",
+	Statistics: "Statistics",
 	Notation: "Notation"}, 
 
 /********
@@ -263,7 +263,7 @@ CM.Data.ConfigDefault = {
 	TooltipLump: 1,
 	DragonAuraInfo: 1,
 	Stats: 1, 
-	MissingUpgrades: 0,
+	MissingUpgrades: 1,
 	UpStats: 1, 
 	TimeFormat: 0, 
 	DetailedTime: 1, 

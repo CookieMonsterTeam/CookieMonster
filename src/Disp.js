@@ -2093,7 +2093,6 @@ CM.Disp.UpdateColors = function() {
 
 /********
  * Section: Functions related to the Stats page
- * TODO: Annotate last functions */
 
 /**
  * This function adds stats created by CookieMonster to the stats page
@@ -2612,84 +2611,80 @@ CM.Disp.CreateStatsPrestigeSection = function() {
 	return section;
 }
 
-// TODO: Fix and annotate this function.
 /**
+ * This function creates the missing upgrades sections for prestige, normal and cookie upgrades
+ * It is called by CM.Disp.AddMenuStats() when CM.Options.MissingUpgrades is set
+ */
 CM.Disp.AddMissingUpgrades = function() {
-	if (CM.Cache.UpgradesOwned != Game.UpgradesOwned) {
-		CM.Cache.CalcMissingUpgrades();
-		CM.Cache.MissingUpgradesString = null;
-        CM.Cache.MissingCookiesString = null;
+	if (CM.Cache.MissingUpgradesPrestige) {
+		var prestigeUpgradesOwned = Game.PrestigeUpgrades.length - l('menu').children[5].children[3].children.length;
+		var title = document.createElement('div');
+		title.id = "CMMissingUpgradesPrestigeTitle";
+		title.className = "listing";
+		titlefrag = document.createElement('div');
+		titlefrag.innerHTML = '<b>Missing Prestige upgrades:</b> '+ prestigeUpgradesOwned + '/' + Game.PrestigeUpgrades.length + ' (' + Math.floor((prestigeUpgradesOwned / Game.PrestigeUpgrades.length) * 100) + '%)';
+		title.appendChild(titlefrag)
+		l('menu').children[5].appendChild(title)
+		upgrades = document.createElement('div');
+		upgrades.className = "listing crateBox";
+		upgrades.innerHTML = CM.Cache.MissingUpgradesPrestige;
+		l('menu').children[5].appendChild(upgrades)
 	}
-
-	// Sort the lists of missing cookies & upgrades
-	var sortMap = function(a,b) {
-		if (a.order > b.order) return 1;
-		else if (a.order < b.order) return -1;
-		else return 0;
+	if (CM.Cache.MissingUpgrades) {
+		var normalUpgradesOwned = Game.UpgradesByPool[""].length + Game.UpgradesByPool["tech"].length - l('menu').children[6].childNodes[2].children.length;
+		var title = document.createElement('div');
+		title.id = "CMMissingUpgradesTitle";
+		title.className = "listing";
+		titlefrag = document.createElement('div');
+		titlefrag.innerHTML = '<b>Missing normal upgrades:</b> '+ normalUpgradesOwned + '/' + (Game.UpgradesByPool[""].length + Game.UpgradesByPool["tech"].length) + ' (' + Math.floor((normalUpgradesOwned / ( Game.UpgradesByPool[""].length + Game.UpgradesByPool["tech"].length)) * 100) + '%)';
+		title.appendChild(titlefrag)
+		l('menu').children[6].insertBefore(title, l('menu').children[6].childNodes[3])
+		upgrades = document.createElement('div');
+		upgrades.className = "listing crateBox";
+		upgrades.innerHTML = CM.Cache.MissingUpgrades;
+		l('menu').children[6].insertBefore(upgrades, document.getElementById("CMMissingUpgradesTitle").nextSibling)
 	}
-	CM.Cache.MissingUpgrades.sort(sortMap);
-	CM.Cache.MissingCookies.sort(sortMap);;
-
-	// Find Upgrades-section of stats menu
-	var upgradesMenu = null;
- 	for (var i = 0; i < l("menu").getElementsByClassName("subsection").length && upgradesMenu == null; i++)
- 	{
- 		if (l("menu").getElementsByClassName("subsection")[i].getElementsByClassName("title")[0].textContent === "Upgrades")
- 		{
- 			upgradesMenu = l("menu").getElementsByClassName("subsection")[i];
- 		}
- 	}
-
-	// This function creates div element from given object. It also adds tooltip for it.
-	var createUpgradeElement = function (me) {
-		return '<div class="crate upgrade disabled noFrame" ' +
-			Game.getTooltip(
-				'<div style="padding:8px 4px;min-width:350px;">' +
-				'<div class="icon" style="float:left;margin-left:-8px;margin-top:-8px;' + (me.icon[2] ? 'background-image:url(' + me.icon[2] + ');' : '') + 'background-position:' + (-me.icon[0] * 48) + 'px ' + (-me.icon[1] * 48) + 'px;"></div>' +
-				'<div style="float:right;"><span class="price">' + Beautify(Math.round(me.getPrice())) + '</span></div>' +
-				'<div class="name">' + me.name + '</div>' +
-				'<div class="line"></div><div class="description">' + me.desc + '</div></div>',
-				'top',
-				true) +
-			' style="background-position:' + (-me.icon[0] * 48) + 'px ' + (-me.icon[1] * 48) + 'px;"></div>';
-	};
-
-	// This function creates section of given elements and adds this elements to it.
-	var createElementBox = function (elements) {
-		var div = document.createElement('div');
-		div.className = 'listing crateBox';
-		elements.forEach(function (element) {
-			div.innerHTML += createUpgradeElement(element);
-	});
-		return div;
-	};
-
-	// This function creates header element with given text.
-	var createHeader = function (text) {
-		var div = document.createElement('div');
-		div.className = 'listing';
-		var b = document.createElement('b');
-		b.textContent = text;
-		div.appendChild(b);
-		return div;
-	};
-
-	if (CM.Cache.MissingUpgrades.length > 0) {
-		upgradesMenu.appendChild(createHeader("Missing Upgrades"));
-		if (CM.Cache.MissingUpgradesString == null) {
-			CM.Cache.MissingUpgradesString = createElementBox(CM.Cache.MissingUpgrades);
+	if (CM.Cache.MissingUpgradesCookies) {
+		var cookieUpgradesOwned = Game.UpgradesByPool["cookie"].length - l('menu').children[6].lastChild.children.length;
+		var title = document.createElement('div');
+		title.id = "CMMissingUpgradesCookiesTitle";
+		title.className = "listing";
+		titlefrag = document.createElement('div');
+		titlefrag.innerHTML = '<b>Missing Cookie upgrades:</b> '+ cookieUpgradesOwned + '/' + Game.UpgradesByPool["cookie"].length + ' (' + Math.floor((cookieUpgradesOwned / Game.UpgradesByPool["cookie"].length) * 100) + '%)';
+		title.appendChild(titlefrag)
+		l('menu').children[6].appendChild(title)
+		upgrades = document.createElement('div');
+		upgrades.className = "listing crateBox";
+		upgrades.innerHTML = CM.Cache.MissingUpgradesCookies;
+		l('menu').children[6].appendChild(upgrades)
+		
 	}
-		upgradesMenu.appendChild(CM.Cache.MissingUpgradesString);
-	}
+}
 
-	if (CM.Cache.MissingCookies.length > 0) {
-		upgradesMenu.appendChild(createHeader("Missing Cookies"));
-		if (CM.Cache.MissingCookiesString == null) {
-			CM.Cache.MissingCookiesString = createElementBox(CM.Cache.MissingCookies);
-		}
-		upgradesMenu.appendChild(CM.Cache.MissingCookiesString);
-	}
-} */
+/**
+ * This function returns the "crates" (icons) for missing upgrades in the stats sections
+ * It returns a html string that gets appended to the respective CM.Cache.MissingUpgrades-variable by CM.Cache.CacheMissingUpgrades()
+ * It is also called by CM.Cache.CacheMissingUpgrades() for every non bought upgrade
+ * @param	{object}	me	The upgrade object
+ * @returns	{string}	?	The HTML string that creates the icon.
+ */
+CM.Disp.crateMissing = function(me) {
+	var classes = 'crate upgrade missing';
+	if (me.pool == 'prestige') classes+=' heavenly';
+	
+	var noFrame = 0;
+	if (!Game.prefs.crates) noFrame = 1;
+	if (noFrame) classes += ' noFrame';
+	
+	var icon = me.icon;
+	if (me.iconFunction) icon = me.iconFunction();
+	tooltip = `function() {return Game.crateTooltip(Game.UpgradesById[${me.id}], 'stats');}`;
+	return `<div class="${classes}"
+	${Game.getDynamicTooltip(tooltip, 'top', true)}
+	style = "${((icon[2] ? 'background-image: url(' + icon[2] + ');' : '') + 'background-position:' + (-icon[0] * 48)+ 'px ' + (-icon[1] * 48) + 'px')};">
+	</div>`;
+}
+
 
 /********
  * Section: Variables used in Disp functions

@@ -147,6 +147,7 @@ CM.Loop = function() {
 			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
 			CM.Cache.RemakeGoldenAndWrathCookiesMults();
 			CM.Cache.CacheStats();
+			CM.Cache.CacheMissingUpgrades();
 			CM.Cache.RemakeChain();
 
 			CM.Cache.RemakeSeaSpec();
