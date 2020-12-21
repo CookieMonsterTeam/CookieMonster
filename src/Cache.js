@@ -15,6 +15,7 @@ CM.Cache.InitCache = function() {
 	CM.Cache.CacheDragonAuras();
 	CM.Cache.CacheWrinklers();
 	CM.Cache.CacheStats();
+	CM.Cache.CacheMissingUpgrades();
 }
 
 /********
@@ -113,6 +114,43 @@ CM.Cache.CacheStats = function() {
 			Game.Objects[i].price * 2 > CM.Cache.Edifice) {
 			CM.Cache.Edifice = Game.Objects[i].price * 2;
 			CM.Cache.EdificeBuilding = i;
+		}
+	}
+}
+
+/**
+ * This functions caches variables related to missing upgrades
+ * It is called by CM.Loop() and CM.Cache.InitCache()
+ * @global	{string}	CM.Cache.MissingUpgrades			String containig the HTML to create the "crates" for missing normal upgrades
+ * @global	{string}	CM.Cache.MissingUpgradesCookies		String containig the HTML to create the "crates" for missing cookie upgrades
+ * @global	{string}	CM.Cache.MissingUpgradesPrestige	String containig the HTML to create the "crates" for missing prestige upgrades
+ */
+CM.Cache.CacheMissingUpgrades = function() {
+	CM.Cache.MissingUpgrades = "";
+	CM.Cache.MissingUpgradesCookies = "";
+	CM.Cache.MissingUpgradesPrestige = "";
+	var list = [];
+	//sort the upgrades
+	for (var i in Game.Upgrades) {
+		list.push(Game.Upgrades[i]);
+	}
+	var sortMap = function(a, b) {
+		if (a.order>b.order) return 1;
+		else if (a.order<b.order) return -1;
+		else return 0;
+	}
+	list.sort(sortMap);
+
+	for (var i in list) {
+		var me = list[i];
+		
+		if (me.bought == 0) {
+			var str = '';
+
+			str += CM.Disp.crateMissing(me);
+			if (me.pool == 'prestige') CM.Cache.MissingUpgradesPrestige += str;
+			else if (me.pool == 'cookie') CM.Cache.MissingUpgradesCookies += str;
+			else if (me.pool != 'toggle' && me.pool != 'unused') CM.Cache.MissingUpgrades += str;
 		}
 	}
 }
@@ -529,22 +567,34 @@ CM.Cache.UpdateAvgCPS = function() {
 	}
 }
 
-CM.Cache.CalcMissingUpgrades = function() {
-	var currentMissingUpgrades = []
-	for (var i in CM.Cache.MissingUpgrades) {
-		if ((CM.Cache.MissingUpgrades[i].pool == "" || CM.Cache.MissingUpgrades[i].pool == "tech") && CM.Cache.MissingUpgrades[i].bought != 1) {
-			currentMissingUpgrades.push(CM.Cache.MissingUpgrades[i])
+CM.Cache.CacheMissingUpgrades = function() {
+	CM.Cache.MissingUpgrades = "";
+	CM.Cache.MissingUpgradesCookies = "";
+	CM.Cache.MissingUpgradesPrestige = "";
+	var list = [];
+	//sort the upgrades
+	for (var i in Game.Upgrades) {
+		list.push(Game.Upgrades[i]);
+	}
+	var sortMap = function(a, b) {
+		if (a.order>b.order) return 1;
+		else if (a.order<b.order) return -1;
+		else return 0;
+	}
+	list.sort(sortMap);
+
+	for (var i in list) {
+		var me = list[i];
+		
+		if (me.bought == 0) {
+			var str = '';
+
+			str += CM.Disp.crateMissing(me);
+			if (me.pool == 'prestige') CM.Cache.MissingUpgradesPrestige += str;
+			else if (me.pool == 'cookie') CM.Cache.MissingUpgradesCookies += str;
+			else if (me.pool != 'toggle' && me.pool != 'unused') CM.Cache.MissingUpgrades += str;
 		}
 	}
-	CM.Cache.MissingUpgrades = currentMissingUpgrades
-
-	var currentMissingCookies = []
-	for (var i in CM.Cache.MissingCookies) {
-		if (CM.Cache.MissingCookies[i].pool == "cookie" && CM.Cache.MissingCookies[i].bought != 1) {
-			currentMissingCookies.push(CM.Cache.MissingCookies[i])
-		}
-	}	
-	CM.Cache.MissingCookies = currentMissingCookies
 }
 
 CM.Cache.min = -1;
