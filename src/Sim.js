@@ -207,6 +207,7 @@ CM.Sim.InitData = function() {
 	for (var i in Game.Achievements) {
 		CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 	}
+	CM.Sim.CopyData
 }
 
 CM.Sim.CopyData = function() {

@@ -190,7 +190,7 @@ CM.Cache.CacheMissingUpgrades = function() {
 CM.Cache.AddQueue = function() {
 	CM.Cache.Queue = document.createElement('script');
 	CM.Cache.Queue.type = 'text/javascript';
-	CM.Cache.Queue.setAttribute('src', 'https://aktanusa.github.io/CookieMonster/queue/queue.js');
+	CM.Cache.Queue.src = 'https://aktanusa.github.io/CookieMonster/queue/queue.js';
 	document.head.appendChild(CM.Cache.Queue);
 }
 
@@ -682,16 +682,16 @@ CM.Cache.spawnedGoldenShimmer = 0;
  * @param 	{object}	config	The Config to be saved (normally CM.Options)
  */
 CM.Config.SaveConfig = function(config) {
-	localStorage.setItem(CM.ConfigPrefix, JSON.stringify(config));
+	CM.save();
 }
 
 /**
  * This function loads the config of CookieMonster saved in localStorage and loads it into CM.Options
  * It is called by CM.DelayInit() and CM.Config.RestoreDefault()
  */
-CM.Config.LoadConfig = function() {
-	if (localStorage.getItem(CM.ConfigPrefix) != null) {
-		CM.Options = JSON.parse(localStorage.getItem(CM.ConfigPrefix));
+CM.Config.LoadConfig = function(settings) {
+	if (settings != null) {
+		CM.Options = settings;
 
 		// Check values
 		var mod = false;
@@ -749,9 +749,8 @@ CM.Config.LoadConfig = function() {
  * It is called by resDefBut.onclick loaded in the options page or by CM.Config.LoadConfig if no localStorage is found
  */
 CM.Config.RestoreDefault = function() {
-	CM.Options = {};
-	CM.Config.SaveConfig(CM.Data.ConfigDefault);
-	CM.Config.LoadConfig();
+	CM.Config.LoadConfig(CM.Data.ConfigDefault);
+	CM.Config.SaveConfig();
 	Game.UpdateMenu();
 }
 
@@ -1386,7 +1385,7 @@ CM.Disp.CreateCssArea = function() {
 
 /**
  * TODO: What does this do? @Aktanusa
- * It is called by CM.Init()
+ * It is called by CM.init, which is called by Game.registerMod
  */
 CM.Disp.AddJscolor = function() {
 	CM.Disp.Jscolor = document.createElement('script');
@@ -4090,24 +4089,6 @@ CM.Loop = function() {
 	CM.Cache.UpdateAvgCPS()
 }
 
-CM.Init = function() {
-	var proceed = true;
-	if (Game.version != CM.VersionMajor) {
-		proceed = confirm('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' is meant for Game version ' + CM.VersionMajor + '.  Loading a different version may cause errors.  Do you still want to load Cookie Monster?');
-	}
-	if (proceed) {
-		CM.Cache.AddQueue();
-		CM.Disp.AddJscolor();
-
-		var delay = setInterval(function() {
-			if (typeof Queue !== 'undefined' && typeof jscolor !== 'undefined') {
-				CM.DelayInit();
-				clearInterval(delay);
-			}
-		}, 500);
-	}
-}
-
 CM.DelayInit = function() {
 	CM.Sim.InitData();
 	CM.Cache.InitCache();
@@ -4144,16 +4125,7 @@ CM.DelayInit = function() {
 	l("upgrades").style.display = "flex";
 	l("upgrades").style["flex-wrap"] = "wrap";
 
-	CM.Main.RegisterHooks();
-
 	Game.Win('Third-party');
-}
-
-/**
- * Hook custom methods into the game
- */
-CM.Main.RegisterHooks = function() {
-	Game.registerHook('draw', CM.Disp.Draw);
 }
 
 /********
@@ -4580,6 +4552,7 @@ CM.Sim.InitData = function() {
 	for (var i in Game.Achievements) {
 		CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 	}
+	CM.Sim.CopyData
 }
 
 CM.Sim.CopyData = function() {
@@ -5275,8 +5248,53 @@ CM.Sim.mouseCps = function() {
  * Footer *
  **********/
 
+/********
+ * Section: Functions related to base game modding API */
+
+/**
+ * TODO: This should at one point be used to register hooks
+ */
+CM.init = function() {
+    var proceed = true;
+    if (Game.version != CM.VersionMajor) {
+        proceed = confirm('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' is meant for Game version ' + CM.VersionMajor + '.  Loading a different version may cause errors.  Do you still want to load Cookie Monster?');
+    }
+    if (proceed) {
+        CM.DelayInit();
+        Game.registerHook('draw', CM.Disp.Draw);
+    }
+}
+
+/**
+ * This registers a save function. Per Game code/comments:
+ * "use this to store persistent data associated with your mod
+ * return 'a string to be saved';"
+ */
+CM.save = function() {
+    return JSON.stringify({
+        settings: CM.Options,
+        version: CM.VersionMajor + '.' + CM.VersionMinor,
+    });
+}
+
+/**
+ * This registers a load function. Per Game code/comments:
+ * "do stuff with the string data you saved previously"
+ */
+CM.load = function(str) {
+    let save = JSON.parse(str);
+    CM.Config.LoadConfig(save.settings);
+}
+
 if (!CM.isRunning) {
-    CM.Init();
+    CM.Cache.AddQueue();
+    CM.Disp.AddJscolor();
+    var delay = setInterval(function() {
+        if (typeof Queue !== 'undefined' && typeof jscolor !== 'undefined') {
+            Game.registerMod('CookieMonster', CM);
+            clearInterval(delay);
+        }
+    }, 500);
     CM.isRunning = 1
 }
 

@@ -211,24 +211,6 @@ CM.Loop = function() {
 	CM.Cache.UpdateAvgCPS()
 }
 
-CM.Init = function() {
-	var proceed = true;
-	if (Game.version != CM.VersionMajor) {
-		proceed = confirm('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' is meant for Game version ' + CM.VersionMajor + '.  Loading a different version may cause errors.  Do you still want to load Cookie Monster?');
-	}
-	if (proceed) {
-		CM.Cache.AddQueue();
-		CM.Disp.AddJscolor();
-
-		var delay = setInterval(function() {
-			if (typeof Queue !== 'undefined' && typeof jscolor !== 'undefined') {
-				CM.DelayInit();
-				clearInterval(delay);
-			}
-		}, 500);
-	}
-}
-
 CM.DelayInit = function() {
 	CM.Sim.InitData();
 	CM.Cache.InitCache();
@@ -265,16 +247,7 @@ CM.DelayInit = function() {
 	l("upgrades").style.display = "flex";
 	l("upgrades").style["flex-wrap"] = "wrap";
 
-	CM.Main.RegisterHooks();
-
 	Game.Win('Third-party');
-}
-
-/**
- * Hook custom methods into the game
- */
-CM.Main.RegisterHooks = function() {
-	Game.registerHook('draw', CM.Disp.Draw);
 }
 
 /********
