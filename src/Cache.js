@@ -158,13 +158,6 @@ CM.Cache.CacheMissingUpgrades = function() {
 /********
  * Section: UNSORTED */
 
-CM.Cache.AddQueue = function() {
-	CM.Cache.Queue = document.createElement('script');
-	CM.Cache.Queue.type = 'text/javascript';
-	CM.Cache.Queue.setAttribute('src', 'https://aktanusa.github.io/CookieMonster/queue/queue.js');
-	document.head.appendChild(CM.Cache.Queue);
-}
-
 CM.Cache.NextNumber = function(base) {
 	var count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
 	while (base == base + count) {

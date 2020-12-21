@@ -6,22 +6,24 @@
  * Section: Functions related to saving, loading and restoring configs */
 
 /**
- * This function saves the config of CookieMonster to localStorage
+ * @deprecated
+ * This function (used to) save the config of CookieMonster
  * It is called by CM.Config.LoadConfig(), CM.Config.RestoreDefault(), CM.Config.ToggleConfig(), 
  * CM.ToggleConfigVolume() and changes in options with type "url", "color" or "numscale"
- * @param 	{object}	config	The Config to be saved (normally CM.Options)
+ * TODO: See if there is a way to force Cookie CLICKER to save only the mod-data and not also Save-data.
+ * Otherwise this can be removed
  */
 CM.Config.SaveConfig = function(config) {
-	localStorage.setItem(CM.ConfigPrefix, JSON.stringify(config));
+	CM.save();
 }
 
 /**
  * This function loads the config of CookieMonster saved in localStorage and loads it into CM.Options
  * It is called by CM.DelayInit() and CM.Config.RestoreDefault()
  */
-CM.Config.LoadConfig = function() {
-	if (localStorage.getItem(CM.ConfigPrefix) != null) {
-		CM.Options = JSON.parse(localStorage.getItem(CM.ConfigPrefix));
+CM.Config.LoadConfig = function(settings) {
+	if (settings != null) {
+		CM.Options = settings;
 
 		// Check values
 		var mod = false;
@@ -79,9 +81,8 @@ CM.Config.LoadConfig = function() {
  * It is called by resDefBut.onclick loaded in the options page or by CM.Config.LoadConfig if no localStorage is found
  */
 CM.Config.RestoreDefault = function() {
-	CM.Options = {};
-	CM.Config.SaveConfig(CM.Data.ConfigDefault);
-	CM.Config.LoadConfig();
+	CM.Config.LoadConfig(CM.Data.ConfigDefault);
+	CM.Config.SaveConfig(CM.Options);
 	Game.UpdateMenu();
 }
 

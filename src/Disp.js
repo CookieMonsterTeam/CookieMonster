@@ -265,17 +265,6 @@ CM.Disp.CreateCssArea = function() {
 }
 
 /**
- * TODO: What does this do? @Aktanusa
- * It is called by CM.Init()
- */
-CM.Disp.AddJscolor = function() {
-	CM.Disp.Jscolor = document.createElement('script');
-	CM.Disp.Jscolor.type = 'text/javascript';
-	CM.Disp.Jscolor.setAttribute('src', 'https://aktanusa.github.io/CookieMonster/jscolor/jscolor.js');
-	document.head.appendChild(CM.Disp.Jscolor);
-}
-
-/**
  * This function sets the size of the background of the full game and the left column
  * depending on whether certain abrs are activated
  * It is called by CM.Disp.UpdateAscendState() and CM.Disp.UpdateBotTimerBarPosition()
