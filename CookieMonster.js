@@ -1479,7 +1479,7 @@ CM.Disp.CreateBotBar = function() {
 	}
 	var type = tbody.appendChild(document.createElement('tr'));
 	type.style.fontWeight = 'bold';
-	type.appendChild(firstCol(CM.VersionMajor + '.' + CM.VersionMinor, CM.Disp.colorYellow));
+	type.appendChild(firstCol('CM ' + CM.VersionMajor + '.' + CM.VersionMinor, CM.Disp.colorYellow));
 	var bonus = tbody.appendChild(document.createElement('tr'));
 	bonus.appendChild(firstCol('Bonus Income', CM.Disp.colorBlue));
 	var pp = tbody.appendChild(document.createElement('tr'));
