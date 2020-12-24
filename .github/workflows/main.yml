@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: es-check-action
-        uses: actions/es-check-action@1.0.2
+        uses: ali-kamalizade/es-check-action@1.0.2
         with:
           directory: ''
           ecmaVersion: 'es5'
