@@ -25,6 +25,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-     - name: es-check-action
-       uses: ali-kamalizade/es-check-action@1.0.2
+      - name: es-check-action
+        uses: actions/es-check-action@1.0.2
+        with:
+          directory: ''
+          ecmaVersion: 'es5'
+          files: '*.js'
 
