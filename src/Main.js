@@ -208,7 +208,8 @@ CM.Loop = function() {
 	CM.Main.CheckWrinklerCount();
 
 	// Update Average CPS (might need to move)
-	CM.Cache.UpdateAvgCPS()
+	CM.Cache.UpdateCurrWrinklerCPS();
+	CM.Cache.UpdateAvgCPS();
 }
 
 CM.DelayInit = function() {

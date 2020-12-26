@@ -99,7 +99,7 @@ CM.Cache.CacheWrinklers = function() {
 }
 
 /********
- * Section: Functions related to Cachining stats */
+ * Section: Functions related to Caching stats */
 
 /**
  * This functions caches variables related to the stats apge
@@ -184,6 +184,139 @@ CM.Cache.CacheMissingUpgrades = function() {
 			else if (me.pool != 'toggle' && me.pool != 'unused') CM.Cache.MissingUpgrades += str;
 		}
 	}
+}
+
+/********
+ * Section: Functions related to Caching CPS */
+
+/**
+ * @class
+ * @classdesc 	This is a class used to store values used to calculate average over time (mostly cps)
+ * @var			{number}				maxLength	The maximum length of the value-storage
+ * @var			{[]}					queue		The values stored
+ * @method		addLatest(newValue)		Appends newValue to the value storage
+ * @method		calcAverage(timePeriod)	Returns the average over the specified timeperiod
+ */
+class CMAvgQueue {
+	constructor(maxLength) {
+		this.maxLength = maxLength;
+		this.queue = []
+	}
+
+	addLatest (newValue) {
+		if (this.queue.push(newValue) > this.maxLength) {
+			this.queue.shift();
+		}
+	}
+
+	// TODO: Might want to do this according to "https://stackoverflow.com/questions/10359907/how-to-compute-the-sum-and-average-of-elements-in-an-array"
+	calcAverage (timePeriod) {
+		if (timePeriod > this.maxLength) timePeriod = this.maxLength, console.log("Called for average of Queue for time-period longer than MaxLength");
+		if (timePeriod > this.queue.length) timePeriod = this.queue.length;
+		var ret = 0
+		for (var i = this.queue.length - 1; i >= 0 && i > this.queue.length - 1 - timePeriod; i--) {
+			ret += this.queue[i];
+		}
+		return ret / timePeriod;
+	}
+}
+
+/**
+ * This functions caches creates the CMAvgQueue used by CM.Cache.UpdateAvgCPS() to calculate CPS
+ * Called by CM.DelayInit()
+ */
+CM.Cache.InitCookiesDiff = function() {
+	CM.Cache.CookiesDiff = new CMAvgQueue(CM.Disp.cookieTimes[CM.Disp.cookieTimes.length - 1]);
+	CM.Cache.WrinkDiff = new CMAvgQueue(CM.Disp.cookieTimes[CM.Disp.cookieTimes.length - 1]);
+	CM.Cache.WrinkFattestDiff = new CMAvgQueue(CM.Disp.cookieTimes[CM.Disp.cookieTimes.length - 1]);
+	CM.Cache.ChoEggDiff = new CMAvgQueue(CM.Disp.cookieTimes[CM.Disp.cookieTimes.length - 1]);
+	CM.Cache.ClicksDiff = new CMAvgQueue(CM.Disp.clickTimes[CM.Disp.clickTimes.length - 1]);
+}
+
+/**
+ * This functions caches two variables related average CPS and Clicks
+ * * It is called by CM.Loop()
+ * TODO: Check if this can be made more concise
+ * @global	{number}	CM.Cache.AvgCPS				Average cookies over time-period as defined by AvgCPSHist
+ * @global	{number}	CM.Cache.AverageClicks		Average cookies from clicking over time-period as defined by AvgClicksHist
+ */
+CM.Cache.UpdateAvgCPS = function() {
+	var currDate = Math.floor(Date.now() / 1000);
+	// Only calculate every new second
+	if ((Game.T / Game.fps) % 1 == 0) {
+		var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
+		if (Game.cpsSucked > 0) {
+			choEggTotal += CM.Cache.WrinklersTotal;
+		}
+		CM.Cache.RealCookiesEarned = Math.max(Game.cookiesEarned, choEggTotal);
+		choEggTotal *= 0.05;
+
+		if (CM.Cache.lastDate != -1) {
+			var timeDiff = currDate - CM.Cache.lastDate
+			var bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
+			var wrinkDiffAvg = Math.max(0, (CM.Cache.WrinklersTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
+			var wrinkFattestDiffAvg = Math.max(0, (CM.Cache.WrinklersFattest[0] - CM.Cache.lastWrinkFattestCookies)) / timeDiff;
+			var choEggDiffAvg = Math.max(0,(choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
+			var clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
+			for (var i = 0; i < timeDiff; i++) {
+				CM.Cache.CookiesDiff.addLatest(bankDiffAvg);
+				CM.Cache.WrinkDiff.addLatest(wrinkDiffAvg);
+				CM.Cache.WrinkFattestDiff.addLatest(wrinkFattestDiffAvg);
+				CM.Cache.ChoEggDiff.addLatest(choEggDiffAvg);
+				CM.Cache.ClicksDiff.addLatest(clicksDiffAvg);
+			}
+		}
+		CM.Cache.lastDate = currDate;
+		CM.Cache.lastCookies = Game.cookies;
+		CM.Cache.lastWrinkCookies = CM.Cache.WrinklersTotal;
+		CM.Cache.lastWrinkFattestCookies = CM.Cache.WrinklersFattest[0];
+		CM.Cache.lastChoEgg = choEggTotal;
+		CM.Cache.lastClicks = Game.cookieClicks;
+
+		var cpsLength = CM.Disp.cookieTimes[CM.Options.AvgCPSHist];
+		
+		CM.Cache.AverageGainBank = CM.Cache.CookiesDiff.calcAverage(cpsLength);
+		CM.Cache.AverageGainWrink = CM.Cache.WrinkDiff.calcAverage(cpsLength);
+		CM.Cache.AverageGainWrinkFattest = CM.Cache.WrinkFattestDiff.calcAverage(cpsLength);
+		CM.Cache.AverageGainChoEgg = CM.Cache.ChoEggDiff.calcAverage(cpsLength);
+
+		CM.Cache.AvgCPS = CM.Cache.AverageGainBank
+		if (CM.Options.CalcWrink == 1) CM.Cache.AvgCPS += CM.Cache.AverageGainWrink;
+		if (CM.Options.CalcWrink == 2) CM.Cache.AvgCPS += CM.Cache.AverageGainWrinkFattest;
+
+		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
+
+		// TODO: Why and where is this used?
+		if (choEgg || CM.Options.CalcWrink == 0) {
+			CM.Cache.AvgCPSChoEgg = CM.Cache.AverageGainBank + CM.Cache.AverageGainWrink + (choEgg ? CM.Cache.AverageGainChoEgg : 0);
+		}
+		else CM.Cache.AvgCPSChoEgg = CM.Cache.AvgCPS;
+
+		CM.Cache.AverageClicks =  CM.Cache.ClicksDiff.calcAverage(CM.Disp.clickTimes[CM.Options.AvgClicksHist]);
+	}
+}
+
+/**
+ * This functions caches the current Wrinkler CPS multiplier
+ * It is called by CM.Loop(). Variables are mostly used by CM.Disp.GetCPS().
+ * @global	{number}	CM.Cache.CurrWrinklerCount		Current number of wrinklers
+ * @global	{number}	CM.Cache.CurrWrinklerCPSMult	Current multiplier of CPS because of wrinklers (excluding their negative sucking effect)
+ */
+CM.Cache.UpdateCurrWrinklerCPS = function() {
+	CM.Cache.CurrWrinklerCPSMult = 0;
+	let count = 0;
+	for (let i in Game.wrinklers) {
+		if (Game.wrinklers[i].phase == 2) count++
+	}
+	let godMult = 1;
+	if (CM.Sim.Objects.Temple.minigameLoaded) {
+		var godLvl = CM.Sim.hasGod('scorn');
+		if (godLvl == 1) godMult *= 1.15;
+		else if (godLvl == 2) godMult *= 1.1;
+		else if (godLvl == 3) godMult *= 1.05;
+	}
+	CM.Cache.CurrWrinklerCount = count;
+	CM.Cache.CurrWrinklerCPSMult = count * (count * 0.05 * 1.1) * (Game.Has('Sacrilegious corruption') * 0.05 + 1) * (Game.Has('Wrinklerspawn') * 0.05 + 1) * godMult;
 }
 
 /********
@@ -486,141 +619,6 @@ CM.Cache.RemakeSellForChoEgg = function() {
 	CM.Cache.SellForChoEgg = sellTotal;
 }
 
-CM.Cache.InitCookiesDiff = function() {
-	CM.Cache.CookiesDiff = new Queue();
-	CM.Cache.WrinkDiff = new Queue();
-	CM.Cache.ChoEggDiff = new Queue();
-	CM.Cache.ClicksDiff = new Queue();
-}
-
-CM.Cache.UpdateAvgCPS = function() {
-	var currDate = Math.floor(Date.now() / 1000);
-	if (CM.Cache.lastDate != currDate) {
-		var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
-		if (Game.cpsSucked > 0) {
-			choEggTotal += CM.Cache.WrinklersTotal;
-		}
-		CM.Cache.RealCookiesEarned = Math.max(Game.cookiesEarned, choEggTotal);
-		choEggTotal *= 0.05;
-
-		if (CM.Cache.lastDate != -1) {
-			var timeDiff = currDate - CM.Cache.lastDate
-			var bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
-			var wrinkDiffAvg = Math.max(0, (CM.Cache.WrinklersTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
-			var choEggDiffAvg = Math.max(0,(choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
-			var clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
-			for (var i = 0; i < timeDiff; i++) {
-				CM.Cache.CookiesDiff.enqueue(bankDiffAvg);
-				CM.Cache.WrinkDiff.enqueue(wrinkDiffAvg);
-				CM.Cache.ChoEggDiff.enqueue(choEggDiffAvg);
-				CM.Cache.ClicksDiff.enqueue(clicksDiffAvg);
-			}
-			// Assumes the queues are the same length
-			while (CM.Cache.CookiesDiff.getLength() > 1800) {
-				CM.Cache.CookiesDiff.dequeue();
-				CM.Cache.WrinkDiff.dequeue();
-				CM.Cache.ClicksDiff.dequeue();
-			}
-
-			while (CM.Cache.ClicksDiff.getLength() > 30) {
-				CM.Cache.ClicksDiff.dequeue();
-			}
-		}
-		CM.Cache.lastDate = currDate;
-		CM.Cache.lastCookies = Game.cookies;
-		CM.Cache.lastWrinkCookies = CM.Cache.WrinklersTotal;
-		CM.Cache.lastChoEgg = choEggTotal;
-		CM.Cache.lastClicks = Game.cookieClicks;
-
-		var sortedGainBank = new Array();
-		var sortedGainWrink = new Array();
-		var sortedGainChoEgg = new Array();
-
-		var cpsLength = Math.min(CM.Cache.CookiesDiff.getLength(), CM.Disp.cookieTimes[CM.Options.AvgCPSHist]);
-
-		// Assumes the queues are the same length
-		for (var i = CM.Cache.CookiesDiff.getLength() - cpsLength; i < CM.Cache.CookiesDiff.getLength(); i++) {
-			sortedGainBank.push(CM.Cache.CookiesDiff.get(i));
-			sortedGainWrink.push(CM.Cache.WrinkDiff.get(i));
-			sortedGainChoEgg.push(CM.Cache.ChoEggDiff.get(i));
-		}
-
-		sortedGainBank.sort(function(a, b) { return a - b; });
-		sortedGainWrink.sort(function(a, b) { return a - b; });
-		sortedGainChoEgg.sort(function(a, b) { return a - b; });
-
-		var cut = Math.round(sortedGainBank.length / 10);
-
-		while (cut > 0) {
-			sortedGainBank.shift();
-			sortedGainBank.pop();
-			sortedGainWrink.shift();
-			sortedGainWrink.pop();
-			sortedGainChoEgg.shift();
-			sortedGainChoEgg.pop();
-			cut--;
-		}
-
-		var totalGainBank = 0;
-		var totalGainWrink = 0;
-		var totalGainChoEgg = 0;
-
-		for (var i = 0; i < sortedGainBank.length; i++) {
-			totalGainBank += sortedGainBank[i];
-			totalGainWrink += sortedGainWrink[i];
-			totalGainChoEgg += sortedGainChoEgg[i];
-		}
-		// TODO: Incorporate situation if CM.Options.CalcWrink == 2
-		CM.Cache.AvgCPS = (totalGainBank + (CM.Options.CalcWrink == 1 ? totalGainWrink : 0)) / sortedGainBank.length;
-
-		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
-
-		if (choEgg || CM.Options.CalcWrink == 0) {
-			CM.Cache.AvgCPSChoEgg = (totalGainBank + totalGainWrink + (choEgg ? totalGainChoEgg : 0)) / sortedGainBank.length;
-		}
-		else {
-			CM.Cache.AvgCPSChoEgg = CM.Cache.AvgCPS;
-		}
-
-		var totalClicks = 0;
-		var clicksLength = Math.min(CM.Cache.ClicksDiff.getLength(), CM.Disp.clickTimes[CM.Options.AvgClicksHist]);
-		for (var i = CM.Cache.ClicksDiff.getLength() - clicksLength; i < CM.Cache.ClicksDiff.getLength(); i++) {
-			totalClicks += CM.Cache.ClicksDiff.get(i);
-		}
-		CM.Cache.AvgClicks = totalClicks / clicksLength;
-	}
-}
-
-CM.Cache.CacheMissingUpgrades = function() {
-	CM.Cache.MissingUpgrades = "";
-	CM.Cache.MissingUpgradesCookies = "";
-	CM.Cache.MissingUpgradesPrestige = "";
-	var list = [];
-	//sort the upgrades
-	for (var i in Game.Upgrades) {
-		list.push(Game.Upgrades[i]);
-	}
-	var sortMap = function(a, b) {
-		if (a.order>b.order) return 1;
-		else if (a.order<b.order) return -1;
-		else return 0;
-	}
-	list.sort(sortMap);
-
-	for (var i in list) {
-		var me = list[i];
-		
-		if (me.bought == 0) {
-			var str = '';
-
-			str += CM.Disp.crateMissing(me);
-			if (me.pool == 'prestige') CM.Cache.MissingUpgradesPrestige += str;
-			else if (me.pool == 'cookie') CM.Cache.MissingUpgradesCookies += str;
-			else if (me.pool != 'toggle' && me.pool != 'unused') CM.Cache.MissingUpgrades += str;
-		}
-	}
-}
-
 CM.Cache.min = -1;
 CM.Cache.max = -1;
 CM.Cache.mid = -1;
@@ -642,23 +640,6 @@ CM.Cache.SellForChoEgg = 0;
 CM.Cache.Title = '';
 CM.Cache.HadBuildAura = false;
 CM.Cache.RealCookiesEarned = -1;
-CM.Cache.lastDate = -1;
-CM.Cache.lastCookies = -1;
-CM.Cache.lastWrinkCookies = -1;
-CM.Cache.lastChoEgg = -1;
-CM.Cache.lastClicks = -1;
-CM.Cache.CookiesDiff;
-CM.Cache.WrinkDiff;
-CM.Cache.ChoEggDiff;
-CM.Cache.ClicksDiff;
-CM.Cache.AvgCPS = -1;
-CM.Cache.AvgCPSChoEgg = -1;
-CM.Cache.AvgClicks = -1;
-CM.Cache.MissingUpgrades = Game.Upgrades;
-CM.Cache.MissingCookies = Game.Upgrades;
-CM.Cache.UpgradesOwned = -1;
-CM.Cache.MissingUpgradesString = null;
-CM.Cache.MissingCookiesString = null;
 CM.Cache.seasonPopShimmer;
 CM.Cache.goldenShimmersByID = {};
 CM.Cache.spawnedGoldenShimmer = 0;
@@ -1176,10 +1157,25 @@ CM.Disp.PopAllNormalWrinklers = function() {
  * @returns	{number}	The average or current cps
  */
 CM.Disp.GetCPS = function() {
-	if (CM.Options.CPSMode)
-		return CM.Cache.AvgCPS;
-	else
-		return (Game.cookiesPs * (1 - Game.cpsSucked));
+	if (CM.Options.CPSMode) {
+		return CM.Cache.AvgCPS;}
+	else {
+		if (CM.Options.CalcWrink == 0) {
+			return (Game.cookiesPs * (1 - Game.cpsSucked));
+		}
+		else if (CM.Options.CalcWrink == 1) {
+			return Game.cookiesPs * (CM.Cache.CurrWrinklerCPSMult + (1 - (CM.Cache.CurrWrinklerCount * 0.05)));
+		}
+		else if (CM.Options.CalcWrink == 2) {
+			// Check if fattest is shiny
+			if (Game.wrinklers[CM.Cache.WrinklersFattest[1]].type == 1) {
+				return Game.cookiesPs * ((CM.Cache.CurrWrinklerCPSMult * 3 / CM.Cache.CurrWrinklerCount)  + (1 - (CM.Cache.CurrWrinklerCount * 0.05)));
+			}
+			else {
+				return Game.cookiesPs * ((CM.Cache.CurrWrinklerCPSMult / CM.Cache.CurrWrinklerCount)  + (1 - (CM.Cache.CurrWrinklerCount * 0.05)));
+			}
+		}
+	}
 }
 
 /**
@@ -3358,7 +3354,7 @@ CM.Disp.AddMenuStats = function(title) {
 			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Options.AvgCPSHist] / 60) + (CM.Options.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', 
 			document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))
 		));
-		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Options.AvgClicksHist] + (CM.Options.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
+		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Options.AvgClicksHist] + (CM.Options.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AverageClicks, 1))));
 		if (Game.Has('Fortune cookies')) {
 			var fortunes = [];
 			for (var i in CM.Data.Fortunes) {
@@ -4106,7 +4102,8 @@ CM.Loop = function() {
 	CM.Main.CheckWrinklerCount();
 
 	// Update Average CPS (might need to move)
-	CM.Cache.UpdateAvgCPS()
+	CM.Cache.UpdateCurrWrinklerCPS();
+	CM.Cache.UpdateAvgCPS();
 }
 
 CM.DelayInit = function() {
@@ -5313,17 +5310,6 @@ CM.load = function(str) {
  * Section: Functions related to the initialization of CookieMonster */
 
 /**
- * This functions loads an external script (on the same repository) that creates a Queue() function
- * It is called by the last function in the footer
- */
-CM.Footer.AddQueue = function() {
-	CM.Footer.Queue = document.createElement('script');
-	CM.Footer.Queue.type = 'text/javascript';
-	CM.Footer.Queue.src = 'https://aktanusa.github.io/CookieMonster/queue/queue.js';
-	document.head.appendChild(CM.Footer.Queue);
-}
-
-/**
  * This functions loads an external script (on the same repository) that creates the 
  * functionality needed to dynamiccaly change colours
  * It is called by the last function in the footer
@@ -5340,10 +5326,9 @@ CM.Footer.AddJscolor = function() {
  * It is called as the last function in this script's execution
  */
 if (!CM.isRunning) {
-    CM.Footer.AddQueue();
     CM.Footer.AddJscolor();
     var delay = setInterval(function() {
-        if (typeof Queue !== 'undefined' && typeof jscolor !== 'undefined') {
+        if (typeof jscolor !== 'undefined') {
             Game.registerMod('CookieMonster', CM);
             clearInterval(delay);
         }

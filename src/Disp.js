@@ -41,10 +41,25 @@ CM.Disp.PopAllNormalWrinklers = function() {
  * @returns	{number}	The average or current cps
  */
 CM.Disp.GetCPS = function() {
-	if (CM.Options.CPSMode)
-		return CM.Cache.AvgCPS;
-	else
-		return (Game.cookiesPs * (1 - Game.cpsSucked));
+	if (CM.Options.CPSMode) {
+		return CM.Cache.AvgCPS;}
+	else {
+		if (CM.Options.CalcWrink == 0) {
+			return (Game.cookiesPs * (1 - Game.cpsSucked));
+		}
+		else if (CM.Options.CalcWrink == 1) {
+			return Game.cookiesPs * (CM.Cache.CurrWrinklerCPSMult + (1 - (CM.Cache.CurrWrinklerCount * 0.05)));
+		}
+		else if (CM.Options.CalcWrink == 2) {
+			// Check if fattest is shiny
+			if (Game.wrinklers[CM.Cache.WrinklersFattest[1]].type == 1) {
+				return Game.cookiesPs * ((CM.Cache.CurrWrinklerCPSMult * 3 / CM.Cache.CurrWrinklerCount)  + (1 - (CM.Cache.CurrWrinklerCount * 0.05)));
+			}
+			else {
+				return Game.cookiesPs * ((CM.Cache.CurrWrinklerCPSMult / CM.Cache.CurrWrinklerCount)  + (1 - (CM.Cache.CurrWrinklerCount * 0.05)));
+			}
+		}
+	}
 }
 
 /**
@@ -2223,7 +2238,7 @@ CM.Disp.AddMenuStats = function(title) {
 			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Options.AvgCPSHist] / 60) + (CM.Options.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', 
 			document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))
 		));
-		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Options.AvgClicksHist] + (CM.Options.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AvgClicks, 1))));
+		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Options.AvgClicksHist] + (CM.Options.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AverageClicks, 1))));
 		if (Game.Has('Fortune cookies')) {
 			var fortunes = [];
 			for (var i in CM.Data.Fortunes) {
