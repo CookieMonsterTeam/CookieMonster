@@ -47,17 +47,6 @@ CM.load = function(str) {
  * Section: Functions related to the initialization of CookieMonster */
 
 /**
- * This functions loads an external script (on the same repository) that creates a Queue() function
- * It is called by the last function in the footer
- */
-CM.Footer.AddQueue = function() {
-	CM.Footer.Queue = document.createElement('script');
-	CM.Footer.Queue.type = 'text/javascript';
-	CM.Footer.Queue.src = 'https://aktanusa.github.io/CookieMonster/queue/queue.js';
-	document.head.appendChild(CM.Footer.Queue);
-}
-
-/**
  * This functions loads an external script (on the same repository) that creates the 
  * functionality needed to dynamiccaly change colours
  * It is called by the last function in the footer
@@ -74,10 +63,9 @@ CM.Footer.AddJscolor = function() {
  * It is called as the last function in this script's execution
  */
 if (!CM.isRunning) {
-    CM.Footer.AddQueue();
     CM.Footer.AddJscolor();
     var delay = setInterval(function() {
-        if (typeof Queue !== 'undefined' && typeof jscolor !== 'undefined') {
+        if (typeof jscolor !== 'undefined') {
             Game.registerMod('CookieMonster', CM);
             clearInterval(delay);
         }
