@@ -1592,7 +1592,7 @@ CM.Disp.CreateTimerBar = function() {
  */
 CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 	timerBar = document.createElement('div');
-	timerBar.id = 'CMTimerBarGC';
+	timerBar.id = 'CMTimerBar';
 	timerBar.style.height = '12px';
 	timerBar.style.margin = '0px 10px';
 	timerBar.style.position = 'relative';
@@ -1621,6 +1621,8 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 		colorBar.id = bars[i].id
 		colorBar.style.display = 'inline-block';
 		colorBar.style.height = '10px';
+		colorBar.style.verticalAlign = "text-top";
+		colorBar.style.textAlign="center";
 		if (bars.length - 1 == i) {
 			colorBar.style.borderTopRightRadius = '10px';
 			colorBar.style.borderBottomRightRadius = '10px';
@@ -1643,7 +1645,7 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 }
 
 /**
- * This function creates an indivudual timer for the timer bar
+ * This function updates indivudual timers in the timer bar
  * It is called by CM.Loop()
  */
 CM.Disp.UpdateTimerBar = function() {
@@ -1656,6 +1658,7 @@ CM.Disp.UpdateTimerBar = function() {
 		if (Game.shimmerTypes['golden'].spawned == 0 && !Game.Has('Golden switch [off]')) {
 			CM.Disp.TimerBars['CMTimerBarGC'].style.display = '';
 			l('CMTimerBarGCMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes['golden'].minTime - Game.shimmerTypes['golden'].time) * maxWidth / Game.shimmerTypes['golden'].maxTime) + 'px';
+			l('CMTimerBarGCMinBar').textContent = Math.ceil((Game.shimmerTypes['golden'].minTime - Game.shimmerTypes['golden'].time)/ Game.fps)
 			if (Game.shimmerTypes['golden'].minTime == Game.shimmerTypes['golden'].maxTime) {
 				l('CMTimerBarGCMinBar').style.borderTopRightRadius = '10px';
 				l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '10px';
@@ -1665,16 +1668,19 @@ CM.Disp.UpdateTimerBar = function() {
 				l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '';
 			}
 			l('CMTimerBarGCBar').style.width = Math.round(Math.min(Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].minTime, Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) * maxWidth / Game.shimmerTypes['golden'].maxTime) + 'px';
+			l('CMTimerBarGCBar').textContent = Math.ceil(Math.min(Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].minTime, Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) / Game.fps);
 			l('CMTimerBarGCTime').textContent = Math.ceil((Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) / Game.fps);
 			numberOfTimers++;
 		}
 		else CM.Disp.TimerBars['CMTimerBarGC'].style.display = 'none';
 
-		// Regulates visibility of Reinder timer
+		// Regulates visibility of Reindeer timer
 		if (Game.season == 'christmas' && Game.shimmerTypes['reindeer'].spawned == 0) {
 			CM.Disp.TimerBars['CMTimerBarRen'].style.display = '';
 			l('CMTimerBarRenMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes['reindeer'].minTime - Game.shimmerTypes['reindeer'].time) * maxWidth / Game.shimmerTypes['reindeer'].maxTime) + 'px';
+			l('CMTimerBarRenMinBar').textContent = Math.ceil((Game.shimmerTypes['reindeer'].minTime - Game.shimmerTypes['reindeer'].time)/ Game.fps)
 			l('CMTimerBarRenBar').style.width = Math.round(Math.min(Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].minTime, Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) * maxWidth / Game.shimmerTypes['reindeer'].maxTime) + 'px';
+			l('CMTimerBarRenBar').textContent = Math.ceil(Math.min(Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].minTime, Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) / Game.fps);
 			l('CMTimerBarRenTime').textContent = Math.ceil((Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) / Game.fps);
 			numberOfTimers++;
 		}
