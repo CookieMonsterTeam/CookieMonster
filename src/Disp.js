@@ -395,7 +395,10 @@ CM.Disp.UpdateBotBar = function() {
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache[target][i].pp, 2);
 			var timeColor = CM.Disp.GetTimeColor((Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].className = CM.Disp.colorTextPre + timeColor.color;
-			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text;
+			if (timeColor.text == "Done!" && Game.cookies < Game.Objects[i].bulkPrice) {
+				CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text + " (with Wrink)";
+			}
+			else CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text;
 		}
 	}
 }
@@ -1483,6 +1486,10 @@ CM.Disp.UpdateTooltipBuilding = function() {
 			l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 			var timeColor = CM.Disp.GetTimeColor((CM.Disp.TooltipPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 			l('CMTooltipTime').textContent = timeColor.text;
+			if (timeColor.text == "Done!" && Game.cookies < CM.Cache[target][CM.Disp.tooltipName].price) {
+				l('CMTooltipTime').textContent = timeColor.text + " (with Wrink)";
+			}
+			else l('CMTooltipTime').textContent = timeColor.text;
 			l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
 		}
 
@@ -1542,6 +1549,10 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 		}
 		var timeColor = CM.Disp.GetTimeColor((CM.Disp.TooltipPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 		l('CMTooltipTime').textContent = timeColor.text;
+		if (timeColor.text == "Done!" && Game.cookies < Game.UpgradesInStore[CM.Disp.tooltipName].getPrice()) {
+			l('CMTooltipTime').textContent = timeColor.text + " (with Wrink)";
+		}
+		else l('CMTooltipTime').textContent = timeColor.text;
 		l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
 		
 		// Add extra info to Chocolate egg tooltip
