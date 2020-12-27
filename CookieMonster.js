@@ -1558,7 +1558,7 @@ CM.Disp.CreateTimerBar = function() {
 	CM.Disp.TimerBar.id = 'CMTimerBar';
 	CM.Disp.TimerBar.style.position = 'absolute';
 	CM.Disp.TimerBar.style.display = 'none';
-	CM.Disp.TimerBar.style.height = '48px';
+	CM.Disp.TimerBar.style.height = '30px';
 	CM.Disp.TimerBar.style.fontSize = '10px';
 	CM.Disp.TimerBar.style.fontWeight = 'bold';
 	CM.Disp.TimerBar.style.backgroundColor = 'black';
@@ -1592,7 +1592,7 @@ CM.Disp.CreateTimerBar = function() {
  */
 CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 	timerBar = document.createElement('div');
-	timerBar.id = 'CMTimerBarGC';
+	timerBar.id = 'CMTimerBar';
 	timerBar.style.height = '12px';
 	timerBar.style.margin = '0px 10px';
 	timerBar.style.position = 'relative';
@@ -1610,6 +1610,7 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 	var type = document.createElement('span');
 	type.style.display = 'inline-block';
 	type.style.textAlign = 'right';
+	type.style.fontSize = "10px";
 	type.style.width = '108px';
 	type.style.marginRight = '5px';
 	type.style.verticalAlign = 'text-top';
@@ -1621,6 +1622,8 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 		colorBar.id = bars[i].id
 		colorBar.style.display = 'inline-block';
 		colorBar.style.height = '10px';
+		colorBar.style.verticalAlign = "text-top";
+		colorBar.style.textAlign="center";
 		if (bars.length - 1 == i) {
 			colorBar.style.borderTopRightRadius = '10px';
 			colorBar.style.borderBottomRightRadius = '10px';
@@ -1643,19 +1646,22 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 }
 
 /**
- * This function creates an indivudual timer for the timer bar
+ * This function updates indivudual timers in the timer bar
  * It is called by CM.Loop()
  */
 CM.Disp.UpdateTimerBar = function() {
 	if (CM.Options.TimerBar == 1) {
-		// label width: 113, timer width: 26, div margin: 20
-		var maxWidth = CM.Disp.TimerBar.offsetWidth - 159;
+		// label width: 113, timer width: 30, div margin: 20
+		var maxWidthTwoBar = CM.Disp.TimerBar.offsetWidth - 163;
+		// label width: 113, div margin: 20, calculate timer width at runtime
+		var maxWidthOneBar = CM.Disp.TimerBar.offsetWidth - 133;
 		var numberOfTimers = 0;
 
 		// Regulates visibility of Golden Cookie timer
 		if (Game.shimmerTypes['golden'].spawned == 0 && !Game.Has('Golden switch [off]')) {
 			CM.Disp.TimerBars['CMTimerBarGC'].style.display = '';
-			l('CMTimerBarGCMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes['golden'].minTime - Game.shimmerTypes['golden'].time) * maxWidth / Game.shimmerTypes['golden'].maxTime) + 'px';
+			l('CMTimerBarGCMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes['golden'].minTime - Game.shimmerTypes['golden'].time) * maxWidthTwoBar / Game.shimmerTypes['golden'].maxTime) + 'px';
+			l('CMTimerBarGCMinBar').textContent = Math.ceil((Game.shimmerTypes['golden'].minTime - Game.shimmerTypes['golden'].time)/ Game.fps)
 			if (Game.shimmerTypes['golden'].minTime == Game.shimmerTypes['golden'].maxTime) {
 				l('CMTimerBarGCMinBar').style.borderTopRightRadius = '10px';
 				l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '10px';
@@ -1664,17 +1670,20 @@ CM.Disp.UpdateTimerBar = function() {
 				l('CMTimerBarGCMinBar').style.borderTopRightRadius = '';
 				l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '';
 			}
-			l('CMTimerBarGCBar').style.width = Math.round(Math.min(Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].minTime, Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) * maxWidth / Game.shimmerTypes['golden'].maxTime) + 'px';
+			l('CMTimerBarGCBar').style.width = Math.round(Math.min(Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].minTime, Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) * maxWidthTwoBar / Game.shimmerTypes['golden'].maxTime) + 'px';
+			l('CMTimerBarGCBar').textContent = Math.ceil(Math.min(Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].minTime, Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) / Game.fps);
 			l('CMTimerBarGCTime').textContent = Math.ceil((Game.shimmerTypes['golden'].maxTime - Game.shimmerTypes['golden'].time) / Game.fps);
 			numberOfTimers++;
 		}
 		else CM.Disp.TimerBars['CMTimerBarGC'].style.display = 'none';
 
-		// Regulates visibility of Reinder timer
+		// Regulates visibility of Reindeer timer
 		if (Game.season == 'christmas' && Game.shimmerTypes['reindeer'].spawned == 0) {
 			CM.Disp.TimerBars['CMTimerBarRen'].style.display = '';
-			l('CMTimerBarRenMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes['reindeer'].minTime - Game.shimmerTypes['reindeer'].time) * maxWidth / Game.shimmerTypes['reindeer'].maxTime) + 'px';
-			l('CMTimerBarRenBar').style.width = Math.round(Math.min(Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].minTime, Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) * maxWidth / Game.shimmerTypes['reindeer'].maxTime) + 'px';
+			l('CMTimerBarRenMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes['reindeer'].minTime - Game.shimmerTypes['reindeer'].time) * maxWidthTwoBar / Game.shimmerTypes['reindeer'].maxTime) + 'px';
+			l('CMTimerBarRenMinBar').textContent = Math.ceil((Game.shimmerTypes['reindeer'].minTime - Game.shimmerTypes['reindeer'].time)/ Game.fps)
+			l('CMTimerBarRenBar').style.width = Math.round(Math.min(Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].minTime, Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) * maxWidthTwoBar / Game.shimmerTypes['reindeer'].maxTime) + 'px';
+			l('CMTimerBarRenBar').textContent = Math.ceil(Math.min(Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].minTime, Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) / Game.fps);
 			l('CMTimerBarRenTime').textContent = Math.ceil((Game.shimmerTypes['reindeer'].maxTime - Game.shimmerTypes['reindeer'].time) / Game.fps);
 			numberOfTimers++;
 		}
@@ -1698,7 +1707,8 @@ CM.Disp.UpdateTimerBar = function() {
 				}
 				else classColor = CM.Disp.colorPurple;
 				timer.lastChild.children[1].className = CM.Disp.colorBackPre + classColor;
-				timer.lastChild.children[1].style.width = Math.round(Game.buffs[i].time * maxWidth / Game.buffs[i].maxTime) + 'px';
+				timer.lastChild.children[1].textContent = Math.round(100 * (Game.buffs[i].time / Game.buffs[i].maxTime)) + "%";
+				timer.lastChild.children[1].style.width = Math.round(Game.buffs[i].time * (maxWidthOneBar - Math.ceil(Game.buffs[i].time / Game.fps).toString().length * 8) / Game.buffs[i].maxTime) + 'px';
 				timer.lastChild.children[2].textContent = Math.ceil(Game.buffs[i].time / Game.fps);
 				numberOfTimers++;
 				CM.Disp.BuffTimerBars[Game.buffs[i].name] = timer
@@ -1709,13 +1719,7 @@ CM.Disp.UpdateTimerBar = function() {
 		}
 
 		if (numberOfTimers != 0) {
-			var height = 48 / numberOfTimers;
-			for (var i in CM.Disp.TimerBars) {
-				CM.Disp.TimerBars[i].style.height = height + 'px';
-			}
-			for (var i in CM.Disp.BuffTimerBars) {
-				CM.Disp.BuffTimerBars[i].style.height = height + 'px';
-			}
+			CM.Disp.TimerBar.style.height = numberOfTimers * 12 + 2 + 'px';
 		}
 	}
 }
@@ -1757,22 +1761,22 @@ CM.Disp.ToggleTimerBarPos = function() {
  */
 CM.Disp.UpdateBotTimerBarPosition = function() {
 	if (CM.Options.BotBar == 1 && CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 1) {
-		CM.Disp.BotBar.style.bottom = '48px';
-		l('game').style.bottom = '118px';
+		CM.Disp.BotBar.style.bottom = CM.Disp.TimerBar.style.height;
+		l('game').style.bottom = Number(CM.Disp.TimerBar.style.height.replace("px","")) + 70 + "px";
 	}
 	else if (CM.Options.BotBar == 1) {
 		CM.Disp.BotBar.style.bottom = '0px';
 		l('game').style.bottom = '70px';
 	}
 	else if (CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 1) {
-		l('game').style.bottom = '48px';
+		l('game').style.bottom = CM.Disp.TimerBar.style.height;
 	}
 	else { // No bars
 		l('game').style.bottom = '0px';
 	}
 
 	if (CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 0) {
-		l('sectionLeft').style.top = '48px';
+		l('sectionLeft').style.top = CM.Disp.TimerBar.style.height;
 	}
 	else {
 		l('sectionLeft').style.top = '';
