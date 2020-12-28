@@ -4495,7 +4495,7 @@ CM.Main.lastWrinklerCount = 0;
 CM.ConfigPrefix = 'CMConfig';
 
 CM.VersionMajor = '2.031';
-CM.VersionMinor = '2';
+CM.VersionMinor = '3';
 
 /*******
  * Sim *
