@@ -209,6 +209,7 @@ CM.ConfigData.ScaleCutoff = {type: 'numscale', group: 'Notation', label: 'Notati
 // Miscellaneous
 CM.ConfigData.GCTimer = {type: 'bool', group: 'Miscellaneous', label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', toggle: true, func: function() {CM.Disp.ToggleGCTimer();}};
 CM.ConfigData.Favicon = {type: 'bool', group: 'Miscellaneous', label: ['Favicon OFF', 'Favicon ON'], desc: 'Update favicon with Golden/Wrath Cookie', toggle: true, func: function() {CM.Disp.UpdateFavicon();}};
+CM.ConfigData.WrinklerButtons = {type: 'bool', group: 'Miscellaneous', label: ['Extra Buttons OFF', 'Extra Buttons ON'], desc: 'Show buttons for popping wrinklers at bottom of cookie section', toggle: true, func: function() {CM.Disp.UpdateWrinklerButtons();}};
 
 
 /**
@@ -234,8 +235,6 @@ CM.Data.ConfigDefault = {
 	GCSound: 1,  
 	GCVolume: 100, 
 	GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', 
-	GCTimer: 1, 
-	Favicon: 1, 
 	FortuneNotification: 0,
 	FortuneFlash: 1, 
 	FortuneSound: 1,  
@@ -290,6 +289,9 @@ CM.Data.ConfigDefault = {
 	Colors: {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
 	SortBuildings: 0,
 	SortUpgrades: 0,
+	GCTimer: 1, 
+	Favicon: 1,
+	WrinklerButtons: 1,
 	Header: {BarsColors: 1, Calculation: 1, Notification: 1, NotificationGC: 1, NotificationFC: 1, NotificationSea: 1, NotificationGard: 1, NotificationMagi: 1, NotificationWrink: 1, NotificationWrinkMax: 1, Tooltip: 1, Statistics: 1, Notation: 1, Miscellaneous: 1, Lucky: 1, Spells: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
 };
 

@@ -236,6 +236,7 @@ CM.DelayInit = function() {
 	for (var i in CM.Disp.TooltipText) {
 		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
+	CM.Disp.CreateWrinklerButtons();
 	CM.Disp.ReplaceTooltipBuild();
 	CM.Disp.ReplaceTooltipGrimoire();
 	CM.Disp.ReplaceTooltipLump();
