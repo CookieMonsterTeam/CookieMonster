@@ -6,15 +6,19 @@
  * Section: Functions related to saving, loading and restoring configs */
 
 /**
- * @deprecated
- * This function (used to) save the config of CookieMonster
+ * This function saves the config of CookieMonster without saving any of the other save-data
+ * This allows saving in between the autosave intervals
  * It is called by CM.Config.LoadConfig(), CM.Config.RestoreDefault(), CM.Config.ToggleConfig(), 
  * CM.ToggleConfigVolume() and changes in options with type "url", "color" or "numscale"
- * TODO: See if there is a way to force Cookie CLICKER to save only the mod-data and not also Save-data.
- * Otherwise this can be removed
  */
-CM.Config.SaveConfig = function(config) {
-	CM.save();
+CM.Config.SaveConfig = function() {
+	let saveString = b64_to_utf8(unescape(localStorage.getItem('CookieClickerGame')).split('!END!')[0]);
+	let pattern = /CookieMonster.*[;$]/;
+	CookieMonsterSave = saveString.match(/CookieMonster.*(;|$)/);
+	if (CookieMonsterSave != null) {
+		newSaveString = saveString.replace(CookieMonsterSave[0], "CookieMonster:" + CM.save());
+		localStorage.setItem('CookieClickerGame', escape(utf8_to_b64(newSaveString)+'!END!'))
+	}
 }
 
 /**
@@ -67,7 +71,7 @@ CM.Config.LoadConfig = function(settings) {
 				}
 			}
 		}
-		if (mod) CM.Config.SaveConfig(CM.Options);
+		if (mod) CM.Config.SaveConfig();
 		CM.Loop(); // Do loop once
 		for (var i in CM.Data.ConfigDefault) {
 			if (i != 'Header' && typeof CM.ConfigData[i].func !== 'undefined') {
@@ -86,7 +90,7 @@ CM.Config.LoadConfig = function(settings) {
  */
 CM.Config.RestoreDefault = function() {
 	CM.Config.LoadConfig(CM.Data.ConfigDefault);
-	CM.Config.SaveConfig(CM.Options);
+	CM.Config.SaveConfig();
 	Game.UpdateMenu();
 }
 
@@ -112,7 +116,7 @@ CM.Config.ToggleConfig = function(config) {
 	}
 
 	l(CM.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Options[config]];
-	CM.Config.SaveConfig(CM.Options);
+	CM.Config.SaveConfig();
 }
 
 /**
@@ -125,7 +129,7 @@ CM.Config.ToggleConfigVolume = function(config) {
 		l("slider" + config + "right").innerHTML = l("slider" + config).value + "%";
 		CM.Options[config] = Math.round(l("slider" + config).value);
 	} 
-	CM.Config.SaveConfig(CM.Options);
+	CM.Config.SaveConfig();
 }
 
 /**
@@ -136,7 +140,7 @@ CM.Config.ToggleConfigVolume = function(config) {
 CM.Config.ToggleHeader = function(config) {
 	CM.Options.Header[config]++;
 	if (CM.Options.Header[config] > 1) CM.Options.Header[config] = 0;
-	CM.Config.SaveConfig(CM.Options);
+	CM.Config.SaveConfig();
 }
 
 /********
