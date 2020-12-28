@@ -2566,11 +2566,6 @@ CM.Disp.TooltipCreateWarningSection = function() {
 		var box = document.createElement('div');
 		box.id = boxId;
 		box.style.display = 'none';
-		// TODO: This is very old code and can probably be removed
-		//box.style.WebkitTransition = 'opacity 0.1s ease-out';
-		//box.style.MozTransition = 'opacity 0.1s ease-out';
-		//box.style.MsTransition = 'opacity 0.1s ease-out';
-		//box.style.OTransition = 'opacity 0.1s ease-out';
 		box.style.transition = 'opacity 0.1s ease-out';
 		box.className = CM.Disp.colorBorderPre + color;
 		box.style.padding = '2px';
