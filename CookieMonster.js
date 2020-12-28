@@ -320,6 +320,63 @@ CM.Cache.UpdateCurrWrinklerCPS = function() {
 }
 
 /********
+ * Section: Functions related to "Specials" (Dragon and Santa) */
+
+/**
+ * This functions caches the current cost of upgrading the dragon level so it can be displayed in the tooltip
+ * It is called by the relevan tooltip-code as a result of CM.Disp.AddDragonLevelUpTooltip() and by CM.Loop()
+ * @global	{number}	CM.Cache.lastDragonLevel		The last cached dragon level
+ * @global	{string}	CM.Cache.CostDragonUpgrade		The Beautified cost of the next upgrade
+ */
+CM.Cache.CacheDragonCost = function() {
+	if (CM.Cache.lastDragonLevel != Game.dragonLevel || CM.Sim.DoSims) {
+		if (Game.dragonLevels[Game.dragonLevel].buy.toString().includes("sacrifice")) {
+			var target = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/Objects\[(.*)\]/)[1];
+			var amount = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/sacrifice\((.*?)\)/)[1];
+			if (target != "i") {
+				target = target.replaceAll("\'", "");
+				if (Game.Objects[target].amount < amount) {
+					CM.Cache.CostDragonUpgrade = "Not enough buildings to sell";
+				}
+				else {
+					var cost = 0;
+					CM.Sim.CopyData();
+					for (var i = 0; i < amount; i++) {
+						var price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
+						price = Game.modifyBuildingPrice(CM.Sim.Objects[target], price);
+						price = Math.ceil(price);
+						cost += price;
+						CM.Sim.Objects[target].amount--;
+					}
+					CM.Cache.CostDragonUpgrade = CM.Disp.Beautify(cost);
+				}
+			}
+			else {
+				var cost = 0;
+				CM.Sim.CopyData();
+				for (var j in Game.Objects) {
+					target = j;
+					if (Game.Objects[target].amount < amount) {
+						CM.Cache.CostDragonUpgrade = "Not enough buildings to sell";
+					}
+					else {
+						for (var i = 0; i < amount; i++) {
+							var price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
+							price = Game.modifyBuildingPrice(CM.Sim.Objects[target], price);
+							price = Math.ceil(price);
+							cost += price;
+							CM.Sim.Objects[target].amount--;
+						}
+					}
+				}
+				CM.Cache.CostDragonUpgrade = CM.Disp.Beautify(cost);
+			}
+		}
+		CM.Cache.lastDragonLevel = Game.dragonLevel;
+	}
+}
+ 			
+/********
  * Section: UNSORTED */
 
 CM.Cache.NextNumber = function(base) {
@@ -2927,7 +2984,7 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 }
 
 /********
- * Section: Functions related to the dragon aura interface */
+ * Section: Functions related to the Dragon */
 
 /**
  * This functions adds the two extra lines about CPS and time to recover to the aura picker infoscreen
@@ -2954,6 +3011,22 @@ CM.Disp.AddAuraInfo = function(aura) {
 		div2.style.textAlign = "center";
 		div2.textContent = "It will take " + timeToRecover + " to recover the cost.";
 		l('dragonAuraInfo').appendChild(div2);
+	}
+}
+
+/**
+ * This functions adds a tooltip to the level up button displaying the cost of rebuying all
+ * It is called by Game.ToggleSpecialMenu() after CM.ReplaceNative()
+ */
+CM.Disp.AddDragonLevelUpTooltip = function() {
+	// Check if it is the dragon popup that is on screen
+	if ((l('specialPopup').className.match(/onScreen/) && l('specialPopup').children[0].style.background.match(/dragon/)) != null) {
+		for (let i = 0; i < l('specialPopup').childNodes.length; i++) {
+			if (l('specialPopup').childNodes[i].className == "optionBox") {
+				l('specialPopup').children[i].onmouseover = function() {CM.Cache.CacheDragonCost(); Game.tooltip.dynamic = 1; Game.tooltip.draw(this, CM.Cache.CostDragonUpgrade, 'this'); Game.tooltip.wobble();}
+				l('specialPopup').children[i].onmouseout = function() {Game.tooltip.shouldHide=1;}
+			}
+		}
 	}
 }
 
@@ -3519,7 +3592,7 @@ CM.Disp.CreateStatsMissDisp = function(theMissDisp) {
  * @returns	{object}	section		The object contating the Lucky section
  */
 CM.Disp.CreateStatsLuckySection = function() {	
-	// TODO: Remove this and creater better tooltip!!
+	// This sets which tooltip to display for certain stats
 	var goldCookTooltip = CM.Sim.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
 	
 	var section = document.createElement('div');
@@ -3584,7 +3657,7 @@ CM.Disp.CreateStatsLuckySection = function() {
  * @returns	{object}	section		The object contating the Chain section
  */
 CM.Disp.CreateStatsChainSection = function() {
-	// TODO: Remove this and creater better tooltip!!
+	// This sets which tooltip to display for certain stats
 	var goldCookTooltip = CM.Sim.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
 	
 	var section = document.createElement('div');
@@ -3957,7 +4030,7 @@ CM.ReplaceNative = function() {
 	CM.Backup.scriptLoaded = Game.scriptLoaded;
 	Game.scriptLoaded = function(who, script) {
 		CM.Backup.scriptLoaded(who, script);
-		CM.Disp.AddTooltipGrimoire()
+		CM.Disp.ReplaceTooltipGrimoire()
 		CM.ReplaceNativeGrimoire();
 	}
 
@@ -3981,6 +4054,16 @@ CM.ReplaceNative = function() {
 		CM.Backup.DescribeDragonAura(aura);
 		CM.Disp.AddAuraInfo(aura);
 	}
+
+	CM.Backup.ToggleSpecialMenu = Game.ToggleSpecialMenu;
+	/**
+	 * This functions adds the code to display the tooltips for the levelUp button of the dragon
+	 */
+	Game.ToggleSpecialMenu = function(on) {
+		CM.Backup.ToggleSpecialMenu(on);
+		CM.Disp.AddDragonLevelUpTooltip();
+	}
+	
 
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
 	Game.UpdateMenu = function() {
@@ -4024,7 +4107,7 @@ CM.ReplaceNativeGrimoireLaunch = function() {
 		eval('CM.Backup.GrimoireLaunchMod = ' + minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame'));
 		Game.Objects['Wizard tower'].minigame.launch = function() {
 			CM.Backup.GrimoireLaunchMod();
-			CM.Disp.AddTooltipGrimoire();
+			CM.Disp.ReplaceTooltipGrimoire();
 			CM.HasReplaceNativeGrimoireDraw = false;
 			CM.ReplaceNativeGrimoireDraw();
 		}
@@ -4061,11 +4144,13 @@ CM.Loop = function() {
 			CM.Cache.CacheStats();
 			CM.Cache.CacheMissingUpgrades();
 			CM.Cache.RemakeChain();
+			CM.Cache.CacheDragonCost();
 
 			CM.Cache.RemakeSeaSpec();
 			CM.Cache.RemakeSellForChoEgg();
 
 			CM.Sim.DoSims = 0;
+			
 		}
 
 		// Check for aura change to recalculate buildings prices

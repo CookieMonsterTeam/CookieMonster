@@ -13,7 +13,6 @@
  */
 CM.Config.SaveConfig = function() {
 	let saveString = b64_to_utf8(unescape(localStorage.getItem('CookieClickerGame')).split('!END!')[0]);
-	let pattern = /CookieMonster.*[;$]/;
 	CookieMonsterSave = saveString.match(/CookieMonster.*(;|$)/);
 	if (CookieMonsterSave != null) {
 		newSaveString = saveString.replace(CookieMonsterSave[0], "CookieMonster:" + CM.save());
