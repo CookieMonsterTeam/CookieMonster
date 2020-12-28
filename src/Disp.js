@@ -1847,8 +1847,8 @@ CM.Disp.AddDragonLevelUpTooltip = function() {
 	if ((l('specialPopup').className.match(/onScreen/) && l('specialPopup').children[0].style.background.match(/dragon/)) != null) {
 		for (let i = 0; i < l('specialPopup').childNodes.length; i++) {
 			if (l('specialPopup').childNodes[i].className == "optionBox") {
-				l('specialPopup').children[i].onmouseover = function() {CM.Cache.CacheDragonCost(); Game.tooltip.dynamic = 1; Game.tooltip.draw(this, CM.Cache.CostDragonUpgrade, 'this'); Game.tooltip.wobble();}
-				l('specialPopup').children[i].onmouseout = function() {Game.tooltip.shouldHide=1;}
+				l('specialPopup').children[i].onmouseover = function() {CM.Cache.CacheDragonCost(); Game.tooltip.dynamic = 1; Game.tooltip.draw(l('specialPopup'), `<div style="min-width:200px;text-align:center;">${CM.Cache.CostDragonUpgrade}</div>`, 'this'); Game.tooltip.wobble();}
+				l('specialPopup').children[i].onmouseout = function() {Game.tooltip.shouldHide = 1;}
 			}
 		}
 	}

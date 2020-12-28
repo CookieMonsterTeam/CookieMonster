@@ -317,7 +317,7 @@ CM.Cache.CacheDragonCost = function() {
 						cost += price;
 						CM.Sim.Objects[target].amount--;
 					}
-					CM.Cache.CostDragonUpgrade = CM.Disp.Beautify(cost);
+					CM.Cache.CostDragonUpgrade = "Cost to rebuy: " + CM.Disp.Beautify(cost);
 				}
 			}
 			else {
@@ -327,6 +327,7 @@ CM.Cache.CacheDragonCost = function() {
 					target = j;
 					if (Game.Objects[target].amount < amount) {
 						CM.Cache.CostDragonUpgrade = "Not enough buildings to sell";
+						break
 					}
 					else {
 						for (var i = 0; i < amount; i++) {
@@ -337,8 +338,8 @@ CM.Cache.CacheDragonCost = function() {
 							CM.Sim.Objects[target].amount--;
 						}
 					}
+					CM.Cache.CostDragonUpgrade = "Cost to rebuy: " + CM.Disp.Beautify(cost);
 				}
-				CM.Cache.CostDragonUpgrade = CM.Disp.Beautify(cost);
 			}
 		}
 		CM.Cache.lastDragonLevel = Game.dragonLevel;
