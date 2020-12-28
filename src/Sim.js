@@ -114,8 +114,8 @@ CM.Sim.hasGod=function(what) {
 
 CM.Sim.eff = function(name) {
 	if (typeof CM.Sim.effs[name]==='undefined') {
-		CM.Sim.effs[name] = 1
-		return CM.Sim.effs[name]
+		CM.Sim.effs[name] = 1;
+		return CM.Sim.effs[name];
 	}
 	else {
 		return CM.Sim.effs[name];
