@@ -289,6 +289,63 @@ CM.Cache.UpdateCurrWrinklerCPS = function() {
 }
 
 /********
+ * Section: Functions related to "Specials" (Dragon and Santa) */
+
+/**
+ * This functions caches the current cost of upgrading the dragon level so it can be displayed in the tooltip
+ * It is called by the relevan tooltip-code as a result of CM.Disp.AddDragonLevelUpTooltip() and by CM.Loop()
+ * @global	{number}	CM.Cache.lastDragonLevel		The last cached dragon level
+ * @global	{string}	CM.Cache.CostDragonUpgrade		The Beautified cost of the next upgrade
+ */
+CM.Cache.CacheDragonCost = function() {
+	if (CM.Cache.lastDragonLevel != Game.dragonLevel || CM.Sim.DoSims) {
+		if (Game.dragonLevels[Game.dragonLevel].buy.toString().includes("sacrifice")) {
+			var target = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/Objects\[(.*)\]/)[1];
+			var amount = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/sacrifice\((.*?)\)/)[1];
+			if (target != "i") {
+				target = target.replaceAll("\'", "");
+				if (Game.Objects[target].amount < amount) {
+					CM.Cache.CostDragonUpgrade = "Not enough buildings to sell";
+				}
+				else {
+					var cost = 0;
+					CM.Sim.CopyData();
+					for (var i = 0; i < amount; i++) {
+						var price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
+						price = Game.modifyBuildingPrice(CM.Sim.Objects[target], price);
+						price = Math.ceil(price);
+						cost += price;
+						CM.Sim.Objects[target].amount--;
+					}
+					CM.Cache.CostDragonUpgrade = CM.Disp.Beautify(cost);
+				}
+			}
+			else {
+				var cost = 0;
+				CM.Sim.CopyData();
+				for (var j in Game.Objects) {
+					target = j;
+					if (Game.Objects[target].amount < amount) {
+						CM.Cache.CostDragonUpgrade = "Not enough buildings to sell";
+					}
+					else {
+						for (var i = 0; i < amount; i++) {
+							var price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
+							price = Game.modifyBuildingPrice(CM.Sim.Objects[target], price);
+							price = Math.ceil(price);
+							cost += price;
+							CM.Sim.Objects[target].amount--;
+						}
+					}
+				}
+				CM.Cache.CostDragonUpgrade = CM.Disp.Beautify(cost);
+			}
+		}
+		CM.Cache.lastDragonLevel = Game.dragonLevel;
+	}
+}
+ 			
+/********
  * Section: UNSORTED */
 
 CM.Cache.NextNumber = function(base) {

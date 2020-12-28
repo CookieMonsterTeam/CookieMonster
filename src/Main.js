@@ -45,7 +45,7 @@ CM.ReplaceNative = function() {
 	CM.Backup.scriptLoaded = Game.scriptLoaded;
 	Game.scriptLoaded = function(who, script) {
 		CM.Backup.scriptLoaded(who, script);
-		CM.Disp.AddTooltipGrimoire()
+		CM.Disp.ReplaceTooltipGrimoire()
 		CM.ReplaceNativeGrimoire();
 	}
 
@@ -69,6 +69,16 @@ CM.ReplaceNative = function() {
 		CM.Backup.DescribeDragonAura(aura);
 		CM.Disp.AddAuraInfo(aura);
 	}
+
+	CM.Backup.ToggleSpecialMenu = Game.ToggleSpecialMenu;
+	/**
+	 * This functions adds the code to display the tooltips for the levelUp button of the dragon
+	 */
+	Game.ToggleSpecialMenu = function(on) {
+		CM.Backup.ToggleSpecialMenu(on);
+		CM.Disp.AddDragonLevelUpTooltip();
+	}
+	
 
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
 	Game.UpdateMenu = function() {
@@ -112,7 +122,7 @@ CM.ReplaceNativeGrimoireLaunch = function() {
 		eval('CM.Backup.GrimoireLaunchMod = ' + minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame'));
 		Game.Objects['Wizard tower'].minigame.launch = function() {
 			CM.Backup.GrimoireLaunchMod();
-			CM.Disp.AddTooltipGrimoire();
+			CM.Disp.ReplaceTooltipGrimoire();
 			CM.HasReplaceNativeGrimoireDraw = false;
 			CM.ReplaceNativeGrimoireDraw();
 		}
@@ -149,11 +159,13 @@ CM.Loop = function() {
 			CM.Cache.CacheStats();
 			CM.Cache.CacheMissingUpgrades();
 			CM.Cache.RemakeChain();
+			CM.Cache.CacheDragonCost();
 
 			CM.Cache.RemakeSeaSpec();
 			CM.Cache.RemakeSellForChoEgg();
 
 			CM.Sim.DoSims = 0;
+			
 		}
 
 		// Check for aura change to recalculate buildings prices
