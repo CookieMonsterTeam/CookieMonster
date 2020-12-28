@@ -299,7 +299,7 @@ CM.Cache.UpdateCurrWrinklerCPS = function() {
  */
 CM.Cache.CacheDragonCost = function() {
 	if (CM.Cache.lastDragonLevel != Game.dragonLevel || CM.Sim.DoSims) {
-		if (Game.dragonLevels[Game.dragonLevel].buy.toString().includes("sacrifice")) {
+		if (Game.dragonLevel < 25 && Game.dragonLevels[Game.dragonLevel].buy.toString().includes("sacrifice")) {
 			var target = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/Objects\[(.*)\]/)[1];
 			var amount = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/sacrifice\((.*?)\)/)[1];
 			if (target != "i") {
