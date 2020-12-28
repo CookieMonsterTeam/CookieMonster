@@ -2029,7 +2029,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		inputPrompt.setAttribute('value', CM.Options[config]);
 		var a = document.createElement('a');
 		a.className = 'option';
-		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(CM.Options); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
+		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
 		a.textContent = 'Edit';
 		div.appendChild(a);
 		var label = document.createElement('label');
@@ -2047,7 +2047,7 @@ CM.Disp.CreatePrefOption = function(config) {
 			input.style.width = '65px';
 			input.setAttribute('value', CM.Options.Colors[CM.Disp.colors[i]]);
 			div.appendChild(input);
-			eval('var change = function() {CM.Options.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.Config.SaveConfig(CM.Options);}');
+			eval('var change = function() {CM.Options.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.Config.SaveConfig();}');
 			var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
 			var label = document.createElement('label');
 			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
@@ -2071,7 +2071,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		input.max = CM.ConfigData[config].max;
 		input.oninput = function() {if (this.value > this.max) console.log("TEST");
 			 CM.Options[config] = this.value; 
-			 CM.Config.SaveConfig(CM.Options); 
+			 CM.Config.SaveConfig(); 
 			 CM.Disp.RefreshScale()
 			}
 		div.appendChild(input);
