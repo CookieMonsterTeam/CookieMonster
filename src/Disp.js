@@ -2188,7 +2188,7 @@ CM.Disp.AddMenuStats = function(title) {
 			var popFattestFrag = document.createDocumentFragment();
 			popFattestFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinklersFattest[0]) + ' '));
 			var popFattestA = document.createElement('a');
-			popFattestA.textContent = 'Pop single fattest';
+			popFattestA.textContent = 'Pop Single Fattest';
 			popFattestA.className = 'option';
 			popFattestA.onclick = function() { Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
 			popFattestFrag.appendChild(popFattestA);
@@ -2735,10 +2735,45 @@ CM.Disp.crateMissing = function(me) {
 	</div>`;
 }
 
+/********
+ * Section: Functions related to the left column of the page */
+
+/**
+ * This function creates two objects at the bottom of the left column that allowing popping of wrinklers
+ * It is called by CM.DelayInit()
+ */
+CM.Disp.CreateWrinklerButtons = function() {
+	var popAllA = document.createElement('a');
+	popAllA.id = "PopAllNormalWrinklerButton"
+	popAllA.textContent = 'Pop All Normal';
+	popAllA.className = 'option';
+	popAllA.onclick = function() { CM.Disp.PopAllNormalWrinklers(); };
+	l('sectionLeftExtra').children[0].append(popAllA);
+	var popFattestA = document.createElement('a');
+	popFattestA.id = "PopFattestWrinklerButton"
+	popFattestA.textContent = 'Pop Single Fattest';
+	popFattestA.className = 'option';
+	popFattestA.onclick = function() { Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
+	l('sectionLeftExtra').children[0].append(popFattestA);
+}
+
+/**
+ * This function updates the display setting of the two objects created by CM.Disp.CreateWrinklerButtons()
+ * It is called by changes in CM.Options.WrinklerButtons
+ */
+CM.Disp.UpdateWrinklerButtons = function() {
+	if (CM.Options.WrinklerButtons) {
+		l('PopAllNormalWrinklerButton').style.display = "";
+		l('PopFattestWrinklerButton').style.display = "";
+	}
+	else {
+		l('PopAllNormalWrinklerButton').style.display = "none";
+		l('PopFattestWrinklerButton').style.display = "none";
+	}
+}
 
 /********
- * Section: Variables used in Disp functions
- */
+ * Section: Variables used in Disp functions */
 
 /**
  * This list is used to make some very basic tooltips.

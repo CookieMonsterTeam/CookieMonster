@@ -1091,6 +1091,7 @@ CM.ConfigData.ScaleCutoff = {type: 'numscale', group: 'Notation', label: 'Notati
 // Miscellaneous
 CM.ConfigData.GCTimer = {type: 'bool', group: 'Miscellaneous', label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', toggle: true, func: function() {CM.Disp.ToggleGCTimer();}};
 CM.ConfigData.Favicon = {type: 'bool', group: 'Miscellaneous', label: ['Favicon OFF', 'Favicon ON'], desc: 'Update favicon with Golden/Wrath Cookie', toggle: true, func: function() {CM.Disp.UpdateFavicon();}};
+CM.ConfigData.WrinklerButtons = {type: 'bool', group: 'Miscellaneous', label: ['Extra Buttons OFF', 'Extra Buttons ON'], desc: 'Show buttons for popping wrinklers at bottom of cookie section', toggle: true, func: function() {CM.Disp.UpdateWrinklerButtons();}};
 
 
 /**
@@ -1116,8 +1117,6 @@ CM.Data.ConfigDefault = {
 	GCSound: 1,  
 	GCVolume: 100, 
 	GCSoundURL: 'https://freesound.org/data/previews/66/66717_931655-lq.mp3', 
-	GCTimer: 1, 
-	Favicon: 1, 
 	FortuneNotification: 0,
 	FortuneFlash: 1, 
 	FortuneSound: 1,  
@@ -1172,6 +1171,9 @@ CM.Data.ConfigDefault = {
 	Colors: {Blue: '#4bb8f0', Green: '#00ff00', Yellow: '#ffff00', Orange: '#ff7f00', Red: '#ff0000', Purple: '#ff00ff', Gray: '#b3b3b3', Pink: '#ff1493', Brown: '#8b4513'},
 	SortBuildings: 0,
 	SortUpgrades: 0,
+	GCTimer: 1, 
+	Favicon: 1,
+	WrinklerButtons: 1,
 	Header: {BarsColors: 1, Calculation: 1, Notification: 1, NotificationGC: 1, NotificationFC: 1, NotificationSea: 1, NotificationGard: 1, NotificationMagi: 1, NotificationWrink: 1, NotificationWrinkMax: 1, Tooltip: 1, Statistics: 1, Notation: 1, Miscellaneous: 1, Lucky: 1, Spells: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
 };
 
@@ -3365,7 +3367,7 @@ CM.Disp.AddMenuStats = function(title) {
 			var popFattestFrag = document.createDocumentFragment();
 			popFattestFrag.appendChild(document.createTextNode(Beautify(CM.Cache.WrinklersFattest[0]) + ' '));
 			var popFattestA = document.createElement('a');
-			popFattestA.textContent = 'Pop single fattest';
+			popFattestA.textContent = 'Pop Single Fattest';
 			popFattestA.className = 'option';
 			popFattestA.onclick = function() { Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
 			popFattestFrag.appendChild(popFattestA);
@@ -3912,10 +3914,45 @@ CM.Disp.crateMissing = function(me) {
 	</div>`;
 }
 
+/********
+ * Section: Functions related to the left column of the page */
+
+/**
+ * This function creates two objects at the bottom of the left column that allowing popping of wrinklers
+ * It is called by CM.DelayInit()
+ */
+CM.Disp.CreateWrinklerButtons = function() {
+	var popAllA = document.createElement('a');
+	popAllA.id = "PopAllNormalWrinklerButton"
+	popAllA.textContent = 'Pop All Normal';
+	popAllA.className = 'option';
+	popAllA.onclick = function() { CM.Disp.PopAllNormalWrinklers(); };
+	l('sectionLeftExtra').children[0].append(popAllA);
+	var popFattestA = document.createElement('a');
+	popFattestA.id = "PopFattestWrinklerButton"
+	popFattestA.textContent = 'Pop Single Fattest';
+	popFattestA.className = 'option';
+	popFattestA.onclick = function() { Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
+	l('sectionLeftExtra').children[0].append(popFattestA);
+}
+
+/**
+ * This function updates the display setting of the two objects created by CM.Disp.CreateWrinklerButtons()
+ * It is called by changes in CM.Options.WrinklerButtons
+ */
+CM.Disp.UpdateWrinklerButtons = function() {
+	if (CM.Options.WrinklerButtons) {
+		l('PopAllNormalWrinklerButton').style.display = "";
+		l('PopFattestWrinklerButton').style.display = "";
+	}
+	else {
+		l('PopAllNormalWrinklerButton').style.display = "none";
+		l('PopFattestWrinklerButton').style.display = "none";
+	}
+}
 
 /********
- * Section: Variables used in Disp functions
- */
+ * Section: Variables used in Disp functions */
 
 /**
  * This list is used to make some very basic tooltips.
@@ -4222,6 +4259,7 @@ CM.DelayInit = function() {
 	for (var i in CM.Disp.TooltipText) {
 		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
+	CM.Disp.CreateWrinklerButtons();
 	CM.Disp.ReplaceTooltipBuild();
 	CM.Disp.ReplaceTooltipGrimoire();
 	CM.Disp.ReplaceTooltipLump();
