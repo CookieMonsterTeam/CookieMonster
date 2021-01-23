@@ -142,7 +142,8 @@ CM.Sim.getCPSBuffMult = function() {
 	return mult;
 }
 
-/* Constructs an object with the static properties of a building,
+/**
+ * Constructs an object with the static properties of a building,
  * but with a 'cps' method changed to use 'CM.Sim.Has' instead of 'Game.Has'
  * (and similar to 'hasAura', 'Objects', 'GetTieredCpsMult' and 'auraMult').
  *
@@ -166,7 +167,10 @@ CM.Sim.InitialBuildingData = function(buildingName) {
 	return you;
 }
 
-/* Similar to the previous function, but for upgrades.
+/**
+ *  Similar to the previous function, but for upgrades.
+ * Note: currently no static data is used by Cookie Monster,
+ * so this function just returns an empty object.
  */
 CM.Sim.InitUpgrade = function(upgradeName) {
 	var me = Game.Upgrades[upgradeName];
@@ -176,7 +180,8 @@ CM.Sim.InitUpgrade = function(upgradeName) {
 	return you;
 }
 
-/* Similar to the previous function, but for achievements.
+/**
+ * Similar to the previous function, but for achievements.
  * Note: currently no static data is used by Cookie Monster,
  * so this function just returns an empty object.
  */
@@ -202,6 +207,7 @@ CM.Sim.InitData = function() {
 	for (var i in Game.Achievements) {
 		CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 	}
+	CM.Sim.CopyData
 }
 
 CM.Sim.CopyData = function() {
@@ -211,8 +217,6 @@ CM.Sim.CopyData = function() {
 	CM.Sim.AchievementsOwned = Game.AchievementsOwned;
 	CM.Sim.heavenlyPower = Game.heavenlyPower; // Unneeded? > Might be modded
 	CM.Sim.prestige = Game.prestige;
-	CM.Sim.dragonAura = Game.dragonAura;
-	CM.Sim.dragonAura2 = Game.dragonAura2;
 
 	// Buildings
 	for (var i in Game.Objects) {
@@ -225,6 +229,8 @@ CM.Sim.CopyData = function() {
 		you.amount = me.amount;
 		you.level = me.level;
 		you.totalCookies = me.totalCookies;
+		you.basePrice = me.basePrice;
+		you.free = me.free;
 		if (me.minigameLoaded) you.minigameLoaded = me.minigameLoaded; you.minigame = me.minigame;
 	}
 
@@ -247,6 +253,11 @@ CM.Sim.CopyData = function() {
 		}
 		you.won = me.won;
 	}
+
+	// Auras
+	CM.Cache.CacheDragonAuras();
+	CM.Sim.dragonAura = CM.Cache.dragonAura;
+	CM.Sim.dragonAura2 = CM.Cache.dragonAura2;
 };
 
 CM.Sim.CalculateGains = function() {
@@ -408,7 +419,7 @@ CM.Sim.CalculateGains = function() {
 		if (rawCookiesPs >= Game.CpsAchievements[i].threshold) CM.Sim.Win(Game.CpsAchievements[i].name);
 	}
 
-	CM.Sim.cookiesPsRaw = rawCookiesPs;	
+	CM.Sim.cookiesPsRaw = rawCookiesPs;
 
 	var n = Game.shimmerTypes['golden'].n;
 	var auraMult = CM.Sim.auraMult('Dragon\'s Fortune');
@@ -611,8 +622,51 @@ CM.Sim.BuyUpgrades = function() {
 
 			CM.Cache.Upgrades[i] = {};
 			CM.Cache.Upgrades[i].bonus = CM.Sim.cookiesPs - Game.cookiesPs;
+
+			var diffMouseCPS = CM.Sim.mouseCps() - Game.computedMouseCps;
+			if (diffMouseCPS) CM.Cache.Upgrades[i].bonusMouse = diffMouseCPS;
 		}
 	}
+}
+
+/**
+ * This functions calculates the cps and cost of changing a Dragon Aura
+ * It is called by CM.Disp.AddAuraInfo()
+ * @param	{number}			aura										The number of the aura currently selected by the mouse/user
+ * @returns {[number, number]} 	[CM.Sim.cookiesPs - Game.cookiesPs, price]	The bonus cps and the price of the change
+ */
+CM.Sim.CalculateChangeAura = function(aura) {
+	CM.Sim.CopyData();
+
+	// Check if aura being changed is first or second aura
+	var auraToBeChanged = l('promptContent').children[0].innerHTML.includes("secondary")
+	if (auraToBeChanged) CM.Sim.dragonAura2 = aura;
+	else CM.Sim.dragonAura = aura;
+
+	// Sell highest building but only if aura is different
+	if (CM.Sim.dragonAura != CM.Cache.dragonAura || CM.Sim.dragonAura2 != CM.Cache.dragonAura2) {
+		for (var i = Game.ObjectsById.length; i > -1, --i;) {
+			if (Game.ObjectsById[i].amount > 0) {	
+				var highestBuilding = CM.Sim.Objects[Game.ObjectsById[i].name].name;
+				CM.Sim.Objects[highestBuilding].amount -=1;
+				CM.Sim.buildingsOwned -= 1;
+				break
+			}
+		}
+		// This calculates price of highest building
+		var price = CM.Sim.Objects[highestBuilding].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[highestBuilding].amount - 1 -CM.Sim.Objects[highestBuilding].free));
+		price = Game.modifyBuildingPrice(CM.Sim.Objects[highestBuilding], price);
+		price = Math.ceil(price);
+	} else var price = 0;
+
+	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
+	CM.Sim.CalculateGains();
+
+	CM.Sim.CheckOtherAchiev();
+	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
+		CM.Sim.CalculateGains();
+	}
+	return [CM.Sim.cookiesPs - Game.cookiesPs, price]
 }
 
 CM.Sim.NoGoldSwitchCookiesPS = function() {
@@ -763,4 +817,85 @@ CM.Sim.SellBuildingsForChoEgg = function() {
 	// CM.Cache.DoRemakeBuildPrices = 1;
 
 	return sellTotal;
+}
+
+/********
+ * Section: Functions used to calculate clicking power */
+
+/**
+ * This function calculates the cookies per click
+ * It is called by CM.Sim.BuyUpgrades() when an upgrades has no bonus-income (and is thus a clicking-upgrade)
+ */
+CM.Sim.mouseCps = function() {
+	var add=0;
+	if (CM.Sim.Has('Thousand fingers')) add += 0.1;
+	if (CM.Sim.Has('Million fingers')) add *= 5;
+	if (CM.Sim.Has('Billion fingers')) add *= 10;
+	if (CM.Sim.Has('Trillion fingers')) add *= 20;
+	if (CM.Sim.Has('Quadrillion fingers')) add *= 20;
+	if (CM.Sim.Has('Quintillion fingers')) add *= 20;
+	if (CM.Sim.Has('Sextillion fingers')) add *= 20;
+	if (CM.Sim.Has('Septillion fingers')) add *= 20;
+	if (CM.Sim.Has('Octillion fingers')) add *= 20;
+	if (CM.Sim.Has('Nonillion fingers')) add *= 20;
+	var num=0;
+	for (var i in CM.Sim.Objects) {num+=CM.Sim.Objects[i].amount;}
+	num -= CM.Sim.Objects['Cursor'].amount;
+	add = add * num;
+
+	// Use CM.Sim.cookiesPs as function is always called after CM.Sim.CalculateGains()
+	if (CM.Sim.Has('Plastic mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Iron mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Titanium mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Adamantium mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Unobtainium mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Eludium mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Wishalloy mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Fantasteel mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Nevercrack mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Armythril mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Technobsidian mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Plasmarble mouse')) add += CM.Sim.cookiesPs * 0.01;
+	if (CM.Sim.Has('Miraculite mouse')) add += CM.Sim.cookiesPs * 0.01;
+
+	if (CM.Sim.Has('Fortune #104')) add += CM.Sim.cookiesPs * 0.01;
+	
+	
+	var mult=1;
+	if (CM.Sim.Has('Santa\'s helpers')) mult *= 1.1;
+	if (CM.Sim.Has('Cookie egg')) mult *= 1.1;
+	if (CM.Sim.Has('Halo gloves')) mult *= 1.1;
+	if (CM.Sim.Has('Dragon claw')) mult *= 1.03;
+	
+	if (CM.Sim.Has('Aura gloves'))
+	{
+		mult *= 1 + 0.05 * Math.min(Game.Objects['Cursor'].level, CM.Sim.Has('Luminous gloves') ? 20 : 10);
+	}
+	
+	mult *= CM.Sim.eff('click');
+	
+	if (CM.Sim.hasGod)
+	{
+		var godLvl = CM.Sim.hasGod('labor');
+		if (godLvl == 1) mult *= 1.15;
+		else if (godLvl == 2) mult *= 1.1;
+		else if (godLvl == 3) mult *= 1.05;
+	}
+	
+	for (var i in Game.buffs)
+	{
+		if (typeof Game.buffs[i].multClick != 'undefined') mult*=Game.buffs[i].multClick;
+	}
+	
+	//if (CM.Sim.auraMult('Dragon Cursor')) mult*=1.05;
+	mult *= 1 + CM.Sim.auraMult('Dragon Cursor') * 0.05;
+	
+	// No need to make this function a CM function
+	var out = mult * Game.ComputeCps(1, CM.Sim.Has('Reinforced index finger') + CM.Sim.Has('Carpal tunnel prevention cream') + CM.Sim.Has('Ambidextrous'), add);
+	
+	out = Game.runModHookOnValue('cookiesPerClick', out);
+	
+	if (Game.hasBuff('Cursed finger')) out = Game.buffs['Cursed finger'].power;
+	
+	return out;
 }
