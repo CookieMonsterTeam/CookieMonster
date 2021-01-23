@@ -4633,6 +4633,9 @@ CM.Sim.auraMult = function(what) {
 }
 
 CM.Sim.hasGod=function(what) {
+	if (!CM.Sim.Objects.Temple.minigameLoaded) {
+		return false
+	}
 	var possibleGods = CM.Sim.Objects.Temple.minigame.gods
 	var god=possibleGods[what];
 	for (var i=0;i<3;i++)
@@ -5403,15 +5406,16 @@ CM.Sim.mouseCps = function() {
 	}
 	
 	mult *= CM.Sim.eff('click');
-	
-	if (CM.Sim.hasGod)
-	{
-		var godLvl = CM.Sim.hasGod('labor');
-		if (godLvl == 1) mult *= 1.15;
-		else if (godLvl == 2) mult *= 1.1;
-		else if (godLvl == 3) mult *= 1.05;
+	if (CM.Sim.Objects.Temple.minigameLoaded) {
+		if (CM.Sim.hasGod)
+		{
+			var godLvl = CM.Sim.hasGod('labor');
+			if (godLvl == 1) mult *= 1.15;
+			else if (godLvl == 2) mult *= 1.1;
+			else if (godLvl == 3) mult *= 1.05;
+		}
 	}
-	
+
 	for (var i in Game.buffs)
 	{
 		if (typeof Game.buffs[i].multClick != 'undefined') mult*=Game.buffs[i].multClick;
