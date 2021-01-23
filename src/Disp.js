@@ -1667,7 +1667,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 		if (CM.Options.ToolWarnLucky == 1) {
 			if (amount < limitLucky && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnLucky').style.display = '';
-				l('CMDispTooltipWarnLuckyText').textContent = Beautify(limitLucky - amount) + ' (' + CM.Disp.FormatTime((limitLucky - amount) / CM.Disp.GetCPS()) + ')';
+				l('CMDispTooltipWarnLuckyText').textContent = Beautify(limitLucky - amount) + ' (' + CM.Disp.FormatTime((limitLucky - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnLucky').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnLucky').style.display = 'none';
@@ -1676,7 +1676,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 			limitLuckyFrenzy = limitLucky * 7;
 			if (amount < limitLuckyFrenzy && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
-				l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / CM.Disp.GetCPS()) + ')';
+				l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
@@ -1685,7 +1685,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 			var limitConjure = limitLucky * 2;
 			if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnConjure').style.display = '';
-				l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / CM.Disp.GetCPS()) + ')';
+				l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnConjure').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnConjure').style.display = 'none';
@@ -1694,7 +1694,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 			var limitConjureFrenzy = limitLucky * 2 * 7;
 			if ((amount < limitConjureFrenzy) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnConjureFrenzy').style.display = '';
-				l('CMDispTooltipWarnConjureFrenzyText').textContent = Beautify(limitConjureFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitConjureFrenzy - amount) / CM.Disp.GetCPS()) + ')';
+				l('CMDispTooltipWarnConjureFrenzyText').textContent = Beautify(limitConjureFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitConjureFrenzy - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnConjureFrenzy').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnConjureFrenzy').style.display = 'none';
@@ -1702,7 +1702,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 		if (CM.Options.ToolWarnEdifice == 1) {
 			if (CM.Cache.Edifice && amount < CM.Cache.Edifice && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnEdifice').style.display = '';
-				l('CMDispTooltipWarnEdificeText').textContent = Beautify(CM.Cache.Edifice - amount) + ' (' + CM.Disp.FormatTime((CM.Cache.Edifice - amount) / CM.Disp.GetCPS()) + ')';
+				l('CMDispTooltipWarnEdificeText').textContent = Beautify(CM.Cache.Edifice - amount) + ' (' + CM.Disp.FormatTime((CM.Cache.Edifice - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnEdifice').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnEdifice').style.display = 'none';
