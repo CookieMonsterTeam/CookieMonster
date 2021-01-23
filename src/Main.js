@@ -45,12 +45,10 @@ CM.ReplaceNative = function() {
 	CM.Backup.scriptLoaded = Game.scriptLoaded;
 	Game.scriptLoaded = function(who, script) {
 		CM.Backup.scriptLoaded(who, script);
-		CM.Disp.ReplaceTooltipGrimoire()
+		CM.Main.ReplaceTooltipGrimoire()
 		CM.ReplaceNativeGrimoire();
 	}
 
-	// TODO: Move this ReplaceTooltip function too other ReplaceTooltip functions
-	// OR: Move all other into this function
 	CM.Backup.RebuildUpgrades = Game.RebuildUpgrades;
 	Game.RebuildUpgrades = function() {
 		CM.Backup.RebuildUpgrades();
@@ -58,7 +56,6 @@ CM.ReplaceNative = function() {
 		Game.CalculateGains();
 	}
 
-	
 	CM.Backup.DescribeDragonAura = Game.DescribeDragonAura;
 	/**
 	 * This functions adds the function CM.Disp.AddAuraInfo() to Game.DescribeDragonAura()
@@ -122,7 +119,7 @@ CM.ReplaceNativeGrimoireLaunch = function() {
 		eval('CM.Backup.GrimoireLaunchMod = ' + minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame'));
 		Game.Objects['Wizard tower'].minigame.launch = function() {
 			CM.Backup.GrimoireLaunchMod();
-			CM.Disp.ReplaceTooltipGrimoire();
+			CM.Main.ReplaceTooltipGrimoire();
 			CM.HasReplaceNativeGrimoireDraw = false;
 			CM.ReplaceNativeGrimoireDraw();
 		}
@@ -237,9 +234,7 @@ CM.DelayInit = function() {
 		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
 	CM.Disp.CreateWrinklerButtons();
-	CM.Disp.ReplaceTooltipBuild();
-	CM.Disp.ReplaceTooltipGrimoire();
-	CM.Disp.ReplaceTooltipLump();
+	CM.Main.ReplaceTooltips();
 	CM.Main.AddWrinklerAreaDetect();
 	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
@@ -263,6 +258,69 @@ CM.DelayInit = function() {
 
 	Game.Win('Third-party');
 }
+
+/********
+ * Section: Functions related to first initizalition of CM */
+
+/**
+ * This function call all functions that replace Game-tooltips with CM-enhanced tooltips
+ * It is called by CM.DelayInit()
+ */
+CM.Main.ReplaceTooltips = function() {
+	CM.Main.ReplaceTooltipBuild();
+	CM.Main.ReplaceTooltipGrimoire();
+	CM.Main.ReplaceTooltipLump();
+}
+
+/********
+ * Section: Functions related to replacing tooltips */
+
+
+/**
+ * This function replaces the original .onmouseover functions of buildings so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 'b'
+ * It is called by CM.Main.ReplaceTooltips()
+ */
+CM.Main.ReplaceTooltipBuild = function() {
+	CM.Main.TooltipBuildBackup = [];
+	for (var i in Game.Objects) {
+		var me = Game.Objects[i];
+		if (l('product' + me.id).onmouseover != null) {
+			CM.Main.TooltipBuildBackup[i] = l('product' + me.id).onmouseover;
+			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}');
+		}
+	}
+}
+
+/**
+ * This function replaces the original .onmouseover functions of the Grimoire minigame so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 'g'
+ * It is called by CM.Main.ReplaceTooltips()
+ */
+CM.Main.ReplaceTooltipGrimoire = function() {
+	if (Game.Objects['Wizard tower'].minigameLoaded) {
+		CM.Main.TooltipGrimoireBackup = [];
+		for (var i in Game.Objects['Wizard tower'].minigame.spellsById) {
+			if (l('grimoireSpell' + i).onmouseover != null) {
+				CM.Main.TooltipGrimoireBackup[i] = l('grimoireSpell' + i).onmouseover;
+				eval('l(\'grimoireSpell\' + i).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'g\', \'' + i + '\');}, \'this\'); Game.tooltip.wobble();}');
+			}
+		}
+	}
+}
+
+/**
+ * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 's'
+ * It is called by CM.Main.ReplaceTooltips()
+ */
+CM.Main.ReplaceTooltipLump = function() {
+	if (Game.canLumps()) {
+		CM.Main.TooltipLumpBackup = l('lumps').onmouseover;
+        eval('l(\'lumps\').onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'Lump\');}, \'this\'); Game.tooltip.wobble();}');
+	}
+};
+
 
 /********
  * Section: Functions related to checking for changes in Minigames/GC's/Ticker
@@ -429,7 +487,7 @@ CM.Main.CheckWrinklerCount = function() {
  * This function creates .onmouseover/out events that determine if the mouse is hovering-over a Wrinkler
  * It is called by CM.DelayInit
  * TODO: The system for displaying wrinklers should ideally use a similar system as other tooltips
- * Thus, writing a CM.Disp.ReplaceTooltipWrinkler function etc.
+ * Thus, writing a CM.Main.ReplaceTooltipWrinkler function etc.
  */
 CM.Main.AddWrinklerAreaDetect = function() {
 	l('backgroundLeftCanvas').onmouseover = function() {CM.Disp.TooltipWrinklerArea = 1;};

@@ -1172,30 +1172,9 @@ CM.Disp.CreateSimpleTooltip = function(placeholder, text, minWidth) {
 }
 
 /**
- * This function replaces the original .onmouseover functions of buildings so that it calls CM.Disp.Tooltip()
- * CM.Disp.Tooltip() sets the tooltip type to 'b'
- * It is called by CM.DelayInit()
- * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
- * TODO: Move this code to Main.js file
- */
-CM.Disp.ReplaceTooltipBuild = function() {
-	CM.Disp.TooltipBuildBackup = [];
-	for (var i in Game.Objects) {
-		var me = Game.Objects[i];
-		if (l('product' + me.id).onmouseover != null) {
-			CM.Disp.TooltipBuildBackup[i] = l('product' + me.id).onmouseover;
-			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}');
-		}
-	}
-}
-
-/**
  * This function replaces the original .onmouseover functions of upgrades so that it calls CM.Disp.Tooltip()
  * CM.Disp.Tooltip() sets the tooltip type to 'u'
- * It is called by CM.ReplaceNative()
- * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
- * TODO: Move this code to Main.js file
- * 
+ * It is called by Game.RebuildUpgrades() through CM.ReplaceNative() and is therefore not permanent like the other ReplaceTooltip functions
  */
 CM.Disp.ReplaceTooltipUpgrade = function() {
 	CM.Disp.TooltipUpgradeBackup = [];
@@ -1207,39 +1186,6 @@ CM.Disp.ReplaceTooltipUpgrade = function() {
 		}
 	}
 }
-
-/**
- * This function replaces the original .onmouseover functions of the Grimoire minigame so that it calls CM.Disp.Tooltip()
- * CM.Disp.Tooltip() sets the tooltip type to 'g'
- * The function is called by CM.DelayInit()
- * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
- * TODO: Move this code to Main.js file
- */
-CM.Disp.ReplaceTooltipGrimoire = function() {
-	if (Game.Objects['Wizard tower'].minigameLoaded) {
-		CM.Disp.TooltipGrimoireBackup = [];
-		for (var i in Game.Objects['Wizard tower'].minigame.spellsById) {
-			if (l('grimoireSpell' + i).onmouseover != null) {
-				CM.Disp.TooltipGrimoireBackup[i] = l('grimoireSpell' + i).onmouseover;
-				eval('l(\'grimoireSpell\' + i).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'g\', \'' + i + '\');}, \'this\'); Game.tooltip.wobble();}');
-			}
-		}
-	}
-}
-
-/**
- * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
- * CM.Disp.Tooltip() sets the tooltip type to 's'
- * The function is called by CM.DelayInit()
- * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
- * TODO: Move this code to Main.js file
- */
-CM.Disp.ReplaceTooltipLump = function() {
-	if (Game.canLumps()) {
-		CM.Disp.TooltipLumpBackup = l('lumps').onmouseover;
-        eval('l(\'lumps\').onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'Lump\');}, \'this\'); Game.tooltip.wobble();}');
-	}
-};
 
 /**
  * This function enhance the standard tooltips by creating and changing l('tooltip')
