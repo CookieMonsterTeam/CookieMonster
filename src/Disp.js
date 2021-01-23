@@ -1413,6 +1413,8 @@ CM.Disp.TooltipCreateWarningSection = function() {
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjure', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"', 'CMDispTooltipWarnConjureText'));
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjureFrenzy', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods" (Frenzy)', 'CMDispTooltipWarnConjureFrenzyText'));
+	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnEdifice', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies needed for "Spontaneous Edifice" to possibly give you your most expensive building"', 'CMDispTooltipWarnEdificeText'));
 	
 	return CM.Disp.TooltipWarn;
@@ -1687,6 +1689,15 @@ CM.Disp.UpdateTooltipWarnings = function() {
 			} else l('CMDispTooltipWarnConjure').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnConjure').style.display = 'none';
+
+		if (CM.Options.ToolWarnConjureFrenzy == 1) {
+			var limitConjureFrenzy = limitLucky * 2 * 7;
+			if ((amount < limitConjureFrenzy) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+				l('CMDispTooltipWarnConjureFrenzy').style.display = '';
+				l('CMDispTooltipWarnConjureFrenzyText').textContent = Beautify(limitConjureFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitConjureFrenzy - amount) / CM.Disp.GetCPS()) + ')';
+			} else l('CMDispTooltipWarnConjureFrenzy').style.display = 'none';
+		}
+		else l('CMDispTooltipWarnConjureFrenzy').style.display = 'none';
 
 		if (CM.Options.ToolWarnEdifice == 1) {
 			if (CM.Cache.Edifice && amount < CM.Cache.Edifice && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
