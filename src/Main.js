@@ -270,6 +270,7 @@ CM.Main.ReplaceTooltips = function() {
 	CM.Main.ReplaceTooltipBuild();
 	CM.Main.ReplaceTooltipGrimoire();
 	CM.Main.ReplaceTooltipLump();
+	CM.Main.ReplaceTooltipGarden();
 }
 
 /********
@@ -321,6 +322,21 @@ CM.Main.ReplaceTooltipLump = function() {
 	}
 };
 
+/**
+ * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to '?'
+ * It is called by CM.Main.ReplaceTooltips()
+ */
+CM.Main.ReplaceTooltipGarden = function() {
+	if (Game.Objects['Farm'].minigameLoaded) {
+		CM.Main.TooltipGardenBackup = [];
+		for (var i in Game.Objects['Farm'].minigame.plot) {
+			for (var j in i) {
+				//console.log(j, i)
+			}
+		}
+	}
+};
 
 /********
  * Section: Functions related to checking for changes in Minigames/GC's/Ticker
