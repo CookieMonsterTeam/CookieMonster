@@ -196,8 +196,11 @@ CM.Disp.Beautify = function(num, floats, forced) {
 			return num.toString()
 		}
 		else if (0.001 < num && num < CM.Options.ScaleCutoff) {
-			answer = num.toFixed(0);
+			answer = num.toFixed(2);
 			if (CM.Options.ScaleSeparator) answer = answer.toLocaleString('nl');
+			for (let i = 0; i < 3; i++) {
+				if (answer[answer.length - 1] == "0" | answer[answer.length - 1] == ".") answer = answer.slice(0, -1)
+			}
 			return answer;
 		}
 		else if (CM.Options.Scale == 4 && !forced || forced == 4) { // Scientific notation, 123456789 => 1.235E+8
@@ -608,6 +611,10 @@ CM.Disp.UpdateTimerBar = function() {
 
 		if (numberOfTimers != 0) {
 			CM.Disp.TimerBar.style.height = numberOfTimers * 12 + 2 + 'px';
+		}
+		if (CM.Disp.LastNumberOfTimers != numberOfTimers) {
+			CM.Disp.LastNumberOfTimers = numberOfTimers
+			CM.Disp.UpdateBotTimerBarPosition();
 		}
 	}
 }
@@ -1414,6 +1421,8 @@ CM.Disp.TooltipCreateWarningSection = function() {
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjure', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"', 'CMDispTooltipWarnConjureText'));
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjureFrenzy', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods" (Frenzy)', 'CMDispTooltipWarnConjureFrenzyText'));
+	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnEdifice', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies needed for "Spontaneous Edifice" to possibly give you your most expensive building"', 'CMDispTooltipWarnEdificeText'));
 	
 	return CM.Disp.TooltipWarn;
@@ -1426,6 +1435,9 @@ CM.Disp.TooltipCreateWarningSection = function() {
 CM.Disp.UpdateTooltip = function() {
 	CM.Sim.CopyData();
 	if (l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea')) {
+		if (CM.Options.TooltipInfo == 0) {
+			l('CMTooltipArea').style.display = "none";
+		}
 		l('CMTooltipArea').innerHTML = '';
 		tooltipBox = CM.Disp.TooltipCreateTooltipBox();
 		l('CMTooltipArea').appendChild(tooltipBox);
@@ -1666,7 +1678,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 		if (CM.Options.ToolWarnLucky == 1) {
 			if (amount < limitLucky && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnLucky').style.display = '';
-				l('CMDispTooltipWarnLuckyText').textContent = Beautify(limitLucky - amount) + ' (' + CM.Disp.FormatTime((limitLucky - amount) / CM.Disp.GetCPS()) + ')';
+				l('CMDispTooltipWarnLuckyText').textContent = Beautify(limitLucky - amount) + ' (' + CM.Disp.FormatTime((limitLucky - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnLucky').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnLucky').style.display = 'none';
@@ -1675,7 +1687,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 			limitLuckyFrenzy = limitLucky * 7;
 			if (amount < limitLuckyFrenzy && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
-				l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / CM.Disp.GetCPS()) + ')';
+				l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
@@ -1684,15 +1696,24 @@ CM.Disp.UpdateTooltipWarnings = function() {
 			var limitConjure = limitLucky * 2;
 			if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnConjure').style.display = '';
-				l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / CM.Disp.GetCPS()) + ')';
+				l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnConjure').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnConjure').style.display = 'none';
 
+		if (CM.Options.ToolWarnConjureFrenzy == 1) {
+			var limitConjureFrenzy = limitLucky * 2 * 7;
+			if ((amount < limitConjureFrenzy) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+				l('CMDispTooltipWarnConjureFrenzy').style.display = '';
+				l('CMDispTooltipWarnConjureFrenzyText').textContent = Beautify(limitConjureFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitConjureFrenzy - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
+			} else l('CMDispTooltipWarnConjureFrenzy').style.display = 'none';
+		}
+		else l('CMDispTooltipWarnConjureFrenzy').style.display = 'none';
+
 		if (CM.Options.ToolWarnEdifice == 1) {
 			if (CM.Cache.Edifice && amount < CM.Cache.Edifice && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnEdifice').style.display = '';
-				l('CMDispTooltipWarnEdificeText').textContent = Beautify(CM.Cache.Edifice - amount) + ' (' + CM.Disp.FormatTime((CM.Cache.Edifice - amount) / CM.Disp.GetCPS()) + ')';
+				l('CMDispTooltipWarnEdificeText').textContent = Beautify(CM.Cache.Edifice - amount) + ' (' + CM.Disp.FormatTime((CM.Cache.Edifice - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnEdifice').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnEdifice').style.display = 'none';
@@ -2050,22 +2071,24 @@ CM.Disp.CreatePrefOption = function(config) {
 		return div;
 	}
 	else if (CM.ConfigData[config].type == "color") {
+		var div = document.createElement('div');
 		for (var i = 0; i < CM.Disp.colors.length; i++) {
-			var div = document.createElement('div');
-			div.className = 'listing';
+			var innerDiv = document.createElement('div');
+			innerDiv.className = 'listing';
 			var input = document.createElement('input');
 			input.id = CM.ConfigPrefix + 'Color' + CM.Disp.colors[i];
 			input.className = 'option';
 			input.style.width = '65px';
 			input.setAttribute('value', CM.Options.Colors[CM.Disp.colors[i]]);
-			div.appendChild(input);
+			innerDiv.appendChild(input);
 			eval('var change = function() {CM.Options.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.Config.SaveConfig();}');
 			var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
 			var label = document.createElement('label');
 			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
-			div.appendChild(label);
-			return div;
+			innerDiv.appendChild(label);
+			div.appendChild(innerDiv)
 		}
+		return div
 	}
 	else if (CM.ConfigData[config].type == "numscale") {
 		var div = document.createElement('div');
@@ -2186,9 +2209,9 @@ CM.Disp.AddMenuStats = function(title) {
 			var popFattestA = document.createElement('a');
 			popFattestA.textContent = 'Pop Single Fattest';
 			popFattestA.className = 'option';
-			popFattestA.onclick = function() { Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
+			popFattestA.onclick = function() {if (CM.Cache.WrinklersFattest[1]) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };;
 			popFattestFrag.appendChild(popFattestA);
-			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping Single Fattest Wrinkler (id: ' + CM.Cache.WrinklersFattest[1] + ")",  popFattestFrag));
+			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping Single Fattest Non-Shiny Wrinkler (id: ' + (CM.Cache.WrinklersFattest[1] ? CM.Cache.WrinklersFattest[1] : "None") + ")",  popFattestFrag));
 		}
 	}
 
@@ -2580,7 +2603,25 @@ CM.Disp.CreateStatsSpellsSection = function() {
 	}
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Cookies Required', conjureReqFrag, 'GoldCookTooltipPlaceholder'));
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (MAX)', document.createTextNode(CM.Disp.Beautify(CM.Cache.ConjureReward)), 'GoldCookTooltipPlaceholder'));
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (CUR)', document.createTextNode(CM.Disp.Beautify(conjureCur)), 'GoldCookTooltipPlaceholder'));
+	
+	var conjureFrenzyColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure * 7) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var conjureFrenzyCur = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
+	var conjureFrenzyTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure * 7) ? CM.Disp.FormatTime((CM.Cache.Conjure * 7 - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	
+	var conjureFrenzyReqFrag = document.createDocumentFragment();
+	var conjureFrenzyReqSpan = document.createElement('span');
+	conjureFrenzyReqSpan.style.fontWeight = 'bold';
+	conjureFrenzyReqSpan.className = CM.Disp.colorTextPre + conjureFrenzyColor;
+	conjureFrenzyReqSpan.textContent = Beautify(CM.Cache.Conjure * 7);
+	conjureFrenzyReqFrag.appendChild(conjureFrenzyReqSpan);
+	if (conjureFrenzyTime != '') {
+		var conjureFrenzyReqSmall = document.createElement('small');
+		conjureFrenzyReqSmall.textContent = ' (' + conjureFrenzyTime + ')';
+		conjureFrenzyReqFrag.appendChild(conjureFrenzyReqSmall);
+	}
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Cookies Required (Frenzy)', conjureFrenzyReqFrag, 'GoldCookTooltipPlaceholder'));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (MAX) (Frenzy)', document.createTextNode(CM.Disp.Beautify(CM.Cache.ConjureReward * 7)), 'GoldCookTooltipPlaceholder'));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (CUR)', document.createTextNode(CM.Disp.Beautify(conjureFrenzyCur)), 'GoldCookTooltipPlaceholder'));
 	if (CM.Cache.Edifice) {
 		section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Spontaneous Edifice\" Cookies Required (most expensive building)', document.createTextNode(CM.Disp.Beautify(CM.Cache.Edifice) + ' (' + CM.Cache.EdificeBuilding + ")"), 'GoldCookTooltipPlaceholder'));
 	}
@@ -2677,7 +2718,9 @@ CM.Disp.AddMissingUpgrades = function() {
 		l('menu').children[5].appendChild(upgrades)
 	}
 	if (CM.Cache.MissingUpgrades) {
-		var normalUpgradesOwned = Game.UpgradesByPool[""].length + Game.UpgradesByPool["tech"].length - l('menu').children[6].childNodes[2].children.length;
+		if (Game.UpgradesOwned) {
+			var normalUpgradesOwned = Game.UpgradesByPool[""].length + Game.UpgradesByPool["tech"].length - l('menu').children[6].childNodes[2].children.length;
+		} else var normalUpgradesOwned = 0;
 		var title = document.createElement('div');
 		title.id = "CMMissingUpgradesTitle";
 		title.className = "listing";
@@ -2749,7 +2792,7 @@ CM.Disp.CreateWrinklerButtons = function() {
 	popFattestA.id = "PopFattestWrinklerButton"
 	popFattestA.textContent = 'Pop Single Fattest';
 	popFattestA.className = 'option';
-	popFattestA.onclick = function() { Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
+	popFattestA.onclick = function() {if (CM.Cache.WrinklersFattest[1]) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
 	l('sectionLeftExtra').children[0].append(popFattestA);
 }
 
