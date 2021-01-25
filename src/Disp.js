@@ -196,8 +196,11 @@ CM.Disp.Beautify = function(num, floats, forced) {
 			return num.toString()
 		}
 		else if (0.001 < num && num < CM.Options.ScaleCutoff) {
-			answer = num.toFixed(0);
+			answer = num.toFixed(2);
 			if (CM.Options.ScaleSeparator) answer = answer.toLocaleString('nl');
+			for (let i = 0; i < 3; i++) {
+				if (answer[answer.length - 1] == "0" | answer[answer.length - 1] == ".") answer = answer.slice(0, -1)
+			}
 			return answer;
 		}
 		else if (CM.Options.Scale == 4 && !forced || forced == 4) { // Scientific notation, 123456789 => 1.235E+8
