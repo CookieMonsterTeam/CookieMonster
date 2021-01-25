@@ -1064,7 +1064,7 @@ CM.ConfigData.WrinklerMaxSoundURL = {type: 'url', group: 'NotificationWrinkMax',
 CM.ConfigData.Title = {type: 'bool', group: 'Notification', label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 
 // Tooltip
-CM.ConfigData.TooltipBuildUp = {type: 'bool', group: 'Tooltip', label: ['Buildings/Upgrades Tooltip Information OFF', 'Buildings/Upgrades Tooltip Information ON'], desc: 'Extra information in tooltip for buildings/upgrades', toggle: true};
+CM.ConfigData.TooltipInfo = {type: 'bool', group: 'Tooltip', label: ['Extra Tooltip Information OFF', 'Extra Tooltip Information ON'], desc: 'Extra information in tooltips', toggle: true};
 CM.ConfigData.TooltipAmor = {type: 'bool', group: 'Tooltip', label: ['Buildings Tooltip Amortization Information OFF', 'Buildings Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
 CM.ConfigData.ToolWarnLucky = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Warning OFF', 'Tooltip Lucky Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" rewards', toggle: true};
 CM.ConfigData.ToolWarnLuckyFrenzy = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Frenzy Warning OFF', 'Tooltip Lucky Frenzy Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" (Frenzy) rewards', toggle: true};
@@ -1150,7 +1150,7 @@ CM.Data.ConfigDefault = {
 	WrinklerMaxVolume: 100, 
 	WrinklerMaxSoundURL: 'https://freesound.org/data/previews/152/152743_15663-lq.mp3', 
 	Title: 1, 
-	TooltipBuildUp: 1, 
+	TooltipInfo: 1, 
 	TooltipAmor: 0, 
 	ToolWarnLucky: 1,
 	ToolWarnLuckyFrenzy: 1,
@@ -2611,6 +2611,9 @@ CM.Disp.TooltipCreateWarningSection = function() {
 CM.Disp.UpdateTooltip = function() {
 	CM.Sim.CopyData();
 	if (l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea')) {
+		if (CM.Options.TooltipInfo == 0) {
+			l('CMTooltipArea').style.display = "none";
+		}
 		l('CMTooltipArea').innerHTML = '';
 		tooltipBox = CM.Disp.TooltipCreateTooltipBox();
 		l('CMTooltipArea').appendChild(tooltipBox);

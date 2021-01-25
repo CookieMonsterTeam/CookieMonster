@@ -1428,6 +1428,9 @@ CM.Disp.TooltipCreateWarningSection = function() {
 CM.Disp.UpdateTooltip = function() {
 	CM.Sim.CopyData();
 	if (l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea')) {
+		if (CM.Options.TooltipInfo == 0) {
+			l('CMTooltipArea').style.display = "none";
+		}
 		l('CMTooltipArea').innerHTML = '';
 		tooltipBox = CM.Disp.TooltipCreateTooltipBox();
 		l('CMTooltipArea').appendChild(tooltipBox);
