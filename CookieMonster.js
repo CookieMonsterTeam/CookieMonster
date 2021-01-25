@@ -183,7 +183,7 @@ CM.Cache.CacheMissingUpgrades = function() {
 			str += CM.Disp.crateMissing(me);
 			if (me.pool == 'prestige') CM.Cache.MissingUpgradesPrestige += str;
 			else if (me.pool == 'cookie') CM.Cache.MissingUpgradesCookies += str;
-			else if (me.pool != 'toggle' && me.pool != 'unused') CM.Cache.MissingUpgrades += str;
+			else if (me.pool != 'toggle' && me.pool != 'unused' && me.pool != 'debug') CM.Cache.MissingUpgrades += str;
 		}
 	}
 }
