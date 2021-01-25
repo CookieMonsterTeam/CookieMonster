@@ -2708,7 +2708,9 @@ CM.Disp.AddMissingUpgrades = function() {
 		l('menu').children[5].appendChild(upgrades)
 	}
 	if (CM.Cache.MissingUpgrades) {
-		var normalUpgradesOwned = Game.UpgradesByPool[""].length + Game.UpgradesByPool["tech"].length - l('menu').children[6].childNodes[2].children.length;
+		if (Game.UpgradesOwned) {
+			var normalUpgradesOwned = Game.UpgradesByPool[""].length + Game.UpgradesByPool["tech"].length - l('menu').children[6].childNodes[2].children.length;
+		} else var normalUpgradesOwned = 0;
 		var title = document.createElement('div');
 		title.id = "CMMissingUpgradesTitle";
 		title.className = "listing";
