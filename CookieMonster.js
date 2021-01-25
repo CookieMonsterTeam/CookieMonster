@@ -1792,6 +1792,10 @@ CM.Disp.UpdateTimerBar = function() {
 		if (numberOfTimers != 0) {
 			CM.Disp.TimerBar.style.height = numberOfTimers * 12 + 2 + 'px';
 		}
+		if (CM.Disp.LastNumberOfTimers != numberOfTimers) {
+			CM.Disp.LastNumberOfTimers = numberOfTimers
+			CM.Disp.UpdateBotTimerBarPosition();
+		}
 	}
 }
 
