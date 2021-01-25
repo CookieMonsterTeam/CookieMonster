@@ -42,7 +42,7 @@ CM.Cache.CacheDragonAuras = function() {
  * It is called by CM.Loop() and CM.Cache.InitCache()
  * @global	{number}				CM.Cache.WrinklersTotal		The cookies of all wrinklers
  * @global	{number}				CM.Cache.WrinklersNormal	The cookies of all normal wrinklers
- * @global	{[{number}, {number}]}	CM.Cache.WrinklersFattest	A list containing the cookies and the id of the fattest wrinkler
+ * @global	{[{number}, {number}]}	CM.Cache.WrinklersFattest	A list containing the cookies and the id of the fattest non-shiny wrinkler
  */
 CM.Cache.CacheWrinklers = function() {
 	CM.Cache.WrinklersTotal = 0;
@@ -62,8 +62,10 @@ CM.Cache.CacheWrinklers = function() {
 			else if (godLvl == 3) sucked *= 1.05;
 		}
 		CM.Cache.WrinklersTotal += sucked;
-		if (Game.wrinklers[i].type == 0) CM.Cache.WrinklersNormal += sucked;
-		if (sucked > CM.Cache.WrinklersFattest[0]) CM.Cache.WrinklersFattest = [sucked, i];
+		if (Game.wrinklers[i].type == 0) {
+			CM.Cache.WrinklersNormal += sucked;
+			if (sucked > CM.Cache.WrinklersFattest[0]) CM.Cache.WrinklersFattest = [sucked, i];
+		}
 	}
 }
 
