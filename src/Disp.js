@@ -147,6 +147,7 @@ CM.Disp.FormatTime = function(time, longFormat) {
 		str += (s < 10 ? '0' : '') + s + ':';
 	} else {
 		if (time > 777600000) return longFormat ? 'Over 9000 days!' : '>9000d';
+		str += (y > 0 ? y + (longFormat ? (y == 1 ? ' year' : ' years') : 'y') + ', ': "");
 		str += (d > 0 ? d + (longFormat ? (d == 1 ? ' day' : ' days') : 'd') + ', ': "");
 		if (str.length > 0 || h > 0) str += h + (longFormat ? (h == 1 ? ' hour' : ' hours') : 'h') + ', ';
 		if (str.length > 0 || m > 0) str += m + (longFormat ? (m == 1 ? ' minute' : ' minutes') : 'm') + ', ';
