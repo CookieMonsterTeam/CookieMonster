@@ -3242,22 +3242,24 @@ CM.Disp.CreatePrefOption = function(config) {
 		return div;
 	}
 	else if (CM.ConfigData[config].type == "color") {
+		var div = document.createElement('div');
 		for (var i = 0; i < CM.Disp.colors.length; i++) {
-			var div = document.createElement('div');
-			div.className = 'listing';
+			var innerDiv = document.createElement('div');
+			innerDiv.className = 'listing';
 			var input = document.createElement('input');
 			input.id = CM.ConfigPrefix + 'Color' + CM.Disp.colors[i];
 			input.className = 'option';
 			input.style.width = '65px';
 			input.setAttribute('value', CM.Options.Colors[CM.Disp.colors[i]]);
-			div.appendChild(input);
+			innerDiv.appendChild(input);
 			eval('var change = function() {CM.Options.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.Config.SaveConfig();}');
 			var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
 			var label = document.createElement('label');
 			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
-			div.appendChild(label);
-			return div;
+			innerDiv.appendChild(label);
+			div.appendChild(innerDiv)
 		}
+		return div
 	}
 	else if (CM.ConfigData[config].type == "numscale") {
 		var div = document.createElement('div');
