@@ -1064,7 +1064,7 @@ CM.ConfigData.WrinklerMaxSoundURL = {type: 'url', group: 'NotificationWrinkMax',
 CM.ConfigData.Title = {type: 'bool', group: 'Notification', label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 
 // Tooltip
-CM.ConfigData.TooltipInfo = {type: 'bool', group: 'Tooltip', label: ['Extra Tooltip Information OFF', 'Extra Tooltip Information ON'], desc: 'Extra information in tooltips', toggle: true};
+CM.ConfigData.TooltipBuildUpgrade = {type: 'bool', group: 'Tooltip', label: ['Extra Tooltip Information OFF', 'Extra Tooltip Information ON'], desc: 'Extra information in tooltips', toggle: true};
 CM.ConfigData.TooltipAmor = {type: 'bool', group: 'Tooltip', label: ['Buildings Tooltip Amortization Information OFF', 'Buildings Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
 CM.ConfigData.ToolWarnLucky = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Warning OFF', 'Tooltip Lucky Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" rewards', toggle: true};
 CM.ConfigData.ToolWarnLuckyFrenzy = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Frenzy Warning OFF', 'Tooltip Lucky Frenzy Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" (Frenzy) rewards', toggle: true};
@@ -1151,7 +1151,7 @@ CM.Data.ConfigDefault = {
 	WrinklerMaxVolume: 100, 
 	WrinklerMaxSoundURL: 'https://freesound.org/data/previews/152/152743_15663-lq.mp3', 
 	Title: 1, 
-	TooltipInfo: 1, 
+	TooltipBuildUpgrade: 1, 
 	TooltipAmor: 0, 
 	ToolWarnLucky: 1,
 	ToolWarnLuckyFrenzy: 1,
@@ -2567,9 +2567,6 @@ CM.Disp.TooltipCreateWarningSection = function() {
 CM.Disp.UpdateTooltip = function() {
 	CM.Sim.CopyData();
 	if (l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea')) {
-		if (CM.Options.TooltipInfo == 0) {
-			l('CMTooltipArea').style.display = "none";
-		}
 		l('CMTooltipArea').innerHTML = '';
 		tooltipBox = CM.Disp.TooltipCreateTooltipBox();
 		l('CMTooltipArea').appendChild(tooltipBox);
@@ -2603,7 +2600,7 @@ CM.Disp.UpdateTooltip = function() {
  * It is called when Building tooltips are created or refreshed by CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateTooltipBuilding = function() {
-	if (CM.Options.TooltipInfo == 1 && Game.buyMode == 1) {
+	if (CM.Options.TooltipBuildUpgrade == 1 && Game.buyMode == 1) {
 		tooltipBox = l('CMTooltipBorder');
 		CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
@@ -2618,7 +2615,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 		CM.Disp.TooltipBonusIncome = CM.Cache[target][CM.Disp.tooltipName].bonus;
 		
 
-		if (CM.Options.TooltipInfo == 1 && Game.buyMode == 1) {
+		if (CM.Options.TooltipBuildUpgrade == 1 && Game.buyMode == 1) {
 			l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 			var increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 			if (isFinite(increase) && increase != 0) {
@@ -2654,6 +2651,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 			l('CMTooltipTime').style.marginBottom = '0px';
 		}
 	}
+	else l('CMTooltipArea').style.display = "none";
 }
 
 /**
@@ -2668,7 +2666,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 	CM.Disp.TooltipPrice = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
 	CM.Disp.TooltipBonusMouse = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonusMouse
 
-	if (CM.Options.TooltipInfo == 1) {
+	if (CM.Options.TooltipBuildUpgrade == 1) {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 		var increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 		if (isFinite(increase) && increase != 0) {
@@ -2708,6 +2706,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 			l('CMTooltipBorder').appendChild(chocolate);
 		}
 	}
+	else l('CMTooltipArea').style.display = "none";
 }
 
 /**
@@ -2728,6 +2727,7 @@ CM.Disp.UpdateTooltipSugarLump = function() {
 		lumpType.textContent = lumpColor.text;
 		lumpType.className = CM.Disp.colorTextPre + lumpColor.color;
 	}
+	else l('CMTooltipArea').style.display = "none";
 }
 
 /**
@@ -2783,6 +2783,7 @@ CM.Disp.UpdateTooltipGrimoire = function() {
 
 		l('CMTooltipArea').appendChild(tooltipBox);
 	}
+	else l('CMTooltipArea').style.display = "none";
 }
 
 /**
