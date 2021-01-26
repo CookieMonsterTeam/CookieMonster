@@ -323,18 +323,16 @@ CM.Main.ReplaceTooltipLump = function() {
 };
 
 /**
- * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
- * CM.Disp.Tooltip() sets the tooltip type to '?'
+ * This function replaces the original .onmouseover functions of all garden plants so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 'p'
  * It is called by CM.Main.ReplaceTooltips()
  */
 CM.Main.ReplaceTooltipGarden = function() {
 	if (Game.Objects['Farm'].minigameLoaded) {
-		CM.Main.TooltipGardenBackup = [];
-		for (var i in Game.Objects['Farm'].minigame.plot) {
-			for (var j in i) {
-				//console.log(j, i)
-			}
-		}
+		Array.from(l('gardenPlot').children).forEach((child, index) => {
+			var coords = child.id.slice(-3,);
+			child.onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('p', [`${coords[0]}`,`${coords[2]}`]);}, 'this'); Game.tooltip.wobble();};
+		});
 	}
 };
 

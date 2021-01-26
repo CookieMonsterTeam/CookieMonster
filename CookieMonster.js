@@ -2416,9 +2416,10 @@ CM.Disp.Tooltip = function(type, name) {
 	}
 	else if (type === 's') l('tooltip').innerHTML = Game.lumpTooltip(); // Sugar Lumps
 	else if (type === 'g') l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)(); // Grimoire
+	else if (type == 'p') l('tooltip').innerHTML =  Game.ObjectsById[2].minigame.tileTooltip(name[0], name[1])(); // Garden plots
 
 	// Adds area for extra tooltip-sections
-	if ((type == 'b' && Game.buyMode == 1) || type == 'u' || type == 's' || type == 'g') {
+	if ((type == 'b' && Game.buyMode == 1) || type == 'u' || type == 's' || type == 'g' || type == 'p') {
 		var area = document.createElement('div');
 		area.id = 'CMTooltipArea';
 		l('tooltip').appendChild(area);
@@ -2582,6 +2583,9 @@ CM.Disp.UpdateTooltip = function() {
 		}
 		else if (CM.Disp.tooltipType === 'g') {
 			CM.Disp.UpdateTooltipGrimoire();
+		}
+		else if (CM.Disp.tooltipType === 'p') {
+			CM.Disp.UpdateTooltipGardenPlots();
 		}
 		CM.Disp.UpdateTooltipWarnings();
 	}
@@ -2777,6 +2781,15 @@ CM.Disp.UpdateTooltipGrimoire = function() {
 
 		l('CMTooltipArea').appendChild(tooltipBox);
 	}
+}
+
+/**
+ * This function adds extra info to the Garden plots tooltips
+ * It is called when Garden plots tooltips are created or refreshed by CM.Disp.UpdateTooltip()
+ * It adds to the additional information to l('CMTooltipArea')
+ */
+CM.Disp.UpdateTooltipGardenPlots = function() {
+	var minigame = Game.Objects['Farm'].minigame;
 }
 
 /**
@@ -4335,18 +4348,16 @@ CM.Main.ReplaceTooltipLump = function() {
 };
 
 /**
- * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
- * CM.Disp.Tooltip() sets the tooltip type to '?'
+ * This function replaces the original .onmouseover functions of all garden plants so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 'p'
  * It is called by CM.Main.ReplaceTooltips()
  */
 CM.Main.ReplaceTooltipGarden = function() {
 	if (Game.Objects['Farm'].minigameLoaded) {
-		CM.Main.TooltipGardenBackup = [];
-		for (var i in Game.Objects['Farm'].minigame.plot) {
-			for (var j in i) {
-				//console.log(j, i)
-			}
-		}
+		Array.from(l('gardenPlot').children).forEach((child, index) => {
+			var coords = child.id.slice(-3,);
+			child.onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('p', [`${coords[0]}`,`${coords[2]}`]);}, 'this'); Game.tooltip.wobble();};
+		});
 	}
 };
 
