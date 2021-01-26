@@ -1253,18 +1253,25 @@ CM.Disp.ReplaceTooltipLump = function() {
  * This function replaces the original Game.crate and Game.crateTooltip functions of stats page
  */
 CM.Disp.ReplaceCrateTooltipAchievements = function() {
+	let options = {normal: false, shadow: false};
+	switch (CM.ConfigData.MissingAchievements) {
+		case 0: options.normal = true; options.shadow = false; break;
+		case 1: options.normal = false; options.shadow = true; break;
+		case 2: options.normal = true; options.shadow = true; break;
+		case 3: options.normal = false; options.shadow = false; break;
+	}
 	CM.Disp.CrateTooltipAchievementsBackup = [Game.crate, Game.crateTooltip];
 	Game.crate = function(me,context,forceClickStr,id) {
 		let output;
 		if (me.type === 'achievement') {
 		    let icon = me.icon;
-		    if (CM.Options.ShowMysteriousShadowAchievements && me.pool === 'shadow') {
+		    if (options.shadow && me.pool === 'shadow') {
 			me.pool = 'normal';
 			me.isShadow = true;
 		    }
 		    output = CM.Disp.CrateTooltipAchievementsBackup[0](me,context,forceClickStr,id);
-		    if (CM.Options.ShowMysteriousAchievements && me.pool === 'normal' && !me.isShadow) output = output.replace('background-position:0px -336px', 'background-position:'+(-icon[0]*48)+'px '+(-icon[1]*48)+'px');
-		    if (CM.Options.ShowMysteriousShadowAchievements && me.isShadow) {
+		    if (options.normal && me.pool === 'normal' && !me.isShadow) output = output.replace('background-position:0px -336px', 'background-position:'+(-icon[0]*48)+'px '+(-icon[1]*48)+'px');
+		    if (options.shadow && me.isShadow) {
 			me.pool = 'shadow';
 			output = output.replace('background-position:0px -336px', 'background-position:'+(-icon[0]*48)+'px '+(-icon[1]*48)+'px');
 		    }
@@ -1277,11 +1284,11 @@ CM.Disp.ReplaceCrateTooltipAchievements = function() {
 		let output;
 		if (me.type === 'achievement') {
 		    output = CM.Disp.CrateTooltipAchievementsBackup[1](me,context);
-		    if (CM.Options.ShowMysteriousAchievements && me.pool === 'normal') {
+		    if (options.normal && me.pool === 'normal') {
 			output = output.replace('<div class="name">???</div>', '<div class="name">'+me.name+'</div>');
 			output = output.replace('<div class="description">???</div>', '<div class="description">'+me.desc+'</div>');
 		    }
-		    if (CM.Options.ShowMysteriousShadowAchievements && me.pool === 'shadow') {
+		    if (options.shadow && me.pool === 'shadow') {
 			output = output.replace('<div class="name">???</div>', '<div class="name">'+me.name+'</div>');
 			output = output.replace('<div class="description">???</div>', '<div class="description">'+me.desc+'</div>');
 		    }
