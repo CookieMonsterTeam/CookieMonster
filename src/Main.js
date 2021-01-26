@@ -240,6 +240,7 @@ CM.DelayInit = function() {
 	CM.Disp.ReplaceTooltipBuild();
 	CM.Disp.ReplaceTooltipGrimoire();
 	CM.Disp.ReplaceTooltipLump();
+	CM.Disp.ReplaceCrateTooltipAchievements();
 	CM.Main.AddWrinklerAreaDetect();
 	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
