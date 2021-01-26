@@ -6,7 +6,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install modules
-      run:
+      run: |
         yarn init
         yarn add eslint --dev
         yarn run eslint --init
