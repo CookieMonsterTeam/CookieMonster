@@ -1253,17 +1253,17 @@ CM.Disp.ReplaceTooltipLump = function() {
  * This function replaces the original Game.crate and Game.crateTooltip functions of stats page
  */
 CM.Disp.ReplaceCrateTooltipAchievements = function() {
-	let options = {normal: false, shadow: false};
-	switch (CM.ConfigData.MissingAchievements) {
-		case 0: options.normal = true; options.shadow = false; break;
-		case 1: options.normal = false; options.shadow = true; break;
-		case 2: options.normal = true; options.shadow = true; break;
-		case 3: options.normal = false; options.shadow = false; break;
-	}
 	CM.Disp.CrateTooltipAchievementsBackup = [Game.crate, Game.crateTooltip];
 	Game.crate = function(me,context,forceClickStr,id) {
 		let output;
 		if (me.type === 'achievement') {
+			let options = {normal: false, shadow: false};
+			switch (CM.Options.MissingAchievements) {
+					case 0: options.normal = true; options.shadow = false; break;
+					case 1: options.normal = false; options.shadow = true; break;
+					case 2: options.normal = true; options.shadow = true; break;
+					case 3: options.normal = false; options.shadow = false; break;
+			}
 		    let icon = me.icon;
 		    if (options.shadow && me.pool === 'shadow') {
 			me.pool = 'normal';
@@ -1283,6 +1283,13 @@ CM.Disp.ReplaceCrateTooltipAchievements = function() {
 	Game.crateTooltip = function(me,context) {
 		let output;
 		if (me.type === 'achievement') {
+			let options = {normal: false, shadow: false};
+			switch (CM.Options.MissingAchievements) {
+					case 0: options.normal = true; options.shadow = false; break;
+					case 1: options.normal = false; options.shadow = true; break;
+					case 2: options.normal = true; options.shadow = true; break;
+					case 3: options.normal = false; options.shadow = false; break;
+			}
 		    output = CM.Disp.CrateTooltipAchievementsBackup[1](me,context);
 		    if (options.normal && me.pool === 'normal') {
 			output = output.replace('<div class="name">???</div>', '<div class="name">'+me.name+'</div>');
