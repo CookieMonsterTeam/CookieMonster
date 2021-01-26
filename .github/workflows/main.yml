@@ -10,8 +10,8 @@ jobs:
         node-version: '12'
     - name: Install dependencies
       run: |
-        npm install eslint --save-dev
         npm init
+        npm install eslint --save-dev
     - name: Lint
       run: |
         npx eslint --init
