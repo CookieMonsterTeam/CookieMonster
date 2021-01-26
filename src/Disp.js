@@ -1250,6 +1250,49 @@ CM.Disp.ReplaceTooltipLump = function() {
 };
 
 /**
+ * This function replaces the original Game.crate and Game.crateTooltip functions of stats page
+ */
+CM.Disp.ReplaceCrateTooltipAchievements = function() {
+	CM.Disp.CrateTooltipAchievementsBackup = [Game.crate, Game.crateTooltip];
+	Game.crate = function(me,context,forceClickStr,id) {
+		let output;
+		if (me.type === 'achievement') {
+		    let icon = me.icon;
+		    if (CM.Options.ShowMysteriousShadowAchievements && me.pool === 'shadow') {
+			me.pool = 'normal';
+			me.isShadow = true;
+		    }
+		    output = CM.Disp.CrateTooltipAchievementsBackup[0](me,context,forceClickStr,id);
+		    if (CM.Options.ShowMysteriousAchievements && me.pool === 'normal' && !me.isShadow) output = output.replace('background-position:0px -336px', 'background-position:'+(-icon[0]*48)+'px '+(-icon[1]*48)+'px');
+		    if (CM.Options.ShowMysteriousShadowAchievements && me.isShadow) {
+			me.pool = 'shadow';
+			output = output.replace('background-position:0px -336px', 'background-position:'+(-icon[0]*48)+'px '+(-icon[1]*48)+'px');
+		    }
+		} else {
+		    output = CM.Disp.CrateTooltipAchievementsBackup[0](me,context,forceClickStr,id);
+		}
+		return output;
+	}
+	Game.crateTooltip = function(me,context) {
+		let output;
+		if (me.type === 'achievement') {
+		    output = CM.Disp.CrateTooltipAchievementsBackup[1](me,context);
+		    if (CM.Options.ShowMysteriousAchievements && me.pool === 'normal') {
+			output = output.replace('<div class="name">???</div>', '<div class="name">'+me.name+'</div>');
+			output = output.replace('<div class="description">???</div>', '<div class="description">'+me.desc+'</div>');
+		    }
+		    if (CM.Options.ShowMysteriousShadowAchievements && me.pool === 'shadow') {
+			output = output.replace('<div class="name">???</div>', '<div class="name">'+me.name+'</div>');
+			output = output.replace('<div class="description">???</div>', '<div class="description">'+me.desc+'</div>');
+		    }
+		} else {
+		    output = CM.Disp.CrateTooltipAchievementsBackup[1](me,context);
+		}
+		return output;
+	}
+}
+
+/**
  * This function enhance the standard tooltips by creating and changing l('tooltip')
  * The function is called by .onmouseover events that have replaced original code to use CM.Disp.Tooltip()
  * @param	{string}	type					Type of tooltip (b, u, s or g)
