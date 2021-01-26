@@ -1075,6 +1075,7 @@ CM.ConfigData.ToolWarnPos = {type: 'bool', group: 'Tooltip', label: ['Tooltip Wa
 CM.ConfigData.TooltipGrim = {type: 'bool', group: 'Tooltip', label: ['Grimoire Tooltip Information OFF', 'Grimoire Tooltip Information ON'], desc: 'Extra information in tooltip for grimoire', toggle: true};
 CM.ConfigData.ToolWrink = {type: 'bool', group: 'Tooltip', label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
 CM.ConfigData.TooltipLump = {type: 'bool', group: 'Tooltip', label: ['Sugar Lump Tooltip OFF', 'Sugar Lump Tooltip ON'], desc: 'Shows the current Sugar Lump type in Sugar lump tooltip.', toggle: true};
+CM.ConfigData.TooltipPlots = {type: 'bool', group: 'Tooltip', label: ['Garden Plots Tooltip OFF', 'Garden Plots Tooltip ON'], desc: 'Shows a tooltip for plants that have a cookie reward.', toggle: true};
 CM.ConfigData.DragonAuraInfo = {type: 'bool', group: 'Tooltip', label: ['Extra Dragon Aura Info OFF', 'Extra Dragon Aura Info ON'], desc: 'Shows information about changes in CPS and costs in the dragon aura interface.', toggle: true};
 
 // Statistics
@@ -1161,6 +1162,7 @@ CM.Data.ConfigDefault = {
 	TooltipGrim:1, 
 	ToolWrink: 1, 
 	TooltipLump: 1,
+	TooltipPlots: 1,
 	DragonAuraInfo: 1,
 	Stats: 1, 
 	MissingUpgrades: 1,
@@ -2789,27 +2791,29 @@ CM.Disp.UpdateTooltipGrimoire = function() {
  * It adds to the additional information to l('CMTooltipArea')
  */
 CM.Disp.UpdateTooltipGardenPlots = function() {
-	var minigame = Game.Objects['Farm'].minigame;
-	if (minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] != 0) {
-		var mature = minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][1] > minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].matureBase;
-		var plantName = minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].name;
-		l('CMTooltipBorder').appendChild(CM.Disp.TooltipCreateHeader('Reward (Current / Maximum)'));
-		var reward = document.createElement('div');
-		reward.id = 'CMTooltipPlantReward';
-		l('CMTooltipBorder').appendChild(reward);
-		if (plantName == "Bakeberry") {
-			l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 30)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 30);
-		} 
-		else if (plantName == "Chocoroot" || plantName == "White chocoroot") {
-			l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 3)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 3);
+	if (CM.Options.TooltipLump) {
+		var minigame = Game.Objects['Farm'].minigame;
+		if (minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] != 0) {
+			var mature = minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][1] > minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].matureBase;
+			var plantName = minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].name;
+			l('CMTooltipBorder').appendChild(CM.Disp.TooltipCreateHeader('Reward (Current / Maximum)'));
+			var reward = document.createElement('div');
+			reward.id = 'CMTooltipPlantReward';
+			l('CMTooltipBorder').appendChild(reward);
+			if (plantName == "Bakeberry") {
+				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 30)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 30);
+			} 
+			else if (plantName == "Chocoroot" || plantName == "White chocoroot") {
+				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 3)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 3);
+			}
+			else if (plantName == "Queenbeet") {
+				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.04, Game.cookiesPs * 60 * 60)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 60);
+			} 
+			else if (plantName == "Duketater") {
+				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.08, Game.cookiesPs * 60 * 120)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 120);
+			} 
+			else l('CMTooltipArea').style.display = "none";
 		}
-		else if (plantName == "Queenbeet") {
-			l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.04, Game.cookiesPs * 60 * 60)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 60);
-		} 
-		else if (plantName == "Duketater") {
-			l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.08, Game.cookiesPs * 60 * 120)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 120);
-		} 
-		else l('CMTooltipArea').style.display = "none";
 	}
 	else l('CMTooltipArea').style.display = "none";
 }
