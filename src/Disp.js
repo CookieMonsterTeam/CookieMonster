@@ -1607,9 +1607,8 @@ CM.Disp.UpdateTooltipGrimoire = function() {
  * It adds to the additional information to l('CMTooltipArea')
  */
 CM.Disp.UpdateTooltipGardenPlots = function() {
-	if (CM.Options.TooltipLump) {
-		var minigame = Game.Objects['Farm'].minigame;
-		if (minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] != 0) {
+	var minigame = Game.Objects['Farm'].minigame;
+	if (CM.Options.TooltipLump && minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] != 0) {
 			var mature = minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][1] > minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].matureBase;
 			var plantName = minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].name;
 			l('CMTooltipBorder').appendChild(CM.Disp.TooltipCreateHeader('Reward (Current / Maximum)'));
@@ -1629,7 +1628,6 @@ CM.Disp.UpdateTooltipGardenPlots = function() {
 				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.08, Game.cookiesPs * 60 * 120)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 120);
 			} 
 			else l('CMTooltipArea').style.display = "none";
-		}
 	}
 	else l('CMTooltipArea').style.display = "none";
 }

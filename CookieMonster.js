@@ -1064,7 +1064,7 @@ CM.ConfigData.WrinklerMaxSoundURL = {type: 'url', group: 'NotificationWrinkMax',
 CM.ConfigData.Title = {type: 'bool', group: 'Notification', label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 
 // Tooltip
-CM.ConfigData.TooltipBuildUpgrade = {type: 'bool', group: 'Tooltip', label: ['Extra Tooltip Information OFF', 'Extra Tooltip Information ON'], desc: 'Extra information in tooltips', toggle: true};
+CM.ConfigData.TooltipBuildUpgrade = {type: 'bool', group: 'Tooltip', label: ['Building/Upgrade Tooltip Information OFF', 'Building/Upgrade  Tooltip Information ON'], desc: 'Extra information in Building/Upgrade tooltips', toggle: true};
 CM.ConfigData.TooltipAmor = {type: 'bool', group: 'Tooltip', label: ['Buildings Tooltip Amortization Information OFF', 'Buildings Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
 CM.ConfigData.ToolWarnLucky = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Warning OFF', 'Tooltip Lucky Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" rewards', toggle: true};
 CM.ConfigData.ToolWarnLuckyFrenzy = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Frenzy Warning OFF', 'Tooltip Lucky Frenzy Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" (Frenzy) rewards', toggle: true};
@@ -2792,9 +2792,8 @@ CM.Disp.UpdateTooltipGrimoire = function() {
  * It adds to the additional information to l('CMTooltipArea')
  */
 CM.Disp.UpdateTooltipGardenPlots = function() {
-	if (CM.Options.TooltipLump) {
-		var minigame = Game.Objects['Farm'].minigame;
-		if (minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] != 0) {
+	var minigame = Game.Objects['Farm'].minigame;
+	if (CM.Options.TooltipLump && minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] != 0) {
 			var mature = minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][1] > minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].matureBase;
 			var plantName = minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].name;
 			l('CMTooltipBorder').appendChild(CM.Disp.TooltipCreateHeader('Reward (Current / Maximum)'));
@@ -2814,7 +2813,6 @@ CM.Disp.UpdateTooltipGardenPlots = function() {
 				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.08, Game.cookiesPs * 60 * 120)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 120);
 			} 
 			else l('CMTooltipArea').style.display = "none";
-		}
 	}
 	else l('CMTooltipArea').style.display = "none";
 }
