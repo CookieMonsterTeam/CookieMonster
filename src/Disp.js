@@ -1752,7 +1752,7 @@ CM.Disp.ToggleToolWarnPos = function() {
  * TODO: Change this code to be the same as other tooltips. (i.d., create tooltip with type "w")
  */
 CM.Disp.CheckWrinklerTooltip = function() {
-	if (CM.Options.ToolWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) { // Latter is set by CM.Main.AddWrinklerAreaDetect
+	if (CM.Options.TooltipWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) { // Latter is set by CM.Main.AddWrinklerAreaDetect
 		var showingTooltip = false;
 		for (var i in Game.wrinklers) {
 			var me = Game.wrinklers[i];
@@ -1790,7 +1790,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
  * TODO: Change this code to be the same as other tooltips. Fit this into CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateWrinklerTooltip = function() {
-	if (CM.Options.ToolWrink == 1 && l('CMTooltipWrinkler') != null) {
+	if (CM.Options.TooltipWrink == 1 && l('CMTooltipWrinkler') != null) {
 		var sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
 		var toSuck = 1.1;
 		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
