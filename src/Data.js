@@ -211,6 +211,8 @@ CM.ConfigData.ScaleCutoff = {type: 'numscale', group: 'Notation', label: 'Notati
 CM.ConfigData.GCTimer = {type: 'bool', group: 'Miscellaneous', label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', toggle: true, func: function() {CM.Disp.ToggleGCTimer();}};
 CM.ConfigData.Favicon = {type: 'bool', group: 'Miscellaneous', label: ['Favicon OFF', 'Favicon ON'], desc: 'Update favicon with Golden/Wrath Cookie', toggle: true, func: function() {CM.Disp.UpdateFavicon();}};
 CM.ConfigData.WrinklerButtons = {type: 'bool', group: 'Miscellaneous', label: ['Extra Buttons OFF', 'Extra Buttons ON'], desc: 'Show buttons for popping wrinklers at bottom of cookie section', toggle: true, func: function() {CM.Disp.UpdateWrinklerButtons();}};
+CM.ConfigData.ShowMysteriousAchievements = {type: 'bool', group: 'Miscellaneous', label: ['Show Mysterious Achievements OFF', 'Show Mysterious Achievements ON'], desc: 'Show mysterious achievemennts in stats', toggle: true, func: function() {}};
+CM.ConfigData.ShowMysteriousShadowAchievements = {type: 'bool', group: 'Miscellaneous', label: ['Show Mysterious Shadow Achievements OFF', 'Show Mysterious Shadow Achievements ON'], desc: 'Show mysterious shadow achievemennts in stats', toggle: true, func: function() {}};
 
 
 /**
