@@ -1414,7 +1414,7 @@ CM.Disp.UpdateTooltip = function() {
  * It is called when Building tooltips are created or refreshed by CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateTooltipBuilding = function() {
-	if (CM.Options.TooltipBuildUp == 1 && Game.buyMode == 1) {
+	if (CM.Options.TooltipInfo == 1 && Game.buyMode == 1) {
 		tooltipBox = l('CMTooltipBorder');
 		CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
@@ -1429,7 +1429,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 		CM.Disp.TooltipBonusIncome = CM.Cache[target][CM.Disp.tooltipName].bonus;
 		
 
-		if (CM.Options.TooltipBuildUp == 1 && Game.buyMode == 1) {
+		if (CM.Options.TooltipInfo == 1 && Game.buyMode == 1) {
 			l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 			var increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 			if (isFinite(increase) && increase != 0) {
@@ -1479,7 +1479,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 	CM.Disp.TooltipPrice = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
 	CM.Disp.TooltipBonusMouse = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonusMouse
 
-	if (CM.Options.TooltipBuildUp == 1) {
+	if (CM.Options.TooltipInfo == 1) {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 		var increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 		if (isFinite(increase) && increase != 0) {
