@@ -7,7 +7,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install modules
       run: |
-        yarn init
+        yarn
         yarn add eslint --dev
         yarn run eslint --init
     - name: Run ESLint
