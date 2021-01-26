@@ -10,9 +10,9 @@ jobs:
         node-version: '12'
     - name: Install dependencies
       run: |
-        yarn install
+        npm install eslint --save-dev
+        npm init
     - name: Lint
       run: |
-        yarn init
-        yarn run eslint --init
-        yarn run eslint . --ext .js
+        npx eslint --init
+        npx eslint . --ext .js
