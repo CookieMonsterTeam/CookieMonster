@@ -13,5 +13,6 @@ jobs:
         yarn install
     - name: Lint
       run: |
+        yarn init
         yarn run eslint --init
         yarn run eslint . --ext .js
