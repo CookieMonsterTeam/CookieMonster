@@ -196,6 +196,8 @@ CM.ConfigData.DragonAuraInfo = {type: 'bool', group: 'Tooltip', label: ['Extra D
 // Statistics
 CM.ConfigData.Stats = {type: 'bool', group: 'Statistics', label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra Cookie Monster statistics!', toggle: true};
 CM.ConfigData.MissingUpgrades = {type: 'bool', group: 'Statistics', label: ['Missing Upgrades OFF', 'Missing Upgrades ON'], desc: 'Shows Missing upgrades in Stats Menu. This feature can be laggy for users with a low amount of unlocked achievements.', toggle: true};
+CM.ConfigData.MissingAchievements = {type: 'bool', group: 'Statistics', label: ['Missing Achievements OFF', 'Missing Achievements ON'], desc: 'Shows Missing achievements in Stats Menu.', toggle: true};
+CM.ConfigData.MissingShadowAchievements = {type: 'bool', group: 'Statistics', label: ['Missing Shadow Achievements OFF', 'Missing Achievements ON'], desc: 'Shows Missing shadow achievements in Stats Menu.', toggle: true};
 CM.ConfigData.UpStats = {type: 'bool', group: 'Statistics', label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 5 seconds', toggle: false};
 CM.ConfigData.TimeFormat = {type: 'bool', group: 'Statistics', label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
 CM.ConfigData.DetailedTime = {type: 'bool', group: 'Statistics', label: ['Detailed Time OFF', 'Detailed Time ON'], desc: 'Change how time is displayed in certain statistics and tooltips', toggle: true, func: function() {CM.Disp.ToggleDetailedTime();}};
@@ -211,8 +213,6 @@ CM.ConfigData.ScaleCutoff = {type: 'numscale', group: 'Notation', label: 'Notati
 CM.ConfigData.GCTimer = {type: 'bool', group: 'Miscellaneous', label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', toggle: true, func: function() {CM.Disp.ToggleGCTimer();}};
 CM.ConfigData.Favicon = {type: 'bool', group: 'Miscellaneous', label: ['Favicon OFF', 'Favicon ON'], desc: 'Update favicon with Golden/Wrath Cookie', toggle: true, func: function() {CM.Disp.UpdateFavicon();}};
 CM.ConfigData.WrinklerButtons = {type: 'bool', group: 'Miscellaneous', label: ['Extra Buttons OFF', 'Extra Buttons ON'], desc: 'Show buttons for popping wrinklers at bottom of cookie section', toggle: true, func: function() {CM.Disp.UpdateWrinklerButtons();}};
-CM.ConfigData.ShowMysteriousAchievements = {type: 'bool', group: 'Miscellaneous', label: ['Show Mysterious Achievements OFF', 'Show Mysterious Achievements ON'], desc: 'Show mysterious achievemennts in stats', toggle: true, func: function() {}};
-CM.ConfigData.ShowMysteriousShadowAchievements = {type: 'bool', group: 'Miscellaneous', label: ['Show Mysterious Shadow Achievements OFF', 'Show Mysterious Shadow Achievements ON'], desc: 'Show mysterious shadow achievemennts in stats', toggle: true, func: function() {}};
 
 
 /**
@@ -282,6 +282,8 @@ CM.Data.ConfigDefault = {
 	DragonAuraInfo: 1,
 	Stats: 1, 
 	MissingUpgrades: 1,
+	MissingAchievements: 1,
+	MissingShadowAchievements: 1,
 	UpStats: 1, 
 	TimeFormat: 0, 
 	DetailedTime: 1, 
@@ -296,8 +298,6 @@ CM.Data.ConfigDefault = {
 	GCTimer: 1, 
 	Favicon: 1,
 	WrinklerButtons: 1,
-	ShowMysteriousAchievements: 0,
-	ShowShadowMysteriousAchievements: 0,
 	Header: {BarsColors: 1, Calculation: 1, Notification: 1, NotificationGC: 1, NotificationFC: 1, NotificationSea: 1, NotificationGard: 1, NotificationMagi: 1, NotificationWrink: 1, NotificationWrinkMax: 1, Tooltip: 1, Statistics: 1, Notation: 1, Miscellaneous: 1, Lucky: 1, Spells: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
 };
 
