@@ -14,6 +14,5 @@ jobs:
         yarn add eslint --dev
     - name: Lint
       run: |
-        yarn init
         yarn run eslint --init
         eslint .
