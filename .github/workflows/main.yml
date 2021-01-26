@@ -11,8 +11,7 @@ jobs:
     - name: Install dependencies
       run: |
         yarn install
-        yarn add eslint --dev
     - name: Lint
       run: |
         yarn run eslint --init
-        eslint .
+        yarn run eslint . --ext .js
