@@ -1064,7 +1064,7 @@ CM.ConfigData.WrinklerMaxSoundURL = {type: 'url', group: 'NotificationWrinkMax',
 CM.ConfigData.Title = {type: 'bool', group: 'Notification', label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 
 // Tooltip
-CM.ConfigData.TooltipInfo = {type: 'bool', group: 'Tooltip', label: ['Extra Tooltip Information OFF', 'Extra Tooltip Information ON'], desc: 'Extra information in tooltips', toggle: true};
+CM.ConfigData.TooltipBuildUpgrade = {type: 'bool', group: 'Tooltip', label: ['Building/Upgrade Tooltip Information OFF', 'Building/Upgrade  Tooltip Information ON'], desc: 'Extra information in Building/Upgrade tooltips', toggle: true};
 CM.ConfigData.TooltipAmor = {type: 'bool', group: 'Tooltip', label: ['Buildings Tooltip Amortization Information OFF', 'Buildings Tooltip Amortization Information ON'], desc: 'Add amortization information to buildings tooltip', toggle: true};
 CM.ConfigData.ToolWarnLucky = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Warning OFF', 'Tooltip Lucky Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" rewards', toggle: true};
 CM.ConfigData.ToolWarnLuckyFrenzy = {type: 'bool', group: 'Tooltip', label: ['Tooltip Lucky Frenzy Warning OFF', 'Tooltip Lucky Frenzy Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Lucky!" (Frenzy) rewards', toggle: true};
@@ -1073,8 +1073,9 @@ CM.ConfigData.ToolWarnConjureFrenzy = {type: 'bool', group: 'Tooltip', label: ['
 CM.ConfigData.ToolWarnEdifice = {type: 'bool', group: 'Tooltip', label: ['Tooltip Edifice Warning OFF', 'Tooltip Edifice Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for "Spontaneous Edifice" to possibly give you your most expensive building', toggle: true};
 CM.ConfigData.ToolWarnPos = {type: 'bool', group: 'Tooltip', label: ['Tooltip Warning Position (Left)', 'Tooltip Warning Position (Bottom)'], desc: 'Placement of the warning boxes', toggle: false, func: function() {CM.Disp.ToggleToolWarnPos();}};
 CM.ConfigData.TooltipGrim = {type: 'bool', group: 'Tooltip', label: ['Grimoire Tooltip Information OFF', 'Grimoire Tooltip Information ON'], desc: 'Extra information in tooltip for grimoire', toggle: true};
-CM.ConfigData.ToolWrink = {type: 'bool', group: 'Tooltip', label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
+CM.ConfigData.TooltipWrink = {type: 'bool', group: 'Tooltip', label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
 CM.ConfigData.TooltipLump = {type: 'bool', group: 'Tooltip', label: ['Sugar Lump Tooltip OFF', 'Sugar Lump Tooltip ON'], desc: 'Shows the current Sugar Lump type in Sugar lump tooltip.', toggle: true};
+CM.ConfigData.TooltipPlots = {type: 'bool', group: 'Tooltip', label: ['Garden Plots Tooltip OFF', 'Garden Plots Tooltip ON'], desc: 'Shows a tooltip for plants that have a cookie reward.', toggle: true};
 CM.ConfigData.DragonAuraInfo = {type: 'bool', group: 'Tooltip', label: ['Extra Dragon Aura Info OFF', 'Extra Dragon Aura Info ON'], desc: 'Shows information about changes in CPS and costs in the dragon aura interface.', toggle: true};
 
 // Statistics
@@ -1150,7 +1151,7 @@ CM.Data.ConfigDefault = {
 	WrinklerMaxVolume: 100, 
 	WrinklerMaxSoundURL: 'https://freesound.org/data/previews/152/152743_15663-lq.mp3', 
 	Title: 1, 
-	TooltipInfo: 1, 
+	TooltipBuildUpgrade: 1, 
 	TooltipAmor: 0, 
 	ToolWarnLucky: 1,
 	ToolWarnLuckyFrenzy: 1,
@@ -1159,8 +1160,9 @@ CM.Data.ConfigDefault = {
 	ToolWarnEdifice: 1,
 	ToolWarnPos: 1, 
 	TooltipGrim:1, 
-	ToolWrink: 1, 
+	TooltipWrink: 1, 
 	TooltipLump: 1,
+	TooltipPlots: 1,
 	DragonAuraInfo: 1,
 	Stats: 1, 
 	MissingUpgrades: 1,
@@ -2363,30 +2365,9 @@ CM.Disp.CreateSimpleTooltip = function(placeholder, text, minWidth) {
 }
 
 /**
- * This function replaces the original .onmouseover functions of buildings so that it calls CM.Disp.Tooltip()
- * CM.Disp.Tooltip() sets the tooltip type to 'b'
- * It is called by CM.DelayInit()
- * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
- * TODO: Move this code to Main.js file
- */
-CM.Disp.ReplaceTooltipBuild = function() {
-	CM.Disp.TooltipBuildBackup = [];
-	for (var i in Game.Objects) {
-		var me = Game.Objects[i];
-		if (l('product' + me.id).onmouseover != null) {
-			CM.Disp.TooltipBuildBackup[i] = l('product' + me.id).onmouseover;
-			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}');
-		}
-	}
-}
-
-/**
  * This function replaces the original .onmouseover functions of upgrades so that it calls CM.Disp.Tooltip()
  * CM.Disp.Tooltip() sets the tooltip type to 'u'
- * It is called by CM.ReplaceNative()
- * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
- * TODO: Move this code to Main.js file
- * 
+ * It is called by Game.RebuildUpgrades() through CM.ReplaceNative() and is therefore not permanent like the other ReplaceTooltip functions
  */
 CM.Disp.ReplaceTooltipUpgrade = function() {
 	CM.Disp.TooltipUpgradeBackup = [];
@@ -2398,39 +2379,6 @@ CM.Disp.ReplaceTooltipUpgrade = function() {
 		}
 	}
 }
-
-/**
- * This function replaces the original .onmouseover functions of the Grimoire minigame so that it calls CM.Disp.Tooltip()
- * CM.Disp.Tooltip() sets the tooltip type to 'g'
- * The function is called by CM.DelayInit()
- * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
- * TODO: Move this code to Main.js file
- */
-CM.Disp.ReplaceTooltipGrimoire = function() {
-	if (Game.Objects['Wizard tower'].minigameLoaded) {
-		CM.Disp.TooltipGrimoireBackup = [];
-		for (var i in Game.Objects['Wizard tower'].minigame.spellsById) {
-			if (l('grimoireSpell' + i).onmouseover != null) {
-				CM.Disp.TooltipGrimoireBackup[i] = l('grimoireSpell' + i).onmouseover;
-				eval('l(\'grimoireSpell\' + i).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'g\', \'' + i + '\');}, \'this\'); Game.tooltip.wobble();}');
-			}
-		}
-	}
-}
-
-/**
- * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
- * CM.Disp.Tooltip() sets the tooltip type to 's'
- * The function is called by CM.DelayInit()
- * TODO: Place all ReplaceTooltip functions either under CM.DelayInit() or CM.ReplaceNative()
- * TODO: Move this code to Main.js file
- */
-CM.Disp.ReplaceTooltipLump = function() {
-	if (Game.canLumps()) {
-		CM.Disp.TooltipLumpBackup = l('lumps').onmouseover;
-        eval('l(\'lumps\').onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'Lump\');}, \'this\'); Game.tooltip.wobble();}');
-	}
-};
 
 /**
  * This function enhance the standard tooltips by creating and changing l('tooltip')
@@ -2470,9 +2418,10 @@ CM.Disp.Tooltip = function(type, name) {
 	}
 	else if (type === 's') l('tooltip').innerHTML = Game.lumpTooltip(); // Sugar Lumps
 	else if (type === 'g') l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)(); // Grimoire
+	else if (type == 'p') l('tooltip').innerHTML =  Game.ObjectsById[2].minigame.tileTooltip(name[0], name[1])(); // Garden plots
 
 	// Adds area for extra tooltip-sections
-	if ((type == 'b' && Game.buyMode == 1) || type == 'u' || type == 's' || type == 'g') {
+	if ((type == 'b' && Game.buyMode == 1) || type == 'u' || type == 's' || type == 'g' || type == 'p') {
 		var area = document.createElement('div');
 		area.id = 'CMTooltipArea';
 		l('tooltip').appendChild(area);
@@ -2618,9 +2567,6 @@ CM.Disp.TooltipCreateWarningSection = function() {
 CM.Disp.UpdateTooltip = function() {
 	CM.Sim.CopyData();
 	if (l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea')) {
-		if (CM.Options.TooltipInfo == 0) {
-			l('CMTooltipArea').style.display = "none";
-		}
 		l('CMTooltipArea').innerHTML = '';
 		tooltipBox = CM.Disp.TooltipCreateTooltipBox();
 		l('CMTooltipArea').appendChild(tooltipBox);
@@ -2637,6 +2583,9 @@ CM.Disp.UpdateTooltip = function() {
 		else if (CM.Disp.tooltipType === 'g') {
 			CM.Disp.UpdateTooltipGrimoire();
 		}
+		else if (CM.Disp.tooltipType === 'p') {
+			CM.Disp.UpdateTooltipGardenPlots();
+		}
 		CM.Disp.UpdateTooltipWarnings();
 	}
 	else if (l('CMTooltipArea') == null) { // Remove warnings if its a basic tooltip
@@ -2651,7 +2600,7 @@ CM.Disp.UpdateTooltip = function() {
  * It is called when Building tooltips are created or refreshed by CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateTooltipBuilding = function() {
-	if (CM.Options.TooltipInfo == 1 && Game.buyMode == 1) {
+	if (CM.Options.TooltipBuildUpgrade == 1 && Game.buyMode == 1) {
 		tooltipBox = l('CMTooltipBorder');
 		CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
@@ -2666,7 +2615,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 		CM.Disp.TooltipBonusIncome = CM.Cache[target][CM.Disp.tooltipName].bonus;
 		
 
-		if (CM.Options.TooltipInfo == 1 && Game.buyMode == 1) {
+		if (CM.Options.TooltipBuildUpgrade == 1 && Game.buyMode == 1) {
 			l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 			var increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 			if (isFinite(increase) && increase != 0) {
@@ -2702,6 +2651,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 			l('CMTooltipTime').style.marginBottom = '0px';
 		}
 	}
+	else l('CMTooltipArea').style.display = "none";
 }
 
 /**
@@ -2716,7 +2666,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 	CM.Disp.TooltipPrice = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
 	CM.Disp.TooltipBonusMouse = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonusMouse
 
-	if (CM.Options.TooltipInfo == 1) {
+	if (CM.Options.TooltipBuildUpgrade == 1) {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 		var increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 		if (isFinite(increase) && increase != 0) {
@@ -2756,6 +2706,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 			l('CMTooltipBorder').appendChild(chocolate);
 		}
 	}
+	else l('CMTooltipArea').style.display = "none";
 }
 
 /**
@@ -2776,6 +2727,7 @@ CM.Disp.UpdateTooltipSugarLump = function() {
 		lumpType.textContent = lumpColor.text;
 		lumpType.className = CM.Disp.colorTextPre + lumpColor.color;
 	}
+	else l('CMTooltipArea').style.display = "none";
 }
 
 /**
@@ -2831,6 +2783,38 @@ CM.Disp.UpdateTooltipGrimoire = function() {
 
 		l('CMTooltipArea').appendChild(tooltipBox);
 	}
+	else l('CMTooltipArea').style.display = "none";
+}
+
+/**
+ * This function adds extra info to the Garden plots tooltips
+ * It is called when Garden plots tooltips are created or refreshed by CM.Disp.UpdateTooltip()
+ * It adds to the additional information to l('CMTooltipArea')
+ */
+CM.Disp.UpdateTooltipGardenPlots = function() {
+	var minigame = Game.Objects['Farm'].minigame;
+	if (CM.Options.TooltipLump && minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] != 0) {
+			var mature = minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][1] > minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].matureBase;
+			var plantName = minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].name;
+			l('CMTooltipBorder').appendChild(CM.Disp.TooltipCreateHeader('Reward (Current / Maximum)'));
+			var reward = document.createElement('div');
+			reward.id = 'CMTooltipPlantReward';
+			l('CMTooltipBorder').appendChild(reward);
+			if (plantName == "Bakeberry") {
+				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 30)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 30);
+			} 
+			else if (plantName == "Chocoroot" || plantName == "White chocoroot") {
+				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 3)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 3);
+			}
+			else if (plantName == "Queenbeet") {
+				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.04, Game.cookiesPs * 60 * 60)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 60);
+			} 
+			else if (plantName == "Duketater") {
+				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.08, Game.cookiesPs * 60 * 120)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 120);
+			} 
+			else l('CMTooltipArea').style.display = "none";
+	}
+	else l('CMTooltipArea').style.display = "none";
 }
 
 /**
@@ -2952,7 +2936,7 @@ CM.Disp.ToggleToolWarnPos = function() {
  * TODO: Change this code to be the same as other tooltips. (i.d., create tooltip with type "w")
  */
 CM.Disp.CheckWrinklerTooltip = function() {
-	if (CM.Options.ToolWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) { // Latter is set by CM.Main.AddWrinklerAreaDetect
+	if (CM.Options.TooltipWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) { // Latter is set by CM.Main.AddWrinklerAreaDetect
 		var showingTooltip = false;
 		for (var i in Game.wrinklers) {
 			var me = Game.wrinklers[i];
@@ -2990,7 +2974,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
  * TODO: Change this code to be the same as other tooltips. Fit this into CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateWrinklerTooltip = function() {
-	if (CM.Options.ToolWrink == 1 && l('CMTooltipWrinkler') != null) {
+	if (CM.Options.TooltipWrink == 1 && l('CMTooltipWrinkler') != null) {
 		var sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
 		var toSuck = 1.1;
 		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
@@ -4111,12 +4095,10 @@ CM.ReplaceNative = function() {
 	CM.Backup.scriptLoaded = Game.scriptLoaded;
 	Game.scriptLoaded = function(who, script) {
 		CM.Backup.scriptLoaded(who, script);
-		CM.Disp.ReplaceTooltipGrimoire()
+		CM.Main.ReplaceTooltipGrimoire()
 		CM.ReplaceNativeGrimoire();
 	}
 
-	// TODO: Move this ReplaceTooltip function too other ReplaceTooltip functions
-	// OR: Move all other into this function
 	CM.Backup.RebuildUpgrades = Game.RebuildUpgrades;
 	Game.RebuildUpgrades = function() {
 		CM.Backup.RebuildUpgrades();
@@ -4124,7 +4106,6 @@ CM.ReplaceNative = function() {
 		Game.CalculateGains();
 	}
 
-	
 	CM.Backup.DescribeDragonAura = Game.DescribeDragonAura;
 	/**
 	 * This functions adds the function CM.Disp.AddAuraInfo() to Game.DescribeDragonAura()
@@ -4188,7 +4169,7 @@ CM.ReplaceNativeGrimoireLaunch = function() {
 		eval('CM.Backup.GrimoireLaunchMod = ' + minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame'));
 		Game.Objects['Wizard tower'].minigame.launch = function() {
 			CM.Backup.GrimoireLaunchMod();
-			CM.Disp.ReplaceTooltipGrimoire();
+			CM.Main.ReplaceTooltipGrimoire();
 			CM.HasReplaceNativeGrimoireDraw = false;
 			CM.ReplaceNativeGrimoireDraw();
 		}
@@ -4303,9 +4284,7 @@ CM.DelayInit = function() {
 		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
 	CM.Disp.CreateWrinklerButtons();
-	CM.Disp.ReplaceTooltipBuild();
-	CM.Disp.ReplaceTooltipGrimoire();
-	CM.Disp.ReplaceTooltipLump();
+	CM.Main.ReplaceTooltips();
 	CM.Main.AddWrinklerAreaDetect();
 	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
@@ -4329,6 +4308,83 @@ CM.DelayInit = function() {
 
 	Game.Win('Third-party');
 }
+
+/********
+ * Section: Functions related to first initizalition of CM */
+
+/**
+ * This function call all functions that replace Game-tooltips with CM-enhanced tooltips
+ * It is called by CM.DelayInit()
+ */
+CM.Main.ReplaceTooltips = function() {
+	CM.Main.ReplaceTooltipBuild();
+	CM.Main.ReplaceTooltipGrimoire();
+	CM.Main.ReplaceTooltipLump();
+	CM.Main.ReplaceTooltipGarden();
+}
+
+/********
+ * Section: Functions related to replacing tooltips */
+
+
+/**
+ * This function replaces the original .onmouseover functions of buildings so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 'b'
+ * It is called by CM.Main.ReplaceTooltips()
+ */
+CM.Main.ReplaceTooltipBuild = function() {
+	CM.Main.TooltipBuildBackup = [];
+	for (var i in Game.Objects) {
+		var me = Game.Objects[i];
+		if (l('product' + me.id).onmouseover != null) {
+			CM.Main.TooltipBuildBackup[i] = l('product' + me.id).onmouseover;
+			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}');
+		}
+	}
+}
+
+/**
+ * This function replaces the original .onmouseover functions of the Grimoire minigame so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 'g'
+ * It is called by CM.Main.ReplaceTooltips()
+ */
+CM.Main.ReplaceTooltipGrimoire = function() {
+	if (Game.Objects['Wizard tower'].minigameLoaded) {
+		CM.Main.TooltipGrimoireBackup = [];
+		for (var i in Game.Objects['Wizard tower'].minigame.spellsById) {
+			if (l('grimoireSpell' + i).onmouseover != null) {
+				CM.Main.TooltipGrimoireBackup[i] = l('grimoireSpell' + i).onmouseover;
+				eval('l(\'grimoireSpell\' + i).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'g\', \'' + i + '\');}, \'this\'); Game.tooltip.wobble();}');
+			}
+		}
+	}
+}
+
+/**
+ * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 's'
+ * It is called by CM.Main.ReplaceTooltips()
+ */
+CM.Main.ReplaceTooltipLump = function() {
+	if (Game.canLumps()) {
+		CM.Main.TooltipLumpBackup = l('lumps').onmouseover;
+        eval('l(\'lumps\').onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'Lump\');}, \'this\'); Game.tooltip.wobble();}');
+	}
+};
+
+/**
+ * This function replaces the original .onmouseover functions of all garden plants so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 'p'
+ * It is called by CM.Main.ReplaceTooltips()
+ */
+CM.Main.ReplaceTooltipGarden = function() {
+	if (Game.Objects['Farm'].minigameLoaded) {
+		Array.from(l('gardenPlot').children).forEach((child, index) => {
+			var coords = child.id.slice(-3,);
+			child.onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('p', [`${coords[0]}`,`${coords[2]}`]);}, 'this'); Game.tooltip.wobble();};
+		});
+	}
+};
 
 /********
  * Section: Functions related to checking for changes in Minigames/GC's/Ticker
@@ -4495,7 +4551,7 @@ CM.Main.CheckWrinklerCount = function() {
  * This function creates .onmouseover/out events that determine if the mouse is hovering-over a Wrinkler
  * It is called by CM.DelayInit
  * TODO: The system for displaying wrinklers should ideally use a similar system as other tooltips
- * Thus, writing a CM.Disp.ReplaceTooltipWrinkler function etc.
+ * Thus, writing a CM.Main.ReplaceTooltipWrinkler function etc.
  */
 CM.Main.AddWrinklerAreaDetect = function() {
 	l('backgroundLeftCanvas').onmouseover = function() {CM.Disp.TooltipWrinklerArea = 1;};
