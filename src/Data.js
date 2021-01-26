@@ -281,7 +281,7 @@ CM.Data.ConfigDefault = {
 	DragonAuraInfo: 1,
 	Stats: 1, 
 	MissingUpgrades: 1,
-	MissingAchievements: 1,
+	MissingAchievements: 2,
 	UpStats: 1, 
 	TimeFormat: 0, 
 	DetailedTime: 1, 
