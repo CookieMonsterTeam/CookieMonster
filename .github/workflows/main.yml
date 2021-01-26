@@ -9,6 +9,6 @@ jobs:
       with:
         node-version: '12'
     - name: Install modules
-      run: yarn
+      run: yarn install
     - name: Lint
       run: eslint .
