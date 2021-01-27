@@ -41,15 +41,6 @@ CM.ReplaceNative = function() {
 	l('bigCookie').removeEventListener('click', Game.ClickCookie, false);
 	l('bigCookie').addEventListener('click', function() { CM.Main.FixMouseY(Game.ClickCookie); }, false);
 
-	// Probably better to load per minigame
-	// TODO!
-	CM.Backup.scriptLoaded = Game.scriptLoaded;
-	Game.scriptLoaded = function(who, script) {
-		CM.Backup.scriptLoaded(who, script);
-		CM.Main.ReplaceTooltipGrimoire()
-		CM.ReplaceNativeGrimoire();
-	}
-
 	CM.Backup.RebuildUpgrades = Game.RebuildUpgrades;
 	Game.RebuildUpgrades = function() {
 		CM.Backup.RebuildUpgrades();
@@ -269,13 +260,16 @@ CM.DelayInit = function() {
  */
 CM.Main.ReplaceTooltips = function() {
 	CM.Main.ReplaceTooltipBuild();
-	CM.Main.ReplaceTooltipLump();
-	CM.Main.ReplaceTooltipGrimoire();
-	
+	CM.Main.ReplaceTooltipLump();	
+
+	// Replace Tooltips of Minigames. Nesting it in LoadMinigames makes sure to replace them even if
+	// they were not loaded initially
 	CM.Backup.LoadMinigames = Game.LoadMinigames;
 	Game.LoadMinigames = function() {
 		CM.Backup.LoadMinigames();
 		CM.Main.ReplaceTooltipGarden();
+		CM.Main.ReplaceTooltipGrimoire()
+		CM.ReplaceNativeGrimoire();
 	}
 	Game.LoadMinigames();
 }
