@@ -330,6 +330,7 @@ CM.Main.ReplaceTooltipLump = function() {
  */
 CM.Main.ReplaceTooltipGarden = function() {
 	if (Game.Objects['Farm'].minigameLoaded) {
+		l('gardenTool-1').onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('ha', 'HarvestAllButton');}, 'this'); Game.tooltip.wobble();}
 		Array.from(l('gardenPlot').children).forEach((child, index) => {
 			var coords = child.id.slice(-3,);
 			child.onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('p', [`${coords[0]}`,`${coords[2]}`]);}, 'this'); Game.tooltip.wobble();};
