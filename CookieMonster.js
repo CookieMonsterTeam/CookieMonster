@@ -920,6 +920,33 @@ CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour hear
 CM.Data.PlantDrops = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Green yeast digestives', 'Wheat slims', 'Fern tea', 'Ichor syrup']
 
 /********
+ * Section: All possible effects plants and other items can have with an explanation */
+
+CM.Data.Effects = {
+	buildingCost: "Building prices",
+	click: "Cookies per click",
+	cps: "Total CPS",
+	cursorCps: "Cursor CPS",
+	goldenCookieDur: "Golden cookie duration",
+	goldenCookieEffDur: "Golden cookie effect duration",
+	goldenCookieFreq: "Golden cookie frequency",
+	goldenCookieGain: "Golden cookie gains",
+	grandmaCps: "Grandma CPS",
+	itemDrops: "Random item drop chance",
+	milk: "Effect from milk",
+	reindeerDur: "Reindeer duration",
+	reindeerFreq: "Reindeer frequency",
+	reindeerGain: "Reindeer gains",
+	upgradeCost: "Upgrade prices",
+	wrathCookieDur: "Wrath cookie duration",
+	wrathCookieEffDur: "Wrath cookie effect duration",
+	wrathCookieFreq: "Wrath cookie frequency",
+	wrathCookieGain: "Wrath cookie gains",
+	wrinklerEat: "Wrinkler ",
+	wrinklerSpawn: "Wrinkler spawn frequency"
+}
+
+/********
  * Section: Data for the various scales used by CookieMonster */
 
 CM.Data.metric = ['', '', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
@@ -4310,9 +4337,10 @@ CM.DelayInit = function() {
  */
 CM.Main.ReplaceTooltips = function() {
 	CM.Main.ReplaceTooltipBuild();
-	CM.Main.ReplaceTooltipLump();
-	CM.Main.ReplaceTooltipGrimoire();
-	
+	CM.Main.ReplaceTooltipLump();	
+
+	// Replace Tooltips of Minigames. Nesting it in LoadMinigames makes sure to replace them even if
+	// they were not loaded initially
 	CM.Backup.LoadMinigames = Game.LoadMinigames;
 	Game.LoadMinigames = function() {
 		CM.Backup.LoadMinigames();
