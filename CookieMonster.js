@@ -2446,9 +2446,10 @@ CM.Disp.Tooltip = function(type, name) {
 	else if (type === 's') l('tooltip').innerHTML = Game.lumpTooltip(); // Sugar Lumps
 	else if (type === 'g') l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)(); // Grimoire
 	else if (type == 'p') l('tooltip').innerHTML =  Game.ObjectsById[2].minigame.tileTooltip(name[0], name[1])(); // Garden plots
+	else if (type == 'ha') l('tooltip').innerHTML =  Game.ObjectsById[2].minigame.toolTooltip(1)(); // Harvest all button in garden
 
 	// Adds area for extra tooltip-sections
-	if ((type == 'b' && Game.buyMode == 1) || type == 'u' || type == 's' || type == 'g' || type == 'p') {
+	if ((type == 'b' && Game.buyMode == 1) || type == 'u' || type == 's' || type == 'g' || type == 'p' || type == 'ha') {
 		var area = document.createElement('div');
 		area.id = 'CMTooltipArea';
 		l('tooltip').appendChild(area);
@@ -2612,6 +2613,9 @@ CM.Disp.UpdateTooltip = function() {
 		}
 		else if (CM.Disp.tooltipType === 'p') {
 			CM.Disp.UpdateTooltipGardenPlots();
+		}
+		else if (CM.Disp.tooltipType === 'ha') {
+			CM.Disp.UpdateTooltipHarvestAll();
 		}
 		CM.Disp.UpdateTooltipWarnings();
 	}
@@ -2840,6 +2844,47 @@ CM.Disp.UpdateTooltipGardenPlots = function() {
 				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.08, Game.cookiesPs * 60 * 120)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 120);
 			} 
 			else l('CMTooltipArea').style.display = "none";
+	}
+	else l('CMTooltipArea').style.display = "none";
+}
+
+/**
+ * This function adds extra info to the Garden Harvest All tooltip
+ * It is called when the Harvest All tooltip is created or refreshed by CM.Disp.UpdateTooltip()
+ * It adds to the additional information to l('CMTooltipArea')
+ */
+CM.Disp.UpdateTooltipHarvestAll = function() {
+	var minigame = Game.Objects['Farm'].minigame;
+	if (CM.Options.TooltipLump) {
+			l('CMTooltipBorder').appendChild(CM.Disp.TooltipCreateHeader('Cookies gained from harvesting:'));
+			var totalGain = 0;
+			if (Game.keys[16] && Game.keys[17]) var mortal = 1;
+			for (var y=0;y<6;y++) {
+				for (var x=0;x<6;x++) {
+					if (minigame.plot[y][x][0]>=1) {
+						let tile = minigame.plot[y][x];
+						let me = minigame.plantsById[tile[0] - 1];
+						let plantName = me.name
+
+						let count = true;
+						if (mortal && me.immortal) count = false;
+						if (tile[1] < me.matureBase) count = false;
+						if (count && plantName == "Bakeberry") {
+							totalGain += Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 30);
+						} 
+						else if (count && plantName == "Chocoroot" || plantName == "White chocoroot") {
+							totalGain += Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 3);
+						}
+						else if (count && plantName == "Queenbeet") {
+							totalGain += Math.min(Game.cookies * 0.04, Game.cookiesPs * 60 * 60);
+						} 
+						else if (count && plantName == "Duketater") {
+							totalGain += Math.min(Game.cookies * 0.08, Game.cookiesPs * 60 * 120);
+						}
+					}
+				}
+			}
+			l('CMTooltipBorder').appendChild(document.createTextNode(CM.Disp.Beautify(totalGain)));
 	}
 	else l('CMTooltipArea').style.display = "none";
 }
@@ -4407,6 +4452,7 @@ CM.Main.ReplaceTooltipLump = function() {
  */
 CM.Main.ReplaceTooltipGarden = function() {
 	if (Game.Objects['Farm'].minigameLoaded) {
+		l('gardenTool-1').onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('ha', 'HarvestAllButton');}, 'this'); Game.tooltip.wobble();}
 		Array.from(l('gardenPlot').children).forEach((child, index) => {
 			var coords = child.id.slice(-3,);
 			child.onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('p', [`${coords[0]}`,`${coords[2]}`]);}, 'this'); Game.tooltip.wobble();};
