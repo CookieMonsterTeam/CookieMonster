@@ -4091,14 +4091,6 @@ CM.ReplaceNative = function() {
 	l('bigCookie').removeEventListener('click', Game.ClickCookie, false);
 	l('bigCookie').addEventListener('click', function() { CM.Main.FixMouseY(Game.ClickCookie); }, false);
 
-	// Probably better to load per minigame
-	CM.Backup.scriptLoaded = Game.scriptLoaded;
-	Game.scriptLoaded = function(who, script) {
-		CM.Backup.scriptLoaded(who, script);
-		CM.Main.ReplaceTooltipGrimoire()
-		CM.ReplaceNativeGrimoire();
-	}
-
 	CM.Backup.RebuildUpgrades = Game.RebuildUpgrades;
 	Game.RebuildUpgrades = function() {
 		CM.Backup.RebuildUpgrades();
@@ -4318,9 +4310,17 @@ CM.DelayInit = function() {
  */
 CM.Main.ReplaceTooltips = function() {
 	CM.Main.ReplaceTooltipBuild();
-	CM.Main.ReplaceTooltipGrimoire();
 	CM.Main.ReplaceTooltipLump();
-	CM.Main.ReplaceTooltipGarden();
+	CM.Main.ReplaceTooltipGrimoire();
+	
+	CM.Backup.LoadMinigames = Game.LoadMinigames;
+	Game.LoadMinigames = function() {
+		CM.Backup.LoadMinigames();
+		CM.Main.ReplaceTooltipGarden();
+		CM.Main.ReplaceTooltipGrimoire()
+		CM.ReplaceNativeGrimoire();
+	}
+	Game.LoadMinigames();
 }
 
 /********
