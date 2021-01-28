@@ -1259,10 +1259,10 @@ CM.Disp.ReplaceCrateTooltipAchievements = function() {
 		if (me.type === 'achievement') {
 			let options = {normal: false, shadow: false};
 			switch (CM.Options.MissingAchievements) {
-					case 0: options.normal = true; options.shadow = false; break;
-					case 1: options.normal = false; options.shadow = true; break;
-					case 2: options.normal = true; options.shadow = true; break;
-					case 3: options.normal = false; options.shadow = false; break;
+					case 0: options.normal = false; options.shadow = false; break;
+					case 1: options.normal = true; options.shadow = false; break;
+					case 2: options.normal = false; options.shadow = true; break;
+					case 3: options.normal = true; options.shadow = true; break;
 			}
 		    let icon = me.icon;
 		    if (options.shadow && me.pool === 'shadow') {
@@ -1285,10 +1285,10 @@ CM.Disp.ReplaceCrateTooltipAchievements = function() {
 		if (me.type === 'achievement') {
 			let options = {normal: false, shadow: false};
 			switch (CM.Options.MissingAchievements) {
-					case 0: options.normal = true; options.shadow = false; break;
-					case 1: options.normal = false; options.shadow = true; break;
-					case 2: options.normal = true; options.shadow = true; break;
-					case 3: options.normal = false; options.shadow = false; break;
+					case 0: options.normal = false; options.shadow = false; break;
+					case 1: options.normal = true; options.shadow = false; break;
+					case 2: options.normal = false; options.shadow = true; break;
+					case 3: options.normal = true; options.shadow = true; break;
 			}
 		    output = CM.Disp.CrateTooltipAchievementsBackup[1](me,context);
 		    if (options.normal && me.pool === 'normal') {
