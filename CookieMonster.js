@@ -2178,7 +2178,8 @@ CM.Disp.CreateWhiteScreen = function() {
  * @param	{string}	config	The setting in CM.Options that is checked before creating the flash
  */
 CM.Disp.Flash = function(mode, config) {
-	if ((CM.Options[config] == 1 && mode == 3) || mode == 1) {
+	// The arguments check makes the sound not play upon initialization of the mod
+	if ((CM.Options[config] == 1 && mode == 3 && arguments.callee.caller.caller.caller.caller == null) || mode == 1) {
 		CM.Disp.WhiteScreen.style.opacity = '0.5';
 		if (mode == 3) {
 			CM.Disp.WhiteScreen.style.display = 'inline';
@@ -2203,7 +2204,8 @@ CM.Disp.Flash = function(mode, config) {
  * @param	{string}	volConfig	The setting in CM.Options that is checked to determine volume
  */
 CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
-	if (CM.Options[sndConfig] == 1) {
+	// The arguments check makes the sound not play upon initialization of the mod
+	if (CM.Options[sndConfig] == 1 && arguments.callee.caller.caller.caller.caller == null) {
 		var sound = new realAudio(url);
 		sound.volume = (CM.Options[volConfig] / 100) * (Game.volume / 100); 
 		sound.play();
@@ -2218,7 +2220,8 @@ CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
  * @param	{string}	message			The text of the to-be created notifications
  */
 CM.Disp.Notification = function(notifyConfig, title, message) {
-	if (CM.Options[notifyConfig] == 1 && document.visibilityState == 'hidden') {
+	// The arguments check makes the sound not play upon initialization of the mod
+	if (CM.Options[notifyConfig] == 1 && document.visibilityState == 'hidden' && arguments.callee.caller.caller.caller.caller == null) {
 		var CookieIcon = 'https://orteil.dashnet.org/cookieclicker/favicon.ico'
 		notification = new Notification(title, {body: message, badge: CookieIcon});
 	}
