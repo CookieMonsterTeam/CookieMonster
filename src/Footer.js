@@ -52,10 +52,13 @@ CM.load = function(str) {
  * It is called by the last function in the footer
  */
 CM.Footer.AddJscolor = function() {
+    /**
 	CM.Footer.Jscolor = document.createElement('script');
 	CM.Footer.Jscolor.type = 'text/javascript';
 	CM.Footer.Jscolor.setAttribute('src', 'https://aktanusa.github.io/CookieMonster/jscolor/jscolor.js');
-	document.head.appendChild(CM.Footer.Jscolor);
+    document.head.appendChild(CM.Footer.Jscolor);
+     */
+    jscolor.init();
 }
 
 /**
