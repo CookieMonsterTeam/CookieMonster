@@ -47,7 +47,7 @@ CM.Cache.InitCache = function() {
 	CM.Cache.CacheWrinklers();
 	CM.Cache.CacheStats();
 	CM.Cache.CacheMissingUpgrades();
-}
+};
 
 /********
  * Section: Functions related to Dragon Auras */
@@ -63,7 +63,7 @@ CM.Cache.CacheDragonAuras = function() {
 	/** @global	*/
 	CM.Cache.dragonAura = Game.dragonAura;
 	CM.Cache.dragonAura2 = Game.dragonAura2;
-}
+};
 
 /********
  * Section: Functions related to Wrinklers */
@@ -98,7 +98,7 @@ CM.Cache.CacheWrinklers = function() {
 			if (sucked > CM.Cache.WrinklersFattest[0]) CM.Cache.WrinklersFattest = [sucked, i];
 		}
 	}
-}
+};
 
 /********
  * Section: Functions related to Caching stats */
@@ -149,7 +149,7 @@ CM.Cache.CacheStats = function() {
 			CM.Cache.EdificeBuilding = i;
 		}
 	}
-}
+};
 
 /**
  * This functions caches variables related to missing upgrades
@@ -171,7 +171,7 @@ CM.Cache.CacheMissingUpgrades = function() {
 		if (a.order>b.order) return 1;
 		else if (a.order<b.order) return -1;
 		else return 0;
-	}
+	};
 	list.sort(sortMap);
 
 	for (var i in list) {
@@ -186,7 +186,7 @@ CM.Cache.CacheMissingUpgrades = function() {
 			else if (me.pool != 'toggle' && me.pool != 'unused' && me.pool != 'debug') CM.Cache.MissingUpgrades += str;
 		}
 	}
-}
+};
 
 /********
  * Section: Functions related to Caching CPS */
@@ -202,7 +202,7 @@ CM.Cache.CacheMissingUpgrades = function() {
 class CMAvgQueue {
 	constructor(maxLength) {
 		this.maxLength = maxLength;
-		this.queue = []
+		this.queue = [];
 	}
 
 	addLatest (newValue) {
@@ -215,7 +215,7 @@ class CMAvgQueue {
 	calcAverage (timePeriod) {
 		if (timePeriod > this.maxLength) timePeriod = this.maxLength, console.log("Called for average of Queue for time-period longer than MaxLength");
 		if (timePeriod > this.queue.length) timePeriod = this.queue.length;
-		var ret = 0
+		var ret = 0;
 		for (var i = this.queue.length - 1; i >= 0 && i > this.queue.length - 1 - timePeriod; i--) {
 			ret += this.queue[i];
 		}
@@ -233,7 +233,7 @@ CM.Cache.InitCookiesDiff = function() {
 	CM.Cache.WrinkFattestDiff = new CMAvgQueue(CM.Disp.cookieTimes[CM.Disp.cookieTimes.length - 1]);
 	CM.Cache.ChoEggDiff = new CMAvgQueue(CM.Disp.cookieTimes[CM.Disp.cookieTimes.length - 1]);
 	CM.Cache.ClicksDiff = new CMAvgQueue(CM.Disp.clickTimes[CM.Disp.clickTimes.length - 1]);
-}
+};
 
 /**
  * This functions caches two variables related average CPS and Clicks
@@ -254,7 +254,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		choEggTotal *= 0.05;
 
 		if (CM.Cache.lastDate != -1) {
-			var timeDiff = currDate - CM.Cache.lastDate
+			var timeDiff = currDate - CM.Cache.lastDate;
 			var bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
 			var wrinkDiffAvg = Math.max(0, (CM.Cache.WrinklersTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
 			var wrinkFattestDiffAvg = Math.max(0, (CM.Cache.WrinklersFattest[0] - CM.Cache.lastWrinkFattestCookies)) / timeDiff;
@@ -282,7 +282,7 @@ CM.Cache.UpdateAvgCPS = function() {
 		CM.Cache.AverageGainWrinkFattest = CM.Cache.WrinkFattestDiff.calcAverage(cpsLength);
 		CM.Cache.AverageGainChoEgg = CM.Cache.ChoEggDiff.calcAverage(cpsLength);
 
-		CM.Cache.AvgCPS = CM.Cache.AverageGainBank
+		CM.Cache.AvgCPS = CM.Cache.AverageGainBank;
 		if (CM.Options.CalcWrink == 1) CM.Cache.AvgCPS += CM.Cache.AverageGainWrink;
 		if (CM.Options.CalcWrink == 2) CM.Cache.AvgCPS += CM.Cache.AverageGainWrinkFattest;
 
@@ -296,7 +296,7 @@ CM.Cache.UpdateAvgCPS = function() {
 
 		CM.Cache.AverageClicks =  CM.Cache.ClicksDiff.calcAverage(CM.Disp.clickTimes[CM.Options.AvgClicksHist]);
 	}
-}
+};
 
 /**
  * This functions caches the current Wrinkler CPS multiplier
@@ -308,7 +308,7 @@ CM.Cache.UpdateCurrWrinklerCPS = function() {
 	CM.Cache.CurrWrinklerCPSMult = 0;
 	let count = 0;
 	for (let i in Game.wrinklers) {
-		if (Game.wrinklers[i].phase == 2) count++
+		if (Game.wrinklers[i].phase == 2) count++;
 	}
 	let godMult = 1;
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
@@ -319,7 +319,7 @@ CM.Cache.UpdateCurrWrinklerCPS = function() {
 	}
 	CM.Cache.CurrWrinklerCount = count;
 	CM.Cache.CurrWrinklerCPSMult = count * (count * 0.05 * 1.1) * (Game.Has('Sacrilegious corruption') * 0.05 + 1) * (Game.Has('Wrinklerspawn') * 0.05 + 1) * godMult;
-}
+};
 
 /********
  * Section: Functions related to "Specials" (Dragon and Santa) */
@@ -341,10 +341,10 @@ CM.Cache.CacheDragonCost = function() {
 					CM.Cache.CostDragonUpgrade = "Not enough buildings to sell";
 				}
 				else {
-					var cost = 0;
+					let cost = 0;
 					CM.Sim.CopyData();
 					for (var i = 0; i < amount; i++) {
-						var price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
+						let price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
 						price = Game.modifyBuildingPrice(CM.Sim.Objects[target], price);
 						price = Math.ceil(price);
 						cost += price;
@@ -354,17 +354,17 @@ CM.Cache.CacheDragonCost = function() {
 				}
 			}
 			else {
-				var cost = 0;
+				let cost = 0;
 				CM.Sim.CopyData();
 				for (var j in Game.Objects) {
 					target = j;
 					if (Game.Objects[target].amount < amount) {
 						CM.Cache.CostDragonUpgrade = "Not enough buildings to sell";
-						break
+						break;
 					}
 					else {
 						for (var i = 0; i < amount; i++) {
-							var price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
+							let price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
 							price = Game.modifyBuildingPrice(CM.Sim.Objects[target], price);
 							price = Math.ceil(price);
 							cost += price;
@@ -377,7 +377,7 @@ CM.Cache.CacheDragonCost = function() {
 		}
 		CM.Cache.lastDragonLevel = Game.dragonLevel;
 	}
-}
+};
  			
 /********
  * Section: UNSORTED */
@@ -388,7 +388,7 @@ CM.Cache.NextNumber = function(base) {
 		count = CM.Cache.NextNumber(count);
 	}
 	return (base + count);
-}
+};
 
 CM.Cache.RemakeBuildingsPrices = function() {
 	for (var i in Game.Objects) {
@@ -396,7 +396,7 @@ CM.Cache.RemakeBuildingsPrices = function() {
 		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
 		CM.Cache.Objects100[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
 	}
-}
+};
 
 CM.Cache.RemakeIncome = function() {
 	// Simulate Building Buys for 1 amount
@@ -410,7 +410,7 @@ CM.Cache.RemakeIncome = function() {
 
 	// Simulate Building Buys for 100 amount
 	CM.Sim.BuyBuildings(100, 'Objects100');
-}
+};
 
 CM.Cache.RemakeBuildingsPP = function() {
 	CM.Cache.min = -1;
@@ -430,7 +430,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 		}
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 		for (var i in CM.Cache.Objects) {
-			var color = '';
+			let color = '';
 			if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 			else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
 			else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
@@ -458,7 +458,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 			for (var i in CM.Cache.Objects) {
-				var color = '';
+				let color = '';
 				if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 				else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
 				else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
@@ -480,7 +480,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 			for (var i in CM.Cache.Objects) {
-				var color = '';
+				let color = '';
 				if (CM.Cache.Objects10[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 				else if (CM.Cache.Objects10[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
 				else if (CM.Cache.Objects10[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
@@ -502,7 +502,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 			for (var i in CM.Cache.Objects) {
-				var color = '';
+				let color = '';
 				if (CM.Cache.Objects100[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 				else if (CM.Cache.Objects100[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
 				else if (CM.Cache.Objects100[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
@@ -513,7 +513,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 			CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
 		}
 	}
-}
+};
 
 CM.Cache.RemakeUpgradePP = function() {
 	for (var i in CM.Cache.Upgrades) {
@@ -524,7 +524,7 @@ CM.Cache.RemakeUpgradePP = function() {
 			CM.Cache.Upgrades[i].pp = (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
 		}
 		if (isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = Infinity;
-		var color = '';
+		let color = '';
 		if (CM.Cache.Upgrades[i].pp <= 0 || CM.Cache.Upgrades[i].pp == Infinity) color = CM.Disp.colorGray;
 		else if (CM.Cache.Upgrades[i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
 		else if (CM.Cache.Upgrades[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
@@ -534,7 +534,7 @@ CM.Cache.RemakeUpgradePP = function() {
 		else color = CM.Disp.colorYellow;
 		CM.Cache.Upgrades[i].color = color;
 	}
-}
+};
 
 CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 	for (var i in CM.Cache[target]) {
@@ -544,7 +544,7 @@ CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 		} else {
 			CM.Cache[target][i].pp = (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
 		}
-		var color = '';
+		let color = '';
 		if (CM.Cache[target][i].pp <= 0 || CM.Cache[target][i].pp == Infinity) color = CM.Disp.colorGray;
 		else if (CM.Cache[target][i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
 		else if (CM.Cache[target][i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
@@ -554,7 +554,7 @@ CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
 		else color = CM.Disp.colorYellow;
 		CM.Cache[target][i].color = color;
 	}
-}
+};
 
 CM.Cache.RemakePP = function() {
 	// Buildings
@@ -562,7 +562,7 @@ CM.Cache.RemakePP = function() {
 
 	// Upgrades
 	CM.Cache.RemakeUpgradePP();
-}
+};
 
 CM.Cache.RemakeGoldenAndWrathCookiesMults = function() {
 	var goldenMult = 1;
@@ -590,7 +590,7 @@ CM.Cache.RemakeGoldenAndWrathCookiesMults = function() {
 	if (Game.shimmerTypes.golden.n === 0) {
 		CM.Cache.DragonsFortuneMultAdjustment *= 1 + CM.Sim.auraMult('Dragon\'s Fortune') * 1.23;
 	}
-}
+};
 
 CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
 	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
@@ -602,7 +602,7 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
 		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
 	}
 	return moni;
-}
+};
 
 CM.Cache.RemakeChain = function() {
 	var maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6;
@@ -650,7 +650,7 @@ CM.Cache.RemakeChain = function() {
 	else {
 		CM.Cache.ChainFrenzyWrath = CM.Cache.NextNumber(CM.Cache.ChainFrenzyWrathReward) / 0.5;
 	}
-}
+};
 
 CM.Cache.RemakeSeaSpec = function() {
 	if (Game.season == 'christmas') {
@@ -660,7 +660,7 @@ CM.Cache.RemakeSeaSpec = function() {
 		CM.Cache.SeaSpec = Math.max(25, val);
 		if (Game.Has('Ho ho ho-flavored frosting')) CM.Cache.SeaSpec *= 2;
 	}
-}
+};
 
 CM.Cache.RemakeSellForChoEgg = function() {
 	var sellTotal = 0;
@@ -677,7 +677,7 @@ CM.Cache.RemakeSellForChoEgg = function() {
 	// Compute cookies earned by selling all buildings with optimal auras (ES + RB)
 	sellTotal += CM.Sim.SellBuildingsForChoEgg();
 	CM.Cache.SellForChoEgg = sellTotal;
-}
+};
 
 CM.Cache.min = -1;
 CM.Cache.max = -1;
