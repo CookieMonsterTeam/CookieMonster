@@ -3318,13 +3318,12 @@ CM.Disp.CreatePrefOption = function(config) {
 			var innerDiv = document.createElement('div');
 			innerDiv.className = 'listing';
 			var input = document.createElement('input');
-			input.id = CM.ConfigPrefix + 'Color' + CM.Disp.colors[i];
-			input.className = 'option';
+			input.id = CM.Disp.colors[i];
 			input.style.width = '65px';
 			input.setAttribute('value', CM.Options.Colors[CM.Disp.colors[i]]);
 			innerDiv.appendChild(input);
-			eval('var change = function() {CM.Options.Colors[\'' + CM.Disp.colors[i] + '\'] = l(CM.ConfigPrefix + \'Color\' + \'' + CM.Disp.colors[i] + '\').value; CM.Disp.UpdateColors(); CM.Config.SaveConfig();}');
-			var jscolorpicker = new jscolor.color(input, {hash: true, caps: false, pickerZIndex: 1000000, pickerPosition: 'right', onImmediateChange: change});
+			let change = function() {CM.Options.Colors[this.targetElement.id] = this.toHEXString(); CM.Disp.UpdateColors(); CM.Config.SaveConfig();};
+			let picker = new JSColor(input, {hash: true, position: "right", onInput: change})
 			var label = document.createElement('label');
 			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
 			innerDiv.appendChild(label);
@@ -5640,12 +5639,14 @@ CM.Footer.AddJscolor = function() {
 	CM.Footer.Jscolor = document.createElement('script');
 	CM.Footer.Jscolor.type = 'text/javascript';
 	CM.Footer.Jscolor.setAttribute('src', 'https://aktanusa.github.io/CookieMonster/jscolor/jscolor.js');
-	document.head.appendChild(CM.Footer.Jscolor);
+    document.head.appendChild(CM.Footer.Jscolor);
+    jscolor.init();
 }
 
 /**
  * This functions starts the initizialization and register CookieMonster
  * It is called as the last function in this script's execution
+ * TODO: Make this async await
  */
 if (!CM.isRunning) {
     CM.Footer.AddJscolor();
