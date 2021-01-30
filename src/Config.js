@@ -34,7 +34,7 @@ CM.Config.LoadConfig = function(settings) {
 
 		// Check values
 		var mod = false;
-		for (var i in CM.Data.ConfigDefault) {
+		for (let i in CM.Data.ConfigDefault) {
 			if (typeof CM.Options[i] === 'undefined') {
 				mod = true;
 				CM.Options[i] = CM.Data.ConfigDefault[i];
@@ -54,7 +54,7 @@ CM.Config.LoadConfig = function(settings) {
 				}
 			}
 			else if (i == 'Header') {
-				for (var j in CM.Data.ConfigDefault.Header) {
+				for (let j in CM.Data.ConfigDefault.Header) {
 					if (typeof CM.Options[i][j] === 'undefined' || !(CM.Options[i][j] > -1 && CM.Options[i][j] < 2)) {
 						mod = true;
 						CM.Options[i][j] = CM.Data.ConfigDefault[i][j];
@@ -62,7 +62,7 @@ CM.Config.LoadConfig = function(settings) {
 				}
 			}
 			else { // Colors
-				for (var j in CM.Data.ConfigDefault.Colors) {
+				for (let j in CM.Data.ConfigDefault.Colors) {
 					if (typeof CM.Options[i][j] === 'undefined' || typeof CM.Options[i][j] != 'string') {
 						mod = true;
 						CM.Options[i][j] = CM.Data.ConfigDefault[i][j];
@@ -72,7 +72,7 @@ CM.Config.LoadConfig = function(settings) {
 		}
 		if (mod) CM.Config.SaveConfig();
 		CM.Loop(); // Do loop once
-		for (var i in CM.Data.ConfigDefault) {
+		for (let i in CM.Data.ConfigDefault) {
 			if (i != 'Header' && typeof CM.ConfigData[i].func !== 'undefined') {
 				CM.ConfigData[i].func();
 			}

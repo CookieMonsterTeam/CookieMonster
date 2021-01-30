@@ -48,7 +48,7 @@ CM.Cache.CacheWrinklers = function() {
 	CM.Cache.WrinklersTotal = 0;
 	CM.Cache.WrinklersNormal = 0;
 	CM.Cache.WrinklersFattest = [0, null];
-	for (var i in Game.wrinklers) {
+	for (let i; i < Game.wrinklers.length; i++) {
 		var sucked = Game.wrinklers[i].sucked;
 		var toSuck = 1.1;
 		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
@@ -106,11 +106,11 @@ CM.Cache.CacheStats = function() {
 	CM.Cache.Edifice = 0;
 	var max = 0;
 	var n = 0;
-	for (var i in Game.Objects) {
+	for (let i of Object.keys(Game.Objects)) {
 		if (Game.Objects[i].amount > max) max = Game.Objects[i].amount;
 		if (Game.Objects[i].amount > 0) n++;
 	}
-	for (var i in Game.Objects) {
+	for (let i of Object.keys(Game.Objects)) {
 		if ((Game.Objects[i].amount < max || n == 1) &&
 			Game.Objects[i].amount < 400 &&
 			Game.Objects[i].price * 2 > CM.Cache.Edifice) {
@@ -133,7 +133,7 @@ CM.Cache.CacheMissingUpgrades = function() {
 	CM.Cache.MissingUpgradesPrestige = "";
 	var list = [];
 	//sort the upgrades
-	for (var i in Game.Upgrades) {
+	for (let i of Object.keys(Game.Upgrades)) {
 		list.push(Game.Upgrades[i]);
 	}
 	var sortMap = function(a, b) {
@@ -143,7 +143,7 @@ CM.Cache.CacheMissingUpgrades = function() {
 	};
 	list.sort(sortMap);
 
-	for (var i in list) {
+	for (let i of Object.keys(list)) {
 		var me = list[i];
 		
 		if (me.bought == 0) {
@@ -182,10 +182,10 @@ class CMAvgQueue {
 
 	// TODO: Might want to do this according to "https://stackoverflow.com/questions/10359907/how-to-compute-the-sum-and-average-of-elements-in-an-array"
 	calcAverage (timePeriod) {
-		if (timePeriod > this.maxLength) timePeriod = this.maxLength, console.log("Called for average of Queue for time-period longer than MaxLength");
+		if (timePeriod > this.maxLength) timePeriod = this.maxLength;
 		if (timePeriod > this.queue.length) timePeriod = this.queue.length;
 		var ret = 0;
-		for (var i = this.queue.length - 1; i >= 0 && i > this.queue.length - 1 - timePeriod; i--) {
+		for (let i = this.queue.length - 1; i >= 0 && i > this.queue.length - 1 - timePeriod; i--) {
 			ret += this.queue[i];
 		}
 		return ret / timePeriod;
@@ -229,7 +229,7 @@ CM.Cache.UpdateAvgCPS = function() {
 			var wrinkFattestDiffAvg = Math.max(0, (CM.Cache.WrinklersFattest[0] - CM.Cache.lastWrinkFattestCookies)) / timeDiff;
 			var choEggDiffAvg = Math.max(0,(choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
 			var clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
-			for (var i = 0; i < timeDiff; i++) {
+			for (let i = 0; i < timeDiff; i++) {
 				CM.Cache.CookiesDiff.addLatest(bankDiffAvg);
 				CM.Cache.WrinkDiff.addLatest(wrinkDiffAvg);
 				CM.Cache.WrinkFattestDiff.addLatest(wrinkFattestDiffAvg);
@@ -312,7 +312,7 @@ CM.Cache.CacheDragonCost = function() {
 				else {
 					let cost = 0;
 					CM.Sim.CopyData();
-					for (var i = 0; i < amount; i++) {
+					for (let i = 0; i < amount; i++) {
 						let price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
 						price = Game.modifyBuildingPrice(CM.Sim.Objects[target], price);
 						price = Math.ceil(price);
@@ -325,14 +325,14 @@ CM.Cache.CacheDragonCost = function() {
 			else {
 				let cost = 0;
 				CM.Sim.CopyData();
-				for (var j in Game.Objects) {
+				for (let j of Object.keys(Game.Objects)) {
 					target = j;
 					if (Game.Objects[target].amount < amount) {
 						CM.Cache.CostDragonUpgrade = "Not enough buildings to sell";
 						break;
 					}
 					else {
-						for (var i = 0; i < amount; i++) {
+						for (let i = 0; i < amount; i++) {
 							let price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
 							price = Game.modifyBuildingPrice(CM.Sim.Objects[target], price);
 							price = Math.ceil(price);
@@ -360,7 +360,7 @@ CM.Cache.NextNumber = function(base) {
 };
 
 CM.Cache.RemakeBuildingsPrices = function() {
-	for (var i in Game.Objects) {
+	for (let i of Object.keys(Game.Objects)) {
 		CM.Cache.Objects[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 1);
 		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
 		CM.Cache.Objects100[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
@@ -387,7 +387,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 	CM.Cache.mid = -1;
 	// Calculate PP and colors when compared to purchase of single optimal building
 	if (CM.Options.ColorPPBulkMode == 0) {
-		for (var i in CM.Cache.Objects) {
+		for (let i of Object.keys(CM.Cache.Objects)) {
 			//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
 			if (Game.cookiesPs) {
 				CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
@@ -398,7 +398,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 			if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
 		}
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-		for (var i in CM.Cache.Objects) {
+		for (let i of Object.keys(CM.Cache.Objects)) {
 			let color = '';
 			if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 			else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
@@ -415,7 +415,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 	// Calculate PP and colors when compared to purchase of selected bulk mode
 	else {
 		if (Game.buyBulk == 1) {
-			for (var i in CM.Cache.Objects) {
+			for (let i of Object.keys(CM.Cache.Objects)) {
 				//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
 				if (Game.cookiesPs) {
 					CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
@@ -426,7 +426,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 				if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-			for (var i in CM.Cache.Objects) {
+			for (let i of Object.keys(CM.Cache.Objects)) {
 				let color = '';
 				if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 				else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
@@ -438,7 +438,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 			CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
 		}
 		else if (Game.buyBulk == 10) {
-			for (var i in CM.Cache.Objects) {
+			for (let i of Object.keys(CM.Cache.Objects)) {
 				if (Game.cookiesPs) {
 					CM.Cache.Objects10[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects10[i].bonus);
 				} else {
@@ -448,7 +448,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 				if (CM.Cache.max == -1 || CM.Cache.Objects10[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects10[i].pp;
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-			for (var i in CM.Cache.Objects) {
+			for (let i of Object.keys(CM.Cache.Objects)) {
 				let color = '';
 				if (CM.Cache.Objects10[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 				else if (CM.Cache.Objects10[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
@@ -460,7 +460,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 			CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
 		}
 		else if (Game.buyBulk == 100) {
-			for (var i in CM.Cache.Objects) {
+			for (let i of Object.keys(CM.Cache.Objects)) {
 				if (Game.cookiesPs) {
 					CM.Cache.Objects100[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects100[i].bonus);
 				} else {
@@ -470,7 +470,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 				if (CM.Cache.max == -1 || CM.Cache.Objects100[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects100[i].pp;
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-			for (var i in CM.Cache.Objects) {
+			for (let i of Object.keys(CM.Cache.Objects)) {
 				let color = '';
 				if (CM.Cache.Objects100[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 				else if (CM.Cache.Objects100[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
@@ -485,7 +485,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 };
 
 CM.Cache.RemakeUpgradePP = function() {
-	for (var i in CM.Cache.Upgrades) {
+	for (let i of Object.keys(CM.Cache.Upgrades)) {
 		//CM.Cache.Upgrades[i].pp = Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus;
 		if (Game.cookiesPs) {
 			CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
@@ -506,7 +506,7 @@ CM.Cache.RemakeUpgradePP = function() {
 };
 
 CM.Cache.RemakeBuildingsOtherPP = function(amount, target) {
-	for (var i in CM.Cache[target]) {
+	for (let i of Object.keys(CM.Cache[target])) {
 		//CM.Cache[target][i].pp = CM.Cache[target][i].price / CM.Cache[target][i].bonus;
 		if (Game.cookiesPs) {
 			CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
@@ -637,7 +637,7 @@ CM.Cache.RemakeSellForChoEgg = function() {
 	if (Game.Objects.Bank.minigameLoaded) {
 		var marketGoods = Game.Objects.Bank.minigame.goods;
 		var goodsVal = 0;
-		for (var i in marketGoods) {
+		for (let i of Object.keys(marketGoods)) {
 			var marketGood = marketGoods[i];
 			goodsVal += marketGood.stock * marketGood.val;
 		}
@@ -669,7 +669,6 @@ CM.Cache.SellForChoEgg = 0;
 CM.Cache.Title = '';
 CM.Cache.HadBuildAura = false;
 CM.Cache.RealCookiesEarned = -1;
-CM.Cache.seasonPopShimmer;
 CM.Cache.goldenShimmersByID = {};
 CM.Cache.spawnedGoldenShimmer = 0;
 
