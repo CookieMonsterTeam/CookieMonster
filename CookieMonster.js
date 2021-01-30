@@ -5507,7 +5507,6 @@ CM.Footer.AddJscolor = function() {
 	CM.Footer.Jscolor.type = 'text/javascript';
 	CM.Footer.Jscolor.setAttribute('src', 'https://aktanusa.github.io/CookieMonster/jscolor/jscolor.js');
     document.head.appendChild(CM.Footer.Jscolor);
-    jscolor.init();
 }
 
 /**
@@ -5519,6 +5518,7 @@ if (!CM.isRunning) {
     CM.Footer.AddJscolor();
     var delay = setInterval(function() {
         if (typeof jscolor !== 'undefined') {
+            jscolor.init();
             Game.registerMod('CookieMonster', CM);
             clearInterval(delay);
         }
