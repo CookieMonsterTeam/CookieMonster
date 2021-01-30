@@ -33,7 +33,7 @@ CM.Data.Fortunes = [
 CM.Data.HalloCookies = ['Skull cookies', 'Ghost cookies', 'Bat cookies', 'Slime cookies', 'Pumpkin cookies', 'Eyeball cookies', 'Spider cookies'];
 CM.Data.ChristCookies = ['Christmas tree biscuits', 'Snowflake biscuits', 'Snowman biscuits', 'Holly biscuits', 'Candy cane biscuits', 'Bell biscuits', 'Present biscuits'];
 CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour heart biscuits', 'Weeping heart biscuits', 'Golden heart biscuits', 'Eternal heart biscuits', 'Prism heart biscuits'];
-CM.Data.PlantDrops = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Green yeast digestives', 'Wheat slims', 'Fern tea', 'Ichor syrup']
+CM.Data.PlantDrops = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Green yeast digestives', 'Wheat slims', 'Fern tea', 'Ichor syrup'];
 
 /********
  * Section: All possible effects plants and other items can have with an explanation */
@@ -60,7 +60,7 @@ CM.Data.Effects = {
 	wrathCookieGain: "Wrath cookie gains",
 	wrinklerEat: "Wrinkler ",
 	wrinklerSpawn: "Wrinkler spawn frequency"
-}
+};
 
 /********
  * Section: Data for the various scales used by CookieMonster */
@@ -77,7 +77,7 @@ CM.Data.shortScaleAbbreviated = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp',
 'USp', 'DSp', 'TSp', 'QaSp', 'QiSp', 'SxSp', 'SpSp', 'OSp', 'NSp', 'Oco', 
 'UOc', 'DOc', 'TOc', 'QaOc', 'QiOc', 'SxOc', 'SpOc', 'OOc', 'NOc', 'Noa',
 'UNo', 'DNo', 'TNo', 'QaNo', 'QiNo', 'SxNo', 'SpNo', 'ONo', 'NNo', 'Ct', 
-'UCt']
+'UCt'];
 
 /********
  * Section: Two array's containing all Config groups and their to-be displayed title */
@@ -90,7 +90,7 @@ CM.ConfigGroups = {
 	Statistics: "Statistics",
 	Notation: "Notation",
 	Miscellaneous: "Miscellaneous"
-}
+};
 
 CM.ConfigGroupsNotification = {
 	NotificationGC: "Golden Cookie",
@@ -100,7 +100,7 @@ CM.ConfigGroupsNotification = {
 	NotificationMagi: "Full Magic Bar",
 	NotificationWrink: "Wrinkler",
 	NotificationWrinkMax: "Maximum Wrinklers",
-}
+};
 
 /********
  * Section: An array (CM.ConfigData) containing all Config options and an array of default settings */

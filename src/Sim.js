@@ -23,7 +23,7 @@ CM.Sim.BuildingGetPrice = function(build, basePrice, start, free, increase) {
 		start++;
 	}
 	return moni;
-}
+};
 
 CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
 	/*var price=0;
@@ -61,13 +61,13 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
 		}
 	}
 	return moni;
-}
+};
 
 CM.Sim.Has = function(what) {
 	var it = CM.Sim.Upgrades[what];
 	if (Game.ascensionMode == 1 && (it.pool == 'prestige' || it.tier == 'fortune')) return 0;
 	return (it ? it.bought : 0);
-}
+};
 
 
 CM.Sim.Win = function(what) {
@@ -77,7 +77,7 @@ CM.Sim.Win = function(what) {
 			if (Game.Achievements[what].pool != 'shadow') CM.Sim.AchievementsOwned++;
 		}
 	}
-}
+};
 
 eval('CM.Sim.HasAchiev = ' + Game.HasAchiev.toString().split('Game').join('CM.Sim'));
 
@@ -89,7 +89,7 @@ CM.Sim.hasAura = function(what) {
 		return true;
 	else
 		return false;
-}
+};
 
 // Check if multiplier auras are present
 // Used as CM.Sim.auraMult('Aura') * mult, i.e. CM.Sim.auraMult('Dragon God) * 0.05
@@ -100,20 +100,20 @@ CM.Sim.auraMult = function(what) {
 	if (Game.dragonAuras[CM.Sim.dragonAura].name == 'Reality Bending' || Game.dragonAuras[CM.Sim.dragonAura2].name == 'Reality Bending')
 		n += 0.1;
 	return n;
-}
+};
 
 CM.Sim.hasGod=function(what) {
 	if (!CM.Sim.Objects.Temple.minigameLoaded) {
-		return false
+		return false;
 	}
-	var possibleGods = CM.Sim.Objects.Temple.minigame.gods
+	var possibleGods = CM.Sim.Objects.Temple.minigame.gods;
 	var god=possibleGods[what];
 	for (var i=0;i<3;i++)
 	{
 		if (CM.Sim.Objects.Temple.minigame.slot[i]==god.id) return (i+1);
 	}
 	return false;
-}
+};
 
 CM.Sim.eff = function(name) {
 	if (typeof CM.Sim.effs[name]==='undefined') {
@@ -123,7 +123,7 @@ CM.Sim.eff = function(name) {
 	else {
 		return CM.Sim.effs[name];
 	}
-}
+};
 
 eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString()
 	.split('Game.Has').join('CM.Sim.Has')
@@ -143,7 +143,7 @@ CM.Sim.getCPSBuffMult = function() {
 		if (typeof Game.buffs[i].multCpS != 'undefined') mult *= Game.buffs[i].multCpS;
 	}
 	return mult;
-}
+};
 
 /**
  * Constructs an object with the static properties of a building,
@@ -168,7 +168,7 @@ CM.Sim.InitialBuildingData = function(buildingName) {
 	you.baseCps = me.baseCps;
 	you.name = me.name;
 	return you;
-}
+};
 
 /**
  *  Similar to the previous function, but for upgrades.
@@ -181,7 +181,7 @@ CM.Sim.InitUpgrade = function(upgradeName) {
 	you.pool = me.pool;
 	you.name = me.name;
 	return you;
-}
+};
 
 /**
  * Similar to the previous function, but for achievements.
@@ -190,7 +190,7 @@ CM.Sim.InitUpgrade = function(upgradeName) {
  */
 CM.Sim.InitAchievement = function(achievementName) {
 	return {};
-}
+};
 
 CM.Sim.InitData = function() {
 	// Buildings
@@ -210,8 +210,8 @@ CM.Sim.InitData = function() {
 	for (var i in Game.Achievements) {
 		CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 	}
-	CM.Sim.CopyData
-}
+	CM.Sim.CopyData;
+};
 
 CM.Sim.CopyData = function() {
 	// Other variables
@@ -424,7 +424,7 @@ CM.Sim.CalculateGains = function() {
 
 	CM.Sim.cookiesPsRaw = rawCookiesPs;
 
-	var n = Game.shimmerTypes['golden'].n;
+	var n = Game.shimmerTypes.golden.n;
 	var auraMult = CM.Sim.auraMult('Dragon\'s Fortune');
 	for (var i = 0; i < n; i++){
 		mult *= 1 + auraMult * 1.23;
@@ -520,7 +520,7 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (buildingsOwned >= 4000 && CM.Sim.UpgradesOwned >= 300) CM.Sim.Win('Polymath');
 	if (buildingsOwned >= 8000 && CM.Sim.UpgradesOwned >= 400) CM.Sim.Win('Renaissance baker');
 
-	if (CM.Sim.Objects['Cursor'].amount + CM.Sim.Objects['Grandma'].amount >= 777) CM.Sim.Win('The elder scrolls');
+	if (CM.Sim.Objects.Cursor.amount + CM.Sim.Objects.Grandma.amount >= 777) CM.Sim.Win('The elder scrolls');
 
 	var hasAllHalloCook = true;
 	for (var i in CM.Data.HalloCookies) {
@@ -535,14 +535,14 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (hasAllChristCook) CM.Sim.Win('Let it snow');
 
 	if (CM.Sim.Has('Fortune cookies')) {
-		var list = Game.Tiers['fortune'].upgrades;
+		var list = Game.Tiers.fortune.upgrades;
 		var fortunes = 0;
 		for (var i in list) {
 			if (CM.Sim.Has(list[i].name)) fortunes++;
 		}
 		if (fortunes >= list.length) CM.Sim.Win('O Fortuna');
 	}
-}
+};
 
 CM.Sim.BuyBuildings = function(amount, target) {
 	CM.Cache[target] = [];
@@ -587,7 +587,7 @@ CM.Sim.BuyBuildings = function(amount, target) {
 			CM.Cache.DoRemakeBuildPrices = 1;
 		}
 	}
-}
+};
 
 CM.Sim.BuyUpgrades = function() {
 	CM.Cache.Upgrades = [];
@@ -604,7 +604,7 @@ CM.Sim.BuyUpgrades = function() {
 				if (CM.Sim.pledges >= 5) CM.Sim.Win('Elder slumber');
 			}
 			else if (i == 'Elder Covenant') {
-				CM.Sim.Win('Elder calm')
+				CM.Sim.Win('Elder calm');
 			}
 			else if (i == 'Prism heart biscuits') {
 				CM.Sim.Win('Lovely cookies');
@@ -630,7 +630,7 @@ CM.Sim.BuyUpgrades = function() {
 			if (diffMouseCPS) CM.Cache.Upgrades[i].bonusMouse = diffMouseCPS;
 		}
 	}
-}
+};
 
 /**
  * This functions calculates the cps and cost of changing a Dragon Aura
@@ -642,7 +642,7 @@ CM.Sim.CalculateChangeAura = function(aura) {
 	CM.Sim.CopyData();
 
 	// Check if aura being changed is first or second aura
-	var auraToBeChanged = l('promptContent').children[0].innerHTML.includes("secondary")
+	var auraToBeChanged = l('promptContent').children[0].innerHTML.includes("secondary");
 	if (auraToBeChanged) CM.Sim.dragonAura2 = aura;
 	else CM.Sim.dragonAura = aura;
 
@@ -653,7 +653,7 @@ CM.Sim.CalculateChangeAura = function(aura) {
 				var highestBuilding = CM.Sim.Objects[Game.ObjectsById[i].name].name;
 				CM.Sim.Objects[highestBuilding].amount -=1;
 				CM.Sim.buildingsOwned -= 1;
-				break
+				break;
 			}
 		}
 		// This calculates price of highest building
@@ -669,8 +669,8 @@ CM.Sim.CalculateChangeAura = function(aura) {
 	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
 		CM.Sim.CalculateGains();
 	}
-	return [CM.Sim.cookiesPs - Game.cookiesPs, price]
-}
+	return [CM.Sim.cookiesPs - Game.cookiesPs, price];
+};
 
 CM.Sim.NoGoldSwitchCookiesPS = function() {
 	if (Game.Has('Golden switch [off]')) {
@@ -680,7 +680,7 @@ CM.Sim.NoGoldSwitchCookiesPS = function() {
 		CM.Cache.NoGoldSwitchCookiesPS = CM.Sim.cookiesPs;
 	}
 	else CM.Cache.NoGoldSwitchCookiesPS = Game.cookiesPs;
-}
+};
 
 CM.Sim.ResetBonus = function(possiblePresMax) {
 	var lastAchievementsOwned = -1;
@@ -740,19 +740,19 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 		CM.Sim.CalculateGains();
 	}
 
-	var ResetCPS = CM.Sim.cookiesPs - curCPS
+	var ResetCPS = CM.Sim.cookiesPs - curCPS;
 
 	// Reset Pretige level after calculation
 	CM.Sim.prestige = Game.prestige;
 
 	return (ResetCPS);
-}
+};
 
 CM.Sim.getSellMultiplier = function() {
 	var giveBack = 0.25;
 	giveBack *= 1 + CM.Sim.auraMult('Earth Shatterer');
 	return giveBack;
-}
+};
 
 CM.Sim.modifyBuildingPrice = function(building,price) {	
 	if (CM.Sim.Has('Season savings')) price *= 0.99;
@@ -774,7 +774,7 @@ CM.Sim.modifyBuildingPrice = function(building,price) {
 		else if (godLvl == 3) price *= 0.98;
 	}
 	return price;
-}
+};
 
 CM.Sim.SellBuildingsForChoEgg = function() {
 	var sellTotal = 0;
@@ -820,7 +820,7 @@ CM.Sim.SellBuildingsForChoEgg = function() {
 	// CM.Cache.DoRemakeBuildPrices = 1;
 
 	return sellTotal;
-}
+};
 
 /********
  * Section: Functions used to calculate clicking power */
@@ -843,7 +843,7 @@ CM.Sim.mouseCps = function() {
 	if (CM.Sim.Has('Nonillion fingers')) add *= 20;
 	var num=0;
 	for (var i in CM.Sim.Objects) {num+=CM.Sim.Objects[i].amount;}
-	num -= CM.Sim.Objects['Cursor'].amount;
+	num -= CM.Sim.Objects.Cursor.amount;
 	add = add * num;
 
 	// Use CM.Sim.cookiesPs as function is always called after CM.Sim.CalculateGains()
@@ -872,7 +872,7 @@ CM.Sim.mouseCps = function() {
 	
 	if (CM.Sim.Has('Aura gloves'))
 	{
-		mult *= 1 + 0.05 * Math.min(Game.Objects['Cursor'].level, CM.Sim.Has('Luminous gloves') ? 20 : 10);
+		mult *= 1 + 0.05 * Math.min(Game.Objects.Cursor.level, CM.Sim.Has('Luminous gloves') ? 20 : 10);
 	}
 	
 	mult *= CM.Sim.eff('click');
@@ -902,4 +902,5 @@ CM.Sim.mouseCps = function() {
 	if (Game.hasBuff('Cursed finger')) out = Game.buffs['Cursed finger'].power;
 	
 	return out;
-}
+};
+

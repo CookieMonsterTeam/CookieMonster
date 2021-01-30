@@ -16,9 +16,9 @@ CM.Config.SaveConfig = function() {
 	CookieMonsterSave = saveString.match(/CookieMonster.*(;|$)/);
 	if (CookieMonsterSave != null) {
 		newSaveString = saveString.replace(CookieMonsterSave[0], "CookieMonster:" + CM.save());
-		localStorage.setItem('CookieClickerGame', escape(utf8_to_b64(newSaveString)+'!END!'))
+		localStorage.setItem('CookieClickerGame', escape(utf8_to_b64(newSaveString)+'!END!'));
 	}
-}
+};
 
 /**
  * This function loads the config of CookieMonster saved in localStorage and loads it into CM.Options
@@ -81,7 +81,7 @@ CM.Config.LoadConfig = function(settings) {
 	else { // Default values
 		CM.Config.RestoreDefault();
 	}
-}
+};
 
 /**
  * This function reloads and resaves the default config as stored in CM.Data.ConfigDefault
@@ -91,7 +91,7 @@ CM.Config.RestoreDefault = function() {
 	CM.Config.LoadConfig(CM.Data.ConfigDefault);
 	CM.Config.SaveConfig();
 	Game.UpdateMenu();
-}
+};
 
 /********
  * Section: Functions related to toggling or changing configs */
@@ -116,7 +116,7 @@ CM.Config.ToggleConfig = function(config) {
 
 	l(CM.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Options[config]];
 	CM.Config.SaveConfig();
-}
+};
 
 /**
  * This function sets the value of the specified volume-option and updates the display in the options menu
@@ -129,7 +129,7 @@ CM.Config.ToggleConfigVolume = function(config) {
 		CM.Options[config] = Math.round(l("slider" + config).value);
 	} 
 	CM.Config.SaveConfig();
-}
+};
 
 /**
  * This function toggles header options by incrementing them with 1 and handling changes
@@ -140,7 +140,7 @@ CM.Config.ToggleHeader = function(config) {
 	CM.Options.Header[config]++;
 	if (CM.Options.Header[config] > 1) CM.Options.Header[config] = 0;
 	CM.Config.SaveConfig();
-}
+};
 
 /********
  * Section: Functions related to notifications */
@@ -154,14 +154,14 @@ CM.Config.ToggleHeader = function(config) {
 CM.Config.CheckNotificationPermissions = function(ToggleOnOff) {
 	if (ToggleOnOff == 1)	{
 		// Check if browser support Promise version of Notification Permissions
-		function checkNotificationPromise() {
+		checkNotificationPromise = function () {
 			try {
 				Notification.requestPermission().then();
 			} catch(e) {
 				return false;
 			}
 			return true;
-		}
+		};
 
 		// Check if the browser supports notifications and which type
 		if (!('Notification' in window)) {
@@ -176,4 +176,4 @@ CM.Config.CheckNotificationPermissions = function(ToggleOnOff) {
 			}
 		}
 	}
-}
+};

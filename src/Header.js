@@ -23,7 +23,7 @@ RunCookieMonsterHeader = function() {
     CM.Options = {};
 
     CM.Sim = {};
-}
+};
 
 if (typeof CM == "undefined") {
     RunCookieMonsterHeader();

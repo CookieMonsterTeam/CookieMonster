@@ -11,31 +11,31 @@ CM.ReplaceNative = function() {
 	Game.CalculateGains = function() {
 		CM.Backup.CalculateGainsMod();
 		CM.Sim.DoSims = 1;
-	}
+	};
 
 	CM.Backup.tooltip = {};
 	CM.Backup.tooltip.draw = Game.tooltip.draw;
 	eval('CM.Backup.tooltip.drawMod = ' + Game.tooltip.draw.toString().split('this').join('Game.tooltip'));
 	Game.tooltip.draw = function(from, text, origin) {
 		CM.Backup.tooltip.drawMod(from, text, origin);
-	}
+	};
 
 	CM.Backup.tooltip.update = Game.tooltip.update;
 	eval('CM.Backup.tooltip.updateMod = ' + Game.tooltip.update.toString().split('this.').join('Game.tooltip.'));
 	Game.tooltip.update = function() {
 		CM.Backup.tooltip.updateMod();
 		CM.Disp.UpdateTooltipLocation();
-	}
+	};
 
 	CM.Backup.UpdateWrinklers = Game.UpdateWrinklers;
 	Game.UpdateWrinklers = function() {
 		CM.Main.FixMouseY(CM.Backup.UpdateWrinklers);
-	}
+	};
 
 	CM.Backup.UpdateSpecial = Game.UpdateSpecial;
 	Game.UpdateSpecial = function() {
 		CM.Main.FixMouseY(CM.Backup.UpdateSpecial);
-	}
+	};
 
 	// Assumes newer browsers
 	l('bigCookie').removeEventListener('click', Game.ClickCookie, false);
@@ -46,7 +46,7 @@ CM.ReplaceNative = function() {
 		CM.Backup.RebuildUpgrades();
 		CM.Disp.ReplaceTooltipUpgrade();
 		Game.CalculateGains();
-	}
+	};
 
 	CM.Backup.DescribeDragonAura = Game.DescribeDragonAura;
 	/**
@@ -57,7 +57,7 @@ CM.ReplaceNative = function() {
 	Game.DescribeDragonAura = function(aura) {
 		CM.Backup.DescribeDragonAura(aura);
 		CM.Disp.AddAuraInfo(aura);
-	}
+	};
 
 	CM.Backup.ToggleSpecialMenu = Game.ToggleSpecialMenu;
 	/**
@@ -66,8 +66,7 @@ CM.ReplaceNative = function() {
 	Game.ToggleSpecialMenu = function(on) {
 		CM.Backup.ToggleSpecialMenu(on);
 		CM.Disp.AddDragonLevelUpTooltip();
-	}
-	
+	};
 
 	CM.Backup.UpdateMenu = Game.UpdateMenu;
 	Game.UpdateMenu = function() {
@@ -75,19 +74,19 @@ CM.ReplaceNative = function() {
 			CM.Backup.UpdateMenu();
 			CM.Disp.AddMenu();
 		}
-	}
+	};
 
 	CM.Backup.sayTime = Game.sayTime;
 	CM.Disp.sayTime = function(time, detail) {
 		if (isNaN(time) || time <= 0) return CM.Backup.sayTime(time, detail);
 		else return CM.Disp.FormatTime(time / Game.fps, 1);
-	}
+	};
 
 	CM.Backup.Loop = Game.Loop;
 	Game.Loop = function() {
 		CM.Backup.Loop();
 		CM.Loop();
-	}
+	};
 
 	CM.Backup.Logic = Game.Logic;
 	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Cache.Title'));
@@ -96,13 +95,13 @@ CM.ReplaceNative = function() {
 
 		// Update Title
 		CM.Disp.UpdateTitle();
-	}
-}
+	};
+};
 
 CM.ReplaceNativeGrimoire = function() {
 	CM.ReplaceNativeGrimoireLaunch();
 	CM.ReplaceNativeGrimoireDraw();
-}
+};
 
 CM.ReplaceNativeGrimoireLaunch = function() {
 	if (!CM.HasReplaceNativeGrimoireLaunch && Game.Objects['Wizard tower'].minigameLoaded) {
@@ -114,10 +113,10 @@ CM.ReplaceNativeGrimoireLaunch = function() {
 			CM.Main.ReplaceTooltipGrimoire();
 			CM.HasReplaceNativeGrimoireDraw = false;
 			CM.ReplaceNativeGrimoireDraw();
-		}
+		};
 		CM.HasReplaceNativeGrimoireLaunch = true;
 	}
-}
+};
 
 CM.ReplaceNativeGrimoireDraw = function() {
 	if (!CM.HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
@@ -128,10 +127,10 @@ CM.ReplaceNativeGrimoireDraw = function() {
 			if (CM.Options.GrimoireBar == 1 && minigame.magic < minigame.magicM) {
 				minigame.magicBarTextL.innerHTML += ' (' + CM.Disp.FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM)) + ')';
 			}
-		}
+		};
 		CM.HasReplaceNativeGrimoireDraw = true;
 	}
-}
+};
 
 CM.Loop = function() {
 	if (CM.Disp.lastAscendState != Game.OnAscend) {
@@ -211,7 +210,7 @@ CM.Loop = function() {
 	// Update Average CPS (might need to move)
 	CM.Cache.UpdateCurrWrinklerCPS();
 	CM.Cache.UpdateAvgCPS();
-}
+};
 
 CM.DelayInit = function() {
 	CM.Sim.InitData();
@@ -249,7 +248,7 @@ CM.DelayInit = function() {
 	l("upgrades").style["flex-wrap"] = "wrap";
 
 	Game.Win('Third-party');
-}
+};
 
 /********
  * Section: Functions related to first initizalition of CM */
@@ -268,11 +267,11 @@ CM.Main.ReplaceTooltips = function() {
 	Game.LoadMinigames = function() {
 		CM.Backup.LoadMinigames();
 		CM.Main.ReplaceTooltipGarden();
-		CM.Main.ReplaceTooltipGrimoire()
+		CM.Main.ReplaceTooltipGrimoire();
 		CM.ReplaceNativeGrimoire();
-	}
+	};
 	Game.LoadMinigames();
-}
+};
 
 /********
  * Section: Functions related to replacing tooltips */
@@ -292,7 +291,7 @@ CM.Main.ReplaceTooltipBuild = function() {
 			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}');
 		}
 	}
-}
+};
 
 /**
  * This function replaces the original .onmouseover functions of the Grimoire minigame so that it calls CM.Disp.Tooltip()
@@ -309,7 +308,7 @@ CM.Main.ReplaceTooltipGrimoire = function() {
 			}
 		}
 	}
-}
+};
 
 /**
  * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
@@ -329,8 +328,8 @@ CM.Main.ReplaceTooltipLump = function() {
  * It is called by CM.Main.ReplaceTooltips()
  */
 CM.Main.ReplaceTooltipGarden = function() {
-	if (Game.Objects['Farm'].minigameLoaded) {
-		l('gardenTool-1').onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('ha', 'HarvestAllButton');}, 'this'); Game.tooltip.wobble();}
+	if (Game.Objects.Farm.minigameLoaded) {
+		l('gardenTool-1').onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('ha', 'HarvestAllButton');}, 'this'); Game.tooltip.wobble();};
 		Array.from(l('gardenPlot').children).forEach((child, index) => {
 			var coords = child.id.slice(-3,);
 			child.onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('p', [`${coords[0]}`,`${coords[2]}`]);}, 'this'); Game.tooltip.wobble();};
@@ -349,15 +348,15 @@ CM.Main.ReplaceTooltipGarden = function() {
  */
 CM.Main.FindShimmer = function() {
 	CM.Main.currSpawnedGoldenCookieState = 0;
-	CM.Cache.goldenShimmersByID = {}
+	CM.Cache.goldenShimmersByID = {};
 	for (var i in Game.shimmers) {
-		CM.Cache.goldenShimmersByID[Game.shimmers[i].id] = Game.shimmers[i]
+		CM.Cache.goldenShimmersByID[Game.shimmers[i].id] = Game.shimmers[i];
 		if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'golden') {
 			CM.Cache.spawnedGoldenShimmer = Game.shimmers[i];
 			CM.Main.currSpawnedGoldenCookieState += 1;
 		}
 	}
-}
+};
 
 /**
  * This function checks for changes in the amount of Golden Cookies
@@ -373,13 +372,13 @@ CM.Main.CheckGoldenCookie = function() {
 			delete CM.Disp.GCTimers[i];
 		}
 	}
-	if (CM.Main.lastGoldenCookieState != Game.shimmerTypes['golden'].n) {
-		CM.Main.lastGoldenCookieState = Game.shimmerTypes['golden'].n;
+	if (CM.Main.lastGoldenCookieState != Game.shimmerTypes.golden.n) {
+		CM.Main.lastGoldenCookieState = Game.shimmerTypes.golden.n;
 		if (CM.Main.lastGoldenCookieState) {
 			if (CM.Main.lastSpawnedGoldenCookieState < CM.Main.currSpawnedGoldenCookieState) {
 				CM.Disp.Flash(3, 'GCFlash');
 				CM.Disp.PlaySound(CM.Options.GCSoundURL, 'GCSound', 'GCVolume');
-				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!")
+				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!");
 			}
 			
 			for (var i in Game.shimmers) {
@@ -399,15 +398,15 @@ CM.Main.CheckGoldenCookie = function() {
 			CM.Disp.GCTimers[i].textContent = Math.ceil(CM.Cache.goldenShimmersByID[i].life / Game.fps);
 		}
 	}
-}
+};
 
 /**
  * This function checks if there is reindeer that has spawned
  * It is called by CM.Loop
  */
 CM.Main.CheckSeasonPopup = function() {
-	if (CM.Main.lastSeasonPopupState != Game.shimmerTypes['reindeer'].spawned) {
-		CM.Main.lastSeasonPopupState = Game.shimmerTypes['reindeer'].spawned;
+	if (CM.Main.lastSeasonPopupState != Game.shimmerTypes.reindeer.spawned) {
+		CM.Main.lastSeasonPopupState = Game.shimmerTypes.reindeer.spawned;
 		for (var i in Game.shimmers) {
 			if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'reindeer') {
 				CM.Cache.seasonPopShimmer = Game.shimmers[i];
@@ -416,9 +415,9 @@ CM.Main.CheckSeasonPopup = function() {
 		}
 		CM.Disp.Flash(3, 'SeaFlash');
 		CM.Disp.PlaySound(CM.Options.SeaSoundURL, 'SeaSound', 'SeaVolume');
-		CM.Disp.Notification('SeaNotification',"Reindeer sighted!", "A Reindeer has spawned. Click it now!")
+		CM.Disp.Notification('SeaNotification',"Reindeer sighted!", "A Reindeer has spawned. Click it now!");
 	}
-}
+};
 
 /**
  * This function checks if there is a fortune cookie on the ticker
@@ -430,24 +429,24 @@ CM.Main.CheckTickerFortune = function() {
 		if (CM.Main.lastTickerFortuneState) {
 			CM.Disp.Flash(3, 'FortuneFlash');
 			CM.Disp.PlaySound(CM.Options.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
-			CM.Disp.Notification('FortuneNotification', "Fortune Cookie found", "A Fortune Cookie has appeared on the Ticker.")
+			CM.Disp.Notification('FortuneNotification', "Fortune Cookie found", "A Fortune Cookie has appeared on the Ticker.");
 		}
 	}
-}
+};
 
 /**
  * This function checks if a garden tick has happened
  * It is called by CM.Loop
  */
 CM.Main.CheckGardenTick = function() {
-	if (Game.Objects['Farm'].minigameLoaded && CM.Main.lastGardenNextStep != Game.Objects['Farm'].minigame.nextStep) {
+	if (Game.Objects.Farm.minigameLoaded && CM.Main.lastGardenNextStep != Game.Objects.Farm.minigame.nextStep) {
 		if (CM.Main.lastGardenNextStep != 0 && CM.Main.lastGardenNextStep < Date.now()) {
 			CM.Disp.Flash(3, 'GardFlash');
 			CM.Disp.PlaySound(CM.Options.GardSoundURL, 'GardSound', 'GardVolume');
 		}
-		CM.Main.lastGardenNextStep = Game.Objects['Farm'].minigame.nextStep;
+		CM.Main.lastGardenNextStep = Game.Objects.Farm.minigame.nextStep;
 	}
-}
+};
 
 /**
  * This function checks if the magic meter is full
@@ -461,10 +460,10 @@ CM.Main.CheckMagicMeter = function() {
 			CM.Main.lastMagicBarFull = true;
 			CM.Disp.Flash(3, 'MagicFlash');
 			CM.Disp.PlaySound(CM.Options.MagicSoundURL, 'MagicSound', 'MagicVolume');
-			CM.Disp.Notification('MagicNotification', "Magic Meter full", "Your Magic Meter is full. Cast a spell!")
+			CM.Disp.Notification('MagicNotification', "Magic Meter full", "Your Magic Meter is full. Cast a spell!");
 		}
 	}
-}
+};
 
 /**
  * This function checks if any new Wrinklers have popped up
@@ -477,7 +476,7 @@ CM.Main.CheckWrinklerCount = function() {
 			if (Game.wrinklers[i].phase == 2) CurrentWrinklers++;
 		}
 		if (CurrentWrinklers > CM.Main.lastWrinklerCount) {
-			CM.Main.lastWrinklerCount = CurrentWrinklers
+			CM.Main.lastWrinklerCount = CurrentWrinklers;
 			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Options.WrinklerMaxFlash) {
 				CM.Disp.Flash(3, 'WrinklerMaxFlash');
 			} else {
@@ -489,15 +488,15 @@ CM.Main.CheckWrinklerCount = function() {
 				CM.Disp.PlaySound(CM.Options.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume');
 			}
 			if (CurrentWrinklers == Game.getWrinklersMax() &&  CM.Options.WrinklerMaxNotification) {
-				CM.Disp.Notification('WrinklerMaxNotification', "Maximum Wrinklers Reached", "You have reached your maximum ammount of wrinklers")
+				CM.Disp.Notification('WrinklerMaxNotification', "Maximum Wrinklers Reached", "You have reached your maximum ammount of wrinklers");
 			} else {
-				CM.Disp.Notification('WrinklerNotification', "A Wrinkler appeared", "A new wrinkler has appeared")
+				CM.Disp.Notification('WrinklerNotification', "A Wrinkler appeared", "A new wrinkler has appeared");
 			}
 		} else {
-			CM.Main.lastWrinklerCount = CurrentWrinklers
+			CM.Main.lastWrinklerCount = CurrentWrinklers;
 		}
 	}
-}
+};
 
 /**
  * This function creates .onmouseover/out events that determine if the mouse is hovering-over a Wrinkler
@@ -514,7 +513,7 @@ CM.Main.AddWrinklerAreaDetect = function() {
 			CM.Disp.TooltipWrinklerBeingShown[i] = 0;
 		}
 	};
-}
+};
 
 /********
  * Section: Functions related to the mouse */
@@ -534,14 +533,14 @@ CM.Main.FixMouseY = function(target) {
 	else {
 		target();
 	}
-}
+};
 
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
 
 CM.Main.lastGoldenCookieState = 0;
 CM.Main.lastSpawnedGoldenCookieState = 0;
-CM.Main.currSpawnedGoldenCookieState
+CM.Main.currSpawnedGoldenCookieState;
 CM.Main.lastTickerFortuneState = 0;
 CM.Main.lastSeasonPopupState = 0;
 CM.Main.lastGardenNextStep = 0;
