@@ -1,7 +1,8 @@
 /**********
  * Header *
  **********/
-RunCookieMonsterHeader = function() {
+
+var RunCookieMonsterHeader = function() {
     CM = {};
 
     CM.Backup = {};

@@ -207,8 +207,8 @@ CM.Disp.Beautify = function(num, floats, forced) {
 			answer = num.toExponential(decimals).toString().replace("e", "E"); 
 		}
 		else {
-			exponential = num.toExponential().toString();
-			AmountOfTenPowerThree = Math.floor(exponential.slice(exponential.indexOf("e") + 1) / 3);
+			let exponential = num.toExponential().toString();
+			let AmountOfTenPowerThree = Math.floor(exponential.slice(exponential.indexOf("e") + 1) / 3);
 			answer = (num / Number("1e" + (AmountOfTenPowerThree * 3))).toFixed(decimals);
 			// answer is now "xxx.xx" (e.g., 123456789 would be 123.46)
 			if (CM.Options.Scale == 1 && !forced || forced == 1) { // Metric scale, 123456789 => 123.457 M
@@ -482,7 +482,7 @@ CM.Disp.CreateTimerBar = function() {
  * @param	[{{string}, {string}}, ...]	bars ([id, color])	The id and colours of individual parts of the timer
  */
 CM.Disp.TimerBarCreateBar = function(id, name, bars) {
-	timerBar = document.createElement('div');
+	let timerBar = document.createElement('div');
 	timerBar.id = 'CMTimerBar';
 	timerBar.style.height = '12px';
 	timerBar.style.margin = '0px 10px';
@@ -593,7 +593,7 @@ CM.Disp.UpdateTimerBar = function() {
 		CM.Disp.BuffTimerBars = {};
 		for (let i of Object.keys(Game.buffs)) {
 			if (Game.buffs[i]) {
-				timer = CM.Disp.TimerBarCreateBar(Game.buffs[i].name, Game.buffs[i].name, [{id: Game.buffs[i].name + 'Bar'}]);
+				let timer = CM.Disp.TimerBarCreateBar(Game.buffs[i].name, Game.buffs[i].name, [{id: Game.buffs[i].name + 'Bar'}]);
 				timer.style.display = '';
 				var classColor = '';
 				// Gives specific timers specific colors
@@ -1021,7 +1021,7 @@ CM.Disp.Notification = function(notifyConfig, title, message) {
 	// The arguments check makes the sound not play upon initialization of the mod
 	if (CM.Options[notifyConfig] == 1 && document.visibilityState == 'hidden' && CM.Disp.Notification.caller.caller.caller.caller == null) {
 		var CookieIcon = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
-		notification = new Notification(title, {body: message, badge: CookieIcon});
+		new Notification(title, {body: message, badge: CookieIcon});
 	}
 };
 
@@ -1129,7 +1129,7 @@ CM.Disp.UpdateTitle = function() {
  * @param	{object}	cookie	A Golden Cookie object
  */
 CM.Disp.CreateGCTimer = function(cookie) {
-	GCTimer = document.createElement('div');
+	let GCTimer = document.createElement('div');
 	GCTimer.id = 'GCTimer' + cookie.id;
 	GCTimer.style.width = '96px';
 	GCTimer.style.height = '96px';
@@ -1397,7 +1397,7 @@ CM.Disp.UpdateTooltip = function() {
 	CM.Sim.CopyData();
 	if (l('tooltipAnchor').style.display != 'none' && l('CMTooltipArea')) {
 		l('CMTooltipArea').innerHTML = '';
-		tooltipBox = CM.Disp.TooltipCreateTooltipBox();
+		let tooltipBox = CM.Disp.TooltipCreateTooltipBox();
 		l('CMTooltipArea').appendChild(tooltipBox);
 		
 		if (CM.Disp.tooltipType == 'b') {
@@ -1433,7 +1433,7 @@ CM.Disp.UpdateTooltip = function() {
  */
 CM.Disp.UpdateTooltipBuilding = function() {
 	if (CM.Options.TooltipBuildUpgrade == 1 && Game.buyMode == 1) {
-		tooltipBox = l('CMTooltipBorder');
+		let tooltipBox = l('CMTooltipBorder');
 		CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
 		var target = '';
@@ -1488,7 +1488,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
  * It is called when Upgrade tooltips are created or refreshed by CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateTooltipUpgrade = function() {
-	tooltipBox = l('CMTooltipBorder');
+	let tooltipBox = l('CMTooltipBorder');
 	CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
 	CM.Disp.TooltipBonusIncome = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonus;
@@ -1545,7 +1545,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
  */
 CM.Disp.UpdateTooltipSugarLump = function() {
 	if (CM.Options.TooltipLump === 1) {
-		tooltipBox = l('CMTooltipBorder');
+		let tooltipBox = l('CMTooltipBorder');
 
 		tooltipBox.appendChild(CM.Disp.TooltipCreateHeader('Current Sugar Lump'));
 
@@ -1569,7 +1569,7 @@ CM.Disp.UpdateTooltipGrimoire = function() {
 	var spellCost = minigame.getSpellCost(minigame.spellsById[CM.Disp.tooltipName]);
 
 	if (CM.Options.TooltipGrim == 1 && spellCost <= minigame.magicM) {
-		tooltipBox = l('CMTooltipBorder');
+		let tooltipBox = l('CMTooltipBorder');
 
 		// Time left till enough magic for spell
 		tooltipBox.appendChild(CM.Disp.TooltipCreateHeader('Time Left'));
@@ -1695,7 +1695,7 @@ CM.Disp.UpdateTooltipHarvestAll = function() {
 CM.Disp.UpdateTooltipWarnings = function() {
 	if (CM.Disp.tooltipType == "b" || CM.Disp.tooltipType == "u") {
 		if (document.getElementById("CMDispTooltipWarningParent") == null) {
-			warningTooltip = CM.Disp.TooltipCreateWarningSection();
+			let warningTooltip = CM.Disp.TooltipCreateWarningSection();
 			l('tooltipAnchor').appendChild(warningTooltip);
 			CM.Disp.ToggleToolWarnPos();
 		}
@@ -1722,7 +1722,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 		else l('CMDispTooltipWarnLucky').style.display = 'none';
 		
 		if (CM.Options.ToolWarnLuckyFrenzy == 1) {
-			limitLuckyFrenzy = limitLucky * 7;
+			let limitLuckyFrenzy = limitLucky * 7;
 			if (amount < limitLuckyFrenzy && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
 				l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
 				l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
@@ -1955,13 +1955,13 @@ CM.Disp.AddMenuPref = function(title) {
 	frag.appendChild(title());
 
 	for (let group of Object.keys(CM.ConfigGroups)) {
-		groupObject = CM.Disp.CreatePrefHeader(group, CM.ConfigGroups[group]); // (group, display-name of group)
+		let groupObject = CM.Disp.CreatePrefHeader(group, CM.ConfigGroups[group]); // (group, display-name of group)
 		frag.appendChild(groupObject);
 		if (CM.Options.Header[group]) { // 0 is show, 1 is collapsed
 			// Make sub-sections of Notification section
 			if (group == "Notification") {
 				for (let subGroup of Object.keys(CM.ConfigGroupsNotification)) {
-					subGroupObject = CM.Disp.CreatePrefHeader(subGroup, CM.ConfigGroupsNotification[subGroup]); // (group, display-name of group)
+					let subGroupObject = CM.Disp.CreatePrefHeader(subGroup, CM.ConfigGroupsNotification[subGroup]); // (group, display-name of group)
 					subGroupObject.style.fontSize = "15px";
 					subGroupObject.style.opacity = "0.5";
 					frag.appendChild(subGroupObject);
@@ -2119,7 +2119,7 @@ CM.Disp.CreatePrefOption = function(config) {
 			input.setAttribute('value', CM.Options.Colors[CM.Disp.colors[i]]);
 			innerDiv.appendChild(input);
 			let change = function() {CM.Options.Colors[this.targetElement.id] = this.toHEXString(); CM.Disp.UpdateColors(); CM.Config.SaveConfig(); Game.UpdateMenu();};
-			let = new JSColor(input, {hash: true, position: "right", onInput: change});
+			new JSColor(input, {hash: true, position: "right", onInput: change});
 			let label = document.createElement('label');
 			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
 			innerDiv.appendChild(label);
@@ -2744,11 +2744,11 @@ CM.Disp.AddMissingUpgrades = function() {
 		let title = document.createElement('div');
 		title.id = "CMMissingUpgradesPrestigeTitle";
 		title.className = "listing";
-		titlefrag = document.createElement('div');
+		let titlefrag = document.createElement('div');
 		titlefrag.innerHTML = '<b>Missing Prestige upgrades:</b> '+ prestigeUpgradesOwned + '/' + Game.PrestigeUpgrades.length + ' (' + Math.floor((prestigeUpgradesOwned / Game.PrestigeUpgrades.length) * 100) + '%)';
 		title.appendChild(titlefrag);
 		l('menu').children[5].appendChild(title);
-		upgrades = document.createElement('div');
+		let upgrades = document.createElement('div');
 		upgrades.className = "listing crateBox";
 		upgrades.innerHTML = CM.Cache.MissingUpgradesPrestige;
 		l('menu').children[5].appendChild(upgrades);
@@ -2759,11 +2759,11 @@ CM.Disp.AddMissingUpgrades = function() {
 		let title = document.createElement('div');
 		title.id = "CMMissingUpgradesTitle";
 		title.className = "listing";
-		titlefrag = document.createElement('div');
+		let titlefrag = document.createElement('div');
 		titlefrag.innerHTML = '<b>Missing normal upgrades:</b> '+ normalUpgradesOwned + '/' + (Game.UpgradesByPool[""].length + Game.UpgradesByPool.tech.length) + ' (' + Math.floor((normalUpgradesOwned / ( Game.UpgradesByPool[""].length + Game.UpgradesByPool.tech.length)) * 100) + '%)';
 		title.appendChild(titlefrag);
 		l('menu').children[6].insertBefore(title, l('menu').children[6].childNodes[3]);
-		upgrades = document.createElement('div');
+		let upgrades = document.createElement('div');
 		upgrades.className = "listing crateBox";
 		upgrades.innerHTML = CM.Cache.MissingUpgrades;
 		l('menu').children[6].insertBefore(upgrades, document.getElementById("CMMissingUpgradesTitle").nextSibling);
@@ -2773,11 +2773,11 @@ CM.Disp.AddMissingUpgrades = function() {
 		let title = document.createElement('div');
 		title.id = "CMMissingUpgradesCookiesTitle";
 		title.className = "listing";
-		titlefrag = document.createElement('div');
+		let titlefrag = document.createElement('div');
 		titlefrag.innerHTML = '<b>Missing Cookie upgrades:</b> '+ cookieUpgradesOwned + '/' + Game.UpgradesByPool.cookie.length + ' (' + Math.floor((cookieUpgradesOwned / Game.UpgradesByPool.cookie.length) * 100) + '%)';
 		title.appendChild(titlefrag);
 		l('menu').children[6].appendChild(title);
-		upgrades = document.createElement('div');
+		let upgrades = document.createElement('div');
 		upgrades.className = "listing crateBox";
 		upgrades.innerHTML = CM.Cache.MissingUpgradesCookies;
 		l('menu').children[6].appendChild(upgrades);
@@ -2802,7 +2802,7 @@ CM.Disp.crateMissing = function(me) {
 	
 	let icon = me.icon;
 	if (me.iconFunction) icon = me.iconFunction();
-	tooltip = `function() {return Game.crateTooltip(Game.UpgradesById[${me.id}], 'stats');}`;
+	let tooltip = `function() {return Game.crateTooltip(Game.UpgradesById[${me.id}], 'stats');}`;
 	return `<div class="${classes}"
 	${Game.getDynamicTooltip(tooltip, 'top', true)}
 	style = "${((icon[2] ? 'background-image: url(' + icon[2] + ');' : '') + 'background-position:' + (-icon[0] * 48)+ 'px ' + (-icon[1] * 48) + 'px')};">

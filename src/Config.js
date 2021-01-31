@@ -13,9 +13,9 @@
  */
 CM.Config.SaveConfig = function() {
 	let saveString = b64_to_utf8(unescape(localStorage.getItem('CookieClickerGame')).split('!END!')[0]);
-	CookieMonsterSave = saveString.match(/CookieMonster.*(;|$)/);
+	let CookieMonsterSave = saveString.match(/CookieMonster.*(;|$)/);
 	if (CookieMonsterSave != null) {
-		newSaveString = saveString.replace(CookieMonsterSave[0], "CookieMonster:" + CM.save());
+		let newSaveString = saveString.replace(CookieMonsterSave[0], "CookieMonster:" + CM.save());
 		localStorage.setItem('CookieClickerGame', escape(utf8_to_b64(newSaveString)+'!END!'));
 	}
 };
@@ -154,7 +154,7 @@ CM.Config.ToggleHeader = function(config) {
 CM.Config.CheckNotificationPermissions = function(ToggleOnOff) {
 	if (ToggleOnOff == 1)	{
 		// Check if browser support Promise version of Notification Permissions
-		checkNotificationPromise = function () {
+		let checkNotificationPromise = function () {
 			try {
 				Notification.requestPermission().then();
 			} catch(e) {
