@@ -20,7 +20,7 @@ CM.init = function() {
         CM.DelayInit();
         Game.registerHook('draw', CM.Disp.Draw);
     }
-}
+};
 
 /**
  * This registers a save function to the CM object. Per Game code/comments:
@@ -32,7 +32,7 @@ CM.save = function() {
         settings: CM.Options,
         version: CM.VersionMajor + '.' + CM.VersionMinor,
     });
-}
+};
 
 /**
  * This registers a load function to the CM object. Per Game code/comments:
@@ -41,7 +41,7 @@ CM.save = function() {
 CM.load = function(str) {
     let save = JSON.parse(str);
     CM.Config.LoadConfig(save.settings);
-}
+};
 
 /********
  * Section: Functions related to the initialization of CookieMonster */
@@ -56,7 +56,7 @@ CM.Footer.AddJscolor = function() {
 	CM.Footer.Jscolor.type = 'text/javascript';
 	CM.Footer.Jscolor.setAttribute('src', 'https://aktanusa.github.io/CookieMonster/jscolor/jscolor.js');
     document.head.appendChild(CM.Footer.Jscolor);
-}
+};
 
 /**
  * This functions starts the initizialization and register CookieMonster
@@ -72,6 +72,6 @@ if (!CM.isRunning) {
             clearInterval(delay);
         }
     }, 500);
-    CM.isRunning = 1
+    CM.isRunning = 1;
 }
 

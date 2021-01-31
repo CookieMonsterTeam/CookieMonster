@@ -1,7 +1,8 @@
 /**********
  * Header *
  **********/
-RunCookieMonsterHeader = function() {
+
+var RunCookieMonsterHeader = function() {
     CM = {};
 
     CM.Backup = {};
@@ -23,7 +24,7 @@ RunCookieMonsterHeader = function() {
     CM.Options = {};
 
     CM.Sim = {};
-}
+};
 
 if (typeof CM == "undefined") {
     RunCookieMonsterHeader();

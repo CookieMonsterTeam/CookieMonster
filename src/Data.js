@@ -33,7 +33,7 @@ CM.Data.Fortunes = [
 CM.Data.HalloCookies = ['Skull cookies', 'Ghost cookies', 'Bat cookies', 'Slime cookies', 'Pumpkin cookies', 'Eyeball cookies', 'Spider cookies'];
 CM.Data.ChristCookies = ['Christmas tree biscuits', 'Snowflake biscuits', 'Snowman biscuits', 'Holly biscuits', 'Candy cane biscuits', 'Bell biscuits', 'Present biscuits'];
 CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour heart biscuits', 'Weeping heart biscuits', 'Golden heart biscuits', 'Eternal heart biscuits', 'Prism heart biscuits'];
-CM.Data.PlantDrops = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Green yeast digestives', 'Wheat slims', 'Fern tea', 'Ichor syrup']
+CM.Data.PlantDrops = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Green yeast digestives', 'Wheat slims', 'Fern tea', 'Ichor syrup'];
 
 /********
  * Section: All possible effects plants and other items can have with an explanation */
@@ -60,7 +60,7 @@ CM.Data.Effects = {
 	wrathCookieGain: "Wrath cookie gains",
 	wrinklerEat: "Wrinkler ",
 	wrinklerSpawn: "Wrinkler spawn frequency"
-}
+};
 
 /********
  * Section: Data for the various scales used by CookieMonster */
@@ -77,7 +77,7 @@ CM.Data.shortScaleAbbreviated = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp',
 'USp', 'DSp', 'TSp', 'QaSp', 'QiSp', 'SxSp', 'SpSp', 'OSp', 'NSp', 'Oco', 
 'UOc', 'DOc', 'TOc', 'QaOc', 'QiOc', 'SxOc', 'SpOc', 'OOc', 'NOc', 'Noa',
 'UNo', 'DNo', 'TNo', 'QaNo', 'QiNo', 'SxNo', 'SpNo', 'ONo', 'NNo', 'Ct', 
-'UCt']
+'UCt'];
 
 /********
  * Section: Two array's containing all Config groups and their to-be displayed title */
@@ -90,7 +90,7 @@ CM.ConfigGroups = {
 	Statistics: "Statistics",
 	Notation: "Notation",
 	Miscellaneous: "Miscellaneous"
-}
+};
 
 CM.ConfigGroupsNotification = {
 	NotificationGC: "Golden Cookie",
@@ -100,7 +100,7 @@ CM.ConfigGroupsNotification = {
 	NotificationMagi: "Full Magic Bar",
 	NotificationWrink: "Wrinkler",
 	NotificationWrinkMax: "Maximum Wrinklers",
-}
+};
 
 /********
  * Section: An array (CM.ConfigData) containing all Config options and an array of default settings */
@@ -154,7 +154,7 @@ CM.ConfigData.GCNotification = {type: 'bool', group: 'NotificationGC', label: ['
 CM.ConfigData.GCFlash = {type: 'bool', group: 'NotificationGC', label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen on Golden Cookie', toggle: true};
 CM.ConfigData.GCSound = {type: 'bool', group: 'NotificationGC', label: ['Sound OFF', 'Sound ON'], desc: 'Play a sound on Golden Cookie', toggle: true};
 CM.ConfigData.GCVolume = {type: 'vol', group: 'NotificationGC', label: [], desc: 'Volume'};
-for (var i = 0; i < 101; i++) {
+for (let i = 0; i < 101; i++) {
 	CM.ConfigData.GCVolume.label[i] = i + '%';
 }
 CM.ConfigData.GCSoundURL = {type: 'url', group: 'NotificationGC', label: 'Sound URL:', desc: 'URL of the sound to be played when a Golden Cookie spawns'};
@@ -162,7 +162,7 @@ CM.ConfigData.FortuneNotification = {type: 'bool', group: 'NotificationFC', labe
 CM.ConfigData.FortuneFlash = {type: 'bool', group: 'NotificationFC', label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen on Fortune Cookie', toggle: true};
 CM.ConfigData.FortuneSound = {type: 'bool', group: 'NotificationFC', label: ['Sound OFF', 'Sound ON'], desc: 'Play a sound on Fortune Cookie', toggle: true};
 CM.ConfigData.FortuneVolume = {type: 'vol', group: 'NotificationFC', label: [], desc: 'Volume'};
-for (var i = 0; i < 101; i++) {
+for (let i = 0; i < 101; i++) {
 	CM.ConfigData.FortuneVolume.label[i] = i + '%';
 }
 CM.ConfigData.FortuneSoundURL = {type: 'url', group: 'NotificationFC', label: 'Sound URL:', desc: 'URL of the sound to be played when the Ticker has a Fortune Cookie'};
@@ -170,14 +170,14 @@ CM.ConfigData.SeaNotification = {type: 'bool', group: 'NotificationSea', label: 
 CM.ConfigData.SeaFlash = {type: 'bool', group: 'NotificationSea', label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen on Season Popup', toggle: true};
 CM.ConfigData.SeaSound = {type: 'bool', group: 'NotificationSea', label: ['Sound OFF', 'Sound ON'], desc: 'Play a sound on Season Popup', toggle: true};
 CM.ConfigData.SeaVolume = {type: 'vol', group: 'NotificationSea', label: [], desc: 'Volume'};
-for (var i = 0; i < 101; i++) {
+for (let i = 0; i < 101; i++) {
 	CM.ConfigData.SeaVolume.label[i] = i + '%';
 }
 CM.ConfigData.SeaSoundURL = {type: 'url', group: 'NotificationSea', label: 'Sound URL:', desc: 'URL of the sound to be played when a Season Special spawns'};
 CM.ConfigData.GardFlash = {type: 'bool', group: 'NotificationGard', label: ['Garden Tick Flash OFF', 'Flash ON'], desc: 'Flash screen on Garden Tick', toggle: true};
 CM.ConfigData.GardSound = {type: 'bool', group: 'NotificationGard', label: ['Sound OFF', 'Sound ON'], desc: 'Play a sound on Garden Tick', toggle: true};
 CM.ConfigData.GardVolume = {type: 'vol', group: 'NotificationGard', label: [], desc: 'Volume'};
-for (var i = 0; i < 101; i++) {
+for (let i = 0; i < 101; i++) {
 	CM.ConfigData.GardVolume.label[i] = i + '%';
 }
 CM.ConfigData.GardSoundURL = {type: 'url', group: 'NotificationGard', label: 'Garden Tick Sound URL:', desc: 'URL of the sound to be played when the garden ticks'};
@@ -185,7 +185,7 @@ CM.ConfigData.MagicNotification = {type: 'bool', group: 'NotificationMagi', labe
 CM.ConfigData.MagicFlash = {type: 'bool', group: 'NotificationMagi', label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen when magic reaches maximum', toggle: true};
 CM.ConfigData.MagicSound = {type: 'bool', group: 'NotificationMagi', label: ['Sound OFF', 'Sound ON'], desc: 'Play a sound when magic reaches maximum', toggle: true};
 CM.ConfigData.MagicVolume = {type: 'vol', group: 'NotificationMagi', label: [], desc: 'Volume'};
-for (var i = 0; i < 101; i++) {
+for (let i = 0; i < 101; i++) {
 	CM.ConfigData.MagicVolume.label[i] = i + '%';
 }
 CM.ConfigData.MagicSoundURL = {type: 'url', group: 'NotificationMagi', label: 'Sound URL:', desc: 'URL of the sound to be played when magic reaches maxium'};
@@ -193,7 +193,7 @@ CM.ConfigData.WrinklerNotification = {type: 'bool', group: 'NotificationWrink', 
 CM.ConfigData.WrinklerFlash = {type: 'bool', group: 'NotificationWrink', label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen when a Wrinkler appears', toggle: true};
 CM.ConfigData.WrinklerSound = {type: 'bool', group: 'NotificationWrink', label: ['Sound OFF', 'Sound ON'], desc: 'Play a sound when a Wrinkler appears', toggle: true};
 CM.ConfigData.WrinklerVolume = {type: 'vol', group: 'NotificationWrink', label: [], desc: 'Volume'};
-for (var i = 0; i < 101; i++) {
+for (let i = 0; i < 101; i++) {
 	CM.ConfigData.WrinklerVolume.label[i] = i + '%';
 }
 CM.ConfigData.WrinklerSoundURL = {type: 'url', group: 'NotificationWrink', label: 'Sound URL:', desc: 'URL of the sound to be played when a Wrinkler appears'};
@@ -201,7 +201,7 @@ CM.ConfigData.WrinklerMaxNotification = {type: 'bool', group: 'NotificationWrink
 CM.ConfigData.WrinklerMaxFlash = {type: 'bool', group: 'NotificationWrinkMax', label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen when the maximum amount of Wrinklers has appeared', toggle: true};
 CM.ConfigData.WrinklerMaxSound = {type: 'bool', group: 'NotificationWrinkMax', label: ['Sound OFF', 'Sound ON'], desc: 'Play a sound when the maximum amount of Wrinklers has appeared', toggle: true};
 CM.ConfigData.WrinklerMaxVolume = {type: 'vol', group: 'NotificationWrinkMax', label: [], desc: 'Volume'};
-for (var i = 0; i < 101; i++) {
+for (let i = 0; i < 101; i++) {
 	CM.ConfigData.WrinklerMaxVolume.label[i] = i + '%';
 }
 CM.ConfigData.WrinklerMaxSoundURL = {type: 'url', group: 'NotificationWrinkMax', label: 'Sound URL:', desc: 'URL of the sound to be played when the maximum amount of Wrinklers has appeared'};
