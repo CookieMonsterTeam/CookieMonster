@@ -61,7 +61,6 @@ CM.Cache.InitCache = function() {
  * @global	{number}	CM.Cache.dragonAura2	The number of the second (left) Aura
  */
 CM.Cache.CacheDragonAuras = function() {
-	/** @global	*/
 	CM.Cache.dragonAura = Game.dragonAura;
 	CM.Cache.dragonAura2 = Game.dragonAura2;
 };
@@ -4226,12 +4225,6 @@ CM.ReplaceNative = function() {
 		else return CM.Disp.FormatTime(time / Game.fps, 1);
 	};
 
-	CM.Backup.Loop = Game.Loop;
-	Game.Loop = function() {
-		CM.Backup.Loop();
-		CM.Loop();
-	};
-
 	CM.Backup.Logic = Game.Logic;
 	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Cache.Title'));
 	Game.Logic = function() {
@@ -5626,6 +5619,8 @@ CM.init = function() {
     if (proceed) {
         CM.DelayInit();
         Game.registerHook('draw', CM.Disp.Draw);
+        Game.registerHook('logic', CM.Loop);
+        
     }
 };
 
