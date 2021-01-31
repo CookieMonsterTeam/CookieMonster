@@ -209,6 +209,7 @@ CM.Cache.InitCookiesDiff = function() {
  * TODO: Check if this can be made more concise
  * @global	{number}	CM.Cache.AvgCPS				Average cookies over time-period as defined by AvgCPSHist
  * @global	{number}	CM.Cache.AverageClicks		Average cookies from clicking over time-period as defined by AvgClicksHist
+ * @global	{number}	CM.Cache.AvgCPSChoEgg		Average cookies from combination of normal CPS and average Chocolate Cookie CPS
  */
 CM.Cache.UpdateAvgCPS = function() {
 	var currDate = Math.floor(Date.now() / 1000);
@@ -256,11 +257,10 @@ CM.Cache.UpdateAvgCPS = function() {
 
 		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 
-		// TODO: Why and where is this used?
 		if (choEgg || CM.Options.CalcWrink == 0) {
-			CM.Cache.AvgCPSChoEgg = CM.Cache.AverageGainBank + CM.Cache.AverageGainWrink + (choEgg ? CM.Cache.AverageGainChoEgg : 0);
+			CM.Cache.AvgCPSWithChoEgg = CM.Cache.AverageGainBank + CM.Cache.AverageGainWrink + (choEgg ? CM.Cache.AverageGainChoEgg : 0);
 		}
-		else CM.Cache.AvgCPSChoEgg = CM.Cache.AvgCPS;
+		else CM.Cache.AvgCPSWithChoEgg = CM.Cache.AvgCPS;
 
 		CM.Cache.AverageClicks =  CM.Cache.ClicksDiff.calcAverage(CM.Disp.clickTimes[CM.Options.AvgClicksHist]);
 	}

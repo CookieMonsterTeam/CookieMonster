@@ -325,8 +325,7 @@ CM.Main.ReplaceTooltipGarden = function() {
 };
 
 /********
- * Section: Functions related to checking for changes in Minigames/GC's/Ticker
- * TODO: Possibly move this section */
+ * Section: Functions related to checking for changes in Minigames/GC's/Ticker */
 
 /**
  * Auxilirary function that finds all currently spawned shimmers. 
@@ -348,14 +347,12 @@ CM.Main.FindShimmer = function() {
 /**
  * This function checks for changes in the amount of Golden Cookies
  * It is called by CM.Loop
- * TODO: Remove the delete function, as it does not delete correctly and crowds CM.Disp.GCTimers
  */
 CM.Main.CheckGoldenCookie = function() {
 	CM.Main.FindShimmer();
 	for (let i of Object.keys(CM.Disp.GCTimers)) {
 		if (typeof CM.Cache.goldenShimmersByID[i] == "undefined") {
 			CM.Disp.GCTimers[i].parentNode.removeChild(CM.Disp.GCTimers[i]);
-			// TODO remove delete here
 			delete CM.Disp.GCTimers[i];
 		}
 	}
