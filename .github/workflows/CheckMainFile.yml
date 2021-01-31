@@ -8,4 +8,4 @@ jobs:
     - name: Check if CookieMonster.js is built correctly 
       run: |
         cat ./src/Header.js ./src/Cache.js ./src/Config.js ./src/Data.js ./src/Disp.js ./src/Main.js ./src/Sim.js ./src/Footer.js > CookieMonsterTest.js
-        cmp --silent CookieMonster.js CookieMonsterTest.js && echo '### SUCCESS: CookieMonster is correctly built! ###' || echo '### WARNING: CookieMonster.js does not seem to be correct. Have you compiled the source files into the final file using either of the combine files? ###'
+        cmp --silent CookieMonster.js CookieMonsterTest.js && echo '### SUCCESS: CookieMonster is correctly built! ###' || echo '### WARNING: CookieMonster.js does not seem to be correct. Have you compiled the source files into the final file using either of the combine files? ###' && exit 1
