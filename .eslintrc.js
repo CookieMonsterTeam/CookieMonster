@@ -14,7 +14,7 @@ module.exports = {
         "JSColor": "readonly",
         "jscolor": "readonly",
         "BeautifyAll": "readonly",
-        
+        "CM": "writable",
     },
     "extends": "eslint:recommended",
     "parserOptions": {
