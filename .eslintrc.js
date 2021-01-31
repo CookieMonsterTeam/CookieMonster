@@ -5,7 +5,6 @@ module.exports = {
     },
     "globals": {
         "module": "readonly",
-        "CM": "writable",
         "Game": "writable",
         "l": "readonly",
         "b64_to_utf8": "readonly",
