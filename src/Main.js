@@ -210,9 +210,7 @@ CM.DelayInit = function() {
 		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
 	CM.Disp.CreateWrinklerButtons();
-
 	CM.Main.ReplaceTooltips();
-
 	CM.Main.AddWrinklerAreaDetect();
 	CM.Cache.InitCookiesDiff();
 	CM.ReplaceNative();
@@ -246,8 +244,7 @@ CM.DelayInit = function() {
  */
 CM.Main.ReplaceTooltips = function() {
 	CM.Main.ReplaceTooltipBuild();
-	CM.Main.ReplaceTooltipLump();
-  CM.Disp.ReplaceCrateTooltipAchievements();
+	CM.Main.ReplaceTooltipLump();	
 
 	// Replace Tooltips of Minigames. Nesting it in LoadMinigames makes sure to replace them even if
 	// they were not loaded initially
