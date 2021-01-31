@@ -3,8 +3,8 @@
  *******/
 
 CM.Sim.BuildingGetPrice = function(build, basePrice, start, free, increase) {
-	/*var price=0;
-	for (var i = Math.max(0 , start); i < Math.max(0, start + increase); i++) {
+	/*let price=0;
+	for (let i = Math.max(0 , start); i < Math.max(0, start + increase); i++) {
 		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
 	}
 	if (Game.Has('Season savings')) price *= 0.99;
@@ -15,8 +15,8 @@ CM.Sim.BuildingGetPrice = function(build, basePrice, start, free, increase) {
 	return Math.ceil(price);*/
 
 	var moni = 0;
-	for (var i = 0; i < increase; i++) {
-		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
+	for (let i = 0; i < increase; i++) {
+		let price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
 		price = Game.modifyBuildingPrice(build, price);
 		price = Math.ceil(price);
 		moni += price;
@@ -26,8 +26,8 @@ CM.Sim.BuildingGetPrice = function(build, basePrice, start, free, increase) {
 };
 
 CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
-	/*var price=0;
-	for (var i = Math.max(0, start - amount); i < Math.max(0, start); i++) {
+	/*let price=0;
+	for (let i = Math.max(0, start - amount); i < Math.max(0, start); i++) {
 		price += basePrice * Math.pow(Game.priceIncrease, Math.max(0, i - free));
 	}
 	if (Game.Has('Season savings')) price*=0.99;
@@ -49,8 +49,8 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
 	var moni = 0;
 	if (amount == -1) amount = start;
 	if (!amount) amount = Game.buyBulk;
-	for (var i = 0; i < amount; i++) {
-		var price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
+	for (let i = 0; i < amount; i++) {
+		let price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
 		price = noSim ? Game.modifyBuildingPrice(build, price) : CM.Sim.modifyBuildingPrice(build, price);
 		price = Math.ceil(price);
 		var giveBack = noSim ? build.getSellMultiplier() : CM.Sim.getSellMultiplier();
@@ -64,7 +64,7 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
 };
 
 CM.Sim.Has = function(what) {
-	var it = CM.Sim.Upgrades[what];
+	let it = CM.Sim.Upgrades[what];
 	if (Game.ascensionMode == 1 && (it.pool == 'prestige' || it.tier == 'fortune')) return 0;
 	return (it ? it.bought : 0);
 };
@@ -108,7 +108,7 @@ CM.Sim.hasGod=function(what) {
 	}
 	var possibleGods = CM.Sim.Objects.Temple.minigame.gods;
 	var god=possibleGods[what];
-	for (var i=0;i<3;i++)
+	for (let i=0;i<3;i++)
 	{
 		if (CM.Sim.Objects.Temple.minigame.slot[i]==god.id) return (i+1);
 	}
@@ -139,7 +139,7 @@ eval('CM.Sim.GetTieredCpsMult = ' + Game.GetTieredCpsMult.toString()
 
 CM.Sim.getCPSBuffMult = function() {
 	var mult = 1;
-	for (var i in Game.buffs) {
+	for (let i of Object.keys(Game.buffs)) {
 		if (typeof Game.buffs[i].multCpS != 'undefined') mult *= Game.buffs[i].multCpS;
 	}
 	return mult;
@@ -155,8 +155,8 @@ CM.Sim.getCPSBuffMult = function() {
  * are set by CM.Sim.CopyData.
  */
 CM.Sim.InitialBuildingData = function(buildingName) {
-	var me = Game.Objects[buildingName];
-	var you = {};
+	let me = Game.Objects[buildingName];
+	let you = {};
 	eval('you.cps = ' + me.cps.toString()
 		.split('Game.Has').join('CM.Sim.Has')
 		.split('Game.hasAura').join('CM.Sim.hasAura')
@@ -176,8 +176,8 @@ CM.Sim.InitialBuildingData = function(buildingName) {
  * so this function just returns an empty object.
  */
 CM.Sim.InitUpgrade = function(upgradeName) {
-	var me = Game.Upgrades[upgradeName];
-	var you = {};
+	let me = Game.Upgrades[upgradeName];
+	let you = {};
 	you.pool = me.pool;
 	you.name = me.name;
 	return you;
@@ -189,28 +189,31 @@ CM.Sim.InitUpgrade = function(upgradeName) {
  * so this function just returns an empty object.
  */
 CM.Sim.InitAchievement = function(achievementName) {
+	let me = Game.Achievements[achievementName];
+	let you = {};
+	you.name = me.name;
 	return {};
 };
 
 CM.Sim.InitData = function() {
 	// Buildings
 	CM.Sim.Objects = [];
-	for (var i in Game.Objects) {
+	for (let i of Object.keys(Game.Objects)) {
 		CM.Sim.Objects[i] = CM.Sim.InitialBuildingData(i);
 	}
 
 	// Upgrades
 	CM.Sim.Upgrades = [];
-	for (var i in Game.Upgrades) {
+	for (let i of Object.keys(Game.Upgrades)) {
 		CM.Sim.Upgrades[i] = CM.Sim.InitUpgrade(i);
 	}
 
 	// Achievements
 	CM.Sim.Achievements = [];
-	for (var i in Game.Achievements) {
+	for (let i of Object.keys(Game.Achievements)) {
 		CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 	}
-	CM.Sim.CopyData;
+	CM.Sim.CopyData();
 };
 
 CM.Sim.CopyData = function() {
@@ -222,9 +225,9 @@ CM.Sim.CopyData = function() {
 	CM.Sim.prestige = Game.prestige;
 
 	// Buildings
-	for (var i in Game.Objects) {
-		var me = Game.Objects[i];
-		var you = CM.Sim.Objects[i];
+	for (let i of Object.keys(Game.Objects)) {
+		let me = Game.Objects[i];
+		let you = CM.Sim.Objects[i];
 		if (you == undefined) { // New building!
 			you = CM.Sim.Objects[i] = CM.Sim.InitialBuildingData(i);
 			CM.Disp.CreateBotBarBuildingColumn(i); // Add new building to the bottom bar
@@ -238,9 +241,9 @@ CM.Sim.CopyData = function() {
 	}
 
 	// Upgrades
-	for (var i in Game.Upgrades) {
-		var me = Game.Upgrades[i];
-		var you = CM.Sim.Upgrades[i];
+	for (let i of Object.keys(Game.Upgrades)) {
+		let me = Game.Upgrades[i];
+		let you = CM.Sim.Upgrades[i];
 		if (you == undefined) {
 			you = CM.Sim.Upgrades[i] = CM.Sim.InitUpgrade(i);
 		}
@@ -248,9 +251,9 @@ CM.Sim.CopyData = function() {
 	}
 
 	// Achievements
-	for (var i in Game.Achievements) {
-		var me = Game.Achievements[i];
-		var you = CM.Sim.Achievements[i];
+	for (let i of Object.keys(Game.Achievements)) {
+		let me = Game.Achievements[i];
+		let you = CM.Sim.Achievements[i];
 		if (you == undefined) {
 			you = CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 		}
@@ -268,12 +271,12 @@ CM.Sim.CalculateGains = function() {
 	var mult = 1;
 	// Include minigame effects
 	var effs={};
-	for (var i in Game.Objects) {
+	for (let i of Object.keys(Game.Objects)) {
 		// TODO Store minigames and effects in Cache
 		// Include possibility of new/modded building and new/modded minigames
 		if (CM.Sim.Objects[i].minigameLoaded && CM.Sim.Objects[i].minigame.effs) {
 			var myEffs = CM.Sim.Objects[i].minigame.effs;
-			for (var ii in myEffs) {
+			for (let ii in myEffs) {
 				if (effs[ii]) effs[ii]*=myEffs[ii];
                 else effs[ii]=myEffs[ii];
 			}
@@ -289,8 +292,8 @@ CM.Sim.CalculateGains = function() {
 
 	// TODO: Make function call cached function where Game.Has is replaced with CM.Has
 	// Related to valentine cookies
-	for (var i in Game.cookieUpgrades) {
-		var me = Game.cookieUpgrades[i];
+	for (let i of Object.keys(Game.cookieUpgrades)) {
+		let me = Game.cookieUpgrades[i];
 		if (CM.Sim.Has(me.name)) {
 			mult *= (1 + (typeof(me.power) == 'function' ? me.power(me) : me.power) * 0.01);
 		}
@@ -316,28 +319,28 @@ CM.Sim.CalculateGains = function() {
 	// Check effect of chosen Gods
 	var buildMult = 1;
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
-		var godLvl = CM.Sim.hasGod('asceticism');
+		let godLvl = CM.Sim.hasGod('asceticism');
 		if (godLvl == 1) mult *= 1.15;
 		else if (godLvl == 2) mult *= 1.1;
 		else if (godLvl == 3) mult *= 1.05;
 
 		// TODO: What does DateAges do?
-		var godLvl = CM.Sim.hasGod('ages');
+		godLvl = CM.Sim.hasGod('ages');
 		if (godLvl == 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 3)) * Math.PI * 2);
 		else if (godLvl == 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 12)) * Math.PI*2);
 		else if (godLvl == 3) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 24)) * Math.PI*2);
 
-		var godLvl = CM.Sim.hasGod('decadence');
+		godLvl = CM.Sim.hasGod('decadence');
 		if (godLvl == 1) buildMult *= 0.93;
 		else if (godLvl == 2) buildMult *= 0.95;
 		else if (godLvl == 3) buildMult *= 0.98;
 
-		var godLvl = CM.Sim.hasGod('industry');
+		godLvl = CM.Sim.hasGod('industry');
 		if (godLvl == 1) buildMult *= 1.1;
 		else if (godLvl == 2) buildMult *= 1.06;
 		else if (godLvl == 3) buildMult *= 1.03;
 
-		var godLvl = CM.Sim.hasGod('labor');
+		godLvl = CM.Sim.hasGod('labor');
 		if (godLvl == 1) buildMult *= 0.97;
 		else if (godLvl == 2) buildMult *= 0.98;
 		else if (godLvl == 3) buildMult *= 0.99;
@@ -351,7 +354,7 @@ CM.Sim.CalculateGains = function() {
 	//if (CM.Sim.hasAura('Breath of Milk')) milkMult *= 1.05;
 	milkMult *= 1 + CM.Sim.auraMult('Breath of Milk') * 0.05;
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
-		var godLvl = CM.Sim.hasGod('mother');
+		let godLvl = CM.Sim.hasGod('mother');
 		if (godLvl == 1) milkMult *= 1.1;
 		else if (godLvl == 2) milkMult *= 1.05;
 		else if (godLvl == 3) milkMult *= 1.03;
@@ -377,8 +380,8 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Kitten angels')) catMult *= (1 + milkProgress * 0.1 * milkMult);
 	if (CM.Sim.Has('Fortune #103')) catMult *= (1 + milkProgress * 0.05 * milkMult);
 
-	for (var i in CM.Sim.Objects) {
-		var me = CM.Sim.Objects[i];
+	for (let i of Object.keys(CM.Sim.Objects)) {
+		let me = CM.Sim.Objects[i];
 		var storedCps = (typeof(me.cps) == 'function' ? me.cps(me) : me.cps);
 		if (Game.ascensionMode != 1) storedCps *= (1 + me.level * 0.01) * buildMult;
 		if (me.name == "Grandma" && CM.Sim.Has('Milkhelp&reg; lactose intolerance relief tablets')) storedCps *= 1 + 0.05 * milkProgress * milkMult;
@@ -418,7 +421,7 @@ CM.Sim.CalculateGains = function() {
 	mult *= 1 + CM.Sim.auraMult('Radiant Appetite');
 
 	var rawCookiesPs = CM.Sim.cookiesPs * mult;
-	for (var i in Game.CpsAchievements) {
+	for (let i of Object.keys(Game.CpsAchievements)) {
 		if (rawCookiesPs >= Game.CpsAchievements[i].threshold) CM.Sim.Win(Game.CpsAchievements[i].name);
 	}
 
@@ -426,7 +429,7 @@ CM.Sim.CalculateGains = function() {
 
 	var n = Game.shimmerTypes.golden.n;
 	var auraMult = CM.Sim.auraMult('Dragon\'s Fortune');
-	for (var i = 0; i < n; i++){
+	for (let i = 0; i < n; i++){
 		mult *= 1 + auraMult * 1.23;
 	}
 
@@ -442,7 +445,7 @@ CM.Sim.CalculateGains = function() {
 		var goldenSwitchMult = 1.5;
 		if (CM.Sim.Has('Residual luck')) {
 			var upgrades = Game.goldenCookieUpgrades;
-			for (var i in upgrades) {
+			for (let i of Object.keys(upgrades)) {
 				if (CM.Sim.Has(upgrades[i])) goldenSwitchMult += 0.1;
 			}
 		}
@@ -468,7 +471,7 @@ CM.Sim.CalculateGains = function() {
 
 CM.Sim.CheckOtherAchiev = function() {
 	var grandmas = 0;
-	for (var i in Game.GrandmaSynergies) {
+	for (let i of Object.keys(Game.GrandmaSynergies)) {
 		if (CM.Sim.Has(Game.GrandmaSynergies[i])) grandmas++;
 	}
 	if (!CM.Sim.HasAchiev('Elder') && grandmas >= 7) CM.Sim.Win('Elder');
@@ -478,7 +481,7 @@ CM.Sim.CheckOtherAchiev = function() {
 	var mathematician = 1;
 	var base10 = 1;
 	var minAmount = 100000;
-	for (var i in CM.Sim.Objects) {
+	for (let i of Object.keys(CM.Sim.Objects)) {
 		buildingsOwned += CM.Sim.Objects[i].amount;
 		minAmount = Math.min(CM.Sim.Objects[i].amount, minAmount);
 		if (!CM.Sim.HasAchiev('Mathematician')) {
@@ -523,13 +526,13 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (CM.Sim.Objects.Cursor.amount + CM.Sim.Objects.Grandma.amount >= 777) CM.Sim.Win('The elder scrolls');
 
 	var hasAllHalloCook = true;
-	for (var i in CM.Data.HalloCookies) {
+	for (let i of Object.keys(CM.Data.HalloCookies)) {
 		if (!CM.Sim.Has(CM.Data.HalloCookies[i])) hasAllHalloCook = false;
 	}
 	if (hasAllHalloCook) CM.Sim.Win('Spooky cookies');
 
 	var hasAllChristCook = true;
-	for (var i in CM.Data.ChristCookies) {
+	for (let i of Object.keys(CM.Data.ChristCookies)) {
 		if (!CM.Sim.Has(CM.Data.ChristCookies[i])) hasAllChristCook = false;
 	}
 	if (hasAllChristCook) CM.Sim.Win('Let it snow');
@@ -537,7 +540,7 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (CM.Sim.Has('Fortune cookies')) {
 		var list = Game.Tiers.fortune.upgrades;
 		var fortunes = 0;
-		for (var i in list) {
+		for (let i of Object.keys(list)) {
 			if (CM.Sim.Has(list[i].name)) fortunes++;
 		}
 		if (fortunes >= list.length) CM.Sim.Win('O Fortuna');
@@ -546,9 +549,9 @@ CM.Sim.CheckOtherAchiev = function() {
 
 CM.Sim.BuyBuildings = function(amount, target) {
 	CM.Cache[target] = [];
-	for (var i in Game.Objects) {
+	for (let i of Object.keys(Game.Objects)) {
 		CM.Sim.CopyData();
-		var me = CM.Sim.Objects[i];
+		let me = CM.Sim.Objects[i];
 		me.amount += amount;
 
 		if (i == 'Cursor') {
@@ -591,10 +594,10 @@ CM.Sim.BuyBuildings = function(amount, target) {
 
 CM.Sim.BuyUpgrades = function() {
 	CM.Cache.Upgrades = [];
-	for (var i in Game.Upgrades) {
+	for (let i of Object.keys(Game.Upgrades)) {
 		if (Game.Upgrades[i].pool == 'toggle' || (Game.Upgrades[i].bought == 0 && Game.Upgrades[i].unlocked && Game.Upgrades[i].pool != 'prestige')) {
 			CM.Sim.CopyData();
-			var me = CM.Sim.Upgrades[i];
+			let me = CM.Sim.Upgrades[i];
 			me.bought = 1;
 			if (Game.CountsAsUpgradeOwned(Game.Upgrades[i].pool)) CM.Sim.UpgradesOwned++;
 
@@ -647,20 +650,22 @@ CM.Sim.CalculateChangeAura = function(aura) {
 	else CM.Sim.dragonAura = aura;
 
 	// Sell highest building but only if aura is different
+	let price = 0;
 	if (CM.Sim.dragonAura != CM.Cache.dragonAura || CM.Sim.dragonAura2 != CM.Cache.dragonAura2) {
-		for (var i = Game.ObjectsById.length; i > -1, --i;) {
+		for (let i = Game.ObjectsById.length; i > -1, --i;) {
 			if (Game.ObjectsById[i].amount > 0) {	
 				var highestBuilding = CM.Sim.Objects[Game.ObjectsById[i].name].name;
 				CM.Sim.Objects[highestBuilding].amount -=1;
 				CM.Sim.buildingsOwned -= 1;
+				price = CM.Sim.Objects[highestBuilding].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[highestBuilding].amount - 1 -CM.Sim.Objects[highestBuilding].free));
+				price = Game.modifyBuildingPrice(CM.Sim.Objects[highestBuilding], price);
+				price = Math.ceil(price);
 				break;
 			}
 		}
 		// This calculates price of highest building
-		var price = CM.Sim.Objects[highestBuilding].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[highestBuilding].amount - 1 -CM.Sim.Objects[highestBuilding].free));
-		price = Game.modifyBuildingPrice(CM.Sim.Objects[highestBuilding], price);
-		price = Math.ceil(price);
-	} else var price = 0;
+		
+	}
 
 	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
 	CM.Sim.CalculateGains();
@@ -768,7 +773,7 @@ CM.Sim.modifyBuildingPrice = function(building,price) {
 	if (building.fortune && CM.Sim.Has(building.fortune.name)) price *= 0.93;
 	price *= CM.Sim.eff('buildingCost');
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
-		var godLvl = CM.Sim.hasGod('creation');
+		let godLvl = CM.Sim.hasGod('creation');
 		if (godLvl == 1) price *= 0.93;
 		else if (godLvl == 2) price *= 0.95;
 		else if (godLvl == 3) price *= 0.98;
@@ -792,7 +797,7 @@ CM.Sim.SellBuildingsForChoEgg = function() {
 	CM.Sim.dragonAura = 5;
 	CM.Sim.dragonAura2 = 18;
 	// Sacrifice highest buildings for the aura switch
-	for (var i = 0; i < buildingsToSacrifice; ++i) {
+	for (let i = 0; i < buildingsToSacrifice; ++i) {
 		var highestBuilding = 0;
 		for (var j in CM.Sim.Objects) {
 			if (CM.Sim.Objects[j].amount > 0) {	
@@ -804,8 +809,8 @@ CM.Sim.SellBuildingsForChoEgg = function() {
 	}
 
 	// Get money made by selling all remaining buildings
-	for (var i in CM.Sim.Objects) {
-		var me = CM.Sim.Objects[i];
+	for (let i of Object.keys(CM.Sim.Objects)) {
+		let me = CM.Sim.Objects[i];
 		sellTotal += CM.Sim.BuildingSell(Game.Objects[me.name], Game.Objects[i].basePrice, me.amount, Game.Objects[i].free, me.amount);
 	}
 
@@ -842,7 +847,7 @@ CM.Sim.mouseCps = function() {
 	if (CM.Sim.Has('Octillion fingers')) add *= 20;
 	if (CM.Sim.Has('Nonillion fingers')) add *= 20;
 	var num=0;
-	for (var i in CM.Sim.Objects) {num+=CM.Sim.Objects[i].amount;}
+	for (let i of Object.keys(CM.Sim.Objects)) {num+=CM.Sim.Objects[i].amount;}
 	num -= CM.Sim.Objects.Cursor.amount;
 	add = add * num;
 
@@ -886,7 +891,7 @@ CM.Sim.mouseCps = function() {
 		}
 	}
 
-	for (var i in Game.buffs)
+	for (let i of Object.keys(Game.buffs))
 	{
 		if (typeof Game.buffs[i].multClick != 'undefined') mult*=Game.buffs[i].multClick;
 	}

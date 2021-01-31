@@ -102,7 +102,7 @@ CM.Cache.CacheStats = function() {
 	CM.Cache.LuckyWrathRewardFrenzy = wrathMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
 	CM.Cache.Conjure = CM.Cache.Lucky * 2;
 	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
-	 
+
 	CM.Cache.Edifice = 0;
 	var max = 0;
 	var n = 0;
@@ -305,7 +305,7 @@ CM.Cache.CacheDragonCost = function() {
 			var target = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/Objects\[(.*)\]/)[1];
 			var amount = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/sacrifice\((.*?)\)/)[1];
 			if (target != "i") {
-				target = target.replaceAll("\'", "");
+				target = target.replaceAll("'", "");
 				if (Game.Objects[target].amount < amount) {
 					CM.Cache.CostDragonUpgrade = "Not enough buildings to sell";
 				}
@@ -347,7 +347,7 @@ CM.Cache.CacheDragonCost = function() {
 		CM.Cache.lastDragonLevel = Game.dragonLevel;
 	}
 };
- 			
+
 /********
  * Section: UNSORTED */
 
@@ -671,4 +671,3 @@ CM.Cache.HadBuildAura = false;
 CM.Cache.RealCookiesEarned = -1;
 CM.Cache.goldenShimmersByID = {};
 CM.Cache.spawnedGoldenShimmer = 0;
-

@@ -221,7 +221,7 @@ CM.DelayInit = function() {
 	CM.Disp.CreateUpgradeBar();
 	CM.Disp.CreateWhiteScreen();
 	CM.Disp.CreateFavicon();
-	for (var i in CM.Disp.TooltipText) {
+	for (let i of Object.keys(CM.Disp.TooltipText)) {
 		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
 	CM.Disp.CreateWrinklerButtons();
@@ -276,7 +276,6 @@ CM.Main.ReplaceTooltips = function() {
 /********
  * Section: Functions related to replacing tooltips */
 
-
 /**
  * This function replaces the original .onmouseover functions of buildings so that it calls CM.Disp.Tooltip()
  * CM.Disp.Tooltip() sets the tooltip type to 'b'
@@ -284,7 +283,7 @@ CM.Main.ReplaceTooltips = function() {
  */
 CM.Main.ReplaceTooltipBuild = function() {
 	CM.Main.TooltipBuildBackup = [];
-	for (var i in Game.Objects) {
+	for (let i of Object.keys(Game.Objects)) {
 		var me = Game.Objects[i];
 		if (l('product' + me.id).onmouseover != null) {
 			CM.Main.TooltipBuildBackup[i] = l('product' + me.id).onmouseover;
@@ -301,7 +300,7 @@ CM.Main.ReplaceTooltipBuild = function() {
 CM.Main.ReplaceTooltipGrimoire = function() {
 	if (Game.Objects['Wizard tower'].minigameLoaded) {
 		CM.Main.TooltipGrimoireBackup = [];
-		for (var i in Game.Objects['Wizard tower'].minigame.spellsById) {
+		for (let i in Game.Objects['Wizard tower'].minigame.spellsById) {
 			if (l('grimoireSpell' + i).onmouseover != null) {
 				CM.Main.TooltipGrimoireBackup[i] = l('grimoireSpell' + i).onmouseover;
 				eval('l(\'grimoireSpell\' + i).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'g\', \'' + i + '\');}, \'this\'); Game.tooltip.wobble();}');
@@ -330,7 +329,7 @@ CM.Main.ReplaceTooltipLump = function() {
 CM.Main.ReplaceTooltipGarden = function() {
 	if (Game.Objects.Farm.minigameLoaded) {
 		l('gardenTool-1').onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('ha', 'HarvestAllButton');}, 'this'); Game.tooltip.wobble();};
-		Array.from(l('gardenPlot').children).forEach((child, index) => {
+		Array.from(l('gardenPlot').children).forEach((child) => {
 			var coords = child.id.slice(-3,);
 			child.onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('p', [`${coords[0]}`,`${coords[2]}`]);}, 'this'); Game.tooltip.wobble();};
 		});
@@ -349,7 +348,7 @@ CM.Main.ReplaceTooltipGarden = function() {
 CM.Main.FindShimmer = function() {
 	CM.Main.currSpawnedGoldenCookieState = 0;
 	CM.Cache.goldenShimmersByID = {};
-	for (var i in Game.shimmers) {
+	for (let i of Object.keys(Game.shimmers)) {
 		CM.Cache.goldenShimmersByID[Game.shimmers[i].id] = Game.shimmers[i];
 		if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'golden') {
 			CM.Cache.spawnedGoldenShimmer = Game.shimmers[i];
@@ -365,7 +364,7 @@ CM.Main.FindShimmer = function() {
  */
 CM.Main.CheckGoldenCookie = function() {
 	CM.Main.FindShimmer();
-	for (var i in CM.Disp.GCTimers) {
+	for (let i of Object.keys(CM.Disp.GCTimers)) {
 		if (typeof CM.Cache.goldenShimmersByID[i] == "undefined") {
 			CM.Disp.GCTimers[i].parentNode.removeChild(CM.Disp.GCTimers[i]);
 			// TODO remove delete here
@@ -381,7 +380,7 @@ CM.Main.CheckGoldenCookie = function() {
 				CM.Disp.Notification('GCNotification', "Golden Cookie Spawned", "A Golden Cookie has spawned. Click it now!");
 			}
 			
-			for (var i in Game.shimmers) {
+			for (let i of Object.keys(Game.shimmers)) {
 				if (typeof CM.Disp.GCTimers[Game.shimmers[i].id] == "undefined") {
 					CM.Disp.CreateGCTimer(Game.shimmers[i]);
 				}
@@ -392,7 +391,7 @@ CM.Main.CheckGoldenCookie = function() {
 		if (CM.Main.currSpawnedGoldenCookieState == 0) CM.Cache.spawnedGoldenShimmer = 0;
 	}
 	else if (CM.Options.GCTimer == 1 && CM.Main.lastGoldenCookieState) {
-		for (var i in CM.Disp.GCTimers) {
+		for (let i of Object.keys(CM.Disp.GCTimers)) {
 			CM.Disp.GCTimers[i].style.opacity = CM.Cache.goldenShimmersByID[i].l.style.opacity;
 			CM.Disp.GCTimers[i].style.transform = CM.Cache.goldenShimmersByID[i].l.style.transform;
 			CM.Disp.GCTimers[i].textContent = Math.ceil(CM.Cache.goldenShimmersByID[i].life / Game.fps);
@@ -407,7 +406,7 @@ CM.Main.CheckGoldenCookie = function() {
 CM.Main.CheckSeasonPopup = function() {
 	if (CM.Main.lastSeasonPopupState != Game.shimmerTypes.reindeer.spawned) {
 		CM.Main.lastSeasonPopupState = Game.shimmerTypes.reindeer.spawned;
-		for (var i in Game.shimmers) {
+		for (let i of Object.keys(Game.shimmers)) {
 			if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'reindeer') {
 				CM.Cache.seasonPopShimmer = Game.shimmers[i];
 				break;
@@ -472,7 +471,7 @@ CM.Main.CheckMagicMeter = function() {
 CM.Main.CheckWrinklerCount = function() {
 	if (Game.elderWrath > 0) {
 		var CurrentWrinklers = 0;
-		for (var i in Game.wrinklers) {
+		for (let i in Game.wrinklers) {
 			if (Game.wrinklers[i].phase == 2) CurrentWrinklers++;
 		}
 		if (CurrentWrinklers > CM.Main.lastWrinklerCount) {
@@ -509,7 +508,7 @@ CM.Main.AddWrinklerAreaDetect = function() {
 	l('backgroundLeftCanvas').onmouseout = function() {
 		CM.Disp.TooltipWrinklerArea = 0;
 		Game.tooltip.hide();
-		for (var i in Game.wrinklers) {
+		for (let i of Object.keys(Game.wrinklers)) {
 			CM.Disp.TooltipWrinklerBeingShown[i] = 0;
 		}
 	};
@@ -540,7 +539,6 @@ CM.HasReplaceNativeGrimoireDraw = false;
 
 CM.Main.lastGoldenCookieState = 0;
 CM.Main.lastSpawnedGoldenCookieState = 0;
-CM.Main.currSpawnedGoldenCookieState;
 CM.Main.lastTickerFortuneState = 0;
 CM.Main.lastSeasonPopupState = 0;
 CM.Main.lastGardenNextStep = 0;

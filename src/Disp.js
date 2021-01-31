@@ -137,7 +137,7 @@ CM.Disp.FormatTime = function(time, longFormat) {
 	var h = Math.floor(time % 86400 / 3600);
 	var m = Math.floor(time % 3600 / 60);
 	var s = Math.floor(time % 60);
-	var str = '';
+	let str = '';
 	if (CM.Options.TimeFormat) {
 		if (time > 3155760000) return 'XX:XX:XX:XX:XX';
 		str += (y < 10 ? '0' : '') + y + ':';
@@ -424,11 +424,11 @@ CM.Disp.CreateBotBarBuildingColumn = function(buildingName) {
 	var pp    = CM.Disp.BotBar.firstChild.firstChild.childNodes[2];
 	var time  = CM.Disp.BotBar.firstChild.firstChild.childNodes[3];
 
-	var i = buildingName;
+	let i = buildingName;
 	var header = type.appendChild(document.createElement('td'));
 	header.appendChild(document.createTextNode((i.indexOf(' ') != -1 ? i.substring(0, i.indexOf(' ')) : i) + ' ('));
 
-	var span = header.appendChild(document.createElement('span'));
+	let span = header.appendChild(document.createElement('span'));
 	span.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
 
 	header.appendChild(document.createTextNode(')'));
@@ -488,7 +488,7 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 	timerBar.style.margin = '0px 10px';
 	timerBar.style.position = 'relative';
 
-	var div = document.createElement('div');
+	let div = document.createElement('div');
 	div.style.width = '100%';
 	div.style.height = '10px';
 	div.style.margin = 'auto';
@@ -508,7 +508,7 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 	type.textContent = name;
 	div.appendChild(type);
 
-	for (var i = 0; i < bars.length; i++) {
+	for (let i = 0; i < bars.length; i++) {
 		var colorBar = document.createElement('span');
 		colorBar.id = bars[i].id;
 		colorBar.style.display = 'inline-block';
@@ -696,11 +696,10 @@ CM.Disp.UpdateBotTimerBarPosition = function() {
  * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.ConfigData.BulkBuildColor
  */
 CM.Disp.UpdateBuildings = function() {
+	let target = 'Objects';
+	if (Game.buyBulk == 10 && CM.Options.BulkBuildColor == 1) target = 'Objects10';
+	else if (Game.buyBulk == 100 && CM.Options.BulkBuildColor == 1) target = 'Objects100';
 	if  (Game.buyMode == 1) {
-		var target = '';
-		if (Game.buyBulk == 10 && CM.Options.BulkBuildColor == 1) target = 'Objects10';
-		else if (Game.buyBulk == 100 && CM.Options.BulkBuildColor == 1) target = 'Objects100';
-		else target = 'Objects';
 		if (CM.Options.BuildColor == 1) {
 			for (let i of Object.keys(CM.Cache[target])) {
 				l('productPrice' + Game.Objects[i].id).style.color = CM.Options.Colors[CM.Cache[target][i].color];
@@ -731,7 +730,7 @@ CM.Disp.UpdateBuildings = function() {
 	// (grid rows are 1-based indexing, and row 1 is the bulk buy/sell options)
 	// This regulates sorting of buildings
 	if (Game.buyMode == 1 && CM.Options.SortBuildings) {
-		var arr = Object.keys(CM.Cache[target]).map(k =>
+		let arr = Object.keys(CM.Cache[target]).map(k =>
 		{
 			var o = CM.Cache[target][k];
 			o.name = k;
@@ -741,11 +740,11 @@ CM.Disp.UpdateBuildings = function() {
 
 		arr.sort(function(a, b){ return (a.pp > b.pp ? 1 : (a.pp < b.pp ? -1 : 0)); });
 
-		for (var x = 0; x < arr.length; x++) {
+		for (let x = 0; x < arr.length; x++) {
 			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
 		}
 	} else {
-		var arr = Object.keys(CM.Cache.Objects).map(k =>
+		let arr = Object.keys(CM.Cache.Objects).map(k =>
 			{
 				var o = CM.Cache.Objects[k];
 				o.name = k;
@@ -753,7 +752,7 @@ CM.Disp.UpdateBuildings = function() {
 				return o;
 			});
 		arr.sort((a, b) => a.id - b.id);
-		for (var x = 0; x < arr.length; x++) {
+		for (let x = 0; x < arr.length; x++) {
 			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
 		}
 	}
@@ -779,7 +778,7 @@ CM.Disp.UpdateUpgrades = function() {
 		for (let i of Object.keys(Game.UpgradesInStore)) {
 			var me = Game.UpgradesInStore[i];
 			var addedColor = false;
-			for (var j = 0; j < l('upgrade' + i).childNodes.length; j++) {
+			for (let j = 0; j < l('upgrade' + i).childNodes.length; j++) {
 				if (l('upgrade' + i).childNodes[j].className.indexOf(CM.Disp.colorBackPre) != -1) {
 					l('upgrade' + i).childNodes[j].className = CM.Disp.colorBackPre + CM.Cache.Upgrades[me.name].color;
 					addedColor = true;
@@ -787,7 +786,7 @@ CM.Disp.UpdateUpgrades = function() {
 				}
 			}
 			if (!addedColor) {
-				var div = document.createElement('div');
+				let div = document.createElement('div');
 				div.style.width = '10px';
 				div.style.height = '10px';
 				div.className = CM.Disp.colorBackPre + CM.Cache.Upgrades[me.name].color;
@@ -813,8 +812,8 @@ CM.Disp.UpdateUpgrades = function() {
 	
 	// Build array of pointers, sort by pp, set flex positions
 	// This regulates sorting of upgrades
-	var arr = [];
-	for (var x = 0; x < Game.UpgradesInStore.length; x++){
+	let arr = [];
+	for (let x = 0; x < Game.UpgradesInStore.length; x++){
 		var o = {};
 		o.name = Game.UpgradesInStore[x].name;
 		o.price = Game.UpgradesInStore[x].basePrice;
@@ -828,9 +827,12 @@ CM.Disp.UpdateUpgrades = function() {
 	else {
 		arr.sort((a, b) => a.price - b.price);
 	}
-		
-	for (var x = 0; x < Game.UpgradesInStore.length; x++){
-		l("upgrade" + x).style.order = arr.findIndex(e => e.name === Game.UpgradesInStore[x].name) + 1;
+	
+	let nameChecker = function(arr, upgrade) {
+		return arr.findIndex(e => e.name === upgrade.name);
+	};
+	for (let x = 0; x < Game.UpgradesInStore.length; x++){
+		l("upgrade" + x).style.order = nameChecker(arr, Game.UpgradesInStore[x]) + 1;
 	}
 };
 
@@ -882,7 +884,7 @@ CM.Disp.CreateUpgradeBar = function() {
 	CM.Disp.UpgradeBar.style.textAlign = 'center';
 	CM.Disp.UpgradeBar.style.fontWeight = 'bold';
 	CM.Disp.UpgradeBar.style.display = 'none';
- 	CM.Disp.UpgradeBar.style.zIndex = '21';
+	CM.Disp.UpgradeBar.style.zIndex = '21';
 	CM.Disp.UpgradeBar.onmouseout = function() { Game.tooltip.hide(); };
 
 	var placeholder = document.createElement('div');
@@ -890,7 +892,7 @@ CM.Disp.CreateUpgradeBar = function() {
 	CM.Disp.UpgradeBar.onmouseover = function() {Game.tooltip.draw(this, escape(placeholder.innerHTML), 'store');};
 
 	var upgradeNumber = function(id, color) {
-		var span = document.createElement('span');
+		let span = document.createElement('span');
 		span.id = id;
 		span.className = CM.Disp.colorTextPre + color;
 		span.style.width = '14.28571428571429%';
@@ -917,16 +919,16 @@ CM.Disp.CreateUpgradeBarLegend = function() {
 	var legend = document.createElement('div');
 	legend.style.minWidth = '330px';
 	legend.style.marginBottom = '4px';
-	var title = document.createElement('div');
+	let title = document.createElement('div');
 	title.className = 'name';
 	title.style.marginBottom = '4px';
 	title.textContent = 'Legend';
 	legend.appendChild(title);
 
 	var legendLine = function(color, text) {
-		var div = document.createElement('div');
+		let div = document.createElement('div');
 		div.style.verticalAlign = 'middle';
-		var span = document.createElement('span');
+		let span = document.createElement('span');
 		span.className = CM.Disp.colorBackPre + color;
 		span.style.display = 'inline-block';
 		span.style.height = '10px';
@@ -975,7 +977,7 @@ CM.Disp.CreateWhiteScreen = function() {
  */
 CM.Disp.Flash = function(mode, config) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if ((CM.Options[config] == 1 && mode == 3 && arguments.callee.caller.caller.caller.caller == null) || mode == 1) {
+	if ((CM.Options[config] == 1 && mode == 3 && CM.Disp.Flash.caller.caller.caller.caller == null) || mode == 1) {
 		CM.Disp.WhiteScreen.style.opacity = '0.5';
 		if (mode == 3) {
 			CM.Disp.WhiteScreen.style.display = 'inline';
@@ -1001,7 +1003,7 @@ CM.Disp.Flash = function(mode, config) {
  */
 CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if (CM.Options[sndConfig] == 1 && arguments.callee.caller.caller.caller.caller == null) {
+	if (CM.Options[sndConfig] == 1 && CM.Disp.PlaySound.caller.caller.caller.caller == null) {
 		var sound = new realAudio(url);
 		sound.volume = (CM.Options[volConfig] / 100) * (Game.volume / 100); 
 		sound.play();
@@ -1017,7 +1019,7 @@ CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
  */
 CM.Disp.Notification = function(notifyConfig, title, message) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if (CM.Options[notifyConfig] == 1 && document.visibilityState == 'hidden' && arguments.callee.caller.caller.caller.caller == null) {
+	if (CM.Options[notifyConfig] == 1 && document.visibilityState == 'hidden' && CM.Disp.Notification.caller.caller.caller.caller == null) {
 		var CookieIcon = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
 		notification = new Notification(title, {body: message, badge: CookieIcon});
 	}
@@ -1059,11 +1061,11 @@ CM.Disp.UpdateTitle = function() {
 		document.title = CM.Cache.Title;
 	}
 	else if (CM.Options.Title == 1) {
-		var addFC = false;
-		var addSP = false;
-		var titleGC;
-		var titleFC;
-		var titleSP;
+		let addFC = false;
+		let addSP = false;
+		let titleGC;
+		let titleFC;
+		let titleSP;
 		
 		if (CM.Cache.spawnedGoldenShimmer) {
 			if (CM.Cache.spawnedGoldenShimmer.wrath) titleGC = '[W ' +  Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps) + ']';
@@ -1088,15 +1090,15 @@ CM.Disp.UpdateTitle = function() {
 		}
 
 		// Remove previous timers and add current cookies
-		var str = CM.Cache.Title;
+		let str = CM.Cache.Title;
 		if (str.charAt(0) == '[') {
 			str = str.substring(str.lastIndexOf(']') + 1);
 		}
 		document.title = titleGC + (addFC ? titleFC : '') + (addSP ? titleSP : '') + ' ' + str;
 	}
 	else if (CM.Options.Title == 2) {
-		var str = '';
-		var spawn = false;
+		let str = '';
+		let spawn = false;
 		if (CM.Cache.spawnedGoldenShimmer) {
 			spawn = true;
 			if (CM.Cache.spawnedGoldenShimmer.wrath) str += '[W ' +  Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps) + ']';
@@ -1111,7 +1113,7 @@ CM.Disp.UpdateTitle = function() {
 			spawn = true;
 		}
 		if (spawn) str += ' - ';
-		var title = 'Cookie Clicker';
+		let title = 'Cookie Clicker';
 		if (Game.season == 'fools') title = 'Cookie Baker';
 		str += title;
 		document.title = str;
@@ -1135,7 +1137,7 @@ CM.Disp.CreateGCTimer = function(cookie) {
 	GCTimer.style.zIndex = '10000000001';
 	GCTimer.style.textAlign = 'center';
 	GCTimer.style.lineHeight = '96px';
-	GCTimer.style.fontFamily = '\"Kavoon\", Georgia, serif';
+	GCTimer.style.fontFamily = '"Kavoon", Georgia, serif';
 	GCTimer.style.fontSize = '35px';
 	GCTimer.style.cursor = 'pointer';
 	GCTimer.style.display = 'block';
@@ -1183,7 +1185,7 @@ CM.Disp.CreateSimpleTooltip = function(placeholder, text, minWidth) {
 	var desc = document.createElement('div');
 	desc.style.minWidth = minWidth;
 	desc.style.marginBottom = '4px';
-	var div = document.createElement('div');
+	let div = document.createElement('div');
 	div.style.textAlign = 'left';
 	div.textContent = text;
 	desc.appendChild(div);
@@ -1198,10 +1200,9 @@ CM.Disp.CreateSimpleTooltip = function(placeholder, text, minWidth) {
 CM.Disp.ReplaceTooltipUpgrade = function() {
 	CM.Disp.TooltipUpgradeBackup = [];
 	for (let i of Object.keys(Game.UpgradesInStore)) {
-		var me = Game.UpgradesInStore[i];
 		if (l('upgrade' + i).onmouseover != null) {
 			CM.Disp.TooltipUpgradeBackup[i] = l('upgrade' + i).onmouseover;
-			eval('l(\'upgrade\' + i).onmouseover = function() {if (!Game.mouseDown) {Game.setOnCrate(this); Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'u\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}}');
+			l('upgrade' + i).onmouseover = function() {if (!Game.mouseDown) {Game.setOnCrate(this); Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('u', `${i}`);}, 'store'); Game.tooltip.wobble();}};
 		}
 	}
 };
@@ -1286,7 +1287,7 @@ CM.Disp.TooltipCreateTooltipBox = function() {
  * @returns {object}	div		An object containing the stylized header
  */
 CM.Disp.TooltipCreateHeader = function(text) {
-	var div = document.createElement('div');
+	let div = document.createElement('div');
 	div.style.fontWeight = 'bold';
 	div.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
 	div.textContent = text;
@@ -1301,7 +1302,7 @@ CM.Disp.TooltipCreateHeader = function(text) {
  */
 CM.Disp.TooltipCreateCalculationSection = function(tooltip) {
 	tooltip.appendChild(CM.Disp.TooltipCreateHeader('Bonus Income'));
-	var income = document.createElement('div');
+	let income = document.createElement('div');
 	income.style.marginBottom = '4px';
 	income.style.color = 'white';
 	income.id = 'CMTooltipIncome';
@@ -1448,7 +1449,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 
 		if (CM.Options.TooltipBuildUpgrade == 1 && Game.buyMode == 1) {
 			l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
-			var increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
+			let increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 			if (isFinite(increase) && increase != 0) {
 				l('CMTooltipIncome').textContent += ' (' + (increase / 100) + '% of income)';
 			}
@@ -1465,21 +1466,18 @@ CM.Disp.UpdateTooltipBuilding = function() {
 		}
 
 		// Add "production left till next achievement"-bar
+		l('CMTooltipProductionHeader').style.display = "none";
+		l('CMTooltipTime').style.marginBottom = '0px';
 		for (let i of Object.keys(Game.Objects[CM.Disp.tooltipName].productionAchievs)) {
 			if (!CM.Sim.HasAchiev(Game.Objects[CM.Disp.tooltipName].productionAchievs[i].achiev.name)) {
-				var nextProductionAchiev = Game.Objects[CM.Disp.tooltipName].productionAchievs[i];
+				let nextProductionAchiev = Game.Objects[CM.Disp.tooltipName].productionAchievs[i];
+				l('CMTooltipTime').style.marginBottom = '4px';
+				l('CMTooltipProductionHeader').style.display = "";
+				l('CMTooltipProduction').className = "ProdAchievement" + CM.Disp.tooltipName;
+				l('CMTooltipProduction').textContent = Beautify(nextProductionAchiev.pow - CM.Sim.Objects[CM.Disp.tooltipName].totalCookies, 15);
+				l('CMTooltipProduction').style.color = "white";
 				break;
 			}
-		}
-		if (typeof nextProductionAchiev != "undefined") {
-			l('CMTooltipTime').style.marginBottom = '4px';
-			l('CMTooltipProductionHeader').style.display = "";
-			l('CMTooltipProduction').className = "ProdAchievement" + CM.Disp.tooltipName;
-			l('CMTooltipProduction').textContent = Beautify(nextProductionAchiev.pow - CM.Sim.Objects[CM.Disp.tooltipName].totalCookies, 15);
-			l('CMTooltipProduction').style.color = "white";
-		} else {
-			l('CMTooltipProductionHeader').style.display = "none";
-			l('CMTooltipTime').style.marginBottom = '0px';
 		}
 	}
 	else l('CMTooltipArea').style.display = "none";
@@ -1499,7 +1497,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 
 	if (CM.Options.TooltipBuildUpgrade == 1) {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
-		var increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
+		let increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 		if (isFinite(increase) && increase != 0) {
 			l('CMTooltipIncome').textContent += ' (' + (increase / 100) + '% of income)';
 		}
@@ -1654,13 +1652,14 @@ CM.Disp.UpdateTooltipGardenPlots = function() {
  * It adds to the additional information to l('CMTooltipArea')
  */
 CM.Disp.UpdateTooltipHarvestAll = function() {
-	var minigame = Game.Objects.Farm.minigame;
+	let minigame = Game.Objects.Farm.minigame;
 	if (CM.Options.TooltipLump) {
 			l('CMTooltipBorder').appendChild(CM.Disp.TooltipCreateHeader('Cookies gained from harvesting:'));
-			var totalGain = 0;
-			if (Game.keys[16] && Game.keys[17]) var mortal = 1;
-			for (var y=0;y<6;y++) {
-				for (var x=0;x<6;x++) {
+			let totalGain = 0;
+			let mortal = 0;
+			if (Game.keys[16] && Game.keys[17]) mortal = 1;
+			for (let y=0;y<6;y++) {
+				for (let x=0; x<6; x++) {
 					if (minigame.plot[y][x][0]>=1) {
 						let tile = minigame.plot[y][x];
 						let me = minigame.plantsById[tile[0] - 1];
@@ -1819,7 +1818,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
 					var wrinkler = document.createElement('div');
 					wrinkler.style.minWidth = '120px';
 					wrinkler.style.marginBottom = '4px';
-					var div = document.createElement('div');
+					let div = document.createElement('div');
 					div.style.textAlign = 'center';
 					div.id = 'CMTooltipWrinkler';
 					wrinkler.appendChild(div);
@@ -1881,12 +1880,12 @@ CM.Disp.AddAuraInfo = function(aura) {
 		l('dragonAuraInfo').style.minHeight = "60px";
 		l('dragonAuraInfo').style.margin = "8px";
 		l('dragonAuraInfo').appendChild(document.createElement("div")).className = "line";
-		var div = document.createElement("div");
+		let div = document.createElement("div");
 		div.style.minWidth = "200px";
 		div.style.textAlign = "center";
 		div.textContent = "Picking this aura will change CPS by " + bonusCPS + " (" + bonusCPSPercentage + "% of current CPS).";
 		l('dragonAuraInfo').appendChild(div);
-		var div2 = document.createElement("div");
+		let div2 = document.createElement("div");
 		div2.style.minWidth = "200px";
 		div2.style.textAlign = "center";
 		div2.textContent = "It will take " + timeToRecover + " to recover the cost.";
@@ -1918,8 +1917,8 @@ CM.Disp.AddDragonLevelUpTooltip = function() {
  * It is called by Game.UpdateMenu()
  */
 CM.Disp.AddMenu = function() {
-	var title = function() {
-		var div = document.createElement('div');
+	let title = function() {
+		let div = document.createElement('div');
 		div.className = 'title ' + CM.Disp.colorTextPre + CM.Disp.colorBlue;
 		div.textContent = 'Cookie Monster Goodies';
 		return div;
@@ -2000,13 +1999,13 @@ CM.Disp.AddMenuPref = function(title) {
  * @returns	{object}		div		The header object
  */
 CM.Disp.CreatePrefHeader = function(config, text) {
-	var div = document.createElement('div');
+	let div = document.createElement('div');
 	div.className = 'title';
 
 	div.style.opacity = '0.7';
 	div.style.fontSize = '17px';
 	div.appendChild(document.createTextNode(text + ' '));
-	var span = document.createElement('span'); // Creates the +/- button
+	let span = document.createElement('span'); // Creates the +/- button
 	span.style.cursor = 'pointer';
 	span.style.display = 'inline-block';
 	span.style.height = '14px';
@@ -2031,9 +2030,9 @@ CM.Disp.CreatePrefHeader = function(config, text) {
  */
 CM.Disp.CreatePrefOption = function(config) {
 	if (CM.ConfigData[config].type == "bool") {
-		var div = document.createElement('div');
+		let div = document.createElement('div');
 		div.className = 'listing';
-		var a = document.createElement('a');
+		let a = document.createElement('a');
 		if (CM.ConfigData[config].toggle && CM.Options[config] == 0) {
 			a.className = 'option off';
 		}
@@ -2044,21 +2043,21 @@ CM.Disp.CreatePrefOption = function(config) {
 		a.onclick = function() {CM.Config.ToggleConfig(config);};
 		a.textContent = CM.ConfigData[config].label[CM.Options[config]];
 		div.appendChild(a);
-		var label = document.createElement('label');
+		let label = document.createElement('label');
 		label.textContent = CM.ConfigData[config].desc;
 		div.appendChild(label);
 		return div;
 	}
 	else if (CM.ConfigData[config].type == "vol") {
-		var div = document.createElement('div');
+		let div = document.createElement('div');
 		div.className = 'listing';
 		var volume = document.createElement('div');
 		volume.className = 'sliderBox';
-		var title = document.createElement('div');
+		let title = document.createElement('div');
 		title.style.float = "left";
 		title.innerHTML = CM.ConfigData[config].desc;
 		volume.appendChild(title);
-		var percent = title = document.createElement('div');
+		var percent = document.createElement('div');
 		percent.id = "slider" + config + "right";
 		percent.style.float = "right";
 		percent.innerHTML = CM.Options[config] + "%";
@@ -2079,13 +2078,13 @@ CM.Disp.CreatePrefOption = function(config) {
 		return div;
 	}
 	else if (CM.ConfigData[config].type == "url") {
-		var div = document.createElement('div');
+		let div = document.createElement('div');
 		div.className = 'listing';
-		var span = document.createElement('span');
+		let span = document.createElement('span');
 		span.className = 'option';
 		span.textContent = CM.ConfigData[config].label + ' ';
 		div.appendChild(span);
-		var input = document.createElement('input');
+		let input = document.createElement('input');
 		input.id = CM.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'text';
@@ -2094,34 +2093,34 @@ CM.Disp.CreatePrefOption = function(config) {
 		input.style.width = '300px';
 		div.appendChild(input);
 		div.appendChild(document.createTextNode(' '));
-		var inputPrompt = document.createElement('input');
+		let inputPrompt = document.createElement('input');
 		inputPrompt.id = CM.ConfigPrefix + config + 'Prompt';
 		inputPrompt.className = 'option';
 		inputPrompt.type = 'text';
 		inputPrompt.setAttribute('value', CM.Options[config]);
-		var a = document.createElement('a');
+		let a = document.createElement('a');
 		a.className = 'option';
 		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
 		a.textContent = 'Edit';
 		div.appendChild(a);
-		var label = document.createElement('label');
+		let label = document.createElement('label');
 		label.textContent = CM.ConfigData[config].desc;
 		div.appendChild(label);
 		return div;
 	}
 	else if (CM.ConfigData[config].type == "color") {
-		var div = document.createElement('div');
-		for (var i = 0; i < CM.Disp.colors.length; i++) {
-			var innerDiv = document.createElement('div');
+		let div = document.createElement('div');
+		for (let i = 0; i < CM.Disp.colors.length; i++) {
+			let innerDiv = document.createElement('div');
 			innerDiv.className = 'listing';
-			var input = document.createElement('input');
+			let input = document.createElement('input');
 			input.id = CM.Disp.colors[i];
 			input.style.width = '65px';
 			input.setAttribute('value', CM.Options.Colors[CM.Disp.colors[i]]);
 			innerDiv.appendChild(input);
 			let change = function() {CM.Options.Colors[this.targetElement.id] = this.toHEXString(); CM.Disp.UpdateColors(); CM.Config.SaveConfig(); Game.UpdateMenu();};
-			let picker = new JSColor(input, {hash: true, position: "right", onInput: change});
-			var label = document.createElement('label');
+			let = new JSColor(input, {hash: true, position: "right", onInput: change});
+			let label = document.createElement('label');
 			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
 			innerDiv.appendChild(label);
 			div.appendChild(innerDiv);
@@ -2129,13 +2128,13 @@ CM.Disp.CreatePrefOption = function(config) {
 		return div;
 	}
 	else if (CM.ConfigData[config].type == "numscale") {
-		var div = document.createElement('div');
+		let div = document.createElement('div');
 		div.className = 'listing';
-		var span = document.createElement('span');
+		let span = document.createElement('span');
 		span.className = 'option';
 		span.textContent = CM.ConfigData[config].label + ' ';
 		div.appendChild(span);
-		var input = document.createElement('input');
+		let input = document.createElement('input');
 		input.id = CM.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'number';
@@ -2143,13 +2142,13 @@ CM.Disp.CreatePrefOption = function(config) {
 		input.min = CM.ConfigData[config].min;
 		input.max = CM.ConfigData[config].max;
 		input.oninput = function() {if (this.value > this.max) console.log("TEST");
-			 CM.Options[config] = this.value; 
-			 CM.Config.SaveConfig(); 
-			 CM.Disp.RefreshScale();
-			};
+			CM.Options[config] = this.value; 
+			CM.Config.SaveConfig(); 
+			CM.Disp.RefreshScale();
+		};
 		div.appendChild(input);
 		div.appendChild(document.createTextNode(' '));
-		var label = document.createElement('label');
+		let label = document.createElement('label');
 		label.textContent = CM.ConfigData[config].desc;
 		div.appendChild(label);
 		return div;
@@ -2184,14 +2183,14 @@ CM.Disp.RefreshScale = function() {
  * The function is therefore called by a change in CM.Options.Colors
  */
 CM.Disp.UpdateColors = function() {
-	var str = '';
-	for (var i = 0; i < CM.Disp.colors.length; i++) {
+	let str = '';
+	for (let i = 0; i < CM.Disp.colors.length; i++) {
 		str += '.' + CM.Disp.colorTextPre + CM.Disp.colors[i] + ' { color: ' + CM.Options.Colors[CM.Disp.colors[i]] + '; }\n';
 	}
-	for (var i = 0; i < CM.Disp.colors.length; i++) {
+	for (let i = 0; i < CM.Disp.colors.length; i++) {
 		str += '.' + CM.Disp.colorBackPre + CM.Disp.colors[i] + ' { background-color: ' + CM.Options.Colors[CM.Disp.colors[i]] + '; }\n';
 	}
-	for (var i = 0; i < CM.Disp.colors.length; i++) {
+	for (let i = 0; i < CM.Disp.colors.length; i++) {
 		str += '.' + CM.Disp.colorBorderPre + CM.Disp.colors[i] + ' { border: 1px solid ' + CM.Options.Colors[CM.Disp.colors[i]] + '; }\n';
 	}
 	CM.Disp.Css.textContent = str;
@@ -2224,7 +2223,7 @@ CM.Disp.AddMenuStats = function(title) {
 	stats.appendChild(CM.Disp.CreateStatsHeader('Spells', 'Spells'));
 	if (CM.Options.Header.Spells) {
 		stats.appendChild(CM.Disp.CreateStatsSpellsSection());
- 	}
+	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Prestige', 'Prestige'));
 	if (CM.Options.Header.Prestige) {
@@ -2360,14 +2359,14 @@ CM.Disp.AddMenuStats = function(title) {
  * @returns	{object}		div		The header object
  */
 CM.Disp.CreateStatsHeader = function(text, config) {
-	var div = document.createElement('div');
+	let div = document.createElement('div');
 	div.className = 'listing';
 	div.style.padding = '5px 16px';
 	div.style.opacity = '0.7';
 	div.style.fontSize = '17px';
-	div.style.fontFamily = '\"Kavoon\", Georgia, serif';
+	div.style.fontFamily = '"Kavoon", Georgia, serif';
 	div.appendChild(document.createTextNode(text + ' '));
-	var span = document.createElement('span');
+	let span = document.createElement('span');
 	span.style.cursor = 'pointer';
 	span.style.display = 'inline-block';
 	span.style.height = '14px';
@@ -2394,7 +2393,7 @@ CM.Disp.CreateStatsHeader = function(text, config) {
  * @returns	{object}		div			The option object
  */
 CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
-	var div = document.createElement('div');
+	let div = document.createElement('div');
 	div.className = 'listing';
 
 	var listingName = document.createElement('b');
@@ -2433,20 +2432,20 @@ CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
 CM.Disp.CreateStatsMissDisp = function(theMissDisp) {
 	var frag = document.createDocumentFragment();
 	frag.appendChild(document.createTextNode(theMissDisp.length + ' '));
-	var span = document.createElement('span');
+	let span = document.createElement('span');
 	span.onmouseout = function() { Game.tooltip.hide(); };
 	var placeholder = document.createElement('div');
 	var missing = document.createElement('div');
 	missing.style.minWidth = '140px';
 	missing.style.marginBottom = '4px';
-	var title = document.createElement('div');
+	let title = document.createElement('div');
 	title.className = 'name';
 	title.style.marginBottom = '4px';
 	title.style.textAlign = 'center';
 	title.textContent = 'Missing';
 	missing.appendChild(title);
 	for (let i of Object.keys(theMissDisp)) {
-		var div = document.createElement('div');
+		let div = document.createElement('div');
 		div.style.textAlign = 'center';
 		div.appendChild(document.createTextNode(theMissDisp[i]));
 		missing.appendChild(div);
@@ -2492,7 +2491,7 @@ CM.Disp.CreateStatsLuckySection = function() {
 		luckyReqSmall.textContent = ' (' + luckyTime + ')';
 		luckyReqFrag.appendChild(luckyReqSmall);
 	}
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Cookies Required', luckyReqFrag, goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Lucky!" Cookies Required', luckyReqFrag, goldCookTooltip));
 
 
 	var luckyColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.LuckyFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
@@ -2508,7 +2507,7 @@ CM.Disp.CreateStatsLuckySection = function() {
 		luckyReqFrenSmall.textContent = ' (' + luckyTimeFrenzy + ')';
 		luckyReqFrenFrag.appendChild(luckyReqFrenSmall);
 	}
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Cookies Required (Frenzy)', luckyReqFrenFrag, goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Lucky!" Cookies Required (Frenzy)', luckyReqFrenFrag, goldCookTooltip));
 	
 	var luckySplit = CM.Cache.LuckyReward != CM.Cache.LuckyWrathReward;
 
@@ -2516,20 +2515,20 @@ CM.Disp.CreateStatsLuckySection = function() {
 	luckyRewardMaxSpan.style.fontWeight = 'bold';
 	luckyRewardMaxSpan.className = CM.Disp.colorTextPre + CM.Cache.LuckyReward;
 	luckyRewardMaxSpan.textContent = Beautify(CM.Cache.LuckyReward) + (luckySplit ? (' / ' + Beautify(CM.Cache.LuckyWrathReward)) : '');
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyRewardMaxSpan, goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Lucky!" Reward (MAX)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyRewardMaxSpan, goldCookTooltip));
 
 	var luckyRewardFrenzyMaxSpan = document.createElement('span');
 	luckyRewardFrenzyMaxSpan.style.fontWeight = 'bold';
 	luckyRewardFrenzyMaxSpan.className = CM.Disp.colorTextPre + luckyRewardFrenzyMaxSpan;
 	luckyRewardFrenzyMaxSpan.textContent = Beautify(CM.Cache.LuckyRewardFrenzy) + (luckySplit ? (' / ' + Beautify(CM.Cache.LuckyWrathRewardFrenzy)) : '');
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyRewardFrenzyMaxSpan , goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Lucky!" Reward (MAX) (Frenzy)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyRewardFrenzyMaxSpan , goldCookTooltip));
 	
 	var luckyCurBase = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * CM.Cache.DragonsFortuneMultAdjustment * 60 * 15) + 13;
 	var luckyCurSpan = document.createElement('span');
 	luckyCurSpan.style.fontWeight = 'bold';
 	luckyCurSpan.className = CM.Disp.colorTextPre + luckyCurSpan;
 	luckyCurSpan.textContent = Beautify(CM.Cache.GoldenCookiesMult * luckyCurBase) + (luckySplit ? (' / ' + Beautify(CM.Cache.WrathCookiesMult * luckyCurBase)) : '');
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Lucky!\" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyCurSpan, goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Lucky!" Reward (CUR)' + (luckySplit ? ' (Golden / Wrath)' : ''), luckyCurSpan, goldCookTooltip));
 	return section;
 };
 
@@ -2557,7 +2556,7 @@ CM.Disp.CreateStatsChainSection = function() {
 		chainReqSmall.textContent = ' (' + chainTime + ')';
 		chainReqFrag.appendChild(chainReqSmall);
 	}
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required', chainReqFrag, goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Cookies Required', chainReqFrag, goldCookTooltip));
 	
 	var chainWrathColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 	var chainWrathTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrath) ? CM.Disp.FormatTime((CM.Cache.ChainWrath - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
@@ -2572,7 +2571,7 @@ CM.Disp.CreateStatsChainSection = function() {
 		chainWrathReqSmall.textContent = ' (' + chainWrathTime + ')';
 		chainWrathReqFrag.appendChild(chainWrathReqSmall);
 	}
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Wrath)', chainWrathReqFrag, goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Cookies Required (Wrath)', chainWrathReqFrag, goldCookTooltip));
 	
 	var chainColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 	var chainTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzy) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
@@ -2587,7 +2586,7 @@ CM.Disp.CreateStatsChainSection = function() {
 		chainReqFrenSmall.textContent = ' (' + chainTimeFrenzy + ')';
 		chainReqFrenFrag.appendChild(chainReqFrenSmall);
 	}
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Frenzy)', chainReqFrenFrag, goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Cookies Required (Frenzy)', chainReqFrenFrag, goldCookTooltip));
 	
 	var chainWrathColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 	var chainWrathTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrath) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzyWrath - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
@@ -2602,17 +2601,17 @@ CM.Disp.CreateStatsChainSection = function() {
 		chainWrathReqFrenSmall.textContent = ' (' + chainWrathTimeFrenzy + ')';
 		chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSmall);
 	}
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Cookies Required (Frenzy) (Wrath)', chainWrathReqFrenFrag, goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Cookies Required (Frenzy) (Wrath)', chainWrathReqFrenFrag, goldCookTooltip));
 
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (MAX) (Golden / Wrath)', document.createTextNode(Beautify(CM.Cache.ChainReward) + ' / ' + Beautify(CM.Cache.ChainWrathReward)), goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Golden / Wrath)', document.createTextNode(Beautify(CM.Cache.ChainReward) + ' / ' + Beautify(CM.Cache.ChainWrathReward)), goldCookTooltip));
 
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (MAX) (Frenzy) (Golden / Wrath)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyReward) + ' / ' + Beautify(CM.Cache.ChainFrenzyWrathReward))), goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Frenzy) (Golden / Wrath)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyReward) + ' / ' + Beautify(CM.Cache.ChainFrenzyWrathReward))), goldCookTooltip));
 
 	// TODO: Place MaxChainMoni function into CM.Cache.RemakeChain and create global variables to store it
 	var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * CM.Cache.DragonsFortuneMultAdjustment * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.5);
 	var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax, CM.Cache.GoldenCookiesMult);
 	var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax, CM.Cache.WrathCookiesMult);
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Chain\" Reward (CUR) (Golden / Wrath)', document.createTextNode((Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))), goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (CUR) (Golden / Wrath)', document.createTextNode((Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))), goldCookTooltip));
 	return section;
 };
 
@@ -2625,7 +2624,6 @@ CM.Disp.CreateStatsSpellsSection = function() {
 	section.className = 'CMStatsSpellsSection';
 
 	var conjureColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-	var conjureCur = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
 	var conjureTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure) ? CM.Disp.FormatTime((CM.Cache.Conjure - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
 	
 	var conjureReqFrag = document.createDocumentFragment();
@@ -2639,8 +2637,8 @@ CM.Disp.CreateStatsSpellsSection = function() {
 		conjureReqSmall.textContent = ' (' + conjureTime + ')';
 		conjureReqFrag.appendChild(conjureReqSmall);
 	}
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Cookies Required', conjureReqFrag, 'GoldCookTooltipPlaceholder'));
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (MAX)', document.createTextNode(CM.Disp.Beautify(CM.Cache.ConjureReward)), 'GoldCookTooltipPlaceholder'));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Conjure Baked Goods" Cookies Required', conjureReqFrag, 'GoldCookTooltipPlaceholder'));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Conjure Baked Goods" Reward (MAX)', document.createTextNode(CM.Disp.Beautify(CM.Cache.ConjureReward)), 'GoldCookTooltipPlaceholder'));
 	
 	var conjureFrenzyColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Conjure * 7) ? CM.Disp.colorRed : CM.Disp.colorGreen;
 	var conjureFrenzyCur = Math.min((Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.15, CM.Cache.NoGoldSwitchCookiesPS * 60 * 30);
@@ -2657,11 +2655,11 @@ CM.Disp.CreateStatsSpellsSection = function() {
 		conjureFrenzyReqSmall.textContent = ' (' + conjureFrenzyTime + ')';
 		conjureFrenzyReqFrag.appendChild(conjureFrenzyReqSmall);
 	}
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Cookies Required (Frenzy)', conjureFrenzyReqFrag, 'GoldCookTooltipPlaceholder'));
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (MAX) (Frenzy)', document.createTextNode(CM.Disp.Beautify(CM.Cache.ConjureReward * 7)), 'GoldCookTooltipPlaceholder'));
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Conjure Baked Goods\" Reward (CUR)', document.createTextNode(CM.Disp.Beautify(conjureFrenzyCur)), 'GoldCookTooltipPlaceholder'));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Conjure Baked Goods" Cookies Required (Frenzy)', conjureFrenzyReqFrag, 'GoldCookTooltipPlaceholder'));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Conjure Baked Goods" Reward (MAX) (Frenzy)', document.createTextNode(CM.Disp.Beautify(CM.Cache.ConjureReward * 7)), 'GoldCookTooltipPlaceholder'));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Conjure Baked Goods" Reward (CUR)', document.createTextNode(CM.Disp.Beautify(conjureFrenzyCur)), 'GoldCookTooltipPlaceholder'));
 	if (CM.Cache.Edifice) {
-		section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '\"Spontaneous Edifice\" Cookies Required (most expensive building)', document.createTextNode(CM.Disp.Beautify(CM.Cache.Edifice) + ' (' + CM.Cache.EdificeBuilding + ")"), 'GoldCookTooltipPlaceholder'));
+		section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Spontaneous Edifice" Cookies Required (most expensive building)', document.createTextNode(CM.Disp.Beautify(CM.Cache.Edifice) + ' (' + CM.Cache.EdificeBuilding + ")"), 'GoldCookTooltipPlaceholder'));
 	}
 	return section;
 };
@@ -2692,7 +2690,7 @@ CM.Disp.CreateStatsPrestigeSection = function() {
 	var resetBonus = CM.Sim.ResetBonus(possiblePresMax);
 	var resetFrag = document.createDocumentFragment();
 	resetFrag.appendChild(document.createTextNode(Beautify(resetBonus)));
-	var increase = Math.round(resetBonus / Game.cookiesPs * 10000);
+	let increase = Math.round(resetBonus / Game.cookiesPs * 10000);
 	if (isFinite(increase) && increase != 0) {
 		var resetSmall = document.createElement('small');
 		resetSmall.textContent = ' (' + (increase / 100) + '% of income)';
@@ -2743,7 +2741,7 @@ CM.Disp.CreateStatsPrestigeSection = function() {
 CM.Disp.AddMissingUpgrades = function() {
 	if (CM.Cache.MissingUpgradesPrestige) {
 		var prestigeUpgradesOwned = Game.PrestigeUpgrades.length - l('menu').children[5].children[3].children.length;
-		var title = document.createElement('div');
+		let title = document.createElement('div');
 		title.id = "CMMissingUpgradesPrestigeTitle";
 		title.className = "listing";
 		titlefrag = document.createElement('div');
@@ -2756,10 +2754,9 @@ CM.Disp.AddMissingUpgrades = function() {
 		l('menu').children[5].appendChild(upgrades);
 	}
 	if (CM.Cache.MissingUpgrades) {
-		if (Game.UpgradesOwned) {
-			var normalUpgradesOwned = Game.UpgradesByPool[""].length + Game.UpgradesByPool.tech.length - l('menu').children[6].childNodes[2].children.length;
-		} else var normalUpgradesOwned = 0;
-		var title = document.createElement('div');
+		let normalUpgradesOwned = 0;
+		if (Game.UpgradesOwned) normalUpgradesOwned = Game.UpgradesByPool[""].length + Game.UpgradesByPool.tech.length - l('menu').children[6].childNodes[2].children.length;
+		let title = document.createElement('div');
 		title.id = "CMMissingUpgradesTitle";
 		title.className = "listing";
 		titlefrag = document.createElement('div');
@@ -2773,7 +2770,7 @@ CM.Disp.AddMissingUpgrades = function() {
 	}
 	if (CM.Cache.MissingUpgradesCookies) {
 		var cookieUpgradesOwned = Game.UpgradesByPool.cookie.length - l('menu').children[6].lastChild.children.length;
-		var title = document.createElement('div');
+		let title = document.createElement('div');
 		title.id = "CMMissingUpgradesCookiesTitle";
 		title.className = "listing";
 		titlefrag = document.createElement('div');
@@ -2803,7 +2800,7 @@ CM.Disp.crateMissing = function(me) {
 	if (!Game.prefs.crates) noFrame = 1;
 	if (noFrame) classes += ' noFrame';
 	
-	var icon = me.icon;
+	let icon = me.icon;
 	if (me.iconFunction) icon = me.iconFunction();
 	tooltip = `function() {return Game.crateTooltip(Game.UpgradesById[${me.id}], 'stats');}`;
 	return `<div class="${classes}"
