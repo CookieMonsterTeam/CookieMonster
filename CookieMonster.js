@@ -5667,6 +5667,6 @@ if (!CM.isRunning) {
             clearInterval(delay);
         }
     }, 500);
-    CM.isRunning = 2;
+    CM.isRunning = 1;
 }
 
