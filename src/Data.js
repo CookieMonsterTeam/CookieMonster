@@ -225,6 +225,7 @@ CM.ConfigData.DragonAuraInfo = {type: 'bool', group: 'Tooltip', label: ['Extra D
 // Statistics
 CM.ConfigData.Stats = {type: 'bool', group: 'Statistics', label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra Cookie Monster statistics!', toggle: true};
 CM.ConfigData.MissingUpgrades = {type: 'bool', group: 'Statistics', label: ['Missing Upgrades OFF', 'Missing Upgrades ON'], desc: 'Shows Missing upgrades in Stats Menu. This feature can be laggy for users with a low amount of unlocked achievements.', toggle: true};
+CM.ConfigData.MissingAchievements = {type: 'bool', group: 'Statistics', label: ['Missing Achievements OFF', 'Missing Normal Achievements ON', 'Missing Shadow Achievements ON', 'All Missing Achievements ON'], desc: 'Shows Missing normal or shadow achievements in Stats Menu.', toggle: false};
 CM.ConfigData.UpStats = {type: 'bool', group: 'Statistics', label: ['Statistics Update Rate (Default)', 'Statistics Update Rate (1s)'], desc: 'Default Game rate is once every 5 seconds', toggle: false};
 CM.ConfigData.TimeFormat = {type: 'bool', group: 'Statistics', label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
 CM.ConfigData.DetailedTime = {type: 'bool', group: 'Statistics', label: ['Detailed Time OFF', 'Detailed Time ON'], desc: 'Change how time is displayed in certain statistics and tooltips', toggle: true, func: function() {CM.Disp.ToggleDetailedTime();}};
@@ -312,6 +313,7 @@ CM.Data.ConfigDefault = {
 	DragonAuraInfo: 1,
 	Stats: 1, 
 	MissingUpgrades: 1,
+	MissingAchievements: 3,
 	UpStats: 1, 
 	TimeFormat: 0, 
 	DetailedTime: 1, 
