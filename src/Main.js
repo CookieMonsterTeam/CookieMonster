@@ -182,26 +182,6 @@ CM.Loop = function() {
 
 		// Calculate PP
 		CM.Cache.RemakePP();
-
-		// Update colors
-		CM.Disp.UpdateBuildings();
-		CM.Disp.UpdateUpgrades();
-
-		// Redraw timers
-		CM.Disp.UpdateTimerBar();
-
-		// Update Bottom Bar
-		CM.Disp.UpdateBotBar();
-
-		// Update Tooltip
-		CM.Disp.UpdateTooltip();
-
-		// Update Wrinkler Tooltip
-		CM.Disp.CheckWrinklerTooltip();
-		CM.Disp.UpdateWrinklerTooltip();
-
-		// Change menu refresh interval
-		CM.Disp.RefreshMenu();
 	}
 
 	// Check all changing minigames and game-states
