@@ -2700,7 +2700,7 @@ CM.Disp.CreateStatsPrestigeSection = function() {
 	var cookiesNextFrag = document.createDocumentFragment();
 	cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
 	var cookiesNextSmall = document.createElement('small');
-	cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / CM.Cache.AvgCPSChoEgg, 1)) + ')';
+	cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / CM.Cache.AvgCPSWithChoEgg, 1)) + ')';
 	cookiesNextFrag.appendChild(cookiesNextSmall);
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Cookies To Next Level', cookiesNextFrag, 'NextPrestTooltipPlaceholder'));
 	

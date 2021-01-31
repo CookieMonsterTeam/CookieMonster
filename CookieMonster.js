@@ -241,6 +241,7 @@ CM.Cache.InitCookiesDiff = function() {
  * TODO: Check if this can be made more concise
  * @global	{number}	CM.Cache.AvgCPS				Average cookies over time-period as defined by AvgCPSHist
  * @global	{number}	CM.Cache.AverageClicks		Average cookies from clicking over time-period as defined by AvgClicksHist
+ * @global	{number}	CM.Cache.AvgCPSChoEgg		Average cookies from combination of normal CPS and average Chocolate Cookie CPS
  */
 CM.Cache.UpdateAvgCPS = function() {
 	var currDate = Math.floor(Date.now() / 1000);
@@ -288,11 +289,10 @@ CM.Cache.UpdateAvgCPS = function() {
 
 		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 
-		// TODO: Why and where is this used?
 		if (choEgg || CM.Options.CalcWrink == 0) {
-			CM.Cache.AvgCPSChoEgg = CM.Cache.AverageGainBank + CM.Cache.AverageGainWrink + (choEgg ? CM.Cache.AverageGainChoEgg : 0);
+			CM.Cache.AvgCPSWithChoEgg = CM.Cache.AverageGainBank + CM.Cache.AverageGainWrink + (choEgg ? CM.Cache.AverageGainChoEgg : 0);
 		}
-		else CM.Cache.AvgCPSChoEgg = CM.Cache.AvgCPS;
+		else CM.Cache.AvgCPSWithChoEgg = CM.Cache.AvgCPS;
 
 		CM.Cache.AverageClicks =  CM.Cache.ClicksDiff.calcAverage(CM.Disp.clickTimes[CM.Options.AvgClicksHist]);
 	}
@@ -3914,7 +3914,7 @@ CM.Disp.CreateStatsPrestigeSection = function() {
 	var cookiesNextFrag = document.createDocumentFragment();
 	cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
 	var cookiesNextSmall = document.createElement('small');
-	cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / CM.Cache.AvgCPSChoEgg, 1)) + ')';
+	cookiesNextSmall.textContent = ' (' + (CM.Disp.FormatTime(neededCook / CM.Cache.AvgCPSWithChoEgg, 1)) + ')';
 	cookiesNextFrag.appendChild(cookiesNextSmall);
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Cookies To Next Level', cookiesNextFrag, 'NextPrestTooltipPlaceholder'));
 	
@@ -4473,8 +4473,7 @@ CM.Main.ReplaceTooltipGarden = function() {
 };
 
 /********
- * Section: Functions related to checking for changes in Minigames/GC's/Ticker
- * TODO: Possibly move this section */
+ * Section: Functions related to checking for changes in Minigames/GC's/Ticker */
 
 /**
  * Auxilirary function that finds all currently spawned shimmers. 
@@ -4496,14 +4495,12 @@ CM.Main.FindShimmer = function() {
 /**
  * This function checks for changes in the amount of Golden Cookies
  * It is called by CM.Loop
- * TODO: Remove the delete function, as it does not delete correctly and crowds CM.Disp.GCTimers
  */
 CM.Main.CheckGoldenCookie = function() {
 	CM.Main.FindShimmer();
 	for (let i of Object.keys(CM.Disp.GCTimers)) {
 		if (typeof CM.Cache.goldenShimmersByID[i] == "undefined") {
 			CM.Disp.GCTimers[i].parentNode.removeChild(CM.Disp.GCTimers[i]);
-			// TODO remove delete here
 			delete CM.Disp.GCTimers[i];
 		}
 	}
@@ -5012,7 +5009,6 @@ CM.Sim.CalculateGains = function() {
 		else if (godLvl == 2) mult *= 1.1;
 		else if (godLvl == 3) mult *= 1.05;
 
-		// TODO: What does DateAges do?
 		godLvl = CM.Sim.hasGod('ages');
 		if (godLvl == 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 3)) * Math.PI * 2);
 		else if (godLvl == 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 12)) * Math.PI*2);
@@ -5102,7 +5098,6 @@ CM.Sim.CalculateGains = function() {
 	}
 	mult *= eggMult;
 
-	// TODO Store lumps?
 	if (CM.Sim.Has('Sugar baking')) mult *= (1 + Math.min(100, Game.lumps) * 0.01);
 
 	//if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;
@@ -5662,7 +5657,6 @@ CM.Footer.AddJscolor = function() {
 /**
  * This functions starts the initizialization and register CookieMonster
  * It is called as the last function in this script's execution
- * TODO: Make this async await
  */
 if (!CM.isRunning) {
     CM.Footer.AddJscolor();

@@ -324,7 +324,6 @@ CM.Sim.CalculateGains = function() {
 		else if (godLvl == 2) mult *= 1.1;
 		else if (godLvl == 3) mult *= 1.05;
 
-		// TODO: What does DateAges do?
 		godLvl = CM.Sim.hasGod('ages');
 		if (godLvl == 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 3)) * Math.PI * 2);
 		else if (godLvl == 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 12)) * Math.PI*2);
@@ -414,7 +413,6 @@ CM.Sim.CalculateGains = function() {
 	}
 	mult *= eggMult;
 
-	// TODO Store lumps?
 	if (CM.Sim.Has('Sugar baking')) mult *= (1 + Math.min(100, Game.lumps) * 0.01);
 
 	//if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;

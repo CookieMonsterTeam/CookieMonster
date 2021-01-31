@@ -63,7 +63,6 @@ CM.Footer.AddJscolor = function() {
 /**
  * This functions starts the initizialization and register CookieMonster
  * It is called as the last function in this script's execution
- * TODO: Make this async await
  */
 if (!CM.isRunning) {
     CM.Footer.AddJscolor();
