@@ -4,6 +4,7 @@ module.exports = {
         "es2021": true
     },
     "globals": {
+        "module": "readonly",
         "CM": "writable",
         "Game": "writable",
         "l": "readonly",
@@ -14,6 +15,7 @@ module.exports = {
         "JSColor": "readonly",
         "jscolor": "readonly",
         "BeautifyAll": "readonly",
+        
     },
     "extends": "eslint:recommended",
     "parserOptions": {
