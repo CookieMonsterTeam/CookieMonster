@@ -29,7 +29,6 @@ CM.Cache.InitCache = function() {
  * @global	{number}	CM.Cache.dragonAura2	The number of the second (left) Aura
  */
 CM.Cache.CacheDragonAuras = function() {
-	/** @global	*/
 	CM.Cache.dragonAura = Game.dragonAura;
 	CM.Cache.dragonAura2 = Game.dragonAura2;
 };

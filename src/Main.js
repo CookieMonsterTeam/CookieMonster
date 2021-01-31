@@ -93,12 +93,6 @@ CM.ReplaceNative = function() {
 		else return CM.Disp.FormatTime(time / Game.fps, 1);
 	};
 
-	CM.Backup.Loop = Game.Loop;
-	Game.Loop = function() {
-		CM.Backup.Loop();
-		CM.Loop();
-	};
-
 	CM.Backup.Logic = Game.Logic;
 	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Cache.Title'));
 	Game.Logic = function() {
@@ -188,26 +182,6 @@ CM.Loop = function() {
 
 		// Calculate PP
 		CM.Cache.RemakePP();
-
-		// Update colors
-		CM.Disp.UpdateBuildings();
-		CM.Disp.UpdateUpgrades();
-
-		// Redraw timers
-		CM.Disp.UpdateTimerBar();
-
-		// Update Bottom Bar
-		CM.Disp.UpdateBotBar();
-
-		// Update Tooltip
-		CM.Disp.UpdateTooltip();
-
-		// Update Wrinkler Tooltip
-		CM.Disp.CheckWrinklerTooltip();
-		CM.Disp.UpdateWrinklerTooltip();
-
-		// Change menu refresh interval
-		CM.Disp.RefreshMenu();
 	}
 
 	// Check all changing minigames and game-states

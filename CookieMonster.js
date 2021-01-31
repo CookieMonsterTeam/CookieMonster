@@ -61,7 +61,6 @@ CM.Cache.InitCache = function() {
  * @global	{number}	CM.Cache.dragonAura2	The number of the second (left) Aura
  */
 CM.Cache.CacheDragonAuras = function() {
-	/** @global	*/
 	CM.Cache.dragonAura = Game.dragonAura;
 	CM.Cache.dragonAura2 = Game.dragonAura2;
 };
@@ -1511,11 +1510,11 @@ CM.Disp.UpdateBackground = function() {
 };
 
 /**
- * This function handles custom drawing for the Game.Draw() function.
+ * This function handles all custom drawing for the Game.Draw() function.
  * It is hooked on 'draw' by CM.RegisterHooks()
  */
 CM.Disp.Draw = function () {
-	// Draw autosave timer in stats menu
+	// Draw autosave timer in stats menu, this must be done here to make it count down correctly
 	if (
 		(Game.prefs.autosave && Game.drawT % 10 == 0) && // with autosave ON and every 10 ticks
 		(Game.onMenu == 'stats' && CM.Options.Stats) // while being on the stats menu only
@@ -1525,6 +1524,25 @@ CM.Disp.Draw = function () {
 			timer.innerText = Game.sayTime(Game.fps * 60 - (Game.T % (Game.fps * 60)), 4);
 		}
 	}
+	// Update colors
+	CM.Disp.UpdateBuildings();
+	CM.Disp.UpdateUpgrades();
+
+	// Redraw timers
+	CM.Disp.UpdateTimerBar();
+
+	// Update Bottom Bar
+	CM.Disp.UpdateBotBar();
+
+	// Update Tooltip
+	CM.Disp.UpdateTooltip();
+
+	// Update Wrinkler Tooltip
+	CM.Disp.CheckWrinklerTooltip();
+	CM.Disp.UpdateWrinklerTooltip();
+
+	// Change menu refresh interval
+	CM.Disp.RefreshMenu();
 };
 
 /********
@@ -4226,12 +4244,6 @@ CM.ReplaceNative = function() {
 		else return CM.Disp.FormatTime(time / Game.fps, 1);
 	};
 
-	CM.Backup.Loop = Game.Loop;
-	Game.Loop = function() {
-		CM.Backup.Loop();
-		CM.Loop();
-	};
-
 	CM.Backup.Logic = Game.Logic;
 	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Cache.Title'));
 	Game.Logic = function() {
@@ -4321,26 +4333,6 @@ CM.Loop = function() {
 
 		// Calculate PP
 		CM.Cache.RemakePP();
-
-		// Update colors
-		CM.Disp.UpdateBuildings();
-		CM.Disp.UpdateUpgrades();
-
-		// Redraw timers
-		CM.Disp.UpdateTimerBar();
-
-		// Update Bottom Bar
-		CM.Disp.UpdateBotBar();
-
-		// Update Tooltip
-		CM.Disp.UpdateTooltip();
-
-		// Update Wrinkler Tooltip
-		CM.Disp.CheckWrinklerTooltip();
-		CM.Disp.UpdateWrinklerTooltip();
-
-		// Change menu refresh interval
-		CM.Disp.RefreshMenu();
 	}
 
 	// Check all changing minigames and game-states
@@ -5626,6 +5618,8 @@ CM.init = function() {
     if (proceed) {
         CM.DelayInit();
         Game.registerHook('draw', CM.Disp.Draw);
+        Game.registerHook('logic', CM.Loop);
+        
     }
 };
 

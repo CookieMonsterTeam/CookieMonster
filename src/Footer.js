@@ -19,6 +19,8 @@ CM.init = function() {
     if (proceed) {
         CM.DelayInit();
         Game.registerHook('draw', CM.Disp.Draw);
+        Game.registerHook('logic', CM.Loop);
+        
     }
 };
 
