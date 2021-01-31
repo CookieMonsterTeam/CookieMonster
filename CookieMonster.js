@@ -1123,6 +1123,7 @@ CM.ConfigData.ScaleCutoff = {type: 'numscale', group: 'Notation', label: 'Notati
 CM.ConfigData.GCTimer = {type: 'bool', group: 'Miscellaneous', label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', toggle: true, func: function() {CM.Disp.ToggleGCTimer();}};
 CM.ConfigData.Favicon = {type: 'bool', group: 'Miscellaneous', label: ['Favicon OFF', 'Favicon ON'], desc: 'Update favicon with Golden/Wrath Cookie', toggle: true, func: function() {CM.Disp.UpdateFavicon();}};
 CM.ConfigData.WrinklerButtons = {type: 'bool', group: 'Miscellaneous', label: ['Extra Buttons OFF', 'Extra Buttons ON'], desc: 'Show buttons for popping wrinklers at bottom of cookie section', toggle: true, func: function() {CM.Disp.UpdateWrinklerButtons();}};
+CM.ConfigData.BulkBuyBlock = {type: 'bool', group: 'Miscellaneous', label: ['Block Bulk Buying OFF', 'Block Bulk Buying ON'], desc: "Block clicking bulk buying when you can't buy all. This prevents buying 7 of a building when you are in buy-10 or buy-100 mode.", toggle: true};
 
 
 /**
@@ -1208,6 +1209,7 @@ CM.Data.ConfigDefault = {
 	GCTimer: 1, 
 	Favicon: 1,
 	WrinklerButtons: 1,
+	BulkBuyBlock: 0,
 	Header: {BarsColors: 1, Calculation: 1, Notification: 1, NotificationGC: 1, NotificationFC: 1, NotificationSea: 1, NotificationGard: 1, NotificationMagi: 1, NotificationWrink: 1, NotificationWrinkMax: 1, Tooltip: 1, Statistics: 1, Notation: 1, Miscellaneous: 1, Lucky: 1, Spells: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
 };
 
@@ -1357,7 +1359,7 @@ CM.Disp.FormatTime = function(time, longFormat) {
 		str += (d < 10 ? '0' : '') + d + ':';
 		str += (h < 10 ? '0' : '') + h + ':';
 		str += (m < 10 ? '0' : '') + m + ':';
-		str += (s < 10 ? '0' : '') + s + ':';
+		str += (s < 10 ? '0' : '') + s;
 	} else {
 		if (time > 777600000) return longFormat ? 'Over 9000 days!' : '>9000d';
 		str += (y > 0 ? y + (longFormat ? (y == 1 ? ' year' : ' years') : 'y') + ', ': "");
@@ -4177,6 +4179,17 @@ CM.ReplaceNative = function() {
 		CM.Backup.RebuildUpgrades();
 		CM.Disp.ReplaceTooltipUpgrade();
 		Game.CalculateGains();
+	};
+
+	/**
+	 * This optiond adds a check to the purchase of a building to allow BulkBuyBlock to work.
+	 * If the options is 1 (on) bulkPrice is under cookies you can't buy the building. 
+	 */
+	CM.Backup.ClickProduct = Game.ClickProduct;
+	Game.ClickProduct = function(what) {
+		if (!CM.Options.BulkBuyBlock || Game.ObjectsById[what].bulkPrice < Game.cookies) {
+			CM.Backup.ClickProduct(what);
+		}
 	};
 
 	CM.Backup.DescribeDragonAura = Game.DescribeDragonAura;

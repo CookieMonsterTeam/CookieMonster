@@ -48,6 +48,17 @@ CM.ReplaceNative = function() {
 		Game.CalculateGains();
 	};
 
+	/**
+	 * This optiond adds a check to the purchase of a building to allow BulkBuyBlock to work.
+	 * If the options is 1 (on) bulkPrice is under cookies you can't buy the building. 
+	 */
+	CM.Backup.ClickProduct = Game.ClickProduct;
+	Game.ClickProduct = function(what) {
+		if (!CM.Options.BulkBuyBlock || Game.ObjectsById[what].bulkPrice < Game.cookies) {
+			CM.Backup.ClickProduct(what);
+		}
+	};
+
 	CM.Backup.DescribeDragonAura = Game.DescribeDragonAura;
 	/**
 	 * This functions adds the function CM.Disp.AddAuraInfo() to Game.DescribeDragonAura()
