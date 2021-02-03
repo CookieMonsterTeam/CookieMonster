@@ -51,27 +51,7 @@ If (for some reason) the above doesn't work, trying pasting everything after the
 
 ### Userscript
 
-If you'd rather use the addon as a script via per example *Greasemonkey* or *Tampermonkey*, you can use the following script, which will automatically load *Cookie Monster* every time the original game loads. You may need to specify <code>http://orteil.dashnet.org/cookieclicker/</code> when asked for a *namespace* or *includes*. For how to add an userscript to your browser, refer to your browser/plugin's documentation as the method changes for each one.
-
-```javascript
-// ==UserScript==
-// @name Cookie Monster
-// @namespace Cookie
-// @include http://orteil.dashnet.org/cookieclicker/
-// @include https://orteil.dashnet.org/cookieclicker/
-// @version 1
-// @grant none
-// ==/UserScript==
-
-(function() {
-    const checkReady = setInterval(function() {
-        if (typeof Game.ready !== 'undefined' && Game.ready) {
-            Game.LoadMod('https://aktanusa.github.io/CookieMonster/CookieMonster.js');
-            clearInterval(checkReady);
-        }
-    }, 1000);
-})();
-```
+If you'd rather use the addon as a [userscript](https://en.wikipedia.org/wiki/Userscript) to automatically load *Cookie Monster* every time the original game loads, install the `cookie-monster.user.js` file. You can do this by clicking on the file in the file-list and clicking "raw".
 
 ## Bugs and suggestions
 
