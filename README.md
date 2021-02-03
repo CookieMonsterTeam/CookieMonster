@@ -51,7 +51,7 @@ If (for some reason) the above doesn't work, trying pasting everything after the
 
 ### Userscript
 
-If you'd rather use the addon as a [userscript](https://en.wikipedia.org/wiki/Userscript) to automatically load *Cookie Monster* every time the original game loads, install the `cookie-monster.user.js` file.
+If you'd rather use the addon as a [userscript](https://en.wikipedia.org/wiki/Userscript) to automatically load *Cookie Monster* every time the original game loads, install the `cookie-monster.user.js` file. You can do this by clicking on the file in the file-list and clicking "raw".
 
 ## Bugs and suggestions
 
