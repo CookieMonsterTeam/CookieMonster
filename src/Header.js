@@ -2,7 +2,10 @@
  * Header *
  **********/
 
-var RunCookieMonsterHeader = function() {
+/**
+ * This functions creates the necessary objects and is run when they do not already exist
+ */
+const RunCookieMonsterHeader = function() {
     CM = {};
 
     CM.Backup = {};
