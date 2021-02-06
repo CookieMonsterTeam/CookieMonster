@@ -392,7 +392,7 @@ CM.Cache.NextNumber = function(base) {
 
 CM.Cache.RemakeBuildingsPrices = function() {
 	for (let i of Object.keys(Game.Objects)) {
-		CM.Cache.Objects[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 1);
+		CM.Cache.Objects1[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 1);
 		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
 		CM.Cache.Objects100[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
 	}
@@ -400,7 +400,7 @@ CM.Cache.RemakeBuildingsPrices = function() {
 
 CM.Cache.RemakeIncome = function() {
 	// Simulate Building Buys for 1 amount
-	CM.Sim.BuyBuildings(1, 'Objects');
+	CM.Sim.BuyBuildings(1, 'Objects1');
 
 	// Simulate Upgrade Buys
 	CM.Sim.BuyUpgrades();
@@ -418,24 +418,24 @@ CM.Cache.RemakeBuildingsPP = function() {
 	CM.Cache.mid = -1;
 	// Calculate PP and colors when compared to purchase of single optimal building
 	if (CM.Options.ColorPPBulkMode == 0) {
-		for (let i of Object.keys(CM.Cache.Objects)) {
-			//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
+		for (let i of Object.keys(CM.Cache.Objects1)) {
+			//CM.Cache.Objects1[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus;
 			if (Game.cookiesPs) {
-				CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+				CM.Cache.Objects1[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 			} else {
-				CM.Cache.Objects[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+				CM.Cache.Objects1[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 			}
-			if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
-			if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
+			if (CM.Cache.min == -1 || CM.Cache.Objects1[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects1[i].pp;
+			if (CM.Cache.max == -1 || CM.Cache.Objects1[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects1[i].pp;
 		}
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-		for (let i of Object.keys(CM.Cache.Objects)) {
+		for (let i of Object.keys(CM.Cache.Objects1)) {
 			let color = '';
-			if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
-			else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
-			else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+			if (CM.Cache.Objects1[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+			else if (CM.Cache.Objects1[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+			else if (CM.Cache.Objects1[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
 			else color = CM.Disp.colorYellow;
-			CM.Cache.Objects[i].color = color;
+			CM.Cache.Objects1[i].color = color;
 		}
 		// Buildings for 10 amount
 		CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
@@ -446,30 +446,30 @@ CM.Cache.RemakeBuildingsPP = function() {
 	// Calculate PP and colors when compared to purchase of selected bulk mode
 	else {
 		if (Game.buyBulk == 1) {
-			for (let i of Object.keys(CM.Cache.Objects)) {
-				//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
+			for (let i of Object.keys(CM.Cache.Objects1)) {
+				//CM.Cache.Objects1[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus;
 				if (Game.cookiesPs) {
-					CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+					CM.Cache.Objects1[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 				} else {
-					CM.Cache.Objects[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+					CM.Cache.Objects1[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 				}
-				if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
-				if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
+				if (CM.Cache.min == -1 || CM.Cache.Objects1[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects1[i].pp;
+				if (CM.Cache.max == -1 || CM.Cache.Objects1[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects1[i].pp;
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-			for (let i of Object.keys(CM.Cache.Objects)) {
+			for (let i of Object.keys(CM.Cache.Objects1)) {
 				let color = '';
-				if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
-				else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
-				else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+				if (CM.Cache.Objects1[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+				else if (CM.Cache.Objects1[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+				else if (CM.Cache.Objects1[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
 				else color = CM.Disp.colorYellow;
-				CM.Cache.Objects[i].color = color;
+				CM.Cache.Objects1[i].color = color;
 			}
 			CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
 			CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
 		}
 		else if (Game.buyBulk == 10) {
-			for (let i of Object.keys(CM.Cache.Objects)) {
+			for (let i of Object.keys(CM.Cache.Objects1)) {
 				if (Game.cookiesPs) {
 					CM.Cache.Objects10[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects10[i].bonus);
 				} else {
@@ -479,7 +479,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 				if (CM.Cache.max == -1 || CM.Cache.Objects10[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects10[i].pp;
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-			for (let i of Object.keys(CM.Cache.Objects)) {
+			for (let i of Object.keys(CM.Cache.Objects1)) {
 				let color = '';
 				if (CM.Cache.Objects10[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 				else if (CM.Cache.Objects10[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
@@ -491,7 +491,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 			CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
 		}
 		else if (Game.buyBulk == 100) {
-			for (let i of Object.keys(CM.Cache.Objects)) {
+			for (let i of Object.keys(CM.Cache.Objects1)) {
 				if (Game.cookiesPs) {
 					CM.Cache.Objects100[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects100[i].bonus);
 				} else {
@@ -501,7 +501,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 				if (CM.Cache.max == -1 || CM.Cache.Objects100[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects100[i].pp;
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-			for (let i of Object.keys(CM.Cache.Objects)) {
+			for (let i of Object.keys(CM.Cache.Objects1)) {
 				let color = '';
 				if (CM.Cache.Objects100[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 				else if (CM.Cache.Objects100[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
@@ -1619,12 +1619,10 @@ CM.Disp.CreateBotBar = function() {
  * It is called by CM.Loop()
  */
 CM.Disp.UpdateBotBar = function() {
-	if (CM.Options.BotBar == 1 && CM.Cache.Objects) {
+	if (CM.Options.BotBar == 1 && CM.Cache.Objects1) {
 		var count = 0;
-		for (let i of Object.keys(CM.Cache.Objects)) {
-			var target = 'Objects';
-			if (Game.buyBulk == 10) {target = 'Objects10';}
-			if (Game.buyBulk == 100) {target = 'Objects100';}
+		for (let i of Object.keys(CM.Cache.Objects1)) {
+			let target = `Objects${Game.buyBulk}`
 			count++;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache[target][i].bonus, 2);
@@ -1929,9 +1927,7 @@ CM.Disp.UpdateBotTimerBarPosition = function() {
  * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.ConfigData.BulkBuildColor
  */
 CM.Disp.UpdateBuildings = function() {
-	let target = 'Objects';
-	if (Game.buyBulk == 10 && CM.Options.BulkBuildColor == 1) target = 'Objects10';
-	else if (Game.buyBulk == 100 && CM.Options.BulkBuildColor == 1) target = 'Objects100';
+	let target = `Objects${Game.buyBulk}`
 	if  (Game.buyMode == 1) {
 		if (CM.Options.BuildColor == 1) {
 			for (let i of Object.keys(CM.Cache[target])) {
@@ -1944,7 +1940,7 @@ CM.Disp.UpdateBuildings = function() {
 		}
 	}
 	else if (Game.buyMode == -1) {
-		for (let i of Object.keys(CM.Cache.Objects)) {
+		for (let i of Object.keys(CM.Cache.Objects1)) {
 			var o = Game.Objects[i];
 			l('productPrice' + o.id).style.color = '';
 			/*
@@ -1977,9 +1973,9 @@ CM.Disp.UpdateBuildings = function() {
 			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
 		}
 	} else {
-		let arr = Object.keys(CM.Cache.Objects).map(k =>
+		let arr = Object.keys(CM.Cache.Objects1).map(k =>
 			{
-				var o = CM.Cache.Objects[k];
+				var o = CM.Cache.Objects1[k];
 				o.name = k;
 				o.id = Game.Objects[k].id;
 				return o;
@@ -2669,12 +2665,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 		let tooltipBox = l('CMTooltipBorder');
 		CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
-		var target = '';
-		// TODO: Change the Cache code and variables to use Objects1, Objectes10, Objects100
-		// That would depreciate this target setting code
-		if (Game.buyMode == 1 && Game.buyBulk == 10) target = 'Objects10';
-		else if (Game.buyMode == 1 && Game.buyBulk == 100) target = 'Objects100';
-		else target = 'Objects';
+		let target = `Objects${Game.buyBulk}`
 
 		CM.Disp.TooltipPrice = Game.Objects[CM.Disp.tooltipName].bulkPrice;
 		CM.Disp.TooltipBonusIncome = CM.Cache[target][CM.Disp.tooltipName].bonus;

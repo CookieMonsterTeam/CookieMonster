@@ -405,12 +405,10 @@ CM.Disp.CreateBotBar = function() {
  * It is called by CM.Loop()
  */
 CM.Disp.UpdateBotBar = function() {
-	if (CM.Options.BotBar == 1 && CM.Cache.Objects) {
+	if (CM.Options.BotBar == 1 && CM.Cache.Objects1) {
 		var count = 0;
-		for (let i of Object.keys(CM.Cache.Objects)) {
-			var target = 'Objects';
-			if (Game.buyBulk == 10) {target = 'Objects10';}
-			if (Game.buyBulk == 100) {target = 'Objects100';}
+		for (let i of Object.keys(CM.Cache.Objects1)) {
+			let target = `Objects${Game.buyBulk}`
 			count++;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache[target][i].bonus, 2);
@@ -715,9 +713,7 @@ CM.Disp.UpdateBotTimerBarPosition = function() {
  * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.ConfigData.BulkBuildColor
  */
 CM.Disp.UpdateBuildings = function() {
-	let target = 'Objects';
-	if (Game.buyBulk == 10 && CM.Options.BulkBuildColor == 1) target = 'Objects10';
-	else if (Game.buyBulk == 100 && CM.Options.BulkBuildColor == 1) target = 'Objects100';
+	let target = `Objects${Game.buyBulk}`
 	if  (Game.buyMode == 1) {
 		if (CM.Options.BuildColor == 1) {
 			for (let i of Object.keys(CM.Cache[target])) {
@@ -730,7 +726,7 @@ CM.Disp.UpdateBuildings = function() {
 		}
 	}
 	else if (Game.buyMode == -1) {
-		for (let i of Object.keys(CM.Cache.Objects)) {
+		for (let i of Object.keys(CM.Cache.Objects1)) {
 			var o = Game.Objects[i];
 			l('productPrice' + o.id).style.color = '';
 			/*
@@ -763,9 +759,9 @@ CM.Disp.UpdateBuildings = function() {
 			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
 		}
 	} else {
-		let arr = Object.keys(CM.Cache.Objects).map(k =>
+		let arr = Object.keys(CM.Cache.Objects1).map(k =>
 			{
-				var o = CM.Cache.Objects[k];
+				var o = CM.Cache.Objects1[k];
 				o.name = k;
 				o.id = Game.Objects[k].id;
 				return o;
@@ -1455,12 +1451,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 		let tooltipBox = l('CMTooltipBorder');
 		CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
-		var target = '';
-		// TODO: Change the Cache code and variables to use Objects1, Objectes10, Objects100
-		// That would depreciate this target setting code
-		if (Game.buyMode == 1 && Game.buyBulk == 10) target = 'Objects10';
-		else if (Game.buyMode == 1 && Game.buyBulk == 100) target = 'Objects100';
-		else target = 'Objects';
+		let target = `Objects${Game.buyBulk}`
 
 		CM.Disp.TooltipPrice = Game.Objects[CM.Disp.tooltipName].bulkPrice;
 		CM.Disp.TooltipBonusIncome = CM.Cache[target][CM.Disp.tooltipName].bonus;
