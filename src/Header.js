@@ -7,6 +7,8 @@
  */
 const RunCookieMonsterHeader = function() {
     CM = {};
+    CM.VersionMajor = '2.031';
+    CM.VersionMinor = '3';
 
     CM.Backup = {};
 
