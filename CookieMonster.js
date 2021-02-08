@@ -2331,7 +2331,6 @@ CM.Data.ConfigDefault = {
         Misc: 1,
     },
 };
-/* eslint-disable no-nested-ternary */
 /*
  Disp
  */
@@ -2497,25 +2496,50 @@ CM.Disp.FormatTime = (time, longFormat) => {
         if (time > 777600000) {
             return longFormat ? 'Over 9000 days!' : '>9000d';
         }
-        str +=
-            y > 0
-                ? `${y + (longFormat ? (y === 1 ? ' year' : ' years') : 'y')}, `
-                : '';
-        str +=
-            d > 0
-                ? `${d + (longFormat ? (d === 1 ? ' day' : ' days') : 'd')}, `
-                : '';
+        let timeUnit;
+        if (y > 0) {
+            if (y === 1) {
+                timeUnit = ' year';
+            } else {
+                timeUnit = ' years';
+            }
+
+            str += `${y + (longFormat ? timeUnit : 'y')}, `;
+        }
+        if (d > 0) {
+            if (d === 1) {
+                timeUnit = ' day';
+            } else {
+                timeUnit = ' days';
+            }
+
+            str += `${d + (longFormat ? timeUnit : 'd')}, `;
+        }
         if (str.length > 0 || h > 0) {
-            str += `${
-                h + (longFormat ? (h === 1 ? ' hour' : ' hours') : 'h')
-            }, `;
+            if (h === 1) {
+                timeUnit = ' hour';
+            } else {
+                timeUnit = ' hours';
+            }
+
+            str += `${h + (longFormat ? timeUnit : 'h')}, `;
         }
         if (str.length > 0 || m > 0) {
-            str += `${
-                m + (longFormat ? (m === 1 ? ' minute' : ' minutes') : 'm')
-            }, `;
+            if (m === 1) {
+                timeUnit = ' minute';
+            } else {
+                timeUnit = ' minutes';
+            }
+
+            str += `${m + (longFormat ? timeUnit : 'm')}, `;
         }
-        str += s + (longFormat ? (s === 1 ? ' second' : ' seconds') : 's');
+
+        if (s === 1) {
+            timeUnit = ' second';
+        } else {
+            timeUnit = ' seconds';
+        }
+        str += s + (longFormat ? timeUnit : 's');
     }
     return str;
 };
@@ -3346,7 +3370,14 @@ CM.Disp.UpdateBuildings = () => {
         });
 
         arr.sort((a, b) => {
-            return a.pp > b.pp ? 1 : a.pp < b.pp ? -1 : 0;
+            let changeThisLater;
+            if (a.pp < b.pp) {
+                changeThisLater = -1;
+            } else {
+                changeThisLater = 0;
+            }
+
+            return a.pp > b.pp ? 1 : changeThisLater;
         });
 
         for (let x = 0; x < arr.length; x++) {
