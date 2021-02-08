@@ -1,0 +1,49 @@
+{
+ "name": "cookie-monster",
+ "version": "2.031.4",
+ "description": "Cookie Monster is an addon you can load into Cookie Clicker that offers a wide range of tools and statistics to enhance the game. It is not a cheat interface – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want. This is a helper, and it is here to help you at whichever degree you want, if you only need some help shortening long numbers, it does that. If you need to be accompanied by hand to pick the best buildings to buy, it does that, but everything is an option.",
+ "keywords": [
+  "Cookie Clicker",
+  "javascript",
+  "mod",
+  "Dashnet",
+  "Orteil"
+ ],
+ "homepage": "https://github.com/Aktanusa/CookieMonster",
+ "bugs": {
+  "url": "https://github.com/Aktanusa/CookieMonster/issues",
+  "email": "danielvannoord@me.com"
+ },
+ "repository": {
+  "type": "git",
+  "url": "https://github.com/Aktanusa/CookieMonster.git"
+ },
+ "license": "MIT",
+ "author": {
+  "name": "Daniel Noord",
+  "email": "danielvannoord@me.com"
+ },
+ "contributors": [
+  {
+   "name": "Aran Leite",
+   "email": "hyoretsu@gmail.com",
+   "url": "https://www.linkedin.com/in/aranleite"
+  }
+ ],
+ "main": "CookieMonster.js",
+ "devDependencies": {
+  "eslint": "^7.19.0",
+  "eslint-config-airbnb-base": "^14.2.1",
+  "eslint-config-prettier": "^7.2.0",
+  "eslint-plugin-import": "^2.22.1",
+  "eslint-plugin-prettier": "^3.3.1",
+  "prettier": "^2.2.1"
+ },
+ "ccrepo": {
+  "icon": [
+   10,
+   0
+  ],
+  "name": "Cookie Monster"
+ }
+}

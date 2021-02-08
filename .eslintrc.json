@@ -1,0 +1,53 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "globals": {
+        "Atomics": "readonly",
+        "Beautify": "writable",
+        "BeautifyAll": "readonly",
+        "b64_to_utf8": "readonly",
+        "CM": "writable",
+        "Game": "writable",
+        "JSColor": "readonly",
+        "jscolor": "readonly",
+        "l": "readonly",
+        "module": "readonly",
+        "realAudio": "readonly",
+        "SharedArrayBuffer": "readonly",
+        "utf8_to_b64": "readonly"
+    },
+    "extends": ["airbnb-base", "plugin:prettier/recommended"],
+    "parserOptions": {
+        "ecmaVersion": 11
+    },
+    "plugins": ["prettier"],
+    "rules": {
+        "consistent-return": "off",
+        "curly": "error",
+        "new-cap": [
+            "error",
+            {
+                "capIsNew": false,
+                "newIsCapExceptions": ["realAudio"]
+            }
+        ],
+        "no-alert": "off",
+        "no-new": "off",
+        "no-new-func": "off",
+        "no-param-reassign": "off",
+        "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+        "no-restricted-syntax": "off",
+        "no-unused-vars": "off",
+        "prefer-destructuring": [
+            "error",
+            {
+                "AssignmentExpression": {
+                    "array": false
+                }
+            }
+        ],
+        "prettier/prettier": "error"
+    }
+}
