@@ -11,8 +11,7 @@
  ],
  "homepage": "https://github.com/Aktanusa/CookieMonster",
  "bugs": {
-  "url": "https://github.com/Aktanusa/CookieMonster/issues",
-  "email": "danielvannoord@me.com"
+  "url": "https://github.com/Aktanusa/CookieMonster/issues"
  },
  "repository": {
   "type": "git",
@@ -20,8 +19,8 @@
  },
  "license": "MIT",
  "author": {
-  "name": "Daniel Noord",
-  "email": "danielvannoord@me.com"
+  "name": "Daniël van Noord",
+  "email": "13665637+DanielNoord@users.noreply.github.com"
  },
  "contributors": [
   {
