@@ -5,36 +5,20 @@
 /**
  * This functions creates the necessary objects and is run when they do not already exist
  */
-const RunCookieMonsterHeader = function() {
-    CM = {};
-    CM.VersionMajor = '2.031';
-    CM.VersionMinor = '3';
-
-    CM.Backup = {};
-
-    CM.Cache = {};
-
-    CM.Config = {};
-
-    CM.ConfigData = {};
-
-    CM.Data = {};
-
-    CM.Disp = {};
-
-    CM.Footer = {};
-
-    CM.Main = {};
-
-    CM.Options = {};
-
-    CM.Sim = {};
+const CM = {
+	Backup: {},
+	Cache: {},
+	Config: {},
+	ConfigData: {},
+	Data: {},
+	Disp: {},
+	Footer: {},
+	Main: {},
+	Options: {},
+	Sim: {},
+	VersionMajor: '2.031',
+	VersionMinor: '3',
 };
-
-if (typeof CM == "undefined") {
-    RunCookieMonsterHeader();
-}
-
 /*********
  * Cache *
  *********/
@@ -798,15 +782,15 @@ CM.Config.ToggleConfig = function(config) {
 
 	if (CM.Options[config] == CM.ConfigData[config].label.length) {
 		CM.Options[config] = 0;
-		if (CM.ConfigData[config].toggle) l(CM.ConfigPrefix + config).className = 'option off';
+		if (CM.ConfigData[config].toggle) l(CM.Config.ConfigPrefix + config).className = 'option off';
 	}
-	else l(CM.ConfigPrefix + config).className = 'option';
+	else l(CM.Config.ConfigPrefix + config).className = 'option';
 
 	if (typeof CM.ConfigData[config].func !== 'undefined') {
 		CM.ConfigData[config].func();
 	}
 
-	l(CM.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Options[config]];
+	l(CM.Config.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Options[config]];
 	CM.Config.SaveConfig();
 };
 
@@ -868,7 +852,16 @@ CM.Config.CheckNotificationPermissions = function(ToggleOnOff) {
 			}
 		}
 	}
-};/********
+};
+
+/********
+ * Section: Variables used in Config functions */
+
+/**
+ * Used to name certain DOM elements and refer to them
+ */
+CM.Config.ConfigPrefix = 'CMConfig';
+/********
  * Data *
  ********/
 
@@ -2194,7 +2187,7 @@ CM.Disp.CreateWhiteScreen = function() {
  */
 CM.Disp.Flash = function(mode, config) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if ((CM.Options[config] == 1 && mode == 3 && CM.Disp.Flash.caller.caller.caller.caller != null) || mode == 1) {
+	if ((CM.Options[config] == 1 && mode == 3 && CM.Disp.Flash.caller.caller.caller.caller == null) || mode == 1) {
 		CM.Disp.WhiteScreen.style.opacity = '0.5';
 		if (mode == 3) {
 			CM.Disp.WhiteScreen.style.display = 'inline';
@@ -2220,7 +2213,7 @@ CM.Disp.Flash = function(mode, config) {
  */
 CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if (CM.Options[sndConfig] == 1 && CM.Disp.PlaySound.caller.caller.caller.caller != null) {
+	if (CM.Options[sndConfig] == 1 && CM.Disp.PlaySound.caller.caller.caller.caller == null) {
 		var sound = new realAudio(url);
 		sound.volume = (CM.Options[volConfig] / 100) * (Game.volume / 100); 
 		sound.play();
@@ -2236,7 +2229,7 @@ CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
  */
 CM.Disp.Notification = function(notifyConfig, title, message) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if (CM.Options[notifyConfig] == 1 && document.visibilityState == 'hidden' && CM.Disp.Notification.caller.caller.caller.caller != null) {
+	if (CM.Options[notifyConfig] == 1 && document.visibilityState == 'hidden' && CM.Disp.Notification.caller.caller.caller.caller == null) {
 		var CookieIcon = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
 		new Notification(title, {body: message, badge: CookieIcon});
 	}
@@ -3251,7 +3244,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		else {
 			a.className = 'option';
 		}
-		a.id = CM.ConfigPrefix + config;
+		a.id = CM.Config.ConfigPrefix + config;
 		a.onclick = function() {CM.Config.ToggleConfig(config);};
 		a.textContent = CM.ConfigData[config].label[CM.Options[config]];
 		div.appendChild(a);
@@ -3297,7 +3290,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		span.textContent = CM.ConfigData[config].label + ' ';
 		div.appendChild(span);
 		let input = document.createElement('input');
-		input.id = CM.ConfigPrefix + config;
+		input.id = CM.Config.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'text';
 		input.readOnly = true;
@@ -3306,13 +3299,13 @@ CM.Disp.CreatePrefOption = function(config) {
 		div.appendChild(input);
 		div.appendChild(document.createTextNode(' '));
 		let inputPrompt = document.createElement('input');
-		inputPrompt.id = CM.ConfigPrefix + config + 'Prompt';
+		inputPrompt.id = CM.Config.ConfigPrefix + config + 'Prompt';
 		inputPrompt.className = 'option';
 		inputPrompt.type = 'text';
 		inputPrompt.setAttribute('value', CM.Options[config]);
 		let a = document.createElement('a');
 		a.className = 'option';
-		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
+		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.Config.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
 		a.textContent = 'Edit';
 		div.appendChild(a);
 		let label = document.createElement('label');
@@ -3347,7 +3340,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		span.textContent = CM.ConfigData[config].label + ' ';
 		div.appendChild(span);
 		let input = document.createElement('input');
-		input.id = CM.ConfigPrefix + config;
+		input.id = CM.Config.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'number';
 		input.value = (CM.Options[config]);
@@ -4646,9 +4639,15 @@ CM.Main.FixMouseY = function(target) {
 	}
 };
 
+/********
+ * Section: Variables used in Main functions */
+
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
 
+/**
+ * TODO: See if these can me removed (probably)
+ */
 CM.Main.lastGoldenCookieState = 0;
 CM.Main.lastSpawnedGoldenCookieState = 0;
 CM.Main.lastTickerFortuneState = 0;
@@ -4656,9 +4655,6 @@ CM.Main.lastSeasonPopupState = 0;
 CM.Main.lastGardenNextStep = 0;
 CM.Main.lastMagicBarFull = 0;
 CM.Main.lastWrinklerCount = 0;
-
-CM.ConfigPrefix = 'CMConfig';
-
 /*******
  * Sim *
  *******/

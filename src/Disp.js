@@ -2049,7 +2049,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		else {
 			a.className = 'option';
 		}
-		a.id = CM.ConfigPrefix + config;
+		a.id = CM.Config.ConfigPrefix + config;
 		a.onclick = function() {CM.Config.ToggleConfig(config);};
 		a.textContent = CM.ConfigData[config].label[CM.Options[config]];
 		div.appendChild(a);
@@ -2095,7 +2095,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		span.textContent = CM.ConfigData[config].label + ' ';
 		div.appendChild(span);
 		let input = document.createElement('input');
-		input.id = CM.ConfigPrefix + config;
+		input.id = CM.Config.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'text';
 		input.readOnly = true;
@@ -2104,13 +2104,13 @@ CM.Disp.CreatePrefOption = function(config) {
 		div.appendChild(input);
 		div.appendChild(document.createTextNode(' '));
 		let inputPrompt = document.createElement('input');
-		inputPrompt.id = CM.ConfigPrefix + config + 'Prompt';
+		inputPrompt.id = CM.Config.ConfigPrefix + config + 'Prompt';
 		inputPrompt.className = 'option';
 		inputPrompt.type = 'text';
 		inputPrompt.setAttribute('value', CM.Options[config]);
 		let a = document.createElement('a');
 		a.className = 'option';
-		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
+		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.Config.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
 		a.textContent = 'Edit';
 		div.appendChild(a);
 		let label = document.createElement('label');
@@ -2145,7 +2145,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		span.textContent = CM.ConfigData[config].label + ' ';
 		div.appendChild(span);
 		let input = document.createElement('input');
-		input.id = CM.ConfigPrefix + config;
+		input.id = CM.Config.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'number';
 		input.value = (CM.Options[config]);
