@@ -1,4 +1,4 @@
-name: Check build of CookieMonster
+name: Check build of CookieMonster.js
 on: pull_request
 jobs:
   build:
