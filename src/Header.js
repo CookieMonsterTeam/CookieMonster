@@ -1,32 +1,18 @@
+/* eslint-disable no-redeclare */
+/* eslint-disable no-unused-vars */
 /**********
  * Header *
  **********/
 
-var RunCookieMonsterHeader = function() {
-    CM = {};
-
-    CM.Backup = {};
-
-    CM.Cache = {};
-
-    CM.Config = {};
-
-    CM.ConfigData = {};
-
-    CM.Data = {};
-
-    CM.Disp = {};
-
-    CM.Footer = {};
-
-    CM.Main = {};
-
-    CM.Options = {};
-
-    CM.Sim = {};
+const CM = {
+    Backup: {},
+    Cache: {},
+    Config: {},
+    ConfigData: {},
+    Data: {},
+    Disp: {},
+    Footer: {},
+    Main: {},
+    Options: {},
+    Sim: {},
 };
-
-if (typeof CM == "undefined") {
-    RunCookieMonsterHeader();
-}
-

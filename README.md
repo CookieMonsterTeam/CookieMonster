@@ -63,6 +63,12 @@ If the bug is still here, you can submit an issue for it. Please do so by using 
 
 All suggestions are welcome, even the smallest ones.
 
+## Contributing
+
+To contribute you can fork and clone the repository and run `npm install`.
+
+Please also remember to run `npm run build` after saving all your changes to build the final `CookieMonster.js` file. 
+
 ## Contributors
 
 * **[Raving_Kumquat](https://cookieclicker.wikia.com/wiki/User:Raving_Kumquat)**: Original author

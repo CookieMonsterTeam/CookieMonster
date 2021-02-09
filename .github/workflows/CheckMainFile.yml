@@ -1,4 +1,4 @@
-name: Check build of CookieMonster
+name: Check build of CookieMonster.js
 on: pull_request
 jobs:
   build:
@@ -7,10 +7,11 @@ jobs:
     - uses: actions/checkout@v2
     - name: Check if CookieMonster.js is built correctly 
       run: |
-        cat ./src/Header.js ./src/Cache.js ./src/Config.js ./src/Data.js ./src/Disp.js ./src/Main.js ./src/Sim.js ./src/Footer.js > CookieMonsterTest.js
+        npm install
+        npx terser ./src/Header.js ./src/Cache.js ./src/Config.js ./src/Data.js ./src/Disp.js ./src/Main.js ./src/Sim.js ./src/Footer.js -o CookieMonsterTest.js
         if cmp CookieMonster.js CookieMonsterTest.js; then
             echo '### SUCCESS: CookieMonster is correctly built! ###'
         else
-            echo '### WARNING: CookieMonster.js does not seem to be correct. Have you compiled the source files into the final file using either of the combine files? ###'
+            echo '### WARNING: CookieMonster.js does not seem to be correct. Make sure to run "npm run build" after saving all your changes! ###'
             exit 1
         fi
