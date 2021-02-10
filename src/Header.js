@@ -1,10 +1,9 @@
+/* eslint-disable no-redeclare */
+/* eslint-disable no-unused-vars */
 /**********
  * Header *
  **********/
 
-/**
- * This functions creates the necessary objects and is run when they do not already exist
- */
 const CM = {
     Backup: {},
     Cache: {},
@@ -16,6 +15,4 @@ const CM = {
     Main: {},
     Options: {},
     Sim: {},
-	VersionMajor: '2.031',
-	VersionMinor: '3',
 };
