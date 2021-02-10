@@ -106,15 +106,15 @@ CM.Config.ToggleConfig = function(config) {
 
 	if (CM.Options[config] == CM.ConfigData[config].label.length) {
 		CM.Options[config] = 0;
-		if (CM.ConfigData[config].toggle) l(CM.ConfigPrefix + config).className = 'option off';
+		if (CM.ConfigData[config].toggle) l(CM.Config.ConfigPrefix + config).className = 'option off';
 	}
-	else l(CM.ConfigPrefix + config).className = 'option';
+	else l(CM.Config.ConfigPrefix + config).className = 'option';
 
 	if (typeof CM.ConfigData[config].func !== 'undefined') {
 		CM.ConfigData[config].func();
 	}
 
-	l(CM.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Options[config]];
+	l(CM.Config.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Options[config]];
 	CM.Config.SaveConfig();
 };
 
@@ -177,3 +177,11 @@ CM.Config.CheckNotificationPermissions = function(ToggleOnOff) {
 		}
 	}
 };
+
+/********
+ * Section: Variables used in Config functions */
+
+/**
+ * Used to name certain DOM elements and refer to them
+ */
+CM.Config.ConfigPrefix = 'CMConfig';

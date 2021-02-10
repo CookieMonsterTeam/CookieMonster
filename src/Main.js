@@ -516,9 +516,15 @@ CM.Main.FixMouseY = function(target) {
 	}
 };
 
+/********
+ * Section: Variables used in Main functions */
+
 CM.HasReplaceNativeGrimoireLaunch = false;
 CM.HasReplaceNativeGrimoireDraw = false;
 
+/**
+ * TODO: See if these can me removed (probably)
+ */
 CM.Main.lastGoldenCookieState = 0;
 CM.Main.lastSpawnedGoldenCookieState = 0;
 CM.Main.lastTickerFortuneState = 0;
@@ -526,9 +532,3 @@ CM.Main.lastSeasonPopupState = 0;
 CM.Main.lastGardenNextStep = 0;
 CM.Main.lastMagicBarFull = 0;
 CM.Main.lastWrinklerCount = 0;
-
-CM.ConfigPrefix = 'CMConfig';
-
-CM.VersionMajor = '2.031';
-CM.VersionMinor = '3';
-

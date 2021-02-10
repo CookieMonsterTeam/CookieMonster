@@ -15,4 +15,6 @@ const CM = {
     Main: {},
     Options: {},
     Sim: {},
+    VersionMajor: '2.031',
+    VersionMinor: '3',
 };

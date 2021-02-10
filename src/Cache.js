@@ -15,6 +15,7 @@ CM.Cache.InitCache = function() {
 	CM.Cache.CacheDragonAuras();
 	CM.Cache.CacheWrinklers();
 	CM.Cache.CacheStats();
+	CM.Cache.RemakeChain();
 	CM.Cache.CacheMissingUpgrades();
 };
 
@@ -86,25 +87,22 @@ CM.Cache.CacheWrinklers = function() {
  * @global	{string}	CM.Cache.EdificeBuilding		Name of most expensive building possible with Spontaneous Edifice
  */
 CM.Cache.CacheStats = function() {
-	var goldenMult = CM.Cache.GoldenCookiesMult;
-	var wrathMult = CM.Cache.WrathCookiesMult;
-
 	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
 	CM.Cache.Lucky *= CM.Cache.DragonsFortuneMultAdjustment;
-	var cpsBuffMult = CM.Sim.getCPSBuffMult();
+	let cpsBuffMult = CM.Sim.getCPSBuffMult();
 	if (cpsBuffMult > 0) CM.Cache.Lucky /= cpsBuffMult;
 	else CM.Cache.Lucky = 0;
-	CM.Cache.LuckyReward = goldenMult * (CM.Cache.Lucky * 0.15) + 13;
-	CM.Cache.LuckyWrathReward = wrathMult * (CM.Cache.Lucky * 0.15) + 13;
+	CM.Cache.LuckyReward = CM.Cache.GoldenCookiesMult * (CM.Cache.Lucky * 0.15) + 13;
+	CM.Cache.LuckyWrathReward = CM.Cache.WrathCookiesMult * (CM.Cache.Lucky * 0.15) + 13;
 	CM.Cache.LuckyFrenzy = CM.Cache.Lucky * 7;
-	CM.Cache.LuckyRewardFrenzy = goldenMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
-	CM.Cache.LuckyWrathRewardFrenzy = wrathMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.LuckyRewardFrenzy = CM.Cache.GoldenCookiesMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
+	CM.Cache.LuckyWrathRewardFrenzy = CM.Cache.WrathCookiesMult * (CM.Cache.LuckyFrenzy * 0.15) + 13;
 	CM.Cache.Conjure = CM.Cache.Lucky * 2;
 	CM.Cache.ConjureReward = CM.Cache.Conjure * 0.15;
 
 	CM.Cache.Edifice = 0;
-	var max = 0;
-	var n = 0;
+	let max = 0;
+	let n = 0;
 	for (let i of Object.keys(Game.Objects)) {
 		if (Game.Objects[i].amount > max) max = Game.Objects[i].amount;
 		if (Game.Objects[i].amount > 0) n++;
@@ -117,6 +115,56 @@ CM.Cache.CacheStats = function() {
 			CM.Cache.EdificeBuilding = i;
 		}
 	}
+};
+
+/**
+ * This functions calculates the max possible payout
+ * It is called by CM.Disp.CreateStatsChainSection() and CM.Cache.RemakeChain()
+ * @param	{number}	digit		
+ * @param	{number}	maxPayout	
+ * @param	{number}	mult		
+ * @returns	{number}	moni		Cookies to be earned with Cookie Chain
+ */
+CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
+	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
+	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
+	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
+	while (nextMoni < maxPayout) {
+		chain++;
+		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
+		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
+	}
+	return [moni, nextMoni];
+};
+
+/**
+ * This functions caches data related to Chain Cookies reward from Golden Cookioes
+ * It is called by CM.Loop() upon changes to cps and CM.Cache.InitCache()
+ * TODO: Fairly sure this is incorrect..
+ * @global	{number}	CM.Cache.Chain		Cookies required for max Cookie Chain normal
+ */
+CM.Cache.RemakeChain = function() {
+	let maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6 * CM.Cache.DragonsFortuneMultAdjustment;
+	// Removes effect of Frenzy etc.
+	let cpsBuffMult = CM.Sim.getCPSBuffMult();
+	if (cpsBuffMult > 0) maxPayout /= cpsBuffMult;
+	else maxPayout = 0;	
+
+	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout, CM.Cache.GoldenCookiesMult);
+	CM.Cache.ChainRequired = CM.Cache.ChainReward[0] * 2;
+	CM.Cache.ChainRequiredNext = CM.Cache.ChainReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
+
+	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout, CM.Cache.WrathCookiesMult);
+	CM.Cache.ChainWrathRequired = CM.Cache.ChainWrathReward[0] * 2;
+	CM.Cache.ChainWrathRequiredNext = CM.Cache.ChainWrathReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
+
+	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7, CM.Cache.GoldenCookiesMult);
+	CM.Cache.ChainFrenzyRequired = CM.Cache.ChainFrenzyReward[0] * 2;
+	CM.Cache.ChainFrenzyRequiredNext = CM.Cache.ChainFrenzyReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
+
+	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7, CM.Cache.WrathCookiesMult);
+	CM.Cache.ChainFrenzyWrathRequired = CM.Cache.ChainFrenzyReward[0] * 2;
+	CM.Cache.ChainFrenzyWrathRequiredNext = CM.Cache.ChainFrenzyReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 };
 
 /**
@@ -348,19 +396,14 @@ CM.Cache.CacheDragonCost = function() {
 };
 
 /********
- * Section: UNSORTED */
+ * Section: ? */
 
-CM.Cache.NextNumber = function(base) {
-	var count = base > Math.pow(2, 53) ? Math.pow(2, Math.floor(Math.log(base) / Math.log(2)) - 53) : 1;
-	while (base == base + count) {
-		count = CM.Cache.NextNumber(count);
-	}
-	return (base + count);
-};
+/********
+ * Section: UNSORTED */
 
 CM.Cache.RemakeBuildingsPrices = function() {
 	for (let i of Object.keys(Game.Objects)) {
-		CM.Cache.Objects[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 1);
+		CM.Cache.Objects1[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 1);
 		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
 		CM.Cache.Objects100[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
 	}
@@ -368,7 +411,7 @@ CM.Cache.RemakeBuildingsPrices = function() {
 
 CM.Cache.RemakeIncome = function() {
 	// Simulate Building Buys for 1 amount
-	CM.Sim.BuyBuildings(1, 'Objects');
+	CM.Sim.BuyBuildings(1, 'Objects1');
 
 	// Simulate Upgrade Buys
 	CM.Sim.BuyUpgrades();
@@ -386,24 +429,24 @@ CM.Cache.RemakeBuildingsPP = function() {
 	CM.Cache.mid = -1;
 	// Calculate PP and colors when compared to purchase of single optimal building
 	if (CM.Options.ColorPPBulkMode == 0) {
-		for (let i of Object.keys(CM.Cache.Objects)) {
-			//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
+		for (let i of Object.keys(CM.Cache.Objects1)) {
+			//CM.Cache.Objects1[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus;
 			if (Game.cookiesPs) {
-				CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+				CM.Cache.Objects1[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 			} else {
-				CM.Cache.Objects[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+				CM.Cache.Objects1[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 			}
-			if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
-			if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
+			if (CM.Cache.min == -1 || CM.Cache.Objects1[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects1[i].pp;
+			if (CM.Cache.max == -1 || CM.Cache.Objects1[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects1[i].pp;
 		}
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-		for (let i of Object.keys(CM.Cache.Objects)) {
+		for (let i of Object.keys(CM.Cache.Objects1)) {
 			let color = '';
-			if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
-			else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
-			else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+			if (CM.Cache.Objects1[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+			else if (CM.Cache.Objects1[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+			else if (CM.Cache.Objects1[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
 			else color = CM.Disp.colorYellow;
-			CM.Cache.Objects[i].color = color;
+			CM.Cache.Objects1[i].color = color;
 		}
 		// Buildings for 10 amount
 		CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
@@ -414,30 +457,30 @@ CM.Cache.RemakeBuildingsPP = function() {
 	// Calculate PP and colors when compared to purchase of selected bulk mode
 	else {
 		if (Game.buyBulk == 1) {
-			for (let i of Object.keys(CM.Cache.Objects)) {
-				//CM.Cache.Objects[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus;
+			for (let i of Object.keys(CM.Cache.Objects1)) {
+				//CM.Cache.Objects1[i].pp = Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus;
 				if (Game.cookiesPs) {
-					CM.Cache.Objects[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+					CM.Cache.Objects1[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 				} else {
-					CM.Cache.Objects[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects[i].bonus);
+					CM.Cache.Objects1[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 				}
-				if (CM.Cache.min == -1 || CM.Cache.Objects[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects[i].pp;
-				if (CM.Cache.max == -1 || CM.Cache.Objects[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects[i].pp;
+				if (CM.Cache.min == -1 || CM.Cache.Objects1[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects1[i].pp;
+				if (CM.Cache.max == -1 || CM.Cache.Objects1[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects1[i].pp;
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-			for (let i of Object.keys(CM.Cache.Objects)) {
+			for (let i of Object.keys(CM.Cache.Objects1)) {
 				let color = '';
-				if (CM.Cache.Objects[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
-				else if (CM.Cache.Objects[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
-				else if (CM.Cache.Objects[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+				if (CM.Cache.Objects1[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
+				else if (CM.Cache.Objects1[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
+				else if (CM.Cache.Objects1[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
 				else color = CM.Disp.colorYellow;
-				CM.Cache.Objects[i].color = color;
+				CM.Cache.Objects1[i].color = color;
 			}
 			CM.Cache.RemakeBuildingsOtherPP(10, 'Objects10');
 			CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
 		}
 		else if (Game.buyBulk == 10) {
-			for (let i of Object.keys(CM.Cache.Objects)) {
+			for (let i of Object.keys(CM.Cache.Objects1)) {
 				if (Game.cookiesPs) {
 					CM.Cache.Objects10[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects10[i].bonus);
 				} else {
@@ -447,7 +490,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 				if (CM.Cache.max == -1 || CM.Cache.Objects10[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects10[i].pp;
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-			for (let i of Object.keys(CM.Cache.Objects)) {
+			for (let i of Object.keys(CM.Cache.Objects1)) {
 				let color = '';
 				if (CM.Cache.Objects10[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 				else if (CM.Cache.Objects10[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
@@ -459,7 +502,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 			CM.Cache.RemakeBuildingsOtherPP(100, 'Objects100');
 		}
 		else if (Game.buyBulk == 100) {
-			for (let i of Object.keys(CM.Cache.Objects)) {
+			for (let i of Object.keys(CM.Cache.Objects1)) {
 				if (Game.cookiesPs) {
 					CM.Cache.Objects100[i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache.Objects100[i].bonus);
 				} else {
@@ -469,7 +512,7 @@ CM.Cache.RemakeBuildingsPP = function() {
 				if (CM.Cache.max == -1 || CM.Cache.Objects100[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects100[i].pp;
 			}
 			CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-			for (let i of Object.keys(CM.Cache.Objects)) {
+			for (let i of Object.keys(CM.Cache.Objects1)) {
 				let color = '';
 				if (CM.Cache.Objects100[i].pp == CM.Cache.min) color = CM.Disp.colorGreen;
 				else if (CM.Cache.Objects100[i].pp == CM.Cache.max) color = CM.Disp.colorRed;
@@ -557,66 +600,6 @@ CM.Cache.RemakeGoldenAndWrathCookiesMults = function() {
 	CM.Cache.DragonsFortuneMultAdjustment = 1;
 	if (Game.shimmerTypes.golden.n === 0) {
 		CM.Cache.DragonsFortuneMultAdjustment *= 1 + CM.Sim.auraMult('Dragon\'s Fortune') * 1.23;
-	}
-};
-
-CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
-	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
-	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
-	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
-	while (nextMoni < maxPayout) {
-		chain++;
-		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
-		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
-	}
-	return moni;
-};
-
-CM.Cache.RemakeChain = function() {
-	var maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6;
-	maxPayout *= CM.Cache.DragonsFortuneMultAdjustment;
-	var cpsBuffMult = CM.Sim.getCPSBuffMult();
-	if (cpsBuffMult > 0) {
-		maxPayout /= cpsBuffMult;
-	} else {
-		maxPayout = 0;
-	}
-
-	var goldenMult = CM.Cache.GoldenCookiesMult;
-	var wrathMult = CM.Cache.WrathCookiesMult;
-
-	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout, goldenMult);
-
-	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout, wrathMult);
-
-	if (maxPayout < CM.Cache.ChainReward) {
-		CM.Cache.Chain = 0;
-	}
-	else {
-		CM.Cache.Chain = CM.Cache.NextNumber(CM.Cache.ChainReward) / 0.5;
-	}
-	if (maxPayout < CM.Cache.ChainWrathReward) {
-		CM.Cache.ChainWrath = 0;
-	}
-	else {
-		CM.Cache.ChainWrath = CM.Cache.NextNumber(CM.Cache.ChainWrathReward) / 0.5;
-	}
-
-	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7, goldenMult);
-
-	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7, wrathMult);
-
-	if ((maxPayout * 7) < CM.Cache.ChainFrenzyReward) {
-		CM.Cache.ChainFrenzy = 0;
-	}
-	else {
-		CM.Cache.ChainFrenzy = CM.Cache.NextNumber(CM.Cache.ChainFrenzyReward) / 0.5;
-	}
-	if ((maxPayout * 7) < CM.Cache.ChainFrenzyWrathReward) {
-		CM.Cache.ChainFrenzyWrath = 0;
-	}
-	else {
-		CM.Cache.ChainFrenzyWrath = CM.Cache.NextNumber(CM.Cache.ChainFrenzyWrathReward) / 0.5;
 	}
 };
 

@@ -405,12 +405,10 @@ CM.Disp.CreateBotBar = function() {
  * It is called by CM.Loop()
  */
 CM.Disp.UpdateBotBar = function() {
-	if (CM.Options.BotBar == 1 && CM.Cache.Objects) {
+	if (CM.Options.BotBar == 1 && CM.Cache.Objects1) {
 		var count = 0;
-		for (let i of Object.keys(CM.Cache.Objects)) {
-			var target = 'Objects';
-			if (Game.buyBulk == 10) {target = 'Objects10';}
-			if (Game.buyBulk == 100) {target = 'Objects100';}
+		for (let i of Object.keys(CM.Cache.Objects1)) {
+			let target = `Objects${Game.buyBulk}`
 			count++;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache[target][i].bonus, 2);
@@ -715,9 +713,7 @@ CM.Disp.UpdateBotTimerBarPosition = function() {
  * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.ConfigData.BulkBuildColor
  */
 CM.Disp.UpdateBuildings = function() {
-	let target = 'Objects';
-	if (Game.buyBulk == 10 && CM.Options.BulkBuildColor == 1) target = 'Objects10';
-	else if (Game.buyBulk == 100 && CM.Options.BulkBuildColor == 1) target = 'Objects100';
+	let target = `Objects${Game.buyBulk}`
 	if  (Game.buyMode == 1) {
 		if (CM.Options.BuildColor == 1) {
 			for (let i of Object.keys(CM.Cache[target])) {
@@ -730,7 +726,7 @@ CM.Disp.UpdateBuildings = function() {
 		}
 	}
 	else if (Game.buyMode == -1) {
-		for (let i of Object.keys(CM.Cache.Objects)) {
+		for (let i of Object.keys(CM.Cache.Objects1)) {
 			var o = Game.Objects[i];
 			l('productPrice' + o.id).style.color = '';
 			/*
@@ -763,9 +759,9 @@ CM.Disp.UpdateBuildings = function() {
 			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
 		}
 	} else {
-		let arr = Object.keys(CM.Cache.Objects).map(k =>
+		let arr = Object.keys(CM.Cache.Objects1).map(k =>
 			{
-				var o = CM.Cache.Objects[k];
+				var o = CM.Cache.Objects1[k];
 				o.name = k;
 				o.id = Game.Objects[k].id;
 				return o;
@@ -1455,12 +1451,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 		let tooltipBox = l('CMTooltipBorder');
 		CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
-		var target = '';
-		// TODO: Change the Cache code and variables to use Objects1, Objectes10, Objects100
-		// That would depreciate this target setting code
-		if (Game.buyMode == 1 && Game.buyBulk == 10) target = 'Objects10';
-		else if (Game.buyMode == 1 && Game.buyBulk == 100) target = 'Objects100';
-		else target = 'Objects';
+		let target = `Objects${Game.buyBulk}`
 
 		CM.Disp.TooltipPrice = Game.Objects[CM.Disp.tooltipName].bulkPrice;
 		CM.Disp.TooltipBonusIncome = CM.Cache[target][CM.Disp.tooltipName].bonus;
@@ -2058,7 +2049,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		else {
 			a.className = 'option';
 		}
-		a.id = CM.ConfigPrefix + config;
+		a.id = CM.Config.ConfigPrefix + config;
 		a.onclick = function() {CM.Config.ToggleConfig(config);};
 		a.textContent = CM.ConfigData[config].label[CM.Options[config]];
 		div.appendChild(a);
@@ -2104,7 +2095,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		span.textContent = CM.ConfigData[config].label + ' ';
 		div.appendChild(span);
 		let input = document.createElement('input');
-		input.id = CM.ConfigPrefix + config;
+		input.id = CM.Config.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'text';
 		input.readOnly = true;
@@ -2113,13 +2104,13 @@ CM.Disp.CreatePrefOption = function(config) {
 		div.appendChild(input);
 		div.appendChild(document.createTextNode(' '));
 		let inputPrompt = document.createElement('input');
-		inputPrompt.id = CM.ConfigPrefix + config + 'Prompt';
+		inputPrompt.id = CM.Config.ConfigPrefix + config + 'Prompt';
 		inputPrompt.className = 'option';
 		inputPrompt.type = 'text';
 		inputPrompt.setAttribute('value', CM.Options[config]);
 		let a = document.createElement('a');
 		a.className = 'option';
-		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
+		a.onclick = function() {Game.Prompt(inputPrompt.outerHTML, [['Save', 'CM.Options[\'' + config + '\'] = l(CM.Config.ConfigPrefix + \'' + config + '\' + \'Prompt\').value; CM.Config.SaveConfig(); Game.ClosePrompt(); Game.UpdateMenu();'], 'Cancel']);};
 		a.textContent = 'Edit';
 		div.appendChild(a);
 		let label = document.createElement('label');
@@ -2154,7 +2145,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		span.textContent = CM.ConfigData[config].label + ' ';
 		div.appendChild(span);
 		let input = document.createElement('input');
-		input.id = CM.ConfigPrefix + config;
+		input.id = CM.Config.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'number';
 		input.value = (CM.Options[config]);
@@ -2562,13 +2553,13 @@ CM.Disp.CreateStatsChainSection = function() {
 	var section = document.createElement('div');
 	section.className = 'CMStatsChainSection';
 
-	var chainColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Chain) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-	var chainTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.Chain) ? CM.Disp.FormatTime((CM.Cache.Chain - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	var chainColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainRequired) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var chainTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainRequired) ? CM.Disp.FormatTime((CM.Cache.ChainRequired - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
 	var chainReqFrag = document.createDocumentFragment();
 	var chainReqSpan = document.createElement('span');
 	chainReqSpan.style.fontWeight = 'bold';
 	chainReqSpan.className = CM.Disp.colorTextPre + chainColor;
-	chainReqSpan.textContent = Beautify(CM.Cache.Chain);
+	chainReqSpan.textContent = Beautify(CM.Cache.ChainRequired);
 	chainReqFrag.appendChild(chainReqSpan);
 	if (chainTime != '') {
 		var chainReqSmall = document.createElement('small');
@@ -2577,13 +2568,13 @@ CM.Disp.CreateStatsChainSection = function() {
 	}
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Cookies Required', chainReqFrag, goldCookTooltip));
 	
-	var chainWrathColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-	var chainWrathTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrath) ? CM.Disp.FormatTime((CM.Cache.ChainWrath - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	var chainWrathColor = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrathRequired) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var chainWrathTime = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainWrathRequired) ? CM.Disp.FormatTime((CM.Cache.ChainWrathRequired - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
 	var chainWrathReqFrag = document.createDocumentFragment();
 	var chainWrathReqSpan = document.createElement('span');
 	chainWrathReqSpan.style.fontWeight = 'bold';
 	chainWrathReqSpan.className = CM.Disp.colorTextPre + chainWrathColor;
-	chainWrathReqSpan.textContent = Beautify(CM.Cache.ChainWrath);
+	chainWrathReqSpan.textContent = Beautify(CM.Cache.ChainWrathRequired);
 	chainWrathReqFrag.appendChild(chainWrathReqSpan);
 	if (chainWrathTime != '') {
 		var chainWrathReqSmall = document.createElement('small');
@@ -2592,13 +2583,13 @@ CM.Disp.CreateStatsChainSection = function() {
 	}
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Cookies Required (Wrath)', chainWrathReqFrag, goldCookTooltip));
 	
-	var chainColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzy) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-	var chainTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzy) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzy - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	var chainColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyRequired) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var chainTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyRequired) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzyRequired - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
 	var chainReqFrenFrag = document.createDocumentFragment();
 	var chainReqFrenSpan = document.createElement('span');
 	chainReqFrenSpan.style.fontWeight = 'bold';
 	chainReqFrenSpan.className = CM.Disp.colorTextPre + chainColorFrenzy;
-	chainReqFrenSpan.textContent = Beautify(CM.Cache.ChainFrenzy);
+	chainReqFrenSpan.textContent = Beautify(CM.Cache.ChainFrenzyRequired);
 	chainReqFrenFrag.appendChild(chainReqFrenSpan);
 	if (chainTimeFrenzy != '') {
 		var chainReqFrenSmall = document.createElement('small');
@@ -2607,13 +2598,13 @@ CM.Disp.CreateStatsChainSection = function() {
 	}
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Cookies Required (Frenzy)', chainReqFrenFrag, goldCookTooltip));
 	
-	var chainWrathColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrath) ? CM.Disp.colorRed : CM.Disp.colorGreen;
-	var chainWrathTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrath) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzyWrath - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
+	var chainWrathColorFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrathRequired) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	var chainWrathTimeFrenzy = ((Game.cookies + CM.Disp.GetWrinkConfigBank()) < CM.Cache.ChainFrenzyWrathRequired) ? CM.Disp.FormatTime((CM.Cache.ChainFrenzyWrathRequired - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS()) : '';
 	var chainWrathReqFrenFrag = document.createDocumentFragment();
 	var chainWrathReqFrenSpan = document.createElement('span');
 	chainWrathReqFrenSpan.style.fontWeight = 'bold';
 	chainWrathReqFrenSpan.className = CM.Disp.colorTextPre + chainWrathColorFrenzy;
-	chainWrathReqFrenSpan.textContent = Beautify(CM.Cache.ChainFrenzyWrath);
+	chainWrathReqFrenSpan.textContent = Beautify(CM.Cache.ChainFrenzyWrathRequired);
 	chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSpan);
 	if (chainWrathTimeFrenzy != '') {
 		var chainWrathReqFrenSmall = document.createElement('small');
@@ -2622,14 +2613,14 @@ CM.Disp.CreateStatsChainSection = function() {
 	}
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Cookies Required (Frenzy) (Wrath)', chainWrathReqFrenFrag, goldCookTooltip));
 
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Golden / Wrath)', document.createTextNode(Beautify(CM.Cache.ChainReward) + ' / ' + Beautify(CM.Cache.ChainWrathReward)), goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Golden / Wrath)', document.createTextNode(Beautify(CM.Cache.ChainReward[0]) + ' / ' + Beautify(CM.Cache.ChainWrathReward[0])), goldCookTooltip));
 
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Frenzy) (Golden / Wrath)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyReward) + ' / ' + Beautify(CM.Cache.ChainFrenzyWrathReward))), goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Frenzy) (Golden / Wrath)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyReward[0]) + ' / ' + Beautify(CM.Cache.ChainFrenzyWrathReward[0]))), goldCookTooltip));
 
 	// TODO: Place MaxChainMoni function into CM.Cache.RemakeChain and create global variables to store it
 	var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * CM.Cache.DragonsFortuneMultAdjustment * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.5);
-	var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax, CM.Cache.GoldenCookiesMult);
-	var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax, CM.Cache.WrathCookiesMult);
+	var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax, CM.Cache.GoldenCookiesMult)[0];
+	var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax, CM.Cache.WrathCookiesMult)[0];
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (CUR) (Golden / Wrath)', document.createTextNode((Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))), goldCookTooltip));
 	return section;
 };
