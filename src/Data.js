@@ -93,6 +93,7 @@ CM.ConfigGroups = {
 };
 
 CM.ConfigGroupsNotification = {
+	NotificationGeneral: "General Notifications",
 	NotificationGC: "Golden Cookie",
 	NotificationFC: "Fortune Cookie",
 	NotificationSea: "Season Special",
@@ -150,6 +151,7 @@ CM.ConfigData.AvgClicksHist = {type: 'bool', group: 'Calculation', label: ['Aver
 CM.ConfigData.ToolWarnBon = {type: 'bool', group: 'Calculation', label: ['Calculate Tooltip Warning With Bonus CPS OFF', 'Calculate Tooltip Warning With Bonus CPS ON'], desc: 'Calculate the warning with or without the bonus CPS you get from buying', toggle: true};
 
 // Notification
+CM.ConfigData.Title = {type: 'bool', group: 'NotificationGeneral', label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 CM.ConfigData.GCNotification = {type: 'bool', group: 'NotificationGC', label: ['Notification OFF', 'Notification ON'], desc: 'Create a notification when Golden Cookie spawns', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.GCNotification);}};
 CM.ConfigData.GCFlash = {type: 'bool', group: 'NotificationGC', label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen on Golden Cookie', toggle: true};
 CM.ConfigData.GCSound = {type: 'bool', group: 'NotificationGC', label: ['Sound OFF', 'Sound ON'], desc: 'Play a sound on Golden Cookie', toggle: true};
@@ -205,7 +207,6 @@ for (let i = 0; i < 101; i++) {
 	CM.ConfigData.WrinklerMaxVolume.label[i] = i + '%';
 }
 CM.ConfigData.WrinklerMaxSoundURL = {type: 'url', group: 'NotificationWrinkMax', label: 'Sound URL:', desc: 'URL of the sound to be played when the maximum amount of Wrinklers has appeared'};
-CM.ConfigData.Title = {type: 'bool', group: 'Notification', label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
 
 // Tooltip
 CM.ConfigData.TooltipBuildUpgrade = {type: 'bool', group: 'Tooltip', label: ['Building/Upgrade Tooltip Information OFF', 'Building/Upgrade  Tooltip Information ON'], desc: 'Extra information in Building/Upgrade tooltips', toggle: true};
@@ -327,6 +328,6 @@ CM.Data.ConfigDefault = {
 	Favicon: 1,
 	WrinklerButtons: 1,
 	BulkBuyBlock: 0,
-	Header: {BarsColors: 1, Calculation: 1, Notification: 1, NotificationGC: 1, NotificationFC: 1, NotificationSea: 1, NotificationGard: 1, NotificationMagi: 1, NotificationWrink: 1, NotificationWrinkMax: 1, Tooltip: 1, Statistics: 1, Notation: 1, Miscellaneous: 1, Lucky: 1, Spells: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
+	Header: {BarsColors: 1, Calculation: 1, Notification: 1, NotificationGeneral: 1, NotificationGC: 1, NotificationFC: 1, NotificationSea: 1, NotificationGard: 1, NotificationMagi: 1, NotificationWrink: 1, NotificationWrinkMax: 1, Tooltip: 1, Statistics: 1, Notation: 1, Miscellaneous: 1, Lucky: 1, Spells: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1},
 };
 
