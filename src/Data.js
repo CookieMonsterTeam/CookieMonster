@@ -152,6 +152,7 @@ CM.ConfigData.ToolWarnBon = {type: 'bool', group: 'Calculation', label: ['Calcul
 
 // Notification
 CM.ConfigData.Title = {type: 'bool', group: 'NotificationGeneral', label: ['Title OFF', 'Title ON', 'Title Pinned Tab Highlight'], desc: 'Update title with Golden Cookie/Season Popup timers; pinned tab highlight only changes the title when a Golden Cookie/Season Popup spawns', toggle: true};
+CM.ConfigData.GeneralSound = {type: 'bool', group: 'NotificationGeneral', label: ['Consider Game Volume Setting OFF', 'Consider Game Volume Setting ON'], desc: 'Turning this toggle to "off" makes Cookie Monster no longer consider the volume setting of the base game, allowing mod notifications to play with base game volume turned down', toggle: true};
 CM.ConfigData.GCNotification = {type: 'bool', group: 'NotificationGC', label: ['Notification OFF', 'Notification ON'], desc: 'Create a notification when Golden Cookie spawns', toggle: true, func: function () {CM.Config.CheckNotificationPermissions(CM.Options.GCNotification);}};
 CM.ConfigData.GCFlash = {type: 'bool', group: 'NotificationGC', label: ['Flash OFF', 'Flash ON'], desc: 'Flash screen on Golden Cookie', toggle: true};
 CM.ConfigData.GCSound = {type: 'bool', group: 'NotificationGC', label: ['Sound OFF', 'Sound ON'], desc: 'Play a sound on Golden Cookie', toggle: true};
@@ -263,6 +264,8 @@ CM.Data.ConfigDefault = {
 	AvgCPSHist: 3, 
 	AvgClicksHist: 0, 
 	ToolWarnBon: 0, 
+	Title: 1, 
+	GeneralSound: 1,
 	GCNotification: 0,
 	GCFlash: 1, 
 	GCSound: 1,  
@@ -297,7 +300,6 @@ CM.Data.ConfigDefault = {
 	WrinklerMaxSound: 1,  
 	WrinklerMaxVolume: 100, 
 	WrinklerMaxSoundURL: 'https://freesound.org/data/previews/152/152743_15663-lq.mp3', 
-	Title: 1, 
 	TooltipBuildUpgrade: 1, 
 	TooltipAmor: 0, 
 	ToolWarnLucky: 1,
