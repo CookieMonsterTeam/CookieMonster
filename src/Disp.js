@@ -992,7 +992,7 @@ CM.Disp.CreateWhiteScreen = function() {
  */
 CM.Disp.Flash = function(mode, config) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if ((CM.Options[config] == 1 && mode == 3 && CM.Disp.Flash.caller.caller.caller.caller == null) || mode == 1) {
+	if ((CM.Options[config] == 1 && mode == 3 && CM.Footer.isInitzializing === false) || mode == 1) {
 		CM.Disp.WhiteScreen.style.opacity = '0.5';
 		if (mode == 3) {
 			CM.Disp.WhiteScreen.style.display = 'inline';
@@ -1018,9 +1018,10 @@ CM.Disp.Flash = function(mode, config) {
  */
 CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if (CM.Options[sndConfig] == 1 && CM.Disp.PlaySound.caller.caller.caller.caller == null) {
+	if (CM.Options[sndConfig] == 1 && CM.Footer.isInitzializing === false) {
 		var sound = new realAudio(url);
-		sound.volume = (CM.Options[volConfig] / 100) * (Game.volume / 100); 
+		if (CM.Options.GeneralSound) sound.volume = (CM.Options[volConfig] / 100) * (Game.volume / 100);
+		else sound.volume = (CM.Options[volConfig] / 100);
 		sound.play();
 	}
 };
@@ -1034,7 +1035,7 @@ CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
  */
 CM.Disp.Notification = function(notifyConfig, title, message) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if (CM.Options[notifyConfig] == 1 && document.visibilityState == 'hidden' && CM.Disp.Notification.caller.caller.caller.caller == null) {
+	if (CM.Options[notifyConfig] == 1 && document.visibilityState == 'hidden' && CM.Footer.isInitzializing === false) {
 		var CookieIcon = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
 		new Notification(title, {body: message, badge: CookieIcon});
 	}

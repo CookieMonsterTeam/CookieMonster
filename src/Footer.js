@@ -12,6 +12,7 @@
  * It starts the further initialization of CookieMonster and registers hooks
  */
 CM.init = function() {
+    CM.Footer.isInitzializing = true
     var proceed = true;
     if (Game.version != CM.VersionMajor) {
         proceed = confirm('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' is meant for Game version ' + CM.VersionMajor + '.  Loading a different version may cause errors.  Do you still want to load Cookie Monster?');
@@ -20,7 +21,7 @@ CM.init = function() {
         CM.DelayInit();
         Game.registerHook('draw', CM.Disp.Draw);
         Game.registerHook('logic', CM.Loop);
-        
+        CM.Footer.isInitzializing = false
     }
 };
 
