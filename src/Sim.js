@@ -47,7 +47,7 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
 	// If noSim is set, use Game methods to compute price instead of Sim ones.
 	noSim = typeof noSim === "undefined" ? 0 : noSim;
 	var moni = 0;
-	if (amount == -1) amount = start;
+	if (amount === -1) amount = start;
 	if (!amount) amount = Game.buyBulk;
 	for (let i = 0; i < amount; i++) {
 		let price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
@@ -65,14 +65,14 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
 
 CM.Sim.Has = function(what) {
 	let it = CM.Sim.Upgrades[what];
-	if (Game.ascensionMode == 1 && (it.pool == 'prestige' || it.tier == 'fortune')) return 0;
+	if (Game.ascensionMode === 1 && (it.pool === 'prestige' || it.tier === 'fortune')) return 0;
 	return (it ? it.bought : 0);
 };
 
 
 CM.Sim.Win = function(what) {
 	if (CM.Sim.Achievements[what]) {
-		if (CM.Sim.Achievements[what].won == 0) {
+		if (CM.Sim.Achievements[what].won === 0) {
 			CM.Sim.Achievements[what].won = 1;
 			if (Game.Achievements[what].pool != 'shadow') CM.Sim.AchievementsOwned++;
 		}
@@ -85,7 +85,7 @@ eval('CM.Sim.GetHeavenlyMultiplier = ' + Game.GetHeavenlyMultiplier.toString().s
 
 // Check for Pantheon Auras
 CM.Sim.hasAura = function(what) {
-	if (Game.dragonAuras[CM.Sim.dragonAura].name == what || Game.dragonAuras[CM.Sim.dragonAura2].name == what)
+	if (Game.dragonAuras[CM.Sim.dragonAura].name === what || Game.dragonAuras[CM.Sim.dragonAura2].name === what)
 		return true;
 	else
 		return false;
@@ -95,9 +95,9 @@ CM.Sim.hasAura = function(what) {
 // Used as CM.Sim.auraMult('Aura') * mult, i.e. CM.Sim.auraMult('Dragon God) * 0.05
 CM.Sim.auraMult = function(what) {
 	var n = 0;
-	if (Game.dragonAuras[CM.Sim.dragonAura].name == what || Game.dragonAuras[CM.Sim.dragonAura2].name == what)
+	if (Game.dragonAuras[CM.Sim.dragonAura].name === what || Game.dragonAuras[CM.Sim.dragonAura2].name === what)
 		n = 1;
-	if (Game.dragonAuras[CM.Sim.dragonAura].name == 'Reality Bending' || Game.dragonAuras[CM.Sim.dragonAura2].name == 'Reality Bending')
+	if (Game.dragonAuras[CM.Sim.dragonAura].name === 'Reality Bending' || Game.dragonAuras[CM.Sim.dragonAura2].name === 'Reality Bending')
 		n += 0.1;
 	return n;
 };
@@ -228,7 +228,7 @@ CM.Sim.CopyData = function() {
 	for (let i of Object.keys(Game.Objects)) {
 		let me = Game.Objects[i];
 		let you = CM.Sim.Objects[i];
-		if (you == undefined) { // New building!
+		if (you === undefined) { // New building!
 			you = CM.Sim.Objects[i] = CM.Sim.InitialBuildingData(i);
 			CM.Disp.CreateBotBarBuildingColumn(i); // Add new building to the bottom bar
 		}
@@ -244,7 +244,7 @@ CM.Sim.CopyData = function() {
 	for (let i of Object.keys(Game.Upgrades)) {
 		let me = Game.Upgrades[i];
 		let you = CM.Sim.Upgrades[i];
-		if (you == undefined) {
+		if (you === undefined) {
 			you = CM.Sim.Upgrades[i] = CM.Sim.InitUpgrade(i);
 		}
 		you.bought = me.bought;
@@ -254,7 +254,7 @@ CM.Sim.CopyData = function() {
 	for (let i of Object.keys(Game.Achievements)) {
 		let me = Game.Achievements[i];
 		let you = CM.Sim.Achievements[i];
-		if (you == undefined) {
+		if (you === undefined) {
 			you = CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 		}
 		you.won = me.won;
@@ -295,7 +295,7 @@ CM.Sim.CalculateGains = function() {
 	for (let i of Object.keys(Game.cookieUpgrades)) {
 		let me = Game.cookieUpgrades[i];
 		if (CM.Sim.Has(me.name)) {
-			mult *= (1 + (typeof(me.power) == 'function' ? me.power(me) : me.power) * 0.01);
+			mult *= (1 + (typeof(me.power) === 'function' ? me.power(me) : me.power) * 0.01);
 		}
 	}
 
@@ -320,29 +320,29 @@ CM.Sim.CalculateGains = function() {
 	var buildMult = 1;
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
 		let godLvl = CM.Sim.hasGod('asceticism');
-		if (godLvl == 1) mult *= 1.15;
-		else if (godLvl == 2) mult *= 1.1;
-		else if (godLvl == 3) mult *= 1.05;
+		if (godLvl === 1) mult *= 1.15;
+		else if (godLvl === 2) mult *= 1.1;
+		else if (godLvl === 3) mult *= 1.05;
 
 		godLvl = CM.Sim.hasGod('ages');
-		if (godLvl == 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 3)) * Math.PI * 2);
-		else if (godLvl == 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 12)) * Math.PI*2);
-		else if (godLvl == 3) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 24)) * Math.PI*2);
+		if (godLvl === 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 3)) * Math.PI * 2);
+		else if (godLvl === 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 12)) * Math.PI*2);
+		else if (godLvl === 3) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 24)) * Math.PI*2);
 
 		godLvl = CM.Sim.hasGod('decadence');
-		if (godLvl == 1) buildMult *= 0.93;
-		else if (godLvl == 2) buildMult *= 0.95;
-		else if (godLvl == 3) buildMult *= 0.98;
+		if (godLvl === 1) buildMult *= 0.93;
+		else if (godLvl === 2) buildMult *= 0.95;
+		else if (godLvl === 3) buildMult *= 0.98;
 
 		godLvl = CM.Sim.hasGod('industry');
-		if (godLvl == 1) buildMult *= 1.1;
-		else if (godLvl == 2) buildMult *= 1.06;
-		else if (godLvl == 3) buildMult *= 1.03;
+		if (godLvl === 1) buildMult *= 1.1;
+		else if (godLvl === 2) buildMult *= 1.06;
+		else if (godLvl === 3) buildMult *= 1.03;
 
 		godLvl = CM.Sim.hasGod('labor');
-		if (godLvl == 1) buildMult *= 0.97;
-		else if (godLvl == 2) buildMult *= 0.98;
-		else if (godLvl == 3) buildMult *= 0.99;
+		if (godLvl === 1) buildMult *= 0.97;
+		else if (godLvl === 2) buildMult *= 0.98;
+		else if (godLvl === 3) buildMult *= 0.99;
 	}
 
 	if (CM.Sim.Has('Santa\'s legacy')) mult *= 1 + (Game.santaLevel + 1) * 0.03;
@@ -354,9 +354,9 @@ CM.Sim.CalculateGains = function() {
 	milkMult *= 1 + CM.Sim.auraMult('Breath of Milk') * 0.05;
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
 		let godLvl = CM.Sim.hasGod('mother');
-		if (godLvl == 1) milkMult *= 1.1;
-		else if (godLvl == 2) milkMult *= 1.05;
-		else if (godLvl == 3) milkMult *= 1.03;
+		if (godLvl === 1) milkMult *= 1.1;
+		else if (godLvl === 2) milkMult *= 1.05;
+		else if (godLvl === 3) milkMult *= 1.03;
 	}
 	// TODO Store minigame buffs?
 	milkMult *= CM.Sim.eff('milk');
@@ -381,9 +381,9 @@ CM.Sim.CalculateGains = function() {
 
 	for (let i of Object.keys(CM.Sim.Objects)) {
 		let me = CM.Sim.Objects[i];
-		var storedCps = (typeof(me.cps) == 'function' ? me.cps(me) : me.cps);
+		var storedCps = (typeof(me.cps) === 'function' ? me.cps(me) : me.cps);
 		if (Game.ascensionMode != 1) storedCps *= (1 + me.level * 0.01) * buildMult;
-		if (me.name == "Grandma" && CM.Sim.Has('Milkhelp&reg; lactose intolerance relief tablets')) storedCps *= 1 + 0.05 * milkProgress * milkMult;
+		if (me.name === "Grandma" && CM.Sim.Has('Milkhelp&reg; lactose intolerance relief tablets')) storedCps *= 1 + 0.05 * milkProgress * milkMult;
 		CM.Sim.cookiesPs += me.amount * storedCps;
 	}
 
@@ -432,8 +432,8 @@ CM.Sim.CalculateGains = function() {
 	}
 
 	var name = Game.bakeryName.toLowerCase();
-	if (name == 'orteil') mult *= 0.99;
-	else if (name == 'ortiel') mult *= 0.98;
+	if (name === 'orteil') mult *= 0.99;
+	else if (name === 'ortiel') mult *= 0.98;
 
 	// TODO: Move CalcWink option and calculation here from CM.Disp
 
@@ -490,8 +490,8 @@ CM.Sim.CheckOtherAchiev = function() {
 		}
 	}
 	if (minAmount >= 1) CM.Sim.Win('One with everything');
-	if (mathematician == 1) CM.Sim.Win('Mathematician');
-	if (base10 == 1) CM.Sim.Win('Base 10');
+	if (mathematician === 1) CM.Sim.Win('Mathematician');
+	if (base10 === 1) CM.Sim.Win('Base 10');
 	if (minAmount >= 100) CM.Sim.Win('Centennial');
 	if (minAmount >= 150) CM.Sim.Win('Centennial and a half');
 	if (minAmount >= 200) CM.Sim.Win('Bicentennial');
@@ -552,7 +552,7 @@ CM.Sim.BuyBuildings = function(amount, target) {
 		let me = CM.Sim.Objects[i];
 		me.amount += amount;
 
-		if (i == 'Cursor') {
+		if (i === 'Cursor') {
 			if (me.amount >= 1) CM.Sim.Win('Click');
 			if (me.amount >= 2) CM.Sim.Win('Double-click');
 			if (me.amount >= 50) CM.Sim.Win('Mouse wheel');
@@ -593,24 +593,24 @@ CM.Sim.BuyBuildings = function(amount, target) {
 CM.Sim.BuyUpgrades = function() {
 	CM.Cache.Upgrades = [];
 	for (let i of Object.keys(Game.Upgrades)) {
-		if (Game.Upgrades[i].pool == 'toggle' || (Game.Upgrades[i].bought == 0 && Game.Upgrades[i].unlocked && Game.Upgrades[i].pool != 'prestige')) {
+		if (Game.Upgrades[i].pool === 'toggle' || (Game.Upgrades[i].bought === 0 && Game.Upgrades[i].unlocked && Game.Upgrades[i].pool != 'prestige')) {
 			CM.Sim.CopyData();
 			let me = CM.Sim.Upgrades[i];
 			me.bought = 1;
 			if (Game.CountsAsUpgradeOwned(Game.Upgrades[i].pool)) CM.Sim.UpgradesOwned++;
 
-			if (i == 'Elder Pledge') {
+			if (i === 'Elder Pledge') {
 				CM.Sim.pledges++;
 				if (CM.Sim.pledges > 0) CM.Sim.Win('Elder nap');
 				if (CM.Sim.pledges >= 5) CM.Sim.Win('Elder slumber');
 			}
-			else if (i == 'Elder Covenant') {
+			else if (i === 'Elder Covenant') {
 				CM.Sim.Win('Elder calm');
 			}
-			else if (i == 'Prism heart biscuits') {
+			else if (i === 'Prism heart biscuits') {
 				CM.Sim.Win('Lovely cookies');
 			}
-			else if (i == 'Heavenly key') {
+			else if (i === 'Heavenly key') {
 				CM.Sim.Win('Wholesome');
 			}
 
@@ -693,7 +693,7 @@ CM.Sim.ResetBonus = function(possiblePresMax) {
 
 	CM.Sim.CopyData();
 
-	if (CM.Sim.Upgrades['Heavenly key'].bought == 0) {
+	if (CM.Sim.Upgrades['Heavenly key'].bought === 0) {
 		CM.Sim.Upgrades['Heavenly chip secret'].bought = 1;
 		CM.Sim.Upgrades['Heavenly cookie stand'].bought = 1;
 		CM.Sim.Upgrades['Heavenly bakery'].bought = 1;
@@ -772,9 +772,9 @@ CM.Sim.modifyBuildingPrice = function(building,price) {
 	price *= CM.Sim.eff('buildingCost');
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
 		let godLvl = CM.Sim.hasGod('creation');
-		if (godLvl == 1) price *= 0.93;
-		else if (godLvl == 2) price *= 0.95;
-		else if (godLvl == 3) price *= 0.98;
+		if (godLvl === 1) price *= 0.93;
+		else if (godLvl === 2) price *= 0.95;
+		else if (godLvl === 3) price *= 0.98;
 	}
 	return price;
 };
@@ -883,9 +883,9 @@ CM.Sim.mouseCps = function() {
 		if (CM.Sim.hasGod)
 		{
 			var godLvl = CM.Sim.hasGod('labor');
-			if (godLvl == 1) mult *= 1.15;
-			else if (godLvl == 2) mult *= 1.1;
-			else if (godLvl == 3) mult *= 1.05;
+			if (godLvl === 1) mult *= 1.15;
+			else if (godLvl === 2) mult *= 1.1;
+			else if (godLvl === 3) mult *= 1.05;
 		}
 	}
 

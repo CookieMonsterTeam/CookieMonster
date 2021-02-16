@@ -40,7 +40,7 @@ CM.Config.LoadConfig = function(settings) {
 				CM.Options[i] = CM.Data.ConfigDefault[i];
 			}
 			else if (i != 'Header' && i != 'Colors') {
-				if (i.indexOf('SoundURL') == -1) {
+				if (i.indexOf('SoundURL') === -1) {
 					if (!(CM.Options[i] > -1 && CM.Options[i] < CM.ConfigData[i].label.length)) {
 						mod = true;
 						CM.Options[i] = CM.Data.ConfigDefault[i];
@@ -53,7 +53,7 @@ CM.Config.LoadConfig = function(settings) {
 					}
 				}
 			}
-			else if (i == 'Header') {
+			else if (i === 'Header') {
 				for (let j in CM.Data.ConfigDefault.Header) {
 					if (typeof CM.Options[i][j] === 'undefined' || !(CM.Options[i][j] > -1 && CM.Options[i][j] < 2)) {
 						mod = true;
@@ -104,7 +104,7 @@ CM.Config.RestoreDefault = function() {
 CM.Config.ToggleConfig = function(config) {
 	CM.Options[config]++;
 
-	if (CM.Options[config] == CM.ConfigData[config].label.length) {
+	if (CM.Options[config] === CM.ConfigData[config].label.length) {
 		CM.Options[config] = 0;
 		if (CM.ConfigData[config].toggle) l(CM.Config.ConfigPrefix + config).className = 'option off';
 	}
@@ -152,7 +152,7 @@ CM.Config.ToggleHeader = function(config) {
  * @param 	{number}	ToggleOnOff		A number indicating whether the option has been turned off (0) or on (1)
  */
 CM.Config.CheckNotificationPermissions = function(ToggleOnOff) {
-	if (ToggleOnOff == 1)	{
+	if (ToggleOnOff === 1)	{
 		// Check if browser support Promise version of Notification Permissions
 		let checkNotificationPromise = function () {
 			try {
