@@ -3886,52 +3886,55 @@ CM.Disp.CreateStatsPrestigeSection = function() {
  * It is called by CM.Disp.AddMenuStats() when CM.Options.MissingUpgrades is set
  */
 CM.Disp.AddMissingUpgrades = function() {
-	if (CM.Cache.MissingUpgradesPrestige) {
-		var prestigeUpgradesOwned = Game.PrestigeUpgrades.length - l('menu').children[5].children[3].children.length;
-		var title = document.createElement('div');
-		title.id = "CMMissingUpgradesPrestigeTitle";
-		title.className = "listing";
-		titlefrag = document.createElement('div');
-		titlefrag.innerHTML = '<b>Missing Prestige upgrades:</b> '+ prestigeUpgradesOwned + '/' + Game.PrestigeUpgrades.length + ' (' + Math.floor((prestigeUpgradesOwned / Game.PrestigeUpgrades.length) * 100) + '%)';
-		title.appendChild(titlefrag)
-		l('menu').children[5].appendChild(title)
-		upgrades = document.createElement('div');
-		upgrades.className = "listing crateBox";
-		upgrades.innerHTML = CM.Cache.MissingUpgradesPrestige;
-		l('menu').children[5].appendChild(upgrades)
+	for (let menuSection of (l('menu').children)) {
+		if (menuSection.children[0]) {
+			if (menuSection.children[0].innerHTML === "Prestige" && CM.Cache.MissingUpgradesPrestige) {
+				let prestigeUpgradesMissing = CM.Cache.MissingUpgradesPrestige.match(new RegExp("div", "g") || []).length / 2;
+				let title = document.createElement('div');
+				title.id = "CMMissingUpgradesPrestigeTitle";
+				title.className = "listing";
+				let titlefrag = document.createElement('div');
+				titlefrag.innerHTML = '<b>Missing Prestige upgrades:</b> '+ prestigeUpgradesMissing + '/' + Game.PrestigeUpgrades.length + ' (' + Math.floor((prestigeUpgradesMissing / Game.PrestigeUpgrades.length) * 100) + '%)';
+				title.appendChild(titlefrag);
+				menuSection.appendChild(title);
+				let upgrades = document.createElement('div');
+				upgrades.className = "listing crateBox";
+				upgrades.innerHTML = CM.Cache.MissingUpgradesPrestige;
+				menuSection.appendChild(upgrades);
+			}
+			else if (menuSection.children[0].innerHTML === "Upgrades") {
+				if (CM.Cache.MissingUpgrades) {
+					let normalUpgradesMissing = CM.Cache.MissingUpgrades.match(new RegExp("div", "g") || []).length / 2;
+					let title = document.createElement('div');
+					title.id = "CMMissingUpgradesTitle";
+					title.className = "listing";
+					let titlefrag = document.createElement('div');
+					titlefrag.innerHTML = '<b>Missing normal upgrades:</b> '+ normalUpgradesMissing + '/' + (Game.UpgradesByPool[""].length + Game.UpgradesByPool.tech.length) + ' (' + Math.floor((normalUpgradesMissing / ( Game.UpgradesByPool[""].length + Game.UpgradesByPool.tech.length)) * 100) + '%)';
+					title.appendChild(titlefrag);
+					menuSection.insertBefore(title, l('menu').children[6].childNodes[3]);
+					let upgrades = document.createElement('div');
+					upgrades.className = "listing crateBox";
+					upgrades.innerHTML = CM.Cache.MissingUpgrades;
+					menuSection.insertBefore(upgrades, document.getElementById("CMMissingUpgradesTitle").nextSibling);
+				}
+				if (CM.Cache.MissingUpgradesCookies) {
+					let cookieUpgradesMissing = CM.Cache.MissingUpgradesCookies.match(new RegExp("div", "g") || []).length / 2;
+					let title = document.createElement('div');
+					title.id = "CMMissingUpgradesCookiesTitle";
+					title.className = "listing";
+					let titlefrag = document.createElement('div');
+					titlefrag.innerHTML = '<b>Missing Cookie upgrades:</b> '+ cookieUpgradesMissing + '/' + Game.UpgradesByPool.cookie.length + ' (' + Math.floor((cookieUpgradesMissing / Game.UpgradesByPool.cookie.length) * 100) + '%)';
+					title.appendChild(titlefrag);
+					menuSection.appendChild(title);
+					let upgrades = document.createElement('div');
+					upgrades.className = "listing crateBox";
+					upgrades.innerHTML = CM.Cache.MissingUpgradesCookies;
+					menuSection.appendChild(upgrades);
+				}
+			}
+		}
 	}
-	if (CM.Cache.MissingUpgrades) {
-		if (Game.UpgradesOwned) {
-			var normalUpgradesOwned = Game.UpgradesByPool[""].length + Game.UpgradesByPool["tech"].length - l('menu').children[6].childNodes[2].children.length;
-		} else var normalUpgradesOwned = 0;
-		var title = document.createElement('div');
-		title.id = "CMMissingUpgradesTitle";
-		title.className = "listing";
-		titlefrag = document.createElement('div');
-		titlefrag.innerHTML = '<b>Missing normal upgrades:</b> '+ normalUpgradesOwned + '/' + (Game.UpgradesByPool[""].length + Game.UpgradesByPool["tech"].length) + ' (' + Math.floor((normalUpgradesOwned / ( Game.UpgradesByPool[""].length + Game.UpgradesByPool["tech"].length)) * 100) + '%)';
-		title.appendChild(titlefrag)
-		l('menu').children[6].insertBefore(title, l('menu').children[6].childNodes[3])
-		upgrades = document.createElement('div');
-		upgrades.className = "listing crateBox";
-		upgrades.innerHTML = CM.Cache.MissingUpgrades;
-		l('menu').children[6].insertBefore(upgrades, document.getElementById("CMMissingUpgradesTitle").nextSibling)
-	}
-	if (CM.Cache.MissingUpgradesCookies) {
-		var cookieUpgradesOwned = Game.UpgradesByPool["cookie"].length - l('menu').children[6].lastChild.children.length;
-		var title = document.createElement('div');
-		title.id = "CMMissingUpgradesCookiesTitle";
-		title.className = "listing";
-		titlefrag = document.createElement('div');
-		titlefrag.innerHTML = '<b>Missing Cookie upgrades:</b> '+ cookieUpgradesOwned + '/' + Game.UpgradesByPool["cookie"].length + ' (' + Math.floor((cookieUpgradesOwned / Game.UpgradesByPool["cookie"].length) * 100) + '%)';
-		title.appendChild(titlefrag)
-		l('menu').children[6].appendChild(title)
-		upgrades = document.createElement('div');
-		upgrades.className = "listing crateBox";
-		upgrades.innerHTML = CM.Cache.MissingUpgradesCookies;
-		l('menu').children[6].appendChild(upgrades)
-		
-	}
-}
+};
 
 /**
  * This function returns the "crates" (icons) for missing upgrades in the stats sections
