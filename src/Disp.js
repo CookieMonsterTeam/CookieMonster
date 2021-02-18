@@ -2727,7 +2727,7 @@ CM.Disp.AddMissingUpgrades = function() {
 					let titlefrag = document.createElement('div');
 					titlefrag.innerHTML = '<b>Missing normal upgrades:</b> '+ normalUpgradesMissing + '/' + (Game.UpgradesByPool[""].length + Game.UpgradesByPool.tech.length) + ' (' + Math.floor((normalUpgradesMissing / ( Game.UpgradesByPool[""].length + Game.UpgradesByPool.tech.length)) * 100) + '%)';
 					title.appendChild(titlefrag);
-					menuSection.insertBefore(title, l('menu').children[6].childNodes[3]);
+					menuSection.insertBefore(title, menuSection.childNodes[3]);
 					let upgrades = document.createElement('div');
 					upgrades.className = "listing crateBox";
 					upgrades.innerHTML = CM.Cache.MissingUpgrades;
