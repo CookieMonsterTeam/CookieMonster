@@ -120,28 +120,42 @@ CM.Cache.CacheStats = function() {
 /**
  * This functions calculates the max possible payout
  * It is called by CM.Disp.CreateStatsChainSection() and CM.Cache.RemakeChain()
- * @param	{number}	digit		
- * @param	{number}	maxPayout	
- * @param	{number}	mult		
- * @returns	{number}	moni		Cookies to be earned with Cookie Chain
+ * @param	{number}			digit		Number of Golden Cookies in chain
+ * @param	{number}			maxPayout	Maximum payout
+ * @param	{number}			mult		Multiplier
+ * @returns	[{number, number}]				Total cookies earned, and cookies needed for next level
  */
 CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
+	let totalFromChain = 0;
+	let moni = 0;
+	let nextMoni = 0;
 	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
-	var moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
-	var nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
 	while (nextMoni < maxPayout) {
-		chain++;
 		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
+		// TODO: Calculate Cookies or cps needed for next level of chain
 		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
+		lastMoni = moni
+		totalFromChain += moni;
+		chain++;
 	}
-	return [moni, nextMoni];
+	return [totalFromChain, nextMoni];
 };
 
 /**
  * This functions caches data related to Chain Cookies reward from Golden Cookioes
  * It is called by CM.Loop() upon changes to cps and CM.Cache.InitCache()
- * TODO: Fairly sure this is incorrect..
- * @global	{number}	CM.Cache.Chain		Cookies required for max Cookie Chain normal
+ * @global	[{number, number}]	CM.Cache.ChainReward			Total cookies earned, and cookies needed for next level for normal chain
+ * @global	{number}			CM.Cache.ChainRequired			Cookies needed for maximum reward for normal chain
+ * @global	{number}			CM.Cache.ChainRequiredNext		Total cookies needed for next level for normal chain
+ * @global	[{number, number}]	CM.Cache.ChainWrathReward			Total cookies earned, and cookies needed for next level for wrath chain
+ * @global	{number}			CM.Cache.ChainWrathRequired			Cookies needed for maximum reward for wrath chain
+ * @global	{number}			CM.Cache.ChainWrathRequiredNext		Total cookies needed for next level for wrath chain
+ * @global	[{number, number}]	CM.Cache.ChainFrenzyReward			Total cookies earned, and cookies needed for next level for normal frenzy chain
+ * @global	{number}			CM.Cache.ChainFrenzyRequired			Cookies needed for maximum reward for normal frenzy chain
+ * @global	{number}			CM.Cache.ChainFrenzyRequiredNext		Total cookies needed for next level for normal frenzy chain
+ * @global	[{number, number}]	CM.Cache.ChainFrenzyWrathReward			Total cookies earned, and cookies needed for next level for wrath frenzy chain
+ * @global	{number}			CM.Cache.ChainFrenzyWrathRequired			Cookies needed for maximum reward for wrath frenzy chain
+ * @global	{number}			CM.Cache.ChainFrenzyWrathRequiredNext		Total cookies needed for next level for wrath frenzy chain
  */
 CM.Cache.RemakeChain = function() {
 	let maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6 * CM.Cache.DragonsFortuneMultAdjustment;
@@ -150,19 +164,20 @@ CM.Cache.RemakeChain = function() {
 	if (cpsBuffMult > 0) maxPayout /= cpsBuffMult;
 	else maxPayout = 0;	
 
-	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout, CM.Cache.GoldenCookiesMult);
+	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout * CM.Cache.GoldenCookiesMult, CM.Cache.GoldenCookiesMult);
+	// TODO: All "required" variables are incorrect. Perhaps something to do with going over the required amount during the chain
 	CM.Cache.ChainRequired = CM.Cache.ChainReward[0] * 2;
 	CM.Cache.ChainRequiredNext = CM.Cache.ChainReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 
-	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout, CM.Cache.WrathCookiesMult);
+	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * CM.Cache.WrathCookiesMult, CM.Cache.WrathCookiesMult);
 	CM.Cache.ChainWrathRequired = CM.Cache.ChainWrathReward[0] * 2;
 	CM.Cache.ChainWrathRequiredNext = CM.Cache.ChainWrathReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 
-	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7, CM.Cache.GoldenCookiesMult);
+	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7 * CM.Cache.GoldenCookiesMult, CM.Cache.GoldenCookiesMult);
 	CM.Cache.ChainFrenzyRequired = CM.Cache.ChainFrenzyReward[0] * 2;
 	CM.Cache.ChainFrenzyRequiredNext = CM.Cache.ChainFrenzyReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 
-	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7, CM.Cache.WrathCookiesMult);
+	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7 * CM.Cache.WrathCookiesMult, CM.Cache.WrathCookiesMult);
 	CM.Cache.ChainFrenzyWrathRequired = CM.Cache.ChainFrenzyReward[0] * 2;
 	CM.Cache.ChainFrenzyWrathRequiredNext = CM.Cache.ChainFrenzyReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 };
