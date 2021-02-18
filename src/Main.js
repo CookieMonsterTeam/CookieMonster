@@ -94,7 +94,7 @@ CM.ReplaceNative = function() {
 	};
 
 	CM.Backup.Logic = Game.Logic;
-	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Cache.Title'));
+	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Disp.Title'));
 	Game.Logic = function() {
 		CM.Backup.LogicMod();
 

@@ -341,7 +341,9 @@ CM.Disp.Draw = function () {
 CM.Disp.ToggleBotBar = function() {
 	if (CM.Options.BotBar === 1) {
 		CM.Disp.BotBar.style.display = '';
-		CM.Disp.UpdateBotBar();
+		if (!CM.Footer.isInitzializing) {
+			CM.Disp.UpdateBotBar();
+		}
 	}
 	else {
 		CM.Disp.BotBar.style.display = 'none';
@@ -1070,11 +1072,11 @@ CM.Disp.UpdateFavicon = function() {
 
 /**
  * This function updates the tab title
- * It is called on every loop by Game.Logic() which also sets CM.Cache.Title to Game.cookies
+ * It is called on every loop by Game.Logic() which also sets CM.Disp.Title to Game.cookies
  */
 CM.Disp.UpdateTitle = function() {
 	if (Game.OnAscend || CM.Options.Title === 0) {
-		document.title = CM.Cache.Title;
+		document.title = CM.Disp.Title;
 	}
 	else if (CM.Options.Title === 1) {
 		let addFC = false;
@@ -1106,7 +1108,7 @@ CM.Disp.UpdateTitle = function() {
 		}
 
 		// Remove previous timers and add current cookies
-		let str = CM.Cache.Title;
+		let str = CM.Disp.Title;
 		if (str.charAt(0) === '[') {
 			str = str.substring(str.lastIndexOf(']') + 1);
 		}
@@ -2919,6 +2921,11 @@ CM.Disp.clickTimes = [1, 5, 10, 15, 30];
  * It is used by CM.Disp.CheckWrinklerTooltip() and CM.Main.AddWrinklerAreaDetect()
  */
 CM.Disp.TooltipWrinklerBeingShown = [];
+
+/**
+ * Used to store the number of cookies to be displayed in the tab-title
+ */
+CM.Disp.Title = '';
 
 /**
  * These are variables with base-values that get initalized when initliazing CookieMonster 
