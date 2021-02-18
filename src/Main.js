@@ -94,7 +94,7 @@ CM.ReplaceNative = function() {
 	};
 
 	CM.Backup.Logic = Game.Logic;
-	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Cache.Title'));
+	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Disp.Title'));
 	Game.Logic = function() {
 		CM.Backup.LogicMod();
 
@@ -129,7 +129,7 @@ CM.ReplaceNativeGrimoireDraw = function() {
 		CM.Backup.GrimoireDraw = minigame.draw;
 		Game.Objects['Wizard tower'].minigame.draw = function() {
 			CM.Backup.GrimoireDraw();
-			if (CM.Options.GrimoireBar == 1 && minigame.magic < minigame.magicM) {
+			if (CM.Options.GrimoireBar === 1 && minigame.magic < minigame.magicM) {
 				minigame.magicBarTextL.innerHTML += ' (' + CM.Disp.FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM)) + ')';
 			}
 		};
@@ -142,7 +142,7 @@ CM.Loop = function() {
 		CM.Disp.lastAscendState = Game.OnAscend;
 		CM.Disp.UpdateAscendState();
 	}
-	if (!Game.OnAscend && Game.AscendTimer == 0) {
+	if (!Game.OnAscend && Game.AscendTimer === 0) {
 		// CM.Sim.DoSims is set whenever CPS has changed
 		if (CM.Sim.DoSims) {
 			CM.Cache.RemakeIncome();
@@ -334,7 +334,7 @@ CM.Main.FindShimmer = function() {
 	CM.Cache.goldenShimmersByID = {};
 	for (let i of Object.keys(Game.shimmers)) {
 		CM.Cache.goldenShimmersByID[Game.shimmers[i].id] = Game.shimmers[i];
-		if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'golden') {
+		if (Game.shimmers[i].spawnLead && Game.shimmers[i].type === 'golden') {
 			CM.Cache.spawnedGoldenShimmer = Game.shimmers[i];
 			CM.Main.currSpawnedGoldenCookieState += 1;
 		}
@@ -348,7 +348,7 @@ CM.Main.FindShimmer = function() {
 CM.Main.CheckGoldenCookie = function() {
 	CM.Main.FindShimmer();
 	for (let i of Object.keys(CM.Disp.GCTimers)) {
-		if (typeof CM.Cache.goldenShimmersByID[i] == "undefined") {
+		if (typeof CM.Cache.goldenShimmersByID[i] === "undefined") {
 			CM.Disp.GCTimers[i].parentNode.removeChild(CM.Disp.GCTimers[i]);
 			delete CM.Disp.GCTimers[i];
 		}
@@ -363,16 +363,16 @@ CM.Main.CheckGoldenCookie = function() {
 			}
 			
 			for (let i of Object.keys(Game.shimmers)) {
-				if (typeof CM.Disp.GCTimers[Game.shimmers[i].id] == "undefined") {
+				if (typeof CM.Disp.GCTimers[Game.shimmers[i].id] === "undefined") {
 					CM.Disp.CreateGCTimer(Game.shimmers[i]);
 				}
 			}
 		}
 		CM.Disp.UpdateFavicon();
 		CM.Main.lastSpawnedGoldenCookieState = CM.Main.currSpawnedGoldenCookieState;
-		if (CM.Main.currSpawnedGoldenCookieState == 0) CM.Cache.spawnedGoldenShimmer = 0;
+		if (CM.Main.currSpawnedGoldenCookieState === 0) CM.Cache.spawnedGoldenShimmer = 0;
 	}
-	else if (CM.Options.GCTimer == 1 && CM.Main.lastGoldenCookieState) {
+	else if (CM.Options.GCTimer === 1 && CM.Main.lastGoldenCookieState) {
 		for (let i of Object.keys(CM.Disp.GCTimers)) {
 			CM.Disp.GCTimers[i].style.opacity = CM.Cache.goldenShimmersByID[i].l.style.opacity;
 			CM.Disp.GCTimers[i].style.transform = CM.Cache.goldenShimmersByID[i].l.style.transform;
@@ -389,7 +389,7 @@ CM.Main.CheckSeasonPopup = function() {
 	if (CM.Main.lastSeasonPopupState != Game.shimmerTypes.reindeer.spawned) {
 		CM.Main.lastSeasonPopupState = Game.shimmerTypes.reindeer.spawned;
 		for (let i of Object.keys(Game.shimmers)) {
-			if (Game.shimmers[i].spawnLead && Game.shimmers[i].type == 'reindeer') {
+			if (Game.shimmers[i].spawnLead && Game.shimmers[i].type === 'reindeer') {
 				CM.Cache.seasonPopShimmer = Game.shimmers[i];
 				break;
 			}
@@ -405,8 +405,8 @@ CM.Main.CheckSeasonPopup = function() {
  * It is called by CM.Loop
  */
 CM.Main.CheckTickerFortune = function() {
-	if (CM.Main.lastTickerFortuneState != (Game.TickerEffect && Game.TickerEffect.type == 'fortune')) {
-		CM.Main.lastTickerFortuneState = (Game.TickerEffect && Game.TickerEffect.type == 'fortune');
+	if (CM.Main.lastTickerFortuneState != (Game.TickerEffect && Game.TickerEffect.type === 'fortune')) {
+		CM.Main.lastTickerFortuneState = (Game.TickerEffect && Game.TickerEffect.type === 'fortune');
 		if (CM.Main.lastTickerFortuneState) {
 			CM.Disp.Flash(3, 'FortuneFlash');
 			CM.Disp.PlaySound(CM.Options.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
@@ -434,7 +434,7 @@ CM.Main.CheckGardenTick = function() {
  * It is called by CM.Loop
  */
 CM.Main.CheckMagicMeter = function() {
-	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Options.GrimoireBar == 1) {
+	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Options.GrimoireBar === 1) {
 		var minigame = Game.Objects['Wizard tower'].minigame;
 		if (minigame.magic < minigame.magicM) CM.Main.lastMagicBarFull = false;
 		else if (!CM.Main.lastMagicBarFull) {
@@ -454,21 +454,21 @@ CM.Main.CheckWrinklerCount = function() {
 	if (Game.elderWrath > 0) {
 		var CurrentWrinklers = 0;
 		for (let i in Game.wrinklers) {
-			if (Game.wrinklers[i].phase == 2) CurrentWrinklers++;
+			if (Game.wrinklers[i].phase === 2) CurrentWrinklers++;
 		}
 		if (CurrentWrinklers > CM.Main.lastWrinklerCount) {
 			CM.Main.lastWrinklerCount = CurrentWrinklers;
-			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Options.WrinklerMaxFlash) {
+			if (CurrentWrinklers === Game.getWrinklersMax() && CM.Options.WrinklerMaxFlash) {
 				CM.Disp.Flash(3, 'WrinklerMaxFlash');
 			} else {
 				CM.Disp.Flash(3, 'WrinklerFlash');
 			}
-			if (CurrentWrinklers == Game.getWrinklersMax() && CM.Options.WrinklerMaxSound) {
+			if (CurrentWrinklers === Game.getWrinklersMax() && CM.Options.WrinklerMaxSound) {
 				CM.Disp.PlaySound(CM.Options.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume');
 			} else {
 				CM.Disp.PlaySound(CM.Options.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume');
 			}
-			if (CurrentWrinklers == Game.getWrinklersMax() &&  CM.Options.WrinklerMaxNotification) {
+			if (CurrentWrinklers === Game.getWrinklersMax() &&  CM.Options.WrinklerMaxNotification) {
 				CM.Disp.Notification('WrinklerMaxNotification', "Maximum Wrinklers Reached", "You have reached your maximum ammount of wrinklers");
 			} else {
 				CM.Disp.Notification('WrinklerNotification', "A Wrinkler appeared", "A new wrinkler has appeared");
@@ -505,7 +505,7 @@ CM.Main.AddWrinklerAreaDetect = function() {
  * before execution of their actual function
  */
 CM.Main.FixMouseY = function(target) {
-	if (CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 0) {
+	if (CM.Options.TimerBar === 1 && CM.Options.TimerBarPos === 0) {
 		var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
 		Game.mouseY -= timerBarHeight;
 		target();

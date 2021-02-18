@@ -16,9 +16,9 @@
  * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinklersTotal)
  */
 CM.Disp.GetWrinkConfigBank = function() {
-	if (CM.Options.CalcWrink == 1) {
+	if (CM.Options.CalcWrink === 1) {
 		return CM.Cache.WrinklersTotal;}
-	else if (CM.Options.CalcWrink == 2) {
+	else if (CM.Options.CalcWrink === 2) {
 		return CM.Cache.WrinklersFattest[0];}
 	else {
 		return 0;}
@@ -30,7 +30,7 @@ CM.Disp.GetWrinkConfigBank = function() {
  */
 CM.Disp.PopAllNormalWrinklers = function() {
 	for (let i of Object.keys(Game.wrinklers)) {
-		if (Game.wrinklers[i].sucked > 0 && Game.wrinklers[i].type == 0) {
+		if (Game.wrinklers[i].sucked > 0 && Game.wrinklers[i].type === 0) {
 			Game.wrinklers[i].hp = 0;
 		}
 	}
@@ -44,15 +44,15 @@ CM.Disp.GetCPS = function() {
 	if (CM.Options.CPSMode) {
 		return CM.Cache.AvgCPS;}
 	else {
-		if (CM.Options.CalcWrink == 0) {
+		if (CM.Options.CalcWrink === 0) {
 			return (Game.cookiesPs * (1 - Game.cpsSucked));
 		}
-		else if (CM.Options.CalcWrink == 1) {
+		else if (CM.Options.CalcWrink === 1) {
 			return Game.cookiesPs * (CM.Cache.CurrWrinklerCPSMult + (1 - (CM.Cache.CurrWrinklerCount * 0.05)));
 		}
-		else if (CM.Options.CalcWrink == 2) {
+		else if (CM.Options.CalcWrink === 2) {
 			// Check if fattest is shiny
-			if (Game.wrinklers[CM.Cache.WrinklersFattest[1]].type == 1) {
+			if (Game.wrinklers[CM.Cache.WrinklersFattest[1]].type === 1) {
 				return Game.cookiesPs * ((CM.Cache.CurrWrinklerCPSMult * 3 / CM.Cache.CurrWrinklerCount)  + (1 - (CM.Cache.CurrWrinklerCount * 0.05)));
 			}
 			else {
@@ -130,7 +130,7 @@ CM.Disp.GetLumpColor = function(type) {
  * @returns	{string}				Formatted time
  */
 CM.Disp.FormatTime = function(time, longFormat) {
-	if (time == Infinity) return time;
+	if (time === Infinity) return time;
 	time = Math.ceil(time);
 	var y = Math.floor(time / 31557600);
 	var d = Math.floor(time % 31557600 / 86400);
@@ -147,11 +147,11 @@ CM.Disp.FormatTime = function(time, longFormat) {
 		str += (s < 10 ? '0' : '') + s;
 	} else {
 		if (time > 777600000) return longFormat ? 'Over 9000 days!' : '>9000d';
-		str += (y > 0 ? y + (longFormat ? (y == 1 ? ' year' : ' years') : 'y') + ', ': "");
-		str += (d > 0 ? d + (longFormat ? (d == 1 ? ' day' : ' days') : 'd') + ', ': "");
-		if (str.length > 0 || h > 0) str += h + (longFormat ? (h == 1 ? ' hour' : ' hours') : 'h') + ', ';
-		if (str.length > 0 || m > 0) str += m + (longFormat ? (m == 1 ? ' minute' : ' minutes') : 'm') + ', ';
-		str += s + (longFormat ? (s == 1 ? ' second' : ' seconds') : 's');
+		str += (y > 0 ? y + (longFormat ? (y === 1 ? ' year' : ' years') : 'y') + ', ': "");
+		str += (d > 0 ? d + (longFormat ? (d === 1 ? ' day' : ' days') : 'd') + ', ': "");
+		if (str.length > 0 || h > 0) str += h + (longFormat ? (h === 1 ? ' hour' : ' hours') : 'h') + ', ';
+		if (str.length > 0 || m > 0) str += m + (longFormat ? (m === 1 ? ' minute' : ' minutes') : 'm') + ', ';
+		str += s + (longFormat ? (s === 1 ? ' second' : ' seconds') : 's');
 	}
 	return str;
 };
@@ -187,23 +187,23 @@ CM.Disp.GetTimeColor = function(time) {
  */
 CM.Disp.Beautify = function(num, floats, forced) {
 	var decimals = CM.Options.ScaleDecimals + 1;
-	if (CM.Options.Scale == 0) {
+	if (CM.Options.Scale === 0) {
 		return CM.Backup.Beautify(num, floats);
 	}
 	else if (isFinite(num)) {
 		var answer = '';
-		if (num == 0) {
+		if (num === 0) {
 			return num.toString();
 		}
 		else if (0.001 < num && num < CM.Options.ScaleCutoff) {
 			answer = num.toFixed(2);
 			if (CM.Options.ScaleSeparator) answer = answer.toLocaleString('nl');
 			for (let i = 0; i < 3; i++) {
-				if (answer[answer.length - 1] == "0" || answer[answer.length - 1] == ".") answer = answer.slice(0, -1);
+				if (answer[answer.length - 1] === "0" || answer[answer.length - 1] === ".") answer = answer.slice(0, -1);
 			}
 			return answer;
 		}
-		else if (CM.Options.Scale == 4 && !forced || forced == 4) { // Scientific notation, 123456789 => 1.235E+8
+		else if (CM.Options.Scale === 4 && !forced || forced === 4) { // Scientific notation, 123456789 => 1.235E+8
 			answer = num.toExponential(decimals).toString().replace("e", "E"); 
 		}
 		else {
@@ -211,28 +211,28 @@ CM.Disp.Beautify = function(num, floats, forced) {
 			let AmountOfTenPowerThree = Math.floor(exponential.slice(exponential.indexOf("e") + 1) / 3);
 			answer = (num / Number("1e" + (AmountOfTenPowerThree * 3))).toFixed(decimals);
 			// answer is now "xxx.xx" (e.g., 123456789 would be 123.46)
-			if (CM.Options.Scale == 1 && !forced || forced == 1) { // Metric scale, 123456789 => 123.457 M
+			if (CM.Options.Scale === 1 && !forced || forced === 1) { // Metric scale, 123456789 => 123.457 M
 				if (num >= 0.01 && num < Number("1e" + CM.Data.metric.length * 3)) {
 					answer += ' ' + CM.Data.metric[AmountOfTenPowerThree];
 				}
 				// If number is too large or little, revert to scientific notation
 				else answer = CM.Disp.Beautify(num, 0, 4);
 			}
-			else if (CM.Options.Scale == 2 && !forced || forced == 2) { // Short scale, 123456789 => 123.457 M
+			else if (CM.Options.Scale === 2 && !forced || forced === 2) { // Short scale, 123456789 => 123.457 M
 				if (num >= 0.01 && num < Number("1e" + CM.Data.shortScale.length * 3)) {
 					answer += ' ' + CM.Data.shortScale[AmountOfTenPowerThree];
 				}
 				// If number is too large or little, revert to scientific notation
 				else answer = CM.Disp.Beautify(num, 0, 4);
 			}
-			else if (CM.Options.Scale == 3 && !forced || forced == 3) { // Short scale, 123456789 => 123.457 M
+			else if (CM.Options.Scale === 3 && !forced || forced === 3) { // Short scale, 123456789 => 123.457 M
 				if (num >= 0.01 && num < Number("1e" + CM.Data.shortScaleAbbreviated.length * 3)) {
 					answer += ' ' + CM.Data.shortScaleAbbreviated[AmountOfTenPowerThree];
 				}
 				// If number is too large or little, revert to scientific notation
 				else answer = CM.Disp.Beautify(num, 0, 4);
 			}
-			else if (CM.Options.Scale == 5 && !forced || forced == 5) { // Engineering notation, 123456789 => 123.457E+6
+			else if (CM.Options.Scale === 5 && !forced || forced === 5) { // Engineering notation, 123456789 => 123.457E+6
 				answer += 'E' + AmountOfTenPowerThree * 3;
 			}
 		}
@@ -243,7 +243,7 @@ CM.Disp.Beautify = function(num, floats, forced) {
 		if (CM.Options.ScaleSeparator) answer = answer.replace('.', ',');
 		return answer;
 	}
-	else if (num == Infinity) {
+	else if (num === Infinity) {
 		return "Infinity";
 	}
 	else {
@@ -262,8 +262,8 @@ CM.Disp.Beautify = function(num, floats, forced) {
 CM.Disp.UpdateAscendState = function() {
 	if (Game.OnAscend) {
 		l('game').style.bottom = '0px';
-		if (CM.Options.BotBar == 1) CM.Disp.BotBar.style.display = 'none';
-		if (CM.Options.TimerBar == 1) CM.Disp.f.style.display = 'none';
+		if (CM.Options.BotBar === 1) CM.Disp.BotBar.style.display = 'none';
+		if (CM.Options.TimerBar === 1) CM.Disp.f.style.display = 'none';
 	}
 	else {
 		CM.Disp.ToggleBotBar();
@@ -302,8 +302,8 @@ CM.Disp.UpdateBackground = function() {
 CM.Disp.Draw = function () {
 	// Draw autosave timer in stats menu, this must be done here to make it count down correctly
 	if (
-		(Game.prefs.autosave && Game.drawT % 10 == 0) && // with autosave ON and every 10 ticks
-		(Game.onMenu == 'stats' && CM.Options.Stats) // while being on the stats menu only
+		(Game.prefs.autosave && Game.drawT % 10 === 0) && // with autosave ON and every 10 ticks
+		(Game.onMenu === 'stats' && CM.Options.Stats) // while being on the stats menu only
 	) {
 		var timer = document.getElementById('CMStatsAutosaveTimer');
 		if (timer) {
@@ -339,9 +339,11 @@ CM.Disp.Draw = function () {
  * It is called by CM.Disp.UpdateAscendState() and a change in CM.Options.BotBar
  */
 CM.Disp.ToggleBotBar = function() {
-	if (CM.Options.BotBar == 1) {
+	if (CM.Options.BotBar === 1) {
 		CM.Disp.BotBar.style.display = '';
-		CM.Disp.UpdateBotBar();
+		if (!CM.Footer.isInitzializing) {
+			CM.Disp.UpdateBotBar();
+		}
 	}
 	else {
 		CM.Disp.BotBar.style.display = 'none';
@@ -405,7 +407,7 @@ CM.Disp.CreateBotBar = function() {
  * It is called by CM.Loop()
  */
 CM.Disp.UpdateBotBar = function() {
-	if (CM.Options.BotBar == 1 && CM.Cache.Objects1) {
+	if (CM.Options.BotBar === 1 && CM.Cache.Objects1) {
 		var count = 0;
 		for (let i of Object.keys(CM.Cache.Objects1)) {
 			let target = `Objects${Game.buyBulk}`
@@ -416,7 +418,7 @@ CM.Disp.UpdateBotBar = function() {
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache[target][i].pp, 2);
 			var timeColor = CM.Disp.GetTimeColor((Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].className = CM.Disp.colorTextPre + timeColor.color;
-			if (timeColor.text == "Done!" && Game.cookies < Game.Objects[i].bulkPrice) {
+			if (timeColor.text === "Done!" && Game.cookies < Game.Objects[i].bulkPrice) {
 				CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text + " (with Wrink)";
 			}
 			else CM.Disp.BotBar.firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text;
@@ -532,7 +534,7 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 		colorBar.style.height = '10px';
 		colorBar.style.verticalAlign = "text-top";
 		colorBar.style.textAlign="center";
-		if (bars.length - 1 == i) {
+		if (bars.length - 1 === i) {
 			colorBar.style.borderTopRightRadius = '10px';
 			colorBar.style.borderBottomRightRadius = '10px';
 		}
@@ -558,7 +560,7 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
  * It is called by CM.Loop()
  */
 CM.Disp.UpdateTimerBar = function() {
-	if (CM.Options.TimerBar == 1) {
+	if (CM.Options.TimerBar === 1) {
 		// label width: 113, timer width: 30, div margin: 20
 		var maxWidthTwoBar = CM.Disp.TimerBar.offsetWidth - 163;
 		// label width: 113, div margin: 20, calculate timer width at runtime
@@ -566,12 +568,12 @@ CM.Disp.UpdateTimerBar = function() {
 		var numberOfTimers = 0;
 
 		// Regulates visibility of Golden Cookie timer
-		if (Game.shimmerTypes.golden.spawned == 0 && !Game.Has('Golden switch [off]')) {
+		if (Game.shimmerTypes.golden.spawned === 0 && !Game.Has('Golden switch [off]')) {
 			CM.Disp.TimerBars.CMTimerBarGC.style.display = '';
 			l('CMTimerBarGCMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes.golden.minTime - Game.shimmerTypes.golden.time) * maxWidthTwoBar / Game.shimmerTypes.golden.maxTime) + 'px';
 			if (CM.Options.TimerBarOverlay >=  1) l('CMTimerBarGCMinBar').textContent = Math.ceil((Game.shimmerTypes.golden.minTime - Game.shimmerTypes.golden.time)/ Game.fps);
 			else l('CMTimerBarGCMinBar').textContent = "";
-			if (Game.shimmerTypes.golden.minTime == Game.shimmerTypes.golden.maxTime) {
+			if (Game.shimmerTypes.golden.minTime === Game.shimmerTypes.golden.maxTime) {
 				l('CMTimerBarGCMinBar').style.borderTopRightRadius = '10px';
 				l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '10px';
 			}
@@ -588,7 +590,7 @@ CM.Disp.UpdateTimerBar = function() {
 		else CM.Disp.TimerBars.CMTimerBarGC.style.display = 'none';
 
 		// Regulates visibility of Reindeer timer
-		if (Game.season == 'christmas' && Game.shimmerTypes.reindeer.spawned == 0) {
+		if (Game.season === 'christmas' && Game.shimmerTypes.reindeer.spawned === 0) {
 			CM.Disp.TimerBars. CMTimerBarRen.style.display = '';
 			l('CMTimerBarRenMinBar').style.width = Math.round(Math.max(0, Game.shimmerTypes.reindeer.minTime - Game.shimmerTypes.reindeer.time) * maxWidthTwoBar / Game.shimmerTypes.reindeer.maxTime) + 'px';
 			if (CM.Options.TimerBarOverlay >=  1) l('CMTimerBarRenMinBar').textContent = Math.ceil((Game.shimmerTypes.reindeer.minTime - Game.shimmerTypes.reindeer.time)/ Game.fps);
@@ -620,7 +622,7 @@ CM.Disp.UpdateTimerBar = function() {
 				else classColor = CM.Disp.colorPurple;
 				timer.lastChild.children[1].className = CM.Disp.colorBackPre + classColor;
 				timer.lastChild.children[1].style.color = "black";
-				if (CM.Options.TimerBarOverlay == 2) timer.lastChild.children[1].textContent = Math.round(100 * (Game.buffs[i].time / Game.buffs[i].maxTime)) + "%";
+				if (CM.Options.TimerBarOverlay === 2) timer.lastChild.children[1].textContent = Math.round(100 * (Game.buffs[i].time / Game.buffs[i].maxTime)) + "%";
 				else timer.lastChild.children[1].textContent = "";
 				timer.lastChild.children[1].style.width = Math.round(Game.buffs[i].time * (maxWidthOneBar - Math.ceil(Game.buffs[i].time / Game.fps).toString().length * 8) / Game.buffs[i].maxTime) + 'px';
 				timer.lastChild.children[2].textContent = Math.ceil(Game.buffs[i].time / Game.fps);
@@ -647,7 +649,7 @@ CM.Disp.UpdateTimerBar = function() {
  * It is called by CM.Disp.UpdateAscendState() or a change in CM.Options.TimerBar
  */
 CM.Disp.ToggleTimerBar = function() {
-	if (CM.Options.TimerBar == 1) CM.Disp.TimerBar.style.display = '';
+	if (CM.Options.TimerBar === 1) CM.Disp.TimerBar.style.display = '';
 	else CM.Disp.TimerBar.style.display = 'none';
 	CM.Disp.UpdateBotTimerBarPosition();
 };
@@ -657,7 +659,7 @@ CM.Disp.ToggleTimerBar = function() {
  * It is called by a change in CM.Options.TimerBarPos
  */
 CM.Disp.ToggleTimerBarPos = function() {
-	if (CM.Options.TimerBarPos == 0) {
+	if (CM.Options.TimerBarPos === 0) {
 		CM.Disp.TimerBar.style.width = '30%';
 		CM.Disp.TimerBar.style.bottom = '';
 		l('game').insertBefore(CM.Disp.TimerBar, l('sectionLeft'));
@@ -678,22 +680,22 @@ CM.Disp.ToggleTimerBarPos = function() {
  * It is called by CM.Disp.ToggleTimerBar(), CM.Disp.ToggleTimerBarPos() and CM.Disp.ToggleBotBar()
  */
 CM.Disp.UpdateBotTimerBarPosition = function() {
-	if (CM.Options.BotBar == 1 && CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 1) {
+	if (CM.Options.BotBar === 1 && CM.Options.TimerBar === 1 && CM.Options.TimerBarPos === 1) {
 		CM.Disp.BotBar.style.bottom = CM.Disp.TimerBar.style.height;
 		l('game').style.bottom = Number(CM.Disp.TimerBar.style.height.replace("px","")) + 70 + "px";
 	}
-	else if (CM.Options.BotBar == 1) {
+	else if (CM.Options.BotBar === 1) {
 		CM.Disp.BotBar.style.bottom = '0px';
 		l('game').style.bottom = '70px';
 	}
-	else if (CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 1) {
+	else if (CM.Options.TimerBar === 1 && CM.Options.TimerBarPos === 1) {
 		l('game').style.bottom = CM.Disp.TimerBar.style.height;
 	}
 	else { // No bars
 		l('game').style.bottom = '0px';
 	}
 
-	if (CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 0) {
+	if (CM.Options.TimerBar === 1 && CM.Options.TimerBarPos === 0) {
 		l('sectionLeft').style.top = CM.Disp.TimerBar.style.height;
 	}
 	else {
@@ -714,8 +716,8 @@ CM.Disp.UpdateBotTimerBarPosition = function() {
  */
 CM.Disp.UpdateBuildings = function() {
 	let target = `Objects${Game.buyBulk}`
-	if  (Game.buyMode == 1) {
-		if (CM.Options.BuildColor == 1) {
+	if  (Game.buyMode === 1) {
+		if (CM.Options.BuildColor === 1) {
 			for (let i of Object.keys(CM.Cache[target])) {
 				l('productPrice' + Game.Objects[i].id).style.color = CM.Options.Colors[CM.Cache[target][i].color];
 			}
@@ -725,7 +727,7 @@ CM.Disp.UpdateBuildings = function() {
 			}
 		}
 	}
-	else if (Game.buyMode == -1) {
+	else if (Game.buyMode === -1) {
 		for (let i of Object.keys(CM.Cache.Objects1)) {
 			var o = Game.Objects[i];
 			l('productPrice' + o.id).style.color = '';
@@ -744,7 +746,7 @@ CM.Disp.UpdateBuildings = function() {
 	// Build array of pointers, sort by pp, use array index (+2) as the grid row number
 	// (grid rows are 1-based indexing, and row 1 is the bulk buy/sell options)
 	// This regulates sorting of buildings
-	if (Game.buyMode == 1 && CM.Options.SortBuildings) {
+	if (Game.buyMode === 1 && CM.Options.SortBuildings) {
 		let arr = Object.keys(CM.Cache[target]).map(k =>
 		{
 			var o = CM.Cache[target][k];
@@ -807,13 +809,13 @@ CM.Disp.UpdateUpgrades = function() {
 				div.className = CM.Disp.colorBackPre + CM.Cache.Upgrades[me.name].color;
 				l('upgrade' + i).appendChild(div);
 			}
-			if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorBlue) blue++;
-			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorGreen) green++;
-			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorYellow) yellow++;
-			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorOrange) orange++;
-			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorRed) red++;
-			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorPurple) purple++;
-			else if (CM.Cache.Upgrades[me.name].color == CM.Disp.colorGray) gray++;
+			if (CM.Cache.Upgrades[me.name].color === CM.Disp.colorBlue) blue++;
+			else if (CM.Cache.Upgrades[me.name].color === CM.Disp.colorGreen) green++;
+			else if (CM.Cache.Upgrades[me.name].color === CM.Disp.colorYellow) yellow++;
+			else if (CM.Cache.Upgrades[me.name].color === CM.Disp.colorOrange) orange++;
+			else if (CM.Cache.Upgrades[me.name].color === CM.Disp.colorRed) red++;
+			else if (CM.Cache.Upgrades[me.name].color === CM.Disp.colorPurple) purple++;
+			else if (CM.Cache.Upgrades[me.name].color === CM.Disp.colorGray) gray++;
 		}
 
 		l('CMUpgradeBarBlue').textContent = blue;
@@ -859,11 +861,11 @@ CM.Disp.UpdateUpgrades = function() {
  * It is called by a change in CM.Options.UpBarColor
  */
 CM.Disp.ToggleUpgradeBarAndColor = function() {
-	if (CM.Options.UpBarColor == 1) { // Colours and bar on
+	if (CM.Options.UpBarColor === 1) { // Colours and bar on
 		CM.Disp.UpgradeBar.style.display = '';
 		CM.Disp.UpdateUpgrades();
 	}
-	else if (CM.Options.UpBarColor == 2) {// Colours on and bar off
+	else if (CM.Options.UpBarColor === 2) {// Colours on and bar off
 		CM.Disp.UpgradeBar.style.display = 'none';
 		CM.Disp.UpdateUpgrades();
 	}
@@ -878,7 +880,7 @@ CM.Disp.ToggleUpgradeBarAndColor = function() {
  * It is called by a change in CM.Options.UpgradeBarFixedPos
  */
 CM.Disp.ToggleUpgradeBarFixedPos = function() {
-	if (CM.Options.UpgradeBarFixedPos == 1) { // Fix to top of screen when scrolling
+	if (CM.Options.UpgradeBarFixedPos === 1) { // Fix to top of screen when scrolling
 		CM.Disp.UpgradeBar.style.position = 'sticky';
 		CM.Disp.UpgradeBar.style.top = '0px';
 	}
@@ -987,14 +989,14 @@ CM.Disp.CreateWhiteScreen = function() {
  * This function creates a flash depending on configs. It is called by all functions 
  * that check game-events and which have settings for Flashes (e.g., Golden Cookies appearing, Magic meter being full)
  * @param	{number}	mode	Sets the intensity of the flash, used to recursively dim flash
- * 								All calls of function have use mode == 3
+ * 								All calls of function have use mode === 3
  * @param	{string}	config	The setting in CM.Options that is checked before creating the flash
  */
 CM.Disp.Flash = function(mode, config) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if ((CM.Options[config] == 1 && mode == 3 && CM.Footer.isInitzializing === false) || mode == 1) {
+	if ((CM.Options[config] === 1 && mode === 3 && CM.Footer.isInitzializing === false) || mode === 1) {
 		CM.Disp.WhiteScreen.style.opacity = '0.5';
-		if (mode == 3) {
+		if (mode === 3) {
 			CM.Disp.WhiteScreen.style.display = 'inline';
 			setTimeout(function() {CM.Disp.Flash(2, config);}, 1000/Game.fps);
 		}
@@ -1002,11 +1004,11 @@ CM.Disp.Flash = function(mode, config) {
 			setTimeout(function() {CM.Disp.Flash(0, config);}, 1000/Game.fps);
 		}
 	}
-	else if (mode == 2) {
+	else if (mode === 2) {
 		CM.Disp.WhiteScreen.style.opacity = '1';
 		setTimeout(function() {CM.Disp.Flash(1, config);}, 1000/Game.fps);
 	}
-	else if (mode == 0) CM.Disp.WhiteScreen.style.display = 'none';
+	else if (mode === 0) CM.Disp.WhiteScreen.style.display = 'none';
 };
 
 /**
@@ -1018,7 +1020,7 @@ CM.Disp.Flash = function(mode, config) {
  */
 CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if (CM.Options[sndConfig] == 1 && CM.Footer.isInitzializing === false) {
+	if (CM.Options[sndConfig] === 1 && CM.Footer.isInitzializing === false) {
 		var sound = new realAudio(url);
 		if (CM.Options.GeneralSound) sound.volume = (CM.Options[volConfig] / 100) * (Game.volume / 100);
 		else sound.volume = (CM.Options[volConfig] / 100);
@@ -1035,7 +1037,7 @@ CM.Disp.PlaySound = function(url, sndConfig, volConfig) {
  */
 CM.Disp.Notification = function(notifyConfig, title, message) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if (CM.Options[notifyConfig] == 1 && document.visibilityState == 'hidden' && CM.Footer.isInitzializing === false) {
+	if (CM.Options[notifyConfig] === 1 && document.visibilityState === 'hidden' && CM.Footer.isInitzializing === false) {
 		var CookieIcon = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
 		new Notification(title, {body: message, badge: CookieIcon});
 	}
@@ -1061,7 +1063,7 @@ CM.Disp.CreateFavicon = function() {
  * By relying on CM.Cache.spawnedGoldenShimmer it only changes for non-user spawned cookie
  */
 CM.Disp.UpdateFavicon = function() {
-	if (CM.Options.Favicon == 1 && CM.Main.lastGoldenCookieState > 0) {
+	if (CM.Options.Favicon === 1 && CM.Main.lastGoldenCookieState > 0) {
 		if (CM.Cache.spawnedGoldenShimmer.wrath) CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
 		else CM.Disp.Favicon.href = 'https://aktanusa.github.io/CookieMonster/favicon/goldenCookie.ico';
 	}
@@ -1070,13 +1072,13 @@ CM.Disp.UpdateFavicon = function() {
 
 /**
  * This function updates the tab title
- * It is called on every loop by Game.Logic() which also sets CM.Cache.Title to Game.cookies
+ * It is called on every loop by Game.Logic() which also sets CM.Disp.Title to Game.cookies
  */
 CM.Disp.UpdateTitle = function() {
-	if (Game.OnAscend || CM.Options.Title == 0) {
-		document.title = CM.Cache.Title;
+	if (Game.OnAscend || CM.Options.Title === 0) {
+		document.title = CM.Disp.Title;
 	}
-	else if (CM.Options.Title == 1) {
+	else if (CM.Options.Title === 1) {
 		let addFC = false;
 		let addSP = false;
 		let titleGC;
@@ -1097,7 +1099,7 @@ CM.Disp.UpdateTitle = function() {
 			titleFC = '[F]';
 		}
 
-		if (Game.season == 'christmas') {
+		if (Game.season === 'christmas') {
 			addSP = true;
 			if (CM.Main.lastSeasonPopupState) titleSP = '[R ' +  Math.ceil(CM.Cache.seasonPopShimmer.life / Game.fps) + ']';
 			else {
@@ -1106,13 +1108,13 @@ CM.Disp.UpdateTitle = function() {
 		}
 
 		// Remove previous timers and add current cookies
-		let str = CM.Cache.Title;
-		if (str.charAt(0) == '[') {
+		let str = CM.Disp.Title;
+		if (str.charAt(0) === '[') {
 			str = str.substring(str.lastIndexOf(']') + 1);
 		}
 		document.title = titleGC + (addFC ? titleFC : '') + (addSP ? titleSP : '') + ' ' + str;
 	}
-	else if (CM.Options.Title == 2) {
+	else if (CM.Options.Title === 2) {
 		let str = '';
 		let spawn = false;
 		if (CM.Cache.spawnedGoldenShimmer) {
@@ -1124,13 +1126,13 @@ CM.Disp.UpdateTitle = function() {
 			spawn = true;
 			str += '[F]';
 		}
-		if (Game.season == 'christmas' && CM.Main.lastSeasonPopupState) {
+		if (Game.season === 'christmas' && CM.Main.lastSeasonPopupState) {
 			str += '[R ' +  Math.ceil(CM.Cache.seasonPopShimmer.life / Game.fps) + ']';
 			spawn = true;
 		}
 		if (spawn) str += ' - ';
 		let title = 'Cookie Clicker';
-		if (Game.season == 'fools') title = 'Cookie Baker';
+		if (Game.season === 'fools') title = 'Cookie Baker';
 		str += title;
 		document.title = str;
 	}
@@ -1157,7 +1159,7 @@ CM.Disp.CreateGCTimer = function(cookie) {
 	GCTimer.style.fontSize = '35px';
 	GCTimer.style.cursor = 'pointer';
 	GCTimer.style.display = 'block';
-	if (CM.Options.GCTimer == 0) GCTimer.style.display = 'none';
+	if (CM.Options.GCTimer === 0) GCTimer.style.display = 'none';
 	GCTimer.style.left = cookie.l.style.left;
 	GCTimer.style.top = cookie.l.style.top;
 	GCTimer.onclick = function () {cookie.pop();};
@@ -1173,7 +1175,7 @@ CM.Disp.CreateGCTimer = function(cookie) {
  * It is called by a change in CM.Options.GCTimer
  */
 CM.Disp.ToggleGCTimer = function() {
-	if (CM.Options.GCTimer == 1) {
+	if (CM.Options.GCTimer === 1) {
 		for (let i of Object.keys(CM.Disp.GCTimers)) {
 			CM.Disp.GCTimers[i].style.display = 'block';
 			CM.Disp.GCTimers[i].style.left = CM.Cache.goldenShimmersByID[i].l.style.left;
@@ -1231,19 +1233,19 @@ CM.Disp.ReplaceTooltipUpgrade = function() {
  * @returns {string}	l('tooltip').innerHTML	The HTML of the l('tooltip')-object
  */
 CM.Disp.Tooltip = function(type, name) {
-	if (type == 'b') { // Buildings
+	if (type === 'b') { // Buildings
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
 		// Adds amortization info to the list of info per building
-		if (CM.Options.TooltipAmor == 1) {
+		if (CM.Options.TooltipAmor === 1) {
 			var buildPrice = CM.Sim.BuildingGetPrice(Game.Objects[name], Game.Objects[name].basePrice, 0, Game.Objects[name].free, Game.Objects[name].amount);
 			var amortizeAmount = buildPrice - Game.Objects[name].totalCookies;
 			if (amortizeAmount > 0) {
 				l('tooltip').innerHTML = l('tooltip').innerHTML
 					.split('so far</div>')
-					.join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) == 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor((buildPrice - Game.Objects[name].totalCookies) / (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text + ')</div>');
+					.join('so far<br/>&bull; <b>' + Beautify(amortizeAmount) + '</b> ' + (Math.floor(amortizeAmount) === 1 ? 'cookie' : 'cookies') + ' left to amortize (' + CM.Disp.GetTimeColor((buildPrice - Game.Objects[name].totalCookies) / (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text + ')</div>');
 			}
 		}
-		if (Game.buyMode == -1) {
+		if (Game.buyMode === -1) {
 			/*
 			 * Fix sell price displayed in the object tooltip.
 			 *
@@ -1255,17 +1257,17 @@ CM.Disp.Tooltip = function(type, name) {
 			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].bulkPrice)).join(Beautify(CM.Sim.BuildingSell(Game.Objects[name], Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].free, Game.buyBulk, 1)));
 		}
 	}
-	else if (type == 'u') { // Upgrades
+	else if (type === 'u') { // Upgrades
 		if (!Game.UpgradesInStore[name]) return '';
 		l('tooltip').innerHTML = Game.crateTooltip(Game.UpgradesInStore[name], 'store');
 	}
 	else if (type === 's') l('tooltip').innerHTML = Game.lumpTooltip(); // Sugar Lumps
 	else if (type === 'g') l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)(); // Grimoire
-	else if (type == 'p') l('tooltip').innerHTML =  Game.ObjectsById[2].minigame.tileTooltip(name[0], name[1])(); // Garden plots
-	else if (type == 'ha') l('tooltip').innerHTML =  Game.ObjectsById[2].minigame.toolTooltip(1)(); // Harvest all button in garden
+	else if (type === 'p') l('tooltip').innerHTML =  Game.ObjectsById[2].minigame.tileTooltip(name[0], name[1])(); // Garden plots
+	else if (type === 'ha') l('tooltip').innerHTML =  Game.ObjectsById[2].minigame.toolTooltip(1)(); // Harvest all button in garden
 
 	// Adds area for extra tooltip-sections
-	if ((type == 'b' && Game.buyMode == 1) || type == 'u' || type == 's' || type == 'g' || type == 'p' || type == 'ha') {
+	if ((type === 'b' && Game.buyMode === 1) || type === 'u' || type === 's' || type === 'g' || type === 'p' || type === 'ha') {
 		var area = document.createElement('div');
 		area.id = 'CMTooltipArea';
 		l('tooltip').appendChild(area);
@@ -1344,7 +1346,7 @@ CM.Disp.TooltipCreateCalculationSection = function(tooltip) {
 	time.id = 'CMTooltipTime';
 	tooltip.appendChild(time);
 
-	if (CM.Disp.tooltipType == 'b') {
+	if (CM.Disp.tooltipType === 'b') {
 		tooltip.appendChild(CM.Disp.TooltipCreateHeader('Production left till next achievement'));
 		tooltip.lastChild.id = 'CMTooltipProductionHeader'; // Assign a id in order to hid when no achiev's are left
 		var production = document.createElement('div');
@@ -1416,10 +1418,10 @@ CM.Disp.UpdateTooltip = function() {
 		let tooltipBox = CM.Disp.TooltipCreateTooltipBox();
 		l('CMTooltipArea').appendChild(tooltipBox);
 		
-		if (CM.Disp.tooltipType == 'b') {
+		if (CM.Disp.tooltipType === 'b') {
 			CM.Disp.UpdateTooltipBuilding();
 		}
-		else if (CM.Disp.tooltipType == 'u') { 
+		else if (CM.Disp.tooltipType === 'u') { 
 			CM.Disp.UpdateTooltipUpgrade();
 		}
 		else if (CM.Disp.tooltipType === 's') {
@@ -1436,7 +1438,7 @@ CM.Disp.UpdateTooltip = function() {
 		}
 		CM.Disp.UpdateTooltipWarnings();
 	}
-	else if (l('CMTooltipArea') == null) { // Remove warnings if its a basic tooltip
+	else if (l('CMTooltipArea') === null) { // Remove warnings if its a basic tooltip
 		if (l('CMDispTooltipWarningParent') != null) {
 			l('CMDispTooltipWarningParent').remove();
 		}
@@ -1448,7 +1450,7 @@ CM.Disp.UpdateTooltip = function() {
  * It is called when Building tooltips are created or refreshed by CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateTooltipBuilding = function() {
-	if (CM.Options.TooltipBuildUpgrade == 1 && Game.buyMode == 1) {
+	if (CM.Options.TooltipBuildUpgrade === 1 && Game.buyMode === 1) {
 		let tooltipBox = l('CMTooltipBorder');
 		CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
@@ -1458,7 +1460,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 		CM.Disp.TooltipBonusIncome = CM.Cache[target][CM.Disp.tooltipName].bonus;
 		
 
-		if (CM.Options.TooltipBuildUpgrade == 1 && Game.buyMode == 1) {
+		if (CM.Options.TooltipBuildUpgrade === 1 && Game.buyMode === 1) {
 			l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 			let increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 			if (isFinite(increase) && increase != 0) {
@@ -1469,7 +1471,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 			l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache[target][CM.Disp.tooltipName].color;
 			var timeColor = CM.Disp.GetTimeColor((CM.Disp.TooltipPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 			l('CMTooltipTime').textContent = timeColor.text;
-			if (timeColor.text == "Done!" && Game.cookies < CM.Cache[target][CM.Disp.tooltipName].price) {
+			if (timeColor.text === "Done!" && Game.cookies < CM.Cache[target][CM.Disp.tooltipName].price) {
 				l('CMTooltipTime').textContent = timeColor.text + " (with Wrink)";
 			}
 			else l('CMTooltipTime').textContent = timeColor.text;
@@ -1506,7 +1508,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 	CM.Disp.TooltipPrice = Game.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].getPrice();
 	CM.Disp.TooltipBonusMouse = CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].bonusMouse;
 
-	if (CM.Options.TooltipBuildUpgrade == 1) {
+	if (CM.Options.TooltipBuildUpgrade === 1) {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 		let increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 		if (isFinite(increase) && increase != 0) {
@@ -1520,7 +1522,7 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 			l('CMTooltipCookiePerClick').previousSibling.style.display = "block";
 		}
 		// If only a clicking power upgrade change PP to click-based period
-		if (CM.Disp.TooltipBonusIncome == 0 && CM.Disp.TooltipBonusMouse) {	
+		if (CM.Disp.TooltipBonusIncome === 0 && CM.Disp.TooltipBonusMouse) {	
 			l('CMTooltipPP').textContent = Beautify(CM.Disp.TooltipPrice / CM.Disp.TooltipBonusMouse) + ' Clicks';
 			l('CMTooltipPP').style.color = "white";
 		}
@@ -1530,14 +1532,14 @@ CM.Disp.UpdateTooltipUpgrade = function() {
 		}
 		var timeColor = CM.Disp.GetTimeColor((CM.Disp.TooltipPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 		l('CMTooltipTime').textContent = timeColor.text;
-		if (timeColor.text == "Done!" && Game.cookies < Game.UpgradesInStore[CM.Disp.tooltipName].getPrice()) {
+		if (timeColor.text === "Done!" && Game.cookies < Game.UpgradesInStore[CM.Disp.tooltipName].getPrice()) {
 			l('CMTooltipTime').textContent = timeColor.text + " (with Wrink)";
 		}
 		else l('CMTooltipTime').textContent = timeColor.text;
 		l('CMTooltipTime').className = CM.Disp.colorTextPre + timeColor.color;
 		
 		// Add extra info to Chocolate egg tooltip
-		if (Game.UpgradesInStore[CM.Disp.tooltipName].name == "Chocolate egg") {
+		if (Game.UpgradesInStore[CM.Disp.tooltipName].name === "Chocolate egg") {
 			l('CMTooltipBorder').lastChild.style.marginBottom = '4px';
 			l('CMTooltipBorder').appendChild(CM.Disp.TooltipCreateHeader('Cookies to be gained (Currently/Max)'));
 			var chocolate = document.createElement('div');
@@ -1579,7 +1581,7 @@ CM.Disp.UpdateTooltipGrimoire = function() {
 	var minigame = Game.Objects['Wizard tower'].minigame;
 	var spellCost = minigame.getSpellCost(minigame.spellsById[CM.Disp.tooltipName]);
 
-	if (CM.Options.TooltipGrim == 1 && spellCost <= minigame.magicM) {
+	if (CM.Options.TooltipGrim === 1 && spellCost <= minigame.magicM) {
 		let tooltipBox = l('CMTooltipBorder');
 
 		// Time left till enough magic for spell
@@ -1602,8 +1604,8 @@ CM.Disp.UpdateTooltipGrimoire = function() {
 			recover.className = CM.Disp.colorTextPre + recoverColor.color;
 		}
 
-		// Extra information on cookies gained when spell is Conjure Baked Goods (Name == 0)
-		if (CM.Disp.tooltipName == 0) {
+		// Extra information on cookies gained when spell is Conjure Baked Goods (Name === 0)
+		if (CM.Disp.tooltipName === 0) {
 			tooltipBox.appendChild(CM.Disp.TooltipCreateHeader('Cookies to be gained/lost'));
 			var conjure = document.createElement('div');
 			conjure.id = 'CMTooltipConjure';
@@ -1640,16 +1642,16 @@ CM.Disp.UpdateTooltipGardenPlots = function() {
 			var reward = document.createElement('div');
 			reward.id = 'CMTooltipPlantReward';
 			l('CMTooltipBorder').appendChild(reward);
-			if (plantName == "Bakeberry") {
+			if (plantName === "Bakeberry") {
 				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 30)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 30);
 			} 
-			else if (plantName == "Chocoroot" || plantName == "White chocoroot") {
+			else if (plantName === "Chocoroot" || plantName === "White chocoroot") {
 				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 3)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 3);
 			}
-			else if (plantName == "Queenbeet") {
+			else if (plantName === "Queenbeet") {
 				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.04, Game.cookiesPs * 60 * 60)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 60);
 			} 
-			else if (plantName == "Duketater") {
+			else if (plantName === "Duketater") {
 				l('CMTooltipPlantReward').textContent = (mature ? CM.Disp.Beautify(Math.min(Game.cookies * 0.08, Game.cookiesPs * 60 * 120)) : "0") + " / " + CM.Disp.Beautify(Game.cookiesPs * 60 * 120);
 			} 
 			else l('CMTooltipArea').style.display = "none";
@@ -1679,16 +1681,16 @@ CM.Disp.UpdateTooltipHarvestAll = function() {
 						let count = true;
 						if (mortal && me.immortal) count = false;
 						if (tile[1] < me.matureBase) count = false;
-						if (count && plantName == "Bakeberry") {
+						if (count && plantName === "Bakeberry") {
 							totalGain += Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 30);
 						} 
-						else if (count && plantName == "Chocoroot" || plantName == "White chocoroot") {
+						else if (count && plantName === "Chocoroot" || plantName === "White chocoroot") {
 							totalGain += Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 3);
 						}
-						else if (count && plantName == "Queenbeet") {
+						else if (count && plantName === "Queenbeet") {
 							totalGain += Math.min(Game.cookies * 0.04, Game.cookiesPs * 60 * 60);
 						} 
-						else if (count && plantName == "Duketater") {
+						else if (count && plantName === "Duketater") {
 							totalGain += Math.min(Game.cookies * 0.08, Game.cookiesPs * 60 * 120);
 						}
 					}
@@ -1704,63 +1706,63 @@ CM.Disp.UpdateTooltipHarvestAll = function() {
  * It is called by CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateTooltipWarnings = function() {
-	if (CM.Disp.tooltipType == "b" || CM.Disp.tooltipType == "u") {
-		if (document.getElementById("CMDispTooltipWarningParent") == null) {
+	if (CM.Disp.tooltipType === "b" || CM.Disp.tooltipType === "u") {
+		if (document.getElementById("CMDispTooltipWarningParent") === null) {
 			let warningTooltip = CM.Disp.TooltipCreateWarningSection();
 			l('tooltipAnchor').appendChild(warningTooltip);
 			CM.Disp.ToggleToolWarnPos();
 		}
 
-		if (CM.Options.ToolWarnPos == 0) CM.Disp.TooltipWarn.style.right = '0px';
+		if (CM.Options.ToolWarnPos === 0) CM.Disp.TooltipWarn.style.right = '0px';
 		else CM.Disp.TooltipWarn.style.top = (l('tooltip').offsetHeight) + 'px';
 
 		CM.Disp.TooltipWarn.style.width = (l('tooltip').offsetWidth - 6) + 'px';
 
 		var amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - CM.Disp.TooltipPrice;
 		var limitLucky = CM.Cache.Lucky;
-		if (CM.Options.ToolWarnBon == 1) {
+		if (CM.Options.ToolWarnBon === 1) {
 			var bonusNoFren = CM.Disp.TooltipBonusIncome;
 			bonusNoFren /= CM.Sim.getCPSBuffMult();
 			limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
 		}
 
-		if (CM.Options.ToolWarnLucky == 1) {
-			if (amount < limitLucky && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+		if (CM.Options.ToolWarnLucky === 1) {
+			if (amount < limitLucky && (CM.Disp.tooltipType != 'b' || Game.buyMode === 1)) {
 				l('CMDispTooltipWarnLucky').style.display = '';
 				l('CMDispTooltipWarnLuckyText').textContent = Beautify(limitLucky - amount) + ' (' + CM.Disp.FormatTime((limitLucky - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnLucky').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnLucky').style.display = 'none';
 		
-		if (CM.Options.ToolWarnLuckyFrenzy == 1) {
+		if (CM.Options.ToolWarnLuckyFrenzy === 1) {
 			let limitLuckyFrenzy = limitLucky * 7;
-			if (amount < limitLuckyFrenzy && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+			if (amount < limitLuckyFrenzy && (CM.Disp.tooltipType != 'b' || Game.buyMode === 1)) {
 				l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
 				l('CMDispTooltipWarnLuckyFrenzyText').textContent = Beautify(limitLuckyFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitLuckyFrenzy - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
 
-		if (CM.Options.ToolWarnConjure == 1) {
+		if (CM.Options.ToolWarnConjure === 1) {
 			var limitConjure = limitLucky * 2;
-			if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+			if ((amount < limitConjure) && (CM.Disp.tooltipType != 'b' || Game.buyMode === 1)) {
 				l('CMDispTooltipWarnConjure').style.display = '';
 				l('CMDispTooltipWarnConjureText').textContent = Beautify(limitConjure - amount) + ' (' + CM.Disp.FormatTime((limitConjure - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnConjure').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnConjure').style.display = 'none';
 
-		if (CM.Options.ToolWarnConjureFrenzy == 1) {
+		if (CM.Options.ToolWarnConjureFrenzy === 1) {
 			var limitConjureFrenzy = limitLucky * 2 * 7;
-			if ((amount < limitConjureFrenzy) && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+			if ((amount < limitConjureFrenzy) && (CM.Disp.tooltipType != 'b' || Game.buyMode === 1)) {
 				l('CMDispTooltipWarnConjureFrenzy').style.display = '';
 				l('CMDispTooltipWarnConjureFrenzyText').textContent = Beautify(limitConjureFrenzy - amount) + ' (' + CM.Disp.FormatTime((limitConjureFrenzy - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnConjureFrenzy').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnConjureFrenzy').style.display = 'none';
 
-		if (CM.Options.ToolWarnEdifice == 1) {
-			if (CM.Cache.Edifice && amount < CM.Cache.Edifice && (CM.Disp.tooltipType != 'b' || Game.buyMode == 1)) {
+		if (CM.Options.ToolWarnEdifice === 1) {
+			if (CM.Cache.Edifice && amount < CM.Cache.Edifice && (CM.Disp.tooltipType != 'b' || Game.buyMode === 1)) {
 				l('CMDispTooltipWarnEdifice').style.display = '';
 				l('CMDispTooltipWarnEdificeText').textContent = Beautify(CM.Cache.Edifice - amount) + ' (' + CM.Disp.FormatTime((CM.Cache.Edifice - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
 			} else l('CMDispTooltipWarnEdifice').style.display = 'none';
@@ -1779,15 +1781,15 @@ CM.Disp.UpdateTooltipWarnings = function() {
  * It is called by Game.tooltip.update() because of CM.ReplaceNative()
  */
 CM.Disp.UpdateTooltipLocation = function() {
-	if (Game.tooltip.origin == 'store') {
+	if (Game.tooltip.origin === 'store') {
 		var warnOffset = 0;
-		if (CM.Options.ToolWarnLucky == 1 && CM.Options.ToolWarnPos == 1 && typeof CM.Disp.TooltipWarn != "undefined") {
+		if (CM.Options.ToolWarnLucky === 1 && CM.Options.ToolWarnPos === 1 && typeof CM.Disp.TooltipWarn != "undefined") {
 			warnOffset = CM.Disp.TooltipWarn.clientHeight - 4;
 		}
 		Game.tooltip.tta.style.top = Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnOffset - 46) + 'px';
 	}
 	// Kept for future possible use if the code changes again
-	/*else if (!Game.onCrate && !Game.OnAscend && CM.Options.TimerBar == 1 && CM.Options.TimerBarPos == 0) {
+	/*else if (!Game.onCrate && !Game.OnAscend && CM.Options.TimerBar === 1 && CM.Options.TimerBarPos === 0) {
 		Game.tooltip.tta.style.top = (parseInt(Game.tooltip.tta.style.top) + parseInt(CM.Disp.TimerBar.style.height)) + 'px';
 	}*/
 };
@@ -1799,7 +1801,7 @@ CM.Disp.UpdateTooltipLocation = function() {
  */
 CM.Disp.ToggleToolWarnPos = function() {
 	if (typeof CM.Disp.TooltipWarn != "undefined") {
-		if (CM.Options.ToolWarnPos == 0) {
+		if (CM.Options.ToolWarnPos === 0) {
 			CM.Disp.TooltipWarn.style.top = 'auto';
 			CM.Disp.TooltipWarn.style.margin = '4px -4px';
 			CM.Disp.TooltipWarn.style.padding = '3px 4px';
@@ -1818,13 +1820,13 @@ CM.Disp.ToggleToolWarnPos = function() {
  * TODO: Change this code to be the same as other tooltips. (i.d., create tooltip with type "w")
  */
 CM.Disp.CheckWrinklerTooltip = function() {
-	if (CM.Options.TooltipWrink == 1 && CM.Disp.TooltipWrinklerArea == 1) { // Latter is set by CM.Main.AddWrinklerAreaDetect
+	if (CM.Options.TooltipWrink === 1 && CM.Disp.TooltipWrinklerArea === 1) { // Latter is set by CM.Main.AddWrinklerAreaDetect
 		var showingTooltip = false;
 		for (let i of Object.keys(Game.wrinklers)) {
 			var me = Game.wrinklers[i];
 			if (me.phase > 0 && me.selected) {
 				showingTooltip = true;
-				if (CM.Disp.TooltipWrinklerBeingShown[i] == 0 || CM.Disp.TooltipWrinklerBeingShown[i] == undefined) {
+				if (CM.Disp.TooltipWrinklerBeingShown[i] === 0 || CM.Disp.TooltipWrinklerBeingShown[i] === undefined) {
 					var placeholder = document.createElement('div');
 					var wrinkler = document.createElement('div');
 					wrinkler.style.minWidth = '120px';
@@ -1856,18 +1858,18 @@ CM.Disp.CheckWrinklerTooltip = function() {
  * TODO: Change this code to be the same as other tooltips. Fit this into CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateWrinklerTooltip = function() {
-	if (CM.Options.TooltipWrink == 1 && l('CMTooltipWrinkler') != null) {
+	if (CM.Options.TooltipWrink === 1 && l('CMTooltipWrinkler') != null) {
 		var sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
 		var toSuck = 1.1;
 		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
-		if (Game.wrinklers[CM.Disp.TooltipWrinkler].type == 1) toSuck *= 3; // Shiny wrinklers
+		if (Game.wrinklers[CM.Disp.TooltipWrinkler].type === 1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 		if (CM.Sim.Objects.Temple.minigameLoaded) {
 			var godLvl = CM.Sim.hasGod('scorn');
-			if (godLvl == 1) sucked *= 1.15;
-			else if (godLvl == 2) sucked *= 1.1;
-			else if (godLvl == 3) sucked *= 1.05;
+			if (godLvl === 1) sucked *= 1.15;
+			else if (godLvl === 2) sucked *= 1.1;
+			else if (godLvl === 3) sucked *= 1.05;
 		}
 		l('CMTooltipWrinkler').textContent = Beautify(sucked);
 	}
@@ -1882,7 +1884,7 @@ CM.Disp.UpdateWrinklerTooltip = function() {
  * @param	{number}	aura	The number of the aura currently selected by the mouse/user
  */
 CM.Disp.AddAuraInfo = function(aura) {
-	if (CM.Options.DragonAuraInfo == 1) {
+	if (CM.Options.DragonAuraInfo === 1) {
 		var [bonusCPS, priceOfChange] = CM.Sim.CalculateChangeAura(aura);
 		var timeToRecover = CM.Disp.FormatTime(priceOfChange / (bonusCPS + Game.cookiesPs));
 		var bonusCPSPercentage = CM.Disp.Beautify(bonusCPS / Game.cookiesPs);
@@ -1912,7 +1914,7 @@ CM.Disp.AddDragonLevelUpTooltip = function() {
 	// Check if it is the dragon popup that is on screen
 	if ((l('specialPopup').className.match(/onScreen/) && l('specialPopup').children[0].style.background.match(/dragon/)) != null) {
 		for (let i = 0; i < l('specialPopup').childNodes.length; i++) {
-			if (l('specialPopup').childNodes[i].className == "optionBox") {
+			if (l('specialPopup').childNodes[i].className === "optionBox") {
 				l('specialPopup').children[i].onmouseover = function() {CM.Cache.CacheDragonCost(); Game.tooltip.dynamic = 1; Game.tooltip.draw(l('specialPopup'), `<div style="min-width:200px;text-align:center;">${CM.Cache.CostDragonUpgrade}</div>`, 'this'); Game.tooltip.wobble();};
 				l('specialPopup').children[i].onmouseout = function() {Game.tooltip.shouldHide = 1;};
 			}
@@ -1935,10 +1937,10 @@ CM.Disp.AddMenu = function() {
 		return div;
 	};
 
-	if (Game.onMenu == 'prefs') {
+	if (Game.onMenu === 'prefs') {
 		CM.Disp.AddMenuPref(title);
 	}
-	else if (Game.onMenu == 'stats') {
+	else if (Game.onMenu === 'stats') {
 		if (CM.Options.Stats) {
 			CM.Disp.AddMenuStats(title);
 		}
@@ -1950,7 +1952,7 @@ CM.Disp.AddMenu = function() {
  * It is called by CM.Loop()
  */
 CM.Disp.RefreshMenu = function() {
-	if (CM.Options.UpStats && Game.onMenu == 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps == 0) Game.UpdateMenu();
+	if (CM.Options.UpStats && Game.onMenu === 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps === 0) Game.UpdateMenu();
 };
 
 /********
@@ -1970,7 +1972,7 @@ CM.Disp.AddMenuPref = function(title) {
 		frag.appendChild(groupObject);
 		if (CM.Options.Header[group]) { // 0 is show, 1 is collapsed
 			// Make sub-sections of Notification section
-			if (group == "Notification") {
+			if (group === "Notification") {
 				for (let subGroup of Object.keys(CM.ConfigGroupsNotification)) {
 					let subGroupObject = CM.Disp.CreatePrefHeader(subGroup, CM.ConfigGroupsNotification[subGroup]); // (group, display-name of group)
 					subGroupObject.style.fontSize = "15px";
@@ -1978,13 +1980,13 @@ CM.Disp.AddMenuPref = function(title) {
 					frag.appendChild(subGroupObject);
 					if (CM.Options.Header[subGroup]) {
 						for (var option in CM.ConfigData) {
-							if (CM.ConfigData[option].group == subGroup) frag.appendChild(CM.Disp.CreatePrefOption(option));
+							if (CM.ConfigData[option].group === subGroup) frag.appendChild(CM.Disp.CreatePrefOption(option));
 						}
 					}
 				}
 			} else {
 				for (let option of Object.keys(CM.ConfigData)) {
-					if (CM.ConfigData[option].group == group) frag.appendChild(CM.Disp.CreatePrefOption(option));
+					if (CM.ConfigData[option].group === group) frag.appendChild(CM.Disp.CreatePrefOption(option));
 				}
 			}
 		}
@@ -2040,11 +2042,11 @@ CM.Disp.CreatePrefHeader = function(config, text) {
  * @returns	{object}		div		The option object
  */
 CM.Disp.CreatePrefOption = function(config) {
-	if (CM.ConfigData[config].type == "bool") {
+	if (CM.ConfigData[config].type === "bool") {
 		let div = document.createElement('div');
 		div.className = 'listing';
 		let a = document.createElement('a');
-		if (CM.ConfigData[config].toggle && CM.Options[config] == 0) {
+		if (CM.ConfigData[config].toggle && CM.Options[config] === 0) {
 			a.className = 'option off';
 		}
 		else {
@@ -2059,7 +2061,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		div.appendChild(label);
 		return div;
 	}
-	else if (CM.ConfigData[config].type == "vol") {
+	else if (CM.ConfigData[config].type === "vol") {
 		let div = document.createElement('div');
 		div.className = 'listing';
 		var volume = document.createElement('div');
@@ -2088,7 +2090,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		div.appendChild(volume);
 		return div;
 	}
-	else if (CM.ConfigData[config].type == "url") {
+	else if (CM.ConfigData[config].type === "url") {
 		let div = document.createElement('div');
 		div.className = 'listing';
 		let span = document.createElement('span');
@@ -2119,7 +2121,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		div.appendChild(label);
 		return div;
 	}
-	else if (CM.ConfigData[config].type == "color") {
+	else if (CM.ConfigData[config].type === "color") {
 		let div = document.createElement('div');
 		for (let i = 0; i < CM.Disp.colors.length; i++) {
 			let innerDiv = document.createElement('div');
@@ -2138,7 +2140,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		}
 		return div;
 	}
-	else if (CM.ConfigData[config].type == "numscale") {
+	else if (CM.ConfigData[config].type === "numscale") {
 		let div = document.createElement('div');
 		div.className = 'listing';
 		let span = document.createElement('span');
@@ -2171,7 +2173,7 @@ CM.Disp.CreatePrefOption = function(config) {
  * It is called by a change in CM.Options.DetailedTime
  */
 CM.Disp.ToggleDetailedTime = function() {
-	if (CM.Options.DetailedTime == 1) Game.sayTime = CM.Disp.sayTime;
+	if (CM.Options.DetailedTime === 1) Game.sayTime = CM.Disp.sayTime;
 	else Game.sayTime = CM.Backup.sayTime;
 };
 
@@ -2310,7 +2312,7 @@ CM.Disp.AddMenuStats = function(title) {
 	var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 	var centEgg = Game.Has('Century egg');
 	
-	if (Game.season == 'christmas' || specDisp || choEgg || centEgg) {
+	if (Game.season === 'christmas' || specDisp || choEgg || centEgg) {
 		stats.appendChild(CM.Disp.CreateStatsHeader('Season Specials', 'Sea'));
 		if (CM.Options.Header.Sea) {
 			if (missingHalloweenCookies.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Halloween Cookies Left to Buy', CM.Disp.CreateStatsMissDisp(missingHalloweenCookies)));
@@ -2320,7 +2322,7 @@ CM.Disp.AddMenuStats = function(title) {
 			if (missingRareEggs.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rare Easter Eggs Left to Unlock',  CM.Disp.CreateStatsMissDisp(missingRareEggs)));
 			if (missingPlantDrops.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rare Plant Drops Left to Unlock',  CM.Disp.CreateStatsMissDisp(missingPlantDrops)));
 
-			if (Game.season == 'christmas') stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
+			if (Game.season === 'christmas') stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Reindeer Reward',  document.createTextNode(Beautify(CM.Cache.SeaSpec))));
 			if (choEgg) {
 				stats.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Chocolate Egg Cookies', document.createTextNode(Beautify(CM.Cache.lastChoEgg)), 'ChoEggTooltipPlaceholder'));
 			}
@@ -2333,10 +2335,10 @@ CM.Disp.AddMenuStats = function(title) {
 	stats.appendChild(CM.Disp.CreateStatsHeader('Miscellaneous', 'Misc'));
 	if (CM.Options.Header.Misc) {
 		stats.appendChild(CM.Disp.CreateStatsListing("basic", 
-			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Options.AvgCPSHist] / 60) + (CM.Options.AvgCPSHist == 3 ? ' minute' : ' minutes'))) + ')', 
+			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Options.AvgCPSHist] / 60) + (CM.Options.AvgCPSHist === 3 ? ' minute' : ' minutes'))) + ')', 
 			document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))
 		));
-		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Options.AvgClicksHist] + (CM.Options.AvgClicksHist == 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AverageClicks, 1))));
+		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Options.AvgClicksHist] + (CM.Options.AvgClicksHist === 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AverageClicks, 1))));
 		if (Game.Has('Fortune cookies')) {
 			var fortunes = [];
 			for (let i of Object.keys(CM.Data.Fortunes)) {
@@ -2410,7 +2412,7 @@ CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
 	var listingName = document.createElement('b');
 	listingName.textContent = name;
 	div.appendChild(listingName);
-	if (type == "withTooltip")  {
+	if (type === "withTooltip")  {
 		div.className = 'listing';
 		
 		var tooltip = document.createElement('span');
@@ -2809,7 +2811,7 @@ CM.Disp.AddMissingUpgrades = function() {
  */
 CM.Disp.crateMissing = function(me) {
 	var classes = 'crate upgrade missing';
-	if (me.pool == 'prestige') classes+=' heavenly';
+	if (me.pool === 'prestige') classes+=' heavenly';
 	
 	var noFrame = 0;
 	if (!Game.prefs.crates) noFrame = 1;
@@ -2923,6 +2925,11 @@ CM.Disp.clickTimes = [1, 5, 10, 15, 30];
  * It is used by CM.Disp.CheckWrinklerTooltip() and CM.Main.AddWrinklerAreaDetect()
  */
 CM.Disp.TooltipWrinklerBeingShown = [];
+
+/**
+ * Used to store the number of cookies to be displayed in the tab-title
+ */
+CM.Disp.Title = '';
 
 /**
  * These are variables with base-values that get initalized when initliazing CookieMonster 
