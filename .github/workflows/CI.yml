@@ -1,7 +1,13 @@
-name: Check build of CookieMonster.js
-on: pull_request
+name: CI
+on: [push, pull_request]
 jobs:
-  build:
+  Check_ESLint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run ESLint
+      run: npx eslint src
+  Check_main_file:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
