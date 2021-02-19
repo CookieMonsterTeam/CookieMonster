@@ -257,7 +257,7 @@ CM.Disp.Beautify = function(num, floats, forced) {
 
 /**
  * This function disables and shows the bars created by CookieMonster when the game is "ascending"
- * It is called by CM.Loop()
+ * It is called by CM.Main.Loop()
  */
 CM.Disp.UpdateAscendState = function() {
 	if (Game.OnAscend) {
@@ -274,7 +274,7 @@ CM.Disp.UpdateAscendState = function() {
 
 /**
  * This function creates a CSS style that stores certain standard CSS classes used by CookieMonster
- * It is called by CM.DelayInit()
+ * It is called by CM.Main.DelayInit()
  */
 CM.Disp.CreateCssArea = function() {
 	CM.Disp.Css = document.createElement('style');
@@ -353,7 +353,7 @@ CM.Disp.ToggleBotBar = function() {
 
 /**
  * This function creates the bottom bar and appends it to l('wrapper')
- * It is called by CM.DelayInit and a change in CM.Options.BotBar
+ * It is called by CM.Main.DelayInit and a change in CM.Options.BotBar
  */
 CM.Disp.CreateBotBar = function() {
 	CM.Disp.BotBar = document.createElement('div');
@@ -404,7 +404,7 @@ CM.Disp.CreateBotBar = function() {
 
 /**
  * This function updates the bonus-, pp-, and time-rows in the the bottom bar
- * It is called by CM.Loop()
+ * It is called by CM.Main.Loop()
  */
 CM.Disp.UpdateBotBar = function() {
 	if (CM.Options.BotBar === 1 && CM.Cache.Objects1) {
@@ -461,7 +461,7 @@ CM.Disp.CreateBotBarBuildingColumn = function(buildingName) {
 
 /**
  * This function creates the TimerBar and appends it to l('wrapper')
- * It is called by CM.DelayInit()
+ * It is called by CM.Main.DelayInit()
  */
 CM.Disp.CreateTimerBar = function() {
 	CM.Disp.TimerBar = document.createElement('div');
@@ -495,7 +495,7 @@ CM.Disp.CreateTimerBar = function() {
 
 /**
  * This function creates an indivudual timer for the timer bar
- * It is called by CM.DelayInit()
+ * It is called by CM.Main.DelayInit()
  * @param	{string}					id					An id to identify the timer
  * @param	{string}					name				The title of the timer
  * @param	[{{string}, {string}}, ...]	bars ([id, color])	The id and colours of individual parts of the timer
@@ -557,7 +557,7 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 
 /**
  * This function updates indivudual timers in the timer bar
- * It is called by CM.Loop()
+ * It is called by CM.Main.Loop()
  */
 CM.Disp.UpdateTimerBar = function() {
 	if (CM.Options.TimerBar === 1) {
@@ -711,7 +711,7 @@ CM.Disp.UpdateBotTimerBarPosition = function() {
 /**
  * This function adjusts some things in the column of buildings.
  * It colours them, helps display the correct sell-price and shuffles the order when CM.Options.SortBuildings is set
- * The function is called by CM.Loop(), CM.Disp.UpdateColors() & CM.Disp.RefreshScale()
+ * The function is called by CM.Main.Loop(), CM.Disp.UpdateColors() & CM.Disp.RefreshScale()
  * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.ConfigData.BulkBuildColor
  */
 CM.Disp.UpdateBuildings = function() {
@@ -778,7 +778,7 @@ CM.Disp.UpdateBuildings = function() {
 /**
  * This function adjusts some things in the upgrades section
  * It colours them and shuffles the order when CM.Options.SortBuildings is set
- * The function is called by CM.Loop(), CM.Disp.ToggleUpgradeBarAndColor & CM.Disp.RefreshScale()
+ * The function is called by CM.Main.Loop(), CM.Disp.ToggleUpgradeBarAndColor & CM.Disp.RefreshScale()
  * And by changes in CM.Options.SortUpgrades
  */
 CM.Disp.UpdateUpgrades = function() {
@@ -971,7 +971,7 @@ CM.Disp.CreateUpgradeBarLegend = function() {
 
 /**
  * This function creates a white square over the full screen and appends it to l('wrapper')
- * It is used by CM.Disp.Flash() to create the effect of a flash and called by CM.DelayInit()
+ * It is used by CM.Disp.Flash() to create the effect of a flash and called by CM.Main.DelayInit()
  */
 CM.Disp.CreateWhiteScreen = function() {
 	CM.Disp.WhiteScreen = document.createElement('div');
@@ -1047,7 +1047,7 @@ CM.Disp.Notification = function(notifyConfig, title, message) {
  * Section: Functions related to updating the tab in the browser's tab-bar
 
 /**
- * This function creates the Favicon, it is called by CM.DelayInit()
+ * This function creates the Favicon, it is called by CM.Main.DelayInit()
  */
 CM.Disp.CreateFavicon = function() {
 	CM.Disp.Favicon = document.createElement('link');
@@ -1193,7 +1193,7 @@ CM.Disp.ToggleGCTimer = function() {
 /**
  * This function creates some very basic tooltips, (e.g., the tooltips in the stats page)
  * The tooltips are created with CM.Disp[placeholder].appendChild(desc)
- * It is called by CM.DelayInit()
+ * It is called by CM.Main.DelayInit()
  * @param	{string}	placeholder	The name used to later refer and spawn the tooltip
  * @param	{string}	text		The text of the tooltip
  * @param	{string}	minWidth	The minimum width of the tooltip
@@ -1213,7 +1213,7 @@ CM.Disp.CreateSimpleTooltip = function(placeholder, text, minWidth) {
 /**
  * This function replaces the original .onmouseover functions of upgrades so that it calls CM.Disp.Tooltip()
  * CM.Disp.Tooltip() sets the tooltip type to 'u'
- * It is called by Game.RebuildUpgrades() through CM.ReplaceNative() and is therefore not permanent like the other ReplaceTooltip functions
+ * It is called by Game.RebuildUpgrades() through CM.Main.ReplaceNative() and is therefore not permanent like the other ReplaceTooltip functions
  */
 CM.Disp.ReplaceTooltipUpgrade = function() {
 	CM.Disp.TooltipUpgradeBackup = [];
@@ -1409,7 +1409,7 @@ CM.Disp.TooltipCreateWarningSection = function() {
 
 /**
  * This function updates the sections of the tooltips created by CookieMonster
- * It is called when tooltips are created by and CM.Disp.Tooltip() on every loop by CM.Loop()
+ * It is called when tooltips are created by and CM.Disp.Tooltip() on every loop by CM.Main.Loop()
  */
 CM.Disp.UpdateTooltip = function() {
 	CM.Sim.CopyData();
@@ -1778,7 +1778,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 
 /**
  * This function updates the location of the tooltip
- * It is called by Game.tooltip.update() because of CM.ReplaceNative()
+ * It is called by Game.tooltip.update() because of CM.Main.ReplaceNative()
  */
 CM.Disp.UpdateTooltipLocation = function() {
 	if (Game.tooltip.origin === 'store') {
@@ -1816,7 +1816,7 @@ CM.Disp.ToggleToolWarnPos = function() {
 
 /**
  * This function checks and create a tooltip for the wrinklers
- * It is called by CM.Loop()
+ * It is called by CM.Main.Loop()
  * TODO: Change this code to be the same as other tooltips. (i.d., create tooltip with type "w")
  */
 CM.Disp.CheckWrinklerTooltip = function() {
@@ -1854,7 +1854,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
 
 /**
  * This function updates the amount to be displayed by the wrinkler tooltip created by CM.Disp.CheckWrinklerTooltip()
- * It is called by CM.Loop()
+ * It is called by CM.Main.Loop()
  * TODO: Change this code to be the same as other tooltips. Fit this into CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateWrinklerTooltip = function() {
@@ -1880,7 +1880,7 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 
 /**
  * This functions adds the two extra lines about CPS and time to recover to the aura picker infoscreen
- * It is called by Game.DescribeDragonAura() after CM.ReplaceNative()
+ * It is called by Game.DescribeDragonAura() after CM.Main.ReplaceNative()
  * @param	{number}	aura	The number of the aura currently selected by the mouse/user
  */
 CM.Disp.AddAuraInfo = function(aura) {
@@ -1908,7 +1908,7 @@ CM.Disp.AddAuraInfo = function(aura) {
 
 /**
  * This functions adds a tooltip to the level up button displaying the cost of rebuying all
- * It is called by Game.ToggleSpecialMenu() after CM.ReplaceNative()
+ * It is called by Game.ToggleSpecialMenu() after CM.Main.ReplaceNative()
  */
 CM.Disp.AddDragonLevelUpTooltip = function() {
 	// Check if it is the dragon popup that is on screen
@@ -1949,7 +1949,7 @@ CM.Disp.AddMenu = function() {
 
 /**
  * This function refreshes the stats page, CM.Options.UpStats determines the rate at which that happens
- * It is called by CM.Loop()
+ * It is called by CM.Main.Loop()
  */
 CM.Disp.RefreshMenu = function() {
 	if (CM.Options.UpStats && Game.onMenu === 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps === 0) Game.UpdateMenu();
@@ -2831,7 +2831,7 @@ CM.Disp.crateMissing = function(me) {
 
 /**
  * This function creates two objects at the bottom of the left column that allowing popping of wrinklers
- * It is called by CM.DelayInit()
+ * It is called by CM.Main.DelayInit()
  */
 CM.Disp.CreateWrinklerButtons = function() {
 	var popAllA = document.createElement('a');
@@ -2868,7 +2868,7 @@ CM.Disp.UpdateWrinklerButtons = function() {
 
 /**
  * This list is used to make some very basic tooltips.
- * It is used by CM.DelayInit() in the call of CM.Disp.CreateSimpleTooltip()
+ * It is used by CM.Main.DelayInit() in the call of CM.Disp.CreateSimpleTooltip()
  * @item	{string}	placeholder	
  * @item	{string}	text		
  * @item	{string}	minWidth	
@@ -2909,8 +2909,11 @@ CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM
  * This array is used to give certain timers specific colours
  */
 CM.Disp.buffColors = {'Frenzy': CM.Disp.colorYellow, 'Dragon Harvest': CM.Disp.colorBrown, 'Elder frenzy': CM.Disp.colorGreen, 'Clot': CM.Disp.colorRed, 'Click frenzy': CM.Disp.colorBlue, 'Dragonflight': CM.Disp.colorPink};
+
+/**
+ * This array is used to track GC timers
+ */
 CM.Disp.GCTimers = {};
-CM.Disp.lastAscendState = -1;
 
 /**
  * These lists are used in the stats page to show 

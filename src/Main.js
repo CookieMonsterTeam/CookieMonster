@@ -2,7 +2,124 @@
  * Main *
  ********/
 
-CM.ReplaceNative = function() {
+/********
+ * Section: Functions related to the main and initialization loop */
+
+/**
+ * Main loop of Cookie Monster
+ * CM.init registers it to the "logic" hook provided by the modding api
+ */
+CM.Main.Loop = function() {
+	if (CM.Disp.lastAscendState != Game.OnAscend) {
+		CM.Disp.lastAscendState = Game.OnAscend;
+		CM.Disp.UpdateAscendState();
+	}
+	if (!Game.OnAscend && Game.AscendTimer === 0) {
+		// CM.Sim.DoSims is set whenever CPS has changed
+		if (CM.Sim.DoSims) {
+			CM.Cache.CacheIncome();
+
+			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
+			CM.Cache.CacheGoldenAndWrathCookiesMults();
+			CM.Cache.CacheStats();
+			CM.Cache.CacheMissingUpgrades();
+			CM.Cache.CacheChain();
+			CM.Cache.CacheDragonCost();
+
+			CM.Cache.CacheSeaSpec();
+			CM.Cache.CacheSellForChoEgg();
+
+			CM.Sim.DoSims = 0;
+		}
+
+		// Check for aura change to recalculate buildings prices
+		var hasBuildAura = Game.auraMult('Fierce Hoarder') > 0;
+		if (!CM.Cache.HadBuildAura && hasBuildAura) {
+			CM.Cache.HadBuildAura = true;
+			CM.Cache.DoRemakeBuildPrices = 1;
+		}
+		else if (CM.Cache.HadBuildAura && !hasBuildAura) {
+			CM.Cache.HadBuildAura = false;
+			CM.Cache.DoRemakeBuildPrices = 1;
+		}
+
+		if (CM.Cache.DoRemakeBuildPrices) {
+			CM.Cache.CacheBuildingsPrices();
+			CM.Cache.DoRemakeBuildPrices = 0;
+		}
+
+		// Update Wrinkler Bank
+		CM.Cache.CacheWrinklers();
+
+		// Calculate PP
+		CM.Cache.CachePP();
+	}
+
+	// Check all changing minigames and game-states
+	CM.Main.CheckGoldenCookie();
+	CM.Main.CheckTickerFortune();
+	CM.Main.CheckSeasonPopup();
+	CM.Main.CheckGardenTick();
+	CM.Main.CheckMagicMeter();
+	CM.Main.CheckWrinklerCount();
+
+	// Cache average CPS
+	CM.Cache.CacheCurrWrinklerCPS();
+	CM.Cache.CacheAvgCPS();
+};
+
+/**
+ * Initialization loop of Cookie Monster
+ * Called by CM.init()
+ */
+CM.Main.DelayInit = function() {
+	CM.Sim.InitData();
+	CM.Cache.InitCache();
+
+	// Creating visual elements
+	CM.Disp.CreateCssArea();
+	CM.Disp.CreateBotBar();
+	CM.Disp.CreateTimerBar();
+	CM.Disp.CreateUpgradeBar();
+	CM.Disp.CreateWhiteScreen();
+	CM.Disp.CreateFavicon();
+	for (let i of Object.keys(CM.Disp.TooltipText)) {
+		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
+	}
+	CM.Disp.CreateWrinklerButtons();
+	CM.Main.ReplaceTooltips();
+	CM.Main.AddWrinklerAreaDetect();
+
+	// Replace native functions
+	CM.Main.ReplaceNative();
+	CM.Main.ReplaceNativeGrimoire();
+	Game.CalculateGains();
+
+	CM.Config.LoadConfig(); // Must be after all things are created!
+	CM.Disp.lastAscendState = Game.OnAscend;
+
+	if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
+	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
+
+	// TODO: given the architecture of your code, you probably want these lines somewhere else,
+	// but I stuck them here for convenience
+	l("products").style.display = "grid";
+	l("storeBulk").style.gridRow = "1/1";
+
+	l("upgrades").style.display = "flex";
+	l("upgrades").style["flex-wrap"] = "wrap";
+
+	Game.Win('Third-party');
+};
+
+/********
+ * Section: Functions related to replacing stuff */
+
+/**
+ * This function replaces certain native (from the base-game) functions
+ * It is called by CM.Main.DelayInit()
+ */
+CM.Main.ReplaceNative = function() {
 	CM.Backup.Beautify = Beautify;
 	Beautify = CM.Disp.Beautify;
 
@@ -48,11 +165,11 @@ CM.ReplaceNative = function() {
 		Game.CalculateGains();
 	};
 
+	CM.Backup.ClickProduct = Game.ClickProduct;
 	/**
-	 * This optiond adds a check to the purchase of a building to allow BulkBuyBlock to work.
+	 * This function adds a check to the purchase of a building to allow BulkBuyBlock to work.
 	 * If the options is 1 (on) bulkPrice is under cookies you can't buy the building. 
 	 */
-	CM.Backup.ClickProduct = Game.ClickProduct;
 	Game.ClickProduct = function(what) {
 		if (!CM.Options.BulkBuyBlock || Game.ObjectsById[what].bulkPrice < Game.cookies) {
 			CM.Backup.ClickProduct(what);
@@ -61,7 +178,7 @@ CM.ReplaceNative = function() {
 
 	CM.Backup.DescribeDragonAura = Game.DescribeDragonAura;
 	/**
-	 * This functions adds the function CM.Disp.AddAuraInfo() to Game.DescribeDragonAura()
+	 * This function adds the function CM.Disp.AddAuraInfo() to Game.DescribeDragonAura()
 	 * This adds information about CPS differences and costs to the aura choosing interface
 	 * @param	{number}	aura	The number of the aura currently selected by the mouse/user
 	 */
@@ -72,7 +189,7 @@ CM.ReplaceNative = function() {
 
 	CM.Backup.ToggleSpecialMenu = Game.ToggleSpecialMenu;
 	/**
-	 * This functions adds the code to display the tooltips for the levelUp button of the dragon
+	 * This function adds the code to display the tooltips for the levelUp button of the dragon
 	 */
 	Game.ToggleSpecialMenu = function(on) {
 		CM.Backup.ToggleSpecialMenu(on);
@@ -97,18 +214,25 @@ CM.ReplaceNative = function() {
 	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Disp.Title'));
 	Game.Logic = function() {
 		CM.Backup.LogicMod();
-
 		// Update Title
 		CM.Disp.UpdateTitle();
 	};
 };
 
-CM.ReplaceNativeGrimoire = function() {
-	CM.ReplaceNativeGrimoireLaunch();
-	CM.ReplaceNativeGrimoireDraw();
+/**
+ * This function fixes replaces the Launch and Draw functions of the Grimoire
+ * It is called by CM.Main.DelayInit() and Game.LoadMinigames()
+ */
+CM.Main.ReplaceNativeGrimoire = function() {
+	CM.Main.ReplaceNativeGrimoireLaunch();
+	CM.Main.ReplaceNativeGrimoireDraw();
 };
 
-CM.ReplaceNativeGrimoireLaunch = function() {
+/**
+ * This function fixes replaces the .launch function of the Grimoire
+ * It is called by CM.Main.ReplaceNativeGrimoire()
+ */
+CM.Main.ReplaceNativeGrimoireLaunch = function() {
 	if (!CM.HasReplaceNativeGrimoireLaunch && Game.Objects['Wizard tower'].minigameLoaded) {
 		var minigame = Game.Objects['Wizard tower'].minigame;
 		CM.Backup.GrimoireLaunch = minigame.launch;
@@ -117,13 +241,17 @@ CM.ReplaceNativeGrimoireLaunch = function() {
 			CM.Backup.GrimoireLaunchMod();
 			CM.Main.ReplaceTooltipGrimoire();
 			CM.HasReplaceNativeGrimoireDraw = false;
-			CM.ReplaceNativeGrimoireDraw();
+			CM.Main.ReplaceNativeGrimoireDraw();
 		};
 		CM.HasReplaceNativeGrimoireLaunch = true;
 	}
 };
 
-CM.ReplaceNativeGrimoireDraw = function() {
+/**
+ * This function fixes replaces the .draw function of the Grimoire
+ * It is called by CM.Main.ReplaceNativeGrimoire()
+ */
+CM.Main.ReplaceNativeGrimoireDraw = function() {
 	if (!CM.HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
 		var minigame = Game.Objects['Wizard tower'].minigame;
 		CM.Backup.GrimoireDraw = minigame.draw;
@@ -137,110 +265,12 @@ CM.ReplaceNativeGrimoireDraw = function() {
 	}
 };
 
-CM.Loop = function() {
-	if (CM.Disp.lastAscendState != Game.OnAscend) {
-		CM.Disp.lastAscendState = Game.OnAscend;
-		CM.Disp.UpdateAscendState();
-	}
-	if (!Game.OnAscend && Game.AscendTimer === 0) {
-		// CM.Sim.DoSims is set whenever CPS has changed
-		if (CM.Sim.DoSims) {
-			CM.Cache.CacheIncome();
-
-			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
-			CM.Cache.CacheGoldenAndWrathCookiesMults();
-			CM.Cache.CacheStats();
-			CM.Cache.CacheMissingUpgrades();
-			CM.Cache.CacheChain();
-			CM.Cache.CacheDragonCost();
-
-			CM.Cache.CacheSeaSpec();
-			CM.Cache.CacheSellForChoEgg();
-
-			CM.Sim.DoSims = 0;
-			
-		}
-
-		// Check for aura change to recalculate buildings prices
-		var hasBuildAura = Game.auraMult('Fierce Hoarder') > 0;
-		if (!CM.Cache.HadBuildAura && hasBuildAura) {
-			CM.Cache.HadBuildAura = true;
-			CM.Cache.DoRemakeBuildPrices = 1;
-		}
-		else if (CM.Cache.HadBuildAura && !hasBuildAura) {
-			CM.Cache.HadBuildAura = false;
-			CM.Cache.DoRemakeBuildPrices = 1;
-		}
-
-		if (CM.Cache.DoRemakeBuildPrices) {
-			CM.Cache.CacheBuildingsPrices();
-			CM.Cache.DoRemakeBuildPrices = 0;
-		}
-
-		// Update Wrinkler Bank
-		CM.Cache.CacheWrinklers();
-
-		// Calculate PP
-		CM.Cache.CachePP();
-	}
-
-	// Check all changing minigames and game-states
-	CM.Main.CheckGoldenCookie();
-	CM.Main.CheckTickerFortune();
-	CM.Main.CheckSeasonPopup();
-	CM.Main.CheckGardenTick();
-	CM.Main.CheckMagicMeter();
-	CM.Main.CheckWrinklerCount();
-
-	// Update Average CPS (might need to move)
-	CM.Cache.CacheCurrWrinklerCPS();
-	CM.Cache.CacheAvgCPS();
-};
-
-CM.DelayInit = function() {
-	CM.Sim.InitData();
-	CM.Cache.InitCache();
-	CM.Disp.CreateCssArea();
-	CM.Disp.CreateBotBar();
-	CM.Disp.CreateTimerBar();
-	CM.Disp.CreateUpgradeBar();
-	CM.Disp.CreateWhiteScreen();
-	CM.Disp.CreateFavicon();
-	for (let i of Object.keys(CM.Disp.TooltipText)) {
-		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
-	}
-	CM.Disp.CreateWrinklerButtons();
-	CM.Main.ReplaceTooltips();
-	CM.Main.AddWrinklerAreaDetect();
-	CM.Cache.InitCookiesDiff();
-	CM.ReplaceNative();
-	CM.ReplaceNativeGrimoire();
-	Game.CalculateGains();
-	CM.Config.LoadConfig(); // Must be after all things are created!
-	CM.Disp.lastAscendState = Game.OnAscend;
-	CM.Disp.lastBuyMode = Game.buyMode;
-	CM.Disp.lastBuyBulk = Game.buyBulk;
-
-	if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
-	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
-
-	// given the architecture of your code, you probably want these lines somewhere else,
-	// but I stuck them here for convenience
-	l("products").style.display = "grid";
-	l("storeBulk").style.gridRow = "1/1";
-
-	l("upgrades").style.display = "flex";
-	l("upgrades").style["flex-wrap"] = "wrap";
-
-	Game.Win('Third-party');
-};
-
 /********
  * Section: Functions related to first initizalition of CM */
 
 /**
  * This function call all functions that replace Game-tooltips with CM-enhanced tooltips
- * It is called by CM.DelayInit()
+ * It is called by CM.Main.DelayInit()
  */
 CM.Main.ReplaceTooltips = function() {
 	CM.Main.ReplaceTooltipBuild();
@@ -253,7 +283,7 @@ CM.Main.ReplaceTooltips = function() {
 		CM.Backup.LoadMinigames();
 		CM.Main.ReplaceTooltipGarden();
 		CM.Main.ReplaceTooltipGrimoire();
-		CM.ReplaceNativeGrimoire();
+		CM.Main.ReplaceNativeGrimoire();
 	};
 	Game.LoadMinigames();
 };
@@ -343,7 +373,7 @@ CM.Main.FindShimmer = function() {
 
 /**
  * This function checks for changes in the amount of Golden Cookies
- * It is called by CM.Loop
+ * It is called by CM.Main.Loop
  */
 CM.Main.CheckGoldenCookie = function() {
 	CM.Main.FindShimmer();
@@ -383,7 +413,7 @@ CM.Main.CheckGoldenCookie = function() {
 
 /**
  * This function checks if there is reindeer that has spawned
- * It is called by CM.Loop
+ * It is called by CM.Main.Loop
  */
 CM.Main.CheckSeasonPopup = function() {
 	if (CM.Main.lastSeasonPopupState != Game.shimmerTypes.reindeer.spawned) {
@@ -402,7 +432,7 @@ CM.Main.CheckSeasonPopup = function() {
 
 /**
  * This function checks if there is a fortune cookie on the ticker
- * It is called by CM.Loop
+ * It is called by CM.Main.Loop
  */
 CM.Main.CheckTickerFortune = function() {
 	if (CM.Main.lastTickerFortuneState != (Game.TickerEffect && Game.TickerEffect.type === 'fortune')) {
@@ -417,7 +447,7 @@ CM.Main.CheckTickerFortune = function() {
 
 /**
  * This function checks if a garden tick has happened
- * It is called by CM.Loop
+ * It is called by CM.Main.Loop
  */
 CM.Main.CheckGardenTick = function() {
 	if (Game.Objects.Farm.minigameLoaded && CM.Main.lastGardenNextStep != Game.Objects.Farm.minigame.nextStep) {
@@ -431,7 +461,7 @@ CM.Main.CheckGardenTick = function() {
 
 /**
  * This function checks if the magic meter is full
- * It is called by CM.Loop
+ * It is called by CM.Main.Loop
  */
 CM.Main.CheckMagicMeter = function() {
 	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Options.GrimoireBar === 1) {
@@ -448,7 +478,7 @@ CM.Main.CheckMagicMeter = function() {
 
 /**
  * This function checks if any new Wrinklers have popped up
- * It is called by CM.Loop
+ * It is called by CM.Main.Loop
  */
 CM.Main.CheckWrinklerCount = function() {
 	if (Game.elderWrath > 0) {
@@ -481,7 +511,7 @@ CM.Main.CheckWrinklerCount = function() {
 
 /**
  * This function creates .onmouseover/out events that determine if the mouse is hovering-over a Wrinkler
- * It is called by CM.DelayInit
+ * It is called by CM.Main.DelayInit
  * TODO: The system for displaying wrinklers should ideally use a similar system as other tooltips
  * Thus, writing a CM.Main.ReplaceTooltipWrinkler function etc.
  */

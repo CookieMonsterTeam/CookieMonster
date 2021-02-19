@@ -8,8 +8,8 @@
 /**
  * This functions runs all cache-functions to generate all "full" cache
  * The declaration follows the structure of the CM.Cache.js file
- * It is called by CM.DelayInit
- * TODO: Add all functions that should be here and remove them from CM.Loop()
+ * It is called by CM.Main.DelayInit
+ * TODO: Add all functions that should be here and remove them from CM.Main.Loop()
  */
 CM.Cache.InitCache = function() {
 	CM.Cache.CacheDragonAuras();
@@ -19,6 +19,7 @@ CM.Cache.InitCache = function() {
 	CM.Cache.CacheChain();
 	CM.Cache.CacheMissingUpgrades();
 	CM.Cache.CacheSeaSpec();
+	CM.Cache.InitCookiesDiff();
 	CM.Cache.CacheAvgCPS();
 	CM.Cache.CacheIncome();
 	CM.Cache.CacheBuildingsPrices();
@@ -45,7 +46,7 @@ CM.Cache.CacheDragonAuras = function() {
 
 /**
  * This functions caches data related to Wrinklers
- * It is called by CM.Loop() and CM.Cache.InitCache()
+ * It is called by CM.Main.Loop() and CM.Cache.InitCache()
  * @global	{number}				CM.Cache.WrinklersTotal		The cookies of all wrinklers
  * @global	{number}				CM.Cache.WrinklersNormal	The cookies of all normal wrinklers
  * @global	{[{number}, {number}]}	CM.Cache.WrinklersFattest	A list containing the cookies and the id of the fattest non-shiny wrinkler
@@ -80,7 +81,7 @@ CM.Cache.CacheWrinklers = function() {
 
 /**
  * This functions caches variables related to the stats apge
- * It is called by CM.Loop() upon changes to cps and CM.Cache.InitCache()
+ * It is called by CM.Main.Loop() upon changes to cps and CM.Cache.InitCache()
  * @global	{number}	CM.Cache.Lucky					Cookies required for max Lucky
  * @global	{number}	CM.Cache.LuckyReward			Reward for max normal Lucky
  * @global	{number}	CM.Cache.LuckyWrathReward		Reward for max normal Lucky from Wrath cookie
@@ -190,7 +191,7 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
 
 /**
  * This functions caches data related to Chain Cookies reward from Golden Cookioes
- * It is called by CM.Loop() upon changes to cps and CM.Cache.InitCache()
+ * It is called by CM.Main.Loop() upon changes to cps and CM.Cache.InitCache()
  * @global	[{number, number}]	CM.Cache.ChainReward			Total cookies earned, and cookies needed for next level for normal chain
  * @global	{number}			CM.Cache.ChainRequired			Cookies needed for maximum reward for normal chain
  * @global	{number}			CM.Cache.ChainRequiredNext		Total cookies needed for next level for normal chain
@@ -231,7 +232,7 @@ CM.Cache.CacheChain = function() {
 
 /**
  * This functions caches variables related to missing upgrades
- * It is called by CM.Loop() and CM.Cache.InitCache()
+ * It is called by CM.Main.Loop() and CM.Cache.InitCache()
  * @global	{string}	CM.Cache.MissingUpgrades			String containig the HTML to create the "crates" for missing normal upgrades
  * @global	{string}	CM.Cache.MissingUpgradesCookies		String containig the HTML to create the "crates" for missing cookie upgrades
  * @global	{string}	CM.Cache.MissingUpgradesPrestige	String containig the HTML to create the "crates" for missing prestige upgrades
@@ -268,7 +269,7 @@ CM.Cache.CacheMissingUpgrades = function() {
 
 /**
  * This functions caches the reward of popping a reindeer
- * It is called by CM.Loop() and CM.Cache.InitCache()
+ * It is called by CM.Main.Loop() and CM.Cache.InitCache()
  * @global	{number}	CM.Cache.SeaSpec	The reward for popping a reindeer
  */
 CM.Cache.CacheSeaSpec = function() {
@@ -318,7 +319,7 @@ class CMAvgQueue {
 
 /**
  * This functions caches creates the CMAvgQueue used by CM.Cache.CacheAvgCPS() to calculate CPS
- * Called by CM.DelayInit()
+ * Called by CM.Cache.InitCache()
  */
 CM.Cache.InitCookiesDiff = function() {
 	CM.Cache.CookiesDiff = new CMAvgQueue(CM.Disp.cookieTimes[CM.Disp.cookieTimes.length - 1]);
@@ -330,7 +331,7 @@ CM.Cache.InitCookiesDiff = function() {
 
 /**
  * This functions caches two variables related average CPS and Clicks
- * It is called by CM.Loop()
+ * It is called by CM.Main.Loop()
  * TODO: Check if this can be made more concise
  * @global	{number}	CM.Cache.RealCookiesEarned	Cookies earned including the Chocolate Egg
  * @global	{number}	CM.Cache.AvgCPS				Average cookies over time-period as defined by AvgCPSHist
@@ -394,7 +395,7 @@ CM.Cache.CacheAvgCPS = function() {
 
 /**
  * This functions caches the reward for selling the Chocolate egg
- * It is called by CM.Loop()
+ * It is called by CM.Main.Loop()
  * @global	{number}	CM.Cache.SellForChoEgg	Total cookies to be gained from selling Chocolate egg
  */
 CM.Cache.CacheSellForChoEgg = function() {
@@ -416,7 +417,7 @@ CM.Cache.CacheSellForChoEgg = function() {
 
 /**
  * This functions caches the current Wrinkler CPS multiplier
- * It is called by CM.Loop(). Variables are mostly used by CM.Disp.GetCPS().
+ * It is called by CM.Main.Loop(). Variables are mostly used by CM.Disp.GetCPS().
  * @global	{number}	CM.Cache.CurrWrinklerCount		Current number of wrinklers
  * @global	{number}	CM.Cache.CurrWrinklerCPSMult	Current multiplier of CPS because of wrinklers (excluding their negative sucking effect)
  */
@@ -442,7 +443,7 @@ CM.Cache.CacheCurrWrinklerCPS = function() {
 
 /**
  * This functions caches the current cost of upgrading the dragon level so it can be displayed in the tooltip
- * It is called by the relevan tooltip-code as a result of CM.Disp.AddDragonLevelUpTooltip() and by CM.Loop()
+ * It is called by the relevan tooltip-code as a result of CM.Disp.AddDragonLevelUpTooltip() and by CM.Main.Loop()
  * @global	{number}	CM.Cache.lastDragonLevel		The last cached dragon level
  * @global	{string}	CM.Cache.CostDragonUpgrade		The Beautified cost of the next upgrade
  */
@@ -500,7 +501,7 @@ CM.Cache.CacheDragonCost = function() {
 
 /**
  * This functions caches the income gain of each building and upgrade and stores it in the cache
- * It is called by CM.Loop() and CM.Cache.InitCache()
+ * It is called by CM.Main.Loop() and CM.Cache.InitCache()
  */
 CM.Cache.CacheIncome = function() {
 	// Simulate Building Buys for 1, 10 and 100 amount
@@ -517,7 +518,7 @@ CM.Cache.CacheIncome = function() {
 
 /**
  * This functions caches the price of each building and stores it in the cache
- * It is called by CM.Loop() and CM.Cache.InitCache()
+ * It is called by CM.Main.Loop() and CM.Cache.InitCache()
  */
 CM.Cache.CacheBuildingsPrices = function() {
 	for (let i of Object.keys(Game.Objects)) {
@@ -532,7 +533,7 @@ CM.Cache.CacheBuildingsPrices = function() {
 
 /**
  * This functions caches the PP of each building and upgrade and stores it in the cache
- * It is called by CM.Loop() and CM.Cache.InitCache()
+ * It is called by CM.Main.Loop() and CM.Cache.InitCache()
  */
 CM.Cache.CachePP = function() {
 	CM.Cache.CacheBuildingsPP();

@@ -18,9 +18,9 @@ CM.init = function() {
         proceed = confirm('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' is meant for Game version ' + CM.VersionMajor + '.  Loading a different version may cause errors.  Do you still want to load Cookie Monster?');
     }
     if (proceed) {
-        CM.DelayInit();
+        CM.Main.DelayInit();
         Game.registerHook('draw', CM.Disp.Draw);
-        Game.registerHook('logic', CM.Loop);
+        Game.registerHook('logic', CM.Main.Loop);
         CM.Footer.isInitzializing = false
     }
 };
