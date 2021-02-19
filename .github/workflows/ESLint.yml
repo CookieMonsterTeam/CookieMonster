@@ -1,9 +1,0 @@
-name: ESLint
-on: [push, pull_request]
-jobs:
-  Check_ESLint:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Run ESLint
-      run: npx eslint src
