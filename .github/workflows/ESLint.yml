@@ -1,7 +1,7 @@
 name: ESLint
 on: [push, pull_request]
 jobs:
-  build:
+  Check ESLint:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
