@@ -15,13 +15,14 @@ CM.Cache.InitCache = function() {
 	CM.Cache.CacheDragonAuras();
 	CM.Cache.CacheWrinklers();
 	CM.Cache.CacheStats();
-	CM.Cache.RemakeGoldenAndWrathCookiesMults();
-	CM.Cache.RemakeChain();
+	CM.Cache.CacheGoldenAndWrathCookiesMults();
+	CM.Cache.CacheChain();
 	CM.Cache.CacheMissingUpgrades();
-	CM.Cache.RemakeSeaSpec();
-	CM.Cache.RemakeIncome();
-	CM.Cache.RemakeBuildingsPrices();
-	CM.Cache.RemakePP();
+	CM.Cache.CacheSeaSpec();
+	CM.Cache.CacheAvgCPS();
+	CM.Cache.CacheIncome();
+	CM.Cache.CacheBuildingsPrices();
+	CM.Cache.CachePP();
 };
 
 /********
@@ -53,7 +54,7 @@ CM.Cache.CacheWrinklers = function() {
 	CM.Cache.WrinklersTotal = 0;
 	CM.Cache.WrinklersNormal = 0;
 	CM.Cache.WrinklersFattest = [0, null];
-	for (let i; i < Game.wrinklers.length; i++) {
+	for (let i = 0; i < Game.wrinklers.length; i++) {
 		var sucked = Game.wrinklers[i].sucked;
 		var toSuck = 1.1;
 		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
@@ -124,13 +125,13 @@ CM.Cache.CacheStats = function() {
 
 /**
  * This functions calculates the multipliers of Golden and Wrath cookie rewards
- * It is mostly used by CM.Cache.MaxChainMoni() and CM.Cache.RemakeChain()
- * It is called by CM.Disp.CreateStatsChainSection() and CM.Cache.RemakeChain()
+ * It is mostly used by CM.Cache.MaxChainMoni() and CM.Cache.CacheChain()
+ * It is called by CM.Disp.CreateStatsChainSection() and CM.Cache.CacheChain()
  * @param	{number}			CM.Cache.GoldenCookiesMult				Multiplier for golden cookies
  * @param	{number}			CM.Cache.WrathCookiesMult				Multiplier for wrath cookies
  * @param	{number}			CM.Cache.DragonsFortuneMultAdjustment	Multiplier for dragon fortune + active golden cookie
  */
-CM.Cache.RemakeGoldenAndWrathCookiesMults = function() {
+CM.Cache.CacheGoldenAndWrathCookiesMults = function() {
 	if (CM.Footer.isInitzializing) {
 		CM.Cache.GoldenCookiesMult = 1;
 		CM.Cache.WrathCookiesMult = 1;
@@ -166,7 +167,7 @@ CM.Cache.RemakeGoldenAndWrathCookiesMults = function() {
 
 /**
  * This functions calculates the max possible payout
- * It is called by CM.Disp.CreateStatsChainSection() and CM.Cache.RemakeChain()
+ * It is called by CM.Disp.CreateStatsChainSection() and CM.Cache.CacheChain()
  * @param	{number}			digit		Number of Golden Cookies in chain
  * @param	{number}			maxPayout	Maximum payout
  * @param	{number}			mult		Multiplier
@@ -203,7 +204,7 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
  * @global	{number}			CM.Cache.ChainFrenzyWrathRequired			Cookies needed for maximum reward for wrath frenzy chain
  * @global	{number}			CM.Cache.ChainFrenzyWrathRequiredNext		Total cookies needed for next level for wrath frenzy chain
  */
-CM.Cache.RemakeChain = function() {
+CM.Cache.CacheChain = function() {
 	let maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6 * CM.Cache.DragonsFortuneMultAdjustment;
 	// Removes effect of Frenzy etc.
 	let cpsBuffMult = CM.Sim.getCPSBuffMult();
@@ -270,7 +271,7 @@ CM.Cache.CacheMissingUpgrades = function() {
  * It is called by CM.Loop() and CM.Cache.InitCache()
  * @global	{number}	CM.Cache.SeaSpec	The reward for popping a reindeer
  */
-CM.Cache.RemakeSeaSpec = function() {
+CM.Cache.CacheSeaSpec = function() {
 	if (Game.season === 'christmas') {
 		var val = Game.cookiesPs * 60;
 		if (Game.hasBuff('Elder frenzy')) val *= 0.5;
@@ -316,7 +317,7 @@ class CMAvgQueue {
 }
 
 /**
- * This functions caches creates the CMAvgQueue used by CM.Cache.UpdateAvgCPS() to calculate CPS
+ * This functions caches creates the CMAvgQueue used by CM.Cache.CacheAvgCPS() to calculate CPS
  * Called by CM.DelayInit()
  */
 CM.Cache.InitCookiesDiff = function() {
@@ -336,7 +337,7 @@ CM.Cache.InitCookiesDiff = function() {
  * @global	{number}	CM.Cache.AverageClicks		Average cookies from clicking over time-period as defined by AvgClicksHist
  * @global	{number}	CM.Cache.AvgCPSChoEgg		Average cookies from combination of normal CPS and average Chocolate Cookie CPS
  */
-CM.Cache.UpdateAvgCPS = function() {
+CM.Cache.CacheAvgCPS = function() {
 	var currDate = Math.floor(Date.now() / 1000);
 	// Only calculate every new second
 	if ((Game.T / Game.fps) % 1 === 0) {
@@ -396,7 +397,7 @@ CM.Cache.UpdateAvgCPS = function() {
  * It is called by CM.Loop()
  * @global	{number}	CM.Cache.SellForChoEgg	Total cookies to be gained from selling Chocolate egg
  */
-CM.Cache.RemakeSellForChoEgg = function() {
+CM.Cache.CacheSellForChoEgg = function() {
 	var sellTotal = 0;
 	// Compute cookies earned by selling stock market goods
 	if (Game.Objects.Bank.minigameLoaded) {
@@ -419,7 +420,7 @@ CM.Cache.RemakeSellForChoEgg = function() {
  * @global	{number}	CM.Cache.CurrWrinklerCount		Current number of wrinklers
  * @global	{number}	CM.Cache.CurrWrinklerCPSMult	Current multiplier of CPS because of wrinklers (excluding their negative sucking effect)
  */
-CM.Cache.UpdateCurrWrinklerCPS = function() {
+CM.Cache.CacheCurrWrinklerCPS = function() {
 	CM.Cache.CurrWrinklerCPSMult = 0;
 	let count = 0;
 	for (let i in Game.wrinklers) {
@@ -501,7 +502,7 @@ CM.Cache.CacheDragonCost = function() {
  * This functions caches the income gain of each building and upgrade and stores it in the cache
  * It is called by CM.Loop() and CM.Cache.InitCache()
  */
-CM.Cache.RemakeIncome = function() {
+CM.Cache.CacheIncome = function() {
 	// Simulate Building Buys for 1, 10 and 100 amount
 	CM.Sim.BuyBuildings(1, 'Objects1');
 	CM.Sim.BuyBuildings(10, 'Objects10');
@@ -518,7 +519,7 @@ CM.Cache.RemakeIncome = function() {
  * This functions caches the price of each building and stores it in the cache
  * It is called by CM.Loop() and CM.Cache.InitCache()
  */
-CM.Cache.RemakeBuildingsPrices = function() {
+CM.Cache.CacheBuildingsPrices = function() {
 	for (let i of Object.keys(Game.Objects)) {
 		CM.Cache.Objects1[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 1);
 		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
@@ -533,16 +534,16 @@ CM.Cache.RemakeBuildingsPrices = function() {
  * This functions caches the PP of each building and upgrade and stores it in the cache
  * It is called by CM.Loop() and CM.Cache.InitCache()
  */
-CM.Cache.RemakePP = function() {
-	CM.Cache.RemakeBuildingsPP();
-	CM.Cache.RemakeUpgradePP();
+CM.Cache.CachePP = function() {
+	CM.Cache.CacheBuildingsPP();
+	CM.Cache.CacheUpgradePP();
 };
 
 /**
  * This functions caches the PP of each building it saves all date in CM.Cache.Objects...
- * It is called by CM.Cache.RemakePP()
+ * It is called by CM.Cache.CachePP()
  */
-CM.Cache.RemakeBuildingsPP = function() {
+CM.Cache.CacheBuildingsPP = function() {
 	CM.Cache.min = -1;
 	CM.Cache.max = -1;
 	CM.Cache.mid = -1;
@@ -565,8 +566,8 @@ CM.Cache.RemakeBuildingsPP = function() {
 			CM.Cache.Objects1[i].color = color;
 		}
 		// Calculate PP of bulk-buy modes
-		CM.Cache.RemakeBuildingsBulkPP('Objects10');
-		CM.Cache.RemakeBuildingsBulkPP('Objects100');
+		CM.Cache.CacheBuildingsBulkPP('Objects10');
+		CM.Cache.CacheBuildingsBulkPP('Objects100');
 	} 
 	// Calculate PP and colors when compared to purchase of selected bulk mode
 	else {
@@ -593,9 +594,9 @@ CM.Cache.RemakeBuildingsPP = function() {
 /**
  * This functions caches the buildings of bulk-buy mode when PP is compared against optimal single-purchase building
  * It saves all date in CM.Cache.Objects...
- * It is called by CM.Cache.RemakeBuildingsPP()
+ * It is called by CM.Cache.CacheBuildingsPP()
  */
-CM.Cache.RemakeBuildingsBulkPP = function(target) {
+CM.Cache.CacheBuildingsBulkPP = function(target) {
 	for (let i of Object.keys(CM.Cache[target])) {
 		if (Game.cookiesPs) {
 			CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
@@ -615,9 +616,9 @@ CM.Cache.RemakeBuildingsBulkPP = function(target) {
 
 /**
  * This functions caches the PP of each building it saves all date in CM.Cache.Upgrades
- * It is called by CM.Cache.RemakePP()
+ * It is called by CM.Cache.CachePP()
  */
-CM.Cache.RemakeUpgradePP = function() {
+CM.Cache.CacheUpgradePP = function() {
 	for (let i of Object.keys(CM.Cache.Upgrades)) {
 		if (Game.cookiesPs) {
 			CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);

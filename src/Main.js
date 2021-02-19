@@ -145,17 +145,17 @@ CM.Loop = function() {
 	if (!Game.OnAscend && Game.AscendTimer === 0) {
 		// CM.Sim.DoSims is set whenever CPS has changed
 		if (CM.Sim.DoSims) {
-			CM.Cache.RemakeIncome();
+			CM.Cache.CacheIncome();
 
 			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
-			CM.Cache.RemakeGoldenAndWrathCookiesMults();
+			CM.Cache.CacheGoldenAndWrathCookiesMults();
 			CM.Cache.CacheStats();
 			CM.Cache.CacheMissingUpgrades();
-			CM.Cache.RemakeChain();
+			CM.Cache.CacheChain();
 			CM.Cache.CacheDragonCost();
 
-			CM.Cache.RemakeSeaSpec();
-			CM.Cache.RemakeSellForChoEgg();
+			CM.Cache.CacheSeaSpec();
+			CM.Cache.CacheSellForChoEgg();
 
 			CM.Sim.DoSims = 0;
 			
@@ -173,7 +173,7 @@ CM.Loop = function() {
 		}
 
 		if (CM.Cache.DoRemakeBuildPrices) {
-			CM.Cache.RemakeBuildingsPrices();
+			CM.Cache.CacheBuildingsPrices();
 			CM.Cache.DoRemakeBuildPrices = 0;
 		}
 
@@ -181,7 +181,7 @@ CM.Loop = function() {
 		CM.Cache.CacheWrinklers();
 
 		// Calculate PP
-		CM.Cache.RemakePP();
+		CM.Cache.CachePP();
 	}
 
 	// Check all changing minigames and game-states
@@ -193,8 +193,8 @@ CM.Loop = function() {
 	CM.Main.CheckWrinklerCount();
 
 	// Update Average CPS (might need to move)
-	CM.Cache.UpdateCurrWrinklerCPS();
-	CM.Cache.UpdateAvgCPS();
+	CM.Cache.CacheCurrWrinklerCPS();
+	CM.Cache.CacheAvgCPS();
 };
 
 CM.DelayInit = function() {
