@@ -22,7 +22,7 @@ CM.Config.SaveConfig = function() {
 
 /**
  * This function loads the config of CookieMonster saved in localStorage and loads it into CM.Options
- * It is called by CM.DelayInit() and CM.Config.RestoreDefault()
+ * It is called by CM.Main.DelayInit() and CM.Config.RestoreDefault()
  */
 CM.Config.LoadConfig = function(settings) {
 	// This removes cookies left from earlier versions of CookieMonster
@@ -71,7 +71,7 @@ CM.Config.LoadConfig = function(settings) {
 			}
 		}
 		if (mod) CM.Config.SaveConfig();
-		CM.Loop(); // Do loop once
+		CM.Main.Loop(); // Do loop once
 		for (let i in CM.Data.ConfigDefault) {
 			if (i != 'Header' && typeof CM.ConfigData[i].func !== 'undefined') {
 				CM.ConfigData[i].func();
