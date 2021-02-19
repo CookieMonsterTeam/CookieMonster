@@ -1,7 +1,7 @@
 name: Check build of CookieMonster.js
 on: pull_request
 jobs:
-  Check_CookieMonster.js:
+  Check_main_file:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
