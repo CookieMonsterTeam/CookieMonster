@@ -360,10 +360,6 @@ CM.Disp.CreateBotBar = function() {
 	CM.Disp.BotBar.style.position = 'absolute';
 	CM.Disp.BotBar.style.display = 'none';
 	CM.Disp.BotBar.style.backgroundColor = '#262224';
-	// This is old code for very old browsersand should not be needed anymore
-	//CM.Disp.BotBar.style.backgroundImage = '-moz-linear-gradient(top, #4d4548, #000000)';
-	//CM.Disp.BotBar.style.backgroundImage = '-o-linear-gradient(top, #4d4548, #000000)';
-	//CM.Disp.BotBar.style.backgroundImage = '-webkit-linear-gradient(top, #4d4548, #000000)';
 	CM.Disp.BotBar.style.backgroundImage = 'linear-gradient(to bottom, #4d4548, #000000)';
 	CM.Disp.BotBar.style.borderTop = '1px solid black';
 	CM.Disp.BotBar.style.overflow = 'auto';
