@@ -247,7 +247,7 @@ CM.Disp.UpdateAscendState = function() {
 	if (Game.OnAscend) {
 		l('game').style.bottom = '0px';
 		if (CM.Options.BotBar === 1) CM.Disp.BotBar.style.display = 'none';
-		if (CM.Options.TimerBar === 1) CM.Disp.f.style.display = 'none';
+		if (CM.Options.TimerBar === 1) CM.Disp.TimerBar.style.display = 'none';
 	}
 	else {
 		CM.Disp.ToggleBotBar();
