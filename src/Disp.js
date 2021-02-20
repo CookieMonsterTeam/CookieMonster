@@ -1090,11 +1090,11 @@ CM.Disp.UpdateTitle = function() {
 		let titleSP;
 		
 		if (CM.Cache.spawnedGoldenShimmer) {
-			if (CM.Cache.spawnedGoldenShimmer.wrath) titleGC = '[W ' +  Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps) + ']';
-			else titleGC = '[G ' +  Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps) + ']';
+			if (CM.Cache.spawnedGoldenShimmer.wrath) titleGC = `[W${Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps)}]`;
+			else titleGC = `[G${Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps)}]`;
 		}
 		else if (!Game.Has('Golden switch [off]')) {
-			titleGC = '[' +  Math.ceil((Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.time) / Game.fps) + ']';
+			titleGC = `[${Number(l('CMTimerBarGCMinBar').textContent) < 0 ? "!" : ""}${Math.ceil((Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.time) / Game.fps)}]`;
 		}
 		else titleGC = '[GS]';
 
@@ -1105,9 +1105,10 @@ CM.Disp.UpdateTitle = function() {
 
 		if (Game.season === 'christmas') {
 			addSP = true;
-			if (CM.Main.lastSeasonPopupState) titleSP = '[R ' +  Math.ceil(CM.Cache.seasonPopShimmer.life / Game.fps) + ']';
+			if (CM.Main.lastSeasonPopupState) titleSP = `[R${Math.ceil(CM.Cache.seasonPopShimmer.life / Game.fps)}]`;
 			else {
-				titleSP = '[' +  Math.ceil((Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.time) / Game.fps) + ']';
+				
+				titleSP = `[${Number(l('CMTimerBarRenMinBar').textContent) < 0 ? "!" : ""}${Math.ceil((Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.time) / Game.fps)}]`;
 			}
 		}
 
@@ -1123,15 +1124,15 @@ CM.Disp.UpdateTitle = function() {
 		let spawn = false;
 		if (CM.Cache.spawnedGoldenShimmer) {
 			spawn = true;
-			if (CM.Cache.spawnedGoldenShimmer.wrath) str += '[W ' +  Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps) + ']';
-			else str += '[G ' +  Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps) + ']';
+			if (CM.Cache.spawnedGoldenShimmer.wrath) str += `[W${Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps)}]`;
+			else str += `[G${Math.ceil(CM.Cache.spawnedGoldenShimmer.life / Game.fps)}]`;
 		}
 		if (CM.Main.lastTickerFortuneState) {
 			spawn = true;
 			str += '[F]';
 		}
 		if (Game.season === 'christmas' && CM.Main.lastSeasonPopupState) {
-			str += '[R ' +  Math.ceil(CM.Cache.seasonPopShimmer.life / Game.fps) + ']';
+			str += `[R${Math.ceil(CM.Cache.seasonPopShimmer.life / Game.fps)}]`;
 			spawn = true;
 		}
 		if (spawn) str += ' - ';
