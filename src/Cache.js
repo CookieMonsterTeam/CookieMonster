@@ -685,7 +685,7 @@ CM.Cache.CacheBuildingsPP = function() {
 		for (let i of Object.keys(CM.Cache[target])) {
 			if (Game.cookiesPs) {
 				CM.Cache[target][i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache[target][i].bonus);
-			} else CM.CM.Cache[target][i].pp = (Game.Objects[i].bulkPrice / CM.Cache[target][i].bonus);
+			} else CM.Cache[target][i].pp = (Game.Objects[i].bulkPrice / CM.Cache[target][i].bonus);
 			if (CM.Cache.min === -1 || CM.Cache[target][i].pp < CM.Cache.min) CM.Cache.min = CM.Cache[target][i].pp;
 			if (CM.Cache.max === -1 || CM.Cache[target][i].pp > CM.Cache.max) CM.Cache.max = CM.Cache[target][i].pp;
 		}

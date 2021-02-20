@@ -2367,7 +2367,7 @@ CM.Disp.AddMenuStats = function(title) {
  */
 CM.Disp.CreateStatsHeader = function(text, config) {
 	let div = document.createElement('div');
-	div.className = 'listing';
+	div.className = 'title';
 	div.style.padding = '5px 16px';
 	div.style.opacity = '0.7';
 	div.style.fontSize = '17px';
@@ -2695,6 +2695,13 @@ CM.Disp.CreateStatsPrestigeSection = function() {
 
 	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Heavenly Chips Per Second (last 5 seconds)', document.createTextNode(Beautify(CM.Cache.HCPerSecond))));
 	
+	let HCTarget = Number(CM.Options.HeavenlyChipsTarget)
+	if (!isNaN(HCTarget)) {
+		let CookiesTillTarget = HCTarget - Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned))
+		section.appendChild(CM.Disp.CreateStatsListing("basic", 'Heavenly Chips To Target Set In Settings (CUR)', document.createTextNode(Beautify(CookiesTillTarget))));
+		section.appendChild(CM.Disp.CreateStatsListing("basic", 'Time To Target (CUR, Current 5 Second Average)', document.createTextNode(CM.Disp.FormatTime(CookiesTillTarget / CM.Cache.HCPerSecond))));
+	}
+
 	let resetBonus = CM.Sim.ResetBonus(possiblePresMax);
 	let resetFrag = document.createDocumentFragment();
 	resetFrag.appendChild(document.createTextNode(Beautify(resetBonus)));
