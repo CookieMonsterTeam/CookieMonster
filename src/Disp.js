@@ -2408,7 +2408,8 @@ CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
 	div.appendChild(listingName);
 	if (type === "withTooltip")  {
 		div.className = 'listing';
-		
+		div.appendChild(document.createTextNode(' '));
+
 		let tooltip = document.createElement('span');
 		tooltip.onmouseout = function() { Game.tooltip.hide(); };
 		tooltip.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp[placeholder].innerHTML));};
@@ -2424,7 +2425,6 @@ CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
 		tooltip.style.verticalAlign = 'bottom';
 		tooltip.textContent = '?';
 		div.appendChild(tooltip);
-		div.appendChild(document.createTextNode(' '));
 	}
 	div.appendChild(document.createTextNode(': '));
 	div.appendChild(text);

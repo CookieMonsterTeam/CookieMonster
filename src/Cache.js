@@ -201,7 +201,7 @@ CM.Cache.MaxChainCookieReward = function(digit, maxPayout, mult) {
 	let chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
 	while (nextMoni < maxPayout) {
 		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
-		// TODO: Calculate Cookies or cps needed for next level of chain. Related to issue #580
+		// TODO: Calculate Cookies or cps needed for next level of chain. See issue #29
 		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
 		totalFromChain += moni;
 		chain++;
