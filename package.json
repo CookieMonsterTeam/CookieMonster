@@ -40,5 +40,12 @@
   "devDependencies": {
     "eslint": "^7.19.0",
     "terser": "^5.6.0-beta"
-  }
+  },
+  "ccrepo": {
+    "icon": [
+     10,
+     0
+    ],
+    "name": "Cookie Monster"
+   }
 }
