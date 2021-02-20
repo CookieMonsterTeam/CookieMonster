@@ -19,10 +19,11 @@ CM.Cache.InitCache = function() {
 	CM.Cache.CacheMissingUpgrades();
 	CM.Cache.CacheSeaSpec();
 	CM.Cache.InitCookiesDiff();
+	CM.Cache.HeavenlyChipsDiff = new CMAvgQueue(5); // Used by CM.Cache.CacheHeavenlyChipsPS()
 	CM.Cache.CacheAvgCPS();
 	CM.Cache.CacheIncome();
 	CM.Cache.CacheBuildingsPrices();
-	CM.Cache.CachePP();
+	CM.Cache.CachePP();	
 };
 
 /**
@@ -34,17 +35,54 @@ CM.Cache.LoopCache = function() {
 	// Update Wrinkler Bank
 	CM.Cache.CacheWrinklers();
 
-	// Calculate PP
 	CM.Cache.CachePP();
-
-	// Cache average CPS
 	CM.Cache.CacheCurrWrinklerCPS();
 	CM.Cache.CacheAvgCPS();
+	CM.Cache.CacheHeavenlyChipsPS();
 
 	let cookiesToNext = Game.HowManyCookiesReset(Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) + 1) - (Game.cookiesEarned + Game.cookiesReset);
 	CM.Cache.TimeTillNextPrestige = CM.Disp.FormatTime(cookiesToNext / CM.Cache.AvgCPS);
 };
 
+
+/********
+ * Section: Helper functions */
+
+/**
+ * @class
+ * @classdesc 	This is a class used to store values used to calculate average over time (mostly cps)
+ * @var			{number}				maxLength	The maximum length of the value-storage
+ * @var			{[]}					queue		The values stored
+ * @method		addLatest(newValue)		Appends newValue to the value storage
+ * @method		calcAverage(timePeriod)	Returns the average over the specified timeperiod
+ */
+class CMAvgQueue {
+	constructor(maxLength) {
+		this.maxLength = maxLength;
+		this.queue = [];
+	}
+
+	addLatest (newValue) {
+		if (this.queue.push(newValue) > this.maxLength) {
+			this.queue.shift();
+		}
+	}
+
+	/**
+	 * This functions returns the average of the values in the queue
+	 * @param 	{number}	timePeriod	The period in seconds to computer average over
+	 * @returns {number}	ret			The average
+ 	 */
+	calcAverage (timePeriod) {
+		if (timePeriod > this.maxLength) timePeriod = this.maxLength;
+		if (timePeriod > this.queue.length) timePeriod = this.queue.length;
+		let ret = 0;
+		for (let i = this.queue.length - 1; i >= 0 && i > this.queue.length - 1 - timePeriod; i--) {
+			ret += this.queue[i];
+		}
+		return ret / timePeriod;
+	}
+}
 
 /********
  * Section: Functions related to Dragon Auras */
@@ -303,44 +341,37 @@ CM.Cache.CacheSeaSpec = function() {
 	}
 };
 
-/********
- * Section: Functions related to Caching CPS */
-
 /**
- * @class
- * @classdesc 	This is a class used to store values used to calculate average over time (mostly cps)
- * @var			{number}				maxLength	The maximum length of the value-storage
- * @var			{[]}					queue		The values stored
- * @method		addLatest(newValue)		Appends newValue to the value storage
- * @method		calcAverage(timePeriod)	Returns the average over the specified timeperiod
+ * This functions caches the heavenly chips per second in the last five seconds
+ * It is called by CM.Cache.LoopCache()
+ * @global	{number}	CM.Cache.HCPerSecond	The Heavenly Chips per second in the last five seconds
  */
-class CMAvgQueue {
-	constructor(maxLength) {
-		this.maxLength = maxLength;
-		this.queue = [];
-	}
-
-	addLatest (newValue) {
-		if (this.queue.push(newValue) > this.maxLength) {
-			this.queue.shift();
+CM.Cache.CacheHeavenlyChipsPS = function() {
+	let currDate = Math.floor(Date.now() / 1000);
+	// Only calculate every new second
+	if ((Game.T / Game.fps) % 1 === 0) {
+		let chipsOwned = Game.HowMuchPrestige(Game.cookiesReset);
+		let ascendNowToOwn = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
+		let ascendNowToGet = ascendNowToOwn - Math.floor(chipsOwned);
+		
+		// Add recent gains to AvgQueue's
+		let timeDiff = currDate - CM.Cache.lastHeavenlyCheck;
+		let heavenlyChipsDiffAvg = Math.max(0, (ascendNowToGet - CM.Cache.lastHeavenlyChips)) / timeDiff;
+		for (let i = 0; i < timeDiff; i++) {
+			CM.Cache.HeavenlyChipsDiff.addLatest(heavenlyChipsDiffAvg);
 		}
-	}
 
-	/**
-	 * This functions returns the average of the values in the queue
-	 * @param 	{number}	timePeriod	The period in seconds to computer average over
-	 * @returns {number}	ret			The average
- 	 */
-	calcAverage (timePeriod) {
-		if (timePeriod > this.maxLength) timePeriod = this.maxLength;
-		if (timePeriod > this.queue.length) timePeriod = this.queue.length;
-		let ret = 0;
-		for (let i = this.queue.length - 1; i >= 0 && i > this.queue.length - 1 - timePeriod; i--) {
-			ret += this.queue[i];
-		}
-		return ret / timePeriod;
+		// Store current data for next loop	
+		CM.Cache.lastHeavenlyCheck = currDate;
+		CM.Cache.lastHeavenlyChips = ascendNowToGet;
+
+		// Get average gain over period of 5 seconds
+		CM.Cache.HCPerSecond = CM.Cache.HeavenlyChipsDiff.calcAverage(5);
 	}
 }
+
+/********
+ * Section: Functions related to caching CPS */
 
 /**
  * This functions caches creates the CMAvgQueue used by CM.Cache.CacheAvgCPS() to calculate CPS
@@ -372,7 +403,7 @@ CM.Cache.CacheAvgCPS = function() {
 		choEggTotal *= 0.05;
 
 		// Add recent gains to AvgQueue's
-		let timeDiff = currDate - CM.Cache.lastDate;
+		let timeDiff = currDate - CM.Cache.lastCPSCheck;
 		let bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
 		let wrinkDiffAvg = Math.max(0, (CM.Cache.WrinklersTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
 		let wrinkFattestDiffAvg = Math.max(0, (CM.Cache.WrinklersFattest[0] - CM.Cache.lastWrinkFattestCookies)) / timeDiff;
@@ -387,7 +418,7 @@ CM.Cache.CacheAvgCPS = function() {
 		}
 
 		// Store current data for next loop	
-		CM.Cache.lastDate = currDate;
+		CM.Cache.lastCPSCheck = currDate;
 		CM.Cache.lastCookies = Game.cookies;
 		CM.Cache.lastWrinkCookies = CM.Cache.WrinklersTotal;
 		CM.Cache.lastWrinkFattestCookies = CM.Cache.WrinklersFattest[0];

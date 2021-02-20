@@ -2692,6 +2692,8 @@ CM.Disp.CreateStatsPrestigeSection = function() {
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Cookies To Next Level', cookiesNextFrag, 'NextPrestTooltipPlaceholder'));
 	
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Heavenly Chips (CUR / MAX)', document.createTextNode(Beautify(Game.heavenlyChips) + ' / ' + Beautify((possiblePresMax - Game.prestige) + Game.heavenlyChips)), 'HeavenChipMaxTooltipPlaceholder'));
+
+	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Heavenly Chips Per Second (last 5 seconds)', document.createTextNode(Beautify(CM.Cache.HCPerSecond))));
 	
 	let resetBonus = CM.Sim.ResetBonus(possiblePresMax);
 	let resetFrag = document.createDocumentFragment();
