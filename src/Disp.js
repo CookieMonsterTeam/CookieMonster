@@ -2695,13 +2695,15 @@ CM.Disp.CreateStatsPrestigeSection = function() {
 	
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Heavenly Chips (CUR / MAX)', document.createTextNode(Beautify(Game.heavenlyChips) + ' / ' + Beautify((possiblePresMax - Game.prestige) + Game.heavenlyChips)), 'HeavenChipMaxTooltipPlaceholder'));
 
-	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Heavenly Chips Per Second (last 5 seconds)', document.createTextNode(Beautify(CM.Cache.HCPerSecond))));
+	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Heavenly Chips Per Second (last 5 seconds)', document.createTextNode(Beautify(CM.Cache.HCPerSecond, 2))));
 	
 	let HCTarget = Number(CM.Options.HeavenlyChipsTarget)
 	if (!isNaN(HCTarget)) {
 		let CookiesTillTarget = HCTarget - Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned))
-		section.appendChild(CM.Disp.CreateStatsListing("basic", 'Heavenly Chips To Target Set In Settings (CUR)', document.createTextNode(Beautify(CookiesTillTarget))));
+		if (CookiesTillTarget > 0) {
+			section.appendChild(CM.Disp.CreateStatsListing("basic", 'Heavenly Chips To Target Set In Settings (CUR)', document.createTextNode(Beautify(CookiesTillTarget))));
 		section.appendChild(CM.Disp.CreateStatsListing("basic", 'Time To Target (CUR, Current 5 Second Average)', document.createTextNode(CM.Disp.FormatTime(CookiesTillTarget / CM.Cache.HCPerSecond))));
+		}
 	}
 
 	let resetBonus = CM.Sim.ResetBonus(possiblePresMax);

@@ -202,7 +202,7 @@ CM.Main.ReplaceNative = function() {
 		.split('document.title')
 		.join('CM.Disp.Title')
 		.split("' more cookies</b> for the next level.<br>';")
-		.join("` more cookies</b> for the next level.<br>${CM.Options.TooltipAscendButton ? `<div class='line'></div>It takes ${CM.Cache.TimeTillNextPrestige} to reach the next level and you are making ${CM.Cache.HCPerSecond} chips on average in the last 5 seconds.<br>` : ``}`;")}`,
+		.join("` more cookies</b> for the next level.<br>${CM.Options.TooltipAscendButton ? `<div class='line'></div>It takes ${CM.Cache.TimeTillNextPrestige} to reach the next level and you are making ${Beautify(CM.Cache.HCPerSecond, 2)} chips on average in the last 5 seconds.<br>` : ``}`;")}`,
 	)();
 	Game.Logic = function() {
 		CM.Backup.LogicMod();
