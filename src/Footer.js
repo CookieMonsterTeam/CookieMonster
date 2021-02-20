@@ -65,7 +65,7 @@ CM.Footer.AddJscolor = function() {
  * This functions starts the initizialization and register CookieMonster
  * It is called as the last function in this script's execution
  */
-if (!CM.isRunning) {
+if (typeof CM.Footer.isInitzializing === 'undefined') {
     CM.Footer.AddJscolor();
     var delay = setInterval(function() {
         if (typeof jscolor !== 'undefined') {
@@ -74,6 +74,4 @@ if (!CM.isRunning) {
             clearInterval(delay);
         }
     }, 500);
-    CM.isRunning = 1;
 }
-

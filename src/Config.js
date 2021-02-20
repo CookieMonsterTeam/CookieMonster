@@ -41,7 +41,7 @@ CM.Config.LoadConfig = function(settings) {
 			}
 			else if (i != 'Header' && i != 'Colors') {
 				if (i.indexOf('SoundURL') === -1) {
-					if (!(CM.Options[i] > -1 && CM.Options[i] < CM.ConfigData[i].label.length)) {
+					if (!(CM.Options[i] > -1 && CM.Options[i] < CM.Data.Config[i].label.length)) {
 						mod = true;
 						CM.Options[i] = CM.Data.ConfigDefault[i];
 					}
@@ -73,8 +73,8 @@ CM.Config.LoadConfig = function(settings) {
 		if (mod) CM.Config.SaveConfig();
 		CM.Main.Loop(); // Do loop once
 		for (let i in CM.Data.ConfigDefault) {
-			if (i != 'Header' && typeof CM.ConfigData[i].func !== 'undefined') {
-				CM.ConfigData[i].func();
+			if (i != 'Header' && typeof CM.Data.Config[i].func !== 'undefined') {
+				CM.Data.Config[i].func();
 			}
 		}
 	}
@@ -104,17 +104,17 @@ CM.Config.RestoreDefault = function() {
 CM.Config.ToggleConfig = function(config) {
 	CM.Options[config]++;
 
-	if (CM.Options[config] === CM.ConfigData[config].label.length) {
+	if (CM.Options[config] === CM.Data.Config[config].label.length) {
 		CM.Options[config] = 0;
-		if (CM.ConfigData[config].toggle) l(CM.Config.ConfigPrefix + config).className = 'option off';
+		if (CM.Data.Config[config].toggle) l(CM.Config.ConfigPrefix + config).className = 'option off';
 	}
 	else l(CM.Config.ConfigPrefix + config).className = 'option';
 
-	if (typeof CM.ConfigData[config].func !== 'undefined') {
-		CM.ConfigData[config].func();
+	if (typeof CM.Data.Config[config].func !== 'undefined') {
+		CM.Data.Config[config].func();
 	}
 
-	l(CM.Config.ConfigPrefix + config).innerHTML = CM.ConfigData[config].label[CM.Options[config]];
+	l(CM.Config.ConfigPrefix + config).innerHTML = CM.Data.Config[config].label[CM.Options[config]];
 	CM.Config.SaveConfig();
 };
 
