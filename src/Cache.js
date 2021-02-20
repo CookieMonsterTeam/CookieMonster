@@ -125,7 +125,7 @@ CM.Cache.CacheStats = function() {
 
 /**
  * This functions calculates the multipliers of Golden and Wrath cookie rewards
- * It is mostly used by CM.Cache.MaxChainMoni() and CM.Cache.CacheChain()
+ * It is mostly used by CM.Cache.MaxChainCookieReward() and CM.Cache.CacheChain()
  * It is called by CM.Disp.CreateStatsChainSection() and CM.Cache.CacheChain()
  * @param	{number}			CM.Cache.GoldenCookiesMult				Multiplier for golden cookies
  * @param	{number}			CM.Cache.WrathCookiesMult				Multiplier for wrath cookies
@@ -166,21 +166,21 @@ CM.Cache.CacheGoldenAndWrathCookiesMults = function() {
 };
 
 /**
- * This functions calculates the max possible payout
+ * This functions calculates the max possible payout given a set of variables
  * It is called by CM.Disp.CreateStatsChainSection() and CM.Cache.CacheChain()
  * @param	{number}			digit		Number of Golden Cookies in chain
  * @param	{number}			maxPayout	Maximum payout
  * @param	{number}			mult		Multiplier
  * @returns	[{number, number}]				Total cookies earned, and cookies needed for next level
  */
-CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
+CM.Cache.MaxChainCookieReward = function(digit, maxPayout, mult) {
 	let totalFromChain = 0;
 	let moni = 0;
 	let nextMoni = 0;
 	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
 	while (nextMoni < maxPayout) {
 		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
-		// TODO: Calculate Cookies or cps needed for next level of chain
+		// TODO: Calculate Cookies or cps needed for next level of chain. Related to issue #580
 		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout));
 		totalFromChain += moni;
 		chain++;
@@ -211,20 +211,21 @@ CM.Cache.CacheChain = function() {
 	if (cpsBuffMult > 0) maxPayout /= cpsBuffMult;
 	else maxPayout = 0;	
 
-	CM.Cache.ChainReward = CM.Cache.MaxChainMoni(7, maxPayout * CM.Cache.GoldenCookiesMult, CM.Cache.GoldenCookiesMult);
-	// TODO: All "required" variables are incorrect. Perhaps something to do with going over the required amount during the chain
+	CM.Cache.ChainReward = CM.Cache.MaxChainCookieReward(7, maxPayout * CM.Cache.GoldenCookiesMult, CM.Cache.GoldenCookiesMult);
+	// TODO: All "required" variables are incorrect. Perhaps something to do with going over the required amount during the chain.
+	// See issue #580 on the Github
 	CM.Cache.ChainRequired = CM.Cache.ChainReward[0] * 2;
 	CM.Cache.ChainRequiredNext = CM.Cache.ChainReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 
-	CM.Cache.ChainWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * CM.Cache.WrathCookiesMult, CM.Cache.WrathCookiesMult);
+	CM.Cache.ChainWrathReward = CM.Cache.MaxChainCookieReward(6, maxPayout * CM.Cache.WrathCookiesMult, CM.Cache.WrathCookiesMult);
 	CM.Cache.ChainWrathRequired = CM.Cache.ChainWrathReward[0] * 2;
 	CM.Cache.ChainWrathRequiredNext = CM.Cache.ChainWrathReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 
-	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainMoni(7, maxPayout * 7 * CM.Cache.GoldenCookiesMult, CM.Cache.GoldenCookiesMult);
+	CM.Cache.ChainFrenzyReward = CM.Cache.MaxChainCookieReward(7, maxPayout * 7 * CM.Cache.GoldenCookiesMult, CM.Cache.GoldenCookiesMult);
 	CM.Cache.ChainFrenzyRequired = CM.Cache.ChainFrenzyReward[0] * 2;
 	CM.Cache.ChainFrenzyRequiredNext = CM.Cache.ChainFrenzyReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 
-	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainMoni(6, maxPayout * 7 * CM.Cache.WrathCookiesMult, CM.Cache.WrathCookiesMult);
+	CM.Cache.ChainFrenzyWrathReward = CM.Cache.MaxChainCookieReward(6, maxPayout * 7 * CM.Cache.WrathCookiesMult, CM.Cache.WrathCookiesMult);
 	CM.Cache.ChainFrenzyWrathRequired = CM.Cache.ChainFrenzyReward[0] * 2;
 	CM.Cache.ChainFrenzyWrathRequiredNext = CM.Cache.ChainFrenzyReward[1] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 };
@@ -304,7 +305,11 @@ class CMAvgQueue {
 		}
 	}
 
-	// TODO: Might want to do this according to "https://stackoverflow.com/questions/10359907/how-to-compute-the-sum-and-average-of-elements-in-an-array"
+	/**
+	 * This functions returns the average of the values in the queue
+	 * @param 	{number}	timePeriod	The period in seconds to computer average over
+	 * @returns {number}	ret			The average
+ 	 */
 	calcAverage (timePeriod) {
 		if (timePeriod > this.maxLength) timePeriod = this.maxLength;
 		if (timePeriod > this.queue.length) timePeriod = this.queue.length;
@@ -331,38 +336,36 @@ CM.Cache.InitCookiesDiff = function() {
 /**
  * This functions caches two variables related average CPS and Clicks
  * It is called by CM.Main.Loop()
- * TODO: Check if this can be made more concise
  * @global	{number}	CM.Cache.RealCookiesEarned	Cookies earned including the Chocolate Egg
  * @global	{number}	CM.Cache.AvgCPS				Average cookies over time-period as defined by AvgCPSHist
  * @global	{number}	CM.Cache.AverageClicks		Average cookies from clicking over time-period as defined by AvgClicksHist
  * @global	{number}	CM.Cache.AvgCPSChoEgg		Average cookies from combination of normal CPS and average Chocolate Cookie CPS
  */
 CM.Cache.CacheAvgCPS = function() {
-	var currDate = Math.floor(Date.now() / 1000);
+	let currDate = Math.floor(Date.now() / 1000);
 	// Only calculate every new second
 	if ((Game.T / Game.fps) % 1 === 0) {
-		var choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
-		if (Game.cpsSucked > 0) {
-			choEggTotal += CM.Cache.WrinklersTotal;
-		}
+		let choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
+		if (Game.cpsSucked > 0) choEggTotal += CM.Cache.WrinklersTotal;
 		CM.Cache.RealCookiesEarned = Math.max(Game.cookiesEarned, choEggTotal);
 		choEggTotal *= 0.05;
 
-		if (CM.Cache.lastDate != -1) {
-			var timeDiff = currDate - CM.Cache.lastDate;
-			var bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
-			var wrinkDiffAvg = Math.max(0, (CM.Cache.WrinklersTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
-			var wrinkFattestDiffAvg = Math.max(0, (CM.Cache.WrinklersFattest[0] - CM.Cache.lastWrinkFattestCookies)) / timeDiff;
-			var choEggDiffAvg = Math.max(0,(choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
-			var clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
-			for (let i = 0; i < timeDiff; i++) {
-				CM.Cache.CookiesDiff.addLatest(bankDiffAvg);
-				CM.Cache.WrinkDiff.addLatest(wrinkDiffAvg);
-				CM.Cache.WrinkFattestDiff.addLatest(wrinkFattestDiffAvg);
-				CM.Cache.ChoEggDiff.addLatest(choEggDiffAvg);
-				CM.Cache.ClicksDiff.addLatest(clicksDiffAvg);
-			}
+		// Add recent gains to AvgQueue's
+		let timeDiff = currDate - CM.Cache.lastDate;
+		let bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
+		let wrinkDiffAvg = Math.max(0, (CM.Cache.WrinklersTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
+		let wrinkFattestDiffAvg = Math.max(0, (CM.Cache.WrinklersFattest[0] - CM.Cache.lastWrinkFattestCookies)) / timeDiff;
+		let choEggDiffAvg = Math.max(0,(choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
+		let clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
+		for (let i = 0; i < timeDiff; i++) {
+			CM.Cache.CookiesDiff.addLatest(bankDiffAvg);
+			CM.Cache.WrinkDiff.addLatest(wrinkDiffAvg);
+			CM.Cache.WrinkFattestDiff.addLatest(wrinkFattestDiffAvg);
+			CM.Cache.ChoEggDiff.addLatest(choEggDiffAvg);
+			CM.Cache.ClicksDiff.addLatest(clicksDiffAvg);
 		}
+
+		// Store current data for next loop	
 		CM.Cache.lastDate = currDate;
 		CM.Cache.lastCookies = Game.cookies;
 		CM.Cache.lastWrinkCookies = CM.Cache.WrinklersTotal;
@@ -370,18 +373,17 @@ CM.Cache.CacheAvgCPS = function() {
 		CM.Cache.lastChoEgg = choEggTotal;
 		CM.Cache.lastClicks = Game.cookieClicks;
 
-		var cpsLength = CM.Disp.cookieTimes[CM.Options.AvgCPSHist];
-		
+		// Get average gain over period of cpsLength seconds
+		let cpsLength = CM.Disp.cookieTimes[CM.Options.AvgCPSHist];
 		CM.Cache.AverageGainBank = CM.Cache.CookiesDiff.calcAverage(cpsLength);
 		CM.Cache.AverageGainWrink = CM.Cache.WrinkDiff.calcAverage(cpsLength);
 		CM.Cache.AverageGainWrinkFattest = CM.Cache.WrinkFattestDiff.calcAverage(cpsLength);
 		CM.Cache.AverageGainChoEgg = CM.Cache.ChoEggDiff.calcAverage(cpsLength);
-
 		CM.Cache.AvgCPS = CM.Cache.AverageGainBank;
 		if (CM.Options.CalcWrink === 1) CM.Cache.AvgCPS += CM.Cache.AverageGainWrink;
 		if (CM.Options.CalcWrink === 2) CM.Cache.AvgCPS += CM.Cache.AverageGainWrinkFattest;
 
-		var choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
+		let choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 
 		if (choEgg || CM.Options.CalcWrink === 0) {
 			CM.Cache.AvgCPSWithChoEgg = CM.Cache.AverageGainBank + CM.Cache.AverageGainWrink + (choEgg ? CM.Cache.AverageGainChoEgg : 0);
@@ -398,13 +400,13 @@ CM.Cache.CacheAvgCPS = function() {
  * @global	{number}	CM.Cache.SellForChoEgg	Total cookies to be gained from selling Chocolate egg
  */
 CM.Cache.CacheSellForChoEgg = function() {
-	var sellTotal = 0;
+	let sellTotal = 0;
 	// Compute cookies earned by selling stock market goods
 	if (Game.Objects.Bank.minigameLoaded) {
-		var marketGoods = Game.Objects.Bank.minigame.goods;
-		var goodsVal = 0;
+		let marketGoods = Game.Objects.Bank.minigame.goods;
+		let goodsVal = 0;
 		for (let i of Object.keys(marketGoods)) {
-			var marketGood = marketGoods[i];
+			let marketGood = marketGoods[i];
 			goodsVal += marketGood.stock * marketGood.val;
 		}
 		sellTotal += goodsVal * Game.cookiesPsRawHighest;

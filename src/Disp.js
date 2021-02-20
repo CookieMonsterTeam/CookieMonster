@@ -82,42 +82,23 @@ CM.Disp.CalculateGrimoireRefillTime = function(currentMagic, maxMagic, targetMag
 /**
  * This function returns Name and Color as object for sugar lump type that is given as input param.
  * It is called by CM.Disp.UpdateTooltipSugarLump()
- * TODO: Can't this be done with a normal array in Data.js? Or as variable-array at end of this file?
  * @param 	{string} 				type 			Sugar Lump Type.
  * @returns {{string}, {string}}	text, color		An array containing the text and display-color of the sugar lump
  */
 CM.Disp.GetLumpColor = function(type) {
-	var name = "";
-	var color = "";
-
-	switch (type) {
-		case 0:
-			name = "Normal";
-			color = CM.Disp.colorGray;
-			break;
-		case 1:
-            name = "Bifurcated";
-            color = CM.Disp.colorGreen;
-			break;
-		case 2:
-            name = "Golden";
-            color = CM.Disp.colorYellow;
-			break;
-		case 3:
-            name = "Meaty";
-            color = CM.Disp.colorOrange;
-			break;
-		case 4:
-            name = "Caramelized";
-            color = CM.Disp.colorPurple;
-			break;
-		default:
-			name = "Unknown Sugar Lump";
-			color = CM.Disp.colorRed;
-			break;
-	}
-
-    return {text: name, color: color};
+	if (type === 0) {
+		return {text: "Normal", color: CM.Disp.colorGray};
+	} else if (type === 1) {
+		return {text: "Bifurcated", color: CM.Disp.colorGreen};
+	} else if (type === 2) {
+		return {text: "Golden", color: CM.Disp.colorYellow};
+	} else if (type === 3) {
+		return {text: "Meaty", color: CM.Disp.colorOrange};
+	} else if (type === 4) {
+		return {text: "Caramelized", color: CM.Disp.colorPurple};
+	} else {
+		return {text: "Unknown Sugar Lump", color: CM.Disp.colorRed};
+	} 
 };
 
 /********
@@ -284,6 +265,18 @@ CM.Disp.CreateCssArea = function() {
 	CM.Disp.Css.type = 'text/css';
 
 	document.head.appendChild(CM.Disp.Css);
+};
+
+/**
+ * This function updates the style of the building and upgrade sections to make these sortable
+ * It is called by CM.Main.DelayInit()
+ */
+CM.Disp.UpdateBuildingUpgradeStyle = function() {
+	l("products").style.display = "grid";
+	l("storeBulk").style.gridRow = "1/1";
+
+	l("upgrades").style.display = "flex";
+	l("upgrades").style["flex-wrap"] = "wrap";
 };
 
 /**
@@ -1822,7 +1815,7 @@ CM.Disp.ToggleToolWarnPos = function() {
 /**
  * This function checks and create a tooltip for the wrinklers
  * It is called by CM.Disp.Draw()
- * TODO: Change this code to be the same as other tooltips. (i.d., create tooltip with type "w")
+ * As wrinklers are not appended to the DOM we us a different system than for other tooltips
  */
 CM.Disp.CheckWrinklerTooltip = function() {
 	if (CM.Options.TooltipWrink === 1 && CM.Disp.TooltipWrinklerArea === 1) { // Latter is set by CM.Main.AddWrinklerAreaDetect
@@ -1860,7 +1853,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
 /**
  * This function updates the amount to be displayed by the wrinkler tooltip created by CM.Disp.CheckWrinklerTooltip()
  * It is called by CM.Disp.Draw()
- * TODO: Change this code to be the same as other tooltips. Fit this into CM.Disp.UpdateTooltip()
+ * As wrinklers are not appended to the DOM we us a different system than for other tooltips
  */
 CM.Disp.UpdateWrinklerTooltip = function() {
 	if (CM.Options.TooltipWrink === 1 && l('CMTooltipWrinkler') != null) {
@@ -2625,10 +2618,9 @@ CM.Disp.CreateStatsChainSection = function() {
 
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Frenzy) (Golden / Wrath)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyReward[0]) + ' / ' + Beautify(CM.Cache.ChainFrenzyWrathReward[0]))), goldCookTooltip));
 
-	// TODO: Place MaxChainMoni function into CM.Cache.RemakeChain and create global variables to store it
 	var chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * CM.Cache.DragonsFortuneMultAdjustment * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.5);
-	var chainCur = CM.Cache.MaxChainMoni(7, chainCurMax, CM.Cache.GoldenCookiesMult)[0];
-	var chainCurWrath = CM.Cache.MaxChainMoni(6, chainCurMax, CM.Cache.WrathCookiesMult)[0];
+	var chainCur = CM.Cache.MaxChainCookieReward(7, chainCurMax, CM.Cache.GoldenCookiesMult)[0];
+	var chainCurWrath = CM.Cache.MaxChainCookieReward(6, chainCurMax, CM.Cache.WrathCookiesMult)[0];
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (CUR) (Golden / Wrath)', document.createTextNode((Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))), goldCookTooltip));
 	return section;
 };
@@ -2921,28 +2913,28 @@ CM.Disp.buffColors = {'Frenzy': CM.Disp.colorYellow, 'Dragon Harvest': CM.Disp.c
 CM.Disp.GCTimers = {};
 
 /**
- * These lists are used in the stats page to show 
+ * These arrays are used in the stats page to show 
  * average cookies per {CM.Disp.cookieTimes/CM.Disp.clickTimes} seconds
  */
 CM.Disp.cookieTimes = [10, 15, 30, 60, 300, 600, 900, 1800];
 CM.Disp.clickTimes = [1, 5, 10, 15, 30];
 
 /**
- * This lists is used to store whether a Wrinkler tooltip is being shown or not
+ * This array is used to store whether a Wrinkler tooltip is being shown or not
  * [i] = 1 means tooltip is being shown, [i] = 0 means hidden
  * It is used by CM.Disp.CheckWrinklerTooltip() and CM.Main.AddWrinklerAreaDetect()
  */
 CM.Disp.TooltipWrinklerBeingShown = [];
 
 /**
- * Used to store the number of cookies to be displayed in the tab-title
- */
-CM.Disp.Title = '';
-
-/**
- * These are variables with base-values that get initalized when initliazing CookieMonster 
- * TODO: See if these can be removed or moved
+ * These are variables used by the functions that create tooltips for wrinklers
+ * See CM.Disp.CheckWrinklerTooltip(), CM.Disp.UpdateWrinklerTooltip() and CM.Main.AddWrinklerAreaDetect()
  */
 CM.Disp.TooltipWrinklerArea = 0;
 CM.Disp.TooltipWrinkler = -1;
 
+
+/**
+ * Used to store the number of cookies to be displayed in the tab-title
+ */
+CM.Disp.Title = '';

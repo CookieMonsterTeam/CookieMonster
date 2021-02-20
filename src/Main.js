@@ -87,6 +87,7 @@ CM.Main.DelayInit = function() {
 		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
 	CM.Disp.CreateWrinklerButtons();
+	CM.Disp.UpdateBuildingUpgradeStyle();
 	CM.Main.ReplaceTooltips();
 	CM.Main.AddWrinklerAreaDetect();
 
@@ -100,14 +101,6 @@ CM.Main.DelayInit = function() {
 
 	if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
 	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
-
-	// TODO: given the architecture of your code, you probably want these lines somewhere else,
-	// but I stuck them here for convenience
-	l("products").style.display = "grid";
-	l("storeBulk").style.gridRow = "1/1";
-
-	l("upgrades").style.display = "flex";
-	l("upgrades").style["flex-wrap"] = "wrap";
 
 	Game.Win('Third-party');
 };
@@ -512,8 +505,7 @@ CM.Main.CheckWrinklerCount = function() {
 /**
  * This function creates .onmouseover/out events that determine if the mouse is hovering-over a Wrinkler
  * It is called by CM.Main.DelayInit
- * TODO: The system for displaying wrinklers should ideally use a similar system as other tooltips
- * Thus, writing a CM.Main.ReplaceTooltipWrinkler function etc.
+ * As wrinklers are not appended to the DOM we us a different system than for other tooltips
  */
 CM.Main.AddWrinklerAreaDetect = function() {
 	l('backgroundLeftCanvas').onmouseover = function() {CM.Disp.TooltipWrinklerArea = 1;};
