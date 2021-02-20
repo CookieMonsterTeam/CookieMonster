@@ -48,24 +48,16 @@ CM.Main.Loop = function() {
 			CM.Cache.DoRemakeBuildPrices = 0;
 		}
 
-		// Update Wrinkler Bank
-		CM.Cache.CacheWrinklers();
+		CM.Cache.LoopCache();
 
-		// Calculate PP
-		CM.Cache.CachePP();
+		// Check all changing minigames and game-states
+		CM.Main.CheckGoldenCookie();
+		CM.Main.CheckTickerFortune();
+		CM.Main.CheckSeasonPopup();
+		CM.Main.CheckGardenTick();
+		CM.Main.CheckMagicMeter();
+		CM.Main.CheckWrinklerCount();
 	}
-
-	// Check all changing minigames and game-states
-	CM.Main.CheckGoldenCookie();
-	CM.Main.CheckTickerFortune();
-	CM.Main.CheckSeasonPopup();
-	CM.Main.CheckGardenTick();
-	CM.Main.CheckMagicMeter();
-	CM.Main.CheckWrinklerCount();
-
-	// Cache average CPS
-	CM.Cache.CacheCurrWrinklerCPS();
-	CM.Cache.CacheAvgCPS();
 };
 
 /**
@@ -202,9 +194,12 @@ CM.Main.ReplaceNative = function() {
 		if (isNaN(time) || time <= 0) return CM.Backup.sayTime(time, detail);
 		else return CM.Disp.FormatTime(time / Game.fps, 1);
 	};
-
+	
+	// Since the Ascend Tooltip is not actually a tooltip we need to add our additional info here...
 	CM.Backup.Logic = Game.Logic;
-	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Disp.Title'));
+	eval('CM.Backup.LogicMod = ' + Game.Logic.toString()
+		.split('document.title').join('CM.Disp.Title')
+		.split("' more cookies</b> for the next level.<br>';").join("` more cookies</b> for the next level.<br>${CM.Options.TooltipAscendButton ? `<div class='line'></div>You need ${CM.Cache.TimeTillNextPrestige} for the next level.<br>` : ``}`;"));
 	Game.Logic = function() {
 		CM.Backup.LogicMod();
 		// Update Title
@@ -267,7 +262,7 @@ CM.Main.ReplaceNativeGrimoireDraw = function() {
  */
 CM.Main.ReplaceTooltips = function() {
 	CM.Main.ReplaceTooltipBuild();
-	CM.Main.ReplaceTooltipLump();	
+	CM.Main.ReplaceTooltipLump();
 
 	// Replace Tooltips of Minigames. Nesting it in LoadMinigames makes sure to replace them even if
 	// they were not loaded initially
@@ -301,6 +296,18 @@ CM.Main.ReplaceTooltipBuild = function() {
 };
 
 /**
+ * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 's'
+ * It is called by CM.Main.ReplaceTooltips()
+ */
+CM.Main.ReplaceTooltipLump = function() {
+	if (Game.canLumps()) {
+		CM.Main.TooltipLumpBackup = l('lumps').onmouseover;
+        eval('l(\'lumps\').onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'Lump\');}, \'this\'); Game.tooltip.wobble();}');
+	}
+};
+
+/**
  * This function replaces the original .onmouseover functions of the Grimoire minigame so that it calls CM.Disp.Tooltip()
  * CM.Disp.Tooltip() sets the tooltip type to 'g'
  * It is called by CM.Main.ReplaceTooltips()
@@ -314,18 +321,6 @@ CM.Main.ReplaceTooltipGrimoire = function() {
 				eval('l(\'grimoireSpell\' + i).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'g\', \'' + i + '\');}, \'this\'); Game.tooltip.wobble();}');
 			}
 		}
-	}
-};
-
-/**
- * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
- * CM.Disp.Tooltip() sets the tooltip type to 's'
- * It is called by CM.Main.ReplaceTooltips()
- */
-CM.Main.ReplaceTooltipLump = function() {
-	if (Game.canLumps()) {
-		CM.Main.TooltipLumpBackup = l('lumps').onmouseover;
-        eval('l(\'lumps\').onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'Lump\');}, \'this\'); Game.tooltip.wobble();}');
 	}
 };
 

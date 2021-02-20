@@ -25,6 +25,27 @@ CM.Cache.InitCache = function() {
 	CM.Cache.CachePP();
 };
 
+/**
+ * This functions caches variables that are needed every loop
+ * It is called by CM.Main.Loop()
+ * @global	{string}	CM.Cache.TimeTillNextPrestige	Time requried till next prestige level
+ */
+CM.Cache.LoopCache = function() {
+	// Update Wrinkler Bank
+	CM.Cache.CacheWrinklers();
+
+	// Calculate PP
+	CM.Cache.CachePP();
+
+	// Cache average CPS
+	CM.Cache.CacheCurrWrinklerCPS();
+	CM.Cache.CacheAvgCPS();
+
+	let cookiesToNext = Game.HowManyCookiesReset(Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) + 1) - (Game.cookiesEarned + Game.cookiesReset);
+	CM.Cache.TimeTillNextPrestige = CM.Disp.FormatTime(cookiesToNext / CM.Cache.AvgCPS);
+};
+
+
 /********
  * Section: Functions related to Dragon Auras */
 
@@ -45,7 +66,7 @@ CM.Cache.CacheDragonAuras = function() {
 
 /**
  * This functions caches data related to Wrinklers
- * It is called by CM.Main.Loop() and CM.Cache.InitCache()
+ * It is called by CM.Cache.LoopCache() and CM.Cache.InitCache()
  * @global	{number}				CM.Cache.WrinklersTotal		The cookies of all wrinklers
  * @global	{number}				CM.Cache.WrinklersNormal	The cookies of all normal wrinklers
  * @global	{[{number}, {number}]}	CM.Cache.WrinklersFattest	A list containing the cookies and the id of the fattest non-shiny wrinkler
@@ -79,7 +100,7 @@ CM.Cache.CacheWrinklers = function() {
  * Section: Functions related to Caching stats */
 
 /**
- * This functions caches variables related to the stats apge
+ * This functions caches variables related to the stats page
  * It is called by CM.Main.Loop() upon changes to cps and CM.Cache.InitCache()
  * @global	{number}	CM.Cache.Lucky					Cookies required for max Lucky
  * @global	{number}	CM.Cache.LuckyReward			Reward for max normal Lucky
@@ -335,7 +356,7 @@ CM.Cache.InitCookiesDiff = function() {
 
 /**
  * This functions caches two variables related average CPS and Clicks
- * It is called by CM.Main.Loop()
+ * It is called by CM.Cache.LoopCache()
  * @global	{number}	CM.Cache.RealCookiesEarned	Cookies earned including the Chocolate Egg
  * @global	{number}	CM.Cache.AvgCPS				Average cookies over time-period as defined by AvgCPSHist
  * @global	{number}	CM.Cache.AverageClicks		Average cookies from clicking over time-period as defined by AvgClicksHist
@@ -418,7 +439,7 @@ CM.Cache.CacheSellForChoEgg = function() {
 
 /**
  * This functions caches the current Wrinkler CPS multiplier
- * It is called by CM.Main.Loop(). Variables are mostly used by CM.Disp.GetCPS().
+ * It is called by CM.Cache.LoopCache(). Variables are mostly used by CM.Disp.GetCPS().
  * @global	{number}	CM.Cache.CurrWrinklerCount		Current number of wrinklers
  * @global	{number}	CM.Cache.CurrWrinklerCPSMult	Current multiplier of CPS because of wrinklers (excluding their negative sucking effect)
  */
@@ -590,7 +611,7 @@ CM.Cache.CacheBuildingsPrices = function() {
 
 /**
  * This functions caches the PP of each building and upgrade and stores it in the cache
- * It is called by CM.Main.Loop() and CM.Cache.InitCache()
+ * It is called by CM.Cache.LoopCache() and CM.Cache.InitCache()
  */
 CM.Cache.CachePP = function() {
 	CM.Cache.CacheBuildingsPP();

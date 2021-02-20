@@ -86,7 +86,7 @@ CM.Data.ConfigGroups = {
 	BarsColors: "Bars/Colors",
 	Calculation: "Calculation",
 	Notification: "Notification",
-	Tooltip: "Tooltips",
+	Tooltip: "Tooltips and additional insights",
 	Statistics: "Statistics",
 	Notation: "Notation",
 	Miscellaneous: "Miscellaneous"
@@ -223,6 +223,7 @@ CM.Data.Config.TooltipWrink = {type: 'bool', group: 'Tooltip', label: ['Wrinkler
 CM.Data.Config.TooltipLump = {type: 'bool', group: 'Tooltip', label: ['Sugar Lump Tooltip OFF', 'Sugar Lump Tooltip ON'], desc: 'Shows the current Sugar Lump type in Sugar lump tooltip.', toggle: true};
 CM.Data.Config.TooltipPlots = {type: 'bool', group: 'Tooltip', label: ['Garden Plots Tooltip OFF', 'Garden Plots Tooltip ON'], desc: 'Shows a tooltip for plants that have a cookie reward.', toggle: true};
 CM.Data.Config.DragonAuraInfo = {type: 'bool', group: 'Tooltip', label: ['Extra Dragon Aura Info OFF', 'Extra Dragon Aura Info ON'], desc: 'Shows information about changes in CPS and costs in the dragon aura interface.', toggle: true};
+CM.Data.Config.TooltipAscendButton = {type: 'bool', group: 'Tooltip', label: ['Show Time Left Ascend Tooltip OFF', 'Show Time Left Ascend Tooltip ON'], desc: 'Shows the time left in the ascend tooltip until next heavenly cookie.', toggle: true};
 
 // Statistics
 CM.Data.Config.Stats = {type: 'bool', group: 'Statistics', label: ['Statistics OFF', 'Statistics ON'], desc: 'Extra Cookie Monster statistics!', toggle: true};
@@ -313,6 +314,7 @@ CM.Data.ConfigDefault = {
 	TooltipLump: 1,
 	TooltipPlots: 1,
 	DragonAuraInfo: 1,
+	TooltipAscendButton: 1,
 	Stats: 1, 
 	MissingUpgrades: 1,
 	UpStats: 1, 
