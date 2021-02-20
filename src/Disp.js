@@ -2342,7 +2342,9 @@ CM.Disp.AddMenuStats = function(title) {
 			}
 			if (fortunes.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Fortune Upgrades Left to Buy',  CM.Disp.CreateStatsMissDisp(fortunes)));
 		}
-		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
+		if (CM.Options.ShowMissedGC) {
+			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
+		}
 		if (Game.prefs.autosave) {
 			let timer = document.createElement('span');
 			timer.id = 'CMStatsAutosaveTimer';

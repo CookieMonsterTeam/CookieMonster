@@ -232,13 +232,14 @@ CM.Data.Config.UpStats = {type: 'bool', group: 'Statistics', label: ['Statistics
 CM.Data.Config.TimeFormat = {type: 'bool', group: 'Statistics', label: ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'], desc: 'Change the time format', toggle: false};
 CM.Data.Config.DetailedTime = {type: 'bool', group: 'Statistics', label: ['Detailed Time OFF', 'Detailed Time ON'], desc: 'Change how time is displayed in certain statistics and tooltips', toggle: true, func: function() {CM.Disp.ToggleDetailedTime();}};
 CM.Data.Config.GrimoireBar = {type: 'bool', group: 'Statistics', label: ['Grimoire Magic Meter Timer OFF', 'Grimoire Magic Meter Timer ON'], desc: 'A timer on how long before the Grimoire magic meter is full', toggle: true};
-CM.Data.Config.HeavenlyChipsTarget = {type: 'numscale', group: 'Statistics', label: 'Heavenly Chips Target', desc: 'Use this to set a Heavenly Chips target that will be counted towards in the "prestige" statsistics sections', min: 1, max: Infinity};
+CM.Data.Config.HeavenlyChipsTarget = {type: 'numscale', group: 'Statistics', label: 'Heavenly Chips Target: ', desc: 'Use this to set a Heavenly Chips target that will be counted towards in the "prestige" statsistics sections', min: 1, max: Infinity};
+CM.Data.Config.ShowMissedGC = {type: 'bool', group: 'Statistics', label: ['Missed GC OFF', 'Missed GC ON'], desc: 'Show a stat in the statistics screen that counts how many Golden Cookies you have missed', toggle: true};
 
 // Notation
 CM.Data.Config.Scale = {type: 'bool', group: 'Notation', label: ['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Short Scale (Abbreviated)', 'Scientific Notation', 'Engineering Notation'], desc: 'Change how long numbers are handled', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 CM.Data.Config.ScaleDecimals = {type: 'bool', group: 'Notation', label: ['1 decimals', '2 decimals', '3 decimals'], desc: 'Set the number of decimals used when applicable', toggle: false, func: function() {CM.Disp.RefreshScale();}};
 CM.Data.Config.ScaleSeparator = {type: 'bool', group: 'Notation', label: ['. for decimals (Standard)', '. for thousands'], desc: 'Set the separator used for decimals and thousands', toggle: false, func: function() {CM.Disp.RefreshScale();}};
-CM.Data.Config.ScaleCutoff = {type: 'numscale', group: 'Notation', label: 'Notation Cut-off Point', desc: 'The number from which CookieMonster will start formatting numbers based on chosen scale. Standard is 999,999. Setting this above 999,999,999 might break certain notations', min: 1, max: 999999999};
+CM.Data.Config.ScaleCutoff = {type: 'numscale', group: 'Notation', label: 'Notation Cut-off Point: ', desc: 'The number from which CookieMonster will start formatting numbers based on chosen scale. Standard is 999,999. Setting this above 999,999,999 might break certain notations', min: 1, max: 999999999};
 
 // Miscellaneous
 CM.Data.Config.GCTimer = {type: 'bool', group: 'Miscellaneous', label: ['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'], desc: 'A timer on the Golden Cookie when it has been spawned', toggle: true, func: function() {CM.Disp.ToggleGCTimer();}};
@@ -323,6 +324,7 @@ CM.Data.ConfigDefault = {
 	DetailedTime: 1,
 	GrimoireBar: 1,
 	HeavenlyChipsTarget: 1,
+	ShowMissedGC: 1,
 	Scale: 2,
 	ScaleDecimals: 2,
 	ScaleSeparator: 0,
