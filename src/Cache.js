@@ -9,7 +9,6 @@
  * This functions runs all cache-functions to generate all "full" cache
  * The declaration follows the structure of the CM.Cache.js file
  * It is called by CM.Main.DelayInit
- * TODO: Add all functions that should be here and remove them from CM.Main.Loop()
  */
 CM.Cache.InitCache = function() {
 	CM.Cache.CacheDragonAuras();
@@ -63,7 +62,7 @@ CM.Cache.CacheWrinklers = function() {
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 		if (CM.Sim.Objects.Temple.minigameLoaded) {
-			var godLvl = CM.Sim.hasGod('scorn');
+			var godLvl = Game.hasGod('scorn');
 			if (godLvl === 1) sucked *= 1.15;
 			else if (godLvl === 2) sucked *= 1.1;
 			else if (godLvl === 3) sucked *= 1.05;
@@ -96,7 +95,7 @@ CM.Cache.CacheWrinklers = function() {
 CM.Cache.CacheStats = function() {
 	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
 	CM.Cache.Lucky *= CM.Cache.DragonsFortuneMultAdjustment;
-	let cpsBuffMult = CM.Sim.getCPSBuffMult();
+	let cpsBuffMult = CM.Cache.getCPSBuffMult();
 	if (cpsBuffMult > 0) CM.Cache.Lucky /= cpsBuffMult;
 	else CM.Cache.Lucky = 0;
 	CM.Cache.LuckyReward = CM.Cache.GoldenCookiesMult * (CM.Cache.Lucky * 0.15) + 13;
@@ -146,10 +145,10 @@ CM.Cache.CacheGoldenAndWrathCookiesMults = function() {
 		if (CM.Sim.Has('Green yeast digestives')) mult *= 1.01;
 		if (CM.Sim.Has('Dragon fang')) mult *= 1.03;
 
-		goldenMult *= 1 + CM.Sim.auraMult('Ancestral Metamorphosis') * 0.1;
-		goldenMult *= CM.Sim.eff('goldenCookieGain');
-		wrathMult *= 1 + CM.Sim.auraMult('Unholy Dominion') * 0.1;
-		wrathMult *= CM.Sim.eff('wrathCookieGain');
+		goldenMult *= 1 + Game.auraMult('Ancestral Metamorphosis') * 0.1;
+		goldenMult *= Game.eff('goldenCookieGain');
+		wrathMult *= 1 + Game.auraMult('Unholy Dominion') * 0.1;
+		wrathMult *= Game.eff('wrathCookieGain');
 
 		// Calculate final golden and wrath multipliers
 		CM.Cache.GoldenCookiesMult = mult * goldenMult;
@@ -161,7 +160,7 @@ CM.Cache.CacheGoldenAndWrathCookiesMults = function() {
 		// Otherwise, the aura effect will be factored in the base CPS making the multiplier not requiring adjustment.
 		CM.Cache.DragonsFortuneMultAdjustment = 1;
 		if (Game.shimmerTypes.golden.n === 0) {
-			CM.Cache.DragonsFortuneMultAdjustment *= 1 + CM.Sim.auraMult('Dragon\'s Fortune') * 1.23;
+			CM.Cache.DragonsFortuneMultAdjustment *= 1 + Game.auraMult('Dragon\'s Fortune') * 1.23;
 		}
 	}
 };
@@ -208,7 +207,7 @@ CM.Cache.MaxChainMoni = function(digit, maxPayout, mult) {
 CM.Cache.CacheChain = function() {
 	let maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6 * CM.Cache.DragonsFortuneMultAdjustment;
 	// Removes effect of Frenzy etc.
-	let cpsBuffMult = CM.Sim.getCPSBuffMult();
+	let cpsBuffMult = CM.Cache.getCPSBuffMult();
 	if (cpsBuffMult > 0) maxPayout /= cpsBuffMult;
 	else maxPayout = 0;	
 
@@ -429,13 +428,38 @@ CM.Cache.CacheCurrWrinklerCPS = function() {
 	}
 	let godMult = 1;
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
-		var godLvl = CM.Sim.hasGod('scorn');
+		var godLvl = Game.hasGod('scorn');
 		if (godLvl === 1) godMult *= 1.15;
 		else if (godLvl === 2) godMult *= 1.1;
 		else if (godLvl === 3) godMult *= 1.05;
 	}
 	CM.Cache.CurrWrinklerCount = count;
 	CM.Cache.CurrWrinklerCPSMult = count * (count * 0.05 * 1.1) * (Game.Has('Sacrilegious corruption') * 0.05 + 1) * (Game.Has('Wrinklerspawn') * 0.05 + 1) * godMult;
+};
+
+/**
+ * This function returns the current CPS buff
+ * It is called by CM.Sim.CalculateGains(), CM.Disp.UpdateTooltipWarnings(), CM.Cache.CacheStats() and CM.Cache.CacheChain()
+ * @returns {number}	mult	The multiplier
+ */
+CM.Cache.getCPSBuffMult = function() {
+	var mult = 1;
+	for (let i of Object.keys(Game.buffs)) {
+		if (typeof Game.buffs[i].multCpS != 'undefined') mult *= Game.buffs[i].multCpS;
+	}
+	return mult;
+};
+
+/**
+ * This function calculates CPS without the Golden Switch as it might be needed in other functions
+ * If so it CM.Sim.Win()'s them and the caller function will know to recall CM.Sim.CalculateGains()
+ * It is called at the end of any functions that simulates certain behaviour
+ */
+CM.Cache.NoGoldSwitchCPS = function() {
+	if (Game.Has('Golden switch [off]')) {
+		CM.Cache.NoGoldSwitchCookiesPS = CM.Sim.NoGoldSwitchCPS();
+	}
+	else CM.Cache.NoGoldSwitchCookiesPS = Game.cookiesPs;
 };
 
 /********
@@ -505,13 +529,44 @@ CM.Cache.CacheDragonCost = function() {
  */
 CM.Cache.CacheIncome = function() {
 	// Simulate Building Buys for 1, 10 and 100 amount
-	CM.Sim.BuyBuildings(1, 'Objects1');
-	CM.Sim.BuyBuildings(10, 'Objects10');
-	CM.Sim.BuyBuildings(100, 'Objects100');
+	CM.Cache.CacheBuildingIncome(1, 'Objects1');
+	CM.Cache.CacheBuildingIncome(10, 'Objects10');
+	CM.Cache.CacheBuildingIncome(100, 'Objects100');
 
 	// Simulate Upgrade Buys
-	CM.Sim.BuyUpgrades();
+	CM.Cache.CacheUpgradeIncome();
 };
+
+/**
+ * This functions starts the calculation/simulation of the bonus income of buildings
+ * It is called by CM.Cache.CacheIncome()
+ * @param	{amount}	amount	Amount to be bought
+ * @parem	{string}	target	The target Cache object ("Objects1", "Objects10" or "Objects100")
+ */
+CM.Cache.CacheBuildingIncome = function(amount, target) {
+	CM.Cache[target] = [];
+	for (let i of Object.keys(Game.Objects)) {
+		CM.Cache[target][i] = {};
+		CM.Cache[target][i].bonus = CM.Sim.BuyBuildingsBonusIncome(i, amount);
+		if (amount != 1) {
+			CM.Cache.DoRemakeBuildPrices = 1;
+		}
+	}
+}
+
+/**
+ * This functions starts the calculation/simulation of the bonus income of upgrades
+ * It is called by CM.Cache.CacheIncome()
+ */
+CM.Cache.CacheUpgradeIncome = function() {
+	CM.Cache.Upgrades = [];
+	for (let i of Object.keys(Game.Upgrades)) {
+		let bonusIncome = CM.Sim.BuyUpgradesBonusIncome(i);
+		CM.Cache.Upgrades[i] = {};
+		if (bonusIncome[0]) CM.Cache.Upgrades[i].bonus = bonusIncome[0];
+		if (bonusIncome[1]) CM.Cache.Upgrades[i].bonusMouse = bonusIncome[1];
+	}
+}
 
 /********
  * Section: Functions related to caching prices */

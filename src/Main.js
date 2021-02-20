@@ -19,7 +19,7 @@ CM.Main.Loop = function() {
 		if (CM.Sim.DoSims) {
 			CM.Cache.CacheIncome();
 
-			CM.Sim.NoGoldSwitchCookiesPS(); // Needed first
+			CM.Cache.NoGoldSwitchCPS(); // Needed first
 			CM.Cache.CacheGoldenAndWrathCookiesMults();
 			CM.Cache.CacheStats();
 			CM.Cache.CacheMissingUpgrades();
@@ -233,7 +233,7 @@ CM.Main.ReplaceNativeGrimoire = function() {
  * It is called by CM.Main.ReplaceNativeGrimoire()
  */
 CM.Main.ReplaceNativeGrimoireLaunch = function() {
-	if (!CM.HasReplaceNativeGrimoireLaunch && Game.Objects['Wizard tower'].minigameLoaded) {
+	if (!CM.Main.HasReplaceNativeGrimoireLaunch && Game.Objects['Wizard tower'].minigameLoaded) {
 		var minigame = Game.Objects['Wizard tower'].minigame;
 		CM.Backup.GrimoireLaunch = minigame.launch;
 		eval('CM.Backup.GrimoireLaunchMod = ' + minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame'));
@@ -243,7 +243,7 @@ CM.Main.ReplaceNativeGrimoireLaunch = function() {
 			CM.HasReplaceNativeGrimoireDraw = false;
 			CM.Main.ReplaceNativeGrimoireDraw();
 		};
-		CM.HasReplaceNativeGrimoireLaunch = true;
+		CM.Main.HasReplaceNativeGrimoireLaunch = true;
 	}
 };
 
@@ -252,7 +252,7 @@ CM.Main.ReplaceNativeGrimoireLaunch = function() {
  * It is called by CM.Main.ReplaceNativeGrimoire()
  */
 CM.Main.ReplaceNativeGrimoireDraw = function() {
-	if (!CM.HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
+	if (!CM.Main.HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
 		var minigame = Game.Objects['Wizard tower'].minigame;
 		CM.Backup.GrimoireDraw = minigame.draw;
 		Game.Objects['Wizard tower'].minigame.draw = function() {
@@ -261,7 +261,7 @@ CM.Main.ReplaceNativeGrimoireDraw = function() {
 				minigame.magicBarTextL.innerHTML += ' (' + CM.Disp.FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM)) + ')';
 			}
 		};
-		CM.HasReplaceNativeGrimoireDraw = true;
+		CM.Main.HasReplaceNativeGrimoireDraw = true;
 	}
 };
 
@@ -545,20 +545,3 @@ CM.Main.FixMouseY = function(target) {
 		target();
 	}
 };
-
-/********
- * Section: Variables used in Main functions */
-
-CM.HasReplaceNativeGrimoireLaunch = false;
-CM.HasReplaceNativeGrimoireDraw = false;
-
-/**
- * TODO: See if these can me removed (probably)
- */
-CM.Main.lastGoldenCookieState = 0;
-CM.Main.lastSpawnedGoldenCookieState = 0;
-CM.Main.lastTickerFortuneState = 0;
-CM.Main.lastSeasonPopupState = 0;
-CM.Main.lastGardenNextStep = 0;
-CM.Main.lastMagicBarFull = 0;
-CM.Main.lastWrinklerCount = 0;

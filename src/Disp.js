@@ -8,7 +8,7 @@
  * All calculations and data should preferrably be put in other files. */
 
 /********
- * Section: Auxilirary functions used by other functions
+ * Section: Auxilirary functions used by other functions */
 
 /**
  * This function returns the total amount stored in the Wrinkler Bank 
@@ -246,6 +246,9 @@ CM.Disp.Beautify = function(num, floats, forced) {
 	else if (num === Infinity) {
 		return "Infinity";
 	}
+	else if (typeof num === "undefined") {
+		return 0;
+	}
 	else {
 		console.log("Could not beautify number with CM.Disp.Beautify:" + num);
 		return CM.Backup.Beautify(num, floats);
@@ -257,7 +260,7 @@ CM.Disp.Beautify = function(num, floats, forced) {
 
 /**
  * This function disables and shows the bars created by CookieMonster when the game is "ascending"
- * It is called by CM.Main.Loop()
+ * It is called by CM.Disp.Draw()
  */
 CM.Disp.UpdateAscendState = function() {
 	if (Game.OnAscend) {
@@ -310,6 +313,7 @@ CM.Disp.Draw = function () {
 			timer.innerText = Game.sayTime(Game.fps * 60 - (Game.T % (Game.fps * 60)), 4);
 		}
 	}
+
 	// Update colors
 	CM.Disp.UpdateBuildings();
 	CM.Disp.UpdateUpgrades();
@@ -404,7 +408,7 @@ CM.Disp.CreateBotBar = function() {
 
 /**
  * This function updates the bonus-, pp-, and time-rows in the the bottom bar
- * It is called by CM.Main.Loop()
+ * It is called by CM.Disp.Draw()
  */
 CM.Disp.UpdateBotBar = function() {
 	if (CM.Options.BotBar === 1 && CM.Cache.Objects1) {
@@ -557,7 +561,7 @@ CM.Disp.TimerBarCreateBar = function(id, name, bars) {
 
 /**
  * This function updates indivudual timers in the timer bar
- * It is called by CM.Main.Loop()
+ * It is called by CM.Disp.Draw()
  */
 CM.Disp.UpdateTimerBar = function() {
 	if (CM.Options.TimerBar === 1) {
@@ -711,8 +715,8 @@ CM.Disp.UpdateBotTimerBarPosition = function() {
 /**
  * This function adjusts some things in the column of buildings.
  * It colours them, helps display the correct sell-price and shuffles the order when CM.Options.SortBuildings is set
- * The function is called by CM.Main.Loop(), CM.Disp.UpdateColors() & CM.Disp.RefreshScale()
- * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.ConfigData.BulkBuildColor
+ * The function is called by CM.Disp.Draw(), CM.Disp.UpdateColors() & CM.Disp.RefreshScale()
+ * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.Data.Config.BulkBuildColor
  */
 CM.Disp.UpdateBuildings = function() {
 	let target = `Objects${Game.buyBulk}`
@@ -778,7 +782,7 @@ CM.Disp.UpdateBuildings = function() {
 /**
  * This function adjusts some things in the upgrades section
  * It colours them and shuffles the order when CM.Options.SortBuildings is set
- * The function is called by CM.Main.Loop(), CM.Disp.ToggleUpgradeBarAndColor & CM.Disp.RefreshScale()
+ * The function is called by CM.Disp.Draw(), CM.Disp.ToggleUpgradeBarAndColor & CM.Disp.RefreshScale()
  * And by changes in CM.Options.SortUpgrades
  */
 CM.Disp.UpdateUpgrades = function() {
@@ -1409,7 +1413,7 @@ CM.Disp.TooltipCreateWarningSection = function() {
 
 /**
  * This function updates the sections of the tooltips created by CookieMonster
- * It is called when tooltips are created by and CM.Disp.Tooltip() on every loop by CM.Main.Loop()
+ * It is called when tooltips are created by and CM.Disp.Tooltip() on every loop by CM.Disp.Draw()
  */
 CM.Disp.UpdateTooltip = function() {
 	CM.Sim.CopyData();
@@ -1482,7 +1486,7 @@ CM.Disp.UpdateTooltipBuilding = function() {
 		l('CMTooltipProductionHeader').style.display = "none";
 		l('CMTooltipTime').style.marginBottom = '0px';
 		for (let i of Object.keys(Game.Objects[CM.Disp.tooltipName].productionAchievs)) {
-			if (!CM.Sim.HasAchiev(Game.Objects[CM.Disp.tooltipName].productionAchievs[i].achiev.name)) {
+			if (!Game.HasAchiev(Game.Objects[CM.Disp.tooltipName].productionAchievs[i].achiev.name)) {
 				let nextProductionAchiev = Game.Objects[CM.Disp.tooltipName].productionAchievs[i];
 				l('CMTooltipTime').style.marginBottom = '4px';
 				l('CMTooltipProductionHeader').style.display = "";
@@ -1722,7 +1726,7 @@ CM.Disp.UpdateTooltipWarnings = function() {
 		var limitLucky = CM.Cache.Lucky;
 		if (CM.Options.ToolWarnBon === 1) {
 			var bonusNoFren = CM.Disp.TooltipBonusIncome;
-			bonusNoFren /= CM.Sim.getCPSBuffMult();
+			bonusNoFren /= CM.Cache.getCPSBuffMult();
 			limitLucky += ((bonusNoFren * 60 * 15) / 0.15);
 		}
 
@@ -1816,7 +1820,7 @@ CM.Disp.ToggleToolWarnPos = function() {
 
 /**
  * This function checks and create a tooltip for the wrinklers
- * It is called by CM.Main.Loop()
+ * It is called by CM.Disp.Draw()
  * TODO: Change this code to be the same as other tooltips. (i.d., create tooltip with type "w")
  */
 CM.Disp.CheckWrinklerTooltip = function() {
@@ -1854,7 +1858,7 @@ CM.Disp.CheckWrinklerTooltip = function() {
 
 /**
  * This function updates the amount to be displayed by the wrinkler tooltip created by CM.Disp.CheckWrinklerTooltip()
- * It is called by CM.Main.Loop()
+ * It is called by CM.Disp.Draw()
  * TODO: Change this code to be the same as other tooltips. Fit this into CM.Disp.UpdateTooltip()
  */
 CM.Disp.UpdateWrinklerTooltip = function() {
@@ -1866,7 +1870,7 @@ CM.Disp.UpdateWrinklerTooltip = function() {
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 		if (CM.Sim.Objects.Temple.minigameLoaded) {
-			var godLvl = CM.Sim.hasGod('scorn');
+			var godLvl = Game.hasGod('scorn');
 			if (godLvl === 1) sucked *= 1.15;
 			else if (godLvl === 2) sucked *= 1.1;
 			else if (godLvl === 3) sucked *= 1.05;
@@ -1949,7 +1953,7 @@ CM.Disp.AddMenu = function() {
 
 /**
  * This function refreshes the stats page, CM.Options.UpStats determines the rate at which that happens
- * It is called by CM.Main.Loop()
+ * It is called by CM.Disp.Draw()
  */
 CM.Disp.RefreshMenu = function() {
 	if (CM.Options.UpStats && Game.onMenu === 'stats' && (Game.drawT - 1) % (Game.fps * 5) != 0 && (Game.drawT - 1) % Game.fps === 0) Game.UpdateMenu();
@@ -1967,26 +1971,26 @@ CM.Disp.AddMenuPref = function(title) {
 	var frag = document.createDocumentFragment();
 	frag.appendChild(title());
 
-	for (let group of Object.keys(CM.ConfigGroups)) {
-		let groupObject = CM.Disp.CreatePrefHeader(group, CM.ConfigGroups[group]); // (group, display-name of group)
+	for (let group of Object.keys(CM.Data.ConfigGroups)) {
+		let groupObject = CM.Disp.CreatePrefHeader(group, CM.Data.ConfigGroups[group]); // (group, display-name of group)
 		frag.appendChild(groupObject);
 		if (CM.Options.Header[group]) { // 0 is show, 1 is collapsed
 			// Make sub-sections of Notification section
 			if (group === "Notification") {
-				for (let subGroup of Object.keys(CM.ConfigGroupsNotification)) {
-					let subGroupObject = CM.Disp.CreatePrefHeader(subGroup, CM.ConfigGroupsNotification[subGroup]); // (group, display-name of group)
+				for (let subGroup of Object.keys(CM.Data.ConfigGroupsNotification)) {
+					let subGroupObject = CM.Disp.CreatePrefHeader(subGroup, CM.Data.ConfigGroupsNotification[subGroup]); // (group, display-name of group)
 					subGroupObject.style.fontSize = "15px";
 					subGroupObject.style.opacity = "0.5";
 					frag.appendChild(subGroupObject);
 					if (CM.Options.Header[subGroup]) {
-						for (var option in CM.ConfigData) {
-							if (CM.ConfigData[option].group === subGroup) frag.appendChild(CM.Disp.CreatePrefOption(option));
+						for (var option in CM.Data.Config) {
+							if (CM.Data.Config[option].group === subGroup) frag.appendChild(CM.Disp.CreatePrefOption(option));
 						}
 					}
 				}
 			} else {
-				for (let option of Object.keys(CM.ConfigData)) {
-					if (CM.ConfigData[option].group === group) frag.appendChild(CM.Disp.CreatePrefOption(option));
+				for (let option of Object.keys(CM.Data.Config)) {
+					if (CM.Data.Config[option].group === group) frag.appendChild(CM.Disp.CreatePrefOption(option));
 				}
 			}
 		}
@@ -2042,11 +2046,11 @@ CM.Disp.CreatePrefHeader = function(config, text) {
  * @returns	{object}		div		The option object
  */
 CM.Disp.CreatePrefOption = function(config) {
-	if (CM.ConfigData[config].type === "bool") {
+	if (CM.Data.Config[config].type === "bool") {
 		let div = document.createElement('div');
 		div.className = 'listing';
 		let a = document.createElement('a');
-		if (CM.ConfigData[config].toggle && CM.Options[config] === 0) {
+		if (CM.Data.Config[config].toggle && CM.Options[config] === 0) {
 			a.className = 'option off';
 		}
 		else {
@@ -2054,21 +2058,21 @@ CM.Disp.CreatePrefOption = function(config) {
 		}
 		a.id = CM.Config.ConfigPrefix + config;
 		a.onclick = function() {CM.Config.ToggleConfig(config);};
-		a.textContent = CM.ConfigData[config].label[CM.Options[config]];
+		a.textContent = CM.Data.Config[config].label[CM.Options[config]];
 		div.appendChild(a);
 		let label = document.createElement('label');
-		label.textContent = CM.ConfigData[config].desc;
+		label.textContent = CM.Data.Config[config].desc;
 		div.appendChild(label);
 		return div;
 	}
-	else if (CM.ConfigData[config].type === "vol") {
+	else if (CM.Data.Config[config].type === "vol") {
 		let div = document.createElement('div');
 		div.className = 'listing';
 		var volume = document.createElement('div');
 		volume.className = 'sliderBox';
 		let title = document.createElement('div');
 		title.style.float = "left";
-		title.innerHTML = CM.ConfigData[config].desc;
+		title.innerHTML = CM.Data.Config[config].desc;
 		volume.appendChild(title);
 		var percent = document.createElement('div');
 		percent.id = "slider" + config + "right";
@@ -2090,12 +2094,12 @@ CM.Disp.CreatePrefOption = function(config) {
 		div.appendChild(volume);
 		return div;
 	}
-	else if (CM.ConfigData[config].type === "url") {
+	else if (CM.Data.Config[config].type === "url") {
 		let div = document.createElement('div');
 		div.className = 'listing';
 		let span = document.createElement('span');
 		span.className = 'option';
-		span.textContent = CM.ConfigData[config].label + ' ';
+		span.textContent = CM.Data.Config[config].label + ' ';
 		div.appendChild(span);
 		let input = document.createElement('input');
 		input.id = CM.Config.ConfigPrefix + config;
@@ -2117,11 +2121,11 @@ CM.Disp.CreatePrefOption = function(config) {
 		a.textContent = 'Edit';
 		div.appendChild(a);
 		let label = document.createElement('label');
-		label.textContent = CM.ConfigData[config].desc;
+		label.textContent = CM.Data.Config[config].desc;
 		div.appendChild(label);
 		return div;
 	}
-	else if (CM.ConfigData[config].type === "color") {
+	else if (CM.Data.Config[config].type === "color") {
 		let div = document.createElement('div');
 		for (let i = 0; i < CM.Disp.colors.length; i++) {
 			let innerDiv = document.createElement('div');
@@ -2134,26 +2138,26 @@ CM.Disp.CreatePrefOption = function(config) {
 			let change = function() {CM.Options.Colors[this.targetElement.id] = this.toHEXString(); CM.Disp.UpdateColors(); CM.Config.SaveConfig(); Game.UpdateMenu();};
 			new JSColor(input, {hash: true, position: "right", onInput: change});
 			let label = document.createElement('label');
-			label.textContent = CM.ConfigData.Colors.desc[CM.Disp.colors[i]];
+			label.textContent = CM.Data.Config.Colors.desc[CM.Disp.colors[i]];
 			innerDiv.appendChild(label);
 			div.appendChild(innerDiv);
 		}
 		return div;
 	}
-	else if (CM.ConfigData[config].type === "numscale") {
+	else if (CM.Data.Config[config].type === "numscale") {
 		let div = document.createElement('div');
 		div.className = 'listing';
 		let span = document.createElement('span');
 		span.className = 'option';
-		span.textContent = CM.ConfigData[config].label + ' ';
+		span.textContent = CM.Data.Config[config].label + ' ';
 		div.appendChild(span);
 		let input = document.createElement('input');
 		input.id = CM.Config.ConfigPrefix + config;
 		input.className = 'option';
 		input.type = 'number';
 		input.value = (CM.Options[config]);
-		input.min = CM.ConfigData[config].min;
-		input.max = CM.ConfigData[config].max;
+		input.min = CM.Data.Config[config].min;
+		input.max = CM.Data.Config[config].max;
 		input.oninput = function() {if (this.value > this.max) console.log("TEST");
 			CM.Options[config] = this.value; 
 			CM.Config.SaveConfig(); 
@@ -2162,7 +2166,7 @@ CM.Disp.CreatePrefOption = function(config) {
 		div.appendChild(input);
 		div.appendChild(document.createTextNode(' '));
 		let label = document.createElement('label');
-		label.textContent = CM.ConfigData[config].desc;
+		label.textContent = CM.Data.Config[config].desc;
 		div.appendChild(label);
 		return div;
 	}
@@ -2486,7 +2490,7 @@ CM.Disp.CreateStatsMissDisp = function(theMissDisp) {
  */
 CM.Disp.CreateStatsLuckySection = function() {	
 	// This sets which tooltip to display for certain stats
-	var goldCookTooltip = CM.Sim.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
+	var goldCookTooltip = Game.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
 	
 	var section = document.createElement('div');
 	section.className = 'CMStatsLuckySection';
@@ -2551,7 +2555,7 @@ CM.Disp.CreateStatsLuckySection = function() {
  */
 CM.Disp.CreateStatsChainSection = function() {
 	// This sets which tooltip to display for certain stats
-	var goldCookTooltip = CM.Sim.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
+	var goldCookTooltip = Game.auraMult('Dragon\'s Fortune') ? 'GoldCookDragonsFortuneTooltipPlaceholder' : 'GoldCookTooltipPlaceholder';
 	
 	var section = document.createElement('div');
 	section.className = 'CMStatsChainSection';
