@@ -55,14 +55,14 @@ CM.Cache.CacheWrinklers = function() {
 	CM.Cache.WrinklersNormal = 0;
 	CM.Cache.WrinklersFattest = [0, null];
 	for (let i = 0; i < Game.wrinklers.length; i++) {
-		var sucked = Game.wrinklers[i].sucked;
-		var toSuck = 1.1;
+		let sucked = Game.wrinklers[i].sucked;
+		let toSuck = 1.1;
 		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
 		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 		if (CM.Sim.Objects.Temple.minigameLoaded) {
-			var godLvl = Game.hasGod('scorn');
+			let godLvl = Game.hasGod('scorn');
 			if (godLvl === 1) sucked *= 1.15;
 			else if (godLvl === 2) sucked *= 1.1;
 			else if (godLvl === 3) sucked *= 1.05;
@@ -137,9 +137,9 @@ CM.Cache.CacheGoldenAndWrathCookiesMults = function() {
 		CM.Cache.WrathCookiesMult = 1;
 		CM.Cache.DragonsFortuneMultAdjustment = 1;
 	} else {
-		var goldenMult = 1;
-		var wrathMult = 1;
-		var mult = 1;
+		let goldenMult = 1;
+		let wrathMult = 1;
+		let mult = 1;
 
 		// Factor auras and upgrade in mults
 		if (CM.Sim.Has('Green yeast digestives')) mult *= 1.01;
@@ -177,7 +177,7 @@ CM.Cache.MaxChainCookieReward = function(digit, maxPayout, mult) {
 	let totalFromChain = 0;
 	let moni = 0;
 	let nextMoni = 0;
-	var chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
+	let chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
 	while (nextMoni < maxPayout) {
 		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout));
 		// TODO: Calculate Cookies or cps needed for next level of chain. Related to issue #580
@@ -241,12 +241,12 @@ CM.Cache.CacheMissingUpgrades = function() {
 	CM.Cache.MissingUpgrades = "";
 	CM.Cache.MissingUpgradesCookies = "";
 	CM.Cache.MissingUpgradesPrestige = "";
-	var list = [];
+	let list = [];
 	//sort the upgrades
 	for (let i of Object.keys(Game.Upgrades)) {
 		list.push(Game.Upgrades[i]);
 	}
-	var sortMap = function(a, b) {
+	let sortMap = function(a, b) {
 		if (a.order>b.order) return 1;
 		else if (a.order<b.order) return -1;
 		else return 0;
@@ -254,10 +254,10 @@ CM.Cache.CacheMissingUpgrades = function() {
 	list.sort(sortMap);
 
 	for (let i of Object.keys(list)) {
-		var me = list[i];
+		let me = list[i];
 		
 		if (me.bought === 0) {
-			var str = '';
+			let str = '';
 
 			str += CM.Disp.crateMissing(me);
 			if (me.pool === 'prestige') CM.Cache.MissingUpgradesPrestige += str;
@@ -274,7 +274,7 @@ CM.Cache.CacheMissingUpgrades = function() {
  */
 CM.Cache.CacheSeaSpec = function() {
 	if (Game.season === 'christmas') {
-		var val = Game.cookiesPs * 60;
+		let val = Game.cookiesPs * 60;
 		if (Game.hasBuff('Elder frenzy')) val *= 0.5;
 		if (Game.hasBuff('Frenzy')) val *= 0.75;
 		CM.Cache.SeaSpec = Math.max(25, val);
@@ -313,7 +313,7 @@ class CMAvgQueue {
 	calcAverage (timePeriod) {
 		if (timePeriod > this.maxLength) timePeriod = this.maxLength;
 		if (timePeriod > this.queue.length) timePeriod = this.queue.length;
-		var ret = 0;
+		let ret = 0;
 		for (let i = this.queue.length - 1; i >= 0 && i > this.queue.length - 1 - timePeriod; i--) {
 			ret += this.queue[i];
 		}
@@ -430,7 +430,7 @@ CM.Cache.CacheCurrWrinklerCPS = function() {
 	}
 	let godMult = 1;
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
-		var godLvl = Game.hasGod('scorn');
+		let godLvl = Game.hasGod('scorn');
 		if (godLvl === 1) godMult *= 1.15;
 		else if (godLvl === 2) godMult *= 1.1;
 		else if (godLvl === 3) godMult *= 1.05;
@@ -445,7 +445,7 @@ CM.Cache.CacheCurrWrinklerCPS = function() {
  * @returns {number}	mult	The multiplier
  */
 CM.Cache.getCPSBuffMult = function() {
-	var mult = 1;
+	let mult = 1;
 	for (let i of Object.keys(Game.buffs)) {
 		if (typeof Game.buffs[i].multCpS != 'undefined') mult *= Game.buffs[i].multCpS;
 	}
@@ -476,8 +476,8 @@ CM.Cache.NoGoldSwitchCPS = function() {
 CM.Cache.CacheDragonCost = function() {
 	if (CM.Cache.lastDragonLevel != Game.dragonLevel || CM.Sim.DoSims) {
 		if (Game.dragonLevel < 25 && Game.dragonLevels[Game.dragonLevel].buy.toString().includes("sacrifice")) {
-			var target = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/Objects\[(.*)\]/)[1];
-			var amount = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/sacrifice\((.*?)\)/)[1];
+			let target = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/Objects\[(.*)\]/)[1];
+			let amount = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/sacrifice\((.*?)\)/)[1];
 			if (target != "i") {
 				target = target.replaceAll("'", "");
 				if (Game.Objects[target].amount < amount) {

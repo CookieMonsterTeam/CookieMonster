@@ -17,7 +17,7 @@
  * @returns {number}	moni		Total price
  */
 CM.Sim.BuildingGetPrice = function(build, basePrice, start, free, increase) {
-	var moni = 0;
+	let moni = 0;
 	for (let i = 0; i < increase; i++) {
 		let price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
 		price = Game.modifyBuildingPrice(build, price);
@@ -84,14 +84,14 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
 	// Calculate money gains from selling buildings
 	// If noSim is set, use Game methods to compute price instead of Sim ones.
 	noSim = typeof noSim === "undefined" ? 0 : noSim;
-	var moni = 0;
+	let moni = 0;
 	if (amount === -1) amount = start;
 	if (!amount) amount = Game.buyBulk;
 	for (let i = 0; i < amount; i++) {
 		let price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
 		price = noSim ? Game.modifyBuildingPrice(build, price) : CM.Sim.modifyBuildingPrice(build, price);
 		price = Math.ceil(price);
-		var giveBack = noSim ? build.getSellMultiplier() : CM.Sim.getSellMultiplier();
+		let giveBack = noSim ? build.getSellMultiplier() : CM.Sim.getSellMultiplier();
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;
@@ -192,7 +192,7 @@ CM.Sim.hasAura = function(what) {
  * @returns {number}			The multiplier
  */
 CM.Sim.auraMult = function(what) {
-	var n = 0;
+	let n = 0;
 	if (Game.dragonAuras[CM.Sim.dragonAura].name === what || Game.dragonAuras[CM.Sim.dragonAura2].name === what)
 		n = 1;
 	if (Game.dragonAuras[CM.Sim.dragonAura].name === 'Reality Bending' || Game.dragonAuras[CM.Sim.dragonAura2].name === 'Reality Bending')
@@ -211,8 +211,8 @@ CM.Sim.hasGod = function(what) {
 	if (!CM.Sim.Objects.Temple.minigameLoaded) {
 		return false;
 	}
-	var possibleGods = CM.Sim.Objects.Temple.minigame.gods;
-	var god=possibleGods[what];
+	let possibleGods = CM.Sim.Objects.Temple.minigame.gods;
+	let god=possibleGods[what];
 	for (let i=0;i<3;i++)
 	{
 		if (CM.Sim.Objects.Temple.minigame.slot[i]==god.id) return (i+1);
@@ -559,7 +559,7 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Ant larva')) eggMult *= 1.01;
 	if (CM.Sim.Has('Century egg')) {
 		// The boost increases a little every day, with diminishing returns up to +10% on the 100th day
-		var day = Math.floor((CM.Sim.DateCentury - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
+		let day = Math.floor((CM.Sim.DateCentury - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
 		day = Math.min(day, 100);
 		// Sets a Cache value to be displayed in the Stats page, could be moved...
 		CM.Cache.CentEgg = 1 + (1 - Math.pow(1 - day / 100, 3)) * 0.1;
@@ -748,7 +748,7 @@ CM.Sim.BuyBuildingsBonusIncome = function(building, amount) {
 		}
 	}
 
-	var lastAchievementsOwned = CM.Sim.AchievementsOwned;
+	let lastAchievementsOwned = CM.Sim.AchievementsOwned;
 
 	CM.Sim.CalculateGains();
 
@@ -789,7 +789,7 @@ CM.Sim.BuyUpgradesBonusIncome = function(upgrade) {
 			CM.Sim.Win('Wholesome');
 		}
 
-		var lastAchievementsOwned = CM.Sim.AchievementsOwned;
+		let lastAchievementsOwned = CM.Sim.AchievementsOwned;
 
 		CM.Sim.CalculateGains();
 
@@ -900,7 +900,7 @@ CM.Sim.CalculateChangeAura = function(aura) {
 	CM.Sim.CopyData();
 
 	// Check if aura being changed is first or second aura
-	var auraToBeChanged = l('promptContent').children[0].innerHTML.includes("secondary");
+	let auraToBeChanged = l('promptContent').children[0].innerHTML.includes("secondary");
 	if (auraToBeChanged) CM.Sim.dragonAura2 = aura;
 	else CM.Sim.dragonAura = aura;
 
@@ -909,7 +909,7 @@ CM.Sim.CalculateChangeAura = function(aura) {
 	if (CM.Sim.dragonAura != CM.Cache.dragonAura || CM.Sim.dragonAura2 != CM.Cache.dragonAura2) {
 		for (let i = Game.ObjectsById.length; i > -1, --i;) {
 			if (Game.ObjectsById[i].amount > 0) {	
-				var highestBuilding = CM.Sim.Objects[Game.ObjectsById[i].name].name;
+				let highestBuilding = CM.Sim.Objects[Game.ObjectsById[i].name].name;
 				CM.Sim.Objects[highestBuilding].amount -=1;
 				CM.Sim.buildingsOwned -= 1;
 				price = CM.Sim.Objects[highestBuilding].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[highestBuilding].amount - 1 -CM.Sim.Objects[highestBuilding].free));
@@ -1029,7 +1029,7 @@ CM.Sim.SellBuildingsForChoEgg = function() {
 
 	// Sacrifice highest buildings for the aura switch
 	for (let i = 0; i < buildingsToSacrifice; ++i) {
-		var highestBuilding = 0;
+		let highestBuilding = 0;
 		for (let j in CM.Sim.Objects) {
 			if (CM.Sim.Objects[j].amount > 0) {	
 				highestBuilding = CM.Sim.Objects[j];

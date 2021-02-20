@@ -33,7 +33,7 @@ CM.Main.Loop = function() {
 		}
 
 		// Check for aura change to recalculate buildings prices
-		var hasBuildAura = Game.auraMult('Fierce Hoarder') > 0;
+		let hasBuildAura = Game.auraMult('Fierce Hoarder') > 0;
 		if (!CM.Cache.HadBuildAura && hasBuildAura) {
 			CM.Cache.HadBuildAura = true;
 			CM.Cache.DoRemakeBuildPrices = 1;
@@ -227,7 +227,7 @@ CM.Main.ReplaceNativeGrimoire = function() {
  */
 CM.Main.ReplaceNativeGrimoireLaunch = function() {
 	if (!CM.Main.HasReplaceNativeGrimoireLaunch && Game.Objects['Wizard tower'].minigameLoaded) {
-		var minigame = Game.Objects['Wizard tower'].minigame;
+		let minigame = Game.Objects['Wizard tower'].minigame;
 		CM.Backup.GrimoireLaunch = minigame.launch;
 		eval('CM.Backup.GrimoireLaunchMod = ' + minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame'));
 		Game.Objects['Wizard tower'].minigame.launch = function() {
@@ -246,7 +246,7 @@ CM.Main.ReplaceNativeGrimoireLaunch = function() {
  */
 CM.Main.ReplaceNativeGrimoireDraw = function() {
 	if (!CM.Main.HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
-		var minigame = Game.Objects['Wizard tower'].minigame;
+		let minigame = Game.Objects['Wizard tower'].minigame;
 		CM.Backup.GrimoireDraw = minigame.draw;
 		Game.Objects['Wizard tower'].minigame.draw = function() {
 			CM.Backup.GrimoireDraw();
@@ -292,7 +292,7 @@ CM.Main.ReplaceTooltips = function() {
 CM.Main.ReplaceTooltipBuild = function() {
 	CM.Main.TooltipBuildBackup = [];
 	for (let i of Object.keys(Game.Objects)) {
-		var me = Game.Objects[i];
+		let me = Game.Objects[i];
 		if (l('product' + me.id).onmouseover != null) {
 			CM.Main.TooltipBuildBackup[i] = l('product' + me.id).onmouseover;
 			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}');
@@ -338,7 +338,7 @@ CM.Main.ReplaceTooltipGarden = function() {
 	if (Game.Objects.Farm.minigameLoaded) {
 		l('gardenTool-1').onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('ha', 'HarvestAllButton');}, 'this'); Game.tooltip.wobble();};
 		Array.from(l('gardenPlot').children).forEach((child) => {
-			var coords = child.id.slice(-3,);
+			let coords = child.id.slice(-3,);
 			child.onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('p', [`${coords[0]}`,`${coords[2]}`]);}, 'this'); Game.tooltip.wobble();};
 		});
 	}
@@ -458,7 +458,7 @@ CM.Main.CheckGardenTick = function() {
  */
 CM.Main.CheckMagicMeter = function() {
 	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Options.GrimoireBar === 1) {
-		var minigame = Game.Objects['Wizard tower'].minigame;
+		let minigame = Game.Objects['Wizard tower'].minigame;
 		if (minigame.magic < minigame.magicM) CM.Main.lastMagicBarFull = false;
 		else if (!CM.Main.lastMagicBarFull) {
 			CM.Main.lastMagicBarFull = true;
@@ -475,7 +475,7 @@ CM.Main.CheckMagicMeter = function() {
  */
 CM.Main.CheckWrinklerCount = function() {
 	if (Game.elderWrath > 0) {
-		var CurrentWrinklers = 0;
+		let CurrentWrinklers = 0;
 		for (let i in Game.wrinklers) {
 			if (Game.wrinklers[i].phase === 2) CurrentWrinklers++;
 		}
@@ -528,7 +528,7 @@ CM.Main.AddWrinklerAreaDetect = function() {
  */
 CM.Main.FixMouseY = function(target) {
 	if (CM.Options.TimerBar === 1 && CM.Options.TimerBarPos === 0) {
-		var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
+		let timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
 		Game.mouseY -= timerBarHeight;
 		target();
 		Game.mouseY += timerBarHeight;

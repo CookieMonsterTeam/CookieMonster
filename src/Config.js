@@ -33,7 +33,7 @@ CM.Config.LoadConfig = function(settings) {
 		CM.Options = settings;
 
 		// Check values
-		var mod = false;
+		let mod = false;
 		for (let i in CM.Data.ConfigDefault) {
 			if (typeof CM.Options[i] === 'undefined') {
 				mod = true;
