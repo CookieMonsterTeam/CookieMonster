@@ -2342,7 +2342,9 @@ CM.Disp.AddMenuStats = function(title) {
 			}
 			if (fortunes.length != 0) stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Fortune Upgrades Left to Buy',  CM.Disp.CreateStatsMissDisp(fortunes)));
 		}
-		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
+		if (CM.Options.ShowMissedGC) {
+			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
+		}
 		if (Game.prefs.autosave) {
 			let timer = document.createElement('span');
 			timer.id = 'CMStatsAutosaveTimer';
@@ -2367,7 +2369,7 @@ CM.Disp.AddMenuStats = function(title) {
  */
 CM.Disp.CreateStatsHeader = function(text, config) {
 	let div = document.createElement('div');
-	div.className = 'listing';
+	div.className = 'title';
 	div.style.padding = '5px 16px';
 	div.style.opacity = '0.7';
 	div.style.fontSize = '17px';
@@ -2408,7 +2410,8 @@ CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
 	div.appendChild(listingName);
 	if (type === "withTooltip")  {
 		div.className = 'listing';
-		
+		div.appendChild(document.createTextNode(' '));
+
 		let tooltip = document.createElement('span');
 		tooltip.onmouseout = function() { Game.tooltip.hide(); };
 		tooltip.onmouseover = function() {Game.tooltip.draw(this, escape(CM.Disp[placeholder].innerHTML));};
@@ -2424,7 +2427,6 @@ CM.Disp.CreateStatsListing = function(type, name, text, placeholder) {
 		tooltip.style.verticalAlign = 'bottom';
 		tooltip.textContent = '?';
 		div.appendChild(tooltip);
-		div.appendChild(document.createTextNode(' '));
 	}
 	div.appendChild(document.createTextNode(': '));
 	div.appendChild(text);
@@ -2692,7 +2694,18 @@ CM.Disp.CreateStatsPrestigeSection = function() {
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Cookies To Next Level', cookiesNextFrag, 'NextPrestTooltipPlaceholder'));
 	
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'Heavenly Chips (CUR / MAX)', document.createTextNode(Beautify(Game.heavenlyChips) + ' / ' + Beautify((possiblePresMax - Game.prestige) + Game.heavenlyChips)), 'HeavenChipMaxTooltipPlaceholder'));
+
+	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Heavenly Chips Per Second (last 5 seconds)', document.createTextNode(Beautify(CM.Cache.HCPerSecond, 2))));
 	
+	let HCTarget = Number(CM.Options.HeavenlyChipsTarget)
+	if (!isNaN(HCTarget)) {
+		let CookiesTillTarget = HCTarget - Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned))
+		if (CookiesTillTarget > 0) {
+			section.appendChild(CM.Disp.CreateStatsListing("basic", 'Heavenly Chips To Target Set In Settings (CUR)', document.createTextNode(Beautify(CookiesTillTarget))));
+		section.appendChild(CM.Disp.CreateStatsListing("basic", 'Time To Target (CUR, Current 5 Second Average)', document.createTextNode(CM.Disp.FormatTime(CookiesTillTarget / CM.Cache.HCPerSecond))));
+		}
+	}
+
 	let resetBonus = CM.Sim.ResetBonus(possiblePresMax);
 	let resetFrag = document.createDocumentFragment();
 	resetFrag.appendChild(document.createTextNode(Beautify(resetBonus)));

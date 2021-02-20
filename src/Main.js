@@ -196,10 +196,14 @@ CM.Main.ReplaceNative = function() {
 	};
 	
 	// Since the Ascend Tooltip is not actually a tooltip we need to add our additional info here...
-	CM.Backup.Logic = Game.Logic;
-	eval('CM.Backup.LogicMod = ' + Game.Logic.toString()
-		.split('document.title').join('CM.Disp.Title')
-		.split("' more cookies</b> for the next level.<br>';").join("` more cookies</b> for the next level.<br>${CM.Options.TooltipAscendButton ? `<div class='line'></div>You need ${CM.Cache.TimeTillNextPrestige} for the next level.<br>` : ``}`;"));
+	CM.Backup.Logic = Game.Logic;	
+	CM.Backup.LogicMod = new Function(
+		`return ${Game.Logic.toString()
+		.split('document.title')
+		.join('CM.Disp.Title')
+		.split("' more cookies</b> for the next level.<br>';")
+		.join("` more cookies</b> for the next level.<br>${CM.Options.TooltipAscendButton ? `<div class='line'></div>It takes ${CM.Cache.TimeTillNextPrestige} to reach the next level and you are making ${Beautify(CM.Cache.HCPerSecond, 2)} chips on average in the last 5 seconds.<br>` : ``}`;")}`,
+	)();
 	Game.Logic = function() {
 		CM.Backup.LogicMod();
 		// Update Title
