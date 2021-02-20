@@ -33,7 +33,7 @@ CM.Main.Loop = function() {
 		}
 
 		// Check for aura change to recalculate buildings prices
-		var hasBuildAura = Game.auraMult('Fierce Hoarder') > 0;
+		let hasBuildAura = Game.auraMult('Fierce Hoarder') > 0;
 		if (!CM.Cache.HadBuildAura && hasBuildAura) {
 			CM.Cache.HadBuildAura = true;
 			CM.Cache.DoRemakeBuildPrices = 1;
@@ -48,24 +48,16 @@ CM.Main.Loop = function() {
 			CM.Cache.DoRemakeBuildPrices = 0;
 		}
 
-		// Update Wrinkler Bank
-		CM.Cache.CacheWrinklers();
+		CM.Cache.LoopCache();
 
-		// Calculate PP
-		CM.Cache.CachePP();
+		// Check all changing minigames and game-states
+		CM.Main.CheckGoldenCookie();
+		CM.Main.CheckTickerFortune();
+		CM.Main.CheckSeasonPopup();
+		CM.Main.CheckGardenTick();
+		CM.Main.CheckMagicMeter();
+		CM.Main.CheckWrinklerCount();
 	}
-
-	// Check all changing minigames and game-states
-	CM.Main.CheckGoldenCookie();
-	CM.Main.CheckTickerFortune();
-	CM.Main.CheckSeasonPopup();
-	CM.Main.CheckGardenTick();
-	CM.Main.CheckMagicMeter();
-	CM.Main.CheckWrinklerCount();
-
-	// Cache average CPS
-	CM.Cache.CacheCurrWrinklerCPS();
-	CM.Cache.CacheAvgCPS();
 };
 
 /**
@@ -87,6 +79,7 @@ CM.Main.DelayInit = function() {
 		CM.Disp.CreateSimpleTooltip(CM.Disp.TooltipText[i][0], CM.Disp.TooltipText[i][1], CM.Disp.TooltipText[i][2]);
 	}
 	CM.Disp.CreateWrinklerButtons();
+	CM.Disp.UpdateBuildingUpgradeStyle();
 	CM.Main.ReplaceTooltips();
 	CM.Main.AddWrinklerAreaDetect();
 
@@ -100,14 +93,6 @@ CM.Main.DelayInit = function() {
 
 	if (Game.prefs.popups) Game.Popup('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!');
 	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
-
-	// TODO: given the architecture of your code, you probably want these lines somewhere else,
-	// but I stuck them here for convenience
-	l("products").style.display = "grid";
-	l("storeBulk").style.gridRow = "1/1";
-
-	l("upgrades").style.display = "flex";
-	l("upgrades").style["flex-wrap"] = "wrap";
 
 	Game.Win('Third-party');
 };
@@ -209,9 +194,12 @@ CM.Main.ReplaceNative = function() {
 		if (isNaN(time) || time <= 0) return CM.Backup.sayTime(time, detail);
 		else return CM.Disp.FormatTime(time / Game.fps, 1);
 	};
-
+	
+	// Since the Ascend Tooltip is not actually a tooltip we need to add our additional info here...
 	CM.Backup.Logic = Game.Logic;
-	eval('CM.Backup.LogicMod = ' + Game.Logic.toString().split('document.title').join('CM.Disp.Title'));
+	eval('CM.Backup.LogicMod = ' + Game.Logic.toString()
+		.split('document.title').join('CM.Disp.Title')
+		.split("' more cookies</b> for the next level.<br>';").join("` more cookies</b> for the next level.<br>${CM.Options.TooltipAscendButton ? `<div class='line'></div>You need ${CM.Cache.TimeTillNextPrestige} for the next level.<br>` : ``}`;"));
 	Game.Logic = function() {
 		CM.Backup.LogicMod();
 		// Update Title
@@ -234,7 +222,7 @@ CM.Main.ReplaceNativeGrimoire = function() {
  */
 CM.Main.ReplaceNativeGrimoireLaunch = function() {
 	if (!CM.Main.HasReplaceNativeGrimoireLaunch && Game.Objects['Wizard tower'].minigameLoaded) {
-		var minigame = Game.Objects['Wizard tower'].minigame;
+		let minigame = Game.Objects['Wizard tower'].minigame;
 		CM.Backup.GrimoireLaunch = minigame.launch;
 		eval('CM.Backup.GrimoireLaunchMod = ' + minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame'));
 		Game.Objects['Wizard tower'].minigame.launch = function() {
@@ -253,7 +241,7 @@ CM.Main.ReplaceNativeGrimoireLaunch = function() {
  */
 CM.Main.ReplaceNativeGrimoireDraw = function() {
 	if (!CM.Main.HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
-		var minigame = Game.Objects['Wizard tower'].minigame;
+		let minigame = Game.Objects['Wizard tower'].minigame;
 		CM.Backup.GrimoireDraw = minigame.draw;
 		Game.Objects['Wizard tower'].minigame.draw = function() {
 			CM.Backup.GrimoireDraw();
@@ -274,7 +262,7 @@ CM.Main.ReplaceNativeGrimoireDraw = function() {
  */
 CM.Main.ReplaceTooltips = function() {
 	CM.Main.ReplaceTooltipBuild();
-	CM.Main.ReplaceTooltipLump();	
+	CM.Main.ReplaceTooltipLump();
 
 	// Replace Tooltips of Minigames. Nesting it in LoadMinigames makes sure to replace them even if
 	// they were not loaded initially
@@ -299,11 +287,23 @@ CM.Main.ReplaceTooltips = function() {
 CM.Main.ReplaceTooltipBuild = function() {
 	CM.Main.TooltipBuildBackup = [];
 	for (let i of Object.keys(Game.Objects)) {
-		var me = Game.Objects[i];
+		let me = Game.Objects[i];
 		if (l('product' + me.id).onmouseover != null) {
 			CM.Main.TooltipBuildBackup[i] = l('product' + me.id).onmouseover;
 			eval('l(\'product\' + me.id).onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'b\', \'' + i + '\');}, \'store\'); Game.tooltip.wobble();}');
 		}
+	}
+};
+
+/**
+ * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
+ * CM.Disp.Tooltip() sets the tooltip type to 's'
+ * It is called by CM.Main.ReplaceTooltips()
+ */
+CM.Main.ReplaceTooltipLump = function() {
+	if (Game.canLumps()) {
+		CM.Main.TooltipLumpBackup = l('lumps').onmouseover;
+        eval('l(\'lumps\').onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'Lump\');}, \'this\'); Game.tooltip.wobble();}');
 	}
 };
 
@@ -325,18 +325,6 @@ CM.Main.ReplaceTooltipGrimoire = function() {
 };
 
 /**
- * This function replaces the original .onmouseover functions of sugar lumps so that it calls CM.Disp.Tooltip()
- * CM.Disp.Tooltip() sets the tooltip type to 's'
- * It is called by CM.Main.ReplaceTooltips()
- */
-CM.Main.ReplaceTooltipLump = function() {
-	if (Game.canLumps()) {
-		CM.Main.TooltipLumpBackup = l('lumps').onmouseover;
-        eval('l(\'lumps\').onmouseover = function() {Game.tooltip.dynamic = 1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip(\'s\', \'Lump\');}, \'this\'); Game.tooltip.wobble();}');
-	}
-};
-
-/**
  * This function replaces the original .onmouseover functions of all garden plants so that it calls CM.Disp.Tooltip()
  * CM.Disp.Tooltip() sets the tooltip type to 'p'
  * It is called by CM.Main.ReplaceTooltips()
@@ -345,7 +333,7 @@ CM.Main.ReplaceTooltipGarden = function() {
 	if (Game.Objects.Farm.minigameLoaded) {
 		l('gardenTool-1').onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('ha', 'HarvestAllButton');}, 'this'); Game.tooltip.wobble();};
 		Array.from(l('gardenPlot').children).forEach((child) => {
-			var coords = child.id.slice(-3,);
+			let coords = child.id.slice(-3,);
 			child.onmouseover = function() {Game.tooltip.dynamic=1; Game.tooltip.draw(this, function() {return CM.Disp.Tooltip('p', [`${coords[0]}`,`${coords[2]}`]);}, 'this'); Game.tooltip.wobble();};
 		});
 	}
@@ -465,7 +453,7 @@ CM.Main.CheckGardenTick = function() {
  */
 CM.Main.CheckMagicMeter = function() {
 	if (Game.Objects['Wizard tower'].minigameLoaded && CM.Options.GrimoireBar === 1) {
-		var minigame = Game.Objects['Wizard tower'].minigame;
+		let minigame = Game.Objects['Wizard tower'].minigame;
 		if (minigame.magic < minigame.magicM) CM.Main.lastMagicBarFull = false;
 		else if (!CM.Main.lastMagicBarFull) {
 			CM.Main.lastMagicBarFull = true;
@@ -482,7 +470,7 @@ CM.Main.CheckMagicMeter = function() {
  */
 CM.Main.CheckWrinklerCount = function() {
 	if (Game.elderWrath > 0) {
-		var CurrentWrinklers = 0;
+		let CurrentWrinklers = 0;
 		for (let i in Game.wrinklers) {
 			if (Game.wrinklers[i].phase === 2) CurrentWrinklers++;
 		}
@@ -512,8 +500,7 @@ CM.Main.CheckWrinklerCount = function() {
 /**
  * This function creates .onmouseover/out events that determine if the mouse is hovering-over a Wrinkler
  * It is called by CM.Main.DelayInit
- * TODO: The system for displaying wrinklers should ideally use a similar system as other tooltips
- * Thus, writing a CM.Main.ReplaceTooltipWrinkler function etc.
+ * As wrinklers are not appended to the DOM we us a different system than for other tooltips
  */
 CM.Main.AddWrinklerAreaDetect = function() {
 	l('backgroundLeftCanvas').onmouseover = function() {CM.Disp.TooltipWrinklerArea = 1;};
@@ -536,7 +523,7 @@ CM.Main.AddWrinklerAreaDetect = function() {
  */
 CM.Main.FixMouseY = function(target) {
 	if (CM.Options.TimerBar === 1 && CM.Options.TimerBarPos === 0) {
-		var timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
+		let timerBarHeight = parseInt(CM.Disp.TimerBar.style.height);
 		Game.mouseY -= timerBarHeight;
 		target();
 		Game.mouseY += timerBarHeight;

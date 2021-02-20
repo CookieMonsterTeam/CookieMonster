@@ -13,7 +13,7 @@
  */
 CM.init = function() {
     CM.Footer.isInitzializing = true
-    var proceed = true;
+    let proceed = true;
     if (Game.version != CM.VersionMajor) {
         proceed = confirm('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' is meant for Game version ' + CM.VersionMajor + '.  Loading a different version may cause errors.  Do you still want to load Cookie Monster?');
     }
@@ -67,7 +67,7 @@ CM.Footer.AddJscolor = function() {
  */
 if (typeof CM.Footer.isInitzializing === 'undefined') {
     CM.Footer.AddJscolor();
-    var delay = setInterval(function() {
+    let delay = setInterval(function() {
         if (typeof jscolor !== 'undefined') {
             jscolor.init();
             Game.registerMod('CookieMonster', CM);
