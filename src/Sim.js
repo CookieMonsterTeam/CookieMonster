@@ -240,35 +240,17 @@ CM.Sim.eff = function(name) {
 /********
  * Section: Functions used to create static objects of Buildings, Upgrades and Achievements */
 
-/**
- * This function returns the "Tiered CPS" multiplier of a building based on current sim data
- * It functions similarly to Game.GetTieredCpsMult()
- * It is called by CM.Sim.InitialBuildingData()
- * @param	{string}	me 	Building object
- * @returns {number}		The multiplier
- */
-CM.Sim.GetTieredCpsMult = function(me) {
-	let mult=1;
-	for (let i in Game.Objects[me.name].tieredUpgrades) {
-		if (!Game.Tiers[Game.Objects[me.name].tieredUpgrades[i].tier].special && CM.Sim.Has(Game.Objects[me.name].tieredUpgrades[i].name)) mult *= 2;
-	}
-	for (let j in Game.Objects[me.name].synergies) {
-		let syn = Game.Objects[me.name].synergies[j];
-		if (CM.Sim.Has(syn.name))
-		{
-			if (syn.buildingTie1.name == me.name) mult *= (1 + 0.05 * CM.Sim.Objects[syn.buildingTie2.name].amount);
-			else if (syn.buildingTie2.name == me.name) mult *= (1 + 0.001 * CM.Sim.Objects[syn.buildingTie1.name].amount);
-		}
-	}
-	if (Game.Objects[me.name].fortune && CM.Sim.Has(Game.Objects[me.name].fortune.name)) mult *= 1.07;
-	if (Game.Objects[me.name].grandma && CM.Sim.Has(Game.Objects[me.name].grandma.name)) mult *= (1 + CM.Sim.Objects['Grandma'].amount * 0.01 * (1 / (Game.Objects[me.name].id - 1)));
-	return mult;
-};
+Game.GetTieredCpsMult = new Function(
+	`return ${Game.GetTieredCpsMult.toString()
+	.split('syn.buildingTie1.amount')
+	.join('CM.Sim.Objects[syn.buildingTie1.name].amount')
+	.split('syn.buildingTie2.amount')
+	.join('CM.Sim.Objects[syn.buildingTie2.name].amount')}`,
+ )();
 
 /**
  * This function constructs an object with the static properties of a building,
- * but with a 'cps' method changed to use 'CM.Sim.Has' instead of 'Game.Has'
- * (and similar to 'hasAura', 'Objects', 'GetTieredCpsMult' and 'auraMult').
+ * but with a 'cps' method changed to use 'CM.Sim.Objects' instead of 'Game.Objects'.
  *
  * The dynamic properties of the building, namely level and amount owned, are set by CM.Sim.CopyData.
  * It is called by CM.Sim.InitData() and CM.Sim.CopyData() if the upgrade is currently missing
@@ -278,18 +260,13 @@ CM.Sim.GetTieredCpsMult = function(me) {
 CM.Sim.InitialBuildingData = function(buildingName) {
 	let me = Game.Objects[buildingName];
 	let you = {};
-	eval('you.cps = ' + me.cps.toString()
-		.split('Game.Has').join('CM.Sim.Has')
-		.split('Game.hasAura').join('CM.Sim.hasAura')
-		.split('Game.Objects').join('CM.Sim.Objects')
-		.split('Game.GetTieredCpsMult').join('CM.Sim.GetTieredCpsMult')
-		.split('Game.auraMult').join('CM.Sim.auraMult')
-		.split('Game.eff').join('CM.Sim.eff')
-	);
-	// Below is needed for above eval!
-	you.baseCps = me.baseCps;
-	you.name = me.name;
-	
+	// You can't assign an object to a const, otherwise modifying one will also change the other
+	Object.assign(you, me);
+	you.cps = new Function(
+		`return ${me.cps.toString()
+		.split('Game.Objects').join('CM.Sim.Objects')}`
+	)();
+
 	return you;
 };
 
