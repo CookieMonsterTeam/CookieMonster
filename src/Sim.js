@@ -102,25 +102,73 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
 };
 
 /********
- * Section: Functions to check whether things are on/present/bought in current sim data */
+ * Section: Functions related to making functions that check against sim data rather than game data */
 
 /**
- * This function checks if an upgrade is bought in the current sim data
- * It functions similarly to Game.Has()
- * It is called by various functions in Sim.js
- * @param	{string}	what	Name of the upgrade
- * @returns {number}			1 if bought, 0 if not
+ * This functions helps create functions that check sim data
+ * For example, instead of Game.Has, a function that has gone through CM.Sim.ReplaceFunction will use CM.Sim.Has()
+ * Subsequently the function rather than checking Game.Upgrades, will check CM.Sim.Upgrades
+ * 
+ * It is called by CM.Sim.ReplaceRelevantFunctions()
+ * @param	{function}	funcToBeReplaced	Function to be replaced
+ * @returns {string}						The function in string form with only calls to CM.Sim
  */
-CM.Sim.Has = function(what) {
-	let it = CM.Sim.Upgrades[what];
-	if (Game.ascensionMode === 1 && (it.pool === 'prestige' || it.tier === 'fortune')) return 0;
-	return (it ? it.bought : 0);
-};
+CM.Sim.ReplaceFunction = function(funcToBeReplaced) {
+	return funcToBeReplaced.toString()
+		.split("Game.Upgrades[") // Include '[' to not replace Game.UpgradesByPool
+		.join("CM.Sim.Upgrades[")
+		.split("Game.Achievements")
+		.join("CM.Sim.Achievements")
+		.split("Game.Has")
+		.join("CM.Sim.Has")
+		.split("Game.dragonAura]")
+		.join("CM.Sim.dragonAura]")
+		.split("Game.dragonAura2]")
+		.join("CM.Sim.dragonAura2]")
+		.split("Game.auraMult")
+		.join("CM.Sim.auraMult")
+		.split("Game.hasGod")
+		.join("CM.Sim.hasGod")
+		.split("M.gods[what]") // Replaces code in the Pantheon minigame
+		.join("CM.Sim.Objects.Temple.minigame.gods[what]")
+		.split("M.slot[i]") // Replaces code in the Pantheon minigame
+		.join("CM.Sim.Objects.Temple.minigame.slot[i]")
+		.split("Game.effs") // Replaces code in the Pantheon minigame
+		.join("CM.Sim.effs")
+		.split("Game.Objects")
+		.join("CM.Sim.Objects")
+		.split("Game.GetTieredCpsMult") // Replace in .cps of building objects
+		.join("CM.Sim.GetTieredCpsMult")
+		.split('Game.eff') // Replace in .cps of building objects
+		.join('CM.Sim.eff');
+		//.split('syn.buildingTie1.amount')
+		//.join('CM.Sim.Objects[syn.buildingTie1.name].amount')
+		//.split('syn.buildingTie2.amount')
+		//.join('CM.Sim.Objects[syn.buildingTie2.name].amount')
+}
+
+/**
+ * This functions creates all functions by CM.Sim to check CM.Sim. data instead of Game. data
+ * It does this by calling CM.Sim.ReplaceFunction()
+ * It follows naming of the vanilla functions
+ * 
+ * It is called by CM.Main.DelayInit()
+ */
+CM.Sim.CreateSimFunctions = function() {
+	CM.Sim.Has = new Function(`return ${CM.Sim.ReplaceFunction(Game.Has)}`)();
+	CM.Sim.HasAchiev = new Function(`return ${CM.Sim.ReplaceFunction(Game.HasAchiev)}`)();
+	CM.Sim.hasAura = new Function(`return ${CM.Sim.ReplaceFunction(Game.hasAura)}`)();
+	CM.Sim.hasGod = new Function(`return ${CM.Sim.ReplaceFunction(Game.hasGod)}`)();
+	CM.Sim.GetHeavenlyMultiplier = new Function(`return ${CM.Sim.ReplaceFunction(Game.GetHeavenlyMultiplier)}`)();
+	CM.Sim.auraMult = new Function(`return ${CM.Sim.ReplaceFunction(Game.auraMult)}`)();
+	CM.Sim.eff = new Function(`return ${CM.Sim.ReplaceFunction(Game.eff)}`)();
+	CM.Sim.GetTieredCpsMult = new Function(`return ${CM.Sim.ReplaceFunction(Game.GetTieredCpsMult)}`)();
+}
 
 /**
  * This function "wins" an achievement in the current sim data
  * It functions similarly to Game.Win()
- * It is called by various functions in Sim.js
+ * It is not created by CM.Sim.CreateSimFunctions() in order to avoid spamming pop-ups upon winning
  * @param	{string}	what	Name of the achievement
  */
 CM.Sim.Win = function(what) {
@@ -132,138 +180,8 @@ CM.Sim.Win = function(what) {
 	}
 };
 
-/**
- * This function checks if an achievement is obtained in the current sim data
- * It functions similarly to Game.HasAchiev()
- * It is called by various functions in Sim.js
- * @param	{string}	what	Name of the achievement
- * @returns {number}			1 if obtained, 0 if not
- */
-CM.Sim.HasAchiev = function(what) {
-	return (CM.Sim.Achievements[what] ? CM.Sim.Achievements[what].won : 0);
-};
-
-/**
- * This function calculates the HeavenlyChips multiplier for the current sim data
- * It functions similarly to Game.GetHeavenlyMultiplier()
- * It is called by CM.Sim.CalculateGains()
- * @returns {number}	heavenlyMult	The multiplier
- */
-CM.Sim.GetHeavenlyMultiplier = function() {
-	let heavenlyMult=0;
-	if (CM.Sim.Has('Heavenly chip secret')) heavenlyMult += 0.05;
-	if (CM.Sim.Has('Heavenly cookie stand')) heavenlyMult += 0.20;
-	if (CM.Sim.Has('Heavenly bakery')) heavenlyMult += 0.25;
-	if (CM.Sim.Has('Heavenly confectionery')) heavenlyMult += 0.25;
-	if (CM.Sim.Has('Heavenly key')) heavenlyMult += 0.25;
-	//if (CM.Sim.hasAura('Dragon God')) heavenlyMult *= 1.05; // This is also a comment in the original function
-	heavenlyMult *= 1 + CM.Sim.auraMult('Dragon God') * 0.05;
-	if (CM.Sim.Has('Lucky digit')) heavenlyMult *= 1.01;
-	if (CM.Sim.Has('Lucky number')) heavenlyMult *= 1.01;
-	if (CM.Sim.Has('Lucky payout')) heavenlyMult *= 1.01;
-	if (CM.Sim.hasGod) {
-		let godLvl = CM.Sim.hasGod('creation');
-		if (godLvl === 1) heavenlyMult *= 0.7;
-		else if (godLvl === 2) heavenlyMult *= 0.8;
-		else if (godLvl === 3) heavenlyMult *= 0.9;
-	}
-	return heavenlyMult;
-};
-
-/**
- * This function checks if an Dragon Aura is active in the current sim data
- * It functions similarly to Game.hasAura()
- * It is called by CM.Sim.InitialBuildingData()
- * @param	{string}	what	Name of the Aura
- * @returns {bool}				true if active, false if not
- */
-CM.Sim.hasAura = function(what) {
-	if (Game.dragonAuras[CM.Sim.dragonAura].name === what || Game.dragonAuras[CM.Sim.dragonAura2].name === what)
-		return true;
-	else
-		return false;
-};
-
-/**
- * This function checks if an Dragon Aura is and returns the multiplier
- * It functions similarly to Game.auraMult()
- * It is called by various functions in Sim.js
- * @param	{string}	what	Name of the Aura
- * @returns {number}			The multiplier
- */
-CM.Sim.auraMult = function(what) {
-	let n = 0;
-	if (Game.dragonAuras[CM.Sim.dragonAura].name === what || Game.dragonAuras[CM.Sim.dragonAura2].name === what)
-		n = 1;
-	if (Game.dragonAuras[CM.Sim.dragonAura].name === 'Reality Bending' || Game.dragonAuras[CM.Sim.dragonAura2].name === 'Reality Bending')
-		n += 0.1;
-	return n;
-};
-
-/**
- * This function checks if a God is selected and returns its place (1, 2, 3)
- * It functions similarly to Game.hasGod()
- * It is called by various functions in Sim.js
- * @param	{string}		what	Name of the God
- * @returns {bool/number}			false if not selected, 1,2,3 if selected
- */
-CM.Sim.hasGod = function(what) {
-	if (!CM.Sim.Objects.Temple.minigameLoaded) {
-		return false;
-	}
-	let possibleGods = CM.Sim.Objects.Temple.minigame.gods;
-	let god=possibleGods[what];
-	for (let i=0;i<3;i++)
-	{
-		if (CM.Sim.Objects.Temple.minigame.slot[i]==god.id) return (i+1);
-	}
-	return false;
-};
-
-/**
- * This function returns the multiplier of an effect in the current sim data
- * It functions similarly to Game.eff()
- * It is called by various functions in Sim.js
- * @param	{string}		name	Name of the effect
- * @returns {number}				The multiplier
- */
-CM.Sim.eff = function(name) {
-	if (typeof CM.Sim.effs[name]==='undefined') {
-		CM.Sim.effs[name] = 1;
-		return CM.Sim.effs[name];
-	}
-	else {
-		return CM.Sim.effs[name];
-	}
-};
-
 /********
  * Section: Functions used to create static objects of Buildings, Upgrades and Achievements */
-
-/**
- * This function returns the "Tiered CPS" multiplier of a building based on current sim data
- * It functions similarly to Game.GetTieredCpsMult()
- * It is called by CM.Sim.InitialBuildingData()
- * @param	{string}	me 	Building object
- * @returns {number}		The multiplier
- */
-CM.Sim.GetTieredCpsMult = function(me) {
-	let mult=1;
-	for (let i in Game.Objects[me.name].tieredUpgrades) {
-		if (!Game.Tiers[Game.Objects[me.name].tieredUpgrades[i].tier].special && CM.Sim.Has(Game.Objects[me.name].tieredUpgrades[i].name)) mult *= 2;
-	}
-	for (let j in Game.Objects[me.name].synergies) {
-		let syn = Game.Objects[me.name].synergies[j];
-		if (CM.Sim.Has(syn.name))
-		{
-			if (syn.buildingTie1.name == me.name) mult *= (1 + 0.05 * CM.Sim.Objects[syn.buildingTie2.name].amount);
-			else if (syn.buildingTie2.name == me.name) mult *= (1 + 0.001 * CM.Sim.Objects[syn.buildingTie1.name].amount);
-		}
-	}
-	if (Game.Objects[me.name].fortune && CM.Sim.Has(Game.Objects[me.name].fortune.name)) mult *= 1.07;
-	if (Game.Objects[me.name].grandma && CM.Sim.Has(Game.Objects[me.name].grandma.name)) mult *= (1 + CM.Sim.Objects['Grandma'].amount * 0.01 * (1 / (Game.Objects[me.name].id - 1)));
-	return mult;
-};
 
 /**
  * This function constructs an object with the static properties of a building,
@@ -278,18 +196,17 @@ CM.Sim.GetTieredCpsMult = function(me) {
 CM.Sim.InitialBuildingData = function(buildingName) {
 	let me = Game.Objects[buildingName];
 	let you = {};
-	eval('you.cps = ' + me.cps.toString()
-		.split('Game.Has').join('CM.Sim.Has')
-		.split('Game.hasAura').join('CM.Sim.hasAura')
-		.split('Game.Objects').join('CM.Sim.Objects')
-		.split('Game.GetTieredCpsMult').join('CM.Sim.GetTieredCpsMult')
-		.split('Game.auraMult').join('CM.Sim.auraMult')
-		.split('Game.eff').join('CM.Sim.eff')
-	);
-	// Below is needed for above eval!
+	you.cps = new Function(`return ${CM.Sim.ReplaceFunction(me.cps)}`)();
+	// Below is needed for above eval, specifically for the GetTieredCpsMult function
 	you.baseCps = me.baseCps;
 	you.name = me.name;
-	
+	you.tieredUpgrades = me.tieredUpgrades;
+	you.synergies = me.synergies;
+	you.fortune = me.fortune;
+	you.grandma = me.grandma;
+	you.baseCPS = me.baseCps
+	you.id = me.id
+	you.vanilla = me.vanilla
 	return you;
 };
 
@@ -305,9 +222,7 @@ CM.Sim.InitUpgrade = function(upgradeName) {
 	// Some upgrades have a function for .power (notably the valentine cookies)
 	you.power = me.power;
 	if (typeof(me.power) === 'function') {
-		eval('me.power = ' + me.power.toString()
-			.split('Game.Has').join('CM.Sim.Has')
-			.split('Game.hasGod').join('CM.Sim.hasGod'));
+		me.power = new Function(`return ${CM.Sim.ReplaceFunction(me.power)}`)();
 	}
 	you.pool = me.pool;
 	you.name = me.name;
