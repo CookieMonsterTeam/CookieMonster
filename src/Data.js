@@ -125,7 +125,6 @@ CM.Data.Config.SortBuildings = {type: 'bool', group: 'BarsColors', label: ['Sort
 CM.Data.Config.SortUpgrades = {type: 'bool', group: 'BarsColors', label: ['Sort Upgrades: Default', 'Sort Upgrades: PP'], desc: 'Sort the display of upgrades in either default order or by PP', toggle: false, func: function () { CM.Disp.UpdateUpgrades();}};
 CM.Data.Config.BuildColor = {type: 'bool', group: 'BarsColors', label: ['Building Colors OFF', 'Building Colors ON'], desc: 'Color code buildings', toggle: true, func: function() {CM.Disp.UpdateBuildings();}};
 CM.Data.Config.BulkBuildColor = {type: 'bool', group: 'BarsColors', label: ['Bulk Building Colors (Single Building Color)', 'Bulk Building Colors (Calculated Bulk Color)'], desc: 'Color code bulk buildings based on single buildings color or calculated bulk value color', toggle: false, func: function() {CM.Disp.UpdateBuildings();}};
-CM.Data.Config.ColorPPBulkMode = {type: 'bool', group: 'BarsColors', label: ['Color of PP (Compared to Single)', 'Color of PP (Compared to Bulk)'], desc: 'Color PP-values based on comparison with single purchase or with selected bulk-buy mode', toggle: false};
 CM.Data.Config.UpBarColor = {type: 'bool', group: 'BarsColors', label: ['Upgrade Colors/Bar OFF', 'Upgrade Colors with Bar ON', 'Upgrade Colors without Bar ON'], desc: 'Color code upgrades and optionally add a counter bar', toggle: false, func: function() {CM.Disp.ToggleUpgradeBarAndColor();}};
 CM.Data.Config.Colors = { type: 'color', group: 'BarsColors',
 	desc: {
@@ -148,6 +147,9 @@ CM.Data.Config.CalcWrink = {type: 'bool', group: 'Calculation', label: ['Calcula
 CM.Data.Config.CPSMode = {type: 'bool', group: 'Calculation', label: ['Current Cookies Per Second', 'Average Cookies Per Second'], desc: 'Calculate times using current Cookies Per Second or average Cookies Per Second', toggle: false};
 CM.Data.Config.AvgCPSHist = {type: 'bool', group: 'Calculation', label: ['Average CPS for past 10s', 'Average CPS for past 15s', 'Average CPS for past 30s', 'Average CPS for past 1m', 'Average CPS for past 5m', 'Average CPS for past 10m', 'Average CPS for past 15m', 'Average CPS for past 30m'], desc: 'How much time average Cookies Per Second should consider', toggle: false};
 CM.Data.Config.AvgClicksHist = {type: 'bool', group: 'Calculation', label: ['Average Cookie Clicks for past 1s', 'Average Cookie Clicks for past 5s', 'Average Cookie Clicks for past 10s', 'Average Cookie Clicks for past 15s', 'Average Cookie Clicks for past 30s'], desc: 'How much time average Cookie Clicks should consider', toggle: false};
+CM.Data.Config.ColorPPBulkMode = {type: 'bool', group: 'Calculation', label: ['Color of PP (Compared to Single)', 'Color of PP (Compared to Bulk)'], desc: 'Color PP-values based on comparison with single purchase or with selected bulk-buy mode', toggle: false};
+CM.Data.Config.PPExcludeTop = {type: 'bool', group: 'Calculation', label: ["Don't Ignore Any", 'Ignore 1st Best', 'Ignore 1st and 2nd Best', 'Ignore 1st, 2nd and 3rd Best'], desc: 'Makes CookieMonster ignore the 1st, 2nd or 3rd best buildings in labeling and colouring PP values', toggle: true};
+CM.Data.Config.PPSecondsLowerLimit = {type: 'numscale', group: 'Calculation', label: 'Lower limit for PP (in seconds): ', desc: 'If a building or upgrade costs less than the specified seconds of CPS it will also be considered optimal and label it as such ("PP is less than xx seconds of CPS"); setting to 0 ignores this option', min: 0, max: Infinity};
 CM.Data.Config.ToolWarnBon = {type: 'bool', group: 'Calculation', label: ['Calculate Tooltip Warning With Bonus CPS OFF', 'Calculate Tooltip Warning With Bonus CPS ON'], desc: 'Calculate the warning with or without the bonus CPS you get from buying', toggle: true};
 
 // Notification
@@ -259,13 +261,15 @@ CM.Data.ConfigDefault = {
 	TimerBarOverlay: 2,
 	BuildColor: 1,
 	BulkBuildColor: 0,
-	ColorPPBulkMode: 0,
 	UpBarColor: 1,
 	UpgradeBarFixedPos: 1,
 	CalcWrink: 0,
 	CPSMode: 1,
 	AvgCPSHist: 3,
 	AvgClicksHist: 0,
+	ColorPPBulkMode: 0,
+	PPExcludeTop: 0,
+	PPSecondsLowerLimit: 0,
 	ToolWarnBon: 0,
 	Title: 1,
 	GeneralSound: 1,

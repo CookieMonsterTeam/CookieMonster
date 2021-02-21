@@ -748,8 +748,8 @@ CM.Disp.UpdateBuildings = function() {
 			return o;
 		});
 
-		arr.sort(function(a, b){ return (a.pp > b.pp ? 1 : (a.pp < b.pp ? -1 : 0)); });
-
+		arr.sort(function(a, b){ return (CM.Disp.colors.indexOf(a.color) > CM.Disp.colors.indexOf(b.color) ? 1 : (CM.Disp.colors.indexOf(a.color) < CM.Disp.colors.indexOf(b.color) ? -1 : 0)); });
+	
 		for (let x = 0; x < arr.length; x++) {
 			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
 		}
@@ -832,7 +832,7 @@ CM.Disp.UpdateUpgrades = function() {
 	}
 
 	if (CM.Options.SortUpgrades) {
-		arr.sort((a, b) => a.pp - b.pp);
+		arr.sort((a, b) => CM.Disp.colors.indexOf(a.color) - CM.Disp.colors.indexOf(b.color));
 	}
 	else {
 		arr.sort((a, b) => a.price - b.price);

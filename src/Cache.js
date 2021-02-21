@@ -650,30 +650,50 @@ CM.Cache.CachePP = function() {
 };
 
 /**
+ * This functions return the colour assosciated with the given pp value
+ * It is called by CM.Cache.CacheBuildingsPP(), CM.Cache.CacheBuildingsBulkPP() and CM.Cache.CacheUpgradePP()
+ * @params	{object}	obj		The obj of which the pp value should be checked
+ * @params	{number}	price	The price of the object
+ * @returns {string}	color	The colour assosciated with the pp value
+ */
+CM.Cache.ColourOfPP = function(me, price) {
+	let color = '';
+	// Colour based on PP
+	if (me.pp <= 0 || me.pp === Infinity) color = CM.Disp.colorGray;
+	else if (me.pp < CM.Cache.min) color = CM.Disp.colorBlue;
+	else if (me.pp === CM.Cache.min) color = CM.Disp.colorGreen;
+	else if (me.pp === CM.Cache.max) color = CM.Disp.colorRed;
+	else if (me.pp > CM.Cache.max) color = CM.Disp.colorPurple;
+	else if (me.pp > CM.Cache.mid) color = CM.Disp.colorOrange;
+	else color = CM.Disp.colorYellow;
+
+	// Colour based on price in terms of CPS
+	if (Number(CM.Options.PPSecondsLowerLimit) !== 0) {
+		if (price / CM.Cache.AvgCPS < Number(CM.Options.PPSecondsLowerLimit)) color = CM.Disp.colorBlue
+	}
+	return color
+};
+
+/**
  * This functions caches the PP of each building it saves all date in CM.Cache.Objects...
  * It is called by CM.Cache.CachePP()
  */
 CM.Cache.CacheBuildingsPP = function() {
-	CM.Cache.min = -1;
-	CM.Cache.max = -1;
-	CM.Cache.mid = -1;
+	CM.Cache.min = Infinity;
+	CM.Cache.max = 1;
+
 	// Calculate PP and colors when compared to purchase of optimal building in single-purchase mode
 	if (CM.Options.ColorPPBulkMode === 0) {
 		for (let i of Object.keys(CM.Cache.Objects1)) {
 			if (Game.cookiesPs) {
 				CM.Cache.Objects1[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 			} else CM.Cache.Objects1[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
-			if (CM.Cache.min === -1 || CM.Cache.Objects1[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects1[i].pp;
-			if (CM.Cache.max === -1 || CM.Cache.Objects1[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects1[i].pp;
+			if (CM.Cache.Objects1[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects1[i].pp;
+			if (CM.Cache.Objects1[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects1[i].pp;
 		}
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 		for (let i of Object.keys(CM.Cache.Objects1)) {
-			let color = '';
-			if (CM.Cache.Objects1[i].pp === CM.Cache.min) color = CM.Disp.colorGreen;
-			else if (CM.Cache.Objects1[i].pp === CM.Cache.max) color = CM.Disp.colorRed;
-			else if (CM.Cache.Objects1[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
-			else color = CM.Disp.colorYellow;
-			CM.Cache.Objects1[i].color = color;
+			CM.Cache.Objects1[i].color = CM.Cache.ColourOfPP(CM.Cache.Objects1[i], Game.Objects[i].getPrice());
 		}
 		// Calculate PP of bulk-buy modes
 		CM.Cache.CacheBuildingsBulkPP('Objects10');
@@ -691,12 +711,7 @@ CM.Cache.CacheBuildingsPP = function() {
 		}
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 		for (let i of Object.keys(CM.Cache.Objects1)) {
-			let color = '';
-			if (CM.Cache[target][i].pp === CM.Cache.min) color = CM.Disp.colorGreen;
-			else if (CM.Cache[target][i].pp === CM.Cache.max) color = CM.Disp.colorRed;
-			else if (CM.Cache[target][i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
-			else color = CM.Disp.colorYellow;
-			CM.Cache[target][i].color = color;
+			CM.Cache[target][i].color = CM.Cache.ColourOfPP(CM.Cache[target][i], Game.Objects[i].bulkPrice);
 		}
 	}
 };
@@ -712,15 +727,7 @@ CM.Cache.CacheBuildingsBulkPP = function(target) {
 			CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
 		} else CM.Cache[target][i].pp = (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
 
-		let color = '';
-		if (CM.Cache[target][i].pp <= 0 || CM.Cache[target][i].pp === Infinity) color = CM.Disp.colorGray;
-		else if (CM.Cache[target][i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
-		else if (CM.Cache[target][i].pp === CM.Cache.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache[target][i].pp === CM.Cache.max) color = CM.Disp.colorRed;
-		else if (CM.Cache[target][i].pp > CM.Cache.max) color = CM.Disp.colorPurple;
-		else if (CM.Cache[target][i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
-		else color = CM.Disp.colorYellow;
-		CM.Cache[target][i].color = color;
+		CM.Cache[target][i].color = CM.Cache.ColourOfPP(CM.Cache[target][i], CM.Cache[target][i].price);
 	}
 };
 
@@ -734,15 +741,8 @@ CM.Cache.CacheUpgradePP = function() {
 			CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
 		} else CM.Cache.Upgrades[i].pp = (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
 		if (isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = Infinity;
-		let color = '';
-		if (CM.Cache.Upgrades[i].pp <= 0 || CM.Cache.Upgrades[i].pp === Infinity) color = CM.Disp.colorGray;
-		else if (CM.Cache.Upgrades[i].pp < CM.Cache.min) color = CM.Disp.colorBlue;
-		else if (CM.Cache.Upgrades[i].pp === CM.Cache.min) color = CM.Disp.colorGreen;
-		else if (CM.Cache.Upgrades[i].pp === CM.Cache.max) color = CM.Disp.colorRed;
-		else if (CM.Cache.Upgrades[i].pp > CM.Cache.max) color = CM.Disp.colorPurple;
-		else if (CM.Cache.Upgrades[i].pp > CM.Cache.mid) color = CM.Disp.colorOrange;
-		else color = CM.Disp.colorYellow;
-		CM.Cache.Upgrades[i].color = color;
+
+		CM.Cache.Upgrades[i].color = CM.Cache.ColourOfPP(CM.Cache.Upgrades[i], Game.Upgrades[i].getPrice());
 	}
 };
 
