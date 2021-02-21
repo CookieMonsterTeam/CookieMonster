@@ -42,7 +42,7 @@ CM.Cache.LoopCache = function() {
 	CM.Cache.CacheHeavenlyChipsPS();
 
 	let cookiesToNext = Game.HowManyCookiesReset(Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) + 1) - (Game.cookiesEarned + Game.cookiesReset);
-	CM.Cache.TimeTillNextPrestige = CM.Disp.FormatTime(cookiesToNext / CM.Cache.AvgCPS);
+	CM.Cache.TimeTillNextPrestige = CM.Disp.FormatTime(cookiesToNext / CM.Disp.GetCPS());
 };
 
 
@@ -671,7 +671,7 @@ CM.Cache.ColourOfPP = function(me, price) {
 
 	// Colour based on price in terms of CPS
 	if (Number(CM.Options.PPSecondsLowerLimit) !== 0) {
-		if (price / CM.Cache.AvgCPS < Number(CM.Options.PPSecondsLowerLimit)) color = CM.Disp.colorBlue
+		if (price / CM.Disp.GetCPS() < Number(CM.Options.PPSecondsLowerLimit)) color = CM.Disp.colorBlue
 	}
 	// Colour based on being able to purchase
 	if (CM.Options.PPOnlyConsiderBuyable) {

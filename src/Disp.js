@@ -1397,6 +1397,8 @@ CM.Disp.TooltipCreateWarningSection = function() {
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjureFrenzy', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods" (Frenzy)', 'CMDispTooltipWarnConjureFrenzyText'));
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnEdifice', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies needed for "Spontaneous Edifice" to possibly give you your most expensive building"', 'CMDispTooltipWarnEdificeText'));
+	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnUser', CM.Disp.colorRed, 'Warning: ', `Purchase of this item will put you under the number of Cookies equal to ${CM.Options.ToolWarnUser} seconds of CPS`, 'CMDispTooltipWarnUserText'));
 	
 	return CM.Disp.TooltipWarn;
 };
@@ -1762,6 +1764,16 @@ CM.Disp.UpdateTooltipWarnings = function() {
 			} else l('CMDispTooltipWarnEdifice').style.display = 'none';
 		}
 		else l('CMDispTooltipWarnEdifice').style.display = 'none';
+
+		if (CM.Options.ToolWarnUser > 0) {
+			if (amount < CM.Options.ToolWarnUser * CM.Disp.GetCPS() && (CM.Disp.tooltipType != 'b' || Game.buyMode === 1)) {
+				l('CMDispTooltipWarnUser').style.display = '';
+				// Need to update tooltip text dynamically
+				l('CMDispTooltipWarnUser').children[0].textContent = `Purchase of this item will put you under the number of Cookies equal to ${CM.Options.ToolWarnUser} seconds of CPS`
+				l('CMDispTooltipWarnUserText').textContent = Beautify(CM.Options.ToolWarnUser * CM.Disp.GetCPS() - amount) + ' (' + CM.Disp.FormatTime((CM.Options.ToolWarnUser * CM.Disp.GetCPS() - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome)) + ')';
+			} else l('CMDispTooltipWarnUser').style.display = 'none';
+		}
+		else l('CMDispTooltipWarnUser').style.display = 'none';
 	}
 	else {
 		if (l('CMDispTooltipWarningParent') != null) {
@@ -2330,7 +2342,7 @@ CM.Disp.AddMenuStats = function(title) {
 	if (CM.Options.Header.Misc) {
 		stats.appendChild(CM.Disp.CreateStatsListing("basic", 
 			'Average Cookies Per Second (Past ' + (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] < 60 ? (CM.Disp.cookieTimes[CM.Options.AvgCPSHist] + ' seconds') : ((CM.Disp.cookieTimes[CM.Options.AvgCPSHist] / 60) + (CM.Options.AvgCPSHist === 3 ? ' minute' : ' minutes'))) + ')', 
-			document.createTextNode(Beautify(CM.Cache.AvgCPS, 3))
+			document.createTextNode(Beautify(CM.Disp.GetCPS(), 3))
 		));
 		stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Average Cookie Clicks Per Second (Past ' + CM.Disp.clickTimes[CM.Options.AvgClicksHist] + (CM.Options.AvgClicksHist === 0 ? ' second' : ' seconds') + ')', document.createTextNode(Beautify(CM.Cache.AverageClicks, 1))));
 		if (Game.Has('Fortune cookies')) {
