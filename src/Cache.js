@@ -681,6 +681,7 @@ CM.Cache.ColourOfPP = function(me, price) {
 CM.Cache.CacheBuildingsPP = function() {
 	CM.Cache.min = Infinity;
 	CM.Cache.max = 1;
+	CM.Cache.ArrayOfPPs = [];
 
 	// Calculate PP and colors when compared to purchase of optimal building in single-purchase mode
 	if (CM.Options.ColorPPBulkMode === 0) {
@@ -688,12 +689,19 @@ CM.Cache.CacheBuildingsPP = function() {
 			if (Game.cookiesPs) {
 				CM.Cache.Objects1[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 			} else CM.Cache.Objects1[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
-			if (CM.Cache.Objects1[i].pp < CM.Cache.min) CM.Cache.min = CM.Cache.Objects1[i].pp;
-			if (CM.Cache.Objects1[i].pp > CM.Cache.max) CM.Cache.max = CM.Cache.Objects1[i].pp;
+			CM.Cache.ArrayOfPPs.push(CM.Cache.Objects1[i].pp)
 		}
+		// Set CM.Cache.min to best non-excluded buidliung
+		CM.Cache.ArrayOfPPs.sort((a, b) => a - b)
+		CM.Cache.min = CM.Cache.ArrayOfPPs[CM.Options.PPExcludeTop]
+		CM.Cache.max = CM.Cache.ArrayOfPPs[CM.Cache.ArrayOfPPs.length - 1];
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 		for (let i of Object.keys(CM.Cache.Objects1)) {
 			CM.Cache.Objects1[i].color = CM.Cache.ColourOfPP(CM.Cache.Objects1[i], Game.Objects[i].getPrice());
+			// Colour based on excluding certain top-buildings
+			for (let j = 0; j < CM.Options.PPExcludeTop; j++) {
+				if (CM.Cache.Objects1[i].pp === CM.Cache.ArrayOfPPs[j]) CM.Cache.Objects1[i].color = CM.Disp.colorGray;
+			}
 		}
 		// Calculate PP of bulk-buy modes
 		CM.Cache.CacheBuildingsBulkPP('Objects10');
@@ -706,12 +714,20 @@ CM.Cache.CacheBuildingsPP = function() {
 			if (Game.cookiesPs) {
 				CM.Cache[target][i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache[target][i].bonus);
 			} else CM.Cache[target][i].pp = (Game.Objects[i].bulkPrice / CM.Cache[target][i].bonus);
-			if (CM.Cache.min === -1 || CM.Cache[target][i].pp < CM.Cache.min) CM.Cache.min = CM.Cache[target][i].pp;
-			if (CM.Cache.max === -1 || CM.Cache[target][i].pp > CM.Cache.max) CM.Cache.max = CM.Cache[target][i].pp;
+			CM.Cache.ArrayOfPPs.push(CM.Cache[target][i].pp)
 		}
+		// Set CM.Cache.min to best non-excluded buidliung
+		CM.Cache.ArrayOfPPs.sort((a, b) => a - b)
+		CM.Cache.min = CM.Cache.ArrayOfPPs[CM.Options.PPExcludeTop]
+		CM.Cache.max = CM.Cache.ArrayOfPPs[CM.Cache.ArrayOfPPs.length - 1];
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
+
 		for (let i of Object.keys(CM.Cache.Objects1)) {
 			CM.Cache[target][i].color = CM.Cache.ColourOfPP(CM.Cache[target][i], Game.Objects[i].bulkPrice);
+			// Colour based on excluding certain top-buildings
+			for (let j = 0; j < CM.Options.PPExcludeTop; j++) {
+				if (CM.Cache[target][i].pp === CM.Cache.ArrayOfPPs[j]) CM.Cache[target][i].color = CM.Disp.colorGray;
+			}
 		}
 	}
 };

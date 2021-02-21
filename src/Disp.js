@@ -748,7 +748,7 @@ CM.Disp.UpdateBuildings = function() {
 			return o;
 		});
 
-		arr.sort(function(a, b){ return (CM.Disp.colors.indexOf(a.color) > CM.Disp.colors.indexOf(b.color) ? 1 : (CM.Disp.colors.indexOf(a.color) < CM.Disp.colors.indexOf(b.color) ? -1 : 0)); });
+		arr.sort(function(a, b){ return (CM.Disp.colors.indexOf(a.color) > CM.Disp.colors.indexOf(b.color) ? 1 : (a.pp < b.pp) ? -1 : 0); });
 	
 		for (let x = 0; x < arr.length; x++) {
 			Game.Objects[arr[x].name].l.style.gridRow = (x + 2) + "/" + (x + 2);
@@ -2908,7 +2908,7 @@ CM.Disp.colorPurple = 'Purple';
 CM.Disp.colorGray = 'Gray';
 CM.Disp.colorPink = 'Pink';
 CM.Disp.colorBrown = 'Brown';
-CM.Disp.colors = [CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorGray, CM.Disp.colorPink, CM.Disp.colorBrown];
+CM.Disp.colors = [CM.Disp.colorGray, CM.Disp.colorBlue, CM.Disp.colorGreen, CM.Disp.colorYellow, CM.Disp.colorOrange, CM.Disp.colorRed, CM.Disp.colorPurple, CM.Disp.colorPink, CM.Disp.colorBrown];
 
 
 /**
