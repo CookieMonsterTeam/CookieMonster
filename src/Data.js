@@ -268,7 +268,7 @@ CM.Data.ConfigDefault = {
 	CPSMode: 1,
 	AvgCPSHist: 3,
 	AvgClicksHist: 0,
-	ColorPPBulkMode: 0,
+	ColorPPBulkMode: 1,
 	PPExcludeTop: 0,
 	PPSecondsLowerLimit: 0,
 	PPOnlyConsiderBuyable: 0,
