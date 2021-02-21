@@ -220,6 +220,7 @@ CM.Data.Config.ToolWarnLuckyFrenzy = {type: 'bool', group: 'Tooltip', label: ['T
 CM.Data.Config.ToolWarnConjure = {type: 'bool', group: 'Tooltip', label: ['Tooltip Conjure Warning OFF', 'Tooltip Conjure Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Conjure Baked Goods" rewards', toggle: true};
 CM.Data.Config.ToolWarnConjureFrenzy = {type: 'bool', group: 'Tooltip', label: ['Tooltip Conjure Frenzy Warning OFF', 'Tooltip Conjure Frenzy Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for max "Conjure Baked Goods" rewards with Frenzy active', toggle: true};
 CM.Data.Config.ToolWarnEdifice = {type: 'bool', group: 'Tooltip', label: ['Tooltip Edifice Warning OFF', 'Tooltip Edifice Warning ON'], desc: 'A warning when buying if it will put the bank under the amount needed for "Spontaneous Edifice" to possibly give you your most expensive building', toggle: true};
+CM.Data.Config.ToolWarnUser = {type: 'numscale', group: 'Tooltip', label: 'Tooltip Warning At x times CPS: ', desc: 'Use this to show a customized warning if buying it will put the bank under the amount equal to value times cps; setting to 0 disables the function altogether', min: 0, max: Infinity};
 CM.Data.Config.ToolWarnPos = {type: 'bool', group: 'Tooltip', label: ['Tooltip Warning Position (Left)', 'Tooltip Warning Position (Bottom)'], desc: 'Placement of the warning boxes', toggle: false, func: function() {CM.Disp.ToggleToolWarnPos();}};
 CM.Data.Config.TooltipGrim = {type: 'bool', group: 'Tooltip', label: ['Grimoire Tooltip Information OFF', 'Grimoire Tooltip Information ON'], desc: 'Extra information in tooltip for grimoire', toggle: true};
 CM.Data.Config.TooltipWrink = {type: 'bool', group: 'Tooltip', label: ['Wrinkler Tooltip OFF', 'Wrinkler Tooltip ON'], desc: 'Shows the amount of cookies a wrinkler will give when popping it', toggle: true};
@@ -268,7 +269,7 @@ CM.Data.ConfigDefault = {
 	CPSMode: 1,
 	AvgCPSHist: 3,
 	AvgClicksHist: 0,
-	ColorPPBulkMode: 0,
+	ColorPPBulkMode: 1,
 	PPExcludeTop: 0,
 	PPSecondsLowerLimit: 0,
 	PPOnlyConsiderBuyable: 0,
@@ -316,6 +317,7 @@ CM.Data.ConfigDefault = {
 	ToolWarnConjure: 1,
 	ToolWarnConjureFrenzy: 1,
 	ToolWarnEdifice: 1,
+	ToolWarnUser: 0,
 	ToolWarnPos: 1,
 	TooltipGrim:1,
 	TooltipWrink: 1,
