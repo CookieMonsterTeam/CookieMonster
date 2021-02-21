@@ -15,6 +15,14 @@ CM.Main.Loop = function() {
 		CM.Disp.UpdateAscendState();
 	}
 	if (!Game.OnAscend && Game.AscendTimer === 0) {
+		// Check if any other mods have been loaded
+		if (CM.Main.LastModCount != Object.keys(Game.mods).length) {
+			CM.Sim.CreateSimFunctions();
+			CM.Sim.InitData();
+			CM.Cache.InitCache();
+			CM.Main.LastModCount = Object.keys(Game.mods).length;
+		}
+		
 		// CM.Sim.DoSims is set whenever CPS has changed
 		if (CM.Sim.DoSims) {
 			CM.Cache.CacheIncome();
@@ -71,6 +79,9 @@ CM.Main.DelayInit = function() {
 	CM.Sim.InitData();
 	CM.Cache.InitCache();
 
+	// Stored to check if we need to re-initiliaze data
+	CM.Main.LastModCount = Object.keys(Game.mods).length
+
 	// Creating visual elements
 	CM.Disp.CreateCssArea();
 	CM.Disp.CreateBotBar();
@@ -98,6 +109,7 @@ CM.Main.DelayInit = function() {
 	else Game.Notify('Cookie Monster version ' + CM.VersionMajor + '.' + CM.VersionMinor + ' loaded!', '', '', 1, 1);
 
 	Game.Win('Third-party');
+	
 };
 
 /********
