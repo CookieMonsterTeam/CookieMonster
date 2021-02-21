@@ -218,7 +218,7 @@ CM.Disp.Beautify = function(num, floats, forced) {
 			}
 		}
 		if (answer === '') {
-			console.log("Could not beautify number with CM.Disp.Beautify:" + num);
+			console.log("Could not beautify number with CM.Disp.Beautify: " + num);
 			answer = CM.Backup.Beautify(num, floats); 
 		}
 		if (CM.Options.ScaleSeparator) answer = answer.replace('.', ',');
@@ -231,7 +231,7 @@ CM.Disp.Beautify = function(num, floats, forced) {
 		return 0;
 	}
 	else {
-		console.log("Could not beautify number with CM.Disp.Beautify:" + num);
+		console.log("Could not beautify number with CM.Disp.Beautify: " + num);
 		return CM.Backup.Beautify(num, floats);
 	}
 };

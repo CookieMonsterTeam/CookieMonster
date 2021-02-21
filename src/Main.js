@@ -65,6 +65,9 @@ CM.Main.Loop = function() {
  * Called by CM.init()
  */
 CM.Main.DelayInit = function() {
+	// Create CM.Sim functions
+	CM.Sim.CreateSimFunctions();
+
 	CM.Sim.InitData();
 	CM.Cache.InitCache();
 
