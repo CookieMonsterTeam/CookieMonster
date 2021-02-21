@@ -150,6 +150,7 @@ CM.Data.Config.AvgClicksHist = {type: 'bool', group: 'Calculation', label: ['Ave
 CM.Data.Config.ColorPPBulkMode = {type: 'bool', group: 'Calculation', label: ['Color of PP (Compared to Single)', 'Color of PP (Compared to Bulk)'], desc: 'Color PP-values based on comparison with single purchase or with selected bulk-buy mode', toggle: false, func: function () {CM.Cache.CachePP();}};
 CM.Data.Config.PPExcludeTop = {type: 'bool', group: 'Calculation', label: ["Don't Ignore Any", 'Ignore 1st Best', 'Ignore 1st and 2nd Best', 'Ignore 1st, 2nd and 3rd Best'], desc: 'Makes CookieMonster ignore the 1st, 2nd or 3rd best buildings in labeling and colouring PP values', toggle: true};
 CM.Data.Config.PPSecondsLowerLimit = {type: 'numscale', group: 'Calculation', label: 'Lower limit for PP (in seconds): ', desc: 'If a building or upgrade costs less than the specified seconds of CPS it will also be considered optimal and label it as such ("PP is less than xx seconds of CPS"); setting to 0 ignores this option', min: 0, max: Infinity};
+CM.Data.Config.PPOnlyConsiderBuyable = {type: 'bool', group: 'Calculation', label: ["Don't Ignore Non-Buyable", 'Ignore Non-Buyable'], desc: "Makes CookieMonster label buildings and upgrades you can't buy right now red, useful in those situations where you just want to spend your full bank 'most optimally'", toggle: true};
 CM.Data.Config.ToolWarnBon = {type: 'bool', group: 'Calculation', label: ['Calculate Tooltip Warning With Bonus CPS OFF', 'Calculate Tooltip Warning With Bonus CPS ON'], desc: 'Calculate the warning with or without the bonus CPS you get from buying', toggle: true};
 
 // Notification
@@ -270,6 +271,7 @@ CM.Data.ConfigDefault = {
 	ColorPPBulkMode: 0,
 	PPExcludeTop: 0,
 	PPSecondsLowerLimit: 0,
+	PPOnlyConsiderBuyable: 0,
 	ToolWarnBon: 0,
 	Title: 1,
 	GeneralSound: 1,

@@ -20,6 +20,7 @@ CM.Cache.InitCache = function() {
 	CM.Cache.CacheSeaSpec();
 	CM.Cache.InitCookiesDiff();
 	CM.Cache.HeavenlyChipsDiff = new CMAvgQueue(5); // Used by CM.Cache.CacheHeavenlyChipsPS()
+	CM.Cache.CacheHeavenlyChipsPS
 	CM.Cache.CacheAvgCPS();
 	CM.Cache.CacheIncome();
 	CM.Cache.CacheBuildingsPrices();
@@ -347,6 +348,7 @@ CM.Cache.CacheSeaSpec = function() {
  * @global	{number}	CM.Cache.HCPerSecond	The Heavenly Chips per second in the last five seconds
  */
 CM.Cache.CacheHeavenlyChipsPS = function() {
+	CM.Cache.HCPerSecond = 0; // Mainly there to not throw errors during initialization
 	let currDate = Math.floor(Date.now() / 1000);
 	// Only calculate every new second
 	if ((Game.T / Game.fps) % 1 === 0) {
@@ -671,6 +673,10 @@ CM.Cache.ColourOfPP = function(me, price) {
 	if (Number(CM.Options.PPSecondsLowerLimit) !== 0) {
 		if (price / CM.Cache.AvgCPS < Number(CM.Options.PPSecondsLowerLimit)) color = CM.Disp.colorBlue
 	}
+	// Colour based on being able to purchase
+	if (CM.Options.PPOnlyConsiderBuyable) {
+		if (price - Game.cookies > 0) color = CM.Disp.colorRed;
+	}
 	return color
 };
 
@@ -682,6 +688,7 @@ CM.Cache.CacheBuildingsPP = function() {
 	CM.Cache.min = Infinity;
 	CM.Cache.max = 1;
 	CM.Cache.ArrayOfPPs = [];
+	if (typeof CM.Options.PPExcludeTop === "undefined") CM.Options.PPExcludeTop = 0; // Otherwise breaks during initialization
 
 	// Calculate PP and colors when compared to purchase of optimal building in single-purchase mode
 	if (CM.Options.ColorPPBulkMode === 0) {
@@ -689,18 +696,26 @@ CM.Cache.CacheBuildingsPP = function() {
 			if (Game.cookiesPs) {
 				CM.Cache.Objects1[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 			} else CM.Cache.Objects1[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
-			CM.Cache.ArrayOfPPs.push(CM.Cache.Objects1[i].pp)
+			CM.Cache.ArrayOfPPs.push([CM.Cache.Objects1[i].pp, Game.Objects[i].getPrice()]);
 		}
 		// Set CM.Cache.min to best non-excluded buidliung
-		CM.Cache.ArrayOfPPs.sort((a, b) => a - b)
-		CM.Cache.min = CM.Cache.ArrayOfPPs[CM.Options.PPExcludeTop]
-		CM.Cache.max = CM.Cache.ArrayOfPPs[CM.Cache.ArrayOfPPs.length - 1];
+		CM.Cache.ArrayOfPPs.sort((a, b) => a[0] - b[0]);
+		if (CM.Options.PPOnlyConsiderBuyable) {
+			while (CM.Cache.ArrayOfPPs[0][1] > Game.cookies) {
+				if (CM.Cache.ArrayOfPPs.length === 1) {
+					break;
+				}
+				CM.Cache.ArrayOfPPs.shift()
+			}
+		}
+		CM.Cache.min = CM.Cache.ArrayOfPPs[CM.Options.PPExcludeTop][0];
+		CM.Cache.max = CM.Cache.ArrayOfPPs[CM.Cache.ArrayOfPPs.length - 1][0];
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 		for (let i of Object.keys(CM.Cache.Objects1)) {
 			CM.Cache.Objects1[i].color = CM.Cache.ColourOfPP(CM.Cache.Objects1[i], Game.Objects[i].getPrice());
 			// Colour based on excluding certain top-buildings
 			for (let j = 0; j < CM.Options.PPExcludeTop; j++) {
-				if (CM.Cache.Objects1[i].pp === CM.Cache.ArrayOfPPs[j]) CM.Cache.Objects1[i].color = CM.Disp.colorGray;
+				if (CM.Cache.Objects1[i].pp === CM.Cache.ArrayOfPPs[j][0]) CM.Cache.Objects1[i].color = CM.Disp.colorGray;
 			}
 		}
 		// Calculate PP of bulk-buy modes
@@ -714,19 +729,27 @@ CM.Cache.CacheBuildingsPP = function() {
 			if (Game.cookiesPs) {
 				CM.Cache[target][i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache[target][i].bonus);
 			} else CM.Cache[target][i].pp = (Game.Objects[i].bulkPrice / CM.Cache[target][i].bonus);
-			CM.Cache.ArrayOfPPs.push(CM.Cache[target][i].pp)
+			CM.Cache.ArrayOfPPs.push([CM.Cache[target][i].pp, Game.Objects[i].bulkPrice])
 		}
 		// Set CM.Cache.min to best non-excluded buidliung
-		CM.Cache.ArrayOfPPs.sort((a, b) => a - b)
-		CM.Cache.min = CM.Cache.ArrayOfPPs[CM.Options.PPExcludeTop]
-		CM.Cache.max = CM.Cache.ArrayOfPPs[CM.Cache.ArrayOfPPs.length - 1];
+		CM.Cache.ArrayOfPPs.sort((a, b) => a[0] - b[0]);
+		if (CM.Options.PPOnlyConsiderBuyable) {
+			while (CM.Cache.ArrayOfPPs[0][1] > Game.cookies) {
+				if (CM.Cache.ArrayOfPPs.length === 1) {
+					break;
+				}
+				CM.Cache.ArrayOfPPs.shift()
+			}
+		}
+		CM.Cache.min = CM.Cache.ArrayOfPPs[CM.Options.PPExcludeTop][0];
+		CM.Cache.max = CM.Cache.ArrayOfPPs[CM.Cache.ArrayOfPPs.length - 1][0];
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 
 		for (let i of Object.keys(CM.Cache.Objects1)) {
 			CM.Cache[target][i].color = CM.Cache.ColourOfPP(CM.Cache[target][i], Game.Objects[i].bulkPrice);
 			// Colour based on excluding certain top-buildings
 			for (let j = 0; j < CM.Options.PPExcludeTop; j++) {
-				if (CM.Cache[target][i].pp === CM.Cache.ArrayOfPPs[j]) CM.Cache[target][i].color = CM.Disp.colorGray;
+				if (CM.Cache[target][i].pp === CM.Cache.ArrayOfPPs[j][0]) CM.Cache[target][i].color = CM.Disp.colorGray;
 			}
 		}
 	}
