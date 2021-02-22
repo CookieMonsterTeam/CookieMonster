@@ -2382,7 +2382,7 @@ CM.Disp.AddMenuStats = function(title) {
 CM.Disp.CreateStatsHeader = function(text, config) {
 	let div = document.createElement('div');
 	div.className = 'title';
-	div.style.padding = '5px 16px';
+	div.style.padding = '0px 16px';
 	div.style.opacity = '0.7';
 	div.style.fontSize = '17px';
 	div.style.fontFamily = '"Kavoon", Georgia, serif';
@@ -2624,14 +2624,17 @@ CM.Disp.CreateStatsChainSection = function() {
 	}
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Cookies Required (Frenzy) (Wrath)', chainWrathReqFrenFrag, goldCookTooltip));
 
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Golden / Wrath)', document.createTextNode(Beautify(CM.Cache.ChainReward[0]) + ' / ' + Beautify(CM.Cache.ChainWrathReward[0])), goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Golden / Wrath)', document.createTextNode(Beautify(CM.Cache.ChainMaxReward[0]) + ' / ' + Beautify(CM.Cache.ChainMaxWrathReward[0])), goldCookTooltip));
 
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Frenzy) (Golden / Wrath)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyReward[0]) + ' / ' + Beautify(CM.Cache.ChainFrenzyWrathReward[0]))), goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Frenzy) (Golden / Wrath)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyMaxReward[0]) + ' / ' + Beautify(CM.Cache.ChainFrenzyMaxWrathReward[0]))), goldCookTooltip));
 
-	let chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * CM.Cache.DragonsFortuneMultAdjustment * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.5);
+	let chainCurMax = Math.min(Game.cookiesPs * 60 * 60 * 6 * CM.Cache.DragonsFortuneMultAdjustment, Game.cookies * 0.5);
 	let chainCur = CM.Cache.MaxChainCookieReward(7, chainCurMax, CM.Cache.GoldenCookiesMult)[0];
 	let chainCurWrath = CM.Cache.MaxChainCookieReward(6, chainCurMax, CM.Cache.WrathCookiesMult)[0];
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (CUR) (Golden / Wrath)', document.createTextNode((Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))), goldCookTooltip));
+
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'CPS Needed For Next Level (G / W)', document.createTextNode((Beautify(CM.Cache.ChainRequiredNext) + ' / ' + Beautify(CM.Cache.ChainWrathRequiredNext))), goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'CPS Needed For Next Level (Frenzy) (G / W)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyRequiredNext) + ' / ' + Beautify(CM.Cache.ChainFrenzyWrathRequiredNext))), goldCookTooltip));
 	return section;
 };
 
