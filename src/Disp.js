@@ -2267,7 +2267,7 @@ CM.Disp.AddMenuStats = function(title) {
 			popFattestA.className = 'option';
 			popFattestA.onclick = function() {if (CM.Cache.WrinklersFattest[1]) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
 			popFattestFrag.appendChild(popFattestA);
-			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping Single Fattest Non-Shiny Wrinkler (id: ' + (CM.Cache.WrinklersFattest[1] ? CM.Cache.WrinklersFattest[1] : "None") + ")",  popFattestFrag));
+			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping Single Fattest Non-Shiny Wrinkler (id: ' + (CM.Cache.WrinklersFattest[1] !== null ? CM.Cache.WrinklersFattest[1] : "None") + ")",  popFattestFrag));
 		}
 	}
 
