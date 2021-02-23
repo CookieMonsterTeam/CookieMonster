@@ -274,19 +274,19 @@ CM.Cache.CacheChain = function() {
 	else maxPayout = 0;	
 
 	CM.Cache.ChainMaxReward = CM.Cache.MaxChainCookieReward(7, maxPayout, CM.Cache.GoldenCookiesMult);
-	CM.Cache.ChainRequired = CM.Cache.ChainMaxReward[1] * 2;
-	CM.Cache.ChainRequiredNext = CM.Cache.ChainMaxReward[2] * 2;
+	CM.Cache.ChainRequired = CM.Cache.ChainMaxReward[1] * 2 / CM.Cache.GoldenCookiesMult;
+	CM.Cache.ChainRequiredNext = CM.Cache.ChainMaxReward[2] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 
 	CM.Cache.ChainMaxWrathReward = CM.Cache.MaxChainCookieReward(6, maxPayout, CM.Cache.WrathCookiesMult);
-	CM.Cache.ChainWrathRequired = CM.Cache.ChainMaxWrathReward[1] * 2;
-	CM.Cache.ChainWrathRequiredNext = CM.Cache.ChainMaxWrathReward[2] * 2;
+	CM.Cache.ChainWrathRequired = CM.Cache.ChainMaxWrathReward[1] * 2 / CM.Cache.WrathCookiesMult;
+	CM.Cache.ChainWrathRequiredNext = CM.Cache.ChainMaxWrathReward[2] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 
 	CM.Cache.ChainFrenzyMaxReward = CM.Cache.MaxChainCookieReward(7, maxPayout * 7, CM.Cache.GoldenCookiesMult);
-	CM.Cache.ChainFrenzyRequired = CM.Cache.ChainFrenzyMaxReward[1] * 2;
+	CM.Cache.ChainFrenzyRequired = CM.Cache.ChainFrenzyMaxReward[1] * 2 / CM.Cache.GoldenCookiesMult;
 	CM.Cache.ChainFrenzyRequiredNext = CM.Cache.ChainFrenzyMaxReward[2] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 
 	CM.Cache.ChainFrenzyMaxWrathReward = CM.Cache.MaxChainCookieReward(6, maxPayout * 7, CM.Cache.WrathCookiesMult);
-	CM.Cache.ChainFrenzyWrathRequired = CM.Cache.ChainFrenzyMaxWrathReward[1] * 2;
+	CM.Cache.ChainFrenzyWrathRequired = CM.Cache.ChainFrenzyMaxWrathReward[1] * 2 / CM.Cache.WrathCookiesMult;
 	CM.Cache.ChainFrenzyWrathRequiredNext = CM.Cache.ChainFrenzyMaxWrathReward[2] / 60 / 60 / 6 / CM.Cache.DragonsFortuneMultAdjustment;
 };
 
