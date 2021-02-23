@@ -1,3 +1,4 @@
+![ESLint](https://github.com/Aktanusa/CookieMonster/workflows/ESLint/badge.svg?event=push)
 ## Cookie Monster
 
 **Cookie Monster** is an addon you can load into Cookie Clicker, that offers a wide range of tools and statistics to enhance the game. **It is not a cheat interface** – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.
@@ -50,27 +51,7 @@ If (for some reason) the above doesn't work, trying pasting everything after the
 
 ### Userscript
 
-If you'd rather use the addon as a script via per example *Greasemonkey* or *Tampermonkey*, you can use the following script, which will automatically load *Cookie Monster* every time the original game loads. You may need to specify <code>http://orteil.dashnet.org/cookieclicker/</code> when asked for a *namespace* or *includes*. For how to add an userscript to your browser, refer to your browser/plugin's documentation as the method changes for each one.
-
-```javascript
-// ==UserScript==
-// @name Cookie Monster
-// @namespace Cookie
-// @include http://orteil.dashnet.org/cookieclicker/
-// @include https://orteil.dashnet.org/cookieclicker/
-// @version 1
-// @grant none
-// ==/UserScript==
-
-(function() {
-    const checkReady = setInterval(function() {
-        if (typeof Game.ready !== 'undefined' && Game.ready) {
-            Game.LoadMod('https://aktanusa.github.io/CookieMonster/CookieMonster.js');
-            clearInterval(checkReady);
-        }
-    }, 1000);
-})();
-```
+If you'd rather use the addon as a [userscript](https://en.wikipedia.org/wiki/Userscript) to automatically load _Cookie Monster_ every time the original game loads, install the `CookieMonster.user.js` file. You can do this by clicking on the file in the file-list and clicking "raw".
 
 ## Bugs and suggestions
 
@@ -81,6 +62,12 @@ Before submitting a bug, make sure to give a shot at the latest version of the a
 If the bug is still here, you can submit an issue for it. Please do so by using the bug report template.
 
 All suggestions are welcome, even the smallest ones.
+
+## Contributing
+
+To contribute you can fork and clone the repository and run `npm install`.
+
+Please also remember to run `npm run build` after saving all your changes to build the final `CookieMonster.js` file. 
 
 ## Contributors
 

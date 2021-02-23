@@ -1,0 +1,53 @@
+{
+  "name": "cookiemonster-mod",
+  "version": "2.031.4",
+  "description": "Cookie Monster is an add-on that you can load into Cookie Clicker which offers a wide range of tools and statistics to enhance the game. It is not a cheat interface – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want. This is a helper and everything is an option.",
+  "main": "CookieMonster.js",
+  "keywords": [
+    "Cookie Clicker",
+    "javascript",
+    "mod",
+    "Dashnet",
+    "Orteil"
+  ],
+  "scripts": {
+    "build": "npx eslint src && terser ./src/Header.js ./src/Cache.js ./src/Config.js ./src/Data.js ./src/Disp.js ./src/Main.js ./src/Sim.js ./src/Footer.js -o CookieMonster.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aktanusa/CookieMonster.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Aktanusa",
+    "email": "chanam.geo@yahoo.com"
+  },
+  "contributors": [
+    {
+      "name": "Daniël van Noord",
+      "email": "13665637+DanielNoord@users.noreply.github.com"
+    },
+    {
+      "name": "Aran Leite",
+      "email": "hyoretsu@gmail.com",
+      "url": "https://www.linkedin.com/in/aranleite"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/Aktanusa/CookieMonster/issues"
+  },
+  "homepage": "https://github.com/Aktanusa/CookieMonster#readme",
+  "devDependencies": {
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "terser": "^5.6.0-beta"
+  },
+  "ccrepo": {
+    "icon": [
+      10,
+      0
+    ],
+    "name": "Cookie Monster"
+  }
+}

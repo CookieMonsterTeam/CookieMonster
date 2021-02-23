@@ -1,31 +1,18 @@
-/**********
+/* eslint-disable no-unused-vars */
+/**
  * Header *
- **********/
-RunCookieMonsterHeader = function() {
-    CM = {};
+ */
 
-    CM.Backup = {};
-
-    CM.Cache = {};
-
-    CM.Config = {};
-
-    CM.ConfigData = {};
-
-    CM.Data = {};
-
-    CM.Disp = {};
-
-    CM.Footer = {};
-
-    CM.Main = {};
-
-    CM.Options = {};
-
-    CM.Sim = {};
-}
-
-if (typeof CM == "undefined") {
-    RunCookieMonsterHeader();
-}
-
+const CM = {
+	Backup: {},
+	Cache: {},
+	Config: {},
+	Data: { Config: {} },
+	Disp: {},
+	Footer: {},
+	Main: {},
+	Options: {},
+	Sim: {},
+	VersionMajor: '2.031',
+	VersionMinor: '4',
+};
