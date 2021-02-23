@@ -1936,18 +1936,17 @@ CM.Disp.AddDragonLevelUpTooltip = function() {
  * It is called by Game.UpdateMenu()
  */
 CM.Disp.AddMenu = function() {
-	let title = function() {
-		let div = document.createElement('div');
-		div.className = 'title ' + CM.Disp.colorTextPre + CM.Disp.colorBlue;
-		div.textContent = 'Cookie Monster Goodies';
-		return div;
-	};
+	let title = document.createElement('div');
+	title.className = 'title ' + CM.Disp.colorTextPre + CM.Disp.colorBlue;
 
 	if (Game.onMenu === 'prefs') {
+		title.textContent = 'Cookie Monster Settings';
 		CM.Disp.AddMenuPref(title);
+		
 	}
 	else if (Game.onMenu === 'stats') {
 		if (CM.Options.Stats) {
+			title.textContent = 'Cookie Monster Statistics';
 			CM.Disp.AddMenuStats(title);
 		}
 	}
@@ -1971,7 +1970,7 @@ CM.Disp.RefreshMenu = function() {
  */
 CM.Disp.AddMenuPref = function(title) {	
 	let frag = document.createDocumentFragment();
-	frag.appendChild(title());
+	frag.appendChild(title);
 
 	for (let group of Object.keys(CM.Data.ConfigGroups)) {
 		let groupObject = CM.Disp.CreatePrefHeader(group, CM.Data.ConfigGroups[group]); // (group, display-name of group)
@@ -2227,7 +2226,7 @@ CM.Disp.UpdateColors = function() {
 CM.Disp.AddMenuStats = function(title) {
 	let stats = document.createElement('div');
 	stats.className = 'subsection';
-	stats.appendChild(title());
+	stats.appendChild(title);
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Lucky Cookies', 'Lucky'));
 	if (CM.Options.Header.Lucky) {
@@ -2267,7 +2266,7 @@ CM.Disp.AddMenuStats = function(title) {
 			popFattestA.className = 'option';
 			popFattestA.onclick = function() {if (CM.Cache.WrinklersFattest[1]) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
 			popFattestFrag.appendChild(popFattestA);
-			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping Single Fattest Non-Shiny Wrinkler (id: ' + (CM.Cache.WrinklersFattest[1] ? CM.Cache.WrinklersFattest[1] : "None") + ")",  popFattestFrag));
+			stats.appendChild(CM.Disp.CreateStatsListing("basic", 'Rewards of Popping Single Fattest Non-Shiny Wrinkler (id: ' + (CM.Cache.WrinklersFattest[1] !== null ? CM.Cache.WrinklersFattest[1] : "None") + ")",  popFattestFrag));
 		}
 	}
 
@@ -2382,7 +2381,7 @@ CM.Disp.AddMenuStats = function(title) {
 CM.Disp.CreateStatsHeader = function(text, config) {
 	let div = document.createElement('div');
 	div.className = 'title';
-	div.style.padding = '5px 16px';
+	div.style.padding = '0px 16px';
 	div.style.opacity = '0.7';
 	div.style.fontSize = '17px';
 	div.style.fontFamily = '"Kavoon", Georgia, serif';
@@ -2624,14 +2623,17 @@ CM.Disp.CreateStatsChainSection = function() {
 	}
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Cookies Required (Frenzy) (Wrath)', chainWrathReqFrenFrag, goldCookTooltip));
 
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Golden / Wrath)', document.createTextNode(Beautify(CM.Cache.ChainReward[0]) + ' / ' + Beautify(CM.Cache.ChainWrathReward[0])), goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Golden / Wrath)', document.createTextNode(Beautify(CM.Cache.ChainMaxReward[0]) + ' / ' + Beautify(CM.Cache.ChainMaxWrathReward[0])), goldCookTooltip));
 
-	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Frenzy) (Golden / Wrath)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyReward[0]) + ' / ' + Beautify(CM.Cache.ChainFrenzyWrathReward[0]))), goldCookTooltip));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (MAX) (Frenzy) (Golden / Wrath)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyMaxReward[0]) + ' / ' + Beautify(CM.Cache.ChainFrenzyMaxWrathReward[0]))), goldCookTooltip));
 
-	let chainCurMax = Math.min(CM.Cache.NoGoldSwitchCookiesPS * CM.Cache.DragonsFortuneMultAdjustment * 60 * 60 * 6, (Game.cookies + CM.Disp.GetWrinkConfigBank()) * 0.5);
+	let chainCurMax = Math.min(Game.cookiesPs * 60 * 60 * 6 * CM.Cache.DragonsFortuneMultAdjustment, Game.cookies * 0.5);
 	let chainCur = CM.Cache.MaxChainCookieReward(7, chainCurMax, CM.Cache.GoldenCookiesMult)[0];
 	let chainCurWrath = CM.Cache.MaxChainCookieReward(6, chainCurMax, CM.Cache.WrathCookiesMult)[0];
 	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Chain" Reward (CUR) (Golden / Wrath)', document.createTextNode((Beautify(chainCur) + ' / ' + Beautify(chainCurWrath))), goldCookTooltip));
+
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'CPS Needed For Next Level (G / W)', document.createTextNode((Beautify(CM.Cache.ChainRequiredNext) + ' / ' + Beautify(CM.Cache.ChainWrathRequiredNext))), 'ChainNextLevelPlaceholder'));
+	section.appendChild(CM.Disp.CreateStatsListing("withTooltip", 'CPS Needed For Next Level (Frenzy) (G / W)', document.createTextNode((Beautify(CM.Cache.ChainFrenzyRequiredNext) + ' / ' + Beautify(CM.Cache.ChainFrenzyWrathRequiredNext))), 'ChainNextLevelPlaceholder'));
 	return section;
 };
 
@@ -2898,7 +2900,8 @@ CM.Disp.TooltipText = [
 	['NextPrestTooltipPlaceholder', 'Calculated with cookies gained from wrinklers and Chocolate egg', '200px'], 
 	['HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and buying Chocolate egg', '330px'], 
 	['ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels unlocked at 100% of its potential and from ascension achievements if you have the same buildings/upgrades after reset', '370px'], 
-	['ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and then buying Chocolate egg', '300px']
+	['ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and then buying Chocolate egg', '300px'],
+	['ChainNextLevelPlaceholder', 'Cheated cookies might break this formula', '250px']
 ];
 
 /**
