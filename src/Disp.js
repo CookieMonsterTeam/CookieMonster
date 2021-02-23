@@ -2241,10 +2241,19 @@ CM.Disp.AddMenuStats = function(title) {
 	if (CM.Options.Header.Chain) {
 		stats.appendChild(CM.Disp.CreateStatsChainSection());
 	}
-
-	stats.appendChild(CM.Disp.CreateStatsHeader('Spells', 'Spells'));
-	if (CM.Options.Header.Spells) {
-		stats.appendChild(CM.Disp.CreateStatsSpellsSection());
+	
+	if (Game.Objects["Wizard tower"].minigameLoaded) {
+		stats.appendChild(CM.Disp.CreateStatsHeader('Spells', 'Spells'));
+		if (CM.Options.Header.Spells) {
+			stats.appendChild(CM.Disp.CreateStatsSpellsSection());
+		}
+	}
+		
+	if (Game.Objects.Farm.minigameLoaded) {
+		stats.appendChild(CM.Disp.CreateStatsHeader('Garden', 'Garden'));
+		if (CM.Options.Header.Garden) {
+			stats.appendChild(CM.Disp.CreateStatsGardenSection());
+		}
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Prestige', 'Prestige'));
@@ -2687,6 +2696,44 @@ CM.Disp.CreateStatsSpellsSection = function() {
 	if (CM.Cache.Edifice) {
 		section.appendChild(CM.Disp.CreateStatsListing("withTooltip", '"Spontaneous Edifice" Cookies Required (most expensive building)', document.createTextNode(CM.Disp.Beautify(CM.Cache.Edifice) + ' (' + CM.Cache.EdificeBuilding + ")"), 'GoldCookTooltipPlaceholder'));
 	}
+	return section;
+};
+
+/**
+ * This function creates the "Garden" section of the stats page
+ * @returns	{object}	section		The object contating the Spells section
+ */
+CM.Disp.CreateStatsGardenSection = function() {
+	let section = document.createElement('div');
+	section.className = 'CMStatsGardenSection';
+	
+	let bakeberryColor = (Game.cookies < Game.cookiesPs * 60 * 30) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	let bakeberryFrag = document.createElement('span');
+	bakeberryFrag.style.fontWeight = 'bold';
+	bakeberryFrag.className = CM.Disp.colorTextPre + bakeberryColor;
+	bakeberryFrag.textContent = Beautify(Game.cookiesPs * 60 * 30);
+	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Cookies required for max reward of Bakeberry: ', bakeberryFrag));
+	
+	let chocorootColor = (Game.cookies < Game.cookiesPs * 60 * 3) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	let chocorootFrag = document.createElement('span');
+	chocorootFrag.style.fontWeight = 'bold';
+	chocorootFrag.className = CM.Disp.colorTextPre + chocorootColor;
+	chocorootFrag.textContent = Beautify(Game.cookiesPs * 60 * 3);
+	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Cookies required for max reward of Chocoroot: ', chocorootFrag));
+
+	let queenbeetColor = (Game.cookies < Game.cookiesPs * 60 * 60) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	let queenbeetFrag = document.createElement('span');
+	queenbeetFrag.style.fontWeight = 'bold';
+	queenbeetFrag.className = CM.Disp.colorTextPre + queenbeetColor;
+	queenbeetFrag.textContent = Beautify(Game.cookiesPs * 60 * 60);
+	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Cookies required for max reward of Queenbeet: ', queenbeetFrag));
+
+	let duketaterColor = (Game.cookies < Game.cookiesPs * 60 * 120) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	let duketaterFrag = document.createElement('span');
+	duketaterFrag.style.fontWeight = 'bold';
+	duketaterFrag.className = CM.Disp.colorTextPre + duketaterColor;
+	duketaterFrag.textContent = Beautify(Game.cookiesPs * 60 * 120);
+	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Cookies required for max reward of Duketater: ', duketaterFrag));
 	return section;
 };
 

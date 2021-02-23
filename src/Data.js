@@ -344,7 +344,7 @@ CM.Data.ConfigDefault = {
 	Favicon: 1,
 	WrinklerButtons: 1,
 	BulkBuyBlock: 0,
-	Header: {BarsColors: 1, Calculation: 1, Notification: 1, NotificationGeneral: 1, NotificationGC: 1, NotificationFC: 1, NotificationSea: 1, NotificationGard: 1, NotificationMagi: 1, NotificationWrink: 1, NotificationWrinkMax: 1, Tooltip: 1, Statistics: 1, Notation: 1, Miscellaneous: 1, Lucky: 1, Spells: 1, Chain: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1, InfoTab: 1},
+	Header: {BarsColors: 1, Calculation: 1, Notification: 1, NotificationGeneral: 1, NotificationGC: 1, NotificationFC: 1, NotificationSea: 1, NotificationGard: 1, NotificationMagi: 1, NotificationWrink: 1, NotificationWrinkMax: 1, Tooltip: 1, Statistics: 1, Notation: 1, Miscellaneous: 1, Lucky: 1, Chain: 1, Spells: 1, Garden: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1, InfoTab: 1},
 };
 
 /**
