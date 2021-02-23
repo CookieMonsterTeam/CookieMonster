@@ -14,5 +14,5 @@ const CM = {
 	Options: {},
 	Sim: {},
 	VersionMajor: '2.031',
-	VersionMinor: '4',
+	VersionMinor: '5',
 };
