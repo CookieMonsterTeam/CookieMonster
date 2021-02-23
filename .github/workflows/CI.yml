@@ -1,0 +1,25 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  Check_ESLint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run ESLint
+      run: |
+        npm install
+        npx eslint src
+  Check_main_file:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check if CookieMonster.js is built correctly 
+      run: |
+        npm install
+        npx terser ./src/Header.js ./src/Cache.js ./src/Config.js ./src/Data.js ./src/Disp.js ./src/Main.js ./src/Sim.js ./src/Footer.js -o CookieMonsterTest.js
+        if cmp CookieMonster.js CookieMonsterTest.js; then
+            echo '### SUCCESS: CookieMonster is correctly built! ###'
+        else
+            echo '### WARNING: CookieMonster.js does not seem to be correct. Make sure to run "npm run build" after saving all your changes! ###'
+            exit 1
+        fi
