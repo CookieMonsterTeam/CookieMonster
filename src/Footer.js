@@ -44,6 +44,10 @@ CM.save = function() {
 CM.load = function(str) {
     let save = JSON.parse(str);
     CM.Config.LoadConfig(save.settings);
+    if (save.version !== CM.VersionMajor + '.' + CM.VersionMinor) {
+        if (Game.prefs.popups) Game.Popup('A new version of Cookie Monster has been loaded, check out the release notes in the info tab!');
+        else Game.Notify('A new version of Cookie Monster has been loaded, check out the release notes in the info tab!', '', '', 0, 1);
+    }
 };
 
 /********

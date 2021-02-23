@@ -1395,8 +1395,10 @@ CM.Disp.TooltipCreateWarningSection = function() {
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjure', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"', 'CMDispTooltipWarnConjureText'));
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjureFrenzy', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods" (Frenzy)', 'CMDispTooltipWarnConjureFrenzyText'));
-	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
-	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnEdifice', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies needed for "Spontaneous Edifice" to possibly give you your most expensive building"', 'CMDispTooltipWarnEdificeText'));
+	if (Game.Objects["Wizard tower"].minigameLoaded) {
+		CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
+		CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnEdifice', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies needed for "Spontaneous Edifice" to possibly give you your most expensive building"', 'CMDispTooltipWarnEdificeText'));
+	}
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnUser', CM.Disp.colorRed, 'Warning: ', `Purchase of this item will put you under the number of Cookies equal to ${CM.Options.ToolWarnUser} seconds of CPS`, 'CMDispTooltipWarnUserText'));
 	
@@ -1937,7 +1939,7 @@ CM.Disp.AddDragonLevelUpTooltip = function() {
  */
 CM.Disp.AddMenu = function() {
 	let title = document.createElement('div');
-	title.className = 'title ' + CM.Disp.colorTextPre + CM.Disp.colorBlue;
+	title.className = 'title'
 
 	if (Game.onMenu === 'prefs') {
 		title.textContent = 'Cookie Monster Settings';
@@ -1949,6 +1951,10 @@ CM.Disp.AddMenu = function() {
 			title.textContent = 'Cookie Monster Statistics';
 			CM.Disp.AddMenuStats(title);
 		}
+	}
+	else if (Game.onMenu === 'log') {
+		title.textContent = 'Cookie Monster '; // To create space between name and button
+		CM.Disp.AddMenuInfo(title);
 	}
 };
 
@@ -1966,7 +1972,7 @@ CM.Disp.RefreshMenu = function() {
 /**
  * This function adds the options/settings of CookieMonster to the options page
  * It is called by CM.Disp.AddMenu
- * @param {function} title	A function that returns the title of CookieMonster pre-styled
+ * @param {object} title	On object that includes the title of the menu
  */
 CM.Disp.AddMenuPref = function(title) {	
 	let frag = document.createDocumentFragment();
@@ -2221,7 +2227,7 @@ CM.Disp.UpdateColors = function() {
 /**
  * This function adds stats created by CookieMonster to the stats page
  * It is called by CM.Disp.AddMenu
- * @param {function} title	A function that returns the title of CookieMonster pre-styled
+ * @param {object} title	On object that includes the title of the menu
  */
 CM.Disp.AddMenuStats = function(title) {
 	let stats = document.createElement('div');
@@ -2237,10 +2243,19 @@ CM.Disp.AddMenuStats = function(title) {
 	if (CM.Options.Header.Chain) {
 		stats.appendChild(CM.Disp.CreateStatsChainSection());
 	}
-
-	stats.appendChild(CM.Disp.CreateStatsHeader('Spells', 'Spells'));
-	if (CM.Options.Header.Spells) {
-		stats.appendChild(CM.Disp.CreateStatsSpellsSection());
+	
+	if (Game.Objects["Wizard tower"].minigameLoaded) {
+		stats.appendChild(CM.Disp.CreateStatsHeader('Spells', 'Spells'));
+		if (CM.Options.Header.Spells) {
+			stats.appendChild(CM.Disp.CreateStatsSpellsSection());
+		}
+	}
+		
+	if (Game.Objects.Farm.minigameLoaded) {
+		stats.appendChild(CM.Disp.CreateStatsHeader('Garden', 'Garden'));
+		if (CM.Options.Header.Garden) {
+			stats.appendChild(CM.Disp.CreateStatsGardenSection());
+		}
 	}
 
 	stats.appendChild(CM.Disp.CreateStatsHeader('Prestige', 'Prestige'));
@@ -2687,6 +2702,44 @@ CM.Disp.CreateStatsSpellsSection = function() {
 };
 
 /**
+ * This function creates the "Garden" section of the stats page
+ * @returns	{object}	section		The object contating the Spells section
+ */
+CM.Disp.CreateStatsGardenSection = function() {
+	let section = document.createElement('div');
+	section.className = 'CMStatsGardenSection';
+	
+	let bakeberryColor = (Game.cookies < Game.cookiesPs * 60 * 30) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	let bakeberryFrag = document.createElement('span');
+	bakeberryFrag.style.fontWeight = 'bold';
+	bakeberryFrag.className = CM.Disp.colorTextPre + bakeberryColor;
+	bakeberryFrag.textContent = Beautify(Game.cookiesPs * 60 * 30);
+	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Cookies required for max reward of Bakeberry: ', bakeberryFrag));
+	
+	let chocorootColor = (Game.cookies < Game.cookiesPs * 60 * 3) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	let chocorootFrag = document.createElement('span');
+	chocorootFrag.style.fontWeight = 'bold';
+	chocorootFrag.className = CM.Disp.colorTextPre + chocorootColor;
+	chocorootFrag.textContent = Beautify(Game.cookiesPs * 60 * 3);
+	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Cookies required for max reward of Chocoroot: ', chocorootFrag));
+
+	let queenbeetColor = (Game.cookies < Game.cookiesPs * 60 * 60) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	let queenbeetFrag = document.createElement('span');
+	queenbeetFrag.style.fontWeight = 'bold';
+	queenbeetFrag.className = CM.Disp.colorTextPre + queenbeetColor;
+	queenbeetFrag.textContent = Beautify(Game.cookiesPs * 60 * 60);
+	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Cookies required for max reward of Queenbeet: ', queenbeetFrag));
+
+	let duketaterColor = (Game.cookies < Game.cookiesPs * 60 * 120) ? CM.Disp.colorRed : CM.Disp.colorGreen;
+	let duketaterFrag = document.createElement('span');
+	duketaterFrag.style.fontWeight = 'bold';
+	duketaterFrag.className = CM.Disp.colorTextPre + duketaterColor;
+	duketaterFrag.textContent = Beautify(Game.cookiesPs * 60 * 120);
+	section.appendChild(CM.Disp.CreateStatsListing("basic", 'Cookies required for max reward of Duketater: ', duketaterFrag));
+	return section;
+};
+
+/**
  * This function creates the "Prestige" section of the stats page
  * @returns	{object}	section		The object contating the Prestige section
  */
@@ -2845,6 +2898,48 @@ CM.Disp.crateMissing = function(me) {
 	style = "${((icon[2] ? 'background-image: url(' + icon[2] + ');' : '') + 'background-position:' + (-icon[0] * 48)+ 'px ' + (-icon[1] * 48) + 'px')};">
 	</div>`;
 };
+
+/********
+ * Section: Functions related to the Stats page
+
+/**
+ * This function adds stats created by CookieMonster to the stats page
+ * It is called by CM.Disp.AddMenu
+ * @param {object} title	On object that includes the title of the menu
+ */
+CM.Disp.AddMenuInfo = function(title) {
+	let info = document.createElement('div');
+	info.className = 'subsection';
+
+	let span = document.createElement('span');
+	span.style.cursor = 'pointer';
+	span.style.display = 'inline-block';
+	span.style.height = '14px';
+	span.style.width = '14px';
+	span.style.borderRadius = '7px';
+	span.style.textAlign = 'center';
+	span.style.backgroundColor = '#C0C0C0';
+	span.style.color = 'black';
+	span.style.fontSize = '13px';
+	span.style.verticalAlign = 'middle';
+	span.textContent = CM.Options.Header.InfoTab ? '-' : '+';
+	span.onclick = function() {CM.Config.ToggleHeader('InfoTab'); Game.UpdateMenu();};
+	title.appendChild(span);
+	info.appendChild(title);
+
+	if (CM.Options.Header.InfoTab) {
+		let description = document.createElement('div')
+		description.innerHTML = CM.Data.ModDescription
+		info.appendChild(description)
+		let notes = document.createElement('div')
+		notes.innerHTML = CM.Data.LatestReleaseNotes
+		info.appendChild(notes)
+	}
+
+	let menu = l('menu').children[1]
+	menu.insertBefore(info, menu.children[1])
+}
+
 
 /********
  * Section: Functions related to the left column of the page */
