@@ -1,8 +1,8 @@
-/*******
+/**
  * Sim *
- *******/
+ */
 
-/********
+/**
  * Section: Functions to calculate building buy and sell prices */
 
 /**
@@ -16,10 +16,10 @@
  * @param	{number}	increase	Increase of building
  * @returns {number}	moni		Total price
  */
-CM.Sim.BuildingGetPrice = function(build, basePrice, start, free, increase) {
+CM.Sim.BuildingGetPrice = function (build, basePrice, start, free, increase) {
 	let moni = 0;
 	for (let i = 0; i < increase; i++) {
-		let price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
+		let price = basePrice * Game.priceIncrease ** Math.max(0, start - free);
 		price = Game.modifyBuildingPrice(build, price);
 		price = Math.ceil(price);
 		moni += price;
@@ -35,13 +35,13 @@ CM.Sim.BuildingGetPrice = function(build, basePrice, start, free, increase) {
  * @param	{number}	price		Current price of building
  * @returns {number}	price		The modified building price
  */
-CM.Sim.modifyBuildingPrice = function(building, price) {	
+CM.Sim.modifyBuildingPrice = function (building, price) {
 	if (CM.Sim.Has('Season savings')) price *= 0.99;
 	if (CM.Sim.Has('Santa\'s dominion')) price *= 0.99;
 	if (CM.Sim.Has('Faberge egg')) price *= 0.99;
 	if (CM.Sim.Has('Divine discount')) price *= 0.99;
 	if (CM.Sim.Has('Fortune #100')) price *= 0.99;
-	//if (CM.Sim.hasAura('Fierce Hoarder')) price *= 0.98;
+	// if (CM.Sim.hasAura('Fierce Hoarder')) price *= 0.98;
 	price *= 1 - CM.Sim.auraMult('Fierce Hoarder') * 0.02;
 	if (Game.hasBuff('Everything must go')) price *= 0.95;
 	if (Game.hasBuff('Crafty pixies')) price *= 0.98;
@@ -49,7 +49,7 @@ CM.Sim.modifyBuildingPrice = function(building, price) {
 	if (building.fortune && CM.Sim.Has(building.fortune.name)) price *= 0.93;
 	price *= CM.Sim.eff('buildingCost');
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
-		let godLvl = CM.Sim.hasGod('creation');
+		const godLvl = CM.Sim.hasGod('creation');
 		if (godLvl === 1) price *= 0.93;
 		else if (godLvl === 2) price *= 0.95;
 		else if (godLvl === 3) price *= 0.98;
@@ -62,7 +62,7 @@ CM.Sim.modifyBuildingPrice = function(building, price) {
  * It is called by CM.Sim.BuildingSell()
  * @returns {number}	giveBack	The multiplier
  */
-CM.Sim.getSellMultiplier = function() {
+CM.Sim.getSellMultiplier = function () {
 	let giveBack = 0.25;
 	giveBack *= 1 + CM.Sim.auraMult('Earth Shatterer');
 	return giveBack;
@@ -80,18 +80,18 @@ CM.Sim.getSellMultiplier = function() {
  * @param	{number}	noSim		1 of 0 depending on if function is called from CM.Sim
  * @returns {number}	moni		Total price gained
  */
-CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
+CM.Sim.BuildingSell = function (build, basePrice, start, free, amount, noSim) {
 	// Calculate money gains from selling buildings
 	// If noSim is set, use Game methods to compute price instead of Sim ones.
-	noSim = typeof noSim === "undefined" ? 0 : noSim;
+	noSim = typeof noSim === 'undefined' ? 0 : noSim;
 	let moni = 0;
 	if (amount === -1) amount = start;
 	if (!amount) amount = Game.buyBulk;
 	for (let i = 0; i < amount; i++) {
-		let price = basePrice * Math.pow(Game.priceIncrease, Math.max(0, start - free));
+		let price = basePrice * Game.priceIncrease ** Math.max(0, start - free);
 		price = noSim ? Game.modifyBuildingPrice(build, price) : CM.Sim.modifyBuildingPrice(build, price);
 		price = Math.ceil(price);
-		let giveBack = noSim ? build.getSellMultiplier() : CM.Sim.getSellMultiplier();
+		const giveBack = noSim ? build.getSellMultiplier() : CM.Sim.getSellMultiplier();
 		price = Math.floor(price * giveBack);
 		if (start > 0) {
 			moni += price;
@@ -101,60 +101,60 @@ CM.Sim.BuildingSell = function(build, basePrice, start, free, amount, noSim) {
 	return moni;
 };
 
-/********
+/**
  * Section: Functions related to making functions that check against sim data rather than game data */
 
 /**
  * This functions helps create functions that check sim data
  * For example, instead of Game.Has, a function that has gone through CM.Sim.ReplaceFunction will use CM.Sim.Has()
  * Subsequently the function rather than checking Game.Upgrades, will check CM.Sim.Upgrades
- * 
+ *
  * It is called by CM.Sim.ReplaceRelevantFunctions()
  * @param	{function}	funcToBeReplaced	Function to be replaced
  * @returns {string}						The function in string form with only calls to CM.Sim
  */
-CM.Sim.ReplaceFunction = function(funcToBeReplaced) {
+CM.Sim.ReplaceFunction = function (funcToBeReplaced) {
 	return funcToBeReplaced.toString()
-		.split("Game.Upgrades[") // Include '[' to not replace Game.UpgradesByPool
-		.join("CM.Sim.Upgrades[")
-		.split("Game.Achievements")
-		.join("CM.Sim.Achievements")
-		.split("Game.Has")
-		.join("CM.Sim.Has")
-		.split("Game.dragonAura]")
-		.join("CM.Sim.dragonAura]")
-		.split("Game.dragonAura2]")
-		.join("CM.Sim.dragonAura2]")
-		.split("Game.auraMult")
-		.join("CM.Sim.auraMult")
-		.split("Game.hasGod")
-		.join("CM.Sim.hasGod")
-		.split("M.gods[what]") // Replaces code in the Pantheon minigame
-		.join("CM.Sim.Objects.Temple.minigame.gods[what]")
-		.split("M.slot[i]") // Replaces code in the Pantheon minigame
-		.join("CM.Sim.Objects.Temple.minigame.slot[i]")
-		.split("Game.effs") // Replaces code in the Pantheon minigame
-		.join("CM.Sim.effs")
-		.split("Game.Objects")
-		.join("CM.Sim.Objects")
-		.split("Game.GetTieredCpsMult") // Replace in .cps of building objects
-		.join("CM.Sim.GetTieredCpsMult")
+		.split('Game.Upgrades[') // Include '[' to not replace Game.UpgradesByPool
+		.join('CM.Sim.Upgrades[')
+		.split('Game.Achievements')
+		.join('CM.Sim.Achievements')
+		.split('Game.Has')
+		.join('CM.Sim.Has')
+		.split('Game.dragonAura]')
+		.join('CM.Sim.dragonAura]')
+		.split('Game.dragonAura2]')
+		.join('CM.Sim.dragonAura2]')
+		.split('Game.auraMult')
+		.join('CM.Sim.auraMult')
+		.split('Game.hasGod')
+		.join('CM.Sim.hasGod')
+		.split('M.gods[what]') // Replaces code in the Pantheon minigame
+		.join('CM.Sim.Objects.Temple.minigame.gods[what]')
+		.split('M.slot[i]') // Replaces code in the Pantheon minigame
+		.join('CM.Sim.Objects.Temple.minigame.slot[i]')
+		.split('Game.effs') // Replaces code in the Pantheon minigame
+		.join('CM.Sim.effs')
+		.split('Game.Objects')
+		.join('CM.Sim.Objects')
+		.split('Game.GetTieredCpsMult') // Replace in .cps of building objects
+		.join('CM.Sim.GetTieredCpsMult')
 		.split('Game.eff') // Replace in .cps of building objects
 		.join('CM.Sim.eff');
-		//.split('syn.buildingTie1.amount')
-		//.join('CM.Sim.Objects[syn.buildingTie1.name].amount')
-		//.split('syn.buildingTie2.amount')
-		//.join('CM.Sim.Objects[syn.buildingTie2.name].amount')
-}
+	// .split('syn.buildingTie1.amount')
+	// .join('CM.Sim.Objects[syn.buildingTie1.name].amount')
+	// .split('syn.buildingTie2.amount')
+	// .join('CM.Sim.Objects[syn.buildingTie2.name].amount')
+};
 
 /**
  * This functions creates all functions by CM.Sim to check CM.Sim. data instead of Game. data
  * It does this by calling CM.Sim.ReplaceFunction()
  * It follows naming of the vanilla functions
- * 
+ *
  * It is called by CM.Main.DelayInit()
  */
-CM.Sim.CreateSimFunctions = function() {
+CM.Sim.CreateSimFunctions = function () {
 	CM.Sim.Has = new Function(`return ${CM.Sim.ReplaceFunction(Game.Has)}`)();
 	CM.Sim.HasAchiev = new Function(`return ${CM.Sim.ReplaceFunction(Game.HasAchiev)}`)();
 	CM.Sim.hasAura = new Function(`return ${CM.Sim.ReplaceFunction(Game.hasAura)}`)();
@@ -163,7 +163,7 @@ CM.Sim.CreateSimFunctions = function() {
 	CM.Sim.auraMult = new Function(`return ${CM.Sim.ReplaceFunction(Game.auraMult)}`)();
 	CM.Sim.eff = new Function(`return ${CM.Sim.ReplaceFunction(Game.eff)}`)();
 	CM.Sim.GetTieredCpsMult = new Function(`return ${CM.Sim.ReplaceFunction(Game.GetTieredCpsMult)}`)();
-}
+};
 
 /**
  * This function "wins" an achievement in the current sim data
@@ -171,16 +171,16 @@ CM.Sim.CreateSimFunctions = function() {
  * It is not created by CM.Sim.CreateSimFunctions() in order to avoid spamming pop-ups upon winning
  * @param	{string}	what	Name of the achievement
  */
-CM.Sim.Win = function(what) {
+CM.Sim.Win = function (what) {
 	if (CM.Sim.Achievements[what]) {
 		if (CM.Sim.Achievements[what].won === 0) {
 			CM.Sim.Achievements[what].won = 1;
-			if (Game.Achievements[what].pool != 'shadow') CM.Sim.AchievementsOwned++;
+			if (Game.Achievements[what].pool !== 'shadow') CM.Sim.AchievementsOwned++;
 		}
 	}
 };
 
-/********
+/**
  * Section: Functions used to create static objects of Buildings, Upgrades and Achievements */
 
 /**
@@ -193,9 +193,9 @@ CM.Sim.Win = function(what) {
  * @param	{string}	buildingName	Name of the building
  * @returns {Object}	you				The static object
  */
-CM.Sim.InitialBuildingData = function(buildingName) {
-	let me = Game.Objects[buildingName];
-	let you = {};
+CM.Sim.InitialBuildingData = function (buildingName) {
+	const me = Game.Objects[buildingName];
+	const you = {};
 	you.cps = new Function(`return ${CM.Sim.ReplaceFunction(me.cps)}`)();
 	// Below is needed for above eval, specifically for the GetTieredCpsMult function
 	you.baseCps = me.baseCps;
@@ -204,9 +204,9 @@ CM.Sim.InitialBuildingData = function(buildingName) {
 	you.synergies = me.synergies;
 	you.fortune = me.fortune;
 	you.grandma = me.grandma;
-	you.baseCPS = me.baseCps
-	you.id = me.id
-	you.vanilla = me.vanilla
+	you.baseCPS = me.baseCps;
+	you.id = me.id;
+	you.vanilla = me.vanilla;
 	return you;
 };
 
@@ -216,12 +216,12 @@ CM.Sim.InitialBuildingData = function(buildingName) {
  * @param	{string}	upgradeName		Name of the Upgrade
  * @returns {Object}	you				The static object
  */
-CM.Sim.InitUpgrade = function(upgradeName) {
-	let me = Game.Upgrades[upgradeName];
-	let you = {};
+CM.Sim.InitUpgrade = function (upgradeName) {
+	const me = Game.Upgrades[upgradeName];
+	const you = {};
 	// Some upgrades have a function for .power (notably the valentine cookies)
 	you.power = me.power;
-	if (typeof(me.power) === 'function') {
+	if (typeof (me.power) === 'function') {
 		me.power = new Function(`return ${CM.Sim.ReplaceFunction(me.power)}`)();
 	}
 	you.pool = me.pool;
@@ -235,47 +235,46 @@ CM.Sim.InitUpgrade = function(upgradeName) {
  * @param	{string}	achievementName	Name of the Achievement
  * @returns {Object}	you				The static object
  */
-CM.Sim.InitAchievement = function(achievementName) {
-	let me = Game.Achievements[achievementName];
-	let you = {};
+CM.Sim.InitAchievement = function (achievementName) {
+	const me = Game.Achievements[achievementName];
+	const you = {};
 	you.name = me.name;
 	return you;
 };
-
 
 /**
  * This function creates static objects for Buildings, Upgrades and Achievements
  * It is called by CM.Main.DelayInit()
  */
-CM.Sim.InitData = function() {
+CM.Sim.InitData = function () {
 	// Buildings
 	CM.Sim.Objects = [];
-	for (let i of Object.keys(Game.Objects)) {
+	for (const i of Object.keys(Game.Objects)) {
 		CM.Sim.Objects[i] = CM.Sim.InitialBuildingData(i);
 	}
 
 	// Upgrades
 	CM.Sim.Upgrades = [];
-	for (let i of Object.keys(Game.Upgrades)) {
+	for (const i of Object.keys(Game.Upgrades)) {
 		CM.Sim.Upgrades[i] = CM.Sim.InitUpgrade(i);
 	}
 
 	// Achievements
 	CM.Sim.Achievements = [];
-	for (let i of Object.keys(Game.Achievements)) {
+	for (const i of Object.keys(Game.Achievements)) {
 		CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
 	}
 	CM.Sim.CopyData();
 };
 
-/********
+/**
  * Section: Functions related to creating a new iteration of "sim data" */
 
 /**
  * This function copies all relevant data and therefore sets a new iteration of the "sim data"
  * It is called at the start of any function that simulates certain behaviour or actions
  */
-CM.Sim.CopyData = function() {
+CM.Sim.CopyData = function () {
 	// Other variables
 	CM.Sim.UpgradesOwned = Game.UpgradesOwned;
 	CM.Sim.pledges = Game.pledges;
@@ -284,11 +283,12 @@ CM.Sim.CopyData = function() {
 	CM.Sim.prestige = Game.prestige;
 
 	// Buildings
-	for (let i of Object.keys(Game.Objects)) {
-		let me = Game.Objects[i];
+	for (const i of Object.keys(Game.Objects)) {
+		const me = Game.Objects[i];
 		let you = CM.Sim.Objects[i];
 		if (you === undefined) { // New building!
-			you = CM.Sim.Objects[i] = CM.Sim.InitialBuildingData(i);
+			CM.Sim.Objects[i] = CM.Sim.InitialBuildingData(i);
+			you = CM.Sim.Objects[i];
 			CM.Disp.CreateBotBarBuildingColumn(i); // Add new building to the bottom bar
 		}
 		you.amount = me.amount;
@@ -300,21 +300,23 @@ CM.Sim.CopyData = function() {
 	}
 
 	// Upgrades
-	for (let i of Object.keys(Game.Upgrades)) {
-		let me = Game.Upgrades[i];
+	for (const i of Object.keys(Game.Upgrades)) {
+		const me = Game.Upgrades[i];
 		let you = CM.Sim.Upgrades[i];
 		if (you === undefined) {
-			you = CM.Sim.Upgrades[i] = CM.Sim.InitUpgrade(i);
+			CM.Sim.Upgrades[i] = CM.Sim.InitUpgrade(i);
+			you = CM.Sim.Upgrades[i];
 		}
 		you.bought = me.bought;
 	}
 
 	// Achievements
-	for (let i of Object.keys(Game.Achievements)) {
-		let me = Game.Achievements[i];
+	for (const i of Object.keys(Game.Achievements)) {
+		const me = Game.Achievements[i];
 		let you = CM.Sim.Achievements[i];
 		if (you === undefined) {
-			you = CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
+			CM.Sim.Achievements[i] = CM.Sim.InitAchievement(i);
+			you = CM.Sim.Achievements[i];
 		}
 		you.won = me.won;
 	}
@@ -325,7 +327,7 @@ CM.Sim.CopyData = function() {
 	CM.Sim.dragonAura2 = CM.Cache.dragonAura2;
 };
 
-/********
+/**
  * Section: Functions related to checking the CPS of the current sim data */
 
 /**
@@ -334,35 +336,35 @@ CM.Sim.CopyData = function() {
  * It is called at the start of any function that simulates certain behaviour or actions
  * @global	{number}	CM.Sim.cookiesPs	The CPS of the current sim data
  */
-CM.Sim.CalculateGains = function() {
+CM.Sim.CalculateGains = function () {
 	CM.Sim.cookiesPs = 0;
 	let mult = 1;
 	// Include minigame effects
-	let effs = {};
-	for (let i of Object.keys(Game.Objects)) {
+	const effs = {};
+	for (const i of Object.keys(Game.Objects)) {
 		if (Game.Objects[i].minigameLoaded && Game.Objects[i].minigame.effs) {
-			let myEffs = Game.Objects[i].minigame.effs;
-			for (let ii in myEffs) {
+			const myEffs = Game.Objects[i].minigame.effs;
+			for (const ii in myEffs) {
 				if (effs[ii]) effs[ii] *= myEffs[ii];
-                else effs[ii] = myEffs[ii];
+				else effs[ii] = myEffs[ii];
 			}
 		}
 	}
 	CM.Sim.effs = effs;
-	
-	if (Game.ascensionMode != 1) mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
-	
+
+	if (Game.ascensionMode !== 1) mult += parseFloat(CM.Sim.prestige) * 0.01 * CM.Sim.heavenlyPower * CM.Sim.GetHeavenlyMultiplier();
+
 	mult *= CM.Sim.eff('cps');
 
-	if (CM.Sim.Has('Heralds') && Game.ascensionMode != 1) mult *= 1 + 0.01 * Game.heralds;
+	if (CM.Sim.Has('Heralds') && Game.ascensionMode !== 1) mult *= 1 + 0.01 * Game.heralds;
 
-	for (let i of Object.keys(Game.cookieUpgrades)) {
-		let me = Game.cookieUpgrades[i];
+	for (const i of Object.keys(Game.cookieUpgrades)) {
+		const me = Game.cookieUpgrades[i];
 		if (CM.Sim.Has(me.name)) {
 			// Some upgrades have a functio as .power (notably the valentine cookies)
 			// CM.Sim.InitialBuildingData has changed to use CM.Sim.Has instead of Game.Has etc.
 			// Therefore this call is to the .power of the Sim.Object
-			if (typeof(me.power) === 'function') {
+			if (typeof (me.power) === 'function') {
 				mult *= 1 + (CM.Sim.Upgrades[me.name].power(CM.Sim.Upgrades[me.name]) * 0.01);
 			} else mult *= 1 + (me.power * 0.01);
 		}
@@ -395,8 +397,8 @@ CM.Sim.CalculateGains = function() {
 
 		godLvl = CM.Sim.hasGod('ages');
 		if (godLvl === 1) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 3)) * Math.PI * 2);
-		else if (godLvl === 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 12)) * Math.PI*2);
-		else if (godLvl === 3) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 24)) * Math.PI*2);
+		else if (godLvl === 2) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 12)) * Math.PI * 2);
+		else if (godLvl === 3) mult *= 1 + 0.15 * Math.sin((CM.Sim.DateAges / 1000 / (60 * 60 * 24)) * Math.PI * 2);
 
 		godLvl = CM.Sim.hasGod('decadence');
 		if (godLvl === 1) buildMult *= 0.93;
@@ -416,13 +418,13 @@ CM.Sim.CalculateGains = function() {
 
 	if (CM.Sim.Has('Santa\'s legacy')) mult *= 1 + (Game.santaLevel + 1) * 0.03;
 
-	let milkProgress = CM.Sim.AchievementsOwned / 25;
+	const milkProgress = CM.Sim.AchievementsOwned / 25;
 	let milkMult = 1;
 	if (CM.Sim.Has('Santa\'s milk and cookies')) milkMult *= 1.05;
-	//if (CM.Sim.hasAura('Breath of Milk')) milkMult *= 1.05;
+	// if (CM.Sim.hasAura('Breath of Milk')) milkMult *= 1.05;
 	milkMult *= 1 + CM.Sim.auraMult('Breath of Milk') * 0.05;
 	if (CM.Sim.hasGod) {
-		let godLvl = CM.Sim.hasGod('mother');
+		const godLvl = CM.Sim.hasGod('mother');
 		if (godLvl === 1) milkMult *= 1.1;
 		else if (godLvl === 2) milkMult *= 1.05;
 		else if (godLvl === 3) milkMult *= 1.03;
@@ -447,15 +449,15 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Kitten angels')) catMult *= (1 + milkProgress * 0.1 * milkMult);
 	if (CM.Sim.Has('Fortune #103')) catMult *= (1 + milkProgress * 0.05 * milkMult);
 
-	for (let i of Object.keys(CM.Sim.Objects)) {
-		let me = CM.Sim.Objects[i];
+	for (const i of Object.keys(CM.Sim.Objects)) {
+		const me = CM.Sim.Objects[i];
 		let storedCps = me.cps(me);
-		if (Game.ascensionMode != 1) storedCps *= (1 + me.level * 0.01) * buildMult;
-		if (me.name === "Grandma" && CM.Sim.Has('Milkhelp&reg; lactose intolerance relief tablets')) storedCps *= 1 + 0.05 * milkProgress * milkMult;
+		if (Game.ascensionMode !== 1) storedCps *= (1 + me.level * 0.01) * buildMult;
+		if (me.name === 'Grandma' && CM.Sim.Has('Milkhelp&reg; lactose intolerance relief tablets')) storedCps *= 1 + 0.05 * milkProgress * milkMult;
 		CM.Sim.cookiesPs += me.amount * storedCps;
 	}
 
-	if (CM.Sim.Has('"egg"')) CM.Sim.cookiesPs += 9;//"egg"
+	if (CM.Sim.Has('"egg"')) CM.Sim.cookiesPs += 9;// "egg"
 
 	mult *= catMult;
 
@@ -477,30 +479,30 @@ CM.Sim.CalculateGains = function() {
 		let day = Math.floor((CM.Sim.DateCentury - Game.startDate) / 1000 / 10) * 10 / 60 / 60 / 24;
 		day = Math.min(day, 100);
 		// Sets a Cache value to be displayed in the Stats page, could be moved...
-		CM.Cache.CentEgg = 1 + (1 - Math.pow(1 - day / 100, 3)) * 0.1;
+		CM.Cache.CentEgg = 1 + (1 - (1 - day / 100) ** 3) * 0.1;
 		eggMult *= CM.Cache.CentEgg;
 	}
 	mult *= eggMult;
 
 	if (CM.Sim.Has('Sugar baking')) mult *= (1 + Math.min(100, Game.lumps) * 0.01);
 
-	//if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;
+	// if (CM.Sim.hasAura('Radiant Appetite')) mult *= 2;
 	mult *= 1 + CM.Sim.auraMult('Radiant Appetite');
 
-	let rawCookiesPs = CM.Sim.cookiesPs * mult;
-	for (let i of Object.keys(Game.CpsAchievements)) {
+	const rawCookiesPs = CM.Sim.cookiesPs * mult;
+	for (const i of Object.keys(Game.CpsAchievements)) {
 		if (rawCookiesPs >= Game.CpsAchievements[i].threshold) CM.Sim.Win(Game.CpsAchievements[i].name);
 	}
 
 	CM.Sim.cookiesPsRaw = rawCookiesPs;
 
-	let n = Game.shimmerTypes.golden.n;
-	let auraMult = CM.Sim.auraMult('Dragon\'s Fortune');
-	for (let i = 0; i < n; i++){
+	const n = Game.shimmerTypes.golden.n;
+	const auraMult = CM.Sim.auraMult('Dragon\'s Fortune');
+	for (let i = 0; i < n; i++) {
 		mult *= 1 + auraMult * 1.23;
 	}
 
-	let name = Game.bakeryName.toLowerCase();
+	const name = Game.bakeryName.toLowerCase();
 	if (name === 'orteil') mult *= 0.99;
 	else if (name === 'ortiel') mult *= 0.98;
 
@@ -509,8 +511,8 @@ CM.Sim.CalculateGains = function() {
 	if (CM.Sim.Has('Golden switch [off]')) {
 		let goldenSwitchMult = 1.5;
 		if (CM.Sim.Has('Residual luck')) {
-			let upgrades = Game.goldenCookieUpgrades;
-			for (let i of Object.keys(upgrades)) {
+			const upgrades = Game.goldenCookieUpgrades;
+			for (const i of Object.keys(upgrades)) {
 				if (CM.Sim.Has(upgrades[i])) goldenSwitchMult += 0.1;
 			}
 		}
@@ -522,11 +524,11 @@ CM.Sim.CalculateGains = function() {
 		mult *= 1 + veilMult;
 	}
 
-	if (CM.Sim.Has('Magic shenanigans')) mult*=1000;
-    if (CM.Sim.Has('Occult obstruction')) mult*=0;
+	if (CM.Sim.Has('Magic shenanigans')) mult *= 1000;
+	if (CM.Sim.Has('Occult obstruction')) mult *= 0;
 
 	CM.Sim.cookiesPs = Game.runModHookOnValue('cps', CM.Sim.cookiesPs);
-	
+
 	mult *= CM.Cache.getCPSBuffMult();
 
 	CM.Sim.cookiesPs *= mult;
@@ -539,9 +541,9 @@ CM.Sim.CalculateGains = function() {
  * If so it CM.Sim.Win()'s them and the caller function will know to recall CM.Sim.CalculateGains()
  * It is called at the end of any functions that simulates certain behaviour
  */
-CM.Sim.CheckOtherAchiev = function() {
+CM.Sim.CheckOtherAchiev = function () {
 	let grandmas = 0;
-	for (let i of Object.keys(Game.GrandmaSynergies)) {
+	for (const i of Object.keys(Game.GrandmaSynergies)) {
 		if (CM.Sim.Has(Game.GrandmaSynergies[i])) grandmas++;
 	}
 	if (!CM.Sim.HasAchiev('Elder') && grandmas >= 7) CM.Sim.Win('Elder');
@@ -551,11 +553,11 @@ CM.Sim.CheckOtherAchiev = function() {
 	let mathematician = 1;
 	let base10 = 1;
 	let minAmount = 100000;
-	for (let i of Object.keys(CM.Sim.Objects)) {
+	for (const i of Object.keys(CM.Sim.Objects)) {
 		buildingsOwned += CM.Sim.Objects[i].amount;
 		minAmount = Math.min(CM.Sim.Objects[i].amount, minAmount);
 		if (!CM.Sim.HasAchiev('Mathematician')) {
-			if (CM.Sim.Objects[i].amount < Math.min(128, Math.pow(2, (Game.ObjectsById.length - Game.Objects[i].id) - 1))) mathematician = 0;
+			if (CM.Sim.Objects[i].amount < Math.min(128, 2 ** ((Game.ObjectsById.length - Game.Objects[i].id) - 1))) mathematician = 0;
 		}
 		if (!CM.Sim.HasAchiev('Base 10')) {
 			if (CM.Sim.Objects[i].amount < (Game.ObjectsById.length - Game.Objects[i].id) * 10) base10 = 0;
@@ -596,21 +598,21 @@ CM.Sim.CheckOtherAchiev = function() {
 	if (CM.Sim.Objects.Cursor.amount + CM.Sim.Objects.Grandma.amount >= 777) CM.Sim.Win('The elder scrolls');
 
 	let hasAllHalloCook = true;
-	for (let i of Object.keys(CM.Data.HalloCookies)) {
+	for (const i of Object.keys(CM.Data.HalloCookies)) {
 		if (!CM.Sim.Has(CM.Data.HalloCookies[i])) hasAllHalloCook = false;
 	}
 	if (hasAllHalloCook) CM.Sim.Win('Spooky cookies');
 
 	let hasAllChristCook = true;
-	for (let i of Object.keys(CM.Data.ChristCookies)) {
+	for (const i of Object.keys(CM.Data.ChristCookies)) {
 		if (!CM.Sim.Has(CM.Data.ChristCookies[i])) hasAllChristCook = false;
 	}
 	if (hasAllChristCook) CM.Sim.Win('Let it snow');
 
 	if (CM.Sim.Has('Fortune cookies')) {
-		let list = Game.Tiers.fortune.upgrades;
+		const list = Game.Tiers.fortune.upgrades;
 		let fortunes = 0;
-		for (let i of Object.keys(list)) {
+		for (const i of Object.keys(list)) {
 			if (CM.Sim.Has(list[i].name)) fortunes++;
 		}
 		if (fortunes >= list.length) CM.Sim.Win('O Fortuna');
@@ -621,14 +623,14 @@ CM.Sim.CheckOtherAchiev = function() {
  * This function calculates CPS without the Golden Switch
  * It is called by CM.Cache.NoGoldSwitchCPS()
  */
-CM.Sim.NoGoldSwitchCPS = function() {
+CM.Sim.NoGoldSwitchCPS = function () {
 	CM.Sim.CopyData();
 	CM.Sim.Upgrades['Golden switch [off]'].bought = 0;
 	CM.Sim.CalculateGains();
 	return CM.Sim.cookiesPs;
 };
 
-/********
+/**
  * Section: Functions related to calculating Bonus Income */
 
 /**
@@ -638,9 +640,9 @@ CM.Sim.NoGoldSwitchCPS = function() {
  * @param	{number}	amount		The amount to be bought
  * @returns {number}				The bonus income of the building
  */
-CM.Sim.BuyBuildingsBonusIncome = function(building, amount) {
+CM.Sim.BuyBuildingsBonusIncome = function (building, amount) {
 	CM.Sim.CopyData();
-	let me = CM.Sim.Objects[building];
+	const me = CM.Sim.Objects[building];
 	me.amount += amount;
 
 	if (building === 'Cursor') {
@@ -655,21 +657,21 @@ CM.Sim.BuyBuildingsBonusIncome = function(building, amount) {
 		if (me.amount >= 600) CM.Sim.Win('With her finger and her thumb');
 		if (me.amount >= 700) CM.Sim.Win('Gotta hand it to you');
 		if (me.amount >= 800) CM.Sim.Win('The devil\'s workshop');
-	}
-	else {
-		for (let j in Game.Objects[me.name].tieredAchievs) {
-			if (me.amount >= Game.Tiers[Game.Objects[me.name].tieredAchievs[j].tier].achievUnlock)
+	} else {
+		for (const j in Game.Objects[me.name].tieredAchievs) {
+			if (me.amount >= Game.Tiers[Game.Objects[me.name].tieredAchievs[j].tier].achievUnlock) {
 				CM.Sim.Win(Game.Objects[me.name].tieredAchievs[j].name);
+			}
 		}
 	}
 
-	let lastAchievementsOwned = CM.Sim.AchievementsOwned;
+	const lastAchievementsOwned = CM.Sim.AchievementsOwned;
 
 	CM.Sim.CalculateGains();
 
 	CM.Sim.CheckOtherAchiev();
 
-	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
+	if (lastAchievementsOwned !== CM.Sim.AchievementsOwned) {
 		CM.Sim.CalculateGains();
 	}
 
@@ -682,10 +684,10 @@ CM.Sim.BuyBuildingsBonusIncome = function(building, amount) {
  * @param	{string}				building	The name of the upgrade to be bought
  * @returns {[{number, number}]}				The bonus income of the upgrade and the difference in MouseCPS
  */
-CM.Sim.BuyUpgradesBonusIncome = function(upgrade) {
-	if (Game.Upgrades[upgrade].pool === 'toggle' || (Game.Upgrades[upgrade].bought === 0 && Game.Upgrades[upgrade].unlocked && Game.Upgrades[upgrade].pool != 'prestige')) {
+CM.Sim.BuyUpgradesBonusIncome = function (upgrade) {
+	if (Game.Upgrades[upgrade].pool === 'toggle' || (Game.Upgrades[upgrade].bought === 0 && Game.Upgrades[upgrade].unlocked && Game.Upgrades[upgrade].pool !== 'prestige')) {
 		CM.Sim.CopyData();
-		let me = CM.Sim.Upgrades[upgrade];
+		const me = CM.Sim.Upgrades[upgrade];
 		me.bought = 1;
 		if (Game.CountsAsUpgradeOwned(Game.Upgrades[upgrade].pool)) CM.Sim.UpgradesOwned++;
 
@@ -693,44 +695,40 @@ CM.Sim.BuyUpgradesBonusIncome = function(upgrade) {
 			CM.Sim.pledges++;
 			if (CM.Sim.pledges > 0) CM.Sim.Win('Elder nap');
 			if (CM.Sim.pledges >= 5) CM.Sim.Win('Elder slumber');
-		}
-		else if (upgrade === 'Elder Covenant') {
+		} else if (upgrade === 'Elder Covenant') {
 			CM.Sim.Win('Elder calm');
-		}
-		else if (upgrade === 'Prism heart biscuits') {
+		} else if (upgrade === 'Prism heart biscuits') {
 			CM.Sim.Win('Lovely cookies');
-		}
-		else if (upgrade === 'Heavenly key') {
+		} else if (upgrade === 'Heavenly key') {
 			CM.Sim.Win('Wholesome');
 		}
 
-		let lastAchievementsOwned = CM.Sim.AchievementsOwned;
+		const lastAchievementsOwned = CM.Sim.AchievementsOwned;
 
 		CM.Sim.CalculateGains();
 
 		CM.Sim.CheckOtherAchiev();
 
-		if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
+		if (lastAchievementsOwned !== CM.Sim.AchievementsOwned) {
 			CM.Sim.CalculateGains();
 		}
 
-		let diffMouseCPS = CM.Sim.mouseCps() - Game.computedMouseCps;
+		const diffMouseCPS = CM.Sim.mouseCps() - Game.computedMouseCps;
 		if (diffMouseCPS) {
 			return [CM.Sim.cookiesPs - Game.cookiesPs, diffMouseCPS];
-		} 
+		}
 		return [CM.Sim.cookiesPs - Game.cookiesPs];
 	} else {
 		return [];
 	}
 };
 
-
 /**
  * This function calculates the cookies per click
  * It is called by CM.Sim.BuyUpgradesBonusIncome() when an upgrades has no bonus-income (and is thus a clicking-upgrade)
  * @returns	{number}	out	The clicking power
  */
-CM.Sim.mouseCps = function() {
+CM.Sim.mouseCps = function () {
 	let add = 0;
 	if (CM.Sim.Has('Thousand fingers')) add += 0.1;
 	if (CM.Sim.Has('Million fingers')) add *= 5;
@@ -742,10 +740,10 @@ CM.Sim.mouseCps = function() {
 	if (CM.Sim.Has('Septillion fingers')) add *= 20;
 	if (CM.Sim.Has('Octillion fingers')) add *= 20;
 	if (CM.Sim.Has('Nonillion fingers')) add *= 20;
-	let num=0;
-	for (let i of Object.keys(CM.Sim.Objects)) {num += CM.Sim.Objects[i].amount;}
+	let num = 0;
+	for (const i of Object.keys(CM.Sim.Objects)) { num += CM.Sim.Objects[i].amount; }
 	num -= CM.Sim.Objects.Cursor.amount;
-	add = add * num;
+	add *= num;
 
 	// Can use CM.Sim.cookiesPs as function is always called after CM.Sim.CalculateGains()
 	if (CM.Sim.Has('Plastic mouse')) add += CM.Sim.cookiesPs * 0.01;
@@ -763,46 +761,45 @@ CM.Sim.mouseCps = function() {
 	if (CM.Sim.Has('Miraculite mouse')) add += CM.Sim.cookiesPs * 0.01;
 
 	if (CM.Sim.Has('Fortune #104')) add += CM.Sim.cookiesPs * 0.01;
-	
-	let mult=1;
+
+	let mult = 1;
 	if (CM.Sim.Has('Santa\'s helpers')) mult *= 1.1;
 	if (CM.Sim.Has('Cookie egg')) mult *= 1.1;
 	if (CM.Sim.Has('Halo gloves')) mult *= 1.1;
 	if (CM.Sim.Has('Dragon claw')) mult *= 1.03;
-	
+
 	if (CM.Sim.Has('Aura gloves')) {
 		mult *= 1 + 0.05 * Math.min(Game.Objects.Cursor.level, CM.Sim.Has('Luminous gloves') ? 20 : 10);
 	}
-	
+
 	mult *= CM.Sim.eff('click');
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
 		if (CM.Sim.hasGod) {
-			let godLvl = CM.Sim.hasGod('labor');
+			const godLvl = CM.Sim.hasGod('labor');
 			if (godLvl === 1) mult *= 1.15;
 			else if (godLvl === 2) mult *= 1.1;
 			else if (godLvl === 3) mult *= 1.05;
 		}
 	}
 
-	for (let i of Object.keys(Game.buffs)) {
-		if (typeof Game.buffs[i].multClick != 'undefined') mult *= Game.buffs[i].multClick;
+	for (const i of Object.keys(Game.buffs)) {
+		if (typeof Game.buffs[i].multClick !== 'undefined') mult *= Game.buffs[i].multClick;
 	}
-	
-	//if (CM.Sim.auraMult('Dragon Cursor')) mult*=1.05;
+
+	// if (CM.Sim.auraMult('Dragon Cursor')) mult*=1.05;
 	mult *= 1 + CM.Sim.auraMult('Dragon Cursor') * 0.05;
-	
+
 	// No need to make this function a CM function
 	let out = mult * Game.ComputeCps(1, CM.Sim.Has('Reinforced index finger') + CM.Sim.Has('Carpal tunnel prevention cream') + CM.Sim.Has('Ambidextrous'), add);
-	
+
 	out = Game.runModHookOnValue('cookiesPerClick', out);
-	
+
 	if (Game.hasBuff('Cursed finger')) out = Game.buffs['Cursed finger'].power;
-	
+
 	return out;
 };
 
-
-/********
+/**
  * Section: Functions related to calculating the effect of changing Dragon Aura */
 
 /**
@@ -811,23 +808,23 @@ CM.Sim.mouseCps = function() {
  * @param	{number}			aura										The number of the aura currently selected by the mouse/user
  * @returns {[number, number]} 	[CM.Sim.cookiesPs - Game.cookiesPs, price]	The bonus cps and the price of the change
  */
-CM.Sim.CalculateChangeAura = function(aura) {
+CM.Sim.CalculateChangeAura = function (aura) {
 	CM.Sim.CopyData();
 
 	// Check if aura being changed is first or second aura
-	let auraToBeChanged = l('promptContent').children[0].innerHTML.includes("secondary");
+	const auraToBeChanged = l('promptContent').children[0].innerHTML.includes('secondary');
 	if (auraToBeChanged) CM.Sim.dragonAura2 = aura;
 	else CM.Sim.dragonAura = aura;
 
 	// Sell highest building but only if aura is different
 	let price = 0;
-	if (CM.Sim.dragonAura != CM.Cache.dragonAura || CM.Sim.dragonAura2 != CM.Cache.dragonAura2) {
-		for (let i = Game.ObjectsById.length; i > -1, --i;) {
-			if (Game.ObjectsById[i].amount > 0) {	
-				let highestBuilding = CM.Sim.Objects[Game.ObjectsById[i].name].name;
-				CM.Sim.Objects[highestBuilding].amount -=1;
+	if (CM.Sim.dragonAura !== CM.Cache.dragonAura || CM.Sim.dragonAura2 !== CM.Cache.dragonAura2) {
+		for (let i = Game.ObjectsById.length; i > -1; --i) {
+			if (Game.ObjectsById[i].amount > 0) {
+				const highestBuilding = CM.Sim.Objects[Game.ObjectsById[i].name].name;
+				CM.Sim.Objects[highestBuilding].amount -= 1;
 				CM.Sim.buildingsOwned -= 1;
-				price = CM.Sim.Objects[highestBuilding].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[highestBuilding].amount - 1 -CM.Sim.Objects[highestBuilding].free));
+				price = CM.Sim.Objects[highestBuilding].basePrice * Game.priceIncrease ** Math.max(0, CM.Sim.Objects[highestBuilding].amount - 1 - CM.Sim.Objects[highestBuilding].free);
 				price = Game.modifyBuildingPrice(CM.Sim.Objects[highestBuilding], price);
 				price = Math.ceil(price);
 				break;
@@ -835,17 +832,17 @@ CM.Sim.CalculateChangeAura = function(aura) {
 		}
 	}
 
-	let lastAchievementsOwned = CM.Sim.AchievementsOwned;
+	const lastAchievementsOwned = CM.Sim.AchievementsOwned;
 	CM.Sim.CalculateGains();
 
 	CM.Sim.CheckOtherAchiev();
-	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
+	if (lastAchievementsOwned !== CM.Sim.AchievementsOwned) {
 		CM.Sim.CalculateGains();
 	}
 	return [CM.Sim.cookiesPs - Game.cookiesPs, price];
 };
 
-/********
+/**
  * Section: Functions related to calculating the reset bonus */
 
 /**
@@ -854,7 +851,7 @@ CM.Sim.CalculateChangeAura = function(aura) {
  * @param	{number}	newHeavenlyChips	The total heavenly chips after ascension
  * @returns	{number}	ResetCPS			The CPS difference after reset
  */
-CM.Sim.ResetBonus = function(newHeavenlyChips) {
+CM.Sim.ResetBonus = function (newHeavenlyChips) {
 	// Calculate CPS with all Heavenly upgrades
 	let curCPS = Game.cookiesPs;
 
@@ -900,17 +897,17 @@ CM.Sim.ResetBonus = function(newHeavenlyChips) {
 
 	CM.Sim.prestige = newHeavenlyChips;
 
-	let lastAchievementsOwned = CM.Sim.AchievementsOwned;
+	const lastAchievementsOwned = CM.Sim.AchievementsOwned;
 
 	CM.Sim.CalculateGains();
 
 	CM.Sim.CheckOtherAchiev();
 
-	if (lastAchievementsOwned != CM.Sim.AchievementsOwned) {
+	if (lastAchievementsOwned !== CM.Sim.AchievementsOwned) {
 		CM.Sim.CalculateGains();
 	}
 
-	let ResetCPS = CM.Sim.cookiesPs - curCPS;
+	const ResetCPS = CM.Sim.cookiesPs - curCPS;
 
 	// Reset Pretige level after calculation as it is used in CM.Sim.CalculateGains() so can't be local
 	CM.Sim.prestige = Game.prestige;
@@ -918,7 +915,7 @@ CM.Sim.ResetBonus = function(newHeavenlyChips) {
 	return ResetCPS;
 };
 
-/********
+/**
  * Section: Functions related to selling builings before buying the chocolate egg */
 
 /**
@@ -926,11 +923,11 @@ CM.Sim.ResetBonus = function(newHeavenlyChips) {
  * It is called by CM.Cache.CacheSellForChoEgg()
  * @returns	{number}	sellTotal	The maximum cookies to be earned
  */
-CM.Sim.SellBuildingsForChoEgg = function() {
+CM.Sim.SellBuildingsForChoEgg = function () {
 	let sellTotal = 0;
 
 	CM.Sim.CopyData();
-	
+
 	// Change auras to Earth Shatterer + Reality bending to optimize money made by selling
 	let buildingsToSacrifice = 2;
 	if (CM.Sim.dragonAura === 5 || CM.Sim.dragonAura === 18) {
@@ -945,8 +942,8 @@ CM.Sim.SellBuildingsForChoEgg = function() {
 	// Sacrifice highest buildings for the aura switch
 	for (let i = 0; i < buildingsToSacrifice; ++i) {
 		let highestBuilding = 0;
-		for (let j in CM.Sim.Objects) {
-			if (CM.Sim.Objects[j].amount > 0) {	
+		for (const j in CM.Sim.Objects) {
+			if (CM.Sim.Objects[j].amount > 0) {
 				highestBuilding = CM.Sim.Objects[j];
 			}
 		}
@@ -955,8 +952,8 @@ CM.Sim.SellBuildingsForChoEgg = function() {
 	}
 
 	// Get money made by selling all remaining buildings
-	for (let i of Object.keys(CM.Sim.Objects)) {
-		let me = CM.Sim.Objects[i];
+	for (const i of Object.keys(CM.Sim.Objects)) {
+		const me = CM.Sim.Objects[i];
 		sellTotal += CM.Sim.BuildingSell(Game.Objects[me.name], Game.Objects[i].basePrice, me.amount, Game.Objects[i].free, me.amount);
 	}
 

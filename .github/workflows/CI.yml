@@ -6,7 +6,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run ESLint
-      run: npx eslint src
+      run: |
+        npm install
+        npx eslint src
   Check_main_file:
     runs-on: ubuntu-latest
     steps:

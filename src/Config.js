@@ -1,22 +1,22 @@
-/**********
+/**
  * Config *
- **********/
+ */
 
-/********
+/**
  * Section: Functions related to saving, loading and restoring configs */
 
 /**
  * This function saves the config of CookieMonster without saving any of the other save-data
  * This allows saving in between the autosave intervals
- * It is called by CM.Config.LoadConfig(), CM.Config.RestoreDefault(), CM.Config.ToggleConfig(), 
+ * It is called by CM.Config.LoadConfig(), CM.Config.RestoreDefault(), CM.Config.ToggleConfig(),
  * CM.ToggleConfigVolume() and changes in options with type "url", "color" or "numscale"
  */
-CM.Config.SaveConfig = function() {
-	let saveString = b64_to_utf8(unescape(localStorage.getItem('CookieClickerGame')).split('!END!')[0]);
-	let CookieMonsterSave = saveString.match(/CookieMonster.*(;|$)/);
-	if (CookieMonsterSave != null) {
-		let newSaveString = saveString.replace(CookieMonsterSave[0], "CookieMonster:" + CM.save());
-		localStorage.setItem('CookieClickerGame', escape(utf8_to_b64(newSaveString)+'!END!'));
+CM.Config.SaveConfig = function () {
+	const saveString = b64_to_utf8(unescape(localStorage.getItem('CookieClickerGame')).split('!END!')[0]);
+	const CookieMonsterSave = saveString.match(/CookieMonster.*(;|$)/);
+	if (CookieMonsterSave !== null) {
+		const newSaveString = saveString.replace(CookieMonsterSave[0], `CookieMonster:${CM.save()}`);
+		localStorage.setItem('CookieClickerGame', escape(`${utf8_to_b64(newSaveString)}!END!`));
 	}
 };
 
@@ -24,46 +24,40 @@ CM.Config.SaveConfig = function() {
  * This function loads the config of CookieMonster saved in localStorage and loads it into CM.Options
  * It is called by CM.Main.DelayInit() and CM.Config.RestoreDefault()
  */
-CM.Config.LoadConfig = function(settings) {
+CM.Config.LoadConfig = function (settings) {
 	// This removes cookies left from earlier versions of CookieMonster
-	if (typeof localStorage.CMConfig != "undefined") {
+	if (typeof localStorage.CMConfig !== 'undefined') {
 		delete localStorage.CMConfig;
 	}
-	if (settings != null) {
+	if (settings !== undefined) {
 		CM.Options = settings;
 
 		// Check values
 		let mod = false;
-		for (let i in CM.Data.ConfigDefault) {
+		for (const i in CM.Data.ConfigDefault) {
 			if (typeof CM.Options[i] === 'undefined') {
 				mod = true;
 				CM.Options[i] = CM.Data.ConfigDefault[i];
-			}
-			else if (i != 'Header' && i != 'Colors') {
+			} else if (i !== 'Header' && i !== 'Colors') {
 				if (i.indexOf('SoundURL') === -1) {
 					if (!(CM.Options[i] > -1 && CM.Options[i] < CM.Data.Config[i].label.length)) {
 						mod = true;
 						CM.Options[i] = CM.Data.ConfigDefault[i];
 					}
+				} else if (typeof CM.Options[i] !== 'string') { // Sound URLs
+					mod = true;
+					CM.Options[i] = CM.Data.ConfigDefault[i];
 				}
-				else {  // Sound URLs
-					if (typeof CM.Options[i] != 'string') {
-						mod = true;
-						CM.Options[i] = CM.Data.ConfigDefault[i];
-					}
-				}
-			}
-			else if (i === 'Header') {
-				for (let j in CM.Data.ConfigDefault.Header) {
+			} else if (i === 'Header') {
+				for (const j in CM.Data.ConfigDefault.Header) {
 					if (typeof CM.Options[i][j] === 'undefined' || !(CM.Options[i][j] > -1 && CM.Options[i][j] < 2)) {
 						mod = true;
 						CM.Options[i][j] = CM.Data.ConfigDefault[i][j];
 					}
 				}
-			}
-			else { // Colors
-				for (let j in CM.Data.ConfigDefault.Colors) {
-					if (typeof CM.Options[i][j] === 'undefined' || typeof CM.Options[i][j] != 'string') {
+			} else { // Colors
+				for (const j in CM.Data.ConfigDefault.Colors) {
+					if (typeof CM.Options[i][j] === 'undefined' || typeof CM.Options[i][j] !== 'string') {
 						mod = true;
 						CM.Options[i][j] = CM.Data.ConfigDefault[i][j];
 					}
@@ -72,13 +66,12 @@ CM.Config.LoadConfig = function(settings) {
 		}
 		if (mod) CM.Config.SaveConfig();
 		CM.Main.Loop(); // Do loop once
-		for (let i in CM.Data.ConfigDefault) {
-			if (i != 'Header' && typeof CM.Data.Config[i].func !== 'undefined') {
+		for (const i in CM.Data.ConfigDefault) {
+			if (i !== 'Header' && typeof CM.Data.Config[i].func !== 'undefined') {
 				CM.Data.Config[i].func();
 			}
 		}
-	}
-	else { // Default values
+	} else { // Default values
 		CM.Config.RestoreDefault();
 	}
 };
@@ -87,13 +80,13 @@ CM.Config.LoadConfig = function(settings) {
  * This function reloads and resaves the default config as stored in CM.Data.ConfigDefault
  * It is called by resDefBut.onclick loaded in the options page or by CM.Config.LoadConfig if no localStorage is found
  */
-CM.Config.RestoreDefault = function() {
+CM.Config.RestoreDefault = function () {
 	CM.Config.LoadConfig(CM.Data.ConfigDefault);
 	CM.Config.SaveConfig();
 	Game.UpdateMenu();
 };
 
-/********
+/**
  * Section: Functions related to toggling or changing configs */
 
 /**
@@ -101,14 +94,13 @@ CM.Config.RestoreDefault = function() {
  * It is called by the onclick event of options of the "bool" type
  * @param 	{string}	config	The name of the option
  */
-CM.Config.ToggleConfig = function(config) {
+CM.Config.ToggleConfig = function (config) {
 	CM.Options[config]++;
 
 	if (CM.Options[config] === CM.Data.Config[config].label.length) {
 		CM.Options[config] = 0;
 		if (CM.Data.Config[config].toggle) l(CM.Config.ConfigPrefix + config).className = 'option off';
-	}
-	else l(CM.Config.ConfigPrefix + config).className = 'option';
+	} else l(CM.Config.ConfigPrefix + config).className = 'option';
 
 	if (typeof CM.Data.Config[config].func !== 'undefined') {
 		CM.Data.Config[config].func();
@@ -123,11 +115,11 @@ CM.Config.ToggleConfig = function(config) {
  * It is called by the oninput and onchange event of "vol" type options
  * @param 	{string}	config	The name of the option
  */
-CM.Config.ToggleConfigVolume = function(config) {
-	if (l("slider" + config) != null) {
-		l("slider" + config + "right").innerHTML = l("slider" + config).value + "%";
-		CM.Options[config] = Math.round(l("slider" + config).value);
-	} 
+CM.Config.ToggleConfigVolume = function (config) {
+	if (l(`slider${config}`) !== null) {
+		l(`slider${config}right`).innerHTML = `${l(`slider${config}`).value}%`;
+		CM.Options[config] = Math.round(l(`slider${config}`).value);
+	}
 	CM.Config.SaveConfig();
 };
 
@@ -136,13 +128,13 @@ CM.Config.ToggleConfigVolume = function(config) {
  * It is called by the onclick event of the +/- next to headers
  * @param 	{string}	config	The name of the header
  */
-CM.Config.ToggleHeader = function(config) {
+CM.Config.ToggleHeader = function (config) {
 	CM.Options.Header[config]++;
 	if (CM.Options.Header[config] > 1) CM.Options.Header[config] = 0;
 	CM.Config.SaveConfig();
 };
 
-/********
+/**
  * Section: Functions related to notifications */
 
 /**
@@ -151,13 +143,13 @@ CM.Config.ToggleHeader = function(config) {
  * Note that most browsers will stop asking if the user has ignored the prompt around 6 times
  * @param 	{number}	ToggleOnOff		A number indicating whether the option has been turned off (0) or on (1)
  */
-CM.Config.CheckNotificationPermissions = function(ToggleOnOff) {
+CM.Config.CheckNotificationPermissions = function (ToggleOnOff) {
 	if (ToggleOnOff === 1)	{
 		// Check if browser support Promise version of Notification Permissions
-		let checkNotificationPromise = function () {
+		const checkNotificationPromise = function () {
 			try {
 				Notification.requestPermission().then();
-			} catch(e) {
+			} catch (e) {
 				return false;
 			}
 			return true;
@@ -165,20 +157,16 @@ CM.Config.CheckNotificationPermissions = function(ToggleOnOff) {
 
 		// Check if the browser supports notifications and which type
 		if (!('Notification' in window)) {
-			console.log("This browser does not support notifications.");
-		} 
-		else {
-			if(checkNotificationPromise()) {
-				Notification.requestPermission().then();
-			} 
-			else {
-				Notification.requestPermission();
-			}
+			console.log('This browser does not support notifications.');
+		} else if (checkNotificationPromise()) {
+			Notification.requestPermission().then();
+		} else {
+			Notification.requestPermission();
 		}
 	}
 };
 
-/********
+/**
  * Section: Variables used in Config functions */
 
 /**
