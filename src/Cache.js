@@ -1,8 +1,8 @@
-/*********
+/**
  * Cache *
- *********/
+ */
 
-/********
+/**
  * Section: General Cache related functions */
 
 /**
@@ -10,7 +10,7 @@
  * The declaration follows the structure of the CM.Cache.js file
  * It is called by CM.Main.DelayInit
  */
-CM.Cache.InitCache = function() {
+CM.Cache.InitCache = function () {
 	CM.Cache.CacheDragonAuras();
 	CM.Cache.CacheWrinklers();
 	CM.Cache.CacheStats();
@@ -20,11 +20,11 @@ CM.Cache.InitCache = function() {
 	CM.Cache.CacheSeaSpec();
 	CM.Cache.InitCookiesDiff();
 	CM.Cache.HeavenlyChipsDiff = new CMAvgQueue(5); // Used by CM.Cache.CacheHeavenlyChipsPS()
-	CM.Cache.CacheHeavenlyChipsPS
+	CM.Cache.CacheHeavenlyChipsPS();
 	CM.Cache.CacheAvgCPS();
 	CM.Cache.CacheIncome();
 	CM.Cache.CacheBuildingsPrices();
-	CM.Cache.CachePP();	
+	CM.Cache.CachePP();
 };
 
 /**
@@ -32,7 +32,7 @@ CM.Cache.InitCache = function() {
  * It is called by CM.Main.Loop()
  * @global	{string}	CM.Cache.TimeTillNextPrestige	Time requried till next prestige level
  */
-CM.Cache.LoopCache = function() {
+CM.Cache.LoopCache = function () {
 	// Update Wrinkler Bank
 	CM.Cache.CacheWrinklers();
 
@@ -41,12 +41,11 @@ CM.Cache.LoopCache = function() {
 	CM.Cache.CacheAvgCPS();
 	CM.Cache.CacheHeavenlyChipsPS();
 
-	let cookiesToNext = Game.HowManyCookiesReset(Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) + 1) - (Game.cookiesEarned + Game.cookiesReset);
+	const cookiesToNext = Game.HowManyCookiesReset(Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) + 1) - (Game.cookiesEarned + Game.cookiesReset);
 	CM.Cache.TimeTillNextPrestige = CM.Disp.FormatTime(cookiesToNext / CM.Disp.GetCPS());
 };
 
-
-/********
+/**
  * Section: Helper functions */
 
 /**
@@ -63,7 +62,7 @@ class CMAvgQueue {
 		this.queue = [];
 	}
 
-	addLatest (newValue) {
+	addLatest(newValue) {
 		if (this.queue.push(newValue) > this.maxLength) {
 			this.queue.shift();
 		}
@@ -74,7 +73,7 @@ class CMAvgQueue {
 	 * @param 	{number}	timePeriod	The period in seconds to computer average over
 	 * @returns {number}	ret			The average
  	 */
-	calcAverage (timePeriod) {
+	calcAverage(timePeriod) {
 		if (timePeriod > this.maxLength) timePeriod = this.maxLength;
 		if (timePeriod > this.queue.length) timePeriod = this.queue.length;
 		let ret = 0;
@@ -85,7 +84,7 @@ class CMAvgQueue {
 	}
 }
 
-/********
+/**
  * Section: Functions related to Dragon Auras */
 
 /**
@@ -95,12 +94,12 @@ class CMAvgQueue {
  * @global	{number}	CM.Cache.dragonAura		The number of the first (right) Aura
  * @global	{number}	CM.Cache.dragonAura2	The number of the second (left) Aura
  */
-CM.Cache.CacheDragonAuras = function() {
+CM.Cache.CacheDragonAuras = function () {
 	CM.Cache.dragonAura = Game.dragonAura;
 	CM.Cache.dragonAura2 = Game.dragonAura2;
 };
 
-/********
+/**
  * Section: Functions related to Wrinklers */
 
 /**
@@ -110,7 +109,7 @@ CM.Cache.CacheDragonAuras = function() {
  * @global	{number}				CM.Cache.WrinklersNormal	The cookies of all normal wrinklers
  * @global	{[{number}, {number}]}	CM.Cache.WrinklersFattest	A list containing the cookies and the id of the fattest non-shiny wrinkler
  */
-CM.Cache.CacheWrinklers = function() {
+CM.Cache.CacheWrinklers = function () {
 	CM.Cache.WrinklersTotal = 0;
 	CM.Cache.WrinklersNormal = 0;
 	CM.Cache.WrinklersFattest = [0, null];
@@ -118,11 +117,11 @@ CM.Cache.CacheWrinklers = function() {
 		let sucked = Game.wrinklers[i].sucked;
 		let toSuck = 1.1;
 		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
-		if (Game.wrinklers[i].type==1) toSuck *= 3; // Shiny wrinklers
+		if (Game.wrinklers[i].type === 1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
 		if (CM.Sim.Objects.Temple.minigameLoaded) {
-			let godLvl = Game.hasGod('scorn');
+			const godLvl = Game.hasGod('scorn');
 			if (godLvl === 1) sucked *= 1.15;
 			else if (godLvl === 2) sucked *= 1.1;
 			else if (godLvl === 3) sucked *= 1.05;
@@ -135,7 +134,7 @@ CM.Cache.CacheWrinklers = function() {
 	}
 };
 
-/********
+/**
  * Section: Functions related to Caching stats */
 
 /**
@@ -152,10 +151,10 @@ CM.Cache.CacheWrinklers = function() {
  * @global	{number}	CM.Cache.Edifice				Cookies required for most expensive building through Spontaneous Edifice
  * @global	{string}	CM.Cache.EdificeBuilding		Name of most expensive building possible with Spontaneous Edifice
  */
-CM.Cache.CacheStats = function() {
+CM.Cache.CacheStats = function () {
 	CM.Cache.Lucky = (CM.Cache.NoGoldSwitchCookiesPS * 900) / 0.15;
 	CM.Cache.Lucky *= CM.Cache.DragonsFortuneMultAdjustment;
-	let cpsBuffMult = CM.Cache.getCPSBuffMult();
+	const cpsBuffMult = CM.Cache.getCPSBuffMult();
 	if (cpsBuffMult > 0) CM.Cache.Lucky /= cpsBuffMult;
 	else CM.Cache.Lucky = 0;
 	CM.Cache.LuckyReward = CM.Cache.GoldenCookiesMult * (CM.Cache.Lucky * 0.15) + 13;
@@ -169,14 +168,14 @@ CM.Cache.CacheStats = function() {
 	CM.Cache.Edifice = 0;
 	let max = 0;
 	let n = 0;
-	for (let i of Object.keys(Game.Objects)) {
+	for (const i of Object.keys(Game.Objects)) {
 		if (Game.Objects[i].amount > max) max = Game.Objects[i].amount;
 		if (Game.Objects[i].amount > 0) n++;
 	}
-	for (let i of Object.keys(Game.Objects)) {
-		if ((Game.Objects[i].amount < max || n === 1) &&
-			Game.Objects[i].amount < 400 &&
-			Game.Objects[i].price * 2 > CM.Cache.Edifice) {
+	for (const i of Object.keys(Game.Objects)) {
+		if ((Game.Objects[i].amount < max || n === 1)
+			&& Game.Objects[i].amount < 400
+			&& Game.Objects[i].price * 2 > CM.Cache.Edifice) {
 			CM.Cache.Edifice = Game.Objects[i].price * 2;
 			CM.Cache.EdificeBuilding = i;
 		}
@@ -191,7 +190,7 @@ CM.Cache.CacheStats = function() {
  * @param	{number}			CM.Cache.WrathCookiesMult				Multiplier for wrath cookies
  * @param	{number}			CM.Cache.DragonsFortuneMultAdjustment	Multiplier for dragon fortune + active golden cookie
  */
-CM.Cache.CacheGoldenAndWrathCookiesMults = function() {
+CM.Cache.CacheGoldenAndWrathCookiesMults = function () {
 	if (CM.Footer.isInitzializing) {
 		CM.Cache.GoldenCookiesMult = 1;
 		CM.Cache.WrathCookiesMult = 1;
@@ -233,17 +232,16 @@ CM.Cache.CacheGoldenAndWrathCookiesMults = function() {
  * @param	{number}					mult		Multiplier
  * @returns	[{number, number, number}]				Total cookies earned, cookie needed for this and next level
  */
-CM.Cache.MaxChainCookieReward = function(digit, maxPayout, mult) {
+CM.Cache.MaxChainCookieReward = function (digit, maxPayout, mult) {
 	let totalFromChain = 0;
 	let moni = 0;
 	let nextMoni = 0;
 	let nextRequired = 0;
 	let chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
 	while (nextMoni < maxPayout) {
-		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain) * digit * mult), maxPayout * mult));
-		// TODO: Calculate Cookies or cps needed for next level of chain. See issue #29
-		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult), maxPayout * mult));
-		nextRequired = Math.floor(1 / 9 * Math.pow(10, chain + 1) * digit * mult);
+		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * 10 ** chain * digit * mult), maxPayout * mult));
+		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * 10 ** (chain + 1) * digit * mult), maxPayout * mult));
+		nextRequired = Math.floor(1 / 9 * 10 ** (chain + 1) * digit * mult);
 		totalFromChain += moni;
 		chain++;
 	}
@@ -266,12 +264,12 @@ CM.Cache.MaxChainCookieReward = function(digit, maxPayout, mult) {
  * @global	{number}			CM.Cache.ChainFrenzyWrathRequired			Cookies needed for maximum reward for wrath frenzy chain
  * @global	{number}			CM.Cache.ChainFrenzyWrathRequiredNext		Total cookies needed for next level for wrath frenzy chain
  */
-CM.Cache.CacheChain = function() {
+CM.Cache.CacheChain = function () {
 	let maxPayout = CM.Cache.NoGoldSwitchCookiesPS * 60 * 60 * 6 * CM.Cache.DragonsFortuneMultAdjustment;
 	// Removes effect of Frenzy etc.
-	let cpsBuffMult = CM.Cache.getCPSBuffMult();
+	const cpsBuffMult = CM.Cache.getCPSBuffMult();
 	if (cpsBuffMult > 0) maxPayout /= cpsBuffMult;
-	else maxPayout = 0;	
+	else maxPayout = 0;
 
 	CM.Cache.ChainMaxReward = CM.Cache.MaxChainCookieReward(7, maxPayout, CM.Cache.GoldenCookiesMult);
 	CM.Cache.ChainRequired = CM.Cache.ChainMaxReward[1] * 2 / CM.Cache.GoldenCookiesMult;
@@ -297,32 +295,32 @@ CM.Cache.CacheChain = function() {
  * @global	{string}	CM.Cache.MissingUpgradesCookies		String containig the HTML to create the "crates" for missing cookie upgrades
  * @global	{string}	CM.Cache.MissingUpgradesPrestige	String containig the HTML to create the "crates" for missing prestige upgrades
  */
-CM.Cache.CacheMissingUpgrades = function() {
-	CM.Cache.MissingUpgrades = "";
-	CM.Cache.MissingUpgradesCookies = "";
-	CM.Cache.MissingUpgradesPrestige = "";
-	let list = [];
-	//sort the upgrades
-	for (let i of Object.keys(Game.Upgrades)) {
+CM.Cache.CacheMissingUpgrades = function () {
+	CM.Cache.MissingUpgrades = '';
+	CM.Cache.MissingUpgradesCookies = '';
+	CM.Cache.MissingUpgradesPrestige = '';
+	const list = [];
+	// sort the upgrades
+	for (const i of Object.keys(Game.Upgrades)) {
 		list.push(Game.Upgrades[i]);
 	}
-	let sortMap = function(a, b) {
-		if (a.order>b.order) return 1;
-		else if (a.order<b.order) return -1;
-		else return 0;
+	const sortMap = function (a, b) {
+		if (a.order > b.order) return 1;
+		else if (a.order < b.order) return -1;
+		return 0;
 	};
 	list.sort(sortMap);
 
-	for (let i of Object.keys(list)) {
-		let me = list[i];
-		
+	for (const i of Object.keys(list)) {
+		const me = list[i];
+
 		if (me.bought === 0) {
 			let str = '';
 
 			str += CM.Disp.crateMissing(me);
 			if (me.pool === 'prestige') CM.Cache.MissingUpgradesPrestige += str;
 			else if (me.pool === 'cookie') CM.Cache.MissingUpgradesCookies += str;
-			else if (me.pool != 'toggle' && me.pool != 'unused' && me.pool != 'debug') CM.Cache.MissingUpgrades += str;
+			else if (me.pool !== 'toggle' && me.pool !== 'unused' && me.pool !== 'debug') CM.Cache.MissingUpgrades += str;
 		}
 	}
 };
@@ -332,7 +330,7 @@ CM.Cache.CacheMissingUpgrades = function() {
  * It is called by CM.Main.Loop() and CM.Cache.InitCache()
  * @global	{number}	CM.Cache.SeaSpec	The reward for popping a reindeer
  */
-CM.Cache.CacheSeaSpec = function() {
+CM.Cache.CacheSeaSpec = function () {
 	if (Game.season === 'christmas') {
 		let val = Game.cookiesPs * 60;
 		if (Game.hasBuff('Elder frenzy')) val *= 0.5;
@@ -347,39 +345,39 @@ CM.Cache.CacheSeaSpec = function() {
  * It is called by CM.Cache.LoopCache()
  * @global	{number}	CM.Cache.HCPerSecond	The Heavenly Chips per second in the last five seconds
  */
-CM.Cache.CacheHeavenlyChipsPS = function() {
+CM.Cache.CacheHeavenlyChipsPS = function () {
 	CM.Cache.HCPerSecond = 0; // Mainly there to not throw errors during initialization
-	let currDate = Math.floor(Date.now() / 1000);
+	const currDate = Math.floor(Date.now() / 1000);
 	// Only calculate every new second
 	if ((Game.T / Game.fps) % 1 === 0) {
-		let chipsOwned = Game.HowMuchPrestige(Game.cookiesReset);
-		let ascendNowToOwn = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
-		let ascendNowToGet = ascendNowToOwn - Math.floor(chipsOwned);
-		
+		const chipsOwned = Game.HowMuchPrestige(Game.cookiesReset);
+		const ascendNowToOwn = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
+		const ascendNowToGet = ascendNowToOwn - Math.floor(chipsOwned);
+
 		// Add recent gains to AvgQueue's
-		let timeDiff = currDate - CM.Cache.lastHeavenlyCheck;
-		let heavenlyChipsDiffAvg = Math.max(0, (ascendNowToGet - CM.Cache.lastHeavenlyChips)) / timeDiff;
+		const timeDiff = currDate - CM.Cache.lastHeavenlyCheck;
+		const heavenlyChipsDiffAvg = Math.max(0, (ascendNowToGet - CM.Cache.lastHeavenlyChips)) / timeDiff;
 		for (let i = 0; i < timeDiff; i++) {
 			CM.Cache.HeavenlyChipsDiff.addLatest(heavenlyChipsDiffAvg);
 		}
 
-		// Store current data for next loop	
+		// Store current data for next loop
 		CM.Cache.lastHeavenlyCheck = currDate;
 		CM.Cache.lastHeavenlyChips = ascendNowToGet;
 
 		// Get average gain over period of 5 seconds
 		CM.Cache.HCPerSecond = CM.Cache.HeavenlyChipsDiff.calcAverage(5);
 	}
-}
+};
 
-/********
+/**
  * Section: Functions related to caching CPS */
 
 /**
  * This functions caches creates the CMAvgQueue used by CM.Cache.CacheAvgCPS() to calculate CPS
  * Called by CM.Cache.InitCache()
  */
-CM.Cache.InitCookiesDiff = function() {
+CM.Cache.InitCookiesDiff = function () {
 	CM.Cache.CookiesDiff = new CMAvgQueue(CM.Disp.cookieTimes[CM.Disp.cookieTimes.length - 1]);
 	CM.Cache.WrinkDiff = new CMAvgQueue(CM.Disp.cookieTimes[CM.Disp.cookieTimes.length - 1]);
 	CM.Cache.WrinkFattestDiff = new CMAvgQueue(CM.Disp.cookieTimes[CM.Disp.cookieTimes.length - 1]);
@@ -395,8 +393,8 @@ CM.Cache.InitCookiesDiff = function() {
  * @global	{number}	CM.Cache.AverageClicks		Average cookies from clicking over time-period as defined by AvgClicksHist
  * @global	{number}	CM.Cache.AvgCPSChoEgg		Average cookies from combination of normal CPS and average Chocolate Cookie CPS
  */
-CM.Cache.CacheAvgCPS = function() {
-	let currDate = Math.floor(Date.now() / 1000);
+CM.Cache.CacheAvgCPS = function () {
+	const currDate = Math.floor(Date.now() / 1000);
 	// Only calculate every new second
 	if ((Game.T / Game.fps) % 1 === 0) {
 		let choEggTotal = Game.cookies + CM.Cache.SellForChoEgg;
@@ -405,12 +403,12 @@ CM.Cache.CacheAvgCPS = function() {
 		choEggTotal *= 0.05;
 
 		// Add recent gains to AvgQueue's
-		let timeDiff = currDate - CM.Cache.lastCPSCheck;
-		let bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
-		let wrinkDiffAvg = Math.max(0, (CM.Cache.WrinklersTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
-		let wrinkFattestDiffAvg = Math.max(0, (CM.Cache.WrinklersFattest[0] - CM.Cache.lastWrinkFattestCookies)) / timeDiff;
-		let choEggDiffAvg = Math.max(0,(choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
-		let clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
+		const timeDiff = currDate - CM.Cache.lastCPSCheck;
+		const bankDiffAvg = Math.max(0, (Game.cookies - CM.Cache.lastCookies)) / timeDiff;
+		const wrinkDiffAvg = Math.max(0, (CM.Cache.WrinklersTotal - CM.Cache.lastWrinkCookies)) / timeDiff;
+		const wrinkFattestDiffAvg = Math.max(0, (CM.Cache.WrinklersFattest[0] - CM.Cache.lastWrinkFattestCookies)) / timeDiff;
+		const choEggDiffAvg = Math.max(0, (choEggTotal - CM.Cache.lastChoEgg)) / timeDiff;
+		const clicksDiffAvg = (Game.cookieClicks - CM.Cache.lastClicks) / timeDiff;
 		for (let i = 0; i < timeDiff; i++) {
 			CM.Cache.CookiesDiff.addLatest(bankDiffAvg);
 			CM.Cache.WrinkDiff.addLatest(wrinkDiffAvg);
@@ -419,7 +417,7 @@ CM.Cache.CacheAvgCPS = function() {
 			CM.Cache.ClicksDiff.addLatest(clicksDiffAvg);
 		}
 
-		// Store current data for next loop	
+		// Store current data for next loop
 		CM.Cache.lastCPSCheck = currDate;
 		CM.Cache.lastCookies = Game.cookies;
 		CM.Cache.lastWrinkCookies = CM.Cache.WrinklersTotal;
@@ -428,7 +426,7 @@ CM.Cache.CacheAvgCPS = function() {
 		CM.Cache.lastClicks = Game.cookieClicks;
 
 		// Get average gain over period of cpsLength seconds
-		let cpsLength = CM.Disp.cookieTimes[CM.Options.AvgCPSHist];
+		const cpsLength = CM.Disp.cookieTimes[CM.Options.AvgCPSHist];
 		CM.Cache.AverageGainBank = CM.Cache.CookiesDiff.calcAverage(cpsLength);
 		CM.Cache.AverageGainWrink = CM.Cache.WrinkDiff.calcAverage(cpsLength);
 		CM.Cache.AverageGainWrinkFattest = CM.Cache.WrinkFattestDiff.calcAverage(cpsLength);
@@ -437,14 +435,13 @@ CM.Cache.CacheAvgCPS = function() {
 		if (CM.Options.CalcWrink === 1) CM.Cache.AvgCPS += CM.Cache.AverageGainWrink;
 		if (CM.Options.CalcWrink === 2) CM.Cache.AvgCPS += CM.Cache.AverageGainWrinkFattest;
 
-		let choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
+		const choEgg = (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg'));
 
 		if (choEgg || CM.Options.CalcWrink === 0) {
 			CM.Cache.AvgCPSWithChoEgg = CM.Cache.AverageGainBank + CM.Cache.AverageGainWrink + (choEgg ? CM.Cache.AverageGainChoEgg : 0);
-		}
-		else CM.Cache.AvgCPSWithChoEgg = CM.Cache.AvgCPS;
+		} else CM.Cache.AvgCPSWithChoEgg = CM.Cache.AvgCPS;
 
-		CM.Cache.AverageClicks =  CM.Cache.ClicksDiff.calcAverage(CM.Disp.clickTimes[CM.Options.AvgClicksHist]);
+		CM.Cache.AverageClicks = CM.Cache.ClicksDiff.calcAverage(CM.Disp.clickTimes[CM.Options.AvgClicksHist]);
 	}
 };
 
@@ -453,14 +450,14 @@ CM.Cache.CacheAvgCPS = function() {
  * It is called by CM.Main.Loop()
  * @global	{number}	CM.Cache.SellForChoEgg	Total cookies to be gained from selling Chocolate egg
  */
-CM.Cache.CacheSellForChoEgg = function() {
+CM.Cache.CacheSellForChoEgg = function () {
 	let sellTotal = 0;
 	// Compute cookies earned by selling stock market goods
 	if (Game.Objects.Bank.minigameLoaded) {
-		let marketGoods = Game.Objects.Bank.minigame.goods;
+		const marketGoods = Game.Objects.Bank.minigame.goods;
 		let goodsVal = 0;
-		for (let i of Object.keys(marketGoods)) {
-			let marketGood = marketGoods[i];
+		for (const i of Object.keys(marketGoods)) {
+			const marketGood = marketGoods[i];
 			goodsVal += marketGood.stock * marketGood.val;
 		}
 		sellTotal += goodsVal * Game.cookiesPsRawHighest;
@@ -476,15 +473,15 @@ CM.Cache.CacheSellForChoEgg = function() {
  * @global	{number}	CM.Cache.CurrWrinklerCount		Current number of wrinklers
  * @global	{number}	CM.Cache.CurrWrinklerCPSMult	Current multiplier of CPS because of wrinklers (excluding their negative sucking effect)
  */
-CM.Cache.CacheCurrWrinklerCPS = function() {
+CM.Cache.CacheCurrWrinklerCPS = function () {
 	CM.Cache.CurrWrinklerCPSMult = 0;
 	let count = 0;
-	for (let i in Game.wrinklers) {
+	for (const i in Game.wrinklers) {
 		if (Game.wrinklers[i].phase === 2) count++;
 	}
 	let godMult = 1;
 	if (CM.Sim.Objects.Temple.minigameLoaded) {
-		let godLvl = Game.hasGod('scorn');
+		const godLvl = Game.hasGod('scorn');
 		if (godLvl === 1) godMult *= 1.15;
 		else if (godLvl === 2) godMult *= 1.1;
 		else if (godLvl === 3) godMult *= 1.05;
@@ -498,10 +495,10 @@ CM.Cache.CacheCurrWrinklerCPS = function() {
  * It is called by CM.Sim.CalculateGains(), CM.Disp.UpdateTooltipWarnings(), CM.Cache.CacheStats() and CM.Cache.CacheChain()
  * @returns {number}	mult	The multiplier
  */
-CM.Cache.getCPSBuffMult = function() {
+CM.Cache.getCPSBuffMult = function () {
 	let mult = 1;
-	for (let i of Object.keys(Game.buffs)) {
-		if (typeof Game.buffs[i].multCpS != 'undefined') mult *= Game.buffs[i].multCpS;
+	for (const i of Object.keys(Game.buffs)) {
+		if (typeof Game.buffs[i].multCpS !== 'undefined') mult *= Game.buffs[i].multCpS;
 	}
 	return mult;
 };
@@ -511,14 +508,13 @@ CM.Cache.getCPSBuffMult = function() {
  * If so it CM.Sim.Win()'s them and the caller function will know to recall CM.Sim.CalculateGains()
  * It is called at the end of any functions that simulates certain behaviour
  */
-CM.Cache.NoGoldSwitchCPS = function() {
+CM.Cache.NoGoldSwitchCPS = function () {
 	if (Game.Has('Golden switch [off]')) {
 		CM.Cache.NoGoldSwitchCookiesPS = CM.Sim.NoGoldSwitchCPS();
-	}
-	else CM.Cache.NoGoldSwitchCookiesPS = Game.cookiesPs;
+	} else CM.Cache.NoGoldSwitchCookiesPS = Game.cookiesPs;
 };
 
-/********
+/**
  * Section: Functions related to "Specials" (Dragon and Santa) */
 
 /**
@@ -527,48 +523,45 @@ CM.Cache.NoGoldSwitchCPS = function() {
  * @global	{number}	CM.Cache.lastDragonLevel		The last cached dragon level
  * @global	{string}	CM.Cache.CostDragonUpgrade		The Beautified cost of the next upgrade
  */
-CM.Cache.CacheDragonCost = function() {
-	if (CM.Cache.lastDragonLevel != Game.dragonLevel || CM.Sim.DoSims) {
-		if (Game.dragonLevel < 25 && Game.dragonLevels[Game.dragonLevel].buy.toString().includes("sacrifice")) {
+CM.Cache.CacheDragonCost = function () {
+	if (CM.Cache.lastDragonLevel !== Game.dragonLevel || CM.Sim.DoSims) {
+		if (Game.dragonLevel < 25 && Game.dragonLevels[Game.dragonLevel].buy.toString().includes('sacrifice')) {
 			let target = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/Objects\[(.*)\]/)[1];
-			let amount = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/sacrifice\((.*?)\)/)[1];
-			if (target != "i") {
-				target = target.replaceAll("'", "");
+			const amount = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/sacrifice\((.*?)\)/)[1];
+			if (target !== 'i') {
+				target = target.replaceAll("'", '');
 				if (Game.Objects[target].amount < amount) {
-					CM.Cache.CostDragonUpgrade = "Not enough buildings to sell";
-				}
-				else {
+					CM.Cache.CostDragonUpgrade = 'Not enough buildings to sell';
+				} else {
 					let cost = 0;
 					CM.Sim.CopyData();
 					for (let i = 0; i < amount; i++) {
-						let price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
+						let price = CM.Sim.Objects[target].basePrice * Game.priceIncrease ** Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free);
 						price = Game.modifyBuildingPrice(CM.Sim.Objects[target], price);
 						price = Math.ceil(price);
 						cost += price;
 						CM.Sim.Objects[target].amount--;
 					}
-					CM.Cache.CostDragonUpgrade = "Cost to rebuy: " + CM.Disp.Beautify(cost);
+					CM.Cache.CostDragonUpgrade = `Cost to rebuy: ${CM.Disp.Beautify(cost)}`;
 				}
-			}
-			else {
+			} else {
 				let cost = 0;
 				CM.Sim.CopyData();
-				for (let j of Object.keys(Game.Objects)) {
+				for (const j of Object.keys(Game.Objects)) {
 					target = j;
 					if (Game.Objects[target].amount < amount) {
-						CM.Cache.CostDragonUpgrade = "Not enough buildings to sell";
+						CM.Cache.CostDragonUpgrade = 'Not enough buildings to sell';
 						break;
-					}
-					else {
+					} else {
 						for (let i = 0; i < amount; i++) {
-							let price = CM.Sim.Objects[target].basePrice * Math.pow(Game.priceIncrease, Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free));
+							let price = CM.Sim.Objects[target].basePrice * Game.priceIncrease ** Math.max(0, CM.Sim.Objects[target].amount - 1 - CM.Sim.Objects[target].free);
 							price = Game.modifyBuildingPrice(CM.Sim.Objects[target], price);
 							price = Math.ceil(price);
 							cost += price;
 							CM.Sim.Objects[target].amount--;
 						}
 					}
-					CM.Cache.CostDragonUpgrade = "Cost to rebuy: " + CM.Disp.Beautify(cost);
+					CM.Cache.CostDragonUpgrade = `Cost to rebuy: ${CM.Disp.Beautify(cost)}`;
 				}
 			}
 		}
@@ -576,14 +569,14 @@ CM.Cache.CacheDragonCost = function() {
 	}
 };
 
-/********
+/**
  * Section: Functions related to caching income */
 
 /**
  * This functions caches the income gain of each building and upgrade and stores it in the cache
  * It is called by CM.Main.Loop() and CM.Cache.InitCache()
  */
-CM.Cache.CacheIncome = function() {
+CM.Cache.CacheIncome = function () {
 	// Simulate Building Buys for 1, 10 and 100 amount
 	CM.Cache.CacheBuildingIncome(1, 'Objects1');
 	CM.Cache.CacheBuildingIncome(10, 'Objects10');
@@ -599,54 +592,54 @@ CM.Cache.CacheIncome = function() {
  * @param	{amount}	amount	Amount to be bought
  * @parem	{string}	target	The target Cache object ("Objects1", "Objects10" or "Objects100")
  */
-CM.Cache.CacheBuildingIncome = function(amount, target) {
+CM.Cache.CacheBuildingIncome = function (amount, target) {
 	CM.Cache[target] = [];
-	for (let i of Object.keys(Game.Objects)) {
+	for (const i of Object.keys(Game.Objects)) {
 		CM.Cache[target][i] = {};
 		CM.Cache[target][i].bonus = CM.Sim.BuyBuildingsBonusIncome(i, amount);
-		if (amount != 1) {
+		if (amount !== 1) {
 			CM.Cache.DoRemakeBuildPrices = 1;
 		}
 	}
-}
+};
 
 /**
  * This functions starts the calculation/simulation of the bonus income of upgrades
  * It is called by CM.Cache.CacheIncome()
  */
-CM.Cache.CacheUpgradeIncome = function() {
+CM.Cache.CacheUpgradeIncome = function () {
 	CM.Cache.Upgrades = [];
-	for (let i of Object.keys(Game.Upgrades)) {
-		let bonusIncome = CM.Sim.BuyUpgradesBonusIncome(i);
+	for (const i of Object.keys(Game.Upgrades)) {
+		const bonusIncome = CM.Sim.BuyUpgradesBonusIncome(i);
 		CM.Cache.Upgrades[i] = {};
 		if (bonusIncome[0]) CM.Cache.Upgrades[i].bonus = bonusIncome[0];
 		if (bonusIncome[1]) CM.Cache.Upgrades[i].bonusMouse = bonusIncome[1];
 	}
-}
+};
 
-/********
+/**
  * Section: Functions related to caching prices */
 
 /**
  * This functions caches the price of each building and stores it in the cache
  * It is called by CM.Main.Loop() and CM.Cache.InitCache()
  */
-CM.Cache.CacheBuildingsPrices = function() {
-	for (let i of Object.keys(Game.Objects)) {
+CM.Cache.CacheBuildingsPrices = function () {
+	for (const i of Object.keys(Game.Objects)) {
 		CM.Cache.Objects1[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 1);
 		CM.Cache.Objects10[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
 		CM.Cache.Objects100[i].price = CM.Sim.BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
 	}
 };
 
-/********
+/**
  * Section: Functions related to caching PP */
 
 /**
  * This functions caches the PP of each building and upgrade and stores it in the cache
  * It is called by CM.Cache.LoopCache() and CM.Cache.InitCache()
  */
-CM.Cache.CachePP = function() {
+CM.Cache.CachePP = function () {
 	CM.Cache.CacheBuildingsPP();
 	CM.Cache.CacheUpgradePP();
 };
@@ -658,7 +651,7 @@ CM.Cache.CachePP = function() {
  * @params	{number}	price	The price of the object
  * @returns {string}	color	The colour assosciated with the pp value
  */
-CM.Cache.ColourOfPP = function(me, price) {
+CM.Cache.ColourOfPP = function (me, price) {
 	let color = '';
 	// Colour based on PP
 	if (me.pp <= 0 || me.pp === Infinity) color = CM.Disp.colorGray;
@@ -671,28 +664,28 @@ CM.Cache.ColourOfPP = function(me, price) {
 
 	// Colour based on price in terms of CPS
 	if (Number(CM.Options.PPSecondsLowerLimit) !== 0) {
-		if (price / CM.Disp.GetCPS() < Number(CM.Options.PPSecondsLowerLimit)) color = CM.Disp.colorBlue
+		if (price / CM.Disp.GetCPS() < Number(CM.Options.PPSecondsLowerLimit)) color = CM.Disp.colorBlue;
 	}
 	// Colour based on being able to purchase
 	if (CM.Options.PPOnlyConsiderBuyable) {
 		if (price - Game.cookies > 0) color = CM.Disp.colorRed;
 	}
-	return color
+	return color;
 };
 
 /**
  * This functions caches the PP of each building it saves all date in CM.Cache.Objects...
  * It is called by CM.Cache.CachePP()
  */
-CM.Cache.CacheBuildingsPP = function() {
+CM.Cache.CacheBuildingsPP = function () {
 	CM.Cache.min = Infinity;
 	CM.Cache.max = 1;
 	CM.Cache.ArrayOfPPs = [];
-	if (typeof CM.Options.PPExcludeTop === "undefined") CM.Options.PPExcludeTop = 0; // Otherwise breaks during initialization
+	if (typeof CM.Options.PPExcludeTop === 'undefined') CM.Options.PPExcludeTop = 0; // Otherwise breaks during initialization
 
 	// Calculate PP and colors when compared to purchase of optimal building in single-purchase mode
 	if (CM.Options.ColorPPBulkMode === 0) {
-		for (let i of Object.keys(CM.Cache.Objects1)) {
+		for (const i of Object.keys(CM.Cache.Objects1)) {
 			if (Game.cookiesPs) {
 				CM.Cache.Objects1[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
 			} else CM.Cache.Objects1[i].pp = (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
@@ -705,13 +698,13 @@ CM.Cache.CacheBuildingsPP = function() {
 				if (CM.Cache.ArrayOfPPs.length === 1) {
 					break;
 				}
-				CM.Cache.ArrayOfPPs.shift()
+				CM.Cache.ArrayOfPPs.shift();
 			}
 		}
 		CM.Cache.min = CM.Cache.ArrayOfPPs[CM.Options.PPExcludeTop][0];
 		CM.Cache.max = CM.Cache.ArrayOfPPs[CM.Cache.ArrayOfPPs.length - 1][0];
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
-		for (let i of Object.keys(CM.Cache.Objects1)) {
+		for (const i of Object.keys(CM.Cache.Objects1)) {
 			CM.Cache.Objects1[i].color = CM.Cache.ColourOfPP(CM.Cache.Objects1[i], Game.Objects[i].getPrice());
 			// Colour based on excluding certain top-buildings
 			for (let j = 0; j < CM.Options.PPExcludeTop; j++) {
@@ -721,15 +714,14 @@ CM.Cache.CacheBuildingsPP = function() {
 		// Calculate PP of bulk-buy modes
 		CM.Cache.CacheBuildingsBulkPP('Objects10');
 		CM.Cache.CacheBuildingsBulkPP('Objects100');
-	} 
-	// Calculate PP and colors when compared to purchase of selected bulk mode
-	else {
-		let target = `Objects${Game.buyBulk}`
-		for (let i of Object.keys(CM.Cache[target])) {
+	} else {
+		// Calculate PP and colors when compared to purchase of selected bulk mode
+		const target = `Objects${Game.buyBulk}`;
+		for (const i of Object.keys(CM.Cache[target])) {
 			if (Game.cookiesPs) {
 				CM.Cache[target][i].pp = (Math.max(Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].bulkPrice / CM.Cache[target][i].bonus);
 			} else CM.Cache[target][i].pp = (Game.Objects[i].bulkPrice / CM.Cache[target][i].bonus);
-			CM.Cache.ArrayOfPPs.push([CM.Cache[target][i].pp, Game.Objects[i].bulkPrice])
+			CM.Cache.ArrayOfPPs.push([CM.Cache[target][i].pp, Game.Objects[i].bulkPrice]);
 		}
 		// Set CM.Cache.min to best non-excluded buidliung
 		CM.Cache.ArrayOfPPs.sort((a, b) => a[0] - b[0]);
@@ -738,14 +730,14 @@ CM.Cache.CacheBuildingsPP = function() {
 				if (CM.Cache.ArrayOfPPs.length === 1) {
 					break;
 				}
-				CM.Cache.ArrayOfPPs.shift()
+				CM.Cache.ArrayOfPPs.shift();
 			}
 		}
 		CM.Cache.min = CM.Cache.ArrayOfPPs[CM.Options.PPExcludeTop][0];
 		CM.Cache.max = CM.Cache.ArrayOfPPs[CM.Cache.ArrayOfPPs.length - 1][0];
 		CM.Cache.mid = ((CM.Cache.max - CM.Cache.min) / 2) + CM.Cache.min;
 
-		for (let i of Object.keys(CM.Cache.Objects1)) {
+		for (const i of Object.keys(CM.Cache.Objects1)) {
 			CM.Cache[target][i].color = CM.Cache.ColourOfPP(CM.Cache[target][i], Game.Objects[i].bulkPrice);
 			// Colour based on excluding certain top-buildings
 			for (let j = 0; j < CM.Options.PPExcludeTop; j++) {
@@ -760,8 +752,8 @@ CM.Cache.CacheBuildingsPP = function() {
  * It saves all date in CM.Cache.Objects...
  * It is called by CM.Cache.CacheBuildingsPP()
  */
-CM.Cache.CacheBuildingsBulkPP = function(target) {
-	for (let i of Object.keys(CM.Cache[target])) {
+CM.Cache.CacheBuildingsBulkPP = function (target) {
+	for (const i of Object.keys(CM.Cache[target])) {
 		if (Game.cookiesPs) {
 			CM.Cache[target][i].pp = (Math.max(CM.Cache[target][i].price - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
 		} else CM.Cache[target][i].pp = (CM.Cache[target][i].price / CM.Cache[target][i].bonus);
@@ -774,18 +766,18 @@ CM.Cache.CacheBuildingsBulkPP = function(target) {
  * This functions caches the PP of each building it saves all date in CM.Cache.Upgrades
  * It is called by CM.Cache.CachePP()
  */
-CM.Cache.CacheUpgradePP = function() {
-	for (let i of Object.keys(CM.Cache.Upgrades)) {
+CM.Cache.CacheUpgradePP = function () {
+	for (const i of Object.keys(CM.Cache.Upgrades)) {
 		if (Game.cookiesPs) {
 			CM.Cache.Upgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
 		} else CM.Cache.Upgrades[i].pp = (Game.Upgrades[i].getPrice() / CM.Cache.Upgrades[i].bonus);
-		if (isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = Infinity;
+		if (Number.isNaN(CM.Cache.Upgrades[i].pp)) CM.Cache.Upgrades[i].pp = Infinity;
 
 		CM.Cache.Upgrades[i].color = CM.Cache.ColourOfPP(CM.Cache.Upgrades[i], Game.Upgrades[i].getPrice());
 	}
 };
 
-/********
+/**
  * Section: Cached variables */
 
 /**
