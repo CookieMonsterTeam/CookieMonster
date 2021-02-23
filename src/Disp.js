@@ -1937,7 +1937,7 @@ CM.Disp.AddDragonLevelUpTooltip = function() {
  */
 CM.Disp.AddMenu = function() {
 	let title = document.createElement('div');
-	title.className = 'title ' + CM.Disp.colorTextPre + CM.Disp.colorBlue;
+	title.className = 'title'
 
 	if (Game.onMenu === 'prefs') {
 		title.textContent = 'Cookie Monster Settings';
@@ -1949,6 +1949,10 @@ CM.Disp.AddMenu = function() {
 			title.textContent = 'Cookie Monster Statistics';
 			CM.Disp.AddMenuStats(title);
 		}
+	}
+	else if (Game.onMenu === 'log') {
+		title.textContent = 'Cookie Monster '; // To create space between name and button
+		CM.Disp.AddMenuInfo(title);
 	}
 };
 
@@ -1966,7 +1970,7 @@ CM.Disp.RefreshMenu = function() {
 /**
  * This function adds the options/settings of CookieMonster to the options page
  * It is called by CM.Disp.AddMenu
- * @param {function} title	A function that returns the title of CookieMonster pre-styled
+ * @param {object} title	On object that includes the title of the menu
  */
 CM.Disp.AddMenuPref = function(title) {	
 	let frag = document.createDocumentFragment();
@@ -2221,7 +2225,7 @@ CM.Disp.UpdateColors = function() {
 /**
  * This function adds stats created by CookieMonster to the stats page
  * It is called by CM.Disp.AddMenu
- * @param {function} title	A function that returns the title of CookieMonster pre-styled
+ * @param {object} title	On object that includes the title of the menu
  */
 CM.Disp.AddMenuStats = function(title) {
 	let stats = document.createElement('div');
@@ -2845,6 +2849,48 @@ CM.Disp.crateMissing = function(me) {
 	style = "${((icon[2] ? 'background-image: url(' + icon[2] + ');' : '') + 'background-position:' + (-icon[0] * 48)+ 'px ' + (-icon[1] * 48) + 'px')};">
 	</div>`;
 };
+
+/********
+ * Section: Functions related to the Stats page
+
+/**
+ * This function adds stats created by CookieMonster to the stats page
+ * It is called by CM.Disp.AddMenu
+ * @param {object} title	On object that includes the title of the menu
+ */
+CM.Disp.AddMenuInfo = function(title) {
+	let info = document.createElement('div');
+	info.className = 'subsection';
+
+	let span = document.createElement('span');
+	span.style.cursor = 'pointer';
+	span.style.display = 'inline-block';
+	span.style.height = '14px';
+	span.style.width = '14px';
+	span.style.borderRadius = '7px';
+	span.style.textAlign = 'center';
+	span.style.backgroundColor = '#C0C0C0';
+	span.style.color = 'black';
+	span.style.fontSize = '13px';
+	span.style.verticalAlign = 'middle';
+	span.textContent = CM.Options.Header.InfoTab ? '-' : '+';
+	span.onclick = function() {CM.Config.ToggleHeader('InfoTab'); Game.UpdateMenu();};
+	title.appendChild(span);
+	info.appendChild(title);
+
+	if (CM.Options.Header.InfoTab) {
+		let description = document.createElement('div')
+		description.innerHTML = CM.Data.ModDescription
+		info.appendChild(description)
+		let notes = document.createElement('div')
+		notes.innerHTML = CM.Data.LatestReleaseNotes
+		info.appendChild(notes)
+	}
+
+	let menu = l('menu').children[1]
+	menu.insertBefore(info, menu.children[1])
+}
+
 
 /********
  * Section: Functions related to the left column of the page */
