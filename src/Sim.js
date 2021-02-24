@@ -688,7 +688,13 @@ CM.Sim.BuyUpgradesBonusIncome = function (upgrade) {
 	if (Game.Upgrades[upgrade].pool === 'toggle' || (Game.Upgrades[upgrade].bought === 0 && Game.Upgrades[upgrade].unlocked && Game.Upgrades[upgrade].pool !== 'prestige')) {
 		CM.Sim.CopyData();
 		const me = CM.Sim.Upgrades[upgrade];
-		me.bought = 1;
+		if (me.name === 'Shimmering veil [on]') {
+			CM.Sim.Upgrades['Shimmering veil [off]'].bought = 0;
+		} else if (me.name === 'Golden switch [on]') {
+			CM.Sim.Upgrades['Golden switch [off]'].bought = 0;
+		} else {
+			me.bought = (me.bought + 1) % 2;
+		}
 		if (Game.CountsAsUpgradeOwned(Game.Upgrades[upgrade].pool)) CM.Sim.UpgradesOwned++;
 
 		if (upgrade === 'Elder Pledge') {
