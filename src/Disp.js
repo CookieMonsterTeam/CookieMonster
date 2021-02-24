@@ -160,7 +160,11 @@ CM.Disp.GetTimeColor = function (time) {
  */
 CM.Disp.Beautify = function (num, floats, forced) {
 	const decimals = CM.Options.ScaleDecimals + 1;
-	if (CM.Options.Scale === 0) {
+	if (num === Infinity) {
+		return 'Infinity';
+	} else if (typeof num === 'undefined') {
+		return '0';
+	} else if (CM.Options.Scale === 0) {
 		return CM.Backup.Beautify(num, floats);
 	} else if (Number.isFinite(num)) {
 		let answer = '';
@@ -202,10 +206,6 @@ CM.Disp.Beautify = function (num, floats, forced) {
 		}
 		if (CM.Options.ScaleSeparator) answer = answer.replace('.', ',');
 		return answer;
-	} else if (num === Infinity) {
-		return 'Infinity';
-	} else if (typeof num === 'undefined') {
-		return 0;
 	} else {
 		console.log(`Could not beautify number with CM.Disp.Beautify: ${num}`);
 		return CM.Backup.Beautify(num, floats);
@@ -1244,6 +1244,7 @@ CM.Disp.TooltipCreateTooltipBox = function () {
 CM.Disp.TooltipCreateHeader = function (text) {
 	const div = document.createElement('div');
 	div.style.fontWeight = 'bold';
+	div.id = `${text}Title`;
 	div.className = CM.Disp.colorTextPre + CM.Disp.colorBlue;
 	div.textContent = text;
 	return div;
@@ -1443,23 +1444,31 @@ CM.Disp.UpdateTooltipUpgrade = function () {
 	if (CM.Options.TooltipBuildUpgrade === 1) {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 		const increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
-		if (Number.isFinite(increase) && increase !== 0) {
-			l('CMTooltipIncome').textContent += ` (${increase / 100}% of income)`;
-		}
-		l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
-		// If clicking power upgrade
-		if (CM.Disp.TooltipBonusMouse) {
-			l('CMTooltipCookiePerClick').textContent = Beautify(CM.Disp.TooltipBonusMouse);
-			l('CMTooltipCookiePerClick').style.display = 'block';
-			l('CMTooltipCookiePerClick').previousSibling.style.display = 'block';
-		}
-		// If only a clicking power upgrade change PP to click-based period
-		if (CM.Disp.TooltipBonusIncome === 0 && CM.Disp.TooltipBonusMouse) {
-			l('CMTooltipPP').textContent = `${Beautify(CM.Disp.TooltipPrice / CM.Disp.TooltipBonusMouse)} Clicks`;
-			l('CMTooltipPP').style.color = 'white';
+		// Don't display certain parts of tooltip if not applicable
+		if (l('CMTooltipIncome').textContent === '0') {
+			l('Bonus IncomeTitle').style.display = 'none';
+			l('CMTooltipIncome').style.display = 'none';
+			l('Payback PeriodTitle').style.display = 'none';
+			l('CMTooltipPP').style.display = 'none';
 		} else {
-			l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
-			l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+			if (Number.isFinite(increase) && increase !== 0) {
+				l('CMTooltipIncome').textContent += ` (${increase / 100}% of income)`;
+			}
+			l('CMTooltipBorder').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+			// If clicking power upgrade
+			if (CM.Disp.TooltipBonusMouse) {
+				l('CMTooltipCookiePerClick').textContent = Beautify(CM.Disp.TooltipBonusMouse);
+				l('CMTooltipCookiePerClick').style.display = 'block';
+				l('CMTooltipCookiePerClick').previousSibling.style.display = 'block';
+			}
+			// If only a clicking power upgrade change PP to click-based period
+			if (CM.Disp.TooltipBonusIncome === 0 && CM.Disp.TooltipBonusMouse) {
+				l('CMTooltipPP').textContent = `${Beautify(CM.Disp.TooltipPrice / CM.Disp.TooltipBonusMouse)} Clicks`;
+				l('CMTooltipPP').style.color = 'white';
+			} else {
+				l('CMTooltipPP').textContent = Beautify(CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].pp, 2);
+				l('CMTooltipPP').className = CM.Disp.colorTextPre + CM.Cache.Upgrades[Game.UpgradesInStore[CM.Disp.tooltipName].name].color;
+			}
 		}
 		const timeColor = CM.Disp.GetTimeColor((CM.Disp.TooltipPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
 		l('CMTooltipTime').textContent = timeColor.text;
