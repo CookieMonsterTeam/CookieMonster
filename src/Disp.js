@@ -791,7 +791,7 @@ CM.Disp.UpdateUpgrades = function () {
 	}
 
 	if (CM.Options.SortUpgrades) {
-		arr.sort((a, b) => CM.Disp.colors.indexOf(a.color) - CM.Disp.colors.indexOf(b.color));
+		arr.sort(function (a, b) { return (CM.Disp.colors.indexOf(a.color) > CM.Disp.colors.indexOf(b.color) ? 1 : (CM.Disp.colors.indexOf(a.color) < CM.Disp.colors.indexOf(b.color) ? -1 : (a.pp < b.pp) ? -1 : 0)); });
 	} else {
 		arr.sort((a, b) => a.price - b.price);
 	}
