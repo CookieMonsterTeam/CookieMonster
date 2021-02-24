@@ -1339,10 +1339,8 @@ CM.Disp.TooltipCreateWarningSection = function () {
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjure', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"', 'CMDispTooltipWarnConjureText'));
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnConjureFrenzy', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods" (Frenzy)', 'CMDispTooltipWarnConjureFrenzyText'));
-	if (Game.Objects['Wizard tower'].minigameLoaded) {
-		CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
-		CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnEdifice', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies needed for "Spontaneous Edifice" to possibly give you your most expensive building"', 'CMDispTooltipWarnEdificeText'));
-	}
+	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
+	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnEdifice', CM.Disp.colorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies needed for "Spontaneous Edifice" to possibly give you your most expensive building"', 'CMDispTooltipWarnEdificeText'));
 	CM.Disp.TooltipWarn.lastChild.style.marginBottom = '4px';
 	CM.Disp.TooltipWarn.appendChild(create('CMDispTooltipWarnUser', CM.Disp.colorRed, 'Warning: ', `Purchase of this item will put you under the number of Cookies equal to ${CM.Options.ToolWarnUser} seconds of CPS`, 'CMDispTooltipWarnUserText'));
 
@@ -1646,6 +1644,7 @@ CM.Disp.UpdateTooltipWarnings = function () {
 		CM.Disp.TooltipWarn.style.width = `${l('tooltip').offsetWidth - 6}px`;
 
 		const amount = (Game.cookies + CM.Disp.GetWrinkConfigBank()) - CM.Disp.TooltipPrice;
+		const bonusIncomeUsed = CM.Options.ToolWarnBon ? CM.Disp.TooltipBonusIncome : 0;
 		let limitLucky = CM.Cache.Lucky;
 		if (CM.Options.ToolWarnBon === 1) {
 			let bonusNoFren = CM.Disp.TooltipBonusIncome;
@@ -1656,7 +1655,7 @@ CM.Disp.UpdateTooltipWarnings = function () {
 		if (CM.Options.ToolWarnLucky === 1) {
 			if (amount < limitLucky && (CM.Disp.tooltipType !== 'b' || Game.buyMode === 1)) {
 				l('CMDispTooltipWarnLucky').style.display = '';
-				l('CMDispTooltipWarnLuckyText').textContent = `${Beautify(limitLucky - amount)} (${CM.Disp.FormatTime((limitLucky - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome))})`;
+				l('CMDispTooltipWarnLuckyText').textContent = `${Beautify(limitLucky - amount)} (${CM.Disp.FormatTime((limitLucky - amount) / (CM.Disp.GetCPS() + bonusIncomeUsed))})`;
 			} else l('CMDispTooltipWarnLucky').style.display = 'none';
 		} else l('CMDispTooltipWarnLucky').style.display = 'none';
 
@@ -1664,7 +1663,7 @@ CM.Disp.UpdateTooltipWarnings = function () {
 			const limitLuckyFrenzy = limitLucky * 7;
 			if (amount < limitLuckyFrenzy && (CM.Disp.tooltipType !== 'b' || Game.buyMode === 1)) {
 				l('CMDispTooltipWarnLuckyFrenzy').style.display = '';
-				l('CMDispTooltipWarnLuckyFrenzyText').textContent = `${Beautify(limitLuckyFrenzy - amount)} (${CM.Disp.FormatTime((limitLuckyFrenzy - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome))})`;
+				l('CMDispTooltipWarnLuckyFrenzyText').textContent = `${Beautify(limitLuckyFrenzy - amount)} (${CM.Disp.FormatTime((limitLuckyFrenzy - amount) / (CM.Disp.GetCPS() + bonusIncomeUsed))})`;
 			} else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
 		} else l('CMDispTooltipWarnLuckyFrenzy').style.display = 'none';
 
@@ -1672,7 +1671,7 @@ CM.Disp.UpdateTooltipWarnings = function () {
 			const limitConjure = limitLucky * 2;
 			if ((amount < limitConjure) && (CM.Disp.tooltipType !== 'b' || Game.buyMode === 1)) {
 				l('CMDispTooltipWarnConjure').style.display = '';
-				l('CMDispTooltipWarnConjureText').textContent = `${Beautify(limitConjure - amount)} (${CM.Disp.FormatTime((limitConjure - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome))})`;
+				l('CMDispTooltipWarnConjureText').textContent = `${Beautify(limitConjure - amount)} (${CM.Disp.FormatTime((limitConjure - amount) / (CM.Disp.GetCPS() + bonusIncomeUsed))})`;
 			} else l('CMDispTooltipWarnConjure').style.display = 'none';
 		} else l('CMDispTooltipWarnConjure').style.display = 'none';
 
@@ -1680,14 +1679,14 @@ CM.Disp.UpdateTooltipWarnings = function () {
 			const limitConjureFrenzy = limitLucky * 2 * 7;
 			if ((amount < limitConjureFrenzy) && (CM.Disp.tooltipType !== 'b' || Game.buyMode === 1)) {
 				l('CMDispTooltipWarnConjureFrenzy').style.display = '';
-				l('CMDispTooltipWarnConjureFrenzyText').textContent = `${Beautify(limitConjureFrenzy - amount)} (${CM.Disp.FormatTime((limitConjureFrenzy - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome))})`;
+				l('CMDispTooltipWarnConjureFrenzyText').textContent = `${Beautify(limitConjureFrenzy - amount)} (${CM.Disp.FormatTime((limitConjureFrenzy - amount) / (CM.Disp.GetCPS() + bonusIncomeUsed))})`;
 			} else l('CMDispTooltipWarnConjureFrenzy').style.display = 'none';
 		} else l('CMDispTooltipWarnConjureFrenzy').style.display = 'none';
 
-		if (CM.Options.ToolWarnEdifice === 1) {
+		if (CM.Options.ToolWarnEdifice === 1 && Game.Objects['Wizard tower'].minigameLoaded) {
 			if (CM.Cache.Edifice && amount < CM.Cache.Edifice && (CM.Disp.tooltipType !== 'b' || Game.buyMode === 1)) {
 				l('CMDispTooltipWarnEdifice').style.display = '';
-				l('CMDispTooltipWarnEdificeText').textContent = `${Beautify(CM.Cache.Edifice - amount)} (${CM.Disp.FormatTime((CM.Cache.Edifice - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome))})`;
+				l('CMDispTooltipWarnEdificeText').textContent = `${Beautify(CM.Cache.Edifice - amount)} (${CM.Disp.FormatTime((CM.Cache.Edifice - amount) / (CM.Disp.GetCPS() + bonusIncomeUsed))})`;
 			} else l('CMDispTooltipWarnEdifice').style.display = 'none';
 		} else l('CMDispTooltipWarnEdifice').style.display = 'none';
 
@@ -1696,7 +1695,7 @@ CM.Disp.UpdateTooltipWarnings = function () {
 				l('CMDispTooltipWarnUser').style.display = '';
 				// Need to update tooltip text dynamically
 				l('CMDispTooltipWarnUser').children[0].textContent = `Purchase of this item will put you under the number of Cookies equal to ${CM.Options.ToolWarnUser} seconds of CPS`;
-				l('CMDispTooltipWarnUserText').textContent = `${Beautify(CM.Options.ToolWarnUser * CM.Disp.GetCPS() - amount)} (${CM.Disp.FormatTime((CM.Options.ToolWarnUser * CM.Disp.GetCPS() - amount) / (CM.Disp.GetCPS() + CM.Disp.TooltipBonusIncome))})`;
+				l('CMDispTooltipWarnUserText').textContent = `${Beautify(CM.Options.ToolWarnUser * CM.Disp.GetCPS() - amount)} (${CM.Disp.FormatTime((CM.Options.ToolWarnUser * CM.Disp.GetCPS() - amount) / (CM.Disp.GetCPS() + bonusIncomeUsed))})`;
 			} else l('CMDispTooltipWarnUser').style.display = 'none';
 		} else l('CMDispTooltipWarnUser').style.display = 'none';
 	} else if (l('CMDispTooltipWarningParent') !== null) {
