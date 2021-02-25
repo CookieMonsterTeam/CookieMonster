@@ -374,10 +374,15 @@ CM.Disp.CreateBotBar = function () {
  * It is called by CM.Disp.Draw()
  */
 CM.Disp.UpdateBotBar = function () {
-	if (CM.Options.BotBar === 1 && CM.Cache.Objects1) {
+	if (CM.Options.BotBar === 1 && CM.Cache.Objects1 && Game.buyMode === 1) {
 		let count = 0;
 		for (const i of Object.keys(CM.Cache.Objects1)) {
-			const target = `Objects${Game.buyBulk}`;
+			let target = `Objects${Game.buyBulk}`;
+			if (Game.buyMode === 1) {
+				CM.Disp.LastTargetBotBar = target;
+			} else {
+				target = CM.Disp.LastTargetBotBar;
+			}
 			count++;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache[target][i].bonus, 2);
@@ -670,7 +675,12 @@ CM.Disp.UpdateBotTimerBarPosition = function () {
  * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.Data.Config.BulkBuildColor
  */
 CM.Disp.UpdateBuildings = function () {
-	const target = `Objects${Game.buyBulk}`;
+	let target = `Objects${Game.buyBulk}`;
+	if (Game.buyMode === 1) {
+		CM.Disp.LastTargetBuildings = target;
+	} else {
+		target = CM.Disp.LastTargetBuildings;
+	}
 	if (Game.buyMode === 1) {
 		if (CM.Options.BuildColor === 1) {
 			for (const i of Object.keys(CM.Cache[target])) {
@@ -1388,7 +1398,12 @@ CM.Disp.UpdateTooltipBuilding = function () {
 		const tooltipBox = l('CMTooltipBorder');
 		CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
-		const target = `Objects${Game.buyBulk}`;
+		let target = `Objects${Game.buyBulk}`;
+		if (Game.buyMode === 1) {
+			CM.Disp.LastTargetTooltipBuilding = target;
+		} else {
+			target = CM.Disp.LastTargetTooltipBuilding;
+		}
 
 		CM.Disp.TooltipPrice = Game.Objects[CM.Disp.tooltipName].bulkPrice;
 		CM.Disp.TooltipBonusIncome = CM.Cache[target][CM.Disp.tooltipName].bonus;
@@ -1443,7 +1458,7 @@ CM.Disp.UpdateTooltipUpgrade = function () {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 		const increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 		// Don't display certain parts of tooltip if not applicable
-		if (l('CMTooltipIncome').textContent === '0') {
+		if (l('CMTooltipIncome').textContent === '0' && (CM.Disp.tooltipType === 'b' || CM.Disp.tooltipType === 'u')) {
 			l('Bonus IncomeTitle').style.display = 'none';
 			l('CMTooltipIncome').style.display = 'none';
 			l('Payback PeriodTitle').style.display = 'none';
@@ -1540,10 +1555,10 @@ CM.Disp.UpdateTooltipGrimoire = function () {
 		}
 
 		// Extra information on cookies gained when spell is Conjure Baked Goods (Name === 0)
-		if (CM.Disp.tooltipName === 0) {
+		if (CM.Disp.tooltipName === '0') {
 			tooltipBox.appendChild(CM.Disp.TooltipCreateHeader('Cookies to be gained/lost'));
 			const conjure = document.createElement('div');
-			conjure.id = 'CMTooltipConjure';
+			conjure.id = 'x';
 			tooltipBox.appendChild(conjure);
 			const reward = document.createElement('span');
 			reward.style.color = '#33FF00';
@@ -2182,7 +2197,7 @@ CM.Disp.AddMenuStats = function (title) {
 			const popFattestA = document.createElement('a');
 			popFattestA.textContent = 'Pop Single Fattest';
 			popFattestA.className = 'option';
-			popFattestA.onclick = function () { if (CM.Cache.WrinklersFattest[1]) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
+			popFattestA.onclick = function () { if (CM.Cache.WrinklersFattest[1] !== null) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
 			popFattestFrag.appendChild(popFattestA);
 			stats.appendChild(CM.Disp.CreateStatsListing('basic', `Rewards of Popping Single Fattest Non-Shiny Wrinkler (id: ${CM.Cache.WrinklersFattest[1] !== null ? CM.Cache.WrinklersFattest[1] : 'None'})`, popFattestFrag));
 		}
@@ -2857,7 +2872,7 @@ CM.Disp.CreateWrinklerButtons = function () {
 	popFattestA.id = 'PopFattestWrinklerButton';
 	popFattestA.textContent = 'Pop Single Fattest';
 	popFattestA.className = 'option';
-	popFattestA.onclick = function () { if (CM.Cache.WrinklersFattest[1]) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
+	popFattestA.onclick = function () { if (CM.Cache.WrinklersFattest[1] !== null) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
 	l('sectionLeftExtra').children[0].append(popFattestA);
 };
 
@@ -2954,3 +2969,10 @@ CM.Disp.TooltipWrinkler = -1;
  * Used to store the number of cookies to be displayed in the tab-title
  */
 CM.Disp.Title = '';
+
+/**
+ * These are variables used to create various displays when the game is loaded on the "sell all" screen
+ */
+CM.Disp.LastTargetBotBar = 1;
+CM.Disp.LastTargetBuildings = 1;
+CM.Disp.LastTargetTooltipBuilding = 1;

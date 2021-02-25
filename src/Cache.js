@@ -684,7 +684,7 @@ CM.Cache.CacheBuildingsPP = function () {
 	if (typeof CM.Options.PPExcludeTop === 'undefined') CM.Options.PPExcludeTop = 0; // Otherwise breaks during initialization
 
 	// Calculate PP and colors when compared to purchase of optimal building in single-purchase mode
-	if (CM.Options.ColorPPBulkMode === 0) {
+	if (CM.Options.ColorPPBulkMode === 0 && Game.buyMode > 0) {
 		for (const i of Object.keys(CM.Cache.Objects1)) {
 			if (Game.cookiesPs) {
 				CM.Cache.Objects1[i].pp = (Math.max(Game.Objects[i].getPrice() - (Game.cookies + CM.Disp.GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Objects[i].getPrice() / CM.Cache.Objects1[i].bonus);
@@ -714,7 +714,7 @@ CM.Cache.CacheBuildingsPP = function () {
 		// Calculate PP of bulk-buy modes
 		CM.Cache.CacheBuildingsBulkPP('Objects10');
 		CM.Cache.CacheBuildingsBulkPP('Objects100');
-	} else {
+	} else if (Game.buyMode > 0) {
 		// Calculate PP and colors when compared to purchase of selected bulk mode
 		const target = `Objects${Game.buyBulk}`;
 		for (const i of Object.keys(CM.Cache[target])) {

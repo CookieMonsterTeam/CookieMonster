@@ -43,6 +43,7 @@ CM.save = function () {
  */
 CM.load = function (str) {
 	const save = JSON.parse(str);
+	CM.Sim.InitData();
 	CM.Config.LoadConfig(save.settings);
 	if (save.version !== `${CM.VersionMajor}.${CM.VersionMinor}`) {
 		if (Game.prefs.popups) Game.Popup('A new version of Cookie Monster has been loaded, check out the release notes in the info tab!');

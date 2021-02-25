@@ -129,10 +129,6 @@ CM.Sim.ReplaceFunction = function (funcToBeReplaced) {
 		.join('CM.Sim.auraMult')
 		.split('Game.hasGod')
 		.join('CM.Sim.hasGod')
-		.split('M.gods[what]') // Replaces code in the Pantheon minigame
-		.join('CM.Sim.Objects.Temple.minigame.gods[what]')
-		.split('M.slot[i]') // Replaces code in the Pantheon minigame
-		.join('CM.Sim.Objects.Temple.minigame.slot[i]')
 		.split('Game.effs') // Replaces code in the Pantheon minigame
 		.join('CM.Sim.effs')
 		.split('Game.Objects')
@@ -158,7 +154,6 @@ CM.Sim.CreateSimFunctions = function () {
 	CM.Sim.Has = new Function(`return ${CM.Sim.ReplaceFunction(Game.Has)}`)();
 	CM.Sim.HasAchiev = new Function(`return ${CM.Sim.ReplaceFunction(Game.HasAchiev)}`)();
 	CM.Sim.hasAura = new Function(`return ${CM.Sim.ReplaceFunction(Game.hasAura)}`)();
-	if (Game.hasGod) CM.Sim.hasGod = new Function(`return ${CM.Sim.ReplaceFunction(Game.hasGod)}`)();
 	CM.Sim.GetHeavenlyMultiplier = new Function(`return ${CM.Sim.ReplaceFunction(Game.GetHeavenlyMultiplier)}`)();
 	CM.Sim.auraMult = new Function(`return ${CM.Sim.ReplaceFunction(Game.auraMult)}`)();
 	CM.Sim.eff = new Function(`return ${CM.Sim.ReplaceFunction(Game.eff)}`)();
@@ -178,6 +173,24 @@ CM.Sim.Win = function (what) {
 			if (Game.Achievements[what].pool !== 'shadow') CM.Sim.AchievementsOwned++;
 		}
 	}
+};
+
+/**
+ * This function checks for the current God level in the sim data
+ * It functions similarly to Game.hasGod()
+ * It is not created by CM.Sim.CreateSimFunctions() as Game.hasGod() is not always available in each save
+ * @param	{string}	what	Name of the achievement
+ */
+CM.Sim.hasGod = function (what) {
+	if (Game.hasGod) {
+		const god = CM.Sim.Objects.Temple.minigame.gods[what];
+		for (let i = 0; i < 3; i++) {
+			if (CM.Sim.Objects.Temple.minigame.slot[i] === god.id) {
+				return (i + 1);
+			}
+		}
+	}
+	return false;
 };
 
 /**
@@ -296,7 +309,10 @@ CM.Sim.CopyData = function () {
 		you.totalCookies = me.totalCookies;
 		you.basePrice = me.basePrice;
 		you.free = me.free;
-		if (me.minigameLoaded) you.minigameLoaded = me.minigameLoaded; you.minigame = me.minigame;
+		if (me.minigameLoaded) {
+			you.minigameLoaded = me.minigameLoaded;
+			you.minigame = me.minigame;
+		}
 	}
 
 	// Upgrades
@@ -825,8 +841,8 @@ CM.Sim.CalculateChangeAura = function (aura) {
 	// Sell highest building but only if aura is different
 	let price = 0;
 	if (CM.Sim.dragonAura !== CM.Cache.dragonAura || CM.Sim.dragonAura2 !== CM.Cache.dragonAura2) {
-		for (let i = Game.ObjectsById.length; i > -1; --i) {
-			if (Game.ObjectsById[i].amount > 0) {
+		for (let i = Game.ObjectsById.length - 1; i > -1; --i) {
+			if (Game.ObjectsById[i - 1].amount > 0) {
 				const highestBuilding = CM.Sim.Objects[Game.ObjectsById[i].name].name;
 				CM.Sim.Objects[highestBuilding].amount -= 1;
 				CM.Sim.buildingsOwned -= 1;
