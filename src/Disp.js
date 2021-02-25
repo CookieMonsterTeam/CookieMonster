@@ -374,10 +374,15 @@ CM.Disp.CreateBotBar = function () {
  * It is called by CM.Disp.Draw()
  */
 CM.Disp.UpdateBotBar = function () {
-	if (CM.Options.BotBar === 1 && CM.Cache.Objects1) {
+	if (CM.Options.BotBar === 1 && CM.Cache.Objects1 && Game.buyMode === 1) {
 		let count = 0;
 		for (const i of Object.keys(CM.Cache.Objects1)) {
-			const target = `Objects${Game.buyBulk}`;
+			let target = `Objects${Game.buyBulk}`;
+			if (Game.buyMode === 1) {
+				CM.Disp.LastTargetBotBar = target;
+			} else {
+				target = CM.Disp.LastTargetBotBar;
+			}
 			count++;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
 			CM.Disp.BotBar.firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache[target][i].bonus, 2);
@@ -670,7 +675,12 @@ CM.Disp.UpdateBotTimerBarPosition = function () {
  * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.Data.Config.BulkBuildColor
  */
 CM.Disp.UpdateBuildings = function () {
-	const target = `Objects${Game.buyBulk}`;
+	let target = `Objects${Game.buyBulk}`;
+	if (Game.buyMode === 1) {
+		CM.Disp.LastTargetBuildings = target;
+	} else {
+		target = CM.Disp.LastTargetBuildings;
+	}
 	if (Game.buyMode === 1) {
 		if (CM.Options.BuildColor === 1) {
 			for (const i of Object.keys(CM.Cache[target])) {
@@ -1388,7 +1398,12 @@ CM.Disp.UpdateTooltipBuilding = function () {
 		const tooltipBox = l('CMTooltipBorder');
 		CM.Disp.TooltipCreateCalculationSection(tooltipBox);
 
-		const target = `Objects${Game.buyBulk}`;
+		let target = `Objects${Game.buyBulk}`;
+		if (Game.buyMode === 1) {
+			CM.Disp.LastTargetTooltipBuilding = target;
+		} else {
+			target = CM.Disp.LastTargetTooltipBuilding;
+		}
 
 		CM.Disp.TooltipPrice = Game.Objects[CM.Disp.tooltipName].bulkPrice;
 		CM.Disp.TooltipBonusIncome = CM.Cache[target][CM.Disp.tooltipName].bonus;
@@ -2954,3 +2969,10 @@ CM.Disp.TooltipWrinkler = -1;
  * Used to store the number of cookies to be displayed in the tab-title
  */
 CM.Disp.Title = '';
+
+/**
+ * These are variables used to create various displays when the game is loaded on the "sell all" screen
+ */
+CM.Disp.LastTargetBotBar = 1;
+CM.Disp.LastTargetBuildings = 1;
+CM.Disp.LastTargetTooltipBuilding = 1;
