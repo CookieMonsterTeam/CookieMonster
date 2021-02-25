@@ -2182,7 +2182,7 @@ CM.Disp.AddMenuStats = function (title) {
 			const popFattestA = document.createElement('a');
 			popFattestA.textContent = 'Pop Single Fattest';
 			popFattestA.className = 'option';
-			popFattestA.onclick = function () { if (CM.Cache.WrinklersFattest[1]) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
+			popFattestA.onclick = function () { if (CM.Cache.WrinklersFattest[1] !== null) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
 			popFattestFrag.appendChild(popFattestA);
 			stats.appendChild(CM.Disp.CreateStatsListing('basic', `Rewards of Popping Single Fattest Non-Shiny Wrinkler (id: ${CM.Cache.WrinklersFattest[1] !== null ? CM.Cache.WrinklersFattest[1] : 'None'})`, popFattestFrag));
 		}
@@ -2857,7 +2857,7 @@ CM.Disp.CreateWrinklerButtons = function () {
 	popFattestA.id = 'PopFattestWrinklerButton';
 	popFattestA.textContent = 'Pop Single Fattest';
 	popFattestA.className = 'option';
-	popFattestA.onclick = function () { if (CM.Cache.WrinklersFattest[1]) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
+	popFattestA.onclick = function () { if (CM.Cache.WrinklersFattest[1] !== null) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
 	l('sectionLeftExtra').children[0].append(popFattestA);
 };
 
