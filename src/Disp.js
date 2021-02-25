@@ -1443,7 +1443,7 @@ CM.Disp.UpdateTooltipUpgrade = function () {
 		l('CMTooltipIncome').textContent = Beautify(CM.Disp.TooltipBonusIncome, 2);
 		const increase = Math.round(CM.Disp.TooltipBonusIncome / Game.cookiesPs * 10000);
 		// Don't display certain parts of tooltip if not applicable
-		if (l('CMTooltipIncome').textContent === '0') {
+		if (l('CMTooltipIncome').textContent === '0' && (CM.Disp.tooltipType === 'b' || CM.Disp.tooltipType === 'u')) {
 			l('Bonus IncomeTitle').style.display = 'none';
 			l('CMTooltipIncome').style.display = 'none';
 			l('Payback PeriodTitle').style.display = 'none';
@@ -1540,10 +1540,10 @@ CM.Disp.UpdateTooltipGrimoire = function () {
 		}
 
 		// Extra information on cookies gained when spell is Conjure Baked Goods (Name === 0)
-		if (CM.Disp.tooltipName === 0) {
+		if (CM.Disp.tooltipName === '0') {
 			tooltipBox.appendChild(CM.Disp.TooltipCreateHeader('Cookies to be gained/lost'));
 			const conjure = document.createElement('div');
-			conjure.id = 'CMTooltipConjure';
+			conjure.id = 'x';
 			tooltipBox.appendChild(conjure);
 			const reward = document.createElement('span');
 			reward.style.color = '#33FF00';

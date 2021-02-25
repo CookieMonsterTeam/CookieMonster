@@ -841,8 +841,8 @@ CM.Sim.CalculateChangeAura = function (aura) {
 	// Sell highest building but only if aura is different
 	let price = 0;
 	if (CM.Sim.dragonAura !== CM.Cache.dragonAura || CM.Sim.dragonAura2 !== CM.Cache.dragonAura2) {
-		for (let i = Game.ObjectsById.length; i > -1; --i) {
-			if (Game.ObjectsById[i].amount > 0) {
+		for (let i = Game.ObjectsById.length - 1; i > -1; --i) {
+			if (Game.ObjectsById[i - 1].amount > 0) {
 				const highestBuilding = CM.Sim.Objects[Game.ObjectsById[i].name].name;
 				CM.Sim.Objects[highestBuilding].amount -= 1;
 				CM.Sim.buildingsOwned -= 1;
