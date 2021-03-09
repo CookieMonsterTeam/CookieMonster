@@ -80,6 +80,9 @@ class CMAvgQueue {
 		for (let i = this.queue.length - 1; i >= 0 && i > this.queue.length - 1 - timePeriod; i--) {
 			ret += this.queue[i];
 		}
+		if (ret === 0) {
+			return 0;
+		}
 		return ret / timePeriod;
 	}
 }
@@ -346,7 +349,6 @@ CM.Cache.CacheSeaSpec = function () {
  * @global	{number}	CM.Cache.HCPerSecond	The Heavenly Chips per second in the last five seconds
  */
 CM.Cache.CacheHeavenlyChipsPS = function () {
-	CM.Cache.HCPerSecond = 0; // Mainly there to not throw errors during initialization
 	const currDate = Math.floor(Date.now() / 1000);
 	// Only calculate every new second
 	if ((Game.T / Game.fps) % 1 === 0) {
