@@ -170,7 +170,7 @@ CM.Main.ReplaceNative = function () {
 	 * If the options is 1 (on) bulkPrice is under cookies you can't buy the building.
 	 */
 	Game.ClickProduct = function (what) {
-		if (!CM.Options.BulkBuyBlock || Game.ObjectsById[what].bulkPrice < Game.cookies) {
+		if (!CM.Options.BulkBuyBlock || (Game.ObjectsById[what].bulkPrice < Game.cookies || Game.buyMode === -1)) {
 			CM.Backup.ClickProduct(what);
 		}
 	};
