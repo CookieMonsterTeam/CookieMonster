@@ -1,2 +1,5 @@
 CookieMonster.js
 CookieMonster.user.js
+src/*.js
+!src/*/*
+dist/*

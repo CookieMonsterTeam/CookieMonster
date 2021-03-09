@@ -16,7 +16,8 @@ jobs:
     - name: Check if CookieMonster.js is built correctly 
       run: |
         npm install
-        npx terser ./src/Header.js ./src/Cache.js ./src/Config.js ./src/Data.js ./src/Disp.js ./src/Main.js ./src/Sim.js ./src/Footer.js -o CookieMonsterTest.js
+        npx webpack
+        npx terser ./dist/Header.js ./dist/Cache.js ./dist/Config.js ./dist/Data.js ./dist/Disp.js ./dist/Main.js ./dist/Sim.js ./dist/Footer.js -o CookieMonsterTest.js
         if cmp CookieMonster.js CookieMonsterTest.js; then
             echo '### SUCCESS: CookieMonster is correctly built! ###'
         else
