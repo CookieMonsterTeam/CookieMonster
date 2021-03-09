@@ -3,7 +3,7 @@
  * Header *
  */
 
-const CM = {
+CM = {
 	Backup: {},
 	Cache: {},
 	Config: {},

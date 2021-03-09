@@ -1,107 +1,32 @@
-/**
- * Data *
- */
+import {
+	Fortunes, HalloCookies, ChristCookies, ValCookies, PlantDrops, Effects,
+} from './src/Gamedata';
+import { ModDescription, LatestReleaseNotes } from './src/Moddata';
+import { metric, shortScale, shortScaleAbbreviated } from './src/Scales';
+import { ConfigGroups, ConfigGroupsNotification } from './src/Sectionheader';
 
-/**
- * Section: Data used in the stats page to show not yet purchased updates. See CM.Disp.CreateStatsMissDisp() */
+const Data = {
+	Fortunes: Fortunes,
+	HalloCookies: HalloCookies,
+	ChristCookies: ChristCookies,
+	ValCookies: ValCookies,
+	PlantDrops: PlantDrops,
+	Effects: Effects,
 
-CM.Data.Fortunes = [
-	'Fortune #001',
-	'Fortune #002',
-	'Fortune #003',
-	'Fortune #004',
-	'Fortune #005',
-	'Fortune #006',
-	'Fortune #007',
-	'Fortune #008',
-	'Fortune #009',
-	'Fortune #010',
-	'Fortune #011',
-	'Fortune #012',
-	'Fortune #013',
-	'Fortune #014',
-	'Fortune #015',
-	'Fortune #016',
-	'Fortune #017',
-	'Fortune #018',
-	'Fortune #100',
-	'Fortune #101',
-	'Fortune #102',
-	'Fortune #103',
-	'Fortune #104',
-];
-CM.Data.HalloCookies = ['Skull cookies', 'Ghost cookies', 'Bat cookies', 'Slime cookies', 'Pumpkin cookies', 'Eyeball cookies', 'Spider cookies'];
-CM.Data.ChristCookies = ['Christmas tree biscuits', 'Snowflake biscuits', 'Snowman biscuits', 'Holly biscuits', 'Candy cane biscuits', 'Bell biscuits', 'Present biscuits'];
-CM.Data.ValCookies = ['Pure heart biscuits', 'Ardent heart biscuits', 'Sour heart biscuits', 'Weeping heart biscuits', 'Golden heart biscuits', 'Eternal heart biscuits', 'Prism heart biscuits'];
-CM.Data.PlantDrops = ['Elderwort biscuits', 'Bakeberry cookies', 'Duketater cookies', 'Green yeast digestives', 'Wheat slims', 'Fern tea', 'Ichor syrup'];
+	ModDescription: ModDescription,
+	LatestReleaseNotes: LatestReleaseNotes,
 
-/**
- * Section: All possible effects plants and other items can have with an explanation */
+	metric: metric,
+	shortScale: shortScale,
+	shortScaleAbbreviated: shortScaleAbbreviated,
 
-CM.Data.Effects = {
-	buildingCost: 'Building prices',
-	click: 'Cookies per click',
-	cps: 'Total CPS',
-	cursorCps: 'Cursor CPS',
-	goldenCookieDur: 'Golden cookie duration',
-	goldenCookieEffDur: 'Golden cookie effect duration',
-	goldenCookieFreq: 'Golden cookie frequency',
-	goldenCookieGain: 'Golden cookie gains',
-	grandmaCps: 'Grandma CPS',
-	itemDrops: 'Random item drop chance',
-	milk: 'Effect from milk',
-	reindeerDur: 'Reindeer duration',
-	reindeerFreq: 'Reindeer frequency',
-	reindeerGain: 'Reindeer gains',
-	upgradeCost: 'Upgrade prices',
-	wrathCookieDur: 'Wrath cookie duration',
-	wrathCookieEffDur: 'Wrath cookie effect duration',
-	wrathCookieFreq: 'Wrath cookie frequency',
-	wrathCookieGain: 'Wrath cookie gains',
-	wrinklerEat: 'Wrinkler ',
-	wrinklerSpawn: 'Wrinkler spawn frequency',
+	ConfigGroups: ConfigGroups,
+	ConfigGroupsNotification: ConfigGroupsNotification,
+
+	Config: {},
 };
 
-/**
- * Section: Data for the various scales used by CookieMonster */
-
-CM.Data.metric = ['', '', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
-CM.Data.shortScale = ['', '', 'M', 'B', 'Tr', 'Quadr', 'Quint', 'Sext', 'Sept', 'Oct', 'Non', 'Dec', 'Undec', 'Duodec', 'Tredec', 'Quattuordec', 'Quindec', 'Sexdec', 'Septendec', 'Octodec', 'Novemdec', 'Vigint', 'Unvigint', 'Duovigint', 'Trevigint', 'Quattuorvigint'];
-CM.Data.shortScaleAbbreviated = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'De',
-	'UDe', 'DDe', 'TDe', 'QaDe', 'QiDe', 'SxDe', 'SpDe', 'ODe', 'NDe', 'Vi',
-	'UVi', 'DVi', 'TVi', 'QaVi', 'QiVi', 'SxVi', 'SpVi', 'OVi', 'NVi', 'Tr',
-	'UTr', 'DTr', 'TTr', 'QaTr', 'QiTr', 'SxTr', 'SpTr', 'OTr', 'NTr', 'Qaa',
-	'UQa', 'DQa', 'TQa', 'QaQa', 'QiQa', 'SxQa', 'SpQa', 'OQa', 'NQa', 'Qia',
-	'UQi', 'DQi', 'TQi', 'QaQi', 'QiQi', 'SxQi', 'SpQi', 'OQi', 'NQi', 'Sxa',
-	'USx', 'DSx', 'TSx', 'QaSx', 'QiSx', 'SxSx', 'SpSx', 'OSx', 'NSx', 'Spa',
-	'USp', 'DSp', 'TSp', 'QaSp', 'QiSp', 'SxSp', 'SpSp', 'OSp', 'NSp', 'Oco',
-	'UOc', 'DOc', 'TOc', 'QaOc', 'QiOc', 'SxOc', 'SpOc', 'OOc', 'NOc', 'Noa',
-	'UNo', 'DNo', 'TNo', 'QaNo', 'QiNo', 'SxNo', 'SpNo', 'ONo', 'NNo', 'Ct',
-	'UCt'];
-
-/**
- * Section: Two array's containing all Config groups and their to-be displayed title */
-
-CM.Data.ConfigGroups = {
-	BarsColors: 'Bars/Colors',
-	Calculation: 'Calculation',
-	Notification: 'Notification',
-	Tooltip: 'Tooltips and additional insights',
-	Statistics: 'Statistics',
-	Notation: 'Notation',
-	Miscellaneous: 'Miscellaneous',
-};
-
-CM.Data.ConfigGroupsNotification = {
-	NotificationGeneral: 'General Notifications',
-	NotificationGC: 'Golden Cookie',
-	NotificationFC: 'Fortune Cookie',
-	NotificationSea: 'Season Special',
-	NotificationGard: 'Garden Tick',
-	NotificationMagi: 'Full Magic Bar',
-	NotificationWrink: 'Wrinkler',
-	NotificationWrinkMax: 'Maximum Wrinklers',
-};
+CM.Data = Data;
 
 /**
  * Section: An array (CM.Data.Config) containing all Config options and an array of default settings */
@@ -523,50 +448,3 @@ CM.Data.ConfigDefault = {
 		BarsColors: 1, Calculation: 1, Notification: 1, NotificationGeneral: 1, NotificationGC: 1, NotificationFC: 1, NotificationSea: 1, NotificationGard: 1, NotificationMagi: 1, NotificationWrink: 1, NotificationWrinkMax: 1, Tooltip: 1, Statistics: 1, Notation: 1, Miscellaneous: 1, Lucky: 1, Chain: 1, Spells: 1, Garden: 1, Prestige: 1, Wrink: 1, Sea: 1, Misc: 1, InfoTab: 1,
 	},
 };
-
-/**
- * These variables are used to describe Cookie Monster in the info tab
- * It is used by CM.Disp.AddMenuInfo()
- */
-CM.Data.ModDescription = `<div class="listing">
-<a href="https://github.com/Aktanusa/CookieMonster" target="blank">Cookie Monster</a>
-offers a wide range of tools and statistics to enhance your game experience.
-It is not a cheat interface – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.</br>
-Progess on new updates and all previous release notes can be found on the GitHub page linked above!</br>
-Please also report any bugs you may find over there!</br>
-</div>
-`;
-CM.Data.LatestReleaseNotes = `<div class="listing">
-<b>The latest update (v 2.031.4) has introduced the following features:</b></br>
-- Added a changelog to the info tab and notification indicating a new version</br>
-- Warnings in tooltips are now based on the income after buying the upgrade</br>
-- A new warning and stat for Conjure Baked Goods in combination with Frenzy has been added</br>
-- User can now set a custom tooltip warning ("x times cps") in the settings</br>
-- Garden plots with plants that give cookies on harvest now display a tooltip with current and maximum reward</br>
-- The Harvest All button in the Garden now has a tooltip displaying the current reward </br>
-- The Ascend button can now display additional info (this can be turned off in the settings) </br>
-- The statistics page now displays the Heavenly Chips per second</br>
-- The statistics page now displays the CPS needed for the next level in Chain Cookies</br>
-- The statistics page now displays the cookies needed for optimal rewards for garden plants</br>
-- You can now set a Heavenly Chips target in the settings which will be counted down to in the statistics page</br>
-- The color picker in the settings has been updated to its latest version</br>
-- The overlay of seconds/percentage of timers is now toggle able and more readable</br>
-- You can now toggle to disable bulk-buying from buying less than the selected amount (i.e., buying 7 of a building by pressing the buy 10 when you don't have enough for 10)</br>
-- CookieMonster now uses the Modding API provided by the base game</br>
-- There is a new option that allows the decoupling of the base game volume setting and the volumes of sounds created by the mod</br>
-- The tab title now displays a "!" if a Golden Cookie or Reindeer can spawn</br>
-- PP calculation can now be set to: 1) Exclude the 1st, 2nd or 3rd most optimal building (if you never want to buy that it), 2) Always consider optimal buildings that cost below "xx seconds of CPS" (toggleable in the settings), 3) Ignore any building or upgrade that is not purchasable at the moment</br>
-</br>
-<b>This update fixes the following bugs:</b></br>
-- Minigames with enhanced tooltips will now also show these if the minigames were not loaded when CookieMonster was loaded</br>
-- Sound, Flashes and Notifications will no longer play when the mod is initializing</br>
-- The color picker should now update its display consistently</br>
-- Fixed some typo's</br>
-- Fixed a game breaking bug when the player had not purchased any upgrades</br>
-- Fixed a number of console errors thrown by CM</br>
-- Fixed the integration with mods that provide additional content, they should now no longer break CookieMonster</br>
-- The Timer bar will now disappear correctly when the Golden Switch has been activated</br>
-- Fixed errors in the calculation of the Chain Cookies and Wrinkler stats</br>
-- Fixed buy warnings showing incorrectly</br>
-</div>
-`;
