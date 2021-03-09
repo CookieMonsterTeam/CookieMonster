@@ -1214,7 +1214,7 @@ CM.Disp.Tooltip = function (type, name) {
 	else if (type === 'ha') l('tooltip').innerHTML = Game.ObjectsById[2].minigame.toolTooltip(1)(); // Harvest all button in garden
 
 	// Adds area for extra tooltip-sections
-	if ((type === 'b' && Game.buyMode === 1) || type === 'u' || type === 's' || type === 'g' || type === 'p' || type === 'ha') {
+	if ((type === 'b' && Game.buyMode === 1) || type === 'u' || type === 's' || type === 'g' || (type === 'p' && !Game.keys[16]) || type === 'ha') {
 		const area = document.createElement('div');
 		area.id = 'CMTooltipArea';
 		l('tooltip').appendChild(area);
@@ -1584,7 +1584,7 @@ CM.Disp.UpdateTooltipGrimoire = function () {
  */
 CM.Disp.UpdateTooltipGardenPlots = function () {
 	const minigame = Game.Objects.Farm.minigame;
-	if (CM.Options.TooltipLump && minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] !== 0) {
+	if (CM.Options.TooltipPlots && minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] !== 0) {
 		const mature = minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][1] > minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].matureBase;
 		const plantName = minigame.plantsById[minigame.plot[CM.Disp.tooltipName[1]][CM.Disp.tooltipName[0]][0] - 1].name;
 		l('CMTooltipBorder').appendChild(CM.Disp.TooltipCreateHeader('Reward (Current / Maximum)'));
