@@ -56,5 +56,9 @@
             0
         ],
         "name": "Cookie Monster"
+    },
+    "dependencies": {
+        "@internal/config": "file:src/Config",
+        "@internal/data": "file:src/Data"
     }
 }

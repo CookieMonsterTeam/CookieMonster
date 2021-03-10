@@ -1,0 +1,5 @@
+{
+    "name": "@internal/config",
+    "main": "Config.js",
+    "version": "0.0.0"
+}
