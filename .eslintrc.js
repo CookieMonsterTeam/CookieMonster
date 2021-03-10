@@ -23,7 +23,6 @@ module.exports = {
 	},
 	rules: {
 		indent: ['error', 'tab'],
-		'import/no-extraneous-dependencies': 'off',
 		'no-tabs': 'off',
 		'max-len': 'off',
 		'no-param-reassign': 'off',

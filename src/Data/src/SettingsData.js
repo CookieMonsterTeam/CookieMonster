@@ -1,4 +1,4 @@
-import CheckNotificationPermissions from '@internal/config/src/CheckNotificationPermissions';
+import CheckNotificationPermissions from '../../Config/src/CheckNotificationPermissions';
 import {
 	SettingStandard, SettingColours, SettingVolume, SettingInputNumber,
 } from './SettingClasses';
