@@ -1,3 +1,6 @@
+import { default as ConfigDefault } from '../../Data/src/SettingsDefault';
+import { default as ConfigData } from '../../Data/src/SettingsData';
+
 /** Functions related to saving, loading and restoring all settings */
 
 /**
@@ -29,54 +32,54 @@ export function LoadConfig(settings) {
 
 		// Check values
 		let mod = false;
-		for (const i in CM.Data.ConfigDefault) {
+		for (const i in ConfigDefault) {
 			if (typeof CM.Options[i] === 'undefined') {
 				mod = true;
-				CM.Options[i] = CM.Data.ConfigDefault[i];
+				CM.Options[i] = ConfigDefault[i];
 			} else if (i !== 'Header' && i !== 'Colors') {
 				if (i.indexOf('SoundURL') === -1) {
-					if (!(CM.Options[i] > -1 && CM.Options[i] < CM.Data.Config[i].label.length)) {
+					if (!(CM.Options[i] > -1 && CM.Options[i] < ConfigData[i].label.length)) {
 						mod = true;
-						CM.Options[i] = CM.Data.ConfigDefault[i];
+						CM.Options[i] = ConfigDefault[i];
 					}
 				} else if (typeof CM.Options[i] !== 'string') { // Sound URLs
 					mod = true;
-					CM.Options[i] = CM.Data.ConfigDefault[i];
+					CM.Options[i] = ConfigDefault[i];
 				}
 			} else if (i === 'Header') {
-				for (const j in CM.Data.ConfigDefault.Header) {
+				for (const j in ConfigDefault.Header) {
 					if (typeof CM.Options[i][j] === 'undefined' || !(CM.Options[i][j] > -1 && CM.Options[i][j] < 2)) {
 						mod = true;
-						CM.Options[i][j] = CM.Data.ConfigDefault[i][j];
+						CM.Options[i][j] = ConfigDefault[i][j];
 					}
 				}
 			} else { // Colors
-				for (const j in CM.Data.ConfigDefault.Colors) {
+				for (const j in ConfigDefault.Colors) {
 					if (typeof CM.Options[i][j] === 'undefined' || typeof CM.Options[i][j] !== 'string') {
 						mod = true;
-						CM.Options[i][j] = CM.Data.ConfigDefault[i][j];
+						CM.Options[i][j] = ConfigDefault[i][j];
 					}
 				}
 			}
 		}
 		if (mod) CM.Config.SaveConfig();
 		CM.Main.Loop(); // Do loop once
-		for (const i in CM.Data.ConfigDefault) {
-			if (i !== 'Header' && typeof CM.Data.Config[i].func !== 'undefined') {
-				CM.Data.Config[i].func();
+		for (const i in ConfigDefault) {
+			if (i !== 'Header' && typeof ConfigData[i].func !== 'undefined') {
+				ConfigData[i].func();
 			}
 		}
 	} else { // Default values
-		CM.Config.RestoreDefault();
+		RestoreDefault();
 	}
 }
 
 /**
- * This function reloads and resaves the default config as stored in CM.Data.ConfigDefault
+ * This function reloads and resaves the default config as stored in ConfigDefault
  * It is called by resDefBut.onclick loaded in the options page or by CM.Config.LoadConfig if no localStorage is found
  */
 export function RestoreDefault() {
-	LoadConfig(CM.Data.ConfigDefault);
+	LoadConfig(ConfigDefault);
 	SaveConfig();
 	Game.UpdateMenu();
 }
