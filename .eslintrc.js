@@ -24,6 +24,7 @@ module.exports = {
 	rules: {
 		indent: ['error', 'tab'],
 		'import/no-named-default': 'off',
+		'import/no-mutable-exports': 'off',
 		'no-tabs': 'off',
 		'max-len': 'off',
 		'no-param-reassign': 'off',

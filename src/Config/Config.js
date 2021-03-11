@@ -1,6 +1,6 @@
-import CheckNotificationPermissions from './src/CheckNotificationPermissions';
+import CheckNotificationPermissions from './CheckNotificationPermissions';
 import { LoadConfig, RestoreDefault, SaveConfig } from './src/SaveLoadReloadSettings';
-import { ToggleConfig, ToggleConfigVolume, ToggleHeader } from './src/ToggleSetting';
+import { ToggleConfig, ToggleConfigVolume, ToggleHeader } from './ToggleSetting';
 
 const Config = {
 	CheckNotificationPermissions: CheckNotificationPermissions,

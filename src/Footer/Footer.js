@@ -2,6 +2,8 @@
  * Footer *
  */
 
+export let isInitzializing = false;
+
 /**
  * Section: Functions related to base game modding API */
 
@@ -13,6 +15,7 @@
  */
 CM.init = function () {
 	CM.Footer.isInitzializing = true;
+	isInitzializing = true;
 	let proceed = true;
 	if (Game.version !== Number(CM.VersionMajor)) {
 		proceed = confirm(`Cookie Monster version ${CM.VersionMajor}.${CM.VersionMinor} is meant for Game version ${CM.VersionMajor}.  Loading a different version may cause errors.  Do you still want to load Cookie Monster?`);
@@ -22,6 +25,7 @@ CM.init = function () {
 		Game.registerHook('draw', CM.Disp.Draw);
 		Game.registerHook('logic', CM.Main.Loop);
 		CM.Footer.isInitzializing = false;
+		isInitzializing = false;
 	}
 };
 
@@ -80,3 +84,5 @@ if (typeof CM.Footer.isInitzializing === 'undefined') {
 		}
 	}, 500);
 }
+
+export default isInitzializing;
