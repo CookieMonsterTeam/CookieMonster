@@ -1,5 +1,11 @@
+/* eslint-disable no-unused-vars */
 import * as UpdateTooltip from './UpdateTooltips';
 import { TooltipCreateTooltipBox } from './CreateTooltip';
+import { Beautify, GetTimeColor } from '../BeautifyAndFormatting/BeautifyFormatting';
+import CopyData from '../../Sim/SimulationData/CopyData';
+import { TooltipName, TooltipType } from '../VariablesAndData';
+import { CMOptions } from '../../Config/VariablesAndData';
+import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 
 /** All general functions related to creating and updating tooltips */
 
@@ -34,13 +40,13 @@ export function CreateTooltip(type, name) {
 	if (type === 'b') { // Buildings
 		l('tooltip').innerHTML = Game.Objects[name].tooltip();
 		// Adds amortization info to the list of info per building
-		if (CM.Options.TooltipAmor === 1) {
-			const buildPrice = CM.Sim.BuildingGetPrice(Game.Objects[name], Game.Objects[name].basePrice, 0, Game.Objects[name].free, Game.Objects[name].amount);
+		if (CMOptions.TooltipAmor === 1) {
+			const buildPrice = BuildingGetPrice(Game.Objects[name], Game.Objects[name].basePrice, 0, Game.Objects[name].free, Game.Objects[name].amount);
 			const amortizeAmount = buildPrice - Game.Objects[name].totalCookies;
 			if (amortizeAmount > 0) {
 				l('tooltip').innerHTML = l('tooltip').innerHTML
 					.split('so far</div>')
-					.join(`so far<br/>&bull; <b>${Beautify(amortizeAmount)}</b> ${Math.floor(amortizeAmount) === 1 ? 'cookie' : 'cookies'} left to amortize (${CM.Disp.GetTimeColor((buildPrice - Game.Objects[name].totalCookies) / (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text})</div>`);
+					.join(`so far<br/>&bull; <b>${Beautify(amortizeAmount)}</b> ${Math.floor(amortizeAmount) === 1 ? 'cookie' : 'cookies'} left to amortize (${GetTimeColor((buildPrice - Game.Objects[name].totalCookies) / (Game.Objects[name].storedTotalCps * Game.globalCpsMult)).text})</div>`);
 			}
 		}
 		if (Game.buyMode === -1) {
@@ -52,7 +58,7 @@ export function CreateTooltip(type, name) {
              *
              * This issue is extensively detailed here: https://github.com/Aktanusa/CookieMonster/issues/359#issuecomment-735658262
              */
-			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].bulkPrice)).join(Beautify(CM.Sim.BuildingSell(Game.Objects[name], Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].free, Game.buyBulk, 1)));
+			l('tooltip').innerHTML = l('tooltip').innerHTML.split(Beautify(Game.Objects[name].bulkPrice)).join(Beautify((Game.Objects[name], Game.Objects[name].basePrice, Game.Objects[name].amount, Game.Objects[name].free, Game.buyBulk, 1)));
 		}
 	} else if (type === 'u') { // Upgrades
 		if (!Game.UpgradesInStore[name]) return '';
@@ -70,8 +76,8 @@ export function CreateTooltip(type, name) {
 	}
 
 	// Sets global variables used by CM.Disp.UpdateTooltip()
-	CM.Disp.tooltipType = type;
-	CM.Disp.tooltipName = name;
+	TooltipType = type;
+	TooltipName = name;
 
 	UpdateTooltips();
 
@@ -82,23 +88,23 @@ export function CreateTooltip(type, name) {
  * This function updates the sections of the tooltips created by CookieMonster
  */
 export function UpdateTooltips() {
-	CM.Sim.CopyData();
+	CopyData();
 	if (l('tooltipAnchor').style.display !== 'none' && l('CMTooltipArea')) {
 		l('CMTooltipArea').innerHTML = '';
 		const tooltipBox = TooltipCreateTooltipBox();
 		l('CMTooltipArea').appendChild(tooltipBox);
 
-		if (CM.Disp.tooltipType === 'b') {
+		if (TooltipType === 'b') {
 			UpdateTooltip.Building();
-		} else if (CM.Disp.tooltipType === 'u') {
+		} else if (TooltipType === 'u') {
 			UpdateTooltip.Upgrade();
-		} else if (CM.Disp.tooltipType === 's') {
+		} else if (TooltipType === 's') {
 			UpdateTooltip.SugarLump();
-		} else if (CM.Disp.tooltipType === 'g') {
+		} else if (TooltipType === 'g') {
 			UpdateTooltip.Grimoire();
-		} else if (CM.Disp.tooltipType === 'p') {
+		} else if (TooltipType === 'p') {
 			UpdateTooltip.GardenPlots();
-		} else if (CM.Disp.tooltipType === 'ha') {
+		} else if (TooltipType === 'ha') {
 			UpdateTooltip.HarvestAll();
 		}
 		UpdateTooltip.Warnings();

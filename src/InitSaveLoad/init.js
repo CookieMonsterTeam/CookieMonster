@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { VersionMajor, VersionMinor } from '../Data/Moddata';
+import Draw from '../Disp/Draw';
 import InitializeCookieMonster from '../Main/Initialization';
-
-/** Variable that shows if Cookie Moonster is initzializing */
-export let isInitializing = false;
+import CMLoop from '../Main/Loop';
+import { isInitializing } from './Variables';
 
 /**
   * This creates a init function for the CM object. Per Game code/comments:
@@ -10,7 +11,7 @@ export let isInitializing = false;
   * declare hooks here"
   * It starts the further initialization of CookieMonster and registers hooks
   */
-export function init() {
+export default function init() {
 	isInitializing = true;
 	let proceed = true;
 	if (Game.version !== Number(VersionMajor)) {
@@ -18,8 +19,8 @@ export function init() {
 	}
 	if (proceed) {
 		InitializeCookieMonster();
-		//Game.registerHook('draw', CM.Disp.Draw);
-		//Game.registerHook('logic', CM.Main.Loop);
+		Game.registerHook('draw', Draw);
+		Game.registerHook('logic', CMLoop);
 		isInitializing = false;
 	}
 }

@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 /** Functions related to the Dragon */
 
-import { Beautify } from '../../Disp/src/BeautifyFormatting';
-import CopyData from '../../Sim/CopyData/CopyData';
+import { Beautify } from '../../Disp/BeautifyAndFormatting/BeautifyFormatting';
+import CopyData from '../../Sim/SimulationData/CopyData';
 import { SimDoSims, SimObjects } from '../../Sim/VariablesAndData';
 import {
 	CacheCostDragonUpgrade, CacheDragonAura, CacheDragonAura2, CacheLastDragonLevel,

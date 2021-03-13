@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /** Caches data related to Wrinklers */
 
+import { SimObjects } from '../../Sim/VariablesAndData';
 import { WrinklersFattest, WrinklersNormal, WrinklersTotal } from '../VariablesAndData';
 
 /**
@@ -18,7 +19,7 @@ export default function CacheWrinklers() {
 		if (Game.wrinklers[i].type === 1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-		if (CM.Sim.Objects.Temple.minigameLoaded) {
+		if (SimObjects.Temple.minigameLoaded) {
 			const godLvl = Game.hasGod('scorn');
 			if (godLvl === 1) sucked *= 1.15;
 			else if (godLvl === 2) sucked *= 1.1;

@@ -1,6 +1,6 @@
 /** Functions used to create static objects of Buildings, Upgrades and Achievements */
 
-import CopyData from '../CopyData/CopyData';
+import CopyData from '../SimulationData/CopyData';
 import { SimAchievements, SimObjects, SimUpgrades } from '../VariablesAndData';
 import InitAchievement from './InitAchievement';
 import InitialBuildingData from './InitialBuildingData';

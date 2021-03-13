@@ -1,12 +1,14 @@
-/**
- * Section: Functions related to the Stats page
+/** Functions related to the Stats page */
+
+import { ToggleHeader } from '../../Config/ToggleSetting';
+import { CMOptions } from '../../Config/VariablesAndData';
+import { LatestReleaseNotes, ModDescription } from '../../Data/Moddata';
 
 /**
  * This function adds stats created by CookieMonster to the stats page
- * It is called by CM.Disp.AddMenu
  * @param {object} title	On object that includes the title of the menu
  */
-CM.Disp.AddMenuInfo = function (title) {
+export default function AddMenuInfo(title) {
 	const info = document.createElement('div');
 	info.className = 'subsection';
 
@@ -21,20 +23,20 @@ CM.Disp.AddMenuInfo = function (title) {
 	span.style.color = 'black';
 	span.style.fontSize = '13px';
 	span.style.verticalAlign = 'middle';
-	span.textContent = CM.Options.Header.InfoTab ? '-' : '+';
-	span.onclick = function () { CM.Config.ToggleHeader('InfoTab'); Game.UpdateMenu(); };
+	span.textContent = CMOptions.Header.InfoTab ? '-' : '+';
+	span.onclick = function () { ToggleHeader('InfoTab'); Game.UpdateMenu(); };
 	title.appendChild(span);
 	info.appendChild(title);
 
-	if (CM.Options.Header.InfoTab) {
+	if (CMOptions.Header.InfoTab) {
 		const description = document.createElement('div');
-		description.innerHTML = CM.Data.ModDescription;
+		description.innerHTML = ModDescription;
 		info.appendChild(description);
 		const notes = document.createElement('div');
-		notes.innerHTML = CM.Data.LatestReleaseNotes;
+		notes.innerHTML = LatestReleaseNotes;
 		info.appendChild(notes);
 	}
 
 	const menu = l('menu').children[1];
 	menu.insertBefore(info, menu.children[1]);
-};
+}

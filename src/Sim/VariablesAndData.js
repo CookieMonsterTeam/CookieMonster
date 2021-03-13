@@ -4,6 +4,7 @@
 export let SimObjects = [];
 export let SimUpgrades = [];
 export let SimAchievements = [];
+export let SimBuildingsOwned;
 export let SimUpgradesOwned;
 export let SimPledges;
 export let SimAchievementsOwned;
@@ -12,12 +13,8 @@ export let SimPrestige;
 export let SimDragonAura;
 export let SimDragonAura2;
 export let SimDoSims;
-
-/** Functions replaced to check Sim data */
-export let SimHas;
-export let SimHasAchiev;
-export let SimHasAura;
-export let SimGetHeavenlyMultiplier;
-export let SimAuraMult;
-export let SimEff;
-export let SimGetTieredCpsMult;
+export let SimEffs;
+export let SimDateCentury;
+export let SimDateAges;
+export let SimCookiesPs;
+export let SimCookiesPsRaw;

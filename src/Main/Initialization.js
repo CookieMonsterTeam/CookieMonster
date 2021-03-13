@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
+import InitCache from '../Cache/CacheInit';
 import { CacheStatsCookies } from '../Cache/Stats/Stats';
+import { LoadConfig } from '../Config/SaveLoadReload/SaveLoadReloadSettings';
 import { VersionMajor, VersionMinor } from '../Data/Moddata';
 import CreateUpgradeBar from '../Disp/BuildingsUpgrades/UpgradeBar';
 import { CreateBotBar } from '../Disp/InfoBars/BottomBar';
@@ -10,20 +12,21 @@ import UpdateBuildingUpgradeStyle from '../Disp/Initialization/UpdateBuildingUpg
 import CreateWhiteScreen from '../Disp/Initialization/WhiteScreen';
 import { CreateFavicon } from '../Disp/TabTitle/FavIcon';
 import { CreateSimpleTooltip } from '../Disp/Tooltips/Tooltip';
-import { TooltipText } from '../Disp/VariablesAndData';
-import CreateSimFunctions from '../Sim/CreateSimFunctions/CreateSimFunctions';
+import { CMLastAscendState, TooltipText } from '../Disp/VariablesAndData';
 import InitData from '../Sim/InitializeData/InitData';
+import ReplaceNativeGrimoire from './ReplaceGameElements/NativeGrimoire';
+import ReplaceTooltips from './ReplaceGameElements/Tooltips';
+import ReplaceNative from './ReplaceGameFunctions/ReplaceNative';
 import { LastModCount } from './VariablesAndData';
+import AddWrinklerAreaDetect from './WrinklerArea/AddDetectArea';
 
 /**
  * Initialization loop of Cookie Monster
  */
 export default function InitializeCookieMonster() {
-	// Create CM.Sim functions
-	CreateSimFunctions();
-
 	InitData();
 	CacheStatsCookies();
+	InitCache();
 
 	// Stored to check if we need to re-initiliaze data
 	LastModCount = Object.keys(Game.mods).length;
@@ -40,21 +43,20 @@ export default function InitializeCookieMonster() {
 	}
 	CreateWrinklerButtons();
 	UpdateBuildingUpgradeStyle();
-	/**
-	CM.Main.ReplaceTooltips();
-	CM.Main.AddWrinklerAreaDetect();
+
+	ReplaceTooltips();
+	AddWrinklerAreaDetect();
 
 	// Replace native functions
-	CM.Main.ReplaceNative();
-	CM.Main.ReplaceNativeGrimoire();
+	ReplaceNative();
+	ReplaceNativeGrimoire();
 	Game.CalculateGains();
 
-	CM.Config.LoadConfig(); // Must be after all things are created!
-	CM.Disp.lastAscendState = Game.OnAscend;
+	LoadConfig(); // Must be after all things are created!
+	CMLastAscendState = Game.OnAscend;
 
 	if (Game.prefs.popups) Game.Popup(`Cookie Monster version ${VersionMajor}.${VersionMinor} loaded!`);
 	else Game.Notify(`Cookie Monster version ${VersionMajor}.${VersionMinor} loaded!`, '', '', 1, 1);
 
 	Game.Win('Third-party');
-	*/
 }

@@ -1,16 +1,21 @@
+import { CMOptions } from '../../Config/VariablesAndData';
+import { SimObjects } from '../../Sim/VariablesAndData';
+import { Beautify } from '../BeautifyAndFormatting/BeautifyFormatting';
+import { TooltipWrinkler, TooltipWrinklerArea, TooltipWrinklerBeingShown } from '../VariablesAndData';
+
 /**
  * This function checks and create a tooltip for the wrinklers
  * It is called by CM.Disp.Draw()
  * As wrinklers are not appended to the DOM we us a different system than for other tooltips
  */
 export function CheckWrinklerTooltip() {
-	if (CM.Options.TooltipWrink === 1 && CM.Disp.TooltipWrinklerArea === 1) { // Latter is set by CM.Main.AddWrinklerAreaDetect
+	if (CMOptions.TooltipWrink === 1 && TooltipWrinklerArea === 1) { // Latter is set by CM.Main.AddWrinklerAreaDetect
 		let showingTooltip = false;
 		for (const i of Object.keys(Game.wrinklers)) {
 			const me = Game.wrinklers[i];
 			if (me.phase > 0 && me.selected) {
 				showingTooltip = true;
-				if (CM.Disp.TooltipWrinklerBeingShown[i] === 0 || CM.Disp.TooltipWrinklerBeingShown[i] === undefined) {
+				if (TooltipWrinklerBeingShown[i] === 0 || TooltipWrinklerBeingShown[i] === undefined) {
 					const placeholder = document.createElement('div');
 					const wrinkler = document.createElement('div');
 					wrinkler.style.minWidth = '120px';
@@ -21,11 +26,11 @@ export function CheckWrinklerTooltip() {
 					wrinkler.appendChild(div);
 					placeholder.appendChild(wrinkler);
 					Game.tooltip.draw(this, escape(placeholder.innerHTML));
-					CM.Disp.TooltipWrinkler = i;
-					CM.Disp.TooltipWrinklerBeingShown[i] = 1;
+					TooltipWrinkler = i;
+					TooltipWrinklerBeingShown[i] = 1;
 				} else break;
 			} else {
-				CM.Disp.TooltipWrinklerBeingShown[i] = 0;
+				TooltipWrinklerBeingShown[i] = 0;
 			}
 		}
 		if (!showingTooltip) {
@@ -40,14 +45,14 @@ export function CheckWrinklerTooltip() {
  * As wrinklers are not appended to the DOM we us a different system than for other tooltips
  */
 export function UpdateWrinklerTooltip() {
-	if (CM.Options.TooltipWrink === 1 && l('CMTooltipWrinkler') !== null) {
-		let sucked = Game.wrinklers[CM.Disp.TooltipWrinkler].sucked;
+	if (CMOptions.TooltipWrink === 1 && l('CMTooltipWrinkler') !== null) {
+		let sucked = Game.wrinklers[TooltipWrinkler].sucked;
 		let toSuck = 1.1;
 		if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
-		if (Game.wrinklers[CM.Disp.TooltipWrinkler].type === 1) toSuck *= 3; // Shiny wrinklers
+		if (Game.wrinklers[TooltipWrinkler].type === 1) toSuck *= 3; // Shiny wrinklers
 		sucked *= toSuck;
 		if (Game.Has('Wrinklerspawn')) sucked *= 1.05;
-		if (CM.Sim.Objects.Temple.minigameLoaded) {
+		if (SimObjects.Temple.minigameLoaded) {
 			const godLvl = Game.hasGod('scorn');
 			if (godLvl === 1) sucked *= 1.15;
 			else if (godLvl === 2) sucked *= 1.1;

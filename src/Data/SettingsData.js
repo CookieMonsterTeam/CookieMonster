@@ -1,5 +1,19 @@
+import CachePP from '../Cache/PP/PP';
 import CheckNotificationPermissions from '../Config/CheckNotificationPermissions';
-import { ToggleBotBar, ToggleTimerBar, ToggleTimerBarPos } from '../Config/SpecificToggles';
+import { ToggleTimerBar, ToggleTimerBarPos } from '../Config/SpecificToggles';
+import ToggleBotBar from '../Config/Toggles/ToggleBotBar';
+import ToggleDetailedTime from '../Config/Toggles/ToggleDetailedTime';
+import ToggleGCTimer from '../Config/Toggles/ToggleGCTimer';
+import ToggleToolWarnPos from '../Config/Toggles/ToggleToolWarnPos';
+import ToggleUpgradeBarAndColor from '../Config/Toggles/ToggleUpgradeBarAndColor';
+import ToggleUpgradeBarFixedPos from '../Config/Toggles/ToggleUpgradeBarFixedPos';
+import ToggleWrinklerButtons from '../Config/Toggles/ToggleWrinklerButtons';
+import { CMOptions } from '../Config/VariablesAndData';
+import UpdateBuildings from '../Disp/BuildingsUpgrades/Buildings';
+import UpdateUpgrades from '../Disp/BuildingsUpgrades/Upgrades';
+import RefreshScale from '../Disp/HelperFunctions/RefreshScale';
+import UpdateColors from '../Disp/HelperFunctions/UpdateColors';
+import { UpdateFavicon } from '../Disp/TabTitle/FavIcon';
 import {
 	SettingStandard, SettingColours, SettingVolume, SettingInputNumber,
 } from './SettingClasses';
@@ -44,7 +58,7 @@ const Config = {
 		['Sort Buildings: Default', 'Sort Buildings: PP'],
 		'Sort the display of buildings in either default order or by PP',
 		false,
-		function () { CM.Disp.UpdateBuildings(); },
+		function () { UpdateBuildings(); },
 	),
 	SortUpgrades: new SettingStandard(
 		'bool',
@@ -52,7 +66,7 @@ const Config = {
 		['Sort Upgrades: Default', 'Sort Upgrades: PP'],
 		'Sort the display of upgrades in either default order or by PP',
 		false,
-		function () { CM.Disp.UpdateUpgrades(); },
+		function () { UpdateUpgrades(); },
 	),
 	BuildColor: new SettingStandard(
 		'bool',
@@ -60,7 +74,7 @@ const Config = {
 		['Building Colors OFF', 'Building Colors ON'],
 		'Color code buildings',
 		true,
-		function () { CM.Disp.UpdateBuildings(); },
+		function () { UpdateBuildings(); },
 	),
 	BulkBuildColor: new SettingStandard(
 		'bool',
@@ -68,7 +82,7 @@ const Config = {
 		['Bulk Building Colors (Single Building Color)', 'Bulk Building Colors (Calculated Bulk Color)'],
 		'Color code bulk buildings based on single buildings color or calculated bulk value color',
 		false,
-		function () { CM.Disp.UpdateBuildings(); },
+		function () { UpdateBuildings(); },
 	),
 	UpBarColor: new SettingStandard(
 		'bool',
@@ -76,7 +90,7 @@ const Config = {
 		['Upgrade Colors/Bar OFF', 'Upgrade Colors with Bar ON', 'Upgrade Colors without Bar ON'],
 		'Color code upgrades and optionally add a counter bar',
 		false,
-		function () { CM.Disp.ToggleUpgradeBarAndColor(); },
+		function () { ToggleUpgradeBarAndColor(); },
 	),
 	Colors: new SettingColours(
 		'color',
@@ -92,7 +106,7 @@ const Config = {
 			Pink: 'Color Pink.  Used for Dragonflight bar',
 			Brown: 'Color Brown.  Used for Dragon Harvest bar',
 		},
-		function () { CM.Disp.UpdateColors(); },
+		function () { UpdateColors(); },
 	),
 	UpgradeBarFixedPos: new SettingStandard(
 		'bool',
@@ -100,7 +114,7 @@ const Config = {
 		['Upgrade Bar Fixed Position OFF', 'Upgrade Bar Fixed Position ON'],
 		'Lock the upgrade bar at top of the screen to prevent it from moving ofscreen when scrolling',
 		true,
-		function () { CM.Disp.ToggleUpgradeBarFixedPos(); },
+		function () { ToggleUpgradeBarFixedPos(); },
 	),
 
 	// Calculation
@@ -138,7 +152,7 @@ const Config = {
 		['Color of PP (Compared to Single)', 'Color of PP (Compared to Bulk)'],
 		'Color PP-values based on comparison with single purchase or with selected bulk-buy mode',
 		false,
-		function () { CM.Cache.CachePP(); },
+		function () { CachePP(); },
 	),
 	PPExcludeTop: new SettingStandard(
 		'bool',
@@ -191,7 +205,7 @@ const Config = {
 		['Notification OFF', 'Notification ON'],
 		'Create a notification when Golden Cookie spawns',
 		true,
-		function () { CheckNotificationPermissions(CM.Options.GCNotification); },
+		function () { CheckNotificationPermissions(CMOptions.GCNotification); },
 	),
 	GCFlash: new SettingStandard(
 		'bool',
@@ -225,7 +239,7 @@ const Config = {
 		['Notification OFF', 'Notification ON'],
 		'Create a notification when Fortune Cookie is on the Ticker',
 		true,
-		function () { CheckNotificationPermissions(CM.Options.FortuneNotification); },
+		function () { CheckNotificationPermissions(CMOptions.FortuneNotification); },
 	),
 	FortuneFlash: new SettingStandard(
 		'bool',
@@ -260,7 +274,7 @@ const Config = {
 		['Notification OFF', 'Notification ON'],
 		'Create a notification on Season Popup',
 		true,
-		function () { CheckNotificationPermissions(CM.Options.SeaNotification); },
+		function () { CheckNotificationPermissions(CMOptions.SeaNotification); },
 	),
 	SeaFlash: new SettingStandard(
 		'bool',
@@ -320,7 +334,7 @@ const Config = {
 		['Notification OFF', 'Notification ON'],
 		'Create a notification when magic reaches maximum',
 		true,
-		function () { CheckNotificationPermissions(CM.Options.MagicNotification); },
+		function () { CheckNotificationPermissions(CMOptions.MagicNotification); },
 	),
 	MagicFlash: new SettingStandard(
 		'bool',
@@ -354,7 +368,7 @@ const Config = {
 		['Notification OFF', 'Notification ON'],
 		'Create a notification when a Wrinkler appears',
 		true,
-		function () { CheckNotificationPermissions(CM.Options.WrinklerNotification); },
+		function () { CheckNotificationPermissions(CMOptions.WrinklerNotification); },
 	),
 	WrinklerFlash: new SettingStandard(
 		'bool',
@@ -388,7 +402,7 @@ const Config = {
 		['Notification OFF', 'Notification ON'],
 		'Create a notification when the maximum amount of Wrinklers has appeared',
 		true,
-		function () { CheckNotificationPermissions(CM.Options.WrinklerMaxNotification); },
+		function () { CheckNotificationPermissions(CMOptions.WrinklerMaxNotification); },
 	),
 	WrinklerMaxFlash: new SettingStandard(
 		'bool',
@@ -481,7 +495,7 @@ const Config = {
 		['Tooltip Warning Position (Left)', 'Tooltip Warning Position (Bottom)'],
 		'Placement of the warning boxes',
 		false,
-		function () { CM.Disp.ToggleToolWarnPos(); },
+		function () { ToggleToolWarnPos(); },
 	),
 	TooltipGrim: new SettingStandard(
 		'bool',
@@ -561,7 +575,7 @@ const Config = {
 		['Detailed Time OFF', 'Detailed Time ON'],
 		'Change how time is displayed in certain statistics and tooltips',
 		true,
-		function () { CM.Disp.ToggleDetailedTime(); },
+		function () { ToggleDetailedTime(); },
 	),
 	GrimoireBar: new SettingStandard(
 		'bool',
@@ -593,7 +607,7 @@ const Config = {
 		['Game\'s Setting Scale', 'Metric', 'Short Scale', 'Short Scale (Abbreviated)', 'Scientific Notation', 'Engineering Notation'],
 		'Change how long numbers are handled',
 		false,
-		function () { CM.Disp.RefreshScale(); },
+		function () { RefreshScale(); },
 	),
 	ScaleDecimals: new SettingStandard(
 		'bool',
@@ -601,7 +615,7 @@ const Config = {
 		['1 decimals', '2 decimals', '3 decimals'],
 		'Set the number of decimals used when applicable',
 		false,
-		function () { CM.Disp.RefreshScale(); },
+		function () { RefreshScale(); },
 	),
 	ScaleSeparator: new SettingStandard(
 		'bool',
@@ -609,7 +623,7 @@ const Config = {
 		['. for decimals (Standard)', '. for thousands'],
 		'Set the separator used for decimals and thousands',
 		false,
-		function () { CM.Disp.RefreshScale(); },
+		function () { RefreshScale(); },
 	),
 	ScaleCutoff: new SettingInputNumber(
 		'numscale',
@@ -627,7 +641,7 @@ const Config = {
 		['Golden Cookie Timer OFF', 'Golden Cookie Timer ON'],
 		'A timer on the Golden Cookie when it has been spawned',
 		true,
-		function () { CM.Disp.ToggleGCTimer(); },
+		function () { ToggleGCTimer(); },
 	),
 	Favicon: new SettingStandard(
 		'bool',
@@ -635,7 +649,7 @@ const Config = {
 		['Favicon OFF', 'Favicon ON'],
 		'Update favicon with Golden/Wrath Cookie',
 		true,
-		function () { CM.Disp.UpdateFavicon(); },
+		function () { UpdateFavicon(); },
 	),
 	WrinklerButtons: new SettingStandard(
 		'bool',
@@ -643,7 +657,7 @@ const Config = {
 		['Extra Buttons OFF', 'Extra Buttons ON'],
 		'Show buttons for popping wrinklers at bottom of cookie section',
 		true,
-		function () { CM.Disp.UpdateWrinklerButtons(); },
+		function () { ToggleWrinklerButtons(); },
 	),
 	BulkBuyBlock: new SettingStandard(
 		'bool',

@@ -1,5 +1,6 @@
-import { default as ConfigData } from '../Data/src/SettingsData';
-import { SaveConfig } from './SaveLoadReloadSettings';
+import { default as ConfigData } from '../Data/SettingsData';
+import { SaveConfig } from './SaveLoadReload/SaveLoadReloadSettings';
+import { CMOptions } from './VariablesAndData';
 
 /** Functions related to toggling or changing an individual setting */
 
@@ -12,10 +13,10 @@ export const ConfigPrefix = 'CMConfig';
  * @param 	{string}	config	The name of the option
  */
 export function ToggleConfig(config) {
-	CM.Options[config]++;
+	CMOptions[config]++;
 
-	if (CM.Options[config] === ConfigData[config].label.length) {
-		CM.Options[config] = 0;
+	if (CMOptions[config] === ConfigData[config].label.length) {
+		CMOptions[config] = 0;
 		if (ConfigData[config].toggle) l(ConfigPrefix + config).className = 'option off';
 	} else l(ConfigPrefix + config).className = 'option';
 
@@ -23,7 +24,7 @@ export function ToggleConfig(config) {
 		ConfigData[config].func();
 	}
 
-	l(ConfigPrefix + config).innerHTML = ConfigData[config].label[CM.Options[config]];
+	l(ConfigPrefix + config).innerHTML = ConfigData[config].label[CMOptions[config]];
 	SaveConfig();
 }
 
@@ -35,7 +36,7 @@ export function ToggleConfig(config) {
 export function ToggleConfigVolume(config) {
 	if (l(`slider${config}`) !== null) {
 		l(`slider${config}right`).innerHTML = `${l(`slider${config}`).value}%`;
-		CM.Options[config] = Math.round(l(`slider${config}`).value);
+		CMOptions[config] = Math.round(l(`slider${config}`).value);
 	}
 	SaveConfig();
 }
@@ -46,7 +47,7 @@ export function ToggleConfigVolume(config) {
  * @param 	{string}	config	The name of the header
  */
 export function ToggleHeader(config) {
-	CM.Options.Header[config]++;
-	if (CM.Options.Header[config] > 1) CM.Options.Header[config] = 0;
+	CMOptions.Header[config]++;
+	if (CMOptions.Header[config] > 1) CMOptions.Header[config] = 0;
 	SaveConfig();
 }

@@ -1,4 +1,5 @@
-import { VersionMajor, VersionMinor } from '../Data/src/Moddata'
+import { CMOptions } from '../Config/VariablesAndData';
+import { VersionMajor, VersionMinor } from '../Data/Moddata';
 
 /**
  * This creates a save function to the CM object. Per Game code/comments:
@@ -7,7 +8,7 @@ import { VersionMajor, VersionMinor } from '../Data/src/Moddata'
  */
 export default function save() {
 	return JSON.stringify({
-		settings: CM.Options,
+		settings: CMOptions,
 		version: `${VersionMajor}.${VersionMinor}`,
 	});
 }

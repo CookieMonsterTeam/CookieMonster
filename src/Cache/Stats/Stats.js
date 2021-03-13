@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /** Functions related to Caching stats */
 
-import { SimHas } from '../../Sim/VariablesAndData';
+import SimHas from '../../Sim/ReplacedGameFunctions/SimHas';
 import GetCPSBuffMult from '../CPS/GetCPSBuffMult';
 import {
 	CacheConjure, CacheConjureReward, CacheDragonsFortuneMultAdjustment, CacheEdifice, CacheEdificeBuilding, CacheGoldenCookiesMult, CacheLucky, CacheLuckyFrenzy, CacheLuckyReward, CacheLuckyRewardFrenzy, CacheLuckyWrathReward, CacheLuckyWrathRewardFrenzy, CacheNoGoldSwitchCookiesPS, CacheWrathCookiesMult,

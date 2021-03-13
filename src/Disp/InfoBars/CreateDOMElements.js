@@ -1,6 +1,6 @@
 /** Functions to create various DOM elements used by the Bars */
 
-import { ColorBlue, ColorTextPre } from '../VariablesAndData';
+import { ColorBackPre, ColorBlue, ColorTextPre } from '../VariablesAndData';
 
 /**
  * This function creates an indivudual timer for the timer bar
@@ -8,7 +8,7 @@ import { ColorBlue, ColorTextPre } from '../VariablesAndData';
  * @param	{string}					name				The title of the timer
  * @param	[{{string}, {string}}, ...]	bars ([id, color])	The id and colours of individual parts of the timer
  */
-export function CreateTimerBar(id, name, bars) {
+export function CreateTimer(id, name, bars) {
 	const timerBar = document.createElement('div');
 	timerBar.id = id;
 	timerBar.style.height = '12px';
@@ -47,7 +47,7 @@ export function CreateTimerBar(id, name, bars) {
 			colorBar.style.borderBottomRightRadius = '10px';
 		}
 		if (typeof bars[i].color !== 'undefined') {
-			colorBar.className = CM.Disp.colorBackPre + bars[i].color;
+			colorBar.className = ColorBackPre + bars[i].color;
 		}
 		div.appendChild(colorBar);
 	}
@@ -65,8 +65,6 @@ export function CreateTimerBar(id, name, bars) {
 
 /**
  * This function extends the bottom bar (created by CM.Disp.CreateBotBar) with a column for the given building.
- * This function is called by CM.Disp.CreateBotBar on initialization of Cookie Monster,
- * and also in CM.Sim.CopyData if a new building (added by another mod) is discovered.
  * @param	{string}	buildingName	Objectname to be added (e.g., "Cursor")
  */
 export function CreateBotBarBuildingColumn(buildingName) {

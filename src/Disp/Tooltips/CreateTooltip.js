@@ -1,5 +1,6 @@
+import { CMOptions } from '../../Config/VariablesAndData';
 import {
-	ColorTextPre, ColorBorderPre, ColorGray, ColorBlue, ColorRed, ColorYellow, ColorPurple,
+	ColorTextPre, ColorBorderPre, ColorGray, ColorBlue, ColorRed, ColorYellow, ColorPurple, TooltipType,
 } from '../VariablesAndData';
 
 /** Creates various sections of tooltips */
@@ -37,7 +38,7 @@ export function TooltipCreateCalculationSection(tooltip) {
 	time.id = 'CMTooltipTime';
 	tooltip.appendChild(time);
 
-	if (CM.Disp.tooltipType === 'b') {
+	if (TooltipType === 'b') {
 		tooltip.appendChild(TooltipCreateHeader('Production left till next achievement'));
 		tooltip.lastChild.id = 'CMTooltipProductionHeader'; // Assign a id in order to hid when no achiev's are left
 		const production = document.createElement('div');
@@ -123,7 +124,7 @@ export function TooltipCreateWarningSection() {
 	TooltipWarn.lastChild.style.marginBottom = '4px';
 	TooltipWarn.appendChild(create('CMDispTooltipWarnEdifice', ColorPurple, 'Warning: ', 'Purchase of this item will put you under the number of Cookies needed for "Spontaneous Edifice" to possibly give you your most expensive building"', 'CMDispTooltipWarnEdificeText'));
 	TooltipWarn.lastChild.style.marginBottom = '4px';
-	TooltipWarn.appendChild(create('CMDispTooltipWarnUser', ColorRed, 'Warning: ', `Purchase of this item will put you under the number of Cookies equal to ${CM.Options.ToolWarnUser} seconds of CPS`, 'CMDispTooltipWarnUserText'));
+	TooltipWarn.appendChild(create('CMDispTooltipWarnUser', ColorRed, 'Warning: ', `Purchase of this item will put you under the number of Cookies equal to ${CMOptions.ToolWarnUser} seconds of CPS`, 'CMDispTooltipWarnUserText'));
 
 	return TooltipWarn;
 }

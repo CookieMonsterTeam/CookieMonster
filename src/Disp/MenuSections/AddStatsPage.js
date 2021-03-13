@@ -3,7 +3,16 @@
 import { AddMissingUpgrades } from './CreateMissingUpgrades';
 import * as CreateSections from './CreateStatsSections';
 import * as CreateElements from './CreateDOMElements';
-import * as GameData from '../../../Data/src/Gamedata';
+import * as GameData from '../../Data/Gamedata';
+import { CMOptions } from '../../Config/VariablesAndData';
+
+import {
+	CacheAverageClicks, CacheCentEgg, CacheLastChoEgg, CacheSeaSpec, CacheWrinklersFattest, CacheWrinklersNormal, CacheWrinklersTotal,
+} from '../../Cache/VariablesAndData';
+import PopAllNormalWrinklers from '../HelperFunctions/PopWrinklers';
+import { ClickTimes, CookieTimes } from '../VariablesAndData';
+import GetCPS from '../HelperFunctions/GetCPS';
+import { Beautify } from '../BeautifyAndFormatting/BeautifyFormatting';
 
 /**
  * This function adds stats created by CookieMonster to the stats page
@@ -16,53 +25,53 @@ export default function AddMenuStats(title) {
 	stats.appendChild(title);
 
 	stats.appendChild(CreateElements.StatsHeader('Lucky Cookies', 'Lucky'));
-	if (CM.Options.Header.Lucky) {
+	if (CMOptions.Header.Lucky) {
 		stats.appendChild(CreateSections.LuckySection());
 	}
 
 	stats.appendChild(CreateElements.StatsHeader('Chain Cookies', 'Chain'));
-	if (CM.Options.Header.Chain) {
+	if (CMOptions.Header.Chain) {
 		stats.appendChild(CreateSections.ChainSection());
 	}
 
 	if (Game.Objects['Wizard tower'].minigameLoaded) {
 		stats.appendChild(CreateElements.StatsHeader('Spells', 'Spells'));
-		if (CM.Options.Header.Spells) {
+		if (CMOptions.Header.Spells) {
 			stats.appendChild(CreateSections.SpellsSection());
 		}
 	}
 
 	if (Game.Objects.Farm.minigameLoaded) {
 		stats.appendChild(CreateElements.StatsHeader('Garden', 'Garden'));
-		if (CM.Options.Header.Garden) {
+		if (CMOptions.Header.Garden) {
 			stats.appendChild(CreateSections.GardenSection());
 		}
 	}
 
 	stats.appendChild(CreateElements.StatsHeader('Prestige', 'Prestige'));
-	if (CM.Options.Header.Prestige) {
+	if (CMOptions.Header.Prestige) {
 		stats.appendChild(CreateSections.PrestigeSection());
 	}
 
 	if (Game.cpsSucked > 0) {
 		stats.appendChild(CreateElements.StatsHeader('Wrinklers', 'Wrink'));
-		if (CM.Options.Header.Wrink) {
+		if (CMOptions.Header.Wrink) {
 			const popAllFrag = document.createDocumentFragment();
-			popAllFrag.appendChild(document.createTextNode(`${Beautify(CM.Cache.WrinklersTotal)} / ${Beautify(CM.Cache.WrinklersNormal)} `));
+			popAllFrag.appendChild(document.createTextNode(`${Beautify(CacheWrinklersTotal)} / ${Beautify(CacheWrinklersNormal)} `));
 			const popAllA = document.createElement('a');
 			popAllA.textContent = 'Pop All Normal';
 			popAllA.className = 'option';
-			popAllA.onclick = function () { CM.Disp.PopAllNormalWrinklers(); };
+			popAllA.onclick = function () { PopAllNormalWrinklers(); };
 			popAllFrag.appendChild(popAllA);
 			stats.appendChild(CreateElements.StatsListing('basic', 'Rewards of Popping (All/Normal)', popAllFrag));
 			const popFattestFrag = document.createDocumentFragment();
-			popFattestFrag.appendChild(document.createTextNode(`${Beautify(CM.Cache.WrinklersFattest[0])} `));
+			popFattestFrag.appendChild(document.createTextNode(`${Beautify(CacheWrinklersFattest[0])} `));
 			const popFattestA = document.createElement('a');
 			popFattestA.textContent = 'Pop Single Fattest';
 			popFattestA.className = 'option';
-			popFattestA.onclick = function () { if (CM.Cache.WrinklersFattest[1] !== null) Game.wrinklers[CM.Cache.WrinklersFattest[1]].hp = 0; };
+			popFattestA.onclick = function () { if (CacheWrinklersFattest[1] !== null) Game.wrinklers[CacheWrinklersFattest[1]].hp = 0; };
 			popFattestFrag.appendChild(popFattestA);
-			stats.appendChild(CreateElements.StatsListing('basic', `Rewards of Popping Single Fattest Non-Shiny Wrinkler (id: ${CM.Cache.WrinklersFattest[1] !== null ? CM.Cache.WrinklersFattest[1] : 'None'})`, popFattestFrag));
+			stats.appendChild(CreateElements.StatsListing('basic', `Rewards of Popping Single Fattest Non-Shiny Wrinkler (id: ${CacheWrinklersFattest[1] !== null ? CacheWrinklersFattest[1] : 'None'})`, popFattestFrag));
 		}
 	}
 
@@ -114,7 +123,7 @@ export default function AddMenuStats(title) {
 
 	if (Game.season === 'christmas' || specDisp || choEgg || centEgg) {
 		stats.appendChild(CreateElements.StatsHeader('Season Specials', 'Sea'));
-		if (CM.Options.Header.Sea) {
+		if (CMOptions.Header.Sea) {
 			if (missingHalloweenCookies.length !== 0) stats.appendChild(CreateElements.StatsListing('basic', 'Halloween Cookies Left to Buy', CreateElements.StatsMissDisp(missingHalloweenCookies)));
 			if (missingChristmasCookies.length !== 0) stats.appendChild(CreateElements.StatsListing('basic', 'Christmas Cookies Left to Buy', CreateElements.StatsMissDisp(missingChristmasCookies)));
 			if (missingValentineCookies.length !== 0) stats.appendChild(CreateElements.StatsListing('basic', 'Valentine Cookies Left to Buy', CreateElements.StatsMissDisp(missingValentineCookies)));
@@ -122,22 +131,22 @@ export default function AddMenuStats(title) {
 			if (missingRareEggs.length !== 0) stats.appendChild(CreateElements.StatsListing('basic', 'Rare Easter Eggs Left to Unlock', CreateElements.StatsMissDisp(missingRareEggs)));
 			if (missingPlantDrops.length !== 0) stats.appendChild(CreateElements.StatsListing('basic', 'Rare Plant Drops Left to Unlock', CreateElements.StatsMissDisp(missingPlantDrops)));
 
-			if (Game.season === 'christmas') stats.appendChild(CreateElements.StatsListing('basic', 'Reindeer Reward', document.createTextNode(Beautify(CM.Cache.SeaSpec))));
+			if (Game.season === 'christmas') stats.appendChild(CreateElements.StatsListing('basic', 'Reindeer Reward', document.createTextNode(Beautify(CacheSeaSpec))));
 			if (choEgg) {
-				stats.appendChild(CreateElements.StatsListing('withTooltip', 'Chocolate Egg Cookies', document.createTextNode(Beautify(CM.Cache.lastChoEgg)), 'ChoEggTooltipPlaceholder'));
+				stats.appendChild(CreateElements.StatsListing('withTooltip', 'Chocolate Egg Cookies', document.createTextNode(Beautify(CacheLastChoEgg)), 'ChoEggTooltipPlaceholder'));
 			}
 			if (centEgg) {
-				stats.appendChild(CreateElements.StatsListing('basic', 'Century Egg Multiplier', document.createTextNode(`${Math.round((CM.Cache.CentEgg - 1) * 10000) / 100}%`)));
+				stats.appendChild(CreateElements.StatsListing('basic', 'Century Egg Multiplier', document.createTextNode(`${Math.round((CacheCentEgg - 1) * 10000) / 100}%`)));
 			}
 		}
 	}
 
 	stats.appendChild(CreateElements.StatsHeader('Miscellaneous', 'Misc'));
-	if (CM.Options.Header.Misc) {
+	if (CMOptions.Header.Misc) {
 		stats.appendChild(CreateElements.StatsListing('basic',
-			`Average Cookies Per Second (Past ${CM.Disp.cookieTimes[CM.Options.AvgCPSHist] < 60 ? (`${CM.Disp.cookieTimes[CM.Options.AvgCPSHist]} seconds`) : ((CM.Disp.cookieTimes[CM.Options.AvgCPSHist] / 60) + (CM.Options.AvgCPSHist === 3 ? ' minute' : ' minutes'))})`,
-			document.createTextNode(Beautify(CM.Disp.GetCPS(), 3))));
-		stats.appendChild(CreateElements.StatsListing('basic', `Average Cookie Clicks Per Second (Past ${CM.Disp.clickTimes[CM.Options.AvgClicksHist]}${CM.Options.AvgClicksHist === 0 ? ' second' : ' seconds'})`, document.createTextNode(Beautify(CM.Cache.AverageClicks, 1))));
+			`Average Cookies Per Second (Past ${CookieTimes[CMOptions.AvgCPSHist] < 60 ? (`${CookieTimes[CMOptions.AvgCPSHist]} seconds`) : ((CookieTimes[CMOptions.AvgCPSHist] / 60) + (CMOptions.AvgCPSHist === 3 ? ' minute' : ' minutes'))})`,
+			document.createTextNode(Beautify(GetCPS(), 3))));
+		stats.appendChild(CreateElements.StatsListing('basic', `Average Cookie Clicks Per Second (Past ${ClickTimes[CMOptions.AvgClicksHist]}${CMOptions.AvgClicksHist === 0 ? ' second' : ' seconds'})`, document.createTextNode(Beautify(CacheAverageClicks, 1))));
 		if (Game.Has('Fortune cookies')) {
 			const fortunes = [];
 			for (const i of Object.keys(GameData.Fortunes)) {
@@ -147,7 +156,7 @@ export default function AddMenuStats(title) {
 			}
 			if (fortunes.length !== 0) stats.appendChild(CreateElements.StatsListing('basic', 'Fortune Upgrades Left to Buy', CreateElements.StatsMissDisp(fortunes)));
 		}
-		if (CM.Options.ShowMissedGC) {
+		if (CMOptions.ShowMissedGC) {
 			stats.appendChild(CreateElements.StatsListing('basic', 'Missed Golden Cookies', document.createTextNode(Beautify(Game.missedGoldenClicks))));
 		}
 		if (Game.prefs.autosave) {
@@ -160,7 +169,7 @@ export default function AddMenuStats(title) {
 
 	l('menu').insertBefore(stats, l('menu').childNodes[2]);
 
-	if (CM.Options.MissingUpgrades) {
+	if (CMOptions.MissingUpgrades) {
 		AddMissingUpgrades();
 	}
-};
+}

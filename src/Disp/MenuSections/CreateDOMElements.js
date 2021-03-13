@@ -1,5 +1,9 @@
 /** Section: Functions related to the creation of basic DOM elements page */
 
+import { ToggleHeader } from '../../Config/ToggleSetting';
+import { CMOptions } from '../../Config/VariablesAndData';
+import { TooltipText } from '../VariablesAndData';
+
 /**
  * This function creates a header-object for the stats page
  * It is called by CM.Disp.AddMenuStats()
@@ -26,8 +30,8 @@ export function StatsHeader(text, config) {
 	span.style.color = 'black';
 	span.style.fontSize = '13px';
 	span.style.verticalAlign = 'middle';
-	span.textContent = CM.Options.Header[config] ? '-' : '+';
-	span.onclick = function () { CM.Config.ToggleHeader(config); Game.UpdateMenu(); };
+	span.textContent = CMOptions.Header[config] ? '-' : '+';
+	span.onclick = function () { ToggleHeader(config); Game.UpdateMenu(); };
 	div.appendChild(span);
 	return div;
 }
@@ -54,7 +58,7 @@ export function StatsListing(type, name, text, placeholder) {
 
 		const tooltip = document.createElement('span');
 		tooltip.onmouseout = function () { Game.tooltip.hide(); };
-		tooltip.onmouseover = function () { Game.tooltip.draw(this, escape(CM.Disp[placeholder].innerHTML)); };
+		tooltip.onmouseover = function () { Game.tooltip.draw(this, escape(TooltipText[placeholder].innerHTML)); };
 		tooltip.style.cursor = 'default';
 		tooltip.style.display = 'inline-block';
 		tooltip.style.height = '10px';

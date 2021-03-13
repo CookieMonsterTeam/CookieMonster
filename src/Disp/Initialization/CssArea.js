@@ -7,6 +7,7 @@ import { DispCSS } from '../VariablesAndData';
 export default function CreateCssArea() {
 	DispCSS = document.createElement('style');
 	DispCSS.type = 'text/css';
+	DispCSS.id = 'CMCSS';
 
 	document.head.appendChild(DispCSS);
 }

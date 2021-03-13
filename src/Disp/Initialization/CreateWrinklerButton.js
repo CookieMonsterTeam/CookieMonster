@@ -1,5 +1,5 @@
-import { WrinklersFattest } from "../../Cache/VariablesAndData";
-import PopAllNormalWrinklers from "../HelperFunctions/PopWrinklers";
+import { WrinklersFattest } from '../../Cache/VariablesAndData';
+import PopAllNormalWrinklers from '../HelperFunctions/PopWrinklers';
 
 /**
  * This function creates two objects at the bottom of the left column that allowing popping of wrinklers

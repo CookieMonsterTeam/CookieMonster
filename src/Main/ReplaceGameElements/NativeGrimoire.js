@@ -1,7 +1,12 @@
 /* eslint-disable no-unused-vars */
-import { FormatTime } from '../../Disp/BeautifyFormatting';
-import { BackupGrimoireDraw, BackupGrimoireLaunch, BackupGrimoireLaunchMod, HasReplaceNativeGrimoireDraw, HasReplaceNativeGrimoireLaunch } from '../VariablesAndData';
-import { ReplaceTooltipGrimoire } from './Tooltips';
+import { CMOptions } from '../../Config/VariablesAndData';
+import { FormatTime } from '../../Disp/BeautifyAndFormatting/BeautifyFormatting';
+
+import CalculateGrimoireRefillTime from '../../Disp/HelperFunctions/CalculateGrimoireRefillTime';
+import {
+	BackupGrimoireDraw, BackupGrimoireLaunch, BackupGrimoireLaunchMod, HasReplaceNativeGrimoireDraw, HasReplaceNativeGrimoireLaunch,
+} from '../VariablesAndData';
+import ReplaceTooltipGrimoire from './TooltipGrimoire';
 
 /**
  * This function fixes replaces the .launch function of the Grimoire
@@ -10,15 +15,15 @@ function ReplaceNativeGrimoireLaunch() {
 	if (!HasReplaceNativeGrimoireLaunch && Game.Objects['Wizard tower'].minigameLoaded) {
 		const minigame = Game.Objects['Wizard tower'].minigame;
 		BackupGrimoireLaunch = minigame.launch;
-		BackupGrimoireLaunchMod = minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame')};
-		Game.Objects['Wizard tower'].minigame.launch = function () {
-			BackupGrimoireLaunchMod();
-			ReplaceTooltipGrimoire();
-			HasReplaceNativeGrimoireDraw = false;
-			ReplaceNativeGrimoireDraw();
-		};
-		HasReplaceNativeGrimoireLaunch = true;
+		BackupGrimoireLaunchMod = minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame');
 	}
+	Game.Objects['Wizard tower'].minigame.launch = function () {
+		BackupGrimoireLaunchMod();
+		ReplaceTooltipGrimoire();
+		HasReplaceNativeGrimoireDraw = false;
+		ReplaceNativeGrimoireDraw();
+	};
+	HasReplaceNativeGrimoireLaunch = true;
 }
 
 /**
@@ -30,8 +35,8 @@ function ReplaceNativeGrimoireDraw() {
 		BackupGrimoireDraw = minigame.draw;
 		Game.Objects['Wizard tower'].minigame.draw = function () {
 			BackupGrimoireDraw();
-			if (CM.Options.GrimoireBar === 1 && minigame.magic < minigame.magicM) {
-				minigame.magicBarTextL.innerHTML += ` (${FormatTime(CM.Disp.CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM))})`;
+			if (CMOptions.GrimoireBar === 1 && minigame.magic < minigame.magicM) {
+				minigame.magicBarTextL.innerHTML += ` (${FormatTime(CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM))})`;
 			}
 		};
 		HasReplaceNativeGrimoireDraw = true;

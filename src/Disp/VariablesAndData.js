@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 /**
  * Section: Variables used in Disp functions */
 
@@ -43,16 +44,28 @@ export const TooltipText = [
 ];
 
 /**
- * This array is used to give certain timers specific colours
+ * These are variables used by the functions that create tooltips for wrinklers
+ * See CM.Disp.CheckWrinklerTooltip(), CM.Disp.UpdateWrinklerTooltip() and CM.Main.AddWrinklerAreaDetect()
  */
-export const BuffColors = {
-	Frenzy: ColorYellow, 'Dragon Harvest': ColorBrown, 'Elder frenzy': ColorGreen, Clot: ColorRed, 'Click frenzy': ColorBlue, Dragonflight: ColorPink,
-};
+export let TooltipWrinklerArea = 0;
+export let TooltipWrinkler = -1;
 
 /**
- * This array is used to track GC timers
+ * This array is used to store whether a Wrinkler tooltip is being shown or not
+ * [i] = 1 means tooltip is being shown, [i] = 0 means hidden
+ * It is used by CM.Disp.CheckWrinklerTooltip() and CM.Main.AddWrinklerAreaDetect()
  */
-export const GCTimers = {};
+export let TooltipWrinklerBeingShown = [];
+
+export let CMLastAscendState;
+export let CMSayTime;
+
+/**
+ * These are variables used to create various displays when the game is loaded on the "sell all" screen
+ */
+export let LastTargetBotBar = 1;
+export let LastTargetBuildings = 1;
+export let LastTargetTooltipBuilding = 1;
 
 /**
  * These arrays are used in the stats page to show
@@ -62,27 +75,27 @@ export const CookieTimes = [10, 15, 30, 60, 300, 600, 900, 1800];
 export const ClickTimes = [1, 5, 10, 15, 30];
 
 /**
- * This array is used to store whether a Wrinkler tooltip is being shown or not
- * [i] = 1 means tooltip is being shown, [i] = 0 means hidden
- * It is used by CM.Disp.CheckWrinklerTooltip() and CM.Main.AddWrinklerAreaDetect()
+ * This array is used to give certain timers specific colours
  */
-export const TooltipWrinklerBeingShown = [];
+export const BuffColors = {
+	Frenzy: ColorYellow, 'Dragon Harvest': ColorBrown, 'Elder frenzy': ColorGreen, Clot: ColorRed, 'Click frenzy': ColorBlue, Dragonflight: ColorPink,
+};
 
 /**
- * These are variables used by the functions that create tooltips for wrinklers
- * See CM.Disp.CheckWrinklerTooltip(), CM.Disp.UpdateWrinklerTooltip() and CM.Main.AddWrinklerAreaDetect()
+ * This array is used to track GC timers
  */
-export const TooltipWrinklerArea = 0;
-export const TooltipWrinkler = -1;
+export let GCTimers = {};
 
 /**
  * Used to store the number of cookies to be displayed in the tab-title
  */
-export const Title = '';
+export let Title = '';
 
-/**
- * These are variables used to create various displays when the game is loaded on the "sell all" screen
- */
-export const LastTargetBotBar = 1;
-export const LastTargetBuildings = 1;
-export const LastTargetTooltipBuilding = 1;
+export let TooltipPrice;
+export let TooltipBonusIncome;
+export let TooltipType;
+export let TooltipName;
+export let TooltipBonusMouse;
+
+export let LastAscendState;
+export let LastNumberOfTimers;

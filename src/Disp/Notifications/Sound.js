@@ -1,5 +1,5 @@
-import { isInitzializing } from '../../Footer/Footer';
-
+import { CMOptions } from '../../Config/VariablesAndData';
+import { isInitializing } from '../../InitSaveLoad/Variables';
 
 /**
  * This function plays a sound depending on configs. It is called by all functions
@@ -8,12 +8,12 @@ import { isInitzializing } from '../../Footer/Footer';
  * @param	{string}	sndConfig	The setting in CM.Options that is checked before creating the sound
  * @param	{string}	volConfig	The setting in CM.Options that is checked to determine volume
  */
-export function PlaySound(url, sndConfig, volConfig) {
+export default function PlaySound(url, sndConfig, volConfig) {
 	// The arguments check makes the sound not play upon initialization of the mod
-	if (CM.Options[sndConfig] === 1 && isInitzializing === false) {
+	if (CMOptions[sndConfig] === 1 && isInitializing === false) {
 		const sound = new realAudio(url);
-		if (CM.Options.GeneralSound) sound.volume = (CM.Options[volConfig] / 100) * (Game.volume / 100);
-		else sound.volume = (CM.Options[volConfig] / 100);
+		if (CMOptions.GeneralSound) sound.volume = (CMOptions[volConfig] / 100) * (Game.volume / 100);
+		else sound.volume = (CMOptions[volConfig] / 100);
 		sound.play();
 	}
 }

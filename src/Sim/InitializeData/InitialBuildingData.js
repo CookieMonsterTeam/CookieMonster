@@ -1,4 +1,4 @@
-import ReplaceFunction from '../CreateSimFunctions/ReplaceFunction';
+import SimGetTieredCpsMult from '../ReplacedGameFunctions/SimGetTieredCpsMult';
 
 /**
  * This function constructs an object with the static properties of a building,
@@ -10,7 +10,12 @@ import ReplaceFunction from '../CreateSimFunctions/ReplaceFunction';
 export default function InitialBuildingData(buildingName) {
 	const me = Game.Objects[buildingName];
 	const you = {};
-	you.cps = new Function(`return ${ReplaceFunction(me.cps)}`)();
+	you.cps = function () {
+		let mult = 1;
+		mult *= SimGetTieredCpsMult(me);
+		mult *= Game.magicCpS(me.name);
+		return me.baseCps * mult;
+	};
 	// Below is needed for above eval, specifically for the GetTieredCpsMult function
 	you.baseCps = me.baseCps;
 	you.name = me.name;

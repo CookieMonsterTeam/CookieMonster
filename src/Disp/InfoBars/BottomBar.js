@@ -1,8 +1,14 @@
 /** Functions related to the Bottom Bar */
 
+import { CacheObjects1, CacheObjects10, CacheObjects100 } from '../../Cache/VariablesAndData';
+import { CMOptions } from '../../Config/VariablesAndData';
 import { VersionMajor, VersionMinor } from '../../Data/Moddata';
-import { Beautify, GetTimeColor } from '../BeautifyFormatting';
-import { ColorBlue, ColorTextPre, ColorYellow } from '../VariablesAndData';
+import { Beautify, GetTimeColor } from '../BeautifyAndFormatting/BeautifyFormatting';
+import GetCPS from '../HelperFunctions/GetCPS';
+import GetWrinkConfigBank from '../HelperFunctions/GetWrinkConfigBank';
+import {
+	ColorBlue, ColorTextPre, ColorYellow, LastTargetBotBar,
+} from '../VariablesAndData';
 import { CreateBotBarBuildingColumn } from './CreateDOMElements';
 
 /**
@@ -44,36 +50,39 @@ export function CreateBotBar() {
 	const time = tbody.appendChild(document.createElement('tr'));
 	time.appendChild(firstCol('Time Left', ColorBlue));
 
+	l('wrapper').appendChild(BotBar);
+
 	for (const i of Object.keys(Game.Objects)) {
 		CreateBotBarBuildingColumn(i);
 	}
-
-	l('wrapper').appendChild(BotBar);
 }
 
 /**
  * This function updates the bonus-, pp-, and time-rows in the the bottom bar
  */
 export function UpdateBotBar() {
-	if (CM.Options.BotBar === 1 && CM.Cache.Objects1 && Game.buyMode === 1) {
+	if (CMOptions.BotBar === 1 && CacheObjects1 && Game.buyMode === 1) {
 		let count = 0;
-		for (const i of Object.keys(CM.Cache.Objects1)) {
-			let target = `Objects${Game.buyBulk}`;
+		for (const i of Object.keys(CacheObjects1)) {
+			let target = Game.buyBulk;
 			if (Game.buyMode === 1) {
-				CM.Disp.LastTargetBotBar = target;
+				LastTargetBotBar = target;
 			} else {
-				target = CM.Disp.LastTargetBotBar;
+				target = LastTargetBotBar;
 			}
+			if (target === 1) target = CacheObjects1;
+			if (target === 10) target = CacheObjects10;
+			if (target === 100) target = CacheObjects100;
 			count++;
-			l('BotBar').firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
-			l('BotBar').firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(CM.Cache[target][i].bonus, 2);
-			l('BotBar').firstChild.firstChild.childNodes[2].childNodes[count].className = ColorTextPre + CM.Cache[target][i].color;
-			l('BotBar').firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(CM.Cache[target][i].pp, 2);
-			const timeColor = GetTimeColor((Game.Objects[i].bulkPrice - (Game.cookies + CM.Disp.GetWrinkConfigBank())) / CM.Disp.GetCPS());
-			l('BotBar').firstChild.firstChild.childNodes[3].childNodes[count].className = ColorTextPre + timeColor.color;
+			l('CMBotBar').firstChild.firstChild.childNodes[0].childNodes[count].childNodes[1].textContent = Game.Objects[i].amount;
+			l('CMBotBar').firstChild.firstChild.childNodes[1].childNodes[count].textContent = Beautify(target[i].bonus, 2);
+			l('CMBotBar').firstChild.firstChild.childNodes[2].childNodes[count].className = ColorTextPre + target[i].color;
+			l('CMBotBar').firstChild.firstChild.childNodes[2].childNodes[count].textContent = Beautify(target[i].pp, 2);
+			const timeColor = GetTimeColor((Game.Objects[i].bulkPrice - (Game.cookies + GetWrinkConfigBank())) / GetCPS());
+			l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[count].className = ColorTextPre + timeColor.color;
 			if (timeColor.text === 'Done!' && Game.cookies < Game.Objects[i].bulkPrice) {
-				l('BotBar').firstChild.firstChild.childNodes[3].childNodes[count].textContent = `${timeColor.text} (with Wrink)`;
-			} else l('BotBar').firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text;
+				l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[count].textContent = `${timeColor.text} (with Wrink)`;
+			} else l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[count].textContent = timeColor.text;
 		}
 	}
 }

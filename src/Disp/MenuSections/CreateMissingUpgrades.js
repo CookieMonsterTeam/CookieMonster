@@ -1,13 +1,15 @@
 /** Functions related to displaying the missing upgrades in the Statistics page */
 
+import { CacheMissingUpgrades, CacheMissingUpgradesCookies, CacheMissingUpgradesPrestige } from '../../Cache/VariablesAndData';
+
 /**
  * This function creates the missing upgrades sections for prestige, normal and cookie upgrades
  */
 export function AddMissingUpgrades() {
 	for (const menuSection of (l('menu').children)) {
 		if (menuSection.children[0]) {
-			if (menuSection.children[0].innerHTML === 'Prestige' && CM.Cache.MissingUpgradesPrestige) {
-				const prestigeUpgradesMissing = CM.Cache.MissingUpgradesPrestige.match(new RegExp('div', 'g') || []).length / 2;
+			if (menuSection.children[0].innerHTML === 'Prestige' && CacheMissingUpgradesPrestige) {
+				const prestigeUpgradesMissing = CacheMissingUpgradesPrestige.match(new RegExp('div', 'g') || []).length / 2;
 				const title = document.createElement('div');
 				title.id = 'CMMissingUpgradesPrestigeTitle';
 				title.className = 'listing';
@@ -17,11 +19,11 @@ export function AddMissingUpgrades() {
 				menuSection.appendChild(title);
 				const upgrades = document.createElement('div');
 				upgrades.className = 'listing crateBox';
-				upgrades.innerHTML = CM.Cache.MissingUpgradesPrestige;
+				upgrades.innerHTML = CacheMissingUpgradesPrestige;
 				menuSection.appendChild(upgrades);
 			} else if (menuSection.children[0].innerHTML === 'Upgrades') {
-				if (CM.Cache.MissingUpgrades) {
-					const normalUpgradesMissing = CM.Cache.MissingUpgrades.match(new RegExp('div', 'g') || []).length / 2;
+				if (CacheMissingUpgrades) {
+					const normalUpgradesMissing = CacheMissingUpgrades.match(new RegExp('div', 'g') || []).length / 2;
 					const title = document.createElement('div');
 					title.id = 'CMMissingUpgradesTitle';
 					title.className = 'listing';
@@ -31,11 +33,11 @@ export function AddMissingUpgrades() {
 					menuSection.insertBefore(title, menuSection.childNodes[3]);
 					const upgrades = document.createElement('div');
 					upgrades.className = 'listing crateBox';
-					upgrades.innerHTML = CM.Cache.MissingUpgrades;
+					upgrades.innerHTML = CacheMissingUpgrades;
 					menuSection.insertBefore(upgrades, document.getElementById('CMMissingUpgradesTitle').nextSibling);
 				}
-				if (CM.Cache.MissingUpgradesCookies) {
-					const cookieUpgradesMissing = CM.Cache.MissingUpgradesCookies.match(new RegExp('div', 'g') || []).length / 2;
+				if (CacheMissingUpgradesCookies) {
+					const cookieUpgradesMissing = CacheMissingUpgradesCookies.match(new RegExp('div', 'g') || []).length / 2;
 					const title = document.createElement('div');
 					title.id = 'CMMissingUpgradesCookiesTitle';
 					title.className = 'listing';
@@ -45,7 +47,7 @@ export function AddMissingUpgrades() {
 					menuSection.appendChild(title);
 					const upgrades = document.createElement('div');
 					upgrades.className = 'listing crateBox';
-					upgrades.innerHTML = CM.Cache.MissingUpgradesCookies;
+					upgrades.innerHTML = CacheMissingUpgradesCookies;
 					menuSection.appendChild(upgrades);
 				}
 			}
