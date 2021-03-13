@@ -10,6 +10,23 @@ import { GCTimers } from '../../Disp/VariablesAndData';
 import { CurrSpawnedGoldenCookieState, LastGoldenCookieState, LastSpawnedGoldenCookieState } from '../VariablesAndData';
 
 /**
+ * Auxilirary function that finds all currently spawned shimmers.
+ * CM.Cache.spawnedGoldenShimmer stores the non-user spawned cookie to later determine data for the favicon and tab-title
+ * It is called by CM.CM.Main.CheckGoldenCookie
+ */
+function FindShimmer() {
+	CurrSpawnedGoldenCookieState = 0;
+	CacheGoldenShimmersByID = {};
+	for (const i of Object.keys(Game.shimmers)) {
+		CacheGoldenShimmersByID[Game.shimmers[i].id] = Game.shimmers[i];
+		if (Game.shimmers[i].spawnLead && Game.shimmers[i].type === 'golden') {
+			CacheSpawnedGoldenShimmer = Game.shimmers[i];
+			CurrSpawnedGoldenCookieState += 1;
+		}
+	}
+}
+
+/**
  * This function checks for changes in the amount of Golden Cookies
  * It is called by CM.Main.Loop
  */
@@ -44,23 +61,6 @@ export default function CheckGoldenCookie() {
 			GCTimers[i].style.opacity = CacheGoldenShimmersByID[i].l.style.opacity;
 			GCTimers[i].style.transform = CacheGoldenShimmersByID[i].l.style.transform;
 			GCTimers[i].textContent = Math.ceil(CacheGoldenShimmersByID[i].life / Game.fps);
-		}
-	}
-}
-
-/**
- * Auxilirary function that finds all currently spawned shimmers.
- * CM.Cache.spawnedGoldenShimmer stores the non-user spawned cookie to later determine data for the favicon and tab-title
- * It is called by CM.CM.Main.CheckGoldenCookie
- */
-function FindShimmer() {
-	CurrSpawnedGoldenCookieState = 0;
-	CacheGoldenShimmersByID = {};
-	for (const i of Object.keys(Game.shimmers)) {
-		CacheGoldenShimmersByID[Game.shimmers[i].id] = Game.shimmers[i];
-		if (Game.shimmers[i].spawnLead && Game.shimmers[i].type === 'golden') {
-			CacheSpawnedGoldenShimmer = Game.shimmers[i];
-			CurrSpawnedGoldenCookieState += 1;
 		}
 	}
 }

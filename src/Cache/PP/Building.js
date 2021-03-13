@@ -9,6 +9,21 @@ import {
 import ColourOfPP from './ColourOfPP';
 
 /**
+ * This functions caches the buildings of bulk-buy mode when PP is compared against optimal single-purchase building
+ * It saves all date in CM.Cache.Objects...
+ * It is called by CM.Cache.CacheBuildingsPP()
+ */
+function CacheBuildingsBulkPP(target) {
+	for (const i of Object.keys(target)) {
+		if (Game.cookiesPs) {
+			target[i].pp = (Math.max(target[i].price - (Game.cookies + GetWrinkConfigBank()), 0) / Game.cookiesPs) + (target[i].price / target[i].bonus);
+		} else target[i].pp = (target[i].price / target[i].bonus);
+
+		target[i].color = ColourOfPP(target[i], target[i].price);
+	}
+}
+
+/**
  * This functions caches the PP of each building it saves all date in CM.Cache.Objects...
  * It is called by CM.Cache.CachePP()
  */
@@ -82,20 +97,5 @@ export default function CacheBuildingsPP() {
 				if (target[i].pp === CacheArrayOfPPs[j][0]) target[i].color = ColorGray;
 			}
 		}
-	}
-}
-
-/**
- * This functions caches the buildings of bulk-buy mode when PP is compared against optimal single-purchase building
- * It saves all date in CM.Cache.Objects...
- * It is called by CM.Cache.CacheBuildingsPP()
- */
-function CacheBuildingsBulkPP(target) {
-	for (const i of Object.keys(target)) {
-		if (Game.cookiesPs) {
-			target[i].pp = (Math.max(target[i].price - (Game.cookies + GetWrinkConfigBank()), 0) / Game.cookiesPs) + (target[i].price / target[i].bonus);
-		} else target[i].pp = (target[i].price / target[i].bonus);
-
-		target[i].color = ColourOfPP(target[i], target[i].price);
 	}
 }

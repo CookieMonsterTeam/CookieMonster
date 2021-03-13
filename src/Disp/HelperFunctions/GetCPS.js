@@ -10,13 +10,12 @@ import { CMOptions } from '../../Config/VariablesAndData';
 export default function GetCPS() {
 	if (CMOptions.CPSMode) {
 		return CacheAvgCps;
-	} else if (CMOptions.CalcWrink === 0) {
+	} if (CMOptions.CalcWrink === 0) {
 		return (Game.cookiesPs * (1 - Game.cpsSucked));
-	} else if (CMOptions.CalcWrink === 1) {
+	} if (CMOptions.CalcWrink === 1) {
 		return Game.cookiesPs * (CacheCurrWrinklerCPSMult + (1 - (CacheCurrWrinklerCount * 0.05)));
-	} else if (CMOptions.CalcWrink === 2 && Game.wrinklers[CacheWrinklersFattest[1]].type === 1) {
+	} if (CMOptions.CalcWrink === 2 && Game.wrinklers[CacheWrinklersFattest[1]].type === 1) {
 		return Game.cookiesPs * ((CacheCurrWrinklerCPSMult * 3 / CacheCurrWrinklerCount) + (1 - (CacheCurrWrinklerCount * 0.05)));
-	} else {
-		return Game.cookiesPs * ((CacheCurrWrinklerCPSMult / CacheCurrWrinklerCount) + (1 - (CacheCurrWrinklerCount * 0.05)));
 	}
+	return Game.cookiesPs * ((CacheCurrWrinklerCPSMult / CacheCurrWrinklerCount) + (1 - (CacheCurrWrinklerCount * 0.05)));
 }

@@ -12,57 +12,6 @@ import {
 } from '../VariablesAndData';
 
 /**
- * This function calculates the bonus income of buying a building
- * It is called by CM.Cache.CacheBuildingIncome()
- * @param	{string}				building	The name of the upgrade to be bought
- * @returns {[{number, number}]}				The bonus income of the upgrade and the difference in MouseCPS
- */
-export default function BuyUpgradesBonusIncome(upgrade) {
-	if (Game.Upgrades[upgrade].pool === 'toggle' || (Game.Upgrades[upgrade].bought === 0 && Game.Upgrades[upgrade].unlocked && Game.Upgrades[upgrade].pool !== 'prestige')) {
-		CopyData();
-		if (SimUpgrades[upgrade].name === 'Shimmering veil [on]') {
-			SimUpgrades['Shimmering veil [off]'].bought = 0;
-		} else if (SimUpgrades[upgrade].name === 'Golden switch [on]') {
-			SimUpgrades['Golden switch [off]'].bought = 0;
-		} else {
-			SimUpgrades[upgrade].bought = (SimUpgrades[upgrade].bought + 1) % 2;
-		}
-		const me = SimUpgrades[upgrade];
-		if (Game.CountsAsUpgradeOwned(Game.Upgrades[upgrade].pool)) SimUpgradesOwned++;
-
-		if (upgrade === 'Elder Pledge') {
-			SimPledges++;
-			if (SimPledges > 0) SimWin('Elder nap');
-			if (SimPledges >= 5) SimWin('Elder slumber');
-		} else if (upgrade === 'Elder Covenant') {
-			SimWin('Elder calm');
-		} else if (upgrade === 'Prism heart biscuits') {
-			SimWin('Lovely cookies');
-		} else if (upgrade === 'Heavenly key') {
-			SimWin('Wholesome');
-		}
-
-		const lastAchievementsOwned = SimAchievementsOwned;
-
-		CalculateGains();
-
-		CheckOtherAchiev();
-
-		if (lastAchievementsOwned !== SimAchievementsOwned) {
-			CalculateGains();
-		}
-
-		const diffMouseCPS = MouseCps() - Game.computedMouseCps;
-		if (diffMouseCPS) {
-			return [SimCookiesPs - Game.cookiesPs, diffMouseCPS];
-		}
-		return [SimCookiesPs - Game.cookiesPs];
-	} else {
-		return [];
-	}
-}
-
-/**
  * This function calculates the cookies per click
  * It is called by CM.Sim.BuyUpgradesBonusIncome() when an upgrades has no bonus-income (and is thus a clicking-upgrade)
  * @returns	{number}	out	The clicking power
@@ -136,4 +85,54 @@ function MouseCps() {
 	if (Game.hasBuff('Cursed finger')) out = Game.buffs['Cursed finger'].power;
 
 	return out;
+}
+
+/**
+ * This function calculates the bonus income of buying a building
+ * It is called by CM.Cache.CacheBuildingIncome()
+ * @param	{string}				building	The name of the upgrade to be bought
+ * @returns {[{number, number}]}				The bonus income of the upgrade and the difference in MouseCPS
+ */
+export default function BuyUpgradesBonusIncome(upgrade) {
+	if (Game.Upgrades[upgrade].pool === 'toggle' || (Game.Upgrades[upgrade].bought === 0 && Game.Upgrades[upgrade].unlocked && Game.Upgrades[upgrade].pool !== 'prestige')) {
+		CopyData();
+		if (SimUpgrades[upgrade].name === 'Shimmering veil [on]') {
+			SimUpgrades['Shimmering veil [off]'].bought = 0;
+		} else if (SimUpgrades[upgrade].name === 'Golden switch [on]') {
+			SimUpgrades['Golden switch [off]'].bought = 0;
+		} else {
+			SimUpgrades[upgrade].bought = (SimUpgrades[upgrade].bought + 1) % 2;
+		}
+		const me = SimUpgrades[upgrade];
+		if (Game.CountsAsUpgradeOwned(Game.Upgrades[upgrade].pool)) SimUpgradesOwned++;
+
+		if (upgrade === 'Elder Pledge') {
+			SimPledges++;
+			if (SimPledges > 0) SimWin('Elder nap');
+			if (SimPledges >= 5) SimWin('Elder slumber');
+		} else if (upgrade === 'Elder Covenant') {
+			SimWin('Elder calm');
+		} else if (upgrade === 'Prism heart biscuits') {
+			SimWin('Lovely cookies');
+		} else if (upgrade === 'Heavenly key') {
+			SimWin('Wholesome');
+		}
+
+		const lastAchievementsOwned = SimAchievementsOwned;
+
+		CalculateGains();
+
+		CheckOtherAchiev();
+
+		if (lastAchievementsOwned !== SimAchievementsOwned) {
+			CalculateGains();
+		}
+
+		const diffMouseCPS = MouseCps() - Game.computedMouseCps;
+		if (diffMouseCPS) {
+			return [SimCookiesPs - Game.cookiesPs, diffMouseCPS];
+		}
+		return [SimCookiesPs - Game.cookiesPs];
+	}
+	return [];
 }

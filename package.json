@@ -11,8 +11,8 @@
         "Orteil"
     ],
     "scripts": {
-        "check_lint": "eslint src",
-        "build": "run-s check_lint pack_prod",
+        "eslint_src": "eslint src",
+        "build": "run-s eslint_src pack_prod",
         "build_test": "run-s pack_dev",
         "pack_prod": "webpack --env production",
         "pack_dev": "webpack"

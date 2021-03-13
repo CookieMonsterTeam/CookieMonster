@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import jscolor from '@eastdesire/jscolor';
 import { CacheHCPerSecond, CacheTimeTillNextPrestige } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import { Beautify as CMBeautify, FormatTime } from '../../Disp/BeautifyAndFormatting/BeautifyFormatting';
@@ -106,7 +107,7 @@ export default function ReplaceNative() {
 	BackupFunctions.sayTime = Game.sayTime;
 	CMSayTime = function (time, detail) {
 		if (Number.isNaN(time) || time <= 0) return BackupFunctions.sayTime(time, detail);
-		else return FormatTime(time / Game.fps, 1);
+		return FormatTime(time / Game.fps, 1);
 	};
 
 	BackupFunctions.Logic = Game.Logic;

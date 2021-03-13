@@ -11,15 +11,14 @@ import {
 export default function GetLumpColor(type) {
 	if (type === 0) {
 		return { text: 'Normal', color: ColorGray };
-	} else if (type === 1) {
+	} if (type === 1) {
 		return { text: 'Bifurcated', color: ColorGreen };
-	} else if (type === 2) {
+	} if (type === 2) {
 		return { text: 'Golden', color: ColorYellow };
-	} else if (type === 3) {
+	} if (type === 3) {
 		return { text: 'Meaty', color: ColorOrange };
-	} else if (type === 4) {
+	} if (type === 4) {
 		return { text: 'Caramelized', color: ColorPurple };
-	} else {
-		return { text: 'Unknown Sugar Lump', color: ColorRed };
 	}
+	return { text: 'Unknown Sugar Lump', color: ColorRed };
 }

@@ -16,9 +16,8 @@ export default function InitialBuildingData(buildingName) {
 		mult *= Game.magicCpS(it.name);
 		if (typeof it.baseCps === 'function') {
 			return it.baseCps(it) * mult;
-		} else {
-			return it.baseCPS * mult;
 		}
+		return it.baseCPS * mult;
 	};
 	// Below is needed for above eval, specifically for the GetTieredCpsMult function
 	you.baseCps = me.baseCps;

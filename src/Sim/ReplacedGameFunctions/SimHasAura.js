@@ -6,7 +6,6 @@ import { SimDragonAura, SimDragonAura2 } from '../VariablesAndData';
 export default function SimHasAura(what) {
 	if (Game.dragonAuras[SimDragonAura].name === what || Game.dragonAuras[SimDragonAura2].name === what) {
 		return true;
-	} else {
-		return false;
 	}
+	return false;
 }

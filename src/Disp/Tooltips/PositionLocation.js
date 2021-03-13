@@ -10,7 +10,7 @@ export default function UpdateTooltipLocation() {
 		if (CMOptions.ToolWarnLucky === 1 && CMOptions.ToolWarnPos === 1 && l('CMDispTooltipWarningParent') !== null) {
 			warnOffset = l('CMDispTooltipWarningParent').clientHeight - 4;
 		}
-		Game.tooltip.tta.style.top = `${Math.min(parseInt(Game.tooltip.tta.style.top), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnOffset - 46)}px`;
+		Game.tooltip.tta.style.top = `${Math.min(parseInt(Game.tooltip.tta.style.top, 10), (l('game').clientHeight + l('topBar').clientHeight) - Game.tooltip.tt.clientHeight - warnOffset - 46)}px`;
 	}
 	// Kept for future possible use if the code changes again
 	/* else if (!Game.onCrate && !Game.OnAscend && CM.Options.TimerBar === 1 && CM.Options.TimerBarPos === 0) {

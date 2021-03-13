@@ -293,7 +293,7 @@ export function PrestigeSection() {
 	section.appendChild(StatsListing('basic', 'Heavenly Chips Per Second (last 5 seconds)', document.createTextNode(Beautify(CacheHCPerSecond, 2))));
 
 	const HCTarget = Number(CMOptions.HeavenlyChipsTarget);
-	if (!isNaN(HCTarget)) {
+	if (!Number.isNaN(HCTarget)) {
 		const CookiesTillTarget = HCTarget - Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
 		if (CookiesTillTarget > 0) {
 			section.appendChild(StatsListing('basic', 'Heavenly Chips To Target Set In Settings (CUR)', document.createTextNode(Beautify(CookiesTillTarget))));
@@ -305,7 +305,7 @@ export function PrestigeSection() {
 	const resetFrag = document.createDocumentFragment();
 	resetFrag.appendChild(document.createTextNode(Beautify(resetBonus)));
 	const increase = Math.round(resetBonus / Game.cookiesPs * 10000);
-	if (isFinite(increase) && increase !== 0) {
+	if (Number.isFinite(increase) && increase !== 0) {
 		const resetSmall = document.createElement('small');
 		resetSmall.textContent = ` (${increase / 100}% of income)`;
 		resetFrag.appendChild(resetSmall);

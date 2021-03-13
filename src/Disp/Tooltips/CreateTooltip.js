@@ -6,48 +6,6 @@ import {
 /** Creates various sections of tooltips */
 
 /**
- * This function appends the sections for Bonus Income, PP and Time left (to achiev) to the tooltip-object
- * The actual data is added by the Update-functions themselves
- * @param	{object}	tooltip		Object of a TooltipBox, normally created by a call to CM.Disp.TooltipCreateTooltipBox()
- */
-export function TooltipCreateCalculationSection(tooltip) {
-	tooltip.appendChild(TooltipCreateHeader('Bonus Income'));
-	const income = document.createElement('div');
-	income.style.marginBottom = '4px';
-	income.style.color = 'white';
-	income.id = 'CMTooltipIncome';
-	tooltip.appendChild(income);
-
-	tooltip.appendChild(TooltipCreateHeader('Bonus Cookies per Click'));
-	tooltip.lastChild.style.display = 'none';
-	const click = document.createElement('div');
-	click.style.marginBottom = '4px';
-	click.style.color = 'white';
-	click.style.display = 'none';
-	click.id = 'CMTooltipCookiePerClick';
-	tooltip.appendChild(click);
-
-	tooltip.appendChild(TooltipCreateHeader('Payback Period'));
-	const pp = document.createElement('div');
-	pp.style.marginBottom = '4px';
-	pp.id = 'CMTooltipPP';
-	tooltip.appendChild(pp);
-
-	tooltip.appendChild(TooltipCreateHeader('Time Left'));
-	const time = document.createElement('div');
-	time.id = 'CMTooltipTime';
-	tooltip.appendChild(time);
-
-	if (TooltipType === 'b') {
-		tooltip.appendChild(TooltipCreateHeader('Production left till next achievement'));
-		tooltip.lastChild.id = 'CMTooltipProductionHeader'; // Assign a id in order to hid when no achiev's are left
-		const production = document.createElement('div');
-		production.id = 'CMTooltipProduction';
-		tooltip.appendChild(production);
-	}
-}
-
-/**
  * This function creates a tooltipBox object which contains all CookieMonster added tooltip information.
  * @returns {object}	div		An object containing the stylized box
  */
@@ -127,4 +85,46 @@ export function TooltipCreateWarningSection() {
 	TooltipWarn.appendChild(create('CMDispTooltipWarnUser', ColorRed, 'Warning: ', `Purchase of this item will put you under the number of Cookies equal to ${CMOptions.ToolWarnUser} seconds of CPS`, 'CMDispTooltipWarnUserText'));
 
 	return TooltipWarn;
+}
+
+/**
+ * This function appends the sections for Bonus Income, PP and Time left (to achiev) to the tooltip-object
+ * The actual data is added by the Update-functions themselves
+ * @param	{object}	tooltip		Object of a TooltipBox, normally created by a call to CM.Disp.TooltipCreateTooltipBox()
+ */
+export function TooltipCreateCalculationSection(tooltip) {
+	tooltip.appendChild(TooltipCreateHeader('Bonus Income'));
+	const income = document.createElement('div');
+	income.style.marginBottom = '4px';
+	income.style.color = 'white';
+	income.id = 'CMTooltipIncome';
+	tooltip.appendChild(income);
+
+	tooltip.appendChild(TooltipCreateHeader('Bonus Cookies per Click'));
+	tooltip.lastChild.style.display = 'none';
+	const click = document.createElement('div');
+	click.style.marginBottom = '4px';
+	click.style.color = 'white';
+	click.style.display = 'none';
+	click.id = 'CMTooltipCookiePerClick';
+	tooltip.appendChild(click);
+
+	tooltip.appendChild(TooltipCreateHeader('Payback Period'));
+	const pp = document.createElement('div');
+	pp.style.marginBottom = '4px';
+	pp.id = 'CMTooltipPP';
+	tooltip.appendChild(pp);
+
+	tooltip.appendChild(TooltipCreateHeader('Time Left'));
+	const time = document.createElement('div');
+	time.id = 'CMTooltipTime';
+	tooltip.appendChild(time);
+
+	if (TooltipType === 'b') {
+		tooltip.appendChild(TooltipCreateHeader('Production left till next achievement'));
+		tooltip.lastChild.id = 'CMTooltipProductionHeader'; // Assign a id in order to hid when no achiev's are left
+		const production = document.createElement('div');
+		production.id = 'CMTooltipProduction';
+		tooltip.appendChild(production);
+	}
 }

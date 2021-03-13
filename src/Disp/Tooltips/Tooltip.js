@@ -30,6 +30,37 @@ export function CreateSimpleTooltip(placeholder, text, minWidth) {
 }
 
 /**
+ * This function updates the sections of the tooltips created by CookieMonster
+ */
+export function UpdateTooltips() {
+	CopyData();
+	if (l('tooltipAnchor').style.display !== 'none' && l('CMTooltipArea')) {
+		l('CMTooltipArea').innerHTML = '';
+		const tooltipBox = TooltipCreateTooltipBox();
+		l('CMTooltipArea').appendChild(tooltipBox);
+
+		if (TooltipType === 'b') {
+			UpdateTooltip.Building();
+		} else if (TooltipType === 'u') {
+			UpdateTooltip.Upgrade();
+		} else if (TooltipType === 's') {
+			UpdateTooltip.SugarLump();
+		} else if (TooltipType === 'g') {
+			UpdateTooltip.Grimoire();
+		} else if (TooltipType === 'p') {
+			UpdateTooltip.GardenPlots();
+		} else if (TooltipType === 'ha') {
+			UpdateTooltip.HarvestAll();
+		}
+		UpdateTooltip.Warnings();
+	} else if (l('CMTooltipArea') === null) { // Remove warnings if its a basic tooltip
+		if (l('CMDispTooltipWarningParent') !== null) {
+			l('CMDispTooltipWarningParent').remove();
+		}
+	}
+}
+
+/**
  * This function enhance the standard tooltips by creating and changing l('tooltip')
  * The function is called by .onmouseover events that have replaced original code to use CM.Disp.Tooltip()
  * @param	{string}	type					Type of tooltip (b, u, s or g)
@@ -82,35 +113,4 @@ export function CreateTooltip(type, name) {
 	UpdateTooltips();
 
 	return l('tooltip').innerHTML;
-}
-
-/**
- * This function updates the sections of the tooltips created by CookieMonster
- */
-export function UpdateTooltips() {
-	CopyData();
-	if (l('tooltipAnchor').style.display !== 'none' && l('CMTooltipArea')) {
-		l('CMTooltipArea').innerHTML = '';
-		const tooltipBox = TooltipCreateTooltipBox();
-		l('CMTooltipArea').appendChild(tooltipBox);
-
-		if (TooltipType === 'b') {
-			UpdateTooltip.Building();
-		} else if (TooltipType === 'u') {
-			UpdateTooltip.Upgrade();
-		} else if (TooltipType === 's') {
-			UpdateTooltip.SugarLump();
-		} else if (TooltipType === 'g') {
-			UpdateTooltip.Grimoire();
-		} else if (TooltipType === 'p') {
-			UpdateTooltip.GardenPlots();
-		} else if (TooltipType === 'ha') {
-			UpdateTooltip.HarvestAll();
-		}
-		UpdateTooltip.Warnings();
-	} else if (l('CMTooltipArea') === null) { // Remove warnings if its a basic tooltip
-		if (l('CMDispTooltipWarningParent') !== null) {
-			l('CMDispTooltipWarningParent').remove();
-		}
-	}
 }

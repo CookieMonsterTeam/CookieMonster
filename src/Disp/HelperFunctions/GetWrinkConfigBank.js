@@ -9,9 +9,8 @@ import { CMOptions } from '../../Config/VariablesAndData';
 export default function GetWrinkConfigBank() {
 	if (CMOptions.CalcWrink === 1) {
 		return CacheWrinklersTotal;
-	} else if (CMOptions.CalcWrink === 2) {
+	} if (CMOptions.CalcWrink === 2) {
 		return CacheWrinklersFattest[0];
-	} else {
-		return 0;
 	}
+	return 0;
 }

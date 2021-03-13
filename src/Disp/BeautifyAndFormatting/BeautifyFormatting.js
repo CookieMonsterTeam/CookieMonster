@@ -18,22 +18,22 @@ export function Beautify(num, floats, forced) {
 	const decimals = CMOptions.ScaleDecimals + 1;
 	if (num === Infinity) {
 		return 'Infinity';
-	} else if (typeof num === 'undefined') {
+	} if (typeof num === 'undefined') {
 		return '0';
-	} else if (CMOptions.Scale === 0) {
+	} if (CMOptions.Scale === 0) {
 		return BackupFunctions.Beautify(num, floats);
-	} else if (Number.isFinite(num)) {
+	} if (Number.isFinite(num)) {
 		let answer = '';
 		if (num === 0) {
 			return num.toString();
-		} else if (num > 0.001 && num < CMOptions.ScaleCutoff) {
+		} if (num > 0.001 && num < CMOptions.ScaleCutoff) {
 			answer = num.toFixed(2);
 			if (CMOptions.ScaleSeparator) answer = answer.toLocaleString('nl');
 			for (let i = 0; i < 3; i++) {
 				if (answer[answer.length - 1] === '0' || answer[answer.length - 1] === '.') answer = answer.slice(0, -1);
 			}
 			return answer;
-		} else if (CMOptions.Scale === 4 && !forced || forced === 4) { // Scientific notation, 123456789 => 1.235E+8
+		} if (CMOptions.Scale === 4 && !forced || forced === 4) { // Scientific notation, 123456789 => 1.235E+8
 			answer = num.toExponential(decimals).toString().replace('e', 'E');
 		} else {
 			const exponential = num.toExponential().toString();
@@ -62,10 +62,9 @@ export function Beautify(num, floats, forced) {
 		}
 		if (CMOptions.ScaleSeparator) answer = answer.replace('.', ',');
 		return answer;
-	} else {
-		console.log(`Could not beautify number with CM.Disp.Beautify: ${num}`);
-		return BackupFunctions.Beautify(num, floats);
 	}
+	console.log(`Could not beautify number with CM.Disp.Beautify: ${num}`);
+	return BackupFunctions.Beautify(num, floats);
 }
 
 /**

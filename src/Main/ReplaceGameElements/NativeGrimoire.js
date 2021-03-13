@@ -9,6 +9,23 @@ import {
 import ReplaceTooltipGrimoire from './TooltipGrimoire';
 
 /**
+ * This function fixes replaces the .draw function of the Grimoire
+ */
+function ReplaceNativeGrimoireDraw() {
+	if (!HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
+		const minigame = Game.Objects['Wizard tower'].minigame;
+		BackupGrimoireDraw = minigame.draw;
+		Game.Objects['Wizard tower'].minigame.draw = function () {
+			BackupGrimoireDraw();
+			if (CMOptions.GrimoireBar === 1 && minigame.magic < minigame.magicM) {
+				minigame.magicBarTextL.innerHTML += ` (${FormatTime(CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM))})`;
+			}
+		};
+		HasReplaceNativeGrimoireDraw = true;
+	}
+}
+
+/**
  * This function fixes replaces the .launch function of the Grimoire
  */
 function ReplaceNativeGrimoireLaunch() {
@@ -24,23 +41,6 @@ function ReplaceNativeGrimoireLaunch() {
 
 			HasReplaceNativeGrimoireLaunch = true;
 		};
-	}
-}
-
-/**
- * This function fixes replaces the .draw function of the Grimoire
- */
-function ReplaceNativeGrimoireDraw() {
-	if (!HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
-		const minigame = Game.Objects['Wizard tower'].minigame;
-		BackupGrimoireDraw = minigame.draw;
-		Game.Objects['Wizard tower'].minigame.draw = function () {
-			BackupGrimoireDraw();
-			if (CMOptions.GrimoireBar === 1 && minigame.magic < minigame.magicM) {
-				minigame.magicBarTextL.innerHTML += ` (${FormatTime(CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM))})`;
-			}
-		};
-		HasReplaceNativeGrimoireDraw = true;
 	}
 }
 

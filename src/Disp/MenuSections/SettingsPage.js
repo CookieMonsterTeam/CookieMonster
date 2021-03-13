@@ -14,52 +14,6 @@ import UpdateColors from '../HelperFunctions/UpdateColors';
 import { Colors } from '../VariablesAndData';
 
 /**
- * This function adds the options/settings of CookieMonster to the options page
- * It is called by CM.Disp.AddMenu
- * @param {object} title	On object that includes the title of the menu
- */
-export default function AddMenuPref(title) {
-	const frag = document.createDocumentFragment();
-	frag.appendChild(title);
-
-	for (const group of Object.keys(ConfigGroups)) {
-		const groupObject = CreatePrefHeader(group, ConfigGroups[group]); // (group, display-name of group)
-		frag.appendChild(groupObject);
-		if (CMOptions.Header[group]) { // 0 is show, 1 is collapsed
-			// Make sub-sections of Notification section
-			if (group === 'Notification') {
-				for (const subGroup of Object.keys(ConfigGroupsNotification)) {
-					const subGroupObject = CreatePrefHeader(subGroup, ConfigGroupsNotification[subGroup]); // (group, display-name of group)
-					subGroupObject.style.fontSize = '15px';
-					subGroupObject.style.opacity = '0.5';
-					frag.appendChild(subGroupObject);
-					if (CMOptions.Header[subGroup]) {
-						for (const option in Config) {
-							if (Config[option].group === subGroup) frag.appendChild(CreatePrefOption(option));
-						}
-					}
-				}
-			} else {
-				for (const option of Object.keys(Config)) {
-					if (Config[option].group === group) frag.appendChild(CreatePrefOption(option));
-				}
-			}
-		}
-	}
-
-	const resDef = document.createElement('div');
-	resDef.className = 'listing';
-	const resDefBut = document.createElement('a');
-	resDefBut.className = 'option';
-	resDefBut.onclick = function () { LoadConfig(ConfigDefault); };
-	resDefBut.textContent = 'Restore Default';
-	resDef.appendChild(resDefBut);
-	frag.appendChild(resDef);
-
-	l('menu').childNodes[2].insertBefore(frag, l('menu').childNodes[2].childNodes[l('menu').childNodes[2].childNodes.length - 1]);
-}
-
-/**
  * This function creates a header-object for the options page
  * @param 	{string}		config	The name of the Config-group
  * @param 	{string}		text	The to-be displayed name of the header
@@ -112,7 +66,7 @@ function CreatePrefOption(config) {
 		label.textContent = Config[config].desc;
 		div.appendChild(label);
 		return div;
-	} else if (Config[config].type === 'vol') {
+	} if (Config[config].type === 'vol') {
 		const volume = document.createElement('div');
 		volume.className = 'sliderBox';
 		const title = document.createElement('div');
@@ -138,7 +92,7 @@ function CreatePrefOption(config) {
 		volume.appendChild(slider);
 		div.appendChild(volume);
 		return div;
-	} else if (Config[config].type === 'url') {
+	} if (Config[config].type === 'url') {
 		const span = document.createElement('span');
 		span.className = 'option';
 		span.textContent = `${Config[config].label} `;
@@ -168,7 +122,7 @@ function CreatePrefOption(config) {
 		label.textContent = Config[config].desc;
 		div.appendChild(label);
 		return div;
-	} else if (Config[config].type === 'color') {
+	} if (Config[config].type === 'color') {
 		div.className = '';
 		for (let i = 0; i < Colors.length; i++) {
 			const innerDiv = document.createElement('div');
@@ -192,7 +146,7 @@ function CreatePrefOption(config) {
 		}
 		jscolor.init();
 		return div;
-	} else if (Config[config].type === 'numscale') {
+	} if (Config[config].type === 'numscale') {
 		const span = document.createElement('span');
 		span.className = 'option';
 		span.textContent = `${Config[config].label} `;
@@ -218,4 +172,50 @@ function CreatePrefOption(config) {
 		return div;
 	}
 	return div;
+}
+
+/**
+ * This function adds the options/settings of CookieMonster to the options page
+ * It is called by CM.Disp.AddMenu
+ * @param {object} title	On object that includes the title of the menu
+ */
+export default function AddMenuPref(title) {
+	const frag = document.createDocumentFragment();
+	frag.appendChild(title);
+
+	for (const group of Object.keys(ConfigGroups)) {
+		const groupObject = CreatePrefHeader(group, ConfigGroups[group]); // (group, display-name of group)
+		frag.appendChild(groupObject);
+		if (CMOptions.Header[group]) { // 0 is show, 1 is collapsed
+			// Make sub-sections of Notification section
+			if (group === 'Notification') {
+				for (const subGroup of Object.keys(ConfigGroupsNotification)) {
+					const subGroupObject = CreatePrefHeader(subGroup, ConfigGroupsNotification[subGroup]); // (group, display-name of group)
+					subGroupObject.style.fontSize = '15px';
+					subGroupObject.style.opacity = '0.5';
+					frag.appendChild(subGroupObject);
+					if (CMOptions.Header[subGroup]) {
+						for (const option in Config) {
+							if (Config[option].group === subGroup) frag.appendChild(CreatePrefOption(option));
+						}
+					}
+				}
+			} else {
+				for (const option of Object.keys(Config)) {
+					if (Config[option].group === group) frag.appendChild(CreatePrefOption(option));
+				}
+			}
+		}
+	}
+
+	const resDef = document.createElement('div');
+	resDef.className = 'listing';
+	const resDefBut = document.createElement('a');
+	resDefBut.className = 'option';
+	resDefBut.onclick = function () { LoadConfig(ConfigDefault); };
+	resDefBut.textContent = 'Restore Default';
+	resDef.appendChild(resDefBut);
+	frag.appendChild(resDef);
+
+	l('menu').childNodes[2].insertBefore(frag, l('menu').childNodes[2].childNodes[l('menu').childNodes[2].childNodes.length - 1]);
 }

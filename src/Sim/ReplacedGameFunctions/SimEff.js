@@ -6,5 +6,5 @@ import { SimEffs } from '../VariablesAndData';
 export default function SimEff(name, def) {
 	if (typeof SimEffs[name] === 'undefined') {
 		return (typeof def === 'undefined' ? 1 : def);
-	} else return SimEffs[name];
+	} return SimEffs[name];
 }

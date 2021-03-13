@@ -11,6 +11,7 @@ import { isInitializing } from '../../InitSaveLoad/Variables';
 export default function PlaySound(url, sndConfig, volConfig) {
 	// The arguments check makes the sound not play upon initialization of the mod
 	if (CMOptions[sndConfig] === 1 && isInitializing === false) {
+		// eslint-disable-next-line new-cap
 		const sound = new realAudio(url);
 		if (CMOptions.GeneralSound) sound.volume = (CMOptions[volConfig] / 100) * (Game.volume / 100);
 		else sound.volume = (CMOptions[volConfig] / 100);

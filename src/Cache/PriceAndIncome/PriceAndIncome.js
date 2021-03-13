@@ -9,20 +9,6 @@ import {
 } from '../VariablesAndData';
 
 /**
- * This functions caches the income gain of each building and upgrade and stores it in the cache
- * It is called by CM.Main.Loop() and CM.Cache.InitCache()
- */
-export function CacheIncome() {
-	// Simulate Building Buys for 1, 10 and 100 amount
-	CacheObjects1 = CacheBuildingIncome(1);
-	CacheObjects10 = CacheBuildingIncome(10);
-	CacheObjects100 = CacheBuildingIncome(100);
-
-	// Simulate Upgrade Buys
-	CacheUpgradeIncome();
-}
-
-/**
  * This functions starts the calculation/simulation of the bonus income of buildings
  * It is called by CM.Cache.CacheIncome()
  * @param	{amount}	amount	Amount to be bought
@@ -63,4 +49,18 @@ export function CacheBuildingsPrices() {
 		CacheObjects10[i].price = BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
 		CacheObjects100[i].price = BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
 	}
+}
+
+/**
+ * This functions caches the income gain of each building and upgrade and stores it in the cache
+ * It is called by CM.Main.Loop() and CM.Cache.InitCache()
+ */
+export function CacheIncome() {
+	// Simulate Building Buys for 1, 10 and 100 amount
+	CacheObjects1 = CacheBuildingIncome(1);
+	CacheObjects10 = CacheBuildingIncome(10);
+	CacheObjects100 = CacheBuildingIncome(100);
+
+	// Simulate Upgrade Buys
+	CacheUpgradeIncome();
 }
