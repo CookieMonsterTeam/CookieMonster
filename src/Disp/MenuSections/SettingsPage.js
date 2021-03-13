@@ -1,5 +1,6 @@
 /** Functions related to the Options/Preferences page */
 
+import jscolor, * as JsColor from '@eastdesire/jscolor';
 import { LoadConfig, SaveConfig } from '../../Config/SaveLoadReload/SaveLoadReloadSettings';
 import {
 	ConfigPrefix, ToggleConfig, ToggleConfigVolume, ToggleHeader,
@@ -169,7 +170,7 @@ function CreatePrefOption(config) {
 		return div;
 	} else if (Config[config].type === 'color') {
 		div.className = '';
-		for (let i = 0; i < Colors; i++) {
+		for (let i = 0; i < Colors.length; i++) {
 			const innerDiv = document.createElement('div');
 			innerDiv.className = 'listing';
 			const input = document.createElement('input');
@@ -183,12 +184,13 @@ function CreatePrefOption(config) {
 				SaveConfig();
 				Game.UpdateMenu();
 			};
-			new JSColor(input, { hash: true, position: 'right', onInput: change });
+			new JsColor(input, { hash: true, position: 'right', onInput: change });
 			const label = document.createElement('label');
 			label.textContent = Config.Colors.desc[Colors[i]];
 			innerDiv.appendChild(label);
 			div.appendChild(innerDiv);
 		}
+		jscolor.init();
 		return div;
 	} else if (Config[config].type === 'numscale') {
 		const span = document.createElement('span');

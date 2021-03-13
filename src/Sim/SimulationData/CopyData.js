@@ -39,6 +39,7 @@ export default function CopyData() {
 			you.minigameLoaded = me.minigameLoaded;
 			you.minigame = me.minigame;
 		}
+		SimObjects[i] = you;
 	}
 
 	// Upgrades
@@ -50,6 +51,7 @@ export default function CopyData() {
 			you = SimUpgrades[i];
 		}
 		you.bought = me.bought;
+		SimUpgrades[i] = you;
 	}
 
 	// Achievements
@@ -61,6 +63,7 @@ export default function CopyData() {
 			you = SimAchievements[i];
 		}
 		you.won = me.won;
+		SimAchievements[i] = you;
 	}
 
 	// Auras

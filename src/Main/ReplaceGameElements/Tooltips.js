@@ -72,5 +72,5 @@ export default function ReplaceTooltips() {
 		ReplaceTooltipGrimoire();
 		ReplaceNativeGrimoire();
 	};
-	LoadMinigames();
+	Game.LoadMinigames();
 }

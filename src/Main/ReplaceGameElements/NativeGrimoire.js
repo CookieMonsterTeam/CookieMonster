@@ -15,15 +15,16 @@ function ReplaceNativeGrimoireLaunch() {
 	if (!HasReplaceNativeGrimoireLaunch && Game.Objects['Wizard tower'].minigameLoaded) {
 		const minigame = Game.Objects['Wizard tower'].minigame;
 		BackupGrimoireLaunch = minigame.launch;
-		BackupGrimoireLaunchMod = minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame');
+		BackupGrimoireLaunchMod = new Function(`return ${minigame.launch.toString().split('=this').join('= Game.Objects[\'Wizard tower\'].minigame')}`);
+		Game.Objects['Wizard tower'].minigame.launch = function () {
+			BackupGrimoireLaunchMod();
+			ReplaceTooltipGrimoire();
+			HasReplaceNativeGrimoireDraw = false;
+			ReplaceNativeGrimoireDraw();
+
+			HasReplaceNativeGrimoireLaunch = true;
+		};
 	}
-	Game.Objects['Wizard tower'].minigame.launch = function () {
-		BackupGrimoireLaunchMod();
-		ReplaceTooltipGrimoire();
-		HasReplaceNativeGrimoireDraw = false;
-		ReplaceNativeGrimoireDraw();
-	};
-	HasReplaceNativeGrimoireLaunch = true;
 }
 
 /**

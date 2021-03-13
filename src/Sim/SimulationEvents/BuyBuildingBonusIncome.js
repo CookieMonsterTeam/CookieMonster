@@ -13,8 +13,8 @@ import { SimAchievementsOwned, SimCookiesPs, SimObjects } from '../VariablesAndD
  */
 export default function BuyBuildingsBonusIncome(building, amount) {
 	CopyData();
+	SimObjects[building].amount += amount;
 	const me = SimObjects[building];
-	me.amount += amount;
 
 	if (building === 'Cursor') {
 		if (me.amount >= 1) SimWin('Click');

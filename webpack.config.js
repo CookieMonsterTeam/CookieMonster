@@ -4,14 +4,16 @@
 */
 const path = require('path');
 
-module.exports = {
-	mode: 'production',
-	devtool: 'eval-source-map',
-	entry: {
-		CookieMonster: { import: './src/CookieMonster.js', filename: './CookieMonster.js' },
-	},
-	output: {
-		filename: 'CookieMonster.js',
-		path: path.resolve(__dirname, 'dist'),
-	},
+module.exports = function (env) {
+	return {
+		mode: 'production',
+		devtool: env.production ? 'source-map' : 'eval-source-map',
+		entry: {
+			CookieMonster: { import: './src/CookieMonster.js', filename: './CookieMonster.js' },
+		},
+		output: {
+			filename: 'CookieMonster.js',
+			path: path.resolve(__dirname, 'dist'),
+		},
+	};
 };

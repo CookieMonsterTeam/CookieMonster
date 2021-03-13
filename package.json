@@ -12,9 +12,10 @@
     ],
     "scripts": {
         "check_lint": "eslint src",
-        "build": "run-s check_lint pack",
-        "build-test": "run-s pack",
-        "pack": "webpack"
+        "build": "run-s check_lint pack_prod",
+        "build_test": "run-s pack_dev",
+        "pack_prod": "webpack --env production",
+        "pack_dev": "webpack"
     },
     "repository": {
         "type": "git",
@@ -54,5 +55,8 @@
             0
         ],
         "name": "Cookie Monster"
+    },
+    "dependencies": {
+        "@eastdesire/jscolor": "^2.4.5"
     }
 }

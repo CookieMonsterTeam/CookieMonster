@@ -10,11 +10,15 @@ import SimGetTieredCpsMult from '../ReplacedGameFunctions/SimGetTieredCpsMult';
 export default function InitialBuildingData(buildingName) {
 	const me = Game.Objects[buildingName];
 	const you = {};
-	you.cps = function () {
+	you.cps = function (it) {
 		let mult = 1;
-		mult *= SimGetTieredCpsMult(me);
-		mult *= Game.magicCpS(me.name);
-		return me.baseCps * mult;
+		mult *= SimGetTieredCpsMult(it);
+		mult *= Game.magicCpS(it.name);
+		if (typeof it.baseCps === 'function') {
+			return it.baseCps(it) * mult;
+		} else {
+			return it.baseCPS * mult;
+		}
 	};
 	// Below is needed for above eval, specifically for the GetTieredCpsMult function
 	you.baseCps = me.baseCps;

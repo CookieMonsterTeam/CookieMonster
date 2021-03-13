@@ -7,6 +7,9 @@ import { SimObjects } from '../VariablesAndData';
  */
 export default function SimHasGod(what) {
 	if (Game.hasGod) {
+		if (SimObjects.Temple.minigame === undefined) {
+			SimObjects.Temple.minigame = Game.Objects.Temple.minigame;
+		}
 		const god = SimObjects.Temple.minigame.gods[what];
 		for (let i = 0; i < 3; i++) {
 			if (SimObjects.Temple.minigame.slot[i] === god.id) {

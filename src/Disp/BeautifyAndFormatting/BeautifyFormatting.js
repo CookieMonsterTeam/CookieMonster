@@ -57,14 +57,12 @@ export function Beautify(num, floats, forced) {
 			}
 		}
 		if (answer === '') {
-			debugger
 			console.log(`Could not beautify number with CM.Disp.Beautify: ${num}`);
 			answer = BackupFunctions.Beautify(num, floats);
 		}
 		if (CMOptions.ScaleSeparator) answer = answer.replace('.', ',');
 		return answer;
 	} else {
-		debugger
 		console.log(`Could not beautify number with CM.Disp.Beautify: ${num}`);
 		return BackupFunctions.Beautify(num, floats);
 	}
@@ -111,7 +109,7 @@ export function FormatTime(time, longFormat) {
 export function GetTimeColor(time) {
 	let color;
 	let text;
-	if (time < 0) {
+	if (time <= 0) {
 		if (CMOptions.TimeFormat) text = '00:00:00:00:00';
 		else text = 'Done!';
 		color = ColorGreen;

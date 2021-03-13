@@ -20,14 +20,14 @@ import {
 export default function BuyUpgradesBonusIncome(upgrade) {
 	if (Game.Upgrades[upgrade].pool === 'toggle' || (Game.Upgrades[upgrade].bought === 0 && Game.Upgrades[upgrade].unlocked && Game.Upgrades[upgrade].pool !== 'prestige')) {
 		CopyData();
-		const me = SimUpgrades[upgrade];
-		if (me.name === 'Shimmering veil [on]') {
+		if (SimUpgrades[upgrade].name === 'Shimmering veil [on]') {
 			SimUpgrades['Shimmering veil [off]'].bought = 0;
-		} else if (me.name === 'Golden switch [on]') {
+		} else if (SimUpgrades[upgrade].name === 'Golden switch [on]') {
 			SimUpgrades['Golden switch [off]'].bought = 0;
 		} else {
-			me.bought = (me.bought + 1) % 2;
+			SimUpgrades[upgrade].bought = (SimUpgrades[upgrade].bought + 1) % 2;
 		}
+		const me = SimUpgrades[upgrade];
 		if (Game.CountsAsUpgradeOwned(Game.Upgrades[upgrade].pool)) SimUpgradesOwned++;
 
 		if (upgrade === 'Elder Pledge') {

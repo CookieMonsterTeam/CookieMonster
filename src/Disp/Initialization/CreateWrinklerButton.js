@@ -1,4 +1,4 @@
-import { WrinklersFattest } from '../../Cache/VariablesAndData';
+import { CacheWrinklersFattest } from '../../Cache/VariablesAndData';
 import PopAllNormalWrinklers from '../HelperFunctions/PopWrinklers';
 
 /**
@@ -15,6 +15,6 @@ export default function CreateWrinklerButtons() {
 	popFattestA.id = 'PopFattestWrinklerButton';
 	popFattestA.textContent = 'Pop Single Fattest';
 	popFattestA.className = 'option';
-	popFattestA.onclick = function () { if (WrinklersFattest[1] !== null) Game.wrinklers[WrinklersFattest[1]].hp = 0; };
+	popFattestA.onclick = function () { if (CacheWrinklersFattest[1] !== null) Game.wrinklers[CacheWrinklersFattest[1]].hp = 0; };
 	l('sectionLeftExtra').children[0].append(popFattestA);
 }

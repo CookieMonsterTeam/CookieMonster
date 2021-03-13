@@ -2,7 +2,9 @@
 /** Caches data related to Wrinklers */
 
 import { SimObjects } from '../../Sim/VariablesAndData';
-import { WrinklersFattest, WrinklersNormal, WrinklersTotal } from '../VariablesAndData';
+import {
+	CacheWrinklersFattest, CacheWrinklersNormal, CacheWrinklersTotal,
+} from '../VariablesAndData';
 
 /**
  * This functions caches data related to Wrinklers
@@ -25,10 +27,10 @@ export default function CacheWrinklers() {
 			else if (godLvl === 2) sucked *= 1.1;
 			else if (godLvl === 3) sucked *= 1.05;
 		}
-		WrinklersTotal += sucked;
+		CacheWrinklersTotal += sucked;
 		if (Game.wrinklers[i].type === 0) {
-			WrinklersNormal += sucked;
-			if (sucked > WrinklersFattest[0]) WrinklersFattest = [sucked, i];
+			CacheWrinklersNormal += sucked;
+			if (sucked > CacheWrinklersFattest[0]) CacheWrinklersFattest = [sucked, i];
 		}
 	}
 }

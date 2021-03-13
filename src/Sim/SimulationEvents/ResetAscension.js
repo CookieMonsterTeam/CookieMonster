@@ -66,7 +66,7 @@ export default function ResetBonus(newHeavenlyChips) {
 
 	CheckOtherAchiev();
 
-	if (lastAchievementsOwned !== CM.Sim.AchievementsOwned) {
+	if (lastAchievementsOwned !== SimAchievementsOwned) {
 		CalculateGains();
 	}
 

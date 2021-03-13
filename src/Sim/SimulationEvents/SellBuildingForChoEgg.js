@@ -28,13 +28,13 @@ export default function SellBuildingsForChoEgg() {
 
 	// Sacrifice highest buildings for the aura switch
 	for (let i = 0; i < buildingsToSacrifice; ++i) {
-		let highestBuilding = 0;
+		let highestBuilding = 'Cursor';
 		for (const j in SimObjects) {
 			if (SimObjects[j].amount > 0) {
-				highestBuilding = SimObjects[j];
+				highestBuilding = j;
 			}
 		}
-		highestBuilding.amount--;
+		SimObjects[highestBuilding].amount--;
 		SimBuildingsOwned--;
 	}
 

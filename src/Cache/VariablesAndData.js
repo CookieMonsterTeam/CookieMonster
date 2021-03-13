@@ -4,9 +4,6 @@ export let CacheDragonAura = 0;
 export let CacheDragonAura2 = 0;
 export let CacheLastDragonLevel = 0;
 export let CacheCostDragonUpgrade = 0;
-export let WrinklersTotal = 0;
-export let WrinklersNormal = 0;
-export let WrinklersFattest = [0, null];
 export let CacheLucky = 0;
 export let CacheLuckyReward = 0;
 export let CacheLuckyWrathReward = 0;
@@ -34,7 +31,7 @@ export let CacheObjects100 = {};
 
 export let CacheWrinklersTotal = 0;
 export let CacheWrinklersNormal = 0;
-export let CacheWrinklersFattest = [];
+export let CacheWrinklersFattest = [0, null];
 
 export let CacheAvgCps = 0;
 export let CacheCurrWrinklerCPSMult = 0;
