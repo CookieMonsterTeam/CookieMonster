@@ -11,8 +11,9 @@
         "Orteil"
     ],
     "scripts": {
+        "copy-file": "cp dist/CookieMonster.js CookieMonster.js",
         "eslint_src": "eslint src",
-        "build": "run-s eslint_src pack_prod remove_comment",
+        "build": "run-s eslint_src pack_prod remove_comment copy-file",
         "build_test": "run-s pack_dev",
         "pack_prod": "webpack --env production",
         "pack_dev": "webpack",
