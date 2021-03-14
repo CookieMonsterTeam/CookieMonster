@@ -10,79 +10,89 @@ import { SimObjects, SimUpgradesOwned } from '../VariablesAndData';
  * It is called at the end of any functions that simulates certain behaviour
  */
 export default function CheckOtherAchiev() {
-	let grandmas = 0;
-	for (const i of Object.keys(Game.GrandmaSynergies)) {
-		if (SimHas(Game.GrandmaSynergies[i])) grandmas++;
-	}
-	if (!SimHasAchiev('Elder') && grandmas >= 7) SimWin('Elder');
-	if (!SimHasAchiev('Veteran') && grandmas >= 14) SimWin('Veteran');
+  let grandmas = 0;
+  for (const i of Object.keys(Game.GrandmaSynergies)) {
+    if (SimHas(Game.GrandmaSynergies[i])) grandmas++;
+  }
+  if (!SimHasAchiev('Elder') && grandmas >= 7) SimWin('Elder');
+  if (!SimHasAchiev('Veteran') && grandmas >= 14) SimWin('Veteran');
 
-	let buildingsOwned = 0;
-	let mathematician = 1;
-	let base10 = 1;
-	let minAmount = 100000;
-	for (const i of Object.keys(SimObjects)) {
-		buildingsOwned += SimObjects[i].amount;
-		minAmount = Math.min(SimObjects[i].amount, minAmount);
-		if (!SimHasAchiev('Mathematician')) {
-			if (SimObjects[i].amount < Math.min(128, 2 ** ((Game.ObjectsById.length - Game.Objects[i].id) - 1))) mathematician = 0;
-		}
-		if (!SimHasAchiev('Base 10')) {
-			if (SimObjects[i].amount < (Game.ObjectsById.length - Game.Objects[i].id) * 10) base10 = 0;
-		}
-	}
-	if (minAmount >= 1) SimWin('One with everything');
-	if (mathematician === 1) SimWin('Mathematician');
-	if (base10 === 1) SimWin('Base 10');
-	if (minAmount >= 100) SimWin('Centennial');
-	if (minAmount >= 150) SimWin('Centennial and a half');
-	if (minAmount >= 200) SimWin('Bicentennial');
-	if (minAmount >= 250) SimWin('Bicentennial and a half');
-	if (minAmount >= 300) SimWin('Tricentennial');
-	if (minAmount >= 350) SimWin('Tricentennial and a half');
-	if (minAmount >= 400) SimWin('Quadricentennial');
-	if (minAmount >= 450) SimWin('Quadricentennial and a half');
-	if (minAmount >= 500) SimWin('Quincentennial');
-	if (minAmount >= 550) SimWin('Quincentennial and a half');
-	if (minAmount >= 600) SimWin('Sexcentennial');
+  let buildingsOwned = 0;
+  let mathematician = 1;
+  let base10 = 1;
+  let minAmount = 100000;
+  for (const i of Object.keys(SimObjects)) {
+    buildingsOwned += SimObjects[i].amount;
+    minAmount = Math.min(SimObjects[i].amount, minAmount);
+    if (!SimHasAchiev('Mathematician')) {
+      if (
+        SimObjects[i].amount <
+        Math.min(128, 2 ** (Game.ObjectsById.length - Game.Objects[i].id - 1))
+      )
+        mathematician = 0;
+    }
+    if (!SimHasAchiev('Base 10')) {
+      if (
+        SimObjects[i].amount <
+        (Game.ObjectsById.length - Game.Objects[i].id) * 10
+      )
+        base10 = 0;
+    }
+  }
+  if (minAmount >= 1) SimWin('One with everything');
+  if (mathematician === 1) SimWin('Mathematician');
+  if (base10 === 1) SimWin('Base 10');
+  if (minAmount >= 100) SimWin('Centennial');
+  if (minAmount >= 150) SimWin('Centennial and a half');
+  if (minAmount >= 200) SimWin('Bicentennial');
+  if (minAmount >= 250) SimWin('Bicentennial and a half');
+  if (minAmount >= 300) SimWin('Tricentennial');
+  if (minAmount >= 350) SimWin('Tricentennial and a half');
+  if (minAmount >= 400) SimWin('Quadricentennial');
+  if (minAmount >= 450) SimWin('Quadricentennial and a half');
+  if (minAmount >= 500) SimWin('Quincentennial');
+  if (minAmount >= 550) SimWin('Quincentennial and a half');
+  if (minAmount >= 600) SimWin('Sexcentennial');
 
-	if (buildingsOwned >= 100) SimWin('Builder');
-	if (buildingsOwned >= 500) SimWin('Architect');
-	if (buildingsOwned >= 1000) SimWin('Engineer');
-	if (buildingsOwned >= 2000) SimWin('Lord of Constructs');
-	if (buildingsOwned >= 4000) SimWin('Grand design');
-	if (buildingsOwned >= 8000) SimWin('Ecumenopolis');
+  if (buildingsOwned >= 100) SimWin('Builder');
+  if (buildingsOwned >= 500) SimWin('Architect');
+  if (buildingsOwned >= 1000) SimWin('Engineer');
+  if (buildingsOwned >= 2000) SimWin('Lord of Constructs');
+  if (buildingsOwned >= 4000) SimWin('Grand design');
+  if (buildingsOwned >= 8000) SimWin('Ecumenopolis');
 
-	if (SimUpgradesOwned >= 20) SimWin('Enhancer');
-	if (SimUpgradesOwned >= 50) SimWin('Augmenter');
-	if (SimUpgradesOwned >= 100) SimWin('Upgrader');
-	if (SimUpgradesOwned >= 200) SimWin('Lord of Progress');
-	if (SimUpgradesOwned >= 300) SimWin('The full picture');
-	if (SimUpgradesOwned >= 400) SimWin('When there\'s nothing left to add');
+  if (SimUpgradesOwned >= 20) SimWin('Enhancer');
+  if (SimUpgradesOwned >= 50) SimWin('Augmenter');
+  if (SimUpgradesOwned >= 100) SimWin('Upgrader');
+  if (SimUpgradesOwned >= 200) SimWin('Lord of Progress');
+  if (SimUpgradesOwned >= 300) SimWin('The full picture');
+  if (SimUpgradesOwned >= 400) SimWin("When there's nothing left to add");
 
-	if (buildingsOwned >= 4000 && SimUpgradesOwned >= 300) SimWin('Polymath');
-	if (buildingsOwned >= 8000 && SimUpgradesOwned >= 400) SimWin('Renaissance baker');
+  if (buildingsOwned >= 4000 && SimUpgradesOwned >= 300) SimWin('Polymath');
+  if (buildingsOwned >= 8000 && SimUpgradesOwned >= 400)
+    SimWin('Renaissance baker');
 
-	if (SimObjects.Cursor.amount + SimObjects.Grandma.amount >= 777) SimWin('The elder scrolls');
+  if (SimObjects.Cursor.amount + SimObjects.Grandma.amount >= 777)
+    SimWin('The elder scrolls');
 
-	let hasAllHalloCook = true;
-	for (const i of Object.keys(HalloCookies)) {
-		if (!SimHas(HalloCookies[i])) hasAllHalloCook = false;
-	}
-	if (hasAllHalloCook) SimWin('Spooky cookies');
+  let hasAllHalloCook = true;
+  for (const i of Object.keys(HalloCookies)) {
+    if (!SimHas(HalloCookies[i])) hasAllHalloCook = false;
+  }
+  if (hasAllHalloCook) SimWin('Spooky cookies');
 
-	let hasAllChristCook = true;
-	for (const i of Object.keys(ChristCookies)) {
-		if (!SimHas(ChristCookies[i])) hasAllChristCook = false;
-	}
-	if (hasAllChristCook) SimWin('Let it snow');
+  let hasAllChristCook = true;
+  for (const i of Object.keys(ChristCookies)) {
+    if (!SimHas(ChristCookies[i])) hasAllChristCook = false;
+  }
+  if (hasAllChristCook) SimWin('Let it snow');
 
-	if (SimHas('Fortune cookies')) {
-		const list = Game.Tiers.fortune.upgrades;
-		let fortunes = 0;
-		for (const i of Object.keys(list)) {
-			if (SimHas(list[i].name)) fortunes++;
-		}
-		if (fortunes >= list.length) SimWin('O Fortuna');
-	}
+  if (SimHas('Fortune cookies')) {
+    const list = Game.Tiers.fortune.upgrades;
+    let fortunes = 0;
+    for (const i of Object.keys(list)) {
+      if (SimHas(list[i].name)) fortunes++;
+    }
+    if (fortunes >= list.length) SimWin('O Fortuna');
+  }
 }

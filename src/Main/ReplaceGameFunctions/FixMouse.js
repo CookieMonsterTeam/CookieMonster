@@ -6,12 +6,12 @@ import { CMOptions } from '../../Config/VariablesAndData';
  * before execution of their actual function
  */
 export default function FixMouseY(target) {
-	if (CMOptions.TimerBar === 1 && CMOptions.TimerBarPos === 0) {
-		const timerBarHeight = parseInt(l('CMTimerBar').style.height, 10);
-		Game.mouseY -= timerBarHeight;
-		target();
-		Game.mouseY += timerBarHeight;
-	} else {
-		target();
-	}
+  if (CMOptions.TimerBar === 1 && CMOptions.TimerBarPos === 0) {
+    const timerBarHeight = parseInt(l('CMTimerBar').style.height, 10);
+    Game.mouseY -= timerBarHeight;
+    target();
+    Game.mouseY += timerBarHeight;
+  } else {
+    target();
+  }
 }

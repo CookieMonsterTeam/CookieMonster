@@ -5,5 +5,11 @@ import { CMOptions } from '../../Config/VariablesAndData';
  * It is called by CM.Disp.Draw()
  */
 export default function RefreshMenu() {
-	if (CMOptions.UpStats && Game.onMenu === 'stats' && (Game.drawT - 1) % (Game.fps * 5) !== 0 && (Game.drawT - 1) % Game.fps === 0) Game.UpdateMenu();
+  if (
+    CMOptions.UpStats &&
+    Game.onMenu === 'stats' &&
+    (Game.drawT - 1) % (Game.fps * 5) !== 0 &&
+    (Game.drawT - 1) % Game.fps === 0
+  )
+    Game.UpdateMenu();
 }

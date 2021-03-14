@@ -23,7 +23,17 @@ export const ColorPurple = 'Purple';
 export const ColorGray = 'Gray';
 export const ColorPink = 'Pink';
 export const ColorBrown = 'Brown';
-export const Colors = [ColorGray, ColorBlue, ColorGreen, ColorYellow, ColorOrange, ColorRed, ColorPurple, ColorPink, ColorBrown];
+export const Colors = [
+  ColorGray,
+  ColorBlue,
+  ColorGreen,
+  ColorYellow,
+  ColorOrange,
+  ColorRed,
+  ColorPurple,
+  ColorPink,
+  ColorBrown,
+];
 
 /**
  * This list is used to make some very basic tooltips.
@@ -33,14 +43,42 @@ export const Colors = [ColorGray, ColorBlue, ColorGreen, ColorYellow, ColorOrang
  * @item	{string}	minWidth
  */
 export const TooltipText = [
-	['GoldCookTooltipPlaceholder', 'Calculated with Golden Switch off', '200px'],
-	['GoldCookDragonsFortuneTooltipPlaceholder', 'Calculated with Golden Switch off and at least one golden cookie on-screen', '240px'],
-	['PrestMaxTooltipPlaceholder', 'The MAX prestige is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and buying Chocolate egg', '320px'],
-	['NextPrestTooltipPlaceholder', 'Calculated with cookies gained from wrinklers and Chocolate egg', '200px'],
-	['HeavenChipMaxTooltipPlaceholder', 'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and buying Chocolate egg', '330px'],
-	['ResetTooltipPlaceholder', 'The bonus income you would get from new prestige levels unlocked at 100% of its potential and from ascension achievements if you have the same buildings/upgrades after reset', '370px'],
-	['ChoEggTooltipPlaceholder', 'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and then buying Chocolate egg', '300px'],
-	['ChainNextLevelPlaceholder', 'Cheated cookies might break this formula', '250px'],
+  ['GoldCookTooltipPlaceholder', 'Calculated with Golden Switch off', '200px'],
+  [
+    'GoldCookDragonsFortuneTooltipPlaceholder',
+    'Calculated with Golden Switch off and at least one golden cookie on-screen',
+    '240px',
+  ],
+  [
+    'PrestMaxTooltipPlaceholder',
+    'The MAX prestige is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and buying Chocolate egg',
+    '320px',
+  ],
+  [
+    'NextPrestTooltipPlaceholder',
+    'Calculated with cookies gained from wrinklers and Chocolate egg',
+    '200px',
+  ],
+  [
+    'HeavenChipMaxTooltipPlaceholder',
+    'The MAX heavenly chips is calculated with the cookies gained from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and buying Chocolate egg',
+    '330px',
+  ],
+  [
+    'ResetTooltipPlaceholder',
+    'The bonus income you would get from new prestige levels unlocked at 100% of its potential and from ascension achievements if you have the same buildings/upgrades after reset',
+    '370px',
+  ],
+  [
+    'ChoEggTooltipPlaceholder',
+    'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and then buying Chocolate egg',
+    '300px',
+  ],
+  [
+    'ChainNextLevelPlaceholder',
+    'Cheated cookies might break this formula',
+    '250px',
+  ],
 ];
 
 /**
@@ -78,7 +116,12 @@ export const ClickTimes = [1, 5, 10, 15, 30];
  * This array is used to give certain timers specific colours
  */
 export const BuffColors = {
-	Frenzy: ColorYellow, 'Dragon Harvest': ColorBrown, 'Elder frenzy': ColorGreen, Clot: ColorRed, 'Click frenzy': ColorBlue, Dragonflight: ColorPink,
+  Frenzy: ColorYellow,
+  'Dragon Harvest': ColorBrown,
+  'Elder frenzy': ColorGreen,
+  Clot: ColorRed,
+  'Click frenzy': ColorBlue,
+  Dragonflight: ColorPink,
 };
 
 /**

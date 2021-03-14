@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { SimObjects } from '../../Sim/VariablesAndData';
-import { CacheCurrWrinklerCount, CacheCurrWrinklerCPSMult } from '../VariablesAndData';
+import {
+  CacheCurrWrinklerCount,
+  CacheCurrWrinklerCPSMult,
+} from '../VariablesAndData';
 
 /**
  * This functions caches the current Wrinkler CPS multiplier
@@ -8,18 +11,23 @@ import { CacheCurrWrinklerCount, CacheCurrWrinklerCPSMult } from '../VariablesAn
  * @global	{number}	CM.Cache.CurrWrinklerCPSMult	Current multiplier of CPS because of wrinklers (excluding their negative sucking effect)
  */
 export default function CacheCurrWrinklerCPS() {
-	CacheCurrWrinklerCPSMult = 0;
-	let count = 0;
-	for (const i in Game.wrinklers) {
-		if (Game.wrinklers[i].phase === 2) count++;
-	}
-	let godMult = 1;
-	if (SimObjects.Temple.minigameLoaded) {
-		const godLvl = Game.hasGod('scorn');
-		if (godLvl === 1) godMult *= 1.15;
-		else if (godLvl === 2) godMult *= 1.1;
-		else if (godLvl === 3) godMult *= 1.05;
-	}
-	CacheCurrWrinklerCount = count;
-	CacheCurrWrinklerCPSMult = count * (count * 0.05 * 1.1) * (Game.Has('Sacrilegious corruption') * 0.05 + 1) * (Game.Has('Wrinklerspawn') * 0.05 + 1) * godMult;
+  CacheCurrWrinklerCPSMult = 0;
+  let count = 0;
+  for (const i in Game.wrinklers) {
+    if (Game.wrinklers[i].phase === 2) count++;
+  }
+  let godMult = 1;
+  if (SimObjects.Temple.minigameLoaded) {
+    const godLvl = Game.hasGod('scorn');
+    if (godLvl === 1) godMult *= 1.15;
+    else if (godLvl === 2) godMult *= 1.1;
+    else if (godLvl === 3) godMult *= 1.05;
+  }
+  CacheCurrWrinklerCount = count;
+  CacheCurrWrinklerCPSMult =
+    count *
+    (count * 0.05 * 1.1) *
+    (Game.Has('Sacrilegious corruption') * 0.05 + 1) *
+    (Game.Has('Wrinklerspawn') * 0.05 + 1) *
+    godMult;
 }

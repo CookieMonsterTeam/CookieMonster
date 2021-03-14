@@ -6,7 +6,7 @@ import SimAuraMult from './SimAuraMult';
  * @returns {number}	giveBack	The multiplier
  */
 export default function SimGetSellMultiplier() {
-	let giveBack = 0.25;
-	giveBack *= 1 + SimAuraMult('Earth Shatterer');
-	return giveBack;
+  let giveBack = 0.25;
+  giveBack *= 1 + SimAuraMult('Earth Shatterer');
+  return giveBack;
 }

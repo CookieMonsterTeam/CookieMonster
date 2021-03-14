@@ -10,22 +10,22 @@ import InitUpgrade from './InitUpgrade';
  * This function creates static objects for Buildings, Upgrades and Achievements
  */
 export default function InitData() {
-	// Buildings
-	SimObjects = [];
-	for (const i of Object.keys(Game.Objects)) {
-		SimObjects[i] = InitialBuildingData(i);
-	}
+  // Buildings
+  SimObjects = [];
+  for (const i of Object.keys(Game.Objects)) {
+    SimObjects[i] = InitialBuildingData(i);
+  }
 
-	// Upgrades
-	SimUpgrades = [];
-	for (const i of Object.keys(Game.Upgrades)) {
-		SimUpgrades[i] = InitUpgrade(i);
-	}
+  // Upgrades
+  SimUpgrades = [];
+  for (const i of Object.keys(Game.Upgrades)) {
+    SimUpgrades[i] = InitUpgrade(i);
+  }
 
-	// Achievements
-	SimAchievements = [];
-	for (const i of Object.keys(Game.Achievements)) {
-		SimAchievements[i] = InitAchievement(i);
-	}
-	CopyData();
+  // Achievements
+  SimAchievements = [];
+  for (const i of Object.keys(Game.Achievements)) {
+    SimAchievements[i] = InitAchievement(i);
+  }
+  CopyData();
 }

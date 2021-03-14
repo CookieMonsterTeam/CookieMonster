@@ -13,19 +13,21 @@ export const ConfigPrefix = 'CMConfig';
  * @param 	{string}	config	The name of the option
  */
 export function ToggleConfig(config) {
-	CMOptions[config]++;
+  CMOptions[config]++;
 
-	if (CMOptions[config] === ConfigData[config].label.length) {
-		CMOptions[config] = 0;
-		if (ConfigData[config].toggle) l(ConfigPrefix + config).className = 'option off';
-	} else l(ConfigPrefix + config).className = 'option';
+  if (CMOptions[config] === ConfigData[config].label.length) {
+    CMOptions[config] = 0;
+    if (ConfigData[config].toggle)
+      l(ConfigPrefix + config).className = 'option off';
+  } else l(ConfigPrefix + config).className = 'option';
 
-	if (typeof ConfigData[config].func !== 'undefined') {
-		ConfigData[config].func();
-	}
+  if (typeof ConfigData[config].func !== 'undefined') {
+    ConfigData[config].func();
+  }
 
-	l(ConfigPrefix + config).innerHTML = ConfigData[config].label[CMOptions[config]];
-	SaveConfig();
+  l(ConfigPrefix + config).innerHTML =
+    ConfigData[config].label[CMOptions[config]];
+  SaveConfig();
 }
 
 /**
@@ -34,11 +36,11 @@ export function ToggleConfig(config) {
  * @param 	{string}	config	The name of the option
  */
 export function ToggleConfigVolume(config) {
-	if (l(`slider${config}`) !== null) {
-		l(`slider${config}right`).innerHTML = `${l(`slider${config}`).value}%`;
-		CMOptions[config] = Math.round(l(`slider${config}`).value);
-	}
-	SaveConfig();
+  if (l(`slider${config}`) !== null) {
+    l(`slider${config}right`).innerHTML = `${l(`slider${config}`).value}%`;
+    CMOptions[config] = Math.round(l(`slider${config}`).value);
+  }
+  SaveConfig();
 }
 
 /**
@@ -47,7 +49,7 @@ export function ToggleConfigVolume(config) {
  * @param 	{string}	config	The name of the header
  */
 export function ToggleHeader(config) {
-	CMOptions.Header[config]++;
-	if (CMOptions.Header[config] > 1) CMOptions.Header[config] = 0;
-	SaveConfig();
+  CMOptions.Header[config]++;
+  if (CMOptions.Header[config] > 1) CMOptions.Header[config] = 0;
+  SaveConfig();
 }

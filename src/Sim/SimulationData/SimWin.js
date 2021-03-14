@@ -8,10 +8,10 @@ import { SimAchievements, SimAchievementsOwned } from '../VariablesAndData';
  * @param	{string}	what	Name of the achievement
  */
 export default function SimWin(what) {
-	if (SimAchievements[what]) {
-		if (SimAchievements[what].won === 0) {
-			SimAchievements[what].won = 1;
-			if (Game.Achievements[what].pool !== 'shadow') SimAchievementsOwned++;
-		}
-	}
+  if (SimAchievements[what]) {
+    if (SimAchievements[what].won === 0) {
+      SimAchievements[what].won = 1;
+      if (Game.Achievements[what].pool !== 'shadow') SimAchievementsOwned++;
+    }
+  }
 }
