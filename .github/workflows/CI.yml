@@ -17,7 +17,7 @@ jobs:
       run: |
         npm install
         npx webpack -o ./test --env production
-        sed -i '' -e '/\/\/# sourceMappingURL.*/d' 'test/CookieMonster.js'
+        sed -i '' -e '/\/\/# sourceMappingURL.*/d' '/test/CookieMonster.js'
         if cmp dist/CookieMonster.js test/CookieMonster.js; then
             echo '### SUCCESS: CookieMonster is correctly built! ###'
         else
