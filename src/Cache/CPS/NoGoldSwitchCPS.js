@@ -8,7 +8,7 @@ import { CacheNoGoldSwitchCookiesPS } from '../VariablesAndData';
  * It is called at the end of any functions that simulates certain behaviour
  */
 export default function CacheNoGoldSwitchCPS() {
-	if (Game.Has('Golden switch [off]')) {
-		CacheNoGoldSwitchCookiesPS = CalcNoGoldSwitchCPS();
-	} else CacheNoGoldSwitchCookiesPS = Game.cookiesPs;
+  if (Game.Has('Golden switch [off]')) {
+    CacheNoGoldSwitchCookiesPS = CalcNoGoldSwitchCPS();
+  } else CacheNoGoldSwitchCookiesPS = Game.cookiesPs;
 }

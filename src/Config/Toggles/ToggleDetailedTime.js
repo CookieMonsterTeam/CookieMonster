@@ -7,6 +7,6 @@ import { CMOptions } from '../VariablesAndData';
  * It is called by a change in CM.Options.DetailedTime
  */
 export default function ToggleDetailedTime() {
-	if (CMOptions.DetailedTime === 1) Game.sayTime = CMSayTime;
-	else Game.sayTime = BackupFunctions.sayTime;
+  if (CMOptions.DetailedTime === 1) Game.sayTime = CMSayTime;
+  else Game.sayTime = BackupFunctions.sayTime;
 }

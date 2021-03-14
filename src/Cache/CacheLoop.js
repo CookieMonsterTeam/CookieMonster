@@ -13,14 +13,19 @@ import CacheWrinklers from './Wrinklers/Wrinklers';
  * @global	{string}	CM.Cache.TimeTillNextPrestige	Time requried till next prestige level
  */
 export default function LoopCache() {
-	// Update Wrinkler Bank
-	CacheWrinklers();
+  // Update Wrinkler Bank
+  CacheWrinklers();
 
-	CachePP();
-	CacheCurrWrinklerCPS();
-	CacheAvgCPS();
-	CacheHeavenlyChipsPS();
+  CachePP();
+  CacheCurrWrinklerCPS();
+  CacheAvgCPS();
+  CacheHeavenlyChipsPS();
 
-	const cookiesToNext = Game.HowManyCookiesReset(Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) + 1) - (Game.cookiesEarned + Game.cookiesReset);
-	CacheTimeTillNextPrestige = FormatTime(cookiesToNext / GetCPS());
+  const cookiesToNext =
+    Game.HowManyCookiesReset(
+      Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) +
+        1,
+    ) -
+    (Game.cookiesEarned + Game.cookiesReset);
+  CacheTimeTillNextPrestige = FormatTime(cookiesToNext / GetCPS());
 }

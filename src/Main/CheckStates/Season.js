@@ -11,16 +11,20 @@ import { LastSeasonPopupState } from '../VariablesAndData';
  * It is called by CM.Main.Loop
  */
 export default function CheckSeasonPopup() {
-	if (LastSeasonPopupState !== Game.shimmerTypes.reindeer.spawned) {
-		LastSeasonPopupState = Game.shimmerTypes.reindeer.spawned;
-		for (const i of Object.keys(Game.shimmers)) {
-			if (Game.shimmers[i].spawnLead && Game.shimmers[i].type === 'reindeer') {
-				CacheSeasonPopShimmer = Game.shimmers[i];
-				break;
-			}
-		}
-		Flash(3, 'SeaFlash');
-		PlaySound(CMOptions.SeaSoundURL, 'SeaSound', 'SeaVolume');
-		Notification('SeaNotification', 'Reindeer sighted!', 'A Reindeer has spawned. Click it now!');
-	}
+  if (LastSeasonPopupState !== Game.shimmerTypes.reindeer.spawned) {
+    LastSeasonPopupState = Game.shimmerTypes.reindeer.spawned;
+    for (const i of Object.keys(Game.shimmers)) {
+      if (Game.shimmers[i].spawnLead && Game.shimmers[i].type === 'reindeer') {
+        CacheSeasonPopShimmer = Game.shimmers[i];
+        break;
+      }
+    }
+    Flash(3, 'SeaFlash');
+    PlaySound(CMOptions.SeaSoundURL, 'SeaSound', 'SeaVolume');
+    Notification(
+      'SeaNotification',
+      'Reindeer sighted!',
+      'A Reindeer has spawned. Click it now!',
+    );
+  }
 }

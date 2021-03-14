@@ -4,9 +4,9 @@ import load from './InitSaveLoad/load';
 import save from './InitSaveLoad/save';
 
 const CM = {
-	init,
-	load,
-	save,
+  init,
+  load,
+  save,
 };
 
 Game.registerMod('CookieMonster', CM);
