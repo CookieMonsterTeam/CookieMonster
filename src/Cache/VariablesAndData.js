@@ -33,7 +33,6 @@ export let CacheWrinklersTotal = 0;
 export let CacheWrinklersNormal = 0;
 export let CacheWrinklersFattest = [0, null];
 
-export let CacheAvgCps = 0;
 export let CacheCurrWrinklerCPSMult = 0;
 export let CacheCurrWrinklerCount = 0;
 
