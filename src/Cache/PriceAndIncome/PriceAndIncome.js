@@ -5,7 +5,11 @@ import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 import BuyBuildingsBonusIncome from '../../Sim/SimulationEvents/BuyBuildingBonusIncome';
 import BuyUpgradesBonusIncome from '../../Sim/SimulationEvents/BuyUpgrades';
 import {
-	CacheDoRemakeBuildPrices, CacheObjects1, CacheObjects10, CacheObjects100, CacheUpgrades,
+  CacheDoRemakeBuildPrices,
+  CacheObjects1,
+  CacheObjects10,
+  CacheObjects100,
+  CacheUpgrades,
 } from '../VariablesAndData';
 
 /**
@@ -15,15 +19,15 @@ import {
  * @parem	{string}	target	The target Cache object ("Objects1", "Objects10" or "Objects100")
  */
 function CacheBuildingIncome(amount, target) {
-	const result = [];
-	for (const i of Object.keys(Game.Objects)) {
-		result[i] = {};
-		result[i].bonus = BuyBuildingsBonusIncome(i, amount);
-		if (amount !== 1) {
-			CacheDoRemakeBuildPrices = 1;
-		}
-	}
-	return result;
+  const result = [];
+  for (const i of Object.keys(Game.Objects)) {
+    result[i] = {};
+    result[i].bonus = BuyBuildingsBonusIncome(i, amount);
+    if (amount !== 1) {
+      CacheDoRemakeBuildPrices = 1;
+    }
+  }
+  return result;
 }
 
 /**
@@ -31,24 +35,42 @@ function CacheBuildingIncome(amount, target) {
  * It is called by CM.Cache.CacheIncome()
  */
 function CacheUpgradeIncome() {
-	CacheUpgrades = [];
-	for (const i of Object.keys(Game.Upgrades)) {
-		const bonusIncome = BuyUpgradesBonusIncome(i);
-		CacheUpgrades[i] = {};
-		if (bonusIncome[0]) CacheUpgrades[i].bonus = bonusIncome[0];
-		if (bonusIncome[1]) CacheUpgrades[i].bonusMouse = bonusIncome[1];
-	}
+  CacheUpgrades = [];
+  for (const i of Object.keys(Game.Upgrades)) {
+    const bonusIncome = BuyUpgradesBonusIncome(i);
+    CacheUpgrades[i] = {};
+    if (bonusIncome[0]) CacheUpgrades[i].bonus = bonusIncome[0];
+    if (bonusIncome[1]) CacheUpgrades[i].bonusMouse = bonusIncome[1];
+  }
 }
 
 /**
  * This functions caches the price of each building and stores it in the cache
  */
 export function CacheBuildingsPrices() {
-	for (const i of Object.keys(Game.Objects)) {
-		CacheObjects1[i].price = BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 1);
-		CacheObjects10[i].price = BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 10);
-		CacheObjects100[i].price = BuildingGetPrice(Game.Objects[i], Game.Objects[i].basePrice, Game.Objects[i].amount, Game.Objects[i].free, 100);
-	}
+  for (const i of Object.keys(Game.Objects)) {
+    CacheObjects1[i].price = BuildingGetPrice(
+      Game.Objects[i],
+      Game.Objects[i].basePrice,
+      Game.Objects[i].amount,
+      Game.Objects[i].free,
+      1,
+    );
+    CacheObjects10[i].price = BuildingGetPrice(
+      Game.Objects[i],
+      Game.Objects[i].basePrice,
+      Game.Objects[i].amount,
+      Game.Objects[i].free,
+      10,
+    );
+    CacheObjects100[i].price = BuildingGetPrice(
+      Game.Objects[i],
+      Game.Objects[i].basePrice,
+      Game.Objects[i].amount,
+      Game.Objects[i].free,
+      100,
+    );
+  }
 }
 
 /**
@@ -56,11 +78,11 @@ export function CacheBuildingsPrices() {
  * It is called by CM.Main.Loop() and CM.Cache.InitCache()
  */
 export function CacheIncome() {
-	// Simulate Building Buys for 1, 10 and 100 amount
-	CacheObjects1 = CacheBuildingIncome(1);
-	CacheObjects10 = CacheBuildingIncome(10);
-	CacheObjects100 = CacheBuildingIncome(100);
+  // Simulate Building Buys for 1, 10 and 100 amount
+  CacheObjects1 = CacheBuildingIncome(1);
+  CacheObjects10 = CacheBuildingIncome(10);
+  CacheObjects100 = CacheBuildingIncome(100);
 
-	// Simulate Upgrade Buys
-	CacheUpgradeIncome();
+  // Simulate Upgrade Buys
+  CacheUpgradeIncome();
 }

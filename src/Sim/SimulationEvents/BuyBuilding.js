@@ -9,14 +9,20 @@
  * @param	{number}	increase	Increase of building
  * @returns {number}	moni		Total price
  */
-export default function BuildingGetPrice(build, basePrice, start, free, increase) {
-	let moni = 0;
-	for (let i = 0; i < increase; i++) {
-		let price = basePrice * Game.priceIncrease ** Math.max(0, start - free);
-		price = Game.modifyBuildingPrice(build, price);
-		price = Math.ceil(price);
-		moni += price;
-		start++;
-	}
-	return moni;
+export default function BuildingGetPrice(
+  build,
+  basePrice,
+  start,
+  free,
+  increase,
+) {
+  let moni = 0;
+  for (let i = 0; i < increase; i++) {
+    let price = basePrice * Game.priceIncrease ** Math.max(0, start - free);
+    price = Game.modifyBuildingPrice(build, price);
+    price = Math.ceil(price);
+    moni += price;
+    start++;
+  }
+  return moni;
 }

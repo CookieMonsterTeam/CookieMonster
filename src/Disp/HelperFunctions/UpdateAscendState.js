@@ -8,13 +8,13 @@ import UpdateBackground from './UpdateBackground';
  * It is called by CM.Disp.Draw()
  */
 export default function UpdateAscendState() {
-	if (Game.OnAscend) {
-		l('game').style.bottom = '0px';
-		if (CMOptions.BotBar === 1) l('CMBotBar').style.display = 'none';
-		if (CMOptions.TimerBar === 1) l('CMTimerBar').style.display = 'none';
-	} else {
-		ToggleBotBar();
-		ToggleTimerBar();
-	}
-	UpdateBackground();
+  if (Game.OnAscend) {
+    l('game').style.bottom = '0px';
+    if (CMOptions.BotBar === 1) l('CMBotBar').style.display = 'none';
+    if (CMOptions.TimerBar === 1) l('CMTimerBar').style.display = 'none';
+  } else {
+    ToggleBotBar();
+    ToggleTimerBar();
+  }
+  UpdateBackground();
 }

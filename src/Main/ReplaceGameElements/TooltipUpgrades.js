@@ -7,20 +7,24 @@ import { TooltipUpgradeBackup } from '../VariablesAndData';
  * It is called by Game.RebuildUpgrades() through CM.Main.ReplaceNative() and is therefore not permanent like the other ReplaceTooltip functions
  */
 export default function ReplaceTooltipUpgrade() {
-	TooltipUpgradeBackup = [];
-	for (const i of Object.keys(Game.UpgradesInStore)) {
-		if (l(`upgrade${i}`).onmouseover !== null) {
-			TooltipUpgradeBackup[i] = l(`upgrade${i}`).onmouseover;
-			l(`upgrade${i}`).onmouseover = function () {
-				if (!Game.mouseDown) {
-					Game.setOnCrate(this);
-					Game.tooltip.dynamic = 1;
-					Game.tooltip.draw(this, function () {
-						return CreateTooltip('u', `${i}`);
-					}, 'store');
-					Game.tooltip.wobble();
-				}
-			};
-		}
-	}
+  TooltipUpgradeBackup = [];
+  for (const i of Object.keys(Game.UpgradesInStore)) {
+    if (l(`upgrade${i}`).onmouseover !== null) {
+      TooltipUpgradeBackup[i] = l(`upgrade${i}`).onmouseover;
+      l(`upgrade${i}`).onmouseover = function () {
+        if (!Game.mouseDown) {
+          Game.setOnCrate(this);
+          Game.tooltip.dynamic = 1;
+          Game.tooltip.draw(
+            this,
+            function () {
+              return CreateTooltip('u', `${i}`);
+            },
+            'store',
+          );
+          Game.tooltip.wobble();
+        }
+      };
+    }
+  }
 }

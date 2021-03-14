@@ -7,8 +7,8 @@ import { VersionMajor, VersionMinor } from '../Data/Moddata';
  * return 'a string to be saved';"
  */
 export default function save() {
-	return JSON.stringify({
-		settings: CMOptions,
-		version: `${VersionMajor}.${VersionMinor}`,
-	});
+  return JSON.stringify({
+    settings: CMOptions,
+    version: `${VersionMajor}.${VersionMinor}`,
+  });
 }

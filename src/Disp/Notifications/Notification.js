@@ -11,9 +11,13 @@ import { isInitializing } from '../../InitSaveLoad/Variables';
  * @param	{string}	message			The text of the to-be created notifications
  */
 export default function Notification(notifyConfig, title, message) {
-	// The arguments check makes the sound not play upon initialization of the mod
-	if (CMOptions[notifyConfig] === 1 && document.visibilityState === 'hidden' && isInitializing === false) {
-		const CookieIcon = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
-		new Notification(title, { body: message, badge: CookieIcon });
-	}
+  // The arguments check makes the sound not play upon initialization of the mod
+  if (
+    CMOptions[notifyConfig] === 1 &&
+    document.visibilityState === 'hidden' &&
+    isInitializing === false
+  ) {
+    const CookieIcon = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
+    new Notification(title, { body: message, badge: CookieIcon });
+  }
 }

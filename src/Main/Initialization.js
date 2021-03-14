@@ -24,39 +24,53 @@ import AddWrinklerAreaDetect from './WrinklerArea/AddDetectArea';
  * Initialization loop of Cookie Monster
  */
 export default function InitializeCookieMonster() {
-	InitData();
-	CacheStatsCookies();
-	InitCache();
+  InitData();
+  CacheStatsCookies();
+  InitCache();
 
-	// Stored to check if we need to re-initiliaze data
-	LastModCount = Object.keys(Game.mods).length;
+  // Stored to check if we need to re-initiliaze data
+  LastModCount = Object.keys(Game.mods).length;
 
-	// Creating visual elements
-	CreateCssArea();
-	CreateBotBar();
-	CreateTimerBar();
-	CreateUpgradeBar();
-	CreateWhiteScreen();
-	CreateFavicon();
-	for (const i of Object.keys(TooltipText)) {
-		CreateSimpleTooltip(TooltipText[i][0], TooltipText[i][1], TooltipText[i][2]);
-	}
-	CreateWrinklerButtons();
-	UpdateBuildingUpgradeStyle();
+  // Creating visual elements
+  CreateCssArea();
+  CreateBotBar();
+  CreateTimerBar();
+  CreateUpgradeBar();
+  CreateWhiteScreen();
+  CreateFavicon();
+  for (const i of Object.keys(TooltipText)) {
+    CreateSimpleTooltip(
+      TooltipText[i][0],
+      TooltipText[i][1],
+      TooltipText[i][2],
+    );
+  }
+  CreateWrinklerButtons();
+  UpdateBuildingUpgradeStyle();
 
-	ReplaceTooltips();
-	AddWrinklerAreaDetect();
+  ReplaceTooltips();
+  AddWrinklerAreaDetect();
 
-	// Replace native functions
-	ReplaceNative();
-	ReplaceNativeGrimoire();
-	Game.CalculateGains();
+  // Replace native functions
+  ReplaceNative();
+  ReplaceNativeGrimoire();
+  Game.CalculateGains();
 
-	LoadConfig(); // Must be after all things are created!
-	CMLastAscendState = Game.OnAscend;
+  LoadConfig(); // Must be after all things are created!
+  CMLastAscendState = Game.OnAscend;
 
-	if (Game.prefs.popups) Game.Popup(`Cookie Monster version ${VersionMajor}.${VersionMinor} loaded!`);
-	else Game.Notify(`Cookie Monster version ${VersionMajor}.${VersionMinor} loaded!`, '', '', 1, 1);
+  if (Game.prefs.popups)
+    Game.Popup(
+      `Cookie Monster version ${VersionMajor}.${VersionMinor} loaded!`,
+    );
+  else
+    Game.Notify(
+      `Cookie Monster version ${VersionMajor}.${VersionMinor} loaded!`,
+      '',
+      '',
+      1,
+      1,
+    );
 
-	Game.Win('Third-party');
+  Game.Win('Third-party');
 }

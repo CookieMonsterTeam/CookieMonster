@@ -7,11 +7,11 @@ import { CMOptions } from '../VariablesAndData';
  * It is called by CM.Disp.UpdateAscendState() and a change in CMOptions.BotBar
  */
 export default function ToggleBotBar() {
-	if (CMOptions.BotBar === 1) {
-		l('CMBotBar').style.display = '';
-		UpdateBotBar();
-	} else {
-		l('CMBotBar').style.display = 'none';
-	}
-	UpdateBotTimerBarPosition();
+  if (CMOptions.BotBar === 1) {
+    l('CMBotBar').style.display = '';
+    UpdateBotBar();
+  } else {
+    l('CMBotBar').style.display = 'none';
+  }
+  UpdateBotTimerBarPosition();
 }

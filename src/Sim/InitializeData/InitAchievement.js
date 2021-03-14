@@ -4,8 +4,8 @@
  * @returns {Object}	you				The static object
  */
 export default function InitAchievement(achievementName) {
-	const me = Game.Achievements[achievementName];
-	const you = {};
-	you.name = me.name;
-	return you;
+  const me = Game.Achievements[achievementName];
+  const you = {};
+  you.name = me.name;
+  return you;
 }

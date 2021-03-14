@@ -8,12 +8,20 @@ import { LastTickerFortuneState } from '../VariablesAndData';
  * It is called by CM.Main.Loop
  */
 export default function CheckTickerFortune() {
-	if (LastTickerFortuneState !== (Game.TickerEffect && Game.TickerEffect.type === 'fortune')) {
-		LastTickerFortuneState = (Game.TickerEffect && Game.TickerEffect.type === 'fortune');
-		if (LastTickerFortuneState) {
-			Flash(3, 'FortuneFlash');
-			PlaySound(CM.Options.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
-			Notification('FortuneNotification', 'Fortune Cookie found', 'A Fortune Cookie has appeared on the Ticker.');
-		}
-	}
+  if (
+    LastTickerFortuneState !==
+    (Game.TickerEffect && Game.TickerEffect.type === 'fortune')
+  ) {
+    LastTickerFortuneState =
+      Game.TickerEffect && Game.TickerEffect.type === 'fortune';
+    if (LastTickerFortuneState) {
+      Flash(3, 'FortuneFlash');
+      PlaySound(CM.Options.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
+      Notification(
+        'FortuneNotification',
+        'Fortune Cookie found',
+        'A Fortune Cookie has appeared on the Ticker.',
+      );
+    }
+  }
 }
