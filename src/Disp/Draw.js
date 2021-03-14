@@ -1,4 +1,5 @@
 import { CMOptions } from '../Config/VariablesAndData';
+import { Beautify } from './BeautifyAndFormatting/BeautifyFormatting';
 import UpdateBuildings from './BuildingsUpgrades/Buildings';
 import UpdateUpgrades from './BuildingsUpgrades/Upgrades';
 import { UpdateBotBar } from './InfoBars/BottomBar';
@@ -42,4 +43,7 @@ export default function Draw() {
 
 	// Change menu refresh interval
 	RefreshMenu();
+
+	// Replace Cookies counter because Orteil uses very weird code to "pad" it...
+	l('cookies').innerHTML = l('cookies').innerHTML.replace(/.*(?=<br>)/i, Beautify(Game.cookies));
 }

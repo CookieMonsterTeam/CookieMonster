@@ -27,11 +27,8 @@ export function Beautify(num, floats, forced) {
 		if (num === 0) {
 			return num.toString();
 		} if (num > 0.001 && num < CMOptions.ScaleCutoff) {
-			answer = num.toFixed(2);
-			if (CMOptions.ScaleSeparator) answer = answer.toLocaleString('nl');
-			for (let i = 0; i < 3; i++) {
-				if (answer[answer.length - 1] === '0' || answer[answer.length - 1] === '.') answer = answer.slice(0, -1);
-			}
+			if (CMOptions.ScaleSeparator) answer = num.toLocaleString('nl');
+			else answer = num.toLocaleString('en');
 			return answer;
 		} if (CMOptions.Scale === 4 && !forced || forced === 4) { // Scientific notation, 123456789 => 1.235E+8
 			answer = num.toExponential(decimals).toString().replace('e', 'E');
