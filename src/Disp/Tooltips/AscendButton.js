@@ -1,0 +1,28 @@
+import { CacheHCPerSecond, CacheTimeTillNextPrestige } from '../../Cache/VariablesAndData';
+import { CMOptions } from '../../Config/VariablesAndData';
+import { Beautify } from '../BeautifyAndFormatting/BeautifyFormatting';
+
+/**
+ * This function creates a header object for tooltips.
+ * @param	{string}	text	Title of header
+ * @returns {object}	div		An object containing the stylized header
+ */
+export default function ReplaceAscendTooltip() {
+	const ascendNowToGet = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) - Math.floor(Game.HowMuchPrestige(Game.cookiesReset));
+	const cookiesToNext = Game.HowManyCookiesReset(Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) + 1) - (Game.cookiesEarned + Game.cookiesReset);
+	const startDate = Game.sayTime(((Date.now() - Game.startDate) / 1000) * Game.fps, -1);
+	let str = '';
+	str += `You've been on this run for <b>${startDate === '' ? 'not very long' : (startDate)}</b>.<br>`;
+	str += '<div class="line"></div>';
+	if (Game.prestige > 0) {
+		str += `Your prestige level is currently <b>${Beautify(Game.prestige)}</b>.<br>(CpS +${Beautify(Game.prestige)}%)`;
+		str += '<div class="line"></div>';
+	}
+	if (ascendNowToGet < 1) str += 'Ascending now would grant you no prestige.';
+	else if (ascendNowToGet < 2) str += 'Ascending now would grant you<br><b>1 prestige level</b> (+1% CpS)<br>and <b>1 heavenly chip</b> to spend.';
+	else str += `Ascending now would grant you<br><b>${Beautify(ascendNowToGet)} prestige levels</b> (+${Beautify(ascendNowToGet)}% CpS)<br>and <b>${Beautify(ascendNowToGet)} heavenly chips</b> to spend.`;
+	str += '<div class="line"></div>';
+	str += `You need <b>${Beautify(cookiesToNext)} more cookies</b> for the next level.<br>`;
+	str += `${CMOptions.TooltipAscendButton ? `<div class='line'></div>It takes ${CacheTimeTillNextPrestige} to reach the next level and you are making ${Beautify(CacheHCPerSecond, 2)} chips on average in the last 5 seconds.<br>` : ''}`;
+	l('ascendTooltip').innerHTML = str;
+}
