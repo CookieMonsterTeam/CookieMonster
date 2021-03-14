@@ -1,5 +1,5 @@
 import {
-	CacheAvgCps, CacheCurrWrinklerCount, CacheCurrWrinklerCPSMult, CacheWrinklersFattest,
+	CacheAverageCPS, CacheCurrWrinklerCount, CacheCurrWrinklerCPSMult, CacheWrinklersFattest,
 } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 
@@ -9,7 +9,7 @@ import { CMOptions } from '../../Config/VariablesAndData';
  */
 export default function GetCPS() {
 	if (CMOptions.CPSMode) {
-		return CacheAvgCps;
+		return CacheAverageCPS;
 	} if (CMOptions.CalcWrink === 0) {
 		return (Game.cookiesPs * (1 - Game.cpsSucked));
 	} if (CMOptions.CalcWrink === 1) {
