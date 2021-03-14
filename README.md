@@ -2,11 +2,10 @@
 ## Cookie Monster
 
 **Cookie Monster** is an addon you can load into Cookie Clicker, that offers a wide range of tools and statistics to enhance the game. **It is not a cheat interface** – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.
-
-This is a helper, and it is here to help you at *whichever* degree you want, if you only need some help shortening long numbers, it does that. If you need to be accompanied by hand to pick the best buildings to buy, it does that, but **everything is an option**.
+The mod helps you to *whichever* degree you want, if you only need some help shortening long numbers, it does that. If you need to be accompanied by hand to pick the best buildings to buy, it does that, but **everything is an option**.
 
 ### Current version
-You can see the current version, and a full history of all versions and what they changed by consulting the [releases page](https://github.com/Aktanusa/CookieMonster/releases).
+The `gh-pages` branch hosts the latest version intended for general users. All development and pull requests should target the `dev` branch.
 
 ### What it does
 
@@ -29,12 +28,6 @@ This index is computed for buildings and upgrades. If the relevant option is ena
 
 Note: For this index, **lower is better**, meaning a building with a PP of 1 is more interesting than one with a PP of 3.
 
-### What it doesn't do
-
-Some upgrades do not give a direct bonus to your income and will display as gray. These are mainly Golden Cookie upgrades and season upgrades.
-
-Do note though that, although these upgrades have no direct value, if buying them earns you an achievement of some sort which in return gives you milk and income, Cookie Monster **will** display that value.
-
 ## Using
 
 ### Bookmarklet
@@ -53,13 +46,13 @@ If (for some reason) the above doesn't work, trying pasting everything after the
 
 If you'd rather use the addon as a [userscript](https://en.wikipedia.org/wiki/Userscript) to automatically load _Cookie Monster_ every time the original game loads, install the `CookieMonster.user.js` file. You can do this by clicking on the file in the file-list and clicking "raw".
 
+**Note that to avoid conflicts Cookie Monster should ideally be loaded after any other content mods have been loaded**
+
 ## Bugs and suggestions
 
 Any bug or suggestion should be **opened as an issue** [in the repository](https://github.com/Aktanusa/CookieMonster/issues) for easier tracking. This allows us to close issues once they're fixed.
 
-Before submitting a bug, make sure to give a shot at the latest version of the addon on the <code>dev</code> branch. This version can be tested by copying the `CookieMonster.js` file of the dev branch into your console.
-
-If the bug is still here, you can submit an issue for it. Please do so by using the bug report template.
+Before submitting a bug, make sure to give a shot at the latest version of the addon on the `dev` branch. This version can be tested by copying the `CookieMonster.js` file of the dev branch into your console. If the bug is still here, you can submit an issue for it. Please do so by using the bug report template.
 
 All suggestions are welcome, even the smallest ones.
 
@@ -67,7 +60,7 @@ All suggestions are welcome, even the smallest ones.
 
 To contribute you can fork and clone the repository and run `npm install`.
 
-Please also remember to run `npm run build` after saving all your changes to build the final `CookieMonster.js` file. 
+Please also remember to run `npm run build` after saving all your changes to build the final `CookieMonster.js` file.
 
 ## Contributors
 

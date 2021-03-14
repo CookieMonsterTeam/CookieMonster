@@ -1,5 +1,5 @@
 name: CI
-on: [push, pull_request]
+on: pull_request
 jobs:
   Check_ESLint:
     runs-on: ubuntu-latest
@@ -16,10 +16,16 @@ jobs:
     - name: Check if CookieMonster.js is built correctly 
       run: |
         npm install
-        npx terser ./src/Header.js ./src/Cache.js ./src/Config.js ./src/Data.js ./src/Disp.js ./src/Main.js ./src/Sim.js ./src/Footer.js -o CookieMonsterTest.js
-        if cmp CookieMonster.js CookieMonsterTest.js; then
+        npx webpack -o ./test --env production
+        if cmp <(head -n 2 dist/CookieMonster.js) <(head -n 2 test/CookieMonster.js); then
             echo '### SUCCESS: CookieMonster is correctly built! ###'
         else
             echo '### WARNING: CookieMonster.js does not seem to be correct. Make sure to run "npm run build" after saving all your changes! ###'
+            exit 1
+        fi
+        if cmp <(head -n 2 CookieMonster.js) <(head -n 2 test/CookieMonster.js); then
+            echo '### SUCCESS: CookieMonster is correctly built! ###'
+        else
+            echo '### WARNING: Make sure to move the file from the /dist folder to the main folder. Otherwise Github Pages won't notice it ###'
             exit 1
         fi
