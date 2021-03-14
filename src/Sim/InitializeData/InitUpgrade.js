@@ -1,5 +1,6 @@
 import SimHas from '../ReplacedGameFunctions/SimHas';
 import SimHasGod from '../ReplacedGameFunctions/SimHasGod';
+import { SimObjects } from '../VariablesAndData';
 
 /**
  * This function constructs an object with the static properties of an upgrade
@@ -12,6 +13,15 @@ export default function InitUpgrade(upgradeName) {
 	// Some upgrades have a function for .power (notably the valentine cookies)
 	you.power = me.power;
 	if (typeof (me.power) === 'function') {
+		if (me.name === 'Sugar crystal cookies') {
+			me.power = function () {
+				let n = 5;
+				for (const i in SimObjects) {
+					if (SimObjects[i].level >= 10) n += 1;
+				}
+				return n;
+			};
+		}
 		me.power = function () {
 			let pow = 2;
 			if (SimHas('Starlove')) pow = 3;
