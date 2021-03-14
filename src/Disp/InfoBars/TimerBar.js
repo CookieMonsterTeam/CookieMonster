@@ -32,6 +32,9 @@ export function CreateTimerBar() {
 		'Next Reindeer',
 		[{ id: 'CMTimerBarRenMinBar', color: ColorGray }, { id: 'CMTimerBarRenBar', color: ColorOrange }]);
 	TimerBar.appendChild(CMTimerBarRen);
+	const TimerBarBuffTimers = document.createElement('div');
+	TimerBarBuffTimers.id = 'CMTimerBarBuffTimers';
+	TimerBar.appendChild(TimerBarBuffTimers);
 
 	l('wrapper').appendChild(TimerBar);
 }
@@ -84,6 +87,7 @@ export function UpdateTimerBar() {
 
 		// On every frame all buff-timers are deleted and re-created
 		const BuffTimerBars = {};
+		l('CMTimerBarBuffTimers').innerHTML = '';
 		for (const i of Object.keys(Game.buffs)) {
 			if (Game.buffs[i]) {
 				const timer = CreateTimer(Game.buffs[i].name, Game.buffs[i].name, [{ id: `${Game.buffs[i].name}Bar` }]);
@@ -104,7 +108,7 @@ export function UpdateTimerBar() {
 			}
 		}
 		for (const i of Object.keys(BuffTimerBars)) {
-			l('CMTimerBar').appendChild(BuffTimerBars[i]);
+			l('CMTimerBarBuffTimers').appendChild(BuffTimerBars[i]);
 		}
 
 		if (numberOfTimers !== 0) {
