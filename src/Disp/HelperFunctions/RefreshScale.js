@@ -7,11 +7,11 @@ import { UpdateBotBar } from '../InfoBars/BottomBar';
  * It is therefore called by a changes in CM.Options.Scale, CM.Options.ScaleDecimals, CM.Options.ScaleSeparator and CM.Options.ScaleCutoff
  */
 export default function RefreshScale() {
-	BeautifyAll();
-	Game.RefreshStore();
-	Game.RebuildUpgrades();
+  BeautifyAll();
+  Game.RefreshStore();
+  Game.RebuildUpgrades();
 
-	UpdateBotBar();
-	UpdateBuildings();
-	UpdateUpgrades();
+  UpdateBotBar();
+  UpdateBuildings();
+  UpdateUpgrades();
 }

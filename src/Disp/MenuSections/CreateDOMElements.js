@@ -12,28 +12,31 @@ import { TooltipText } from '../VariablesAndData';
  * @returns	{object}		div		The header object
  */
 export function StatsHeader(text, config) {
-	const div = document.createElement('div');
-	div.className = 'title';
-	div.style.padding = '0px 16px';
-	div.style.opacity = '0.7';
-	div.style.fontSize = '17px';
-	div.style.fontFamily = '"Kavoon", Georgia, serif';
-	div.appendChild(document.createTextNode(`${text} `));
-	const span = document.createElement('span');
-	span.style.cursor = 'pointer';
-	span.style.display = 'inline-block';
-	span.style.height = '14px';
-	span.style.width = '14px';
-	span.style.borderRadius = '7px';
-	span.style.textAlign = 'center';
-	span.style.backgroundColor = '#C0C0C0';
-	span.style.color = 'black';
-	span.style.fontSize = '13px';
-	span.style.verticalAlign = 'middle';
-	span.textContent = CMOptions.Header[config] ? '-' : '+';
-	span.onclick = function () { ToggleHeader(config); Game.UpdateMenu(); };
-	div.appendChild(span);
-	return div;
+  const div = document.createElement('div');
+  div.className = 'title';
+  div.style.padding = '0px 16px';
+  div.style.opacity = '0.7';
+  div.style.fontSize = '17px';
+  div.style.fontFamily = '"Kavoon", Georgia, serif';
+  div.appendChild(document.createTextNode(`${text} `));
+  const span = document.createElement('span');
+  span.style.cursor = 'pointer';
+  span.style.display = 'inline-block';
+  span.style.height = '14px';
+  span.style.width = '14px';
+  span.style.borderRadius = '7px';
+  span.style.textAlign = 'center';
+  span.style.backgroundColor = '#C0C0C0';
+  span.style.color = 'black';
+  span.style.fontSize = '13px';
+  span.style.verticalAlign = 'middle';
+  span.textContent = CMOptions.Header[config] ? '-' : '+';
+  span.onclick = function () {
+    ToggleHeader(config);
+    Game.UpdateMenu();
+  };
+  div.appendChild(span);
+  return div;
 }
 
 /**
@@ -46,35 +49,39 @@ export function StatsHeader(text, config) {
  * @returns	{object}		div			The option object
  */
 export function StatsListing(type, name, text, placeholder) {
-	const div = document.createElement('div');
-	div.className = 'listing';
+  const div = document.createElement('div');
+  div.className = 'listing';
 
-	const listingName = document.createElement('b');
-	listingName.textContent = name;
-	div.appendChild(listingName);
-	if (type === 'withTooltip') {
-		div.className = 'listing';
-		div.appendChild(document.createTextNode(' '));
+  const listingName = document.createElement('b');
+  listingName.textContent = name;
+  div.appendChild(listingName);
+  if (type === 'withTooltip') {
+    div.className = 'listing';
+    div.appendChild(document.createTextNode(' '));
 
-		const tooltip = document.createElement('span');
-		tooltip.onmouseout = function () { Game.tooltip.hide(); };
-		tooltip.onmouseover = function () { Game.tooltip.draw(this, escape(TooltipText[placeholder].innerHTML)); };
-		tooltip.style.cursor = 'default';
-		tooltip.style.display = 'inline-block';
-		tooltip.style.height = '10px';
-		tooltip.style.width = '10px';
-		tooltip.style.borderRadius = '5px';
-		tooltip.style.textAlign = 'center';
-		tooltip.style.backgroundColor = '#C0C0C0';
-		tooltip.style.color = 'black';
-		tooltip.style.fontSize = '9px';
-		tooltip.style.verticalAlign = 'bottom';
-		tooltip.textContent = '?';
-		div.appendChild(tooltip);
-	}
-	div.appendChild(document.createTextNode(': '));
-	div.appendChild(text);
-	return div;
+    const tooltip = document.createElement('span');
+    tooltip.onmouseout = function () {
+      Game.tooltip.hide();
+    };
+    tooltip.onmouseover = function () {
+      Game.tooltip.draw(this, escape(TooltipText[placeholder].innerHTML));
+    };
+    tooltip.style.cursor = 'default';
+    tooltip.style.display = 'inline-block';
+    tooltip.style.height = '10px';
+    tooltip.style.width = '10px';
+    tooltip.style.borderRadius = '5px';
+    tooltip.style.textAlign = 'center';
+    tooltip.style.backgroundColor = '#C0C0C0';
+    tooltip.style.color = 'black';
+    tooltip.style.fontSize = '9px';
+    tooltip.style.verticalAlign = 'bottom';
+    tooltip.textContent = '?';
+    div.appendChild(tooltip);
+  }
+  div.appendChild(document.createTextNode(': '));
+  div.appendChild(text);
+  return div;
 }
 
 /**
@@ -83,39 +90,43 @@ export function StatsListing(type, name, text, placeholder) {
  * @returns	{object}		frag			The tooltip object
  */
 export function StatsMissDisp(theMissDisp) {
-	const frag = document.createDocumentFragment();
-	frag.appendChild(document.createTextNode(`${theMissDisp.length} `));
-	const span = document.createElement('span');
-	span.onmouseout = function () { Game.tooltip.hide(); };
-	const placeholder = document.createElement('div');
-	const missing = document.createElement('div');
-	missing.style.minWidth = '140px';
-	missing.style.marginBottom = '4px';
-	const title = document.createElement('div');
-	title.className = 'name';
-	title.style.marginBottom = '4px';
-	title.style.textAlign = 'center';
-	title.textContent = 'Missing';
-	missing.appendChild(title);
-	for (const i of Object.keys(theMissDisp)) {
-		const div = document.createElement('div');
-		div.style.textAlign = 'center';
-		div.appendChild(document.createTextNode(theMissDisp[i]));
-		missing.appendChild(div);
-	}
-	placeholder.appendChild(missing);
-	span.onmouseover = function () { Game.tooltip.draw(this, escape(placeholder.innerHTML)); };
-	span.style.cursor = 'default';
-	span.style.display = 'inline-block';
-	span.style.height = '10px';
-	span.style.width = '10px';
-	span.style.borderRadius = '5px';
-	span.style.textAlign = 'center';
-	span.style.backgroundColor = '#C0C0C0';
-	span.style.color = 'black';
-	span.style.fontSize = '9px';
-	span.style.verticalAlign = 'bottom';
-	span.textContent = '?';
-	frag.appendChild(span);
-	return frag;
+  const frag = document.createDocumentFragment();
+  frag.appendChild(document.createTextNode(`${theMissDisp.length} `));
+  const span = document.createElement('span');
+  span.onmouseout = function () {
+    Game.tooltip.hide();
+  };
+  const placeholder = document.createElement('div');
+  const missing = document.createElement('div');
+  missing.style.minWidth = '140px';
+  missing.style.marginBottom = '4px';
+  const title = document.createElement('div');
+  title.className = 'name';
+  title.style.marginBottom = '4px';
+  title.style.textAlign = 'center';
+  title.textContent = 'Missing';
+  missing.appendChild(title);
+  for (const i of Object.keys(theMissDisp)) {
+    const div = document.createElement('div');
+    div.style.textAlign = 'center';
+    div.appendChild(document.createTextNode(theMissDisp[i]));
+    missing.appendChild(div);
+  }
+  placeholder.appendChild(missing);
+  span.onmouseover = function () {
+    Game.tooltip.draw(this, escape(placeholder.innerHTML));
+  };
+  span.style.cursor = 'default';
+  span.style.display = 'inline-block';
+  span.style.height = '10px';
+  span.style.width = '10px';
+  span.style.borderRadius = '5px';
+  span.style.textAlign = 'center';
+  span.style.backgroundColor = '#C0C0C0';
+  span.style.color = 'black';
+  span.style.fontSize = '9px';
+  span.style.verticalAlign = 'bottom';
+  span.textContent = '?';
+  frag.appendChild(span);
+  return frag;
 }

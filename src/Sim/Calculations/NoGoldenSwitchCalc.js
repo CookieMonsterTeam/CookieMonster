@@ -7,8 +7,8 @@ import CalculateGains from './CalculateGains';
  * It is called by CM.Cache.NoGoldSwitchCPS()
  */
 export default function CalcNoGoldSwitchCPS() {
-	CopyData();
-	SimUpgrades['Golden switch [off]'].bought = 0;
-	CalculateGains();
-	return SimCookiesPs;
+  CopyData();
+  SimUpgrades['Golden switch [off]'].bought = 0;
+  CalculateGains();
+  return SimCookiesPs;
 }

@@ -7,12 +7,23 @@ import ColourOfPP from './ColourOfPP';
  * It is called by CM.Cache.CachePP()
  */
 export default function CacheUpgradePP() {
-	for (const i of Object.keys(CacheUpgrades)) {
-		if (Game.cookiesPs) {
-			CacheUpgrades[i].pp = (Math.max(Game.Upgrades[i].getPrice() - (Game.cookies + GetWrinkConfigBank()), 0) / Game.cookiesPs) + (Game.Upgrades[i].getPrice() / CacheUpgrades[i].bonus);
-		} else CacheUpgrades[i].pp = (Game.Upgrades[i].getPrice() / CacheUpgrades[i].bonus);
-		if (Number.isNaN(CacheUpgrades[i].pp)) CacheUpgrades[i].pp = Infinity;
+  for (const i of Object.keys(CacheUpgrades)) {
+    if (Game.cookiesPs) {
+      CacheUpgrades[i].pp =
+        Math.max(
+          Game.Upgrades[i].getPrice() - (Game.cookies + GetWrinkConfigBank()),
+          0,
+        ) /
+          Game.cookiesPs +
+        Game.Upgrades[i].getPrice() / CacheUpgrades[i].bonus;
+    } else
+      CacheUpgrades[i].pp =
+        Game.Upgrades[i].getPrice() / CacheUpgrades[i].bonus;
+    if (Number.isNaN(CacheUpgrades[i].pp)) CacheUpgrades[i].pp = Infinity;
 
-		CacheUpgrades[i].color = ColourOfPP(CacheUpgrades[i], Game.Upgrades[i].getPrice());
-	}
+    CacheUpgrades[i].color = ColourOfPP(
+      CacheUpgrades[i],
+      Game.Upgrades[i].getPrice(),
+    );
+  }
 }

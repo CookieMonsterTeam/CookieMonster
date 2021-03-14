@@ -5,11 +5,11 @@ import { CMOptions } from '../VariablesAndData';
  * It is called by changes in CM.Options.WrinklerButtons
  */
 export default function ToggleWrinklerButtons() {
-	if (CMOptions.WrinklerButtons) {
-		l('PopAllNormalWrinklerButton').style.display = '';
-		l('PopFattestWrinklerButton').style.display = '';
-	} else {
-		l('PopAllNormalWrinklerButton').style.display = 'none';
-		l('PopFattestWrinklerButton').style.display = 'none';
-	}
+  if (CMOptions.WrinklerButtons) {
+    l('PopAllNormalWrinklerButton').style.display = '';
+    l('PopFattestWrinklerButton').style.display = '';
+  } else {
+    l('PopAllNormalWrinklerButton').style.display = 'none';
+    l('PopFattestWrinklerButton').style.display = 'none';
+  }
 }

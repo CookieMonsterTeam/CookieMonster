@@ -9,6 +9,6 @@ import CacheUpgradePP from './Upgrade';
  * It is called by CM.Cache.LoopCache() and CM.Cache.InitCache()
  */
 export default function CachePP() {
-	CacheBuildingsPP();
-	CacheUpgradePP();
+  CacheBuildingsPP();
+  CacheUpgradePP();
 }

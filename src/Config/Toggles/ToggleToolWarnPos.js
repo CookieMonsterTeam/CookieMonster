@@ -6,15 +6,15 @@ import { CMOptions } from '../VariablesAndData';
  * and upon creation of the warning tooltip by CM.Disp.UpdateTooltipWarnings()
  */
 export default function ToggleToolWarnPos() {
-	if (l('CMDispTooltipWarningParent') !== null) {
-		if (CMOptions.ToolWarnPos === 0) {
-			l('CMDispTooltipWarningParent').style.top = 'auto';
-			l('CMDispTooltipWarningParent').style.margin = '4px -4px';
-			l('CMDispTooltipWarningParent').style.padding = '3px 4px';
-		} else {
-			l('CMDispTooltipWarningParent').style.right = 'auto';
-			l('CMDispTooltipWarningParent').style.margin = '4px';
-			l('CMDispTooltipWarningParent').style.padding = '4px 3px';
-		}
-	}
+  if (l('CMDispTooltipWarningParent') !== null) {
+    if (CMOptions.ToolWarnPos === 0) {
+      l('CMDispTooltipWarningParent').style.top = 'auto';
+      l('CMDispTooltipWarningParent').style.margin = '4px -4px';
+      l('CMDispTooltipWarningParent').style.padding = '3px 4px';
+    } else {
+      l('CMDispTooltipWarningParent').style.right = 'auto';
+      l('CMDispTooltipWarningParent').style.margin = '4px';
+      l('CMDispTooltipWarningParent').style.padding = '4px 3px';
+    }
+  }
 }

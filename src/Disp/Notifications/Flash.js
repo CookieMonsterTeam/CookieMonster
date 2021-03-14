@@ -9,17 +9,26 @@ import { isInitializing } from '../../InitSaveLoad/Variables';
  * @param	{string}	config	The setting in CM.Options that is checked before creating the flash
  */
 export default function Flash(mode, config) {
-	// The arguments check makes the sound not play upon initialization of the mod
-	if ((CMOptions[config] === 1 && mode === 3 && isInitializing === false) || mode === 1) {
-		l('CMWhiteScreen').style.opacity = '0.5';
-		if (mode === 3) {
-			l('CMWhiteScreen').style.display = 'inline';
-			setTimeout(function () { Flash(2, config); }, 1000 / Game.fps);
-		} else {
-			setTimeout(function () { Flash(0, config); }, 1000 / Game.fps);
-		}
-	} else if (mode === 2) {
-		l('CMWhiteScreen').style.opacity = '1';
-		setTimeout(function () { Flash(1, config); }, 1000 / Game.fps);
-	} else if (mode === 0) l('CMWhiteScreen').style.display = 'none';
+  // The arguments check makes the sound not play upon initialization of the mod
+  if (
+    (CMOptions[config] === 1 && mode === 3 && isInitializing === false) ||
+    mode === 1
+  ) {
+    l('CMWhiteScreen').style.opacity = '0.5';
+    if (mode === 3) {
+      l('CMWhiteScreen').style.display = 'inline';
+      setTimeout(function () {
+        Flash(2, config);
+      }, 1000 / Game.fps);
+    } else {
+      setTimeout(function () {
+        Flash(0, config);
+      }, 1000 / Game.fps);
+    }
+  } else if (mode === 2) {
+    l('CMWhiteScreen').style.opacity = '1';
+    setTimeout(function () {
+      Flash(1, config);
+    }, 1000 / Game.fps);
+  } else if (mode === 0) l('CMWhiteScreen').style.display = 'none';
 }

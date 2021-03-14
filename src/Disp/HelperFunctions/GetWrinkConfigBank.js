@@ -1,4 +1,7 @@
-import { CacheWrinklersFattest, CacheWrinklersTotal } from '../../Cache/VariablesAndData';
+import {
+  CacheWrinklersFattest,
+  CacheWrinklersTotal,
+} from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 
 /**
@@ -7,10 +10,11 @@ import { CMOptions } from '../../Config/VariablesAndData';
  * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinklersTotal)
  */
 export default function GetWrinkConfigBank() {
-	if (CMOptions.CalcWrink === 1) {
-		return CacheWrinklersTotal;
-	} if (CMOptions.CalcWrink === 2) {
-		return CacheWrinklersFattest[0];
-	}
-	return 0;
+  if (CMOptions.CalcWrink === 1) {
+    return CacheWrinklersTotal;
+  }
+  if (CMOptions.CalcWrink === 2) {
+    return CacheWrinklersFattest[0];
+  }
+  return 0;
 }

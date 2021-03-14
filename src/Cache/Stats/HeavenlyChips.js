@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-vars */
 import {
-	CacheHCPerSecond, CacheLastHeavenlyCheck, CacheLastHeavenlyChips, HeavenlyChipsDiff,
+  CacheHCPerSecond,
+  CacheLastHeavenlyCheck,
+  CacheLastHeavenlyChips,
+  HeavenlyChipsDiff,
 } from '../VariablesAndData';
 
 /**
@@ -9,25 +12,28 @@ import {
  * @global	{number}	CM.Cache.HCPerSecond	The Heavenly Chips per second in the last five seconds
  */
 export default function CacheHeavenlyChipsPS() {
-	const currDate = Math.floor(Date.now() / 1000);
-	// Only calculate every new second
-	if ((Game.T / Game.fps) % 1 === 0) {
-		const chipsOwned = Game.HowMuchPrestige(Game.cookiesReset);
-		const ascendNowToOwn = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
-		const ascendNowToGet = ascendNowToOwn - Math.floor(chipsOwned);
+  const currDate = Math.floor(Date.now() / 1000);
+  // Only calculate every new second
+  if ((Game.T / Game.fps) % 1 === 0) {
+    const chipsOwned = Game.HowMuchPrestige(Game.cookiesReset);
+    const ascendNowToOwn = Math.floor(
+      Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned),
+    );
+    const ascendNowToGet = ascendNowToOwn - Math.floor(chipsOwned);
 
-		// Add recent gains to AvgQueue's
-		const timeDiff = currDate - CacheLastHeavenlyCheck;
-		const heavenlyChipsDiffAvg = Math.max(0, (ascendNowToGet - CacheLastHeavenlyChips)) / timeDiff;
-		for (let i = 0; i < timeDiff; i++) {
-			HeavenlyChipsDiff.addLatest(heavenlyChipsDiffAvg);
-		}
+    // Add recent gains to AvgQueue's
+    const timeDiff = currDate - CacheLastHeavenlyCheck;
+    const heavenlyChipsDiffAvg =
+      Math.max(0, ascendNowToGet - CacheLastHeavenlyChips) / timeDiff;
+    for (let i = 0; i < timeDiff; i++) {
+      HeavenlyChipsDiff.addLatest(heavenlyChipsDiffAvg);
+    }
 
-		// Store current data for next loop
-		CacheLastHeavenlyCheck = currDate;
-		CacheLastHeavenlyChips = ascendNowToGet;
+    // Store current data for next loop
+    CacheLastHeavenlyCheck = currDate;
+    CacheLastHeavenlyChips = ascendNowToGet;
 
-		// Get average gain over period of 5 seconds
-		CacheHCPerSecond = HeavenlyChipsDiff.calcAverage(5);
-	}
+    // Get average gain over period of 5 seconds
+    CacheHCPerSecond = HeavenlyChipsDiff.calcAverage(5);
+  }
 }

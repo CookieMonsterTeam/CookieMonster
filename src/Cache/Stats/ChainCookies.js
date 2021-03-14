@@ -1,7 +1,22 @@
 /* eslint-disable no-unused-vars */
 import GetCPSBuffMult from '../CPS/GetCPSBuffMult';
 import {
-	CacheChainFrenzyMaxReward, CacheChainFrenzyRequired, CacheChainFrenzyRequiredNext, CacheChainFrenzyWrathMaxReward, CacheChainFrenzyWrathRequired, CacheChainFrenzyWrathRequiredNext, CacheChainMaxReward, CacheChainRequired, CacheChainRequiredNext, CacheChainWrathMaxReward, CacheChainWrathRequired, CacheChainWrathRequiredNext, CacheDragonsFortuneMultAdjustment, CacheGoldenCookiesMult, CacheNoGoldSwitchCookiesPS, CacheWrathCookiesMult,
+  CacheChainFrenzyMaxReward,
+  CacheChainFrenzyRequired,
+  CacheChainFrenzyRequiredNext,
+  CacheChainFrenzyWrathMaxReward,
+  CacheChainFrenzyWrathRequired,
+  CacheChainFrenzyWrathRequiredNext,
+  CacheChainMaxReward,
+  CacheChainRequired,
+  CacheChainRequiredNext,
+  CacheChainWrathMaxReward,
+  CacheChainWrathRequired,
+  CacheChainWrathRequiredNext,
+  CacheDragonsFortuneMultAdjustment,
+  CacheGoldenCookiesMult,
+  CacheNoGoldSwitchCookiesPS,
+  CacheWrathCookiesMult,
 } from '../VariablesAndData';
 
 /**
@@ -13,19 +28,32 @@ import {
  * @returns	[{number, number, number}]				Total cookies earned, cookie needed for this and next level
  */
 export function MaxChainCookieReward(digit, maxPayout, mult) {
-	let totalFromChain = 0;
-	let moni = 0;
-	let nextMoni = 0;
-	let nextRequired = 0;
-	let chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
-	while (nextMoni < maxPayout) {
-		moni = Math.max(digit, Math.min(Math.floor(1 / 9 * 10 ** chain * digit * mult), maxPayout * mult));
-		nextMoni = Math.max(digit, Math.min(Math.floor(1 / 9 * 10 ** (chain + 1) * digit * mult), maxPayout * mult));
-		nextRequired = Math.floor(1 / 9 * 10 ** (chain + 1) * digit * mult);
-		totalFromChain += moni;
-		chain++;
-	}
-	return [totalFromChain, moni, nextRequired];
+  let totalFromChain = 0;
+  let moni = 0;
+  let nextMoni = 0;
+  let nextRequired = 0;
+  let chain =
+    1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
+  while (nextMoni < maxPayout) {
+    moni = Math.max(
+      digit,
+      Math.min(
+        Math.floor((1 / 9) * 10 ** chain * digit * mult),
+        maxPayout * mult,
+      ),
+    );
+    nextMoni = Math.max(
+      digit,
+      Math.min(
+        Math.floor((1 / 9) * 10 ** (chain + 1) * digit * mult),
+        maxPayout * mult,
+      ),
+    );
+    nextRequired = Math.floor((1 / 9) * 10 ** (chain + 1) * digit * mult);
+    totalFromChain += moni;
+    chain++;
+  }
+  return [totalFromChain, moni, nextRequired];
 }
 
 /**
@@ -45,25 +73,65 @@ export function MaxChainCookieReward(digit, maxPayout, mult) {
  * @global	{number}			CM.Cache.ChainFrenzyWrathRequiredNext		Total cookies needed for next level for wrath frenzy chain
  */
 export function CacheChain() {
-	let maxPayout = CacheNoGoldSwitchCookiesPS * 60 * 60 * 6 * CacheDragonsFortuneMultAdjustment;
-	// Removes effect of Frenzy etc.
-	const cpsBuffMult = GetCPSBuffMult();
-	if (cpsBuffMult > 0) maxPayout /= cpsBuffMult;
-	else maxPayout = 0;
+  let maxPayout =
+    CacheNoGoldSwitchCookiesPS *
+    60 *
+    60 *
+    6 *
+    CacheDragonsFortuneMultAdjustment;
+  // Removes effect of Frenzy etc.
+  const cpsBuffMult = GetCPSBuffMult();
+  if (cpsBuffMult > 0) maxPayout /= cpsBuffMult;
+  else maxPayout = 0;
 
-	CacheChainMaxReward = MaxChainCookieReward(7, maxPayout, CacheGoldenCookiesMult);
-	CacheChainRequired = CacheChainMaxReward[1] * 2 / CacheGoldenCookiesMult;
-	CacheChainRequiredNext = CacheChainMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment;
+  CacheChainMaxReward = MaxChainCookieReward(
+    7,
+    maxPayout,
+    CacheGoldenCookiesMult,
+  );
+  CacheChainRequired = (CacheChainMaxReward[1] * 2) / CacheGoldenCookiesMult;
+  CacheChainRequiredNext =
+    CacheChainMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment;
 
-	CacheChainWrathMaxReward = MaxChainCookieReward(6, maxPayout, CacheWrathCookiesMult);
-	CacheChainWrathRequired = CacheChainWrathMaxReward[1] * 2 / CacheWrathCookiesMult;
-	CacheChainWrathRequiredNext = CacheChainWrathMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment;
+  CacheChainWrathMaxReward = MaxChainCookieReward(
+    6,
+    maxPayout,
+    CacheWrathCookiesMult,
+  );
+  CacheChainWrathRequired =
+    (CacheChainWrathMaxReward[1] * 2) / CacheWrathCookiesMult;
+  CacheChainWrathRequiredNext =
+    CacheChainWrathMaxReward[2] /
+    60 /
+    60 /
+    6 /
+    CacheDragonsFortuneMultAdjustment;
 
-	CacheChainFrenzyMaxReward = MaxChainCookieReward(7, maxPayout * 7, CacheGoldenCookiesMult);
-	CacheChainFrenzyRequired = CacheChainFrenzyMaxReward[1] * 2 / CacheGoldenCookiesMult;
-	CacheChainFrenzyRequiredNext = CacheChainFrenzyMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment;
+  CacheChainFrenzyMaxReward = MaxChainCookieReward(
+    7,
+    maxPayout * 7,
+    CacheGoldenCookiesMult,
+  );
+  CacheChainFrenzyRequired =
+    (CacheChainFrenzyMaxReward[1] * 2) / CacheGoldenCookiesMult;
+  CacheChainFrenzyRequiredNext =
+    CacheChainFrenzyMaxReward[2] /
+    60 /
+    60 /
+    6 /
+    CacheDragonsFortuneMultAdjustment;
 
-	CacheChainFrenzyWrathMaxReward = MaxChainCookieReward(6, maxPayout * 7, CacheWrathCookiesMult);
-	CacheChainFrenzyWrathRequired = CacheChainFrenzyWrathMaxReward[1] * 2 / CacheWrathCookiesMult;
-	CacheChainFrenzyWrathRequiredNext = CacheChainFrenzyWrathMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment;
+  CacheChainFrenzyWrathMaxReward = MaxChainCookieReward(
+    6,
+    maxPayout * 7,
+    CacheWrathCookiesMult,
+  );
+  CacheChainFrenzyWrathRequired =
+    (CacheChainFrenzyWrathMaxReward[1] * 2) / CacheWrathCookiesMult;
+  CacheChainFrenzyWrathRequiredNext =
+    CacheChainFrenzyWrathMaxReward[2] /
+    60 /
+    60 /
+    6 /
+    CacheDragonsFortuneMultAdjustment;
 }
