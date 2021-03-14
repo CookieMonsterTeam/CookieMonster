@@ -74,13 +74,15 @@ export function Beautify(num, floats, forced) {
       }
     }
     if (answer === '') {
-      console.log(`Could not beautify number with CM.Disp.Beautify: ${num}`);
+      console.log(
+        `Could not beautify number with Cookie Monster Beautify: ${num}`,
+      );
       answer = BackupFunctions.Beautify(num, floats);
     }
     if (CMOptions.ScaleSeparator) answer = answer.replace('.', ',');
     return answer;
   }
-  console.log(`Could not beautify number with CM.Disp.Beautify: ${num}`);
+  console.log(`Could not beautify number with Cookie Monster Beautify: ${num}`);
   return BackupFunctions.Beautify(num, floats);
 }
 
