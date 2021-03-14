@@ -16,7 +16,7 @@
         "build_test": "run-s pack_dev",
         "pack_prod": "webpack --env production",
         "pack_dev": "webpack",
-        "remove_comment": "sed -i '' -e '/\\/\\/# sourceMappingURL.*/d' dist/CookieMonster.js"
+        "remove_comment": "sed '$d' dist/CookieMonster.js"
     },
     "repository": {
         "type": "git",
