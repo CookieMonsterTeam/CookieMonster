@@ -12,10 +12,11 @@
     ],
     "scripts": {
         "eslint_src": "eslint src",
-        "build": "run-s eslint_src pack_prod",
+        "build": "run-s eslint_src pack_prod remove_comment",
         "build_test": "run-s pack_dev",
         "pack_prod": "webpack --env production",
-        "pack_dev": "webpack"
+        "pack_dev": "webpack",
+        "remove_comment": "sed -i '' -e '/\\/\\/# sourceMappingURL.*/d' dist/CookieMonster.js"
     },
     "repository": {
         "type": "git",
