@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 import jscolor from '@eastdesire/jscolor';
-import { CacheHCPerSecond, CacheTimeTillNextPrestige } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import { Beautify as CMBeautify, FormatTime } from '../../Disp/BeautifyAndFormatting/BeautifyFormatting';
 import { AddAuraInfo, AddDragonLevelUpTooltip } from '../../Disp/Dragon/Dragon';
 import AddMenu from '../../Disp/MenuSections/AddMenus';
 import UpdateTitle from '../../Disp/TabTitle/TabTitle';
+import ReplaceAscendTooltip from '../../Disp/Tooltips/AscendButton';
 import UpdateTooltipLocation from '../../Disp/Tooltips/PositionLocation';
 import { CMSayTime, Title } from '../../Disp/VariablesAndData';
 import { SimDateAges, SimDateCentury, SimDoSims } from '../../Sim/VariablesAndData';
@@ -121,6 +121,6 @@ export default function ReplaceNative() {
 		UpdateTitle();
 
 		// Since the Ascend Tooltip is not actually a tooltip we need to add our additional info here...
-		l('ascendTooltip').innerHTML += `${CMOptions.TooltipAscendButton ? `<div class='line'></div>It takes ${CacheTimeTillNextPrestige} to reach the next level and you are making ${CMBeautify(CacheHCPerSecond, 2)} chips on average in the last 5 seconds.<br>` : ''}`;
+		ReplaceAscendTooltip();
 	};
 }
