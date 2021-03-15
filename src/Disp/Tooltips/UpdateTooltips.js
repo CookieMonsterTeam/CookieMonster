@@ -62,6 +62,10 @@ export function Building() {
       );
       if (Number.isFinite(increase) && increase !== 0) {
         l('CMTooltipIncome').textContent += ` (${increase / 100}% of income)`;
+      } else {
+        l('CMTooltipIncome').textContent += ` (<0${
+          CMOptions.ScaleSeparator ? ',' : '.'
+        }01% of income)`;
       }
       l('CMTooltipBorder').className = ColorTextPre + target[TooltipName].color;
       l('CMTooltipPP').textContent = Beautify(target[TooltipName].pp, 2);
@@ -134,6 +138,10 @@ export function Upgrade() {
     } else {
       if (Number.isFinite(increase) && increase !== 0) {
         l('CMTooltipIncome').textContent += ` (${increase / 100}% of income)`;
+      } else {
+        l('CMTooltipIncome').textContent += ` (<0${
+          CMOptions.ScaleSeparator ? ',' : '.'
+        }01% of income)`;
       }
       l('CMTooltipBorder').className =
         ColorTextPre +
