@@ -8,9 +8,12 @@ import {
   CacheObjects10,
   CacheObjects100,
   CacheUpgrades,
+  CacheWrinklersFattest,
+  CacheWrinklersTotal,
 } from '../../Cache/VariablesAndData';
 import ToggleToolWarnPos from '../../Config/Toggles/ToggleToolWarnPos';
 import { CMOptions } from '../../Config/VariablesAndData';
+import CopyData from '../../Sim/SimulationData/CopyData';
 import { SimObjects } from '../../Sim/VariablesAndData';
 import {
   Beautify,
@@ -37,7 +40,7 @@ import * as Create from './CreateTooltip';
 /**
  * This function adds extra info to the Building tooltips
  */
-export function Building() {
+function Building() {
   if (CMOptions.TooltipBuildUpgrade === 1 && Game.buyMode === 1) {
     const tooltipBox = l('CMTooltipBorder');
     Create.TooltipCreateCalculationSection(tooltipBox);
@@ -111,7 +114,7 @@ export function Building() {
 /**
  * This function adds extra info to the Upgrade tooltips
  */
-export function Upgrade() {
+function Upgrade() {
   const tooltipBox = l('CMTooltipBorder');
   Create.TooltipCreateCalculationSection(tooltipBox);
 
@@ -200,7 +203,7 @@ export function Upgrade() {
  * This function adds extra info to the Sugar Lump tooltip
  * It adds to the additional information to l('CMTooltipArea')
  */
-export function SugarLump() {
+function SugarLump() {
   if (CMOptions.TooltipLump === 1) {
     const tooltipBox = l('CMTooltipBorder');
 
@@ -219,7 +222,7 @@ export function SugarLump() {
  * This function adds extra info to the Grimoire tooltips
  * It adds to the additional information to l('CMTooltipArea')
  */
-export function Grimoire() {
+function Grimoire() {
   const minigame = Game.Objects['Wizard tower'].minigame;
   const spellCost = minigame.getSpellCost(minigame.spellsById[TooltipName]);
 
@@ -289,7 +292,7 @@ export function Grimoire() {
  * This function adds extra info to the Garden plots tooltips
  * It adds to the additional information to l('CMTooltipArea')
  */
-export function GardenPlots() {
+function GardenPlots() {
   const minigame = Game.Objects.Farm.minigame;
   if (
     CMOptions.TooltipPlots &&
@@ -341,7 +344,7 @@ export function GardenPlots() {
  * It is called when the Harvest All tooltip is created or refreshed by CM.Disp.UpdateTooltip()
  * It adds to the additional information to l('CMTooltipArea')
  */
-export function HarvestAll() {
+function HarvestAll() {
   const minigame = Game.Objects.Farm.minigame;
   if (CMOptions.TooltipLump) {
     l('CMTooltipBorder').appendChild(
@@ -391,10 +394,28 @@ export function HarvestAll() {
 }
 
 /**
- * This function updates the warnings section of the building and upgrade tooltips
- * It is called by CM.Disp.UpdateTooltip()
+ * This function adds extra info to the wrinkler button tooltip
+ * It adds to the additional information to l('CMTooltipArea')
  */
-export function Warnings() {
+function WrinklerButton() {
+  l('tooltip').innerHTML = '';
+  l('tooltip').appendChild(Create.TooltipCreateHeader('Reward:'));
+
+  const WrinklerReward = document.createElement('div');
+  WrinklerReward.id = 'CMWrinklerReward';
+  if (TooltipName === 'PopAll') {
+    WrinklerReward.textContent = CacheWrinklersTotal;
+  } else if (TooltipName === 'PopFattest') {
+    WrinklerReward.textContent = CacheWrinklersFattest[0];
+  }
+
+  l('tooltip').appendChild(WrinklerReward);
+}
+
+/**
+ * This function updates the warnings section of the building and upgrade tooltips
+ */
+function Warnings() {
   if (TooltipType === 'b' || TooltipType === 'u') {
     if (document.getElementById('CMDispTooltipWarningParent') === null) {
       l('tooltipAnchor').appendChild(Create.TooltipCreateWarningSection());
@@ -515,5 +536,40 @@ export function Warnings() {
     } else l('CMDispTooltipWarnUser').style.display = 'none';
   } else if (l('CMDispTooltipWarningParent') !== null) {
     l('CMDispTooltipWarningParent').remove();
+  }
+}
+
+/**
+ * This function updates the sections of the tooltips created by CookieMonster
+ */
+export default function UpdateTooltips() {
+  CopyData();
+  if (l('tooltipAnchor').style.display !== 'none' && l('CMTooltipArea')) {
+    l('CMTooltipArea').innerHTML = '';
+    const tooltipBox = Create.TooltipCreateTooltipBox();
+    l('CMTooltipArea').appendChild(tooltipBox);
+
+    if (TooltipType === 'b') {
+      Building();
+    } else if (TooltipType === 'u') {
+      Upgrade();
+    } else if (TooltipType === 's') {
+      SugarLump();
+    } else if (TooltipType === 'g') {
+      Grimoire();
+    } else if (TooltipType === 'p') {
+      GardenPlots();
+    } else if (TooltipType === 'ha') {
+      HarvestAll();
+    } else if (TooltipType === 'wb') {
+      l('CMTooltipArea').innerHTML = '';
+      WrinklerButton();
+    }
+    Warnings();
+  } else if (l('CMTooltipArea') === null) {
+    // Remove warnings if its a basic tooltip
+    if (l('CMDispTooltipWarningParent') !== null) {
+      l('CMDispTooltipWarningParent').remove();
+    }
   }
 }
