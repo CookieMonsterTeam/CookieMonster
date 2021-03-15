@@ -5,7 +5,7 @@ import UpdateUpgrades from './BuildingsUpgrades/Upgrades';
 import { UpdateBotBar } from './InfoBars/BottomBar';
 import { UpdateTimerBar } from './InfoBars/TimerBar';
 import RefreshMenu from './MenuSections/Refreshmenu';
-import { UpdateTooltips } from './Tooltips/Tooltip';
+import UpdateTooltips from './Tooltips/UpdateTooltips';
 import {
   CheckWrinklerTooltip,
   UpdateWrinklerTooltip,
