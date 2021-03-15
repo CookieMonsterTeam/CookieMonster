@@ -12,27 +12,28 @@ export default function InitUpgrade(upgradeName) {
   const you = {};
   // Some upgrades have a function for .power (notably the valentine cookies)
   you.power = me.power;
-  if (typeof me.power === 'function') {
+  if (typeof you.power === 'function') {
     if (me.name === 'Sugar crystal cookies') {
-      me.power = function () {
+      you.power = function () {
         let n = 5;
         for (const i in SimObjects) {
           if (SimObjects[i].level >= 10) n += 1;
         }
         return n;
       };
+    } else {
+      you.power = function () {
+        let pow = 2;
+        if (SimHas('Starlove')) pow = 3;
+        if (Game.hasGod) {
+          const godLvl = SimHasGod('seasons');
+          if (godLvl === 1) pow *= 1.3;
+          else if (godLvl === 2) pow *= 1.2;
+          else if (godLvl === 3) pow *= 1.1;
+        }
+        return pow;
+      };
     }
-    me.power = function () {
-      let pow = 2;
-      if (SimHas('Starlove')) pow = 3;
-      if (Game.hasGod) {
-        const godLvl = SimHasGod('seasons');
-        if (godLvl === 1) pow *= 1.3;
-        else if (godLvl === 2) pow *= 1.2;
-        else if (godLvl === 3) pow *= 1.1;
-      }
-      return pow;
-    };
   }
   you.pool = me.pool;
   you.name = me.name;
