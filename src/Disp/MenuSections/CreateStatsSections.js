@@ -505,11 +505,11 @@ export function GardenSection() {
   section.className = 'CMStatsGardenSection';
 
   const bakeberryColor =
-    Game.cookies < Game.cookiesPs * 60 * 30 ? ColorRed : ColorGreen;
+    Game.cookies < Game.cookiesPs * 60 * 10 * 100 ? ColorRed : ColorGreen;
   const bakeberryFrag = document.createElement('span');
   bakeberryFrag.style.fontWeight = 'bold';
   bakeberryFrag.className = ColorTextPre + bakeberryColor;
-  bakeberryFrag.textContent = Beautify(Game.cookiesPs * 60 * 30);
+  bakeberryFrag.textContent = Beautify(Game.cookiesPs * 60 * 10 * 100);
   section.appendChild(
     StatsListing(
       'basic',
@@ -519,11 +519,11 @@ export function GardenSection() {
   );
 
   const chocorootColor =
-    Game.cookies < Game.cookiesPs * 60 * 3 ? ColorRed : ColorGreen;
+    Game.cookies < Game.cookiesPs * 60 * 100 ? ColorRed : ColorGreen;
   const chocorootFrag = document.createElement('span');
   chocorootFrag.style.fontWeight = 'bold';
   chocorootFrag.className = ColorTextPre + chocorootColor;
-  chocorootFrag.textContent = Beautify(Game.cookiesPs * 60 * 3);
+  chocorootFrag.textContent = Beautify(Game.cookiesPs * 60 * 100);
   section.appendChild(
     StatsListing(
       'basic',
@@ -533,11 +533,11 @@ export function GardenSection() {
   );
 
   const queenbeetColor =
-    Game.cookies < Game.cookiesPs * 60 * 60 ? ColorRed : ColorGreen;
+    Game.cookies < Game.cookiesPs * 60 * 60 * 25 ? ColorRed : ColorGreen;
   const queenbeetFrag = document.createElement('span');
   queenbeetFrag.style.fontWeight = 'bold';
   queenbeetFrag.className = ColorTextPre + queenbeetColor;
-  queenbeetFrag.textContent = Beautify(Game.cookiesPs * 60 * 60);
+  queenbeetFrag.textContent = Beautify(Game.cookiesPs * 60 * 60 * 25);
   section.appendChild(
     StatsListing(
       'basic',
@@ -547,11 +547,11 @@ export function GardenSection() {
   );
 
   const duketaterColor =
-    Game.cookies < Game.cookiesPs * 60 * 120 ? ColorRed : ColorGreen;
+    Game.cookies < Game.cookiesPs * 60 * 15 * 100 ? ColorRed : ColorGreen;
   const duketaterFrag = document.createElement('span');
   duketaterFrag.style.fontWeight = 'bold';
   duketaterFrag.className = ColorTextPre + duketaterColor;
-  duketaterFrag.textContent = Beautify(Game.cookiesPs * 60 * 120);
+  duketaterFrag.textContent = Beautify(Game.cookiesPs * 60 * 15 * 100);
   section.appendChild(
     StatsListing(
       'basic',
