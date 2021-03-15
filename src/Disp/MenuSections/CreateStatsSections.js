@@ -591,18 +591,20 @@ export function PrestigeSection() {
     ),
   );
 
-  const neededCook =
+  const neededCook = Math.max(
+    0,
     Game.HowManyCookiesReset(possiblePresMax + 1) -
-    (CacheRealCookiesEarned +
-      Game.cookiesReset +
-      CacheWrinklersTotal +
-      ((
-        Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')
+      (CacheRealCookiesEarned +
+        Game.cookiesReset +
+        CacheWrinklersTotal +
+        ((
+          Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')
+            ? CacheLastChoEgg
+            : 0
+        )
           ? CacheLastChoEgg
-          : 0
-      )
-        ? CacheLastChoEgg
-        : 0));
+          : 0)),
+  );
   const cookiesNextFrag = document.createDocumentFragment();
   cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
   const cookiesNextSmall = document.createElement('small');
