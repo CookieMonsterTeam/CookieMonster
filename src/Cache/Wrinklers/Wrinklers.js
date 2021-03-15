@@ -16,6 +16,9 @@ import {
  * @global	{[{number}, {number}]}	CM.Cache.WrinklersFattest	A list containing the cookies and the id of the fattest non-shiny wrinkler
  */
 export default function CacheWrinklers() {
+  CacheWrinklersTotal = 0;
+  CacheWrinklersNormal = 0;
+  CacheWrinklersFattest = [0, null];
   for (let i = 0; i < Game.wrinklers.length; i++) {
     let sucked = Game.wrinklers[i].sucked;
     let toSuck = 1.1;
