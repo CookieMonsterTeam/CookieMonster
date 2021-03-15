@@ -1,5 +1,6 @@
 import {
   CacheHCPerSecond,
+  CacheLastHeavenlyChips,
   CacheTimeTillNextPrestige,
 } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
@@ -11,15 +12,15 @@ import { Beautify } from '../BeautifyAndFormatting/BeautifyFormatting';
  * @returns {object}	div		An object containing the stylized header
  */
 export default function ReplaceAscendTooltip() {
-  const ascendNowToGet =
-    Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) -
-    Math.floor(Game.HowMuchPrestige(Game.cookiesReset));
-  const cookiesToNext =
+  const cookiesToNext = Math.max(
+    0,
     Game.HowManyCookiesReset(
       Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) +
         1,
     ) -
-    (Game.cookiesEarned + Game.cookiesReset);
+      (Game.cookiesEarned + Game.cookiesReset),
+  );
+
   const startDate = Game.sayTime(
     ((Date.now() - Game.startDate) / 1000) * Game.fps,
     -1,
@@ -35,17 +36,18 @@ export default function ReplaceAscendTooltip() {
     )}</b>.<br>(CpS +${Beautify(Game.prestige)}%)`;
     str += '<div class="line"></div>';
   }
-  if (ascendNowToGet < 1) str += 'Ascending now would grant you no prestige.';
-  else if (ascendNowToGet < 2)
+  if (CacheLastHeavenlyChips < 1)
+    str += 'Ascending now would grant you no prestige.';
+  else if (CacheLastHeavenlyChips < 2)
     str +=
       'Ascending now would grant you<br><b>1 prestige level</b> (+1% CpS)<br>and <b>1 heavenly chip</b> to spend.';
   else
     str += `Ascending now would grant you<br><b>${Beautify(
-      ascendNowToGet,
+      CacheLastHeavenlyChips,
     )} prestige levels</b> (+${Beautify(
-      ascendNowToGet,
+      CacheLastHeavenlyChips,
     )}% CpS)<br>and <b>${Beautify(
-      ascendNowToGet,
+      CacheLastHeavenlyChips,
     )} heavenly chips</b> to spend.`;
   str += '<div class="line"></div>';
   str += `You need <b>${Beautify(
