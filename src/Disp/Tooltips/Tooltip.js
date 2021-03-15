@@ -113,6 +113,12 @@ export function CreateTooltip(type, name) {
   else if (type === 'ha')
     l('tooltip').innerHTML = Game.ObjectsById[2].minigame.toolTooltip(1)();
   else if (type === 'wb') l('tooltip').innerHTML = '';
+  else if (type === 'pag')
+    l('tooltip').innerHTML = Game.Objects.Temple.minigame.godTooltip(name)();
+  else if (type === 'pas')
+    l('tooltip').innerHTML = Game.Objects.Temple.minigame.slotTooltip(
+      name[0],
+    )();
 
   // Adds area for extra tooltip-sections
   if (
@@ -122,7 +128,9 @@ export function CreateTooltip(type, name) {
     type === 'g' ||
     (type === 'p' && !Game.keys[16]) ||
     type === 'ha' ||
-    type === 'wb'
+    type === 'wb' ||
+    type === 'pag' ||
+    (type === 'pas' && name[1] !== -1)
   ) {
     const area = document.createElement('div');
     area.id = 'CMTooltipArea';

@@ -71,6 +71,7 @@ const ConfigDefault = {
   TooltipWrink: 1,
   TooltipLump: 1,
   TooltipPlots: 1,
+  TooltipPantheon: 1,
   DragonAuraInfo: 1,
   TooltipAscendButton: 1,
   Stats: 1,

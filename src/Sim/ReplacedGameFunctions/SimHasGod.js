@@ -1,4 +1,4 @@
-import { SimObjects } from '../VariablesAndData';
+import { SimGod1, SimGod2, SimGod3, SimObjects } from '../VariablesAndData';
 
 /**
  * This function checks for the current God level in the sim data
@@ -11,10 +11,14 @@ export default function SimHasGod(what) {
       SimObjects.Temple.minigame = Game.Objects.Temple.minigame;
     }
     const god = SimObjects.Temple.minigame.gods[what];
-    for (let i = 0; i < 3; i++) {
-      if (SimObjects.Temple.minigame.slot[i] === god.id) {
-        return i + 1;
-      }
+    if (SimGod1 === god.id) {
+      return 1;
+    }
+    if (SimGod2 === god.id) {
+      return 2;
+    }
+    if (SimGod3 === god.id) {
+      return 3;
     }
   }
   return false;
