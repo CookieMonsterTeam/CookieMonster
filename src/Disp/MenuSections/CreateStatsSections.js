@@ -505,11 +505,11 @@ export function GardenSection() {
   section.className = 'CMStatsGardenSection';
 
   const bakeberryColor =
-    Game.cookies < Game.cookiesPs * 60 * 3 * 100 ? ColorRed : ColorGreen;
+    Game.cookies < Game.cookiesPs * 60 * 10 * 100 ? ColorRed : ColorGreen;
   const bakeberryFrag = document.createElement('span');
   bakeberryFrag.style.fontWeight = 'bold';
   bakeberryFrag.className = ColorTextPre + bakeberryColor;
-  bakeberryFrag.textContent = Beautify(Game.cookiesPs * 60 * 3 * 100);
+  bakeberryFrag.textContent = Beautify(Game.cookiesPs * 60 * 10 * 100);
   section.appendChild(
     StatsListing(
       'basic',
