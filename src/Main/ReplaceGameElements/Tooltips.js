@@ -86,6 +86,40 @@ function ReplaceTooltipGarden() {
   }
 }
 
+function ReplaceTooltipPantheon() {
+  if (Game.Objects.Temple.minigameLoaded) {
+    for (let i = 0; i < 11; i += 1) {
+      l(`templeGod${i}`).onmouseover = function () {
+        Game.tooltip.dynamic = 1;
+        Game.tooltip.draw(
+          this,
+          function () {
+            return CreateTooltip('pag', i);
+          },
+          'this',
+        );
+        Game.tooltip.wobble();
+      };
+    }
+    for (let i = 0; i < 3; i += 1) {
+      l(`templeSlot${i}`).onmouseover = function () {
+        Game.tooltip.dynamic = 1;
+        Game.tooltip.draw(
+          this,
+          function () {
+            return CreateTooltip('pas', [
+              i,
+              Game.Objects.Temple.minigame.slot[i],
+            ]);
+          },
+          'this',
+        );
+        Game.tooltip.wobble();
+      };
+    }
+  }
+}
+
 /**
  * This function call all functions that replace Game-tooltips with Cookie Monster enhanced tooltips
  */
@@ -100,6 +134,7 @@ export default function ReplaceTooltips() {
     LoadMinigames();
     ReplaceTooltipGarden();
     ReplaceTooltipGrimoire();
+    ReplaceTooltipPantheon();
     ReplaceNativeGrimoire();
   };
   Game.LoadMinigames();

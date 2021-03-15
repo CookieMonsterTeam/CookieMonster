@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import * as UpdateTooltip from './UpdateTooltips';
+import UpdateTooltips, * as UpdateTooltip from './UpdateTooltips';
 import { TooltipCreateTooltipBox } from './CreateTooltip';
 import {
   Beautify,
@@ -30,38 +30,6 @@ export function CreateSimpleTooltip(placeholder, text, minWidth) {
   div.textContent = text;
   desc.appendChild(div);
   Tooltip.appendChild(desc);
-}
-
-/**
- * This function updates the sections of the tooltips created by CookieMonster
- */
-export function UpdateTooltips() {
-  CopyData();
-  if (l('tooltipAnchor').style.display !== 'none' && l('CMTooltipArea')) {
-    l('CMTooltipArea').innerHTML = '';
-    const tooltipBox = TooltipCreateTooltipBox();
-    l('CMTooltipArea').appendChild(tooltipBox);
-
-    if (TooltipType === 'b') {
-      UpdateTooltip.Building();
-    } else if (TooltipType === 'u') {
-      UpdateTooltip.Upgrade();
-    } else if (TooltipType === 's') {
-      UpdateTooltip.SugarLump();
-    } else if (TooltipType === 'g') {
-      UpdateTooltip.Grimoire();
-    } else if (TooltipType === 'p') {
-      UpdateTooltip.GardenPlots();
-    } else if (TooltipType === 'ha') {
-      UpdateTooltip.HarvestAll();
-    }
-    UpdateTooltip.Warnings();
-  } else if (l('CMTooltipArea') === null) {
-    // Remove warnings if its a basic tooltip
-    if (l('CMDispTooltipWarningParent') !== null) {
-      l('CMDispTooltipWarningParent').remove();
-    }
-  }
 }
 
 /**
@@ -141,9 +109,16 @@ export function CreateTooltip(type, name) {
       name[0],
       name[1],
     )();
-  // Garden plots
+  // Harvest all button in garden
   else if (type === 'ha')
-    l('tooltip').innerHTML = Game.ObjectsById[2].minigame.toolTooltip(1)(); // Harvest all button in garden
+    l('tooltip').innerHTML = Game.ObjectsById[2].minigame.toolTooltip(1)();
+  else if (type === 'wb') l('tooltip').innerHTML = '';
+  else if (type === 'pag')
+    l('tooltip').innerHTML = Game.Objects.Temple.minigame.godTooltip(name)();
+  else if (type === 'pas')
+    l('tooltip').innerHTML = Game.Objects.Temple.minigame.slotTooltip(
+      name[0],
+    )();
 
   // Adds area for extra tooltip-sections
   if (
@@ -152,7 +127,10 @@ export function CreateTooltip(type, name) {
     type === 's' ||
     type === 'g' ||
     (type === 'p' && !Game.keys[16]) ||
-    type === 'ha'
+    type === 'ha' ||
+    type === 'wb' ||
+    type === 'pag' ||
+    (type === 'pas' && name[1] !== -1)
   ) {
     const area = document.createElement('div');
     area.id = 'CMTooltipArea';

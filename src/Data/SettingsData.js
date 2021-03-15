@@ -585,6 +585,16 @@ const Config = {
     'Shows a tooltip for plants that have a cookie reward.',
     true,
   ),
+  TooltipPantheon: new SettingStandard(
+    'bool',
+    'Tooltip',
+    [
+      'Show Extra Info Pantheon Tooltip OFF',
+      'Show Extra Info Pantheon Tooltip ON',
+    ],
+    'Shows additional info in the pantheon tooltip',
+    true,
+  ),
   DragonAuraInfo: new SettingStandard(
     'bool',
     'Tooltip',
