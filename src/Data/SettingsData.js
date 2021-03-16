@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import CheckNotificationPermissions from '../Config/CheckNotificationPermissions';
 import { ToggleTimerBar, ToggleTimerBarPos } from '../Config/SpecificToggles';
 import ToggleBotBar from '../Config/Toggles/ToggleBotBar';
@@ -13,6 +14,7 @@ import UpdateUpgrades from '../Disp/BuildingsUpgrades/Upgrades';
 import RefreshScale from '../Disp/HelperFunctions/RefreshScale';
 import UpdateColors from '../Disp/HelperFunctions/UpdateColors';
 import { UpdateFavicon } from '../Disp/TabTitle/FavIcon';
+import { SimDoSims } from '../Sim/VariablesAndData';
 import {
   SettingStandard,
   SettingColours,
@@ -159,6 +161,9 @@ const Config = {
     ],
     'Calculate times and average Cookies Per Second with (only the single non-shiny fattest) Wrinklers',
     true,
+    function () {
+      SimDoSims = true;
+    },
   ),
   CPSMode: new SettingStandard(
     'bool',
