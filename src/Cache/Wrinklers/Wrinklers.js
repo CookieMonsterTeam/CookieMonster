@@ -20,7 +20,7 @@ export default function CacheWrinklers() {
   CacheWrinklersNormal = 0;
   CacheWrinklersFattest = [0, null];
   for (let i = 0; i < Game.wrinklers.length; i++) {
-    let sucked = Game.wrinklers[i].sucked;
+    let { sucked } = Game.wrinklers[i];
     let toSuck = 1.1;
     if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
     if (Game.wrinklers[i].type === 1) toSuck *= 3; // Shiny wrinklers

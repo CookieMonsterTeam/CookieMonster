@@ -106,12 +106,12 @@ export function StatsMissDisp(theMissDisp) {
   title.style.textAlign = 'center';
   title.textContent = 'Missing';
   missing.appendChild(title);
-  for (const i of Object.keys(theMissDisp)) {
+  Object.keys(theMissDisp).forEach((i) => {
     const div = document.createElement('div');
     div.style.textAlign = 'center';
     div.appendChild(document.createTextNode(theMissDisp[i]));
     missing.appendChild(div);
-  }
+  });
   placeholder.appendChild(missing);
   span.onmouseover = function () {
     Game.tooltip.draw(this, escape(placeholder.innerHTML));

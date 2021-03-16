@@ -34,9 +34,9 @@ function MouseCps() {
   if (SimHas('Octillion fingers')) add *= 20;
   if (SimHas('Nonillion fingers')) add *= 20;
   let num = 0;
-  for (const i of Object.keys(SimObjects)) {
+  Object.keys(SimObjects).forEach((i) => {
     num += SimObjects[i].amount;
-  }
+  });
   num -= SimObjects.Cursor.amount;
   add *= num;
 
@@ -83,10 +83,10 @@ function MouseCps() {
     }
   }
 
-  for (const i of Object.keys(Game.buffs)) {
+  Object.keys(Game.buffs).forEach((i) => {
     if (typeof Game.buffs[i].multClick !== 'undefined')
       mult *= Game.buffs[i].multClick;
-  }
+  });
 
   // if (CM.Sim.auraMult('Dragon Cursor')) mult*=1.05;
   mult *= 1 + SimAuraMult('Dragon Cursor') * 0.05;
@@ -132,10 +132,10 @@ export default function BuyUpgradesBonusIncome(upgrade) {
     }
     const me = SimUpgrades[upgrade];
     if (Game.CountsAsUpgradeOwned(Game.Upgrades[upgrade].pool))
-      SimUpgradesOwned++;
+      SimUpgradesOwned += 1;
 
     if (upgrade === 'Elder Pledge') {
-      SimPledges++;
+      SimPledges += 1;
       if (SimPledges > 0) SimWin('Elder nap');
       if (SimPledges >= 5) SimWin('Elder slumber');
     } else if (upgrade === 'Elder Covenant') {

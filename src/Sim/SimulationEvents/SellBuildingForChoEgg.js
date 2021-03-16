@@ -21,10 +21,10 @@ export default function SellBuildingsForChoEgg() {
   // Change auras to Earth Shatterer + Reality bending to optimize money made by selling
   let buildingsToSacrifice = 2;
   if (SimDragonAura === 5 || SimDragonAura === 18) {
-    --buildingsToSacrifice;
+    buildingsToSacrifice -= 1;
   }
   if (SimDragonAura2 === 5 || SimDragonAura2 === 18) {
-    --buildingsToSacrifice;
+    buildingsToSacrifice -= 1;
   }
   SimDragonAura = 5;
   SimDragonAura2 = 18;
@@ -32,17 +32,17 @@ export default function SellBuildingsForChoEgg() {
   // Sacrifice highest buildings for the aura switch
   for (let i = 0; i < buildingsToSacrifice; ++i) {
     let highestBuilding = 'Cursor';
-    for (const j in SimObjects) {
+    Object.keys(SimObjects).forEach((j) => {
       if (SimObjects[j].amount > 0) {
         highestBuilding = j;
       }
-    }
-    SimObjects[highestBuilding].amount--;
-    SimBuildingsOwned--;
+    });
+    SimObjects[highestBuilding].amount -= 1;
+    SimBuildingsOwned -= 1;
   }
 
   // Get money made by selling all remaining buildings
-  for (const i of Object.keys(SimObjects)) {
+  Object.keys(SimObjects).forEach((i) => {
     const me = SimObjects[i];
     sellTotal += BuildingSell(
       Game.Objects[me.name],
@@ -51,7 +51,7 @@ export default function SellBuildingsForChoEgg() {
       Game.Objects[i].free,
       me.amount,
     );
-  }
+  });
 
   return sellTotal;
 }

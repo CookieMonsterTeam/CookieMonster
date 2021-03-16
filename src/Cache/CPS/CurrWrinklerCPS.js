@@ -13,9 +13,9 @@ import {
 export default function CacheCurrWrinklerCPS() {
   CacheCurrWrinklerCPSMult = 0;
   let count = 0;
-  for (const i in Game.wrinklers) {
-    if (Game.wrinklers[i].phase === 2) count++;
-  }
+  Object.keys(Game.wrinklers).forEach((i) => {
+    if (Game.wrinklers[i].phase === 2) count += 1;
+  });
   let godMult = 1;
   if (SimObjects.Temple.minigameLoaded) {
     const godLvl = Game.hasGod('scorn');

@@ -12,20 +12,20 @@ import InitUpgrade from './InitUpgrade';
 export default function InitData() {
   // Buildings
   SimObjects = [];
-  for (const i of Object.keys(Game.Objects)) {
+  Object.keys(Game.Objects).forEach((i) => {
     SimObjects[i] = InitialBuildingData(i);
-  }
+  });
 
   // Upgrades
   SimUpgrades = [];
-  for (const i of Object.keys(Game.Upgrades)) {
+  Object.keys(Game.Upgrades).forEach((i) => {
     SimUpgrades[i] = InitUpgrade(i);
-  }
+  });
 
   // Achievements
   SimAchievements = [];
-  for (const i of Object.keys(Game.Achievements)) {
+  Object.keys(Game.Achievements).forEach((i) => {
     SimAchievements[i] = InitAchievement(i);
-  }
+  });
   CopyData();
 }

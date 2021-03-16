@@ -20,13 +20,13 @@ import {
  */
 function CacheBuildingIncome(amount, target) {
   const result = [];
-  for (const i of Object.keys(Game.Objects)) {
+  Object.keys(Game.Objects).forEach((i) => {
     result[i] = {};
     result[i].bonus = BuyBuildingsBonusIncome(i, amount);
     if (amount !== 1) {
       CacheDoRemakeBuildPrices = 1;
     }
-  }
+  });
   return result;
 }
 
@@ -36,19 +36,19 @@ function CacheBuildingIncome(amount, target) {
  */
 function CacheUpgradeIncome() {
   CacheUpgrades = [];
-  for (const i of Object.keys(Game.Upgrades)) {
+  Object.keys(Game.Upgrades).forEach((i) => {
     const bonusIncome = BuyUpgradesBonusIncome(i);
     CacheUpgrades[i] = {};
     if (bonusIncome[0]) CacheUpgrades[i].bonus = bonusIncome[0];
     if (bonusIncome[1]) CacheUpgrades[i].bonusMouse = bonusIncome[1];
-  }
+  });
 }
 
 /**
  * This functions caches the price of each building and stores it in the cache
  */
 export function CacheBuildingsPrices() {
-  for (const i of Object.keys(Game.Objects)) {
+  Object.keys(Game.Objects).forEach((i) => {
     CacheObjects1[i].price = BuildingGetPrice(
       Game.Objects[i],
       Game.Objects[i].basePrice,
@@ -70,7 +70,7 @@ export function CacheBuildingsPrices() {
       Game.Objects[i].free,
       100,
     );
-  }
+  });
 }
 
 /**

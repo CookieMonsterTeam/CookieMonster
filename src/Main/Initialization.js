@@ -38,13 +38,13 @@ export default function InitializeCookieMonster() {
   CreateUpgradeBar();
   CreateWhiteScreen();
   CreateFavicon();
-  for (const i of Object.keys(TooltipText)) {
+  Object.keys(TooltipText).forEach((i) => {
     CreateSimpleTooltip(
       TooltipText[i][0],
       TooltipText[i][1],
       TooltipText[i][2],
     );
-  }
+  });
   CreateWrinklerButtons();
   UpdateBuildingUpgradeStyle();
 

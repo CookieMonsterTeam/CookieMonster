@@ -1,6 +1,6 @@
 import { CMOptions } from '../../Config/VariablesAndData';
 import Flash from '../../Disp/Notifications/Flash';
-import Notification from '../../Disp/Notifications/Notification';
+import CreateNotification from '../../Disp/Notifications/Notification';
 import PlaySound from '../../Disp/Notifications/Sound';
 import { LastTickerFortuneState } from '../VariablesAndData';
 
@@ -18,7 +18,7 @@ export default function CheckTickerFortune() {
     if (LastTickerFortuneState) {
       Flash(3, 'FortuneFlash');
       PlaySound(CMOptions.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
-      Notification(
+      CreateNotification(
         'FortuneNotification',
         'Fortune Cookie found',
         'A Fortune Cookie has appeared on the Ticker.',

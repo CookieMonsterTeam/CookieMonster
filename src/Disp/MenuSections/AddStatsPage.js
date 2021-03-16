@@ -112,47 +112,47 @@ export default function AddMenuStats(title) {
 
   let specDisp = false;
   const missingHalloweenCookies = [];
-  for (const i of Object.keys(GameData.HalloCookies)) {
+  Object.keys(GameData.HalloCookies).forEach((i) => {
     if (!Game.Has(GameData.HalloCookies[i])) {
       missingHalloweenCookies.push(GameData.HalloCookies[i]);
       specDisp = true;
     }
-  }
+  });
   const missingChristmasCookies = [];
-  for (const i of Object.keys(GameData.ChristCookies)) {
+  Object.keys(GameData.ChristCookies).forEach((i) => {
     if (!Game.Has(GameData.ChristCookies[i])) {
       missingChristmasCookies.push(GameData.ChristCookies[i]);
       specDisp = true;
     }
-  }
+  });
   const missingValentineCookies = [];
-  for (const i of Object.keys(GameData.ValCookies)) {
+  Object.keys(GameData.ValCookies).forEach((i) => {
     if (!Game.Has(GameData.ValCookies[i])) {
       missingValentineCookies.push(GameData.ValCookies[i]);
       specDisp = true;
     }
-  }
+  });
   const missingNormalEggs = [];
-  for (const i of Object.keys(Game.eggDrops)) {
+  Object.keys(Game.eggDrops).forEach((i) => {
     if (!Game.HasUnlocked(Game.eggDrops[i])) {
       missingNormalEggs.push(Game.eggDrops[i]);
       specDisp = true;
     }
-  }
+  });
   const missingRareEggs = [];
-  for (const i of Object.keys(Game.rareEggDrops)) {
+  Object.keys(Game.rareEggDrops).forEach((i) => {
     if (!Game.HasUnlocked(Game.rareEggDrops[i])) {
       missingRareEggs.push(Game.rareEggDrops[i]);
       specDisp = true;
     }
-  }
+  });
   const missingPlantDrops = [];
-  for (const i of Object.keys(GameData.PlantDrops)) {
+  Object.keys(GameData.PlantDrops).forEach((i) => {
     if (!Game.HasUnlocked(GameData.PlantDrops[i])) {
       missingPlantDrops.push(GameData.PlantDrops[i]);
       specDisp = true;
     }
-  }
+  });
   const choEgg =
     Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg');
   const centEgg = Game.Has('Century egg');
@@ -266,11 +266,11 @@ export default function AddMenuStats(title) {
     );
     if (Game.Has('Fortune cookies')) {
       const fortunes = [];
-      for (const i of Object.keys(GameData.Fortunes)) {
+      Object.keys(GameData.Fortunes).forEach((i) => {
         if (!Game.Has(GameData.Fortunes[i])) {
           fortunes.push(GameData.Fortunes[i]);
         }
-      }
+      });
       if (fortunes.length !== 0)
         stats.appendChild(
           CreateElements.StatsListing(

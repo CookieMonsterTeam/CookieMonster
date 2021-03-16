@@ -22,21 +22,26 @@ export default function BuildingSell(
 ) {
   // Calculate money gains from selling buildings
   // If noSim is set, use Game methods to compute price instead of Sim ones.
-  noSim = typeof noSim === 'undefined' ? 0 : noSim;
+  const noSimRes = typeof noSim === 'undefined' ? 0 : noSim;
+  let toChange = amount;
+  let startingAmount = start;
   let moni = 0;
-  if (amount === -1) amount = start;
-  if (!amount) amount = Game.buyBulk;
-  for (let i = 0; i < amount; i++) {
-    let price = basePrice * Game.priceIncrease ** Math.max(0, start - free);
-    price = noSim
+  if (amount === -1) toChange = startingAmount;
+  if (!amount) toChange = Game.buyBulk;
+  for (let i = 0; i < toChange; i++) {
+    let price =
+      basePrice * Game.priceIncrease ** Math.max(0, startingAmount - free);
+    price = noSimRes
       ? Game.modifyBuildingPrice(build, price)
       : SimModifyBuildingPrice(build, price);
     price = Math.ceil(price);
-    const giveBack = noSim ? build.getSellMultiplier() : SimGetSellMultiplier();
+    const giveBack = noSimRes
+      ? build.getSellMultiplier()
+      : SimGetSellMultiplier();
     price = Math.floor(price * giveBack);
-    if (start > 0) {
+    if (startingAmount > 0) {
       moni += price;
-      start--;
+      startingAmount -= 1;
     }
   }
   return moni;

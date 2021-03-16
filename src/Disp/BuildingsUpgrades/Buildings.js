@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import {
   CacheObjects1,
   CacheObjects10,
@@ -30,17 +31,17 @@ export default function UpdateBuildings() {
 
   if (Game.buyMode === 1) {
     if (CMOptions.BuildColor === 1) {
-      for (const i of Object.keys(target)) {
+      Object.keys(target).forEach((i) => {
         l(`productPrice${Game.Objects[i].id}`).style.color =
           CMOptions.Colors[target[i].color];
-      }
+      });
     } else {
-      for (const i of Object.keys(Game.Objects)) {
+      Object.keys(Game.Objects).forEach((i) => {
         l(`productPrice${Game.Objects[i].id}`).style.removeProperty('color');
-      }
+      });
     }
   } else if (Game.buyMode === -1) {
-    for (const i of Object.keys(CacheObjects1)) {
+    Object.keys(CacheObjects1).forEach((i) => {
       const o = Game.Objects[i];
       l(`productPrice${o.id}`).style.color = '';
       /*
@@ -54,7 +55,7 @@ export default function UpdateBuildings() {
       l(`productPrice${o.id}`).innerHTML = Beautify(
         BuildingSell(o, o.basePrice, o.amount, o.free, Game.buyBulk, 1),
       );
-    }
+    });
   }
 
   // Build array of pointers, sort by pp, use array index (+2) as the grid row number

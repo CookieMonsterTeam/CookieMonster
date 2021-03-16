@@ -51,7 +51,7 @@ export function MaxChainCookieReward(digit, maxPayout, mult) {
     );
     nextRequired = Math.floor((1 / 9) * 10 ** (chain + 1) * digit * mult);
     totalFromChain += moni;
-    chain++;
+    chain += 1;
   }
   return [totalFromChain, moni, nextRequired];
 }

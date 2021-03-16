@@ -10,7 +10,7 @@ import {
  * This function creates the missing upgrades sections for prestige, normal and cookie upgrades
  */
 export function AddMissingUpgrades() {
-  for (const menuSection of l('menu').children) {
+  l('menu').childNodes.forEach((menuSection) => {
     if (menuSection.children[0]) {
       if (
         menuSection.children[0].innerHTML === 'Prestige' &&
@@ -82,7 +82,7 @@ export function AddMissingUpgrades() {
         }
       }
     }
-  }
+  });
 }
 
 /**
@@ -99,7 +99,7 @@ export function crateMissing(me) {
   if (!Game.prefs.crates) noFrame = 1;
   if (noFrame) classes += ' noFrame';
 
-  let icon = me.icon;
+  let { icon } = me;
   if (me.iconFunction) icon = me.iconFunction();
   const tooltip = `function() {return Game.crateTooltip(Game.UpgradesById[${me.id}], 'stats');}`;
   return `<div class="${classes}"
