@@ -2,7 +2,7 @@
 
 import { ToggleHeader } from '../../Config/ToggleSetting';
 import { CMOptions } from '../../Config/VariablesAndData';
-import { TooltipText } from '../VariablesAndData';
+import { SimpleTooltipElements } from '../VariablesAndData';
 
 /**
  * This function creates a header-object for the stats page
@@ -64,7 +64,10 @@ export function StatsListing(type, name, text, placeholder) {
       Game.tooltip.hide();
     };
     tooltip.onmouseover = function () {
-      Game.tooltip.draw(this, escape(TooltipText[placeholder].innerHTML));
+      Game.tooltip.draw(
+        this,
+        escape(SimpleTooltipElements[placeholder].innerHTML),
+      );
     };
     tooltip.style.cursor = 'default';
     tooltip.style.display = 'inline-block';

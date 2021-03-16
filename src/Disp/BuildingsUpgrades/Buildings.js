@@ -62,22 +62,42 @@ export default function UpdateBuildings() {
   // (grid rows are 1-based indexing, and row 1 is the bulk buy/sell options)
   // This regulates sorting of buildings
   if (Game.buyMode === 1 && CMOptions.SortBuildings) {
-    const arr = Object.keys(target).map((k) => {
-      const o = target[k];
-      o.name = k;
-      o.id = Game.Objects[k].id;
-      return o;
-    });
+    let arr;
+    if (CMOptions.SortBuildings === 1) {
+      arr = Object.keys(CacheObjects1).map((k) => {
+        const o = CacheObjects1[k];
+        o.name = k;
+        o.id = Game.Objects[k].id;
+        return o;
+      });
 
-    arr.sort(function (a, b) {
-      return Colors.indexOf(a.color) > Colors.indexOf(b.color)
-        ? 1
-        : Colors.indexOf(a.color) < Colors.indexOf(b.color)
-        ? -1
-        : a.pp < b.pp
-        ? -1
-        : 0;
-    });
+      arr.sort(function (a, b) {
+        return Colors.indexOf(a.color) > Colors.indexOf(b.color)
+          ? 1
+          : Colors.indexOf(a.color) < Colors.indexOf(b.color)
+          ? -1
+          : a.pp < b.pp
+          ? -1
+          : 0;
+      });
+    } else if (CMOptions.SortBuildings === 2) {
+      arr = Object.keys(target).map((k) => {
+        const o = target[k];
+        o.name = k;
+        o.id = Game.Objects[k].id;
+        return o;
+      });
+
+      arr.sort(function (a, b) {
+        return Colors.indexOf(a.color) > Colors.indexOf(b.color)
+          ? 1
+          : Colors.indexOf(a.color) < Colors.indexOf(b.color)
+          ? -1
+          : a.pp < b.pp
+          ? -1
+          : 0;
+      });
+    }
 
     for (let x = 0; x < arr.length; x++) {
       Game.Objects[arr[x].name].l.style.gridRow = `${x + 2}/${x + 2}`;

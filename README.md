@@ -18,13 +18,13 @@ Cookie Monster also indicates the time left before being able to buy an upgrade 
 
 This index is computed for buildings and upgrades. If the relevant option is enabled, it will color-code each of them based on their value:
 
-* Light Blue: (upgrades) This item has a better PP than any building
-* Green: This item has the best PP
-* Yellow: This item is not the best, but it is closer to best than it is to worst
-* Orange: This item is not the worst, but it is closer to worst than it is to best
-* Red: This item has the worst PP
-* Purple: (upgrades) This item has a worse PP than any building
-* Gray: (upgrades) This item has not been calculated and/or cannot be calculated due to no definitive worth.
+* Light Blue: (upgrades) This item has a better PP than the best building to buy
+* Green: This building has the best PP
+* Yellow: This building is within the top 10 of best PP's
+* Orange: This building is within the top 20 of best PP's
+* Red: This building is within the top 30 of best PP's
+* Purple: This building is worse than the top 10 of best PP's
+* Gray: This item does not have a PP, often this means that there is no change to CPS
 
 Note: For this index, **lower is better**, meaning a building with a PP of 1 is more interesting than one with a PP of 3.
 

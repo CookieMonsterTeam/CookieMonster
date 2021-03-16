@@ -183,7 +183,8 @@ function CreatePrefOption(config) {
         SaveConfig();
         Game.UpdateMenu();
       };
-      JsColor(input, { hash: true, position: 'right', onInput: change });
+      // eslint-disable-next-line no-new
+      new JsColor(input, { hash: true, position: 'right', onInput: change });
       const label = document.createElement('label');
       label.textContent = Config.Colors.desc[Colors[i]];
       innerDiv.appendChild(label);
