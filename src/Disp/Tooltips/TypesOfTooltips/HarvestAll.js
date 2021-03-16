@@ -8,7 +8,7 @@ import * as Create from '../CreateTooltip';
  * It adds to the additional information to l('CMTooltipArea')
  */
 export default function HarvestAll() {
-  const minigame = Game.Objects.Farm.minigame;
+  const { minigame } = Game.Objects.Farm;
   if (CMOptions.TooltipLump) {
     l('CMTooltipBorder').appendChild(
       Create.TooltipCreateHeader('Cookies gained from harvesting:'),

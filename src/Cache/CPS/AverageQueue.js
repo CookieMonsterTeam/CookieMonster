@@ -34,12 +34,13 @@ export class CMAvgQueue {
    * @returns {number}	ret			The average
    */
   calcAverage(timePeriod) {
-    if (timePeriod > this.maxLength) timePeriod = this.maxLength;
-    if (timePeriod > this.queue.length) timePeriod = this.queue.length;
+    let time = timePeriod;
+    if (time > this.maxLength) time = this.maxLength;
+    if (time > this.queue.length) time = this.queue.length;
     let ret = 0;
     for (
       let i = this.queue.length - 1;
-      i >= 0 && i > this.queue.length - 1 - timePeriod;
+      i >= 0 && i > this.queue.length - 1 - time;
       i--
     ) {
       ret += this.queue[i];
@@ -47,7 +48,7 @@ export class CMAvgQueue {
     if (ret === 0) {
       return 0;
     }
-    return ret / timePeriod;
+    return ret / time;
   }
 }
 

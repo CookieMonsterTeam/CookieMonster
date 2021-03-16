@@ -14,7 +14,7 @@ import * as Create from '../CreateTooltip';
  * It adds to the additional information to l('CMTooltipArea')
  */
 export default function Grimoire() {
-  const minigame = Game.Objects['Wizard tower'].minigame;
+  const { minigame } = Game.Objects['Wizard tower'];
   const spellCost = minigame.getSpellCost(minigame.spellsById[TooltipName]);
 
   if (CMOptions.TooltipGrim === 1 && spellCost <= minigame.magicM) {

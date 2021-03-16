@@ -11,7 +11,7 @@ export default function SimWin(what) {
   if (SimAchievements[what]) {
     if (SimAchievements[what].won === 0) {
       SimAchievements[what].won = 1;
-      if (Game.Achievements[what].pool !== 'shadow') SimAchievementsOwned++;
+      if (Game.Achievements[what].pool !== 'shadow') SimAchievementsOwned += 1;
     }
   }
 }

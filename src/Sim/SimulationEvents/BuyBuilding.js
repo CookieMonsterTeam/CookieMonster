@@ -16,13 +16,15 @@ export default function BuildingGetPrice(
   free,
   increase,
 ) {
+  let startingAmount = start;
   let moni = 0;
-  for (let i = 0; i < increase; i++) {
-    let price = basePrice * Game.priceIncrease ** Math.max(0, start - free);
+  for (let i = 0; i < increase; i += 1) {
+    let price =
+      basePrice * Game.priceIncrease ** Math.max(0, startingAmount - free);
     price = Game.modifyBuildingPrice(build, price);
     price = Math.ceil(price);
     moni += price;
-    start++;
+    startingAmount += 1;
   }
   return moni;
 }

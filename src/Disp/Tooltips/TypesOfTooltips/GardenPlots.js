@@ -8,7 +8,7 @@ import * as Create from '../CreateTooltip';
  * It adds to the additional information to l('CMTooltipArea')
  */
 export default function GardenPlots() {
-  const minigame = Game.Objects.Farm.minigame;
+  const { minigame } = Game.Objects.Farm;
   if (
     CMOptions.TooltipPlots &&
     minigame.plot[TooltipName[1]][TooltipName[0]][0] !== 0

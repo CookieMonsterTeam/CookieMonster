@@ -13,10 +13,10 @@ export default function CacheSellAllForChoEgg() {
   if (Game.Objects.Bank.minigameLoaded) {
     const marketGoods = Game.Objects.Bank.minigame.goods;
     let goodsVal = 0;
-    for (const i of Object.keys(marketGoods)) {
+    Object.keys(marketGoods).forEach((i) => {
       const marketGood = marketGoods[i];
       goodsVal += marketGood.stock * marketGood.val;
-    }
+    });
     sellTotal += goodsVal * Game.cookiesPsRawHighest;
   }
   // Compute cookies earned by selling all buildings with optimal auras (ES + RB)

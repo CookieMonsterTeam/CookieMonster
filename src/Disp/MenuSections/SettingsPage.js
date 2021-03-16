@@ -170,7 +170,7 @@ function CreatePrefOption(config) {
         SaveConfig();
         Game.UpdateMenu();
       };
-      new JsColor(input, { hash: true, position: 'right', onInput: change });
+      JsColor(input, { hash: true, position: 'right', onInput: change });
       const label = document.createElement('label');
       label.textContent = Config.Colors.desc[Colors[i]];
       innerDiv.appendChild(label);
@@ -216,14 +216,14 @@ export default function AddMenuPref(title) {
   const frag = document.createDocumentFragment();
   frag.appendChild(title);
 
-  for (const group of Object.keys(ConfigGroups)) {
+  Object.keys(ConfigGroups).forEach((group) => {
     const groupObject = CreatePrefHeader(group, ConfigGroups[group]); // (group, display-name of group)
     frag.appendChild(groupObject);
     if (CMOptions.Header[group]) {
       // 0 is show, 1 is collapsed
       // Make sub-sections of Notification section
       if (group === 'Notification') {
-        for (const subGroup of Object.keys(ConfigGroupsNotification)) {
+        Object.keys(ConfigGroupsNotification).forEach((subGroup) => {
           const subGroupObject = CreatePrefHeader(
             subGroup,
             ConfigGroupsNotification[subGroup],
@@ -232,20 +232,20 @@ export default function AddMenuPref(title) {
           subGroupObject.style.opacity = '0.5';
           frag.appendChild(subGroupObject);
           if (CMOptions.Header[subGroup]) {
-            for (const option in Config) {
+            Object.keys(Config).forEach((option) => {
               if (Config[option].group === subGroup)
                 frag.appendChild(CreatePrefOption(option));
-            }
+            });
           }
-        }
+        });
       } else {
-        for (const option of Object.keys(Config)) {
+        Object.keys(Config).forEach((option) => {
           if (Config[option].group === group)
             frag.appendChild(CreatePrefOption(option));
-        }
+        });
       }
     }
-  }
+  });
 
   const resDef = document.createElement('div');
   resDef.className = 'listing';

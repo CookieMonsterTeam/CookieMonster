@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 /** Functions related to replacing tooltips */
 
@@ -14,7 +15,7 @@ import ReplaceTooltipGrimoire from './TooltipGrimoire';
  * This function replaces the original .onmouseover functions of buildings
  */
 function ReplaceTooltipBuild() {
-  for (const i of Object.keys(Game.Objects)) {
+  Object.keys(Game.Objects).forEach((i) => {
     const me = Game.Objects[i];
     if (l(`product${me.id}`).onmouseover !== null) {
       TooltipBuildBackup[i] = l(`product${me.id}`).onmouseover;
@@ -30,7 +31,7 @@ function ReplaceTooltipBuild() {
         Game.tooltip.wobble();
       };
     }
-  }
+  });
 }
 
 /**
@@ -129,6 +130,7 @@ export default function ReplaceTooltips() {
 
   // Replace Tooltips of Minigames. Nesting it in LoadMinigames makes sure to replace them even if
   // they were not loaded initially
+  // eslint-disable-next-line prefer-destructuring
   LoadMinigames = Game.LoadMinigames;
   Game.LoadMinigames = function () {
     LoadMinigames();

@@ -37,7 +37,7 @@ export default function CopyData() {
   SimPrestige = Game.prestige;
 
   // Buildings
-  for (const i of Object.keys(Game.Objects)) {
+  Object.keys(Game.Objects).forEach((i) => {
     const me = Game.Objects[i];
     let you = SimObjects[i];
     if (you === undefined) {
@@ -61,10 +61,10 @@ export default function CopyData() {
       you.minigame = me.minigame;
     }
     SimObjects[i] = you;
-  }
+  });
 
   // Upgrades
-  for (const i of Object.keys(Game.Upgrades)) {
+  Object.keys(Game.Upgrades).forEach((i) => {
     const me = Game.Upgrades[i];
     let you = SimUpgrades[i];
     if (you === undefined) {
@@ -73,10 +73,10 @@ export default function CopyData() {
     }
     you.bought = me.bought;
     SimUpgrades[i] = you;
-  }
+  });
 
   // Achievements
-  for (const i of Object.keys(Game.Achievements)) {
+  Object.keys(Game.Achievements).forEach((i) => {
     const me = Game.Achievements[i];
     let you = SimAchievements[i];
     if (you === undefined) {
@@ -85,7 +85,7 @@ export default function CopyData() {
     }
     you.won = me.won;
     SimAchievements[i] = you;
-  }
+  });
 
   // Auras
   CacheDragonAuras();

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-unused-vars */
 /** Functions related to the Dragon */
 
@@ -44,7 +45,7 @@ export default function CacheDragonCost() {
             price = Game.modifyBuildingPrice(SimObjects[target], price);
             price = Math.ceil(price);
             cost += price;
-            SimObjects[target].amount--;
+            SimObjects[target].amount -= 1;
           }
           CacheCostDragonUpgrade = `Cost to rebuy: ${cost}`;
         }
@@ -68,7 +69,7 @@ export default function CacheDragonCost() {
               price = Game.modifyBuildingPrice(SimObjects[target], price);
               price = Math.ceil(price);
               cost += price;
-              SimObjects[target].amount--;
+              SimObjects[target].amount -= 1;
             }
           }
           CacheCostDragonUpgrade = `Cost to rebuy: ${Beautify(cost)}`;

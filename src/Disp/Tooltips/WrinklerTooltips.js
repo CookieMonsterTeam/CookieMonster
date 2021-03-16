@@ -16,7 +16,7 @@ export function CheckWrinklerTooltip() {
   if (CMOptions.TooltipWrink === 1 && TooltipWrinklerArea === 1) {
     // Latter is set by CM.Main.AddWrinklerAreaDetect
     let showingTooltip = false;
-    for (const i of Object.keys(Game.wrinklers)) {
+    Object.keys(Game.wrinklers).forEach((i) => {
       const me = Game.wrinklers[i];
       if (me.phase > 0 && me.selected) {
         showingTooltip = true;
@@ -36,11 +36,11 @@ export function CheckWrinklerTooltip() {
           Game.tooltip.draw(this, escape(placeholder.innerHTML));
           TooltipWrinkler = i;
           TooltipWrinklerBeingShown[i] = 1;
-        } else break;
+        }
       } else {
         TooltipWrinklerBeingShown[i] = 0;
       }
-    }
+    });
     if (!showingTooltip) {
       Game.tooltip.hide();
     }
@@ -54,7 +54,7 @@ export function CheckWrinklerTooltip() {
  */
 export function UpdateWrinklerTooltip() {
   if (CMOptions.TooltipWrink === 1 && l('CMTooltipWrinkler') !== null) {
-    let sucked = Game.wrinklers[TooltipWrinkler].sucked;
+    let { sucked } = Game.wrinklers[TooltipWrinkler];
     let toSuck = 1.1;
     if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;
     if (Game.wrinklers[TooltipWrinkler].type === 1) toSuck *= 3; // Shiny wrinklers

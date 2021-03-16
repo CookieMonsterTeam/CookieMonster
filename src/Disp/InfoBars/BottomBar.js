@@ -63,9 +63,9 @@ export function CreateBotBar() {
 
   l('wrapper').appendChild(BotBar);
 
-  for (const i of Object.keys(Game.Objects)) {
+  Object.keys(Game.Objects).forEach((i) => {
     CreateBotBarBuildingColumn(i);
-  }
+  });
 }
 
 /**
@@ -74,7 +74,7 @@ export function CreateBotBar() {
 export function UpdateBotBar() {
   if (CMOptions.BotBar === 1 && CacheObjects1 && Game.buyMode === 1) {
     let count = 0;
-    for (const i of Object.keys(CacheObjects1)) {
+    Object.keys(CacheObjects1).forEach((i) => {
       let target = Game.buyBulk;
       if (Game.buyMode === 1) {
         LastTargetBotBar = target;
@@ -84,7 +84,7 @@ export function UpdateBotBar() {
       if (target === 1) target = CacheObjects1;
       if (target === 10) target = CacheObjects10;
       if (target === 100) target = CacheObjects100;
-      count++;
+      count += 1;
       l('CMBotBar').firstChild.firstChild.childNodes[0].childNodes[
         count
       ].childNodes[1].textContent = Game.Objects[i].amount;
@@ -115,6 +115,6 @@ export function UpdateBotBar() {
         l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[
           count
         ].textContent = timeColor.text;
-    }
+    });
   }
 }

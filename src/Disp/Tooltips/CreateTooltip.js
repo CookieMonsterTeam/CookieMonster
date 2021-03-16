@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { CMOptions } from '../../Config/VariablesAndData';
 import {
   ColorTextPre,

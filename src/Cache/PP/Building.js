@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 import { CMOptions } from '../../Config/VariablesAndData';
 import GetWrinkConfigBank from '../../Disp/HelperFunctions/GetWrinkConfigBank';
@@ -19,7 +20,7 @@ import ColourOfPP from './ColourOfPP';
  * It is called by CM.Cache.CacheBuildingsPP()
  */
 function CacheBuildingsBulkPP(target) {
-  for (const i of Object.keys(target)) {
+  Object.keys(target).forEach((i) => {
     if (Game.cookiesPs) {
       target[i].pp =
         Math.max(target[i].price - (Game.cookies + GetWrinkConfigBank()), 0) /
@@ -28,7 +29,7 @@ function CacheBuildingsBulkPP(target) {
     } else target[i].pp = target[i].price / target[i].bonus;
 
     target[i].color = ColourOfPP(target[i], target[i].price);
-  }
+  });
 }
 
 /**
@@ -43,7 +44,7 @@ export default function CacheBuildingsPP() {
 
   // Calculate PP and colors when compared to purchase of optimal building in single-purchase mode
   if (CMOptions.ColorPPBulkMode === 0 && Game.buyMode > 0) {
-    for (const i of Object.keys(CacheObjects1)) {
+    Object.keys(CacheObjects1).forEach((i) => {
       if (Game.cookiesPs) {
         CacheObjects1[i].pp =
           Math.max(
@@ -56,7 +57,7 @@ export default function CacheBuildingsPP() {
         CacheObjects1[i].pp =
           Game.Objects[i].getPrice() / CacheObjects1[i].bonus;
       CacheArrayOfPPs.push([CacheObjects1[i].pp, Game.Objects[i].getPrice()]);
-    }
+    });
     // Set CM.Cache.min to best non-excluded buidliung
     CacheArrayOfPPs.sort((a, b) => a[0] - b[0]);
     if (CMOptions.PPOnlyConsiderBuyable) {
@@ -70,7 +71,7 @@ export default function CacheBuildingsPP() {
     CacheMinPP = CacheArrayOfPPs[CMOptions.PPExcludeTop][0];
     CacheMaxPP = CacheArrayOfPPs[CacheArrayOfPPs.length - 1][0];
     CacheMidPP = (CacheMaxPP - CacheMinPP) / 2 + CacheMinPP;
-    for (const i of Object.keys(CacheObjects1)) {
+    Object.keys(CacheObjects1).forEach((i) => {
       CacheObjects1[i].color = ColourOfPP(
         CacheObjects1[i],
         Game.Objects[i].getPrice(),
@@ -80,7 +81,7 @@ export default function CacheBuildingsPP() {
         if (CacheObjects1[i].pp === CacheArrayOfPPs[j][0])
           CacheObjects1[i].color = ColorGray;
       }
-    }
+    });
     // Calculate PP of bulk-buy modes
     CacheBuildingsBulkPP(CacheObjects10);
     CacheBuildingsBulkPP(CacheObjects100);
@@ -90,7 +91,7 @@ export default function CacheBuildingsPP() {
     if (Game.buyBulk === 1) target = CacheObjects1;
     else if (Game.buyBulk === 10) target = CacheObjects10;
     else if (Game.buyBulk === 100) target = CacheObjects100;
-    for (const i of Object.keys(target)) {
+    Object.keys(target).forEach((i) => {
       if (Game.cookiesPs) {
         target[i].pp =
           Math.max(
@@ -101,7 +102,7 @@ export default function CacheBuildingsPP() {
           Game.Objects[i].bulkPrice / target[i].bonus;
       } else target[i].pp = Game.Objects[i].bulkPrice / target[i].bonus;
       CacheArrayOfPPs.push([target[i].pp, Game.Objects[i].bulkPrice]);
-    }
+    });
     // Set CM.Cache.min to best non-excluded buidliung
     CacheArrayOfPPs.sort((a, b) => a[0] - b[0]);
     if (CMOptions.PPOnlyConsiderBuyable) {
@@ -116,12 +117,12 @@ export default function CacheBuildingsPP() {
     CacheMaxPP = CacheArrayOfPPs[CacheArrayOfPPs.length - 1][0];
     CacheMidPP = (CacheMaxPP - CacheMinPP) / 2 + CacheMinPP;
 
-    for (const i of Object.keys(CacheObjects1)) {
+    Object.keys(CacheObjects1).forEach((i) => {
       target[i].color = ColourOfPP(target[i], Game.Objects[i].bulkPrice);
       // Colour based on excluding certain top-buildings
       for (let j = 0; j < CMOptions.PPExcludeTop; j++) {
         if (target[i].pp === CacheArrayOfPPs[j][0]) target[i].color = ColorGray;
       }
-    }
+    });
   }
 }
