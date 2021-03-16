@@ -65,10 +65,10 @@ export let CacheSeasonPopShimmer = {};
 
 export let CacheTimeTillNextPrestige = 0;
 
+/** Stores lowest PP value */
 export let CacheMinPP = 0;
-export let CacheMidPP = 0;
-export let CacheMaxPP = 0;
-export let CacheArrayOfPPs = [];
+/** Stores all PP values of all buildings for all buy settings (1, 10, 100) */
+export let CachePPArray = [];
 
 export let CacheGoldenShimmersByID = {};
 
@@ -100,6 +100,7 @@ export let CacheDoRemakeBuildPrices;
 
 export let CacheHadBuildAura;
 
+/** Store the CPS effect of each god if it was put into each slot */
 export let CacheGods = {
   0: [0, 0, 0],
   1: [0, 0, 0],
