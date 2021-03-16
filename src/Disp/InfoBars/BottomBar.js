@@ -96,7 +96,7 @@ export function UpdateBotBar() {
       ].className = ColorTextPre + target[i].color;
       l('CMBotBar').firstChild.firstChild.childNodes[2].childNodes[
         count
-      ].textContent = Beautify(target[i].pp, 2);
+      ].textContent = Beautify(Math.round(target[i].pp), 2);
       const timeColor = GetTimeColor(
         (Game.Objects[i].bulkPrice - (Game.cookies + GetWrinkConfigBank())) /
           GetCPS(),

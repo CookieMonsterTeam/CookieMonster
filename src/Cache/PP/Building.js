@@ -62,10 +62,10 @@ export default function CacheBuildingsPP() {
   let indexOfMin = 0;
   if (CMOptions.PPOnlyConsiderBuyable) {
     while (CachePPArray[indexOfMin][1] > Game.cookies) {
-      if (CachePPArray.length === indexOfMin - 1) {
+      indexOfMin += 1;
+      if (CachePPArray.length === indexOfMin + 1) {
         break;
       }
-      indexOfMin += 1;
     }
   }
   CacheMinPP = CachePPArray[CMOptions.PPExcludeTop][indexOfMin];
