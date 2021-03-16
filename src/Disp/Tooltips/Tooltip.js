@@ -6,7 +6,11 @@ import {
   GetTimeColor,
 } from '../BeautifyAndFormatting/BeautifyFormatting';
 import CopyData from '../../Sim/SimulationData/CopyData';
-import { TooltipName, TooltipType } from '../VariablesAndData';
+import {
+  SimpleTooltipElements,
+  TooltipName,
+  TooltipType,
+} from '../VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 
@@ -30,6 +34,7 @@ export function CreateSimpleTooltip(placeholder, text, minWidth) {
   div.textContent = text;
   desc.appendChild(div);
   Tooltip.appendChild(desc);
+  SimpleTooltipElements[placeholder] = Tooltip;
 }
 
 /**
