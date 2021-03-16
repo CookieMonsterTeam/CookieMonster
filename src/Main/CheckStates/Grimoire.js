@@ -18,7 +18,7 @@ export default function CheckMagicMeter() {
     else if (!LastMagicBarFull) {
       LastMagicBarFull = true;
       Flash(3, 'MagicFlash');
-      PlaySound(CMOptions.MagicSoundURL, 'MagicSound', 'MagicVolume');
+      PlaySound(CMOptions.MagicSoundURL, 'MagicSound', 'MagicVolume', false);
       CreateNotification(
         'MagicNotification',
         'Magic Meter full',

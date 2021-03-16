@@ -32,12 +32,14 @@ export default function CheckWrinklerCount() {
           CMOptions.WrinklerMaxSoundURL,
           'WrinklerMaxSound',
           'WrinklerMaxVolume',
+          false,
         );
       } else {
         PlaySound(
           CMOptions.WrinklerSoundURL,
           'WrinklerSound',
           'WrinklerVolume',
+          false,
         );
       }
       if (
