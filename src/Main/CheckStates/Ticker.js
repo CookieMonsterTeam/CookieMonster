@@ -17,7 +17,12 @@ export default function CheckTickerFortune() {
       Game.TickerEffect && Game.TickerEffect.type === 'fortune';
     if (LastTickerFortuneState) {
       Flash(3, 'FortuneFlash');
-      PlaySound(CMOptions.FortuneSoundURL, 'FortuneSound', 'FortuneVolume');
+      PlaySound(
+        CMOptions.FortuneSoundURL,
+        'FortuneSound',
+        'FortuneVolume',
+        false,
+      );
       CreateNotification(
         'FortuneNotification',
         'Fortune Cookie found',

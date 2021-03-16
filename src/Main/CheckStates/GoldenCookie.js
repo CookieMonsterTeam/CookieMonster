@@ -50,7 +50,7 @@ export default function CheckGoldenCookie() {
     if (LastGoldenCookieState) {
       if (LastSpawnedGoldenCookieState < CurrSpawnedGoldenCookieState) {
         Flash(3, 'GCFlash');
-        PlaySound(CMOptions.GCSoundURL, 'GCSound', 'GCVolume');
+        PlaySound(CMOptions.GCSoundURL, 'GCSound', 'GCVolume', false);
         CreateNotification(
           'GCNotification',
           'Golden Cookie Spawned',

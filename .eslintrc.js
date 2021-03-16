@@ -8,7 +8,6 @@ module.exports = {
     l: 'readonly',
     b64_to_utf8: 'readonly',
     utf8_to_b64: 'readonly',
-    realAudio: 'readonly',
     BeautifyAll: 'readonly',
   },
   extends: ['airbnb-base', 'plugin:prettier/recommended'],

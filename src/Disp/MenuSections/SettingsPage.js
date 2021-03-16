@@ -20,6 +20,7 @@ import Config from '../../Data/SettingsData';
 import ConfigDefault from '../../Data/SettingsDefault';
 import RefreshScale from '../HelperFunctions/RefreshScale';
 import UpdateColors from '../HelperFunctions/UpdateColors';
+import PlaySound from '../Notifications/Sound';
 import { Colors } from '../VariablesAndData';
 
 /**
@@ -110,6 +111,18 @@ function CreatePrefOption(config) {
     };
     volume.appendChild(slider);
     div.appendChild(volume);
+    const a = document.createElement('a');
+    a.className = 'option';
+    a.onclick = function () {
+      PlaySound(
+        CMOptions[config.replace('Volume', 'SoundURL')],
+        config.replace('Volume', 'Sound'),
+        config,
+        true,
+      );
+    };
+    a.textContent = 'Test sound';
+    div.appendChild(a);
     return div;
   }
   if (Config[config].type === 'url') {

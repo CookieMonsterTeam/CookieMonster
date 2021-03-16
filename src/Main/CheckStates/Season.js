@@ -19,7 +19,7 @@ export default function CheckSeasonPopup() {
       }
     });
     Flash(3, 'SeaFlash');
-    PlaySound(CMOptions.SeaSoundURL, 'SeaSound', 'SeaVolume');
+    PlaySound(CMOptions.SeaSoundURL, 'SeaSound', 'SeaVolume', false);
     CreateNotification(
       'SeaNotification',
       'Reindeer sighted!',
