@@ -101,6 +101,7 @@ const ConfigDefault = {
   GCTimer: 1,
   Favicon: 1,
   WrinklerButtons: 1,
+  HideSectionsButtons: 0,
   BulkBuyBlock: 0,
   Header: {
     BarsColors: 1,

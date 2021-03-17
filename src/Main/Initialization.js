@@ -6,6 +6,7 @@ import { VersionMajor, VersionMinor } from '../Data/Moddata';
 import CreateUpgradeBar from '../Disp/BuildingsUpgrades/UpgradeBar';
 import { CreateBotBar } from '../Disp/InfoBars/BottomBar';
 import { CreateTimerBar } from '../Disp/InfoBars/TimerBar';
+import CreateSectionHideButtons from '../Disp/Initialization/CreateSectionHideButtons';
 import CreateWrinklerButtons from '../Disp/Initialization/CreateWrinklerButton';
 import CreateCssArea from '../Disp/Initialization/CssArea';
 import UpdateBuildingUpgradeStyle from '../Disp/Initialization/UpdateBuildingUpgradeStyle';
@@ -37,6 +38,7 @@ export default function InitializeCookieMonster() {
   CreateTimerBar();
   CreateUpgradeBar();
   CreateWhiteScreen();
+  CreateSectionHideButtons();
   CreateFavicon();
   Object.keys(TooltipText).forEach((i) => {
     CreateSimpleTooltip(
