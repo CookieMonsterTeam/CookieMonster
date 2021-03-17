@@ -5,6 +5,7 @@ const ConfigDefault = {
   TimerBarPos: 0,
   TimerBarOverlay: 2,
   BuildColor: 1,
+  PPDisplayTime: 0,
   UpBarColor: 1,
   UpgradeBarFixedPos: 1,
   CalcWrink: 0,

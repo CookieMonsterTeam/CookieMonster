@@ -100,6 +100,13 @@ const Config = {
       UpdateBuildings();
     },
   ),
+  PPDisplayTime: new SettingStandard(
+    'bool',
+    'BarsColors',
+    ['PP As Value (Standard)', 'PP As Time Unit'],
+    'Display PP as calculated value or as approximate time unit. Note that PP does not translate directly into a time unit and this is therefore only an approximation.',
+    false,
+  ),
   UpBarColor: new SettingStandard(
     'bool',
     'BarsColors',

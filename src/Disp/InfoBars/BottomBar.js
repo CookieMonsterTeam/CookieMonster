@@ -9,6 +9,7 @@ import { CMOptions } from '../../Config/VariablesAndData';
 import { VersionMajor, VersionMinor } from '../../Data/Moddata';
 import {
   Beautify,
+  FormatTime,
   GetTimeColor,
 } from '../BeautifyAndFormatting/BeautifyFormatting';
 import GetCPS from '../HelperFunctions/GetCPS';
@@ -94,9 +95,13 @@ export function UpdateBotBar() {
       l('CMBotBar').firstChild.firstChild.childNodes[2].childNodes[
         count
       ].className = ColorTextPre + target[i].color;
+      let PPString;
+      if (CMOptions.PPDisplayTime)
+        PPString = FormatTime(Math.round(target[i].pp));
+      else PPString = Beautify(Math.round(target[i].pp), 2);
       l('CMBotBar').firstChild.firstChild.childNodes[2].childNodes[
         count
-      ].textContent = Beautify(Math.round(target[i].pp), 2);
+      ].textContent = PPString;
       const timeColor = GetTimeColor(
         (Game.Objects[i].bulkPrice - (Game.cookies + GetWrinkConfigBank())) /
           GetCPS(),

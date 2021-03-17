@@ -8,6 +8,7 @@ import { CMOptions } from '../../../Config/VariablesAndData';
 import { SimObjects } from '../../../Sim/VariablesAndData';
 import {
   Beautify,
+  FormatTime,
   GetTimeColor,
 } from '../../BeautifyAndFormatting/BeautifyFormatting';
 import GetCPS from '../../HelperFunctions/GetCPS';
@@ -55,7 +56,9 @@ export default function Building() {
         }01% of income)`;
       }
       l('CMTooltipBorder').className = ColorTextPre + target[TooltipName].color;
-      l('CMTooltipPP').textContent = Beautify(target[TooltipName].pp, 2);
+      if (CMOptions.PPDisplayTime)
+        l('CMTooltipPP').textContent = FormatTime(target[TooltipName].pp);
+      else l('CMTooltipPP').textContent = Beautify(target[TooltipName].pp, 2);
       l('CMTooltipPP').className = ColorTextPre + target[TooltipName].color;
       const timeColor = GetTimeColor(
         (TooltipPrice - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
