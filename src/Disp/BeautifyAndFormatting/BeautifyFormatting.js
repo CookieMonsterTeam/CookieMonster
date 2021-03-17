@@ -96,6 +96,7 @@ export function Beautify(num, floats, forced) {
 export function FormatTime(time, longFormat) {
   let formattedTime = time;
   if (time === Infinity) return time;
+  if (time < 0) return 'Negative time period';
   formattedTime = Math.ceil(time);
   const y = Math.floor(formattedTime / 31557600);
   const d = Math.floor((formattedTime % 31557600) / 86400);

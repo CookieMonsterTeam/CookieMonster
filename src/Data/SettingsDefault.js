@@ -5,6 +5,7 @@ const ConfigDefault = {
   TimerBarPos: 0,
   TimerBarOverlay: 2,
   BuildColor: 1,
+  PPDisplayTime: 0,
   UpBarColor: 1,
   UpgradeBarFixedPos: 1,
   CalcWrink: 0,
@@ -100,6 +101,7 @@ const ConfigDefault = {
   GCTimer: 1,
   Favicon: 1,
   WrinklerButtons: 1,
+  HideSectionsButtons: 0,
   BulkBuyBlock: 0,
   Header: {
     BarsColors: 1,

@@ -4,6 +4,7 @@ import { ToggleTimerBar, ToggleTimerBarPos } from '../Config/SpecificToggles';
 import ToggleBotBar from '../Config/Toggles/ToggleBotBar';
 import ToggleDetailedTime from '../Config/Toggles/ToggleDetailedTime';
 import ToggleGCTimer from '../Config/Toggles/ToggleGCTimer';
+import ToggleSectionHideButtons from '../Config/Toggles/ToggleSectionHideButtons';
 import ToggleToolWarnPos from '../Config/Toggles/ToggleToolWarnPos';
 import ToggleUpgradeBarAndColor from '../Config/Toggles/ToggleUpgradeBarAndColor';
 import ToggleUpgradeBarFixedPos from '../Config/Toggles/ToggleUpgradeBarFixedPos';
@@ -99,6 +100,13 @@ const Config = {
     function () {
       UpdateBuildings();
     },
+  ),
+  PPDisplayTime: new SettingStandard(
+    'bool',
+    'BarsColors',
+    ['PP As Value (Standard)', 'PP As Time Unit'],
+    'Display PP as calculated value or as approximate time unit. Note that PP does not translate directly into a time unit and this is therefore only an approximation.',
+    false,
   ),
   UpBarColor: new SettingStandard(
     'bool',
@@ -728,11 +736,21 @@ const Config = {
   WrinklerButtons: new SettingStandard(
     'bool',
     'Miscellaneous',
-    ['Extra Buttons OFF', 'Extra Buttons ON'],
+    ['Extra Wrinkler Buttons OFF', 'Extra Wrinkler Buttons ON'],
     'Show buttons for popping wrinklers at bottom of cookie section',
     true,
     function () {
       ToggleWrinklerButtons();
+    },
+  ),
+  HideSectionsButtons: new SettingStandard(
+    'bool',
+    'Miscellaneous',
+    ['Hide Upgrades/Buildings Button OFF', 'Hide Upgrades/Buildings Button ON'],
+    'Show buttons for hiding and showing the upgrades and buildings section in the right column',
+    true,
+    function () {
+      ToggleSectionHideButtons();
     },
   ),
   BulkBuyBlock: new SettingStandard(

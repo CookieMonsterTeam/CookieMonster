@@ -5,6 +5,7 @@ import {
 import { CMOptions } from '../../../Config/VariablesAndData';
 import {
   Beautify,
+  FormatTime,
   GetTimeColor,
 } from '../../BeautifyAndFormatting/BeautifyFormatting';
 import GetCPS from '../../HelperFunctions/GetCPS';
@@ -70,10 +71,15 @@ export default function Upgrade() {
         )} Clicks`;
         l('CMTooltipPP').style.color = 'white';
       } else {
-        l('CMTooltipPP').textContent = Beautify(
-          CacheUpgrades[Game.UpgradesInStore[TooltipName].name].pp,
-          2,
-        );
+        if (CMOptions.PPDisplayTime)
+          l('CMTooltipPP').textContent = FormatTime(
+            CacheUpgrades[Game.UpgradesInStore[TooltipName].name].pp,
+          );
+        else
+          l('CMTooltipPP').textContent = Beautify(
+            CacheUpgrades[Game.UpgradesInStore[TooltipName].name].pp,
+            2,
+          );
         l('CMTooltipPP').className =
           ColorTextPre +
           CacheUpgrades[Game.UpgradesInStore[TooltipName].name].color;
