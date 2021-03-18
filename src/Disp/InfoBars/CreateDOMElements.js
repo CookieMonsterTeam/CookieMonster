@@ -86,8 +86,12 @@ export function CreateBotBarBuildingColumn(buildingName) {
     span.className = ColorTextPre + ColorBlue;
 
     header.appendChild(document.createTextNode(')'));
+    type.lastChild.style.paddingLeft = '8px';
     bonus.appendChild(document.createElement('td'));
+    bonus.lastChild.style.paddingLeft = '8px';
     pp.appendChild(document.createElement('td'));
+    pp.lastChild.style.paddingLeft = '8px';
     time.appendChild(document.createElement('td'));
+    time.lastChild.style.paddingLeft = '2px';
   }
 }

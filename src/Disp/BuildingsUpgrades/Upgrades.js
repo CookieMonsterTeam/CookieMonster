@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { CacheUpgrades } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import {
@@ -29,10 +30,10 @@ export default function UpdateUpgrades() {
     let purple = 0;
     let gray = 0;
 
-    for (const i of Object.keys(Game.UpgradesInStore)) {
+    Object.keys(Game.UpgradesInStore).forEach((i) => {
       const me = Game.UpgradesInStore[i];
       let addedColor = false;
-      for (let j = 0; j < l(`upgrade${i}`).childNodes.length; j++) {
+      for (let j = 0; j < l(`upgrade${i}`).childNodes.length; j += 1) {
         if (
           l(`upgrade${i}`).childNodes[j].className.indexOf(ColorBackPre) !== -1
         ) {
@@ -49,14 +50,14 @@ export default function UpdateUpgrades() {
         div.className = ColorBackPre + CacheUpgrades[me.name].color;
         l(`upgrade${i}`).appendChild(div);
       }
-      if (CacheUpgrades[me.name].color === ColorBlue) blue++;
-      else if (CacheUpgrades[me.name].color === ColorGreen) green++;
-      else if (CacheUpgrades[me.name].color === ColorYellow) yellow++;
-      else if (CacheUpgrades[me.name].color === ColorOrange) orange++;
-      else if (CacheUpgrades[me.name].color === ColorRed) red++;
-      else if (CacheUpgrades[me.name].color === ColorPurple) purple++;
-      else if (CacheUpgrades[me.name].color === ColorGray) gray++;
-    }
+      if (CacheUpgrades[me.name].color === ColorBlue) blue += 1;
+      else if (CacheUpgrades[me.name].color === ColorGreen) green += 1;
+      else if (CacheUpgrades[me.name].color === ColorYellow) yellow += 1;
+      else if (CacheUpgrades[me.name].color === ColorOrange) orange += 1;
+      else if (CacheUpgrades[me.name].color === ColorRed) red += 1;
+      else if (CacheUpgrades[me.name].color === ColorPurple) purple += 1;
+      else if (CacheUpgrades[me.name].color === ColorGray) gray += 1;
+    });
 
     l('CMUpgradeBarBlue').textContent = blue;
     l('CMUpgradeBarGreen').textContent = green;
@@ -70,7 +71,7 @@ export default function UpdateUpgrades() {
   const arr = [];
   // Build array of pointers, sort by pp, set flex positions
   // This regulates sorting of upgrades
-  for (let x = 0; x < Game.UpgradesInStore.length; x++) {
+  for (let x = 0; x < Game.UpgradesInStore.length; x += 1) {
     const o = {};
     o.name = Game.UpgradesInStore[x].name;
     o.price = Game.UpgradesInStore[x].basePrice;
@@ -95,7 +96,7 @@ export default function UpdateUpgrades() {
   const nameChecker = function (arr2, upgrade) {
     return arr2.findIndex((e) => e.name === upgrade.name);
   };
-  for (let x = 0; x < Game.UpgradesInStore.length; x++) {
+  for (let x = 0; x < Game.UpgradesInStore.length; x += 1) {
     l(`upgrade${x}`).style.order =
       nameChecker(arr, Game.UpgradesInStore[x]) + 1;
   }

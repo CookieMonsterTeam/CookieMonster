@@ -15,8 +15,8 @@ export default function AddWrinklerAreaDetect() {
   l('backgroundLeftCanvas').onmouseout = function () {
     TooltipWrinklerArea = 0;
     Game.tooltip.hide();
-    for (const i of Object.keys(Game.wrinklers)) {
+    Object.keys(Game.wrinklers).forEach((i) => {
       TooltipWrinklerBeingShown[i] = 0;
-    }
+    });
   };
 }

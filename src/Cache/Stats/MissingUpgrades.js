@@ -19,9 +19,9 @@ export default function CacheAllMissingUpgrades() {
   CacheMissingUpgradesPrestige = '';
   const list = [];
   // sort the upgrades
-  for (const i of Object.keys(Game.Upgrades)) {
+  Object.keys(Game.Upgrades).forEach((i) => {
     list.push(Game.Upgrades[i]);
-  }
+  });
   const sortMap = function (a, b) {
     if (a.order > b.order) return 1;
     if (a.order < b.order) return -1;
@@ -29,7 +29,7 @@ export default function CacheAllMissingUpgrades() {
   };
   list.sort(sortMap);
 
-  for (const i of Object.keys(list)) {
+  Object.keys(list).forEach((i) => {
     const me = list[i];
 
     if (me.bought === 0) {
@@ -45,5 +45,5 @@ export default function CacheAllMissingUpgrades() {
       )
         CacheMissingUpgrades += str;
     }
-  }
+  });
 }

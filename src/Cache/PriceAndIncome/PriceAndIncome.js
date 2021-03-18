@@ -1,10 +1,16 @@
 /* eslint-disable no-unused-vars */
 /** Section: Functions related to caching income */
 
+import { CMOptions } from '../../Config/VariablesAndData';
+import GetCPS from '../../Disp/HelperFunctions/GetCPS';
 import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 import BuyBuildingsBonusIncome from '../../Sim/SimulationEvents/BuyBuildingBonusIncome';
 import BuyUpgradesBonusIncome from '../../Sim/SimulationEvents/BuyUpgrades';
 import {
+  CacheAverageCPS,
+  CacheAverageGainBank,
+  CacheAverageGainWrink,
+  CacheAverageGainWrinkFattest,
   CacheDoRemakeBuildPrices,
   CacheObjects1,
   CacheObjects10,
@@ -20,13 +26,13 @@ import {
  */
 function CacheBuildingIncome(amount, target) {
   const result = [];
-  for (const i of Object.keys(Game.Objects)) {
+  Object.keys(Game.Objects).forEach((i) => {
     result[i] = {};
     result[i].bonus = BuyBuildingsBonusIncome(i, amount);
     if (amount !== 1) {
       CacheDoRemakeBuildPrices = 1;
     }
-  }
+  });
   return result;
 }
 
@@ -36,19 +42,28 @@ function CacheBuildingIncome(amount, target) {
  */
 function CacheUpgradeIncome() {
   CacheUpgrades = [];
-  for (const i of Object.keys(Game.Upgrades)) {
+  Object.keys(Game.Upgrades).forEach((i) => {
     const bonusIncome = BuyUpgradesBonusIncome(i);
-    CacheUpgrades[i] = {};
-    if (bonusIncome[0]) CacheUpgrades[i].bonus = bonusIncome[0];
-    if (bonusIncome[1]) CacheUpgrades[i].bonusMouse = bonusIncome[1];
-  }
+    if (i === 'Elder Pledge') {
+      CacheUpgrades[i] = { bonus: Game.cookiesPs - CacheAverageGainBank };
+      if (CMOptions.CalcWrink === 1)
+        CacheUpgrades[i].bonus -= CacheAverageGainWrink;
+      else if (CMOptions.CalcWrink === 2)
+        CacheUpgrades[i].bonus -= CacheAverageGainWrinkFattest;
+      if (!Number.isFinite(CacheUpgrades[i].bonus)) CacheUpgrades[i].bonus = 0;
+    } else {
+      CacheUpgrades[i] = {};
+      if (bonusIncome[0]) CacheUpgrades[i].bonus = bonusIncome[0];
+      if (bonusIncome[1]) CacheUpgrades[i].bonusMouse = bonusIncome[1];
+    }
+  });
 }
 
 /**
  * This functions caches the price of each building and stores it in the cache
  */
 export function CacheBuildingsPrices() {
-  for (const i of Object.keys(Game.Objects)) {
+  Object.keys(Game.Objects).forEach((i) => {
     CacheObjects1[i].price = BuildingGetPrice(
       Game.Objects[i],
       Game.Objects[i].basePrice,
@@ -70,7 +85,7 @@ export function CacheBuildingsPrices() {
       Game.Objects[i].free,
       100,
     );
-  }
+  });
 }
 
 /**

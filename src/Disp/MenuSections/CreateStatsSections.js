@@ -1,8 +1,10 @@
 /** Functions to create the individual sections of the Statistics page */
 
+import * as GameData from '../../Data/Gamedata';
 import { MaxChainCookieReward } from '../../Cache/Stats/ChainCookies';
 import {
   CacheAvgCPSWithChoEgg,
+  CacheCentEgg,
   CacheChainFrenzyMaxReward,
   CacheChainFrenzyRequired,
   CacheChainFrenzyRequiredNext,
@@ -30,6 +32,7 @@ import {
   CacheLuckyWrathRewardFrenzy,
   CacheNoGoldSwitchCookiesPS,
   CacheRealCookiesEarned,
+  CacheSeaSpec,
   CacheWrathCookiesMult,
   CacheWrinklersTotal,
 } from '../../Cache/VariablesAndData';
@@ -43,7 +46,7 @@ import {
 import GetCPS from '../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../HelperFunctions/GetWrinkConfigBank';
 import { ColorGreen, ColorRed, ColorTextPre } from '../VariablesAndData';
-import { StatsListing } from './CreateDOMElements';
+import { StatsListing, StatsHeader, StatsMissDisp } from './CreateDOMElements';
 
 /**
  * This function creates the "Lucky" section of the stats page
@@ -739,5 +742,247 @@ export function PrestigeSection() {
     );
   }
 
+  return section;
+}
+
+/**
+ * This function creates the "Season Specials" section of the stats page
+ * @returns	{object}	section		The object contating the Season Specials section
+ */
+export function SeasonSection() {
+  const section = document.createElement('div');
+  section.className = 'CMStatsSeasonSection';
+
+  let specDisp = false;
+  const missingHalloweenCookies = [];
+  Object.keys(GameData.HalloCookies).forEach((i) => {
+    if (!Game.Has(GameData.HalloCookies[i])) {
+      missingHalloweenCookies.push(GameData.HalloCookies[i]);
+      specDisp = true;
+    }
+  });
+  const missingChristmasCookies = [];
+  Object.keys(GameData.ChristCookies).forEach((i) => {
+    if (!Game.Has(GameData.ChristCookies[i])) {
+      missingChristmasCookies.push(GameData.ChristCookies[i]);
+      specDisp = true;
+    }
+  });
+  const missingValentineCookies = [];
+  Object.keys(GameData.ValCookies).forEach((i) => {
+    if (!Game.Has(GameData.ValCookies[i])) {
+      missingValentineCookies.push(GameData.ValCookies[i]);
+      specDisp = true;
+    }
+  });
+  const missingNormalEggs = [];
+  Object.keys(Game.eggDrops).forEach((i) => {
+    if (!Game.HasUnlocked(Game.eggDrops[i])) {
+      missingNormalEggs.push(Game.eggDrops[i]);
+      specDisp = true;
+    }
+  });
+  const missingRareEggs = [];
+  Object.keys(Game.rareEggDrops).forEach((i) => {
+    if (!Game.HasUnlocked(Game.rareEggDrops[i])) {
+      missingRareEggs.push(Game.rareEggDrops[i]);
+      specDisp = true;
+    }
+  });
+  const missingPlantDrops = [];
+  Object.keys(GameData.PlantDrops).forEach((i) => {
+    if (!Game.HasUnlocked(GameData.PlantDrops[i])) {
+      missingPlantDrops.push(GameData.PlantDrops[i]);
+      specDisp = true;
+    }
+  });
+  const choEgg =
+    Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg');
+  const centEgg = Game.Has('Century egg');
+
+  if (Game.season === 'christmas' || specDisp || choEgg || centEgg) {
+    section.appendChild(StatsHeader('Season Specials', 'Sea'));
+    if (CMOptions.Header.Sea) {
+      if (missingHalloweenCookies.length !== 0) {
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Halloween cookies left to buy',
+            StatsMissDisp(missingHalloweenCookies),
+          ),
+        );
+        let failRateHalloween = 0.95;
+        if (Game.HasAchiev('Spooky cookies')) failRateHalloween = 0.8;
+        if (Game.Has('Starterror')) failRateHalloween *= 0.9;
+        failRateHalloween *= 1 / Game.dropRateMult();
+        if (Game.hasGod) {
+          const godLvl = Game.hasGod('seasons');
+          if (godLvl === 1) failRateHalloween *= 0.9;
+          else if (godLvl === 2) failRateHalloween *= 0.95;
+          else if (godLvl === 3) failRateHalloween *= 0.97;
+        }
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Chance of receiving a cookie from wrinkler/shiny wrinkler',
+            document.createTextNode(
+              `${Beautify((1 - failRateHalloween) * 100)}% / ${Beautify(
+                (1 - failRateHalloween * 0.9) * 100,
+              )}%`,
+            ),
+          ),
+        );
+      }
+      if (missingChristmasCookies.length !== 0) {
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Christmas cookies left to buy',
+            StatsMissDisp(missingChristmasCookies),
+          ),
+        );
+        let failRateChristmas = 0.8;
+        if (Game.HasAchiev('Let it snow')) failRateChristmas = 0.6;
+        failRateChristmas *= 1 / Game.dropRateMult();
+        if (Game.Has('Starsnow')) failRateChristmas *= 0.95;
+        if (Game.hasGod) {
+          const godLvl = Game.hasGod('seasons');
+          if (godLvl === 1) failRateChristmas *= 0.9;
+          else if (godLvl === 2) failRateChristmas *= 0.95;
+          else if (godLvl === 3) failRateChristmas *= 0.97;
+        }
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Chance of receiving a cookie from reindeer',
+            document.createTextNode(
+              `${Beautify((1 - failRateChristmas) * 100)}%`,
+            ),
+          ),
+        );
+      }
+      if (missingValentineCookies.length !== 0) {
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Valentine cookies left to buy',
+            StatsMissDisp(missingValentineCookies),
+          ),
+        );
+      }
+      const dropRateEgg = function (StartingFailRate) {
+        let failRateEgg = StartingFailRate * (1 / Game.dropRateMult());
+        if (Game.HasAchiev('Hide & seek champion')) failRateEgg *= 0.7;
+        if (Game.Has('Omelette')) failRateEgg *= 0.9;
+        if (Game.Has('Starspawn')) failRateEgg *= 0.9;
+        if (Game.hasGod) {
+          const godLvl = Game.hasGod('seasons');
+          if (godLvl === 1) failRateEgg *= 0.9;
+          else if (godLvl === 2) failRateEgg *= 0.95;
+          else if (godLvl === 3) failRateEgg *= 0.97;
+        }
+        // Calculations courtesy of @svschouw, at https://github.com/Aktanusa/CookieMonster/issues/25
+        const succesRateEgg = 1 - failRateEgg;
+        const obtainedEggs = Game.eggDrops.length - missingNormalEggs.length;
+        const obtainedRareEggs =
+          Game.rareEggDrops.length - missingRareEggs.length;
+        const pNormal1 =
+          succesRateEgg * 0.9 * (1 - obtainedEggs / Game.eggDrops.length);
+        const pRare1 =
+          succesRateEgg *
+          0.1 *
+          (1 - obtainedRareEggs / Game.rareEggDrops.length);
+        const pRedropNormal =
+          succesRateEgg * 0.9 * (obtainedEggs / Game.eggDrops.length);
+        const pRedropRare =
+          succesRateEgg * 0.1 * (obtainedRareEggs / Game.rareEggDrops.length);
+        const pRedrop = pRedropNormal + pRedropRare;
+        const pNormal2 =
+          pRedrop * 0.9 * (1 - obtainedEggs / Game.eggDrops.length);
+        const pRare2 =
+          pRedrop * 0.1 * (1 - obtainedRareEggs / Game.rareEggDrops.length);
+        return [pNormal1 + pNormal2, pRare1 + pRare2];
+      };
+      if (missingNormalEggs.length !== 0) {
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Normal easter eggs left to unlock',
+            StatsMissDisp(missingNormalEggs),
+          ),
+        );
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Chance of receiving an egg from wrinkler/golden cookie',
+            document.createTextNode(
+              `${Beautify(dropRateEgg(0.98)[0] * 100)}% / ${Beautify(
+                dropRateEgg(0.9)[0] * 100,
+              )}%`,
+            ),
+          ),
+        );
+      }
+      if (missingRareEggs.length !== 0) {
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Rare easter eggs left to unlock',
+            StatsMissDisp(missingRareEggs),
+          ),
+        );
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Chance of receiving a rare egg from wrinkler/golden cookie',
+            document.createTextNode(
+              `${Beautify(dropRateEgg(0.98)[1] * 100)}% / ${Beautify(
+                dropRateEgg(0.9)[1] * 100,
+              )}%`,
+            ),
+          ),
+        );
+      }
+      if (missingPlantDrops.length !== 0) {
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Rare plant drops left to unlock',
+            StatsMissDisp(missingPlantDrops),
+          ),
+        );
+      }
+
+      if (Game.season === 'christmas')
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Reindeer reward',
+            document.createTextNode(Beautify(CacheSeaSpec)),
+          ),
+        );
+      if (choEgg) {
+        section.appendChild(
+          StatsListing(
+            'withTooltip',
+            'Chocolate egg cookies',
+            document.createTextNode(Beautify(CacheLastChoEgg)),
+            'ChoEggTooltipPlaceholder',
+          ),
+        );
+      }
+      if (centEgg) {
+        section.appendChild(
+          StatsListing(
+            'basic',
+            'Century egg multiplier',
+            document.createTextNode(
+              `${Math.round((CacheCentEgg - 1) * 10000) / 100}%`,
+            ),
+          ),
+        );
+      }
+    }
+  }
   return section;
 }

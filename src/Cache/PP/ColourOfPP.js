@@ -9,7 +9,7 @@ import {
   ColorRed,
   ColorYellow,
 } from '../../Disp/VariablesAndData';
-import { CacheMaxPP, CacheMidPP, CacheMinPP } from '../VariablesAndData';
+import { CacheMinPP, CachePPArray } from '../VariablesAndData';
 
 /**
  * This functions return the colour assosciated with the given pp value
@@ -24,10 +24,10 @@ export default function ColourOfPP(me, price) {
   if (me.pp <= 0 || me.pp === Infinity) color = ColorGray;
   else if (me.pp < CacheMinPP) color = ColorBlue;
   else if (me.pp === CacheMinPP) color = ColorGreen;
-  else if (me.pp === CacheMaxPP) color = ColorRed;
-  else if (me.pp > CacheMaxPP) color = ColorPurple;
-  else if (me.pp > CacheMidPP) color = ColorOrange;
-  else color = ColorYellow;
+  else if (me.pp < CachePPArray[10][0]) color = ColorYellow;
+  else if (me.pp < CachePPArray[20][0]) color = ColorOrange;
+  else if (me.pp > CachePPArray[30][0]) color = ColorRed;
+  else color = ColorPurple;
 
   // Colour based on price in terms of CPS
   if (Number(CMOptions.PPSecondsLowerLimit) !== 0) {

@@ -1,9 +1,10 @@
-import CachePP from '../Cache/PP/PP';
+/* eslint-disable no-unused-vars */
 import CheckNotificationPermissions from '../Config/CheckNotificationPermissions';
 import { ToggleTimerBar, ToggleTimerBarPos } from '../Config/SpecificToggles';
 import ToggleBotBar from '../Config/Toggles/ToggleBotBar';
 import ToggleDetailedTime from '../Config/Toggles/ToggleDetailedTime';
 import ToggleGCTimer from '../Config/Toggles/ToggleGCTimer';
+import ToggleSectionHideButtons from '../Config/Toggles/ToggleSectionHideButtons';
 import ToggleToolWarnPos from '../Config/Toggles/ToggleToolWarnPos';
 import ToggleUpgradeBarAndColor from '../Config/Toggles/ToggleUpgradeBarAndColor';
 import ToggleUpgradeBarFixedPos from '../Config/Toggles/ToggleUpgradeBarFixedPos';
@@ -14,6 +15,7 @@ import UpdateUpgrades from '../Disp/BuildingsUpgrades/Upgrades';
 import RefreshScale from '../Disp/HelperFunctions/RefreshScale';
 import UpdateColors from '../Disp/HelperFunctions/UpdateColors';
 import { UpdateFavicon } from '../Disp/TabTitle/FavIcon';
+import { SimDoSims } from '../Sim/VariablesAndData';
 import {
   SettingStandard,
   SettingColours,
@@ -68,7 +70,11 @@ const Config = {
   SortBuildings: new SettingStandard(
     'bool',
     'BarsColors',
-    ['Sort Buildings: Default', 'Sort Buildings: PP'],
+    [
+      'Sort Buildings: Default',
+      'Sort Buildings: PP of x1 purchase',
+      'Sort Buildings: PP of selected bulk mode',
+    ],
     'Sort the display of buildings in either default order or by PP',
     false,
     function () {
@@ -95,18 +101,12 @@ const Config = {
       UpdateBuildings();
     },
   ),
-  BulkBuildColor: new SettingStandard(
+  PPDisplayTime: new SettingStandard(
     'bool',
     'BarsColors',
-    [
-      'Bulk Building Colors (Single Building Color)',
-      'Bulk Building Colors (Calculated Bulk Color)',
-    ],
-    'Color code bulk buildings based on single buildings color or calculated bulk value color',
+    ['PP As Value (Standard)', 'PP As Time Unit'],
+    'Display PP as calculated value or as approximate time unit. Note that PP does not translate directly into a time unit and this is therefore only an approximation.',
     false,
-    function () {
-      UpdateBuildings();
-    },
   ),
   UpBarColor: new SettingStandard(
     'bool',
@@ -127,17 +127,17 @@ const Config = {
     'BarsColors',
     {
       Blue:
-        'Color Blue.  Used to show better than best PP building, for Click Frenzy bar, and for various labels',
+        'Color Blue.  Used to show upgrades better than best PP building, for Click Frenzy bar, and for various labels',
       Green:
         'Color Green.  Used to show best PP building, for Blood Frenzy bar, and for various labels',
       Yellow:
-        'Color Yellow.  Used to show between best and worst PP buildings closer to best, for Frenzy bar, and for various labels',
+        'Color Yellow.  Used to show buildings within the top 10 of PP, for Frenzy bar, and for various labels',
       Orange:
-        'Color Orange.  Used to show between best and worst PP buildings closer to worst, for Next Reindeer bar, and for various labels',
+        'Color Orange.  Used to show buildings within the top 20 of PP, for Next Reindeer bar, and for various labels',
       Red:
-        'Color Red.  Used to show worst PP building, for Clot bar, and for various labels',
+        'Color Red.  Used to show buildings within the top 30 of PP, for Clot bar, and for various labels',
       Purple:
-        'Color Purple.  Used to show worse than worst PP building, for Next Cookie bar, and for various labels',
+        'Color Purple.  Used to show buildings outside of the top 30 of PP, for Next Cookie bar, and for various labels',
       Gray:
         'Color Gray.  Used to show negative or infinity PP, and for Next Cookie/Next Reindeer bar',
       Pink: 'Color Pink.  Used for Dragonflight bar',
@@ -169,6 +169,9 @@ const Config = {
     ],
     'Calculate times and average Cookies Per Second with (only the single non-shiny fattest) Wrinklers',
     true,
+    function () {
+      SimDoSims = true;
+    },
   ),
   CPSMode: new SettingStandard(
     'bool',
@@ -205,16 +208,6 @@ const Config = {
     ],
     'How much time average Cookie Clicks should consider',
     false,
-  ),
-  ColorPPBulkMode: new SettingStandard(
-    'bool',
-    'Calculation',
-    ['Color of PP (Compared to Single)', 'Color of PP (Compared to Bulk)'],
-    'Color PP-values based on comparison with single purchase or with selected bulk-buy mode',
-    false,
-    function () {
-      CachePP();
-    },
   ),
   PPExcludeTop: new SettingStandard(
     'bool',
@@ -585,6 +578,16 @@ const Config = {
     'Shows a tooltip for plants that have a cookie reward.',
     true,
   ),
+  TooltipPantheon: new SettingStandard(
+    'bool',
+    'Tooltip',
+    [
+      'Show Extra Info Pantheon Tooltip OFF',
+      'Show Extra Info Pantheon Tooltip ON',
+    ],
+    'Shows additional info in the pantheon tooltip',
+    true,
+  ),
   DragonAuraInfo: new SettingStandard(
     'bool',
     'Tooltip',
@@ -684,7 +687,7 @@ const Config = {
     'bool',
     'Notation',
     ['1 decimals', '2 decimals', '3 decimals'],
-    'Set the number of decimals used when applicable',
+    `Set the number of decimals used when applicable. This only works with Cookie Monster scales and not with "Game's Setting Scale"`,
     false,
     function () {
       RefreshScale();
@@ -733,11 +736,21 @@ const Config = {
   WrinklerButtons: new SettingStandard(
     'bool',
     'Miscellaneous',
-    ['Extra Buttons OFF', 'Extra Buttons ON'],
+    ['Extra Wrinkler Buttons OFF', 'Extra Wrinkler Buttons ON'],
     'Show buttons for popping wrinklers at bottom of cookie section',
     true,
     function () {
       ToggleWrinklerButtons();
+    },
+  ),
+  HideSectionsButtons: new SettingStandard(
+    'bool',
+    'Miscellaneous',
+    ['Hide Upgrades/Buildings Button OFF', 'Hide Upgrades/Buildings Button ON'],
+    'Show buttons for hiding and showing the upgrades and buildings section in the right column',
+    true,
+    function () {
+      ToggleSectionHideButtons();
     },
   ),
   BulkBuyBlock: new SettingStandard(

@@ -80,6 +80,7 @@ export const TooltipText = [
     '250px',
   ],
 ];
+export const SimpleTooltipElements = {};
 
 /**
  * These are variables used by the functions that create tooltips for wrinklers

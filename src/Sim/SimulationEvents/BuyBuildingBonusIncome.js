@@ -33,14 +33,14 @@ export default function BuyBuildingsBonusIncome(building, amount) {
     if (me.amount >= 700) SimWin('Gotta hand it to you');
     if (me.amount >= 800) SimWin("The devil's workshop");
   } else {
-    for (const j in Game.Objects[me.name].tieredAchievs) {
+    Object.keys(Game.Objects[me.name].tieredAchievs).forEach((j) => {
       if (
         me.amount >=
         Game.Tiers[Game.Objects[me.name].tieredAchievs[j].tier].achievUnlock
       ) {
         SimWin(Game.Objects[me.name].tieredAchievs[j].name);
       }
-    }
+    });
   }
 
   const lastAchievementsOwned = SimAchievementsOwned;

@@ -105,7 +105,7 @@ export function UpdateTimerBar() {
         (Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.time) /
           Game.fps,
       );
-      numberOfTimers++;
+      numberOfTimers += 1;
     } else l('CMTimerBarGC').style.display = 'none';
 
     // Regulates visibility of Reindeer timer
@@ -152,7 +152,7 @@ export function UpdateTimerBar() {
         (Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.time) /
           Game.fps,
       );
-      numberOfTimers++;
+      numberOfTimers += 1;
     } else {
       l('CMTimerBarRen').style.display = 'none';
     }
@@ -160,7 +160,7 @@ export function UpdateTimerBar() {
     // On every frame all buff-timers are deleted and re-created
     const BuffTimerBars = {};
     l('CMTimerBarBuffTimers').innerHTML = '';
-    for (const i of Object.keys(Game.buffs)) {
+    Object.keys(Game.buffs).forEach((i) => {
       if (Game.buffs[i]) {
         const timer = CreateTimer(Game.buffs[i].name, Game.buffs[i].name, [
           { id: `${Game.buffs[i].name}Bar` },
@@ -187,13 +187,13 @@ export function UpdateTimerBar() {
         timer.lastChild.children[2].textContent = Math.ceil(
           Game.buffs[i].time / Game.fps,
         );
-        numberOfTimers++;
+        numberOfTimers += 1;
         BuffTimerBars[Game.buffs[i].name] = timer;
       }
-    }
-    for (const i of Object.keys(BuffTimerBars)) {
+    });
+    Object.keys(BuffTimerBars).forEach((i) => {
       l('CMTimerBarBuffTimers').appendChild(BuffTimerBars[i]);
-    }
+    });
 
     if (numberOfTimers !== 0) {
       l('CMTimerBar').style.height = `${numberOfTimers * 12 + 2}px`;

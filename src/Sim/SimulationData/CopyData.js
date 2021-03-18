@@ -13,6 +13,9 @@ import {
   SimAchievementsOwned,
   SimDragonAura,
   SimDragonAura2,
+  SimGod1,
+  SimGod2,
+  SimGod3,
   SimHeavenlyPower,
   SimObjects,
   SimPledges,
@@ -34,7 +37,7 @@ export default function CopyData() {
   SimPrestige = Game.prestige;
 
   // Buildings
-  for (const i of Object.keys(Game.Objects)) {
+  Object.keys(Game.Objects).forEach((i) => {
     const me = Game.Objects[i];
     let you = SimObjects[i];
     if (you === undefined) {
@@ -49,14 +52,19 @@ export default function CopyData() {
     you.basePrice = me.basePrice;
     you.free = me.free;
     if (me.minigameLoaded) {
+      if (me.name === 'Temple') {
+        SimGod1 = me.minigame.slot[0];
+        SimGod2 = me.minigame.slot[1];
+        SimGod3 = me.minigame.slot[2];
+      }
       you.minigameLoaded = me.minigameLoaded;
       you.minigame = me.minigame;
     }
     SimObjects[i] = you;
-  }
+  });
 
   // Upgrades
-  for (const i of Object.keys(Game.Upgrades)) {
+  Object.keys(Game.Upgrades).forEach((i) => {
     const me = Game.Upgrades[i];
     let you = SimUpgrades[i];
     if (you === undefined) {
@@ -65,10 +73,10 @@ export default function CopyData() {
     }
     you.bought = me.bought;
     SimUpgrades[i] = you;
-  }
+  });
 
   // Achievements
-  for (const i of Object.keys(Game.Achievements)) {
+  Object.keys(Game.Achievements).forEach((i) => {
     const me = Game.Achievements[i];
     let you = SimAchievements[i];
     if (you === undefined) {
@@ -77,7 +85,7 @@ export default function CopyData() {
     }
     you.won = me.won;
     SimAchievements[i] = you;
-  }
+  });
 
   // Auras
   CacheDragonAuras();

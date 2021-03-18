@@ -42,11 +42,11 @@ export function CacheStatsCookies() {
   CacheEdifice = 0;
   let max = 0;
   let n = 0;
-  for (const i of Object.keys(Game.Objects)) {
+  Object.keys(Game.Objects).forEach((i) => {
     if (Game.Objects[i].amount > max) max = Game.Objects[i].amount;
-    if (Game.Objects[i].amount > 0) n++;
-  }
-  for (const i of Object.keys(Game.Objects)) {
+    if (Game.Objects[i].amount > 0) n += 1;
+  });
+  Object.keys(Game.Objects).forEach((i) => {
     if (
       (Game.Objects[i].amount < max || n === 1) &&
       Game.Objects[i].amount < 400 &&
@@ -55,7 +55,7 @@ export function CacheStatsCookies() {
       CacheEdifice = Game.Objects[i].price * 2;
       CacheEdificeBuilding = i;
     }
-  }
+  });
 }
 
 /**

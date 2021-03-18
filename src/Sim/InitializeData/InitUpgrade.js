@@ -16,9 +16,9 @@ export default function InitUpgrade(upgradeName) {
     if (me.name === 'Sugar crystal cookies') {
       you.power = function () {
         let n = 5;
-        for (const i in SimObjects) {
+        Object.keys(SimObjects).forEach((i) => {
           if (SimObjects[i].level >= 10) n += 1;
-        }
+        });
         return n;
       };
     } else {

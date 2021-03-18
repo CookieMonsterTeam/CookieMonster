@@ -1,6 +1,6 @@
 import { CMOptions } from '../../Config/VariablesAndData';
 import Flash from '../../Disp/Notifications/Flash';
-import Notification from '../../Disp/Notifications/Notification';
+import CreateNotification from '../../Disp/Notifications/Notification';
 import PlaySound from '../../Disp/Notifications/Sound';
 import { LastWrinklerCount } from '../VariablesAndData';
 
@@ -11,9 +11,9 @@ import { LastWrinklerCount } from '../VariablesAndData';
 export default function CheckWrinklerCount() {
   if (Game.elderWrath > 0) {
     let CurrentWrinklers = 0;
-    for (const i in Game.wrinklers) {
-      if (Game.wrinklers[i].phase === 2) CurrentWrinklers++;
-    }
+    Object.keys(Game.wrinklers).forEach((i) => {
+      if (Game.wrinklers[i].phase === 2) CurrentWrinklers += 1;
+    });
     if (CurrentWrinklers > LastWrinklerCount) {
       LastWrinklerCount = CurrentWrinklers;
       if (
@@ -32,25 +32,27 @@ export default function CheckWrinklerCount() {
           CMOptions.WrinklerMaxSoundURL,
           'WrinklerMaxSound',
           'WrinklerMaxVolume',
+          false,
         );
       } else {
         PlaySound(
           CMOptions.WrinklerSoundURL,
           'WrinklerSound',
           'WrinklerVolume',
+          false,
         );
       }
       if (
         CurrentWrinklers === Game.getWrinklersMax() &&
         CMOptions.WrinklerMaxNotification
       ) {
-        Notification(
+        CreateNotification(
           'WrinklerMaxNotification',
           'Maximum Wrinklers Reached',
           'You have reached your maximum ammount of wrinklers',
         );
       } else {
-        Notification(
+        CreateNotification(
           'WrinklerNotification',
           'A Wrinkler appeared',
           'A new wrinkler has appeared',

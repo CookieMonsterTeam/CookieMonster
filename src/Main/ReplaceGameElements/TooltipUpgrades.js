@@ -8,7 +8,7 @@ import { TooltipUpgradeBackup } from '../VariablesAndData';
  */
 export default function ReplaceTooltipUpgrade() {
   TooltipUpgradeBackup = [];
-  for (const i of Object.keys(Game.UpgradesInStore)) {
+  Object.keys(Game.UpgradesInStore).forEach((i) => {
     if (l(`upgrade${i}`).onmouseover !== null) {
       TooltipUpgradeBackup[i] = l(`upgrade${i}`).onmouseover;
       l(`upgrade${i}`).onmouseover = function () {
@@ -26,5 +26,5 @@ export default function ReplaceTooltipUpgrade() {
         }
       };
     }
-  }
+  });
 }

@@ -7,7 +7,7 @@ import ColourOfPP from './ColourOfPP';
  * It is called by CM.Cache.CachePP()
  */
 export default function CacheUpgradePP() {
-  for (const i of Object.keys(CacheUpgrades)) {
+  Object.keys(CacheUpgrades).forEach((i) => {
     if (Game.cookiesPs) {
       CacheUpgrades[i].pp =
         Math.max(
@@ -25,5 +25,5 @@ export default function CacheUpgradePP() {
       CacheUpgrades[i],
       Game.Upgrades[i].getPrice(),
     );
-  }
+  });
 }

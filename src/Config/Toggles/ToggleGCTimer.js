@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 import { CacheGoldenShimmersByID } from '../../Cache/VariablesAndData';
 import { GCTimers } from '../../Disp/VariablesAndData';
 import { CMOptions } from '../VariablesAndData';
@@ -8,12 +9,12 @@ import { CMOptions } from '../VariablesAndData';
  */
 export default function ToggleGCTimer() {
   if (CMOptions.GCTimer === 1) {
-    for (const i of Object.keys(GCTimers)) {
+    Object.keys(GCTimers).forEach((i) => {
       GCTimers[i].style.display = 'block';
       GCTimers[i].style.left = CacheGoldenShimmersByID[i].l.style.left;
       GCTimers[i].style.top = CacheGoldenShimmersByID[i].l.style.top;
-    }
+    });
   } else {
-    for (const i of Object.keys(GCTimers)) GCTimers[i].style.display = 'none';
+    Object.keys(GCTimers).forEach((i) => (GCTimers[i].style.display = 'none'));
   }
 }

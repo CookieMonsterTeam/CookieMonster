@@ -11,9 +11,9 @@ import { SimObjects, SimUpgradesOwned } from '../VariablesAndData';
  */
 export default function CheckOtherAchiev() {
   let grandmas = 0;
-  for (const i of Object.keys(Game.GrandmaSynergies)) {
-    if (SimHas(Game.GrandmaSynergies[i])) grandmas++;
-  }
+  Object.keys(Game.GrandmaSynergies).forEach((i) => {
+    if (SimHas(Game.GrandmaSynergies[i])) grandmas += 1;
+  });
   if (!SimHasAchiev('Elder') && grandmas >= 7) SimWin('Elder');
   if (!SimHasAchiev('Veteran') && grandmas >= 14) SimWin('Veteran');
 
@@ -21,7 +21,7 @@ export default function CheckOtherAchiev() {
   let mathematician = 1;
   let base10 = 1;
   let minAmount = 100000;
-  for (const i of Object.keys(SimObjects)) {
+  Object.keys(SimObjects).forEach((i) => {
     buildingsOwned += SimObjects[i].amount;
     minAmount = Math.min(SimObjects[i].amount, minAmount);
     if (!SimHasAchiev('Mathematician')) {
@@ -38,7 +38,7 @@ export default function CheckOtherAchiev() {
       )
         base10 = 0;
     }
-  }
+  });
   if (minAmount >= 1) SimWin('One with everything');
   if (mathematician === 1) SimWin('Mathematician');
   if (base10 === 1) SimWin('Base 10');
@@ -76,23 +76,23 @@ export default function CheckOtherAchiev() {
     SimWin('The elder scrolls');
 
   let hasAllHalloCook = true;
-  for (const i of Object.keys(HalloCookies)) {
+  Object.keys(HalloCookies).forEach((i) => {
     if (!SimHas(HalloCookies[i])) hasAllHalloCook = false;
-  }
+  });
   if (hasAllHalloCook) SimWin('Spooky cookies');
 
   let hasAllChristCook = true;
-  for (const i of Object.keys(ChristCookies)) {
+  Object.keys(ChristCookies).forEach((i) => {
     if (!SimHas(ChristCookies[i])) hasAllChristCook = false;
-  }
+  });
   if (hasAllChristCook) SimWin('Let it snow');
 
   if (SimHas('Fortune cookies')) {
     const list = Game.Tiers.fortune.upgrades;
     let fortunes = 0;
-    for (const i of Object.keys(list)) {
-      if (SimHas(list[i].name)) fortunes++;
-    }
+    Object.keys(list).forEach((i) => {
+      if (SimHas(list[i].name)) fortunes += 1;
+    });
     if (fortunes >= list.length) SimWin('O Fortuna');
   }
 }
