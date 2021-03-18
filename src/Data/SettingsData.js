@@ -687,7 +687,7 @@ const Config = {
     'bool',
     'Notation',
     ['1 decimals', '2 decimals', '3 decimals'],
-    'Set the number of decimals used when applicable',
+    `Set the number of decimals used when applicable. This only works with Cookie Monster scales and not with "Game's Setting Scale"`,
     false,
     function () {
       RefreshScale();

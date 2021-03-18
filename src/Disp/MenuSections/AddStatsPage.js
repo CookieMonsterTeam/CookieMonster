@@ -8,9 +8,6 @@ import { CMOptions } from '../../Config/VariablesAndData';
 
 import {
   CacheAverageClicks,
-  CacheCentEgg,
-  CacheLastChoEgg,
-  CacheSeaSpec,
   CacheWrinklersFattest,
   CacheWrinklersNormal,
   CacheWrinklersTotal,
@@ -110,136 +107,7 @@ export default function AddMenuStats(title) {
     }
   }
 
-  let specDisp = false;
-  const missingHalloweenCookies = [];
-  Object.keys(GameData.HalloCookies).forEach((i) => {
-    if (!Game.Has(GameData.HalloCookies[i])) {
-      missingHalloweenCookies.push(GameData.HalloCookies[i]);
-      specDisp = true;
-    }
-  });
-  const missingChristmasCookies = [];
-  Object.keys(GameData.ChristCookies).forEach((i) => {
-    if (!Game.Has(GameData.ChristCookies[i])) {
-      missingChristmasCookies.push(GameData.ChristCookies[i]);
-      specDisp = true;
-    }
-  });
-  const missingValentineCookies = [];
-  Object.keys(GameData.ValCookies).forEach((i) => {
-    if (!Game.Has(GameData.ValCookies[i])) {
-      missingValentineCookies.push(GameData.ValCookies[i]);
-      specDisp = true;
-    }
-  });
-  const missingNormalEggs = [];
-  Object.keys(Game.eggDrops).forEach((i) => {
-    if (!Game.HasUnlocked(Game.eggDrops[i])) {
-      missingNormalEggs.push(Game.eggDrops[i]);
-      specDisp = true;
-    }
-  });
-  const missingRareEggs = [];
-  Object.keys(Game.rareEggDrops).forEach((i) => {
-    if (!Game.HasUnlocked(Game.rareEggDrops[i])) {
-      missingRareEggs.push(Game.rareEggDrops[i]);
-      specDisp = true;
-    }
-  });
-  const missingPlantDrops = [];
-  Object.keys(GameData.PlantDrops).forEach((i) => {
-    if (!Game.HasUnlocked(GameData.PlantDrops[i])) {
-      missingPlantDrops.push(GameData.PlantDrops[i]);
-      specDisp = true;
-    }
-  });
-  const choEgg =
-    Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg');
-  const centEgg = Game.Has('Century egg');
-
-  if (Game.season === 'christmas' || specDisp || choEgg || centEgg) {
-    stats.appendChild(CreateElements.StatsHeader('Season Specials', 'Sea'));
-    if (CMOptions.Header.Sea) {
-      if (missingHalloweenCookies.length !== 0)
-        stats.appendChild(
-          CreateElements.StatsListing(
-            'basic',
-            'Halloween Cookies Left to Buy',
-            CreateElements.StatsMissDisp(missingHalloweenCookies),
-          ),
-        );
-      if (missingChristmasCookies.length !== 0)
-        stats.appendChild(
-          CreateElements.StatsListing(
-            'basic',
-            'Christmas Cookies Left to Buy',
-            CreateElements.StatsMissDisp(missingChristmasCookies),
-          ),
-        );
-      if (missingValentineCookies.length !== 0)
-        stats.appendChild(
-          CreateElements.StatsListing(
-            'basic',
-            'Valentine Cookies Left to Buy',
-            CreateElements.StatsMissDisp(missingValentineCookies),
-          ),
-        );
-      if (missingNormalEggs.length !== 0)
-        stats.appendChild(
-          CreateElements.StatsListing(
-            'basic',
-            'Normal Easter Eggs Left to Unlock',
-            CreateElements.StatsMissDisp(missingNormalEggs),
-          ),
-        );
-      if (missingRareEggs.length !== 0)
-        stats.appendChild(
-          CreateElements.StatsListing(
-            'basic',
-            'Rare Easter Eggs Left to Unlock',
-            CreateElements.StatsMissDisp(missingRareEggs),
-          ),
-        );
-      if (missingPlantDrops.length !== 0)
-        stats.appendChild(
-          CreateElements.StatsListing(
-            'basic',
-            'Rare Plant Drops Left to Unlock',
-            CreateElements.StatsMissDisp(missingPlantDrops),
-          ),
-        );
-
-      if (Game.season === 'christmas')
-        stats.appendChild(
-          CreateElements.StatsListing(
-            'basic',
-            'Reindeer Reward',
-            document.createTextNode(Beautify(CacheSeaSpec)),
-          ),
-        );
-      if (choEgg) {
-        stats.appendChild(
-          CreateElements.StatsListing(
-            'withTooltip',
-            'Chocolate Egg Cookies',
-            document.createTextNode(Beautify(CacheLastChoEgg)),
-            'ChoEggTooltipPlaceholder',
-          ),
-        );
-      }
-      if (centEgg) {
-        stats.appendChild(
-          CreateElements.StatsListing(
-            'basic',
-            'Century Egg Multiplier',
-            document.createTextNode(
-              `${Math.round((CacheCentEgg - 1) * 10000) / 100}%`,
-            ),
-          ),
-        );
-      }
-    }
-  }
+  stats.appendChild(CreateSections.SeasonSection());
 
   stats.appendChild(CreateElements.StatsHeader('Miscellaneous', 'Misc'));
   if (CMOptions.Header.Misc) {
