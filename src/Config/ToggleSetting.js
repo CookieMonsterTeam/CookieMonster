@@ -1,4 +1,4 @@
-import { default as ConfigData } from '../Data/SettingsData';
+import ConfigData from '../Data/SettingsData';
 import { SaveConfig } from './SaveLoadReload/SaveLoadReloadSettings';
 import { CMOptions } from './VariablesAndData';
 
@@ -13,7 +13,7 @@ export const ConfigPrefix = 'CMConfig';
  * @param 	{string}	config	The name of the option
  */
 export function ToggleConfig(config) {
-  CMOptions[config]++;
+  CMOptions[config] += 1;
 
   if (CMOptions[config] === ConfigData[config].label.length) {
     CMOptions[config] = 0;
@@ -49,7 +49,7 @@ export function ToggleConfigVolume(config) {
  * @param 	{string}	config	The name of the header
  */
 export function ToggleHeader(config) {
-  CMOptions.Header[config]++;
+  CMOptions.Header[config] += 1;
   if (CMOptions.Header[config] > 1) CMOptions.Header[config] = 0;
   SaveConfig();
 }

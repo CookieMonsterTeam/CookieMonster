@@ -19,5 +19,6 @@ If applicable, add screenshots to help explain your problem.
 
 **Save file**
 ```
-If applicable please copy your save file here
+Please add a save file here.
+This makes debugging much easier as we do not always have a good test save to debug the issue
 ```

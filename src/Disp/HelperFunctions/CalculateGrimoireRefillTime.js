@@ -10,11 +10,11 @@ export default function CalculateGrimoireRefillTime(
   maxMagic,
   targetMagic,
 ) {
+  let magic = currentMagic;
   let count = 0;
-  while (currentMagic < targetMagic) {
-    currentMagic +=
-      Math.max(0.002, (currentMagic / Math.max(maxMagic, 100)) ** 0.5) * 0.002;
-    count++;
+  while (magic < targetMagic) {
+    magic += Math.max(0.002, (magic / Math.max(maxMagic, 100)) ** 0.5) * 0.002;
+    count += 1;
   }
   return count / Game.fps;
 }

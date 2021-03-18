@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /** General functions to format or beautify strings */
 
 import { CMOptions } from '../../Config/VariablesAndData';
@@ -93,23 +94,26 @@ export function Beautify(num, floats, forced) {
  * @returns	{string}				Formatted time
  */
 export function FormatTime(time, longFormat) {
+  let formattedTime = time;
   if (time === Infinity) return time;
-  time = Math.ceil(time);
-  const y = Math.floor(time / 31557600);
-  const d = Math.floor((time % 31557600) / 86400);
-  const h = Math.floor((time % 86400) / 3600);
-  const m = Math.floor((time % 3600) / 60);
-  const s = Math.floor(time % 60);
+  if (time < 0) return 'Negative time period';
+  formattedTime = Math.ceil(time);
+  const y = Math.floor(formattedTime / 31557600);
+  const d = Math.floor((formattedTime % 31557600) / 86400);
+  const h = Math.floor((formattedTime % 86400) / 3600);
+  const m = Math.floor((formattedTime % 3600) / 60);
+  const s = Math.floor(formattedTime % 60);
   let str = '';
   if (CMOptions.TimeFormat) {
-    if (time > 3155760000) return 'XX:XX:XX:XX:XX';
+    if (formattedTime > 3155760000) return 'XX:XX:XX:XX:XX';
     str += `${(y < 10 ? '0' : '') + y}:`;
     str += `${(d < 10 ? '0' : '') + d}:`;
     str += `${(h < 10 ? '0' : '') + h}:`;
     str += `${(m < 10 ? '0' : '') + m}:`;
     str += (s < 10 ? '0' : '') + s;
   } else {
-    if (time > 777600000) return longFormat ? 'Over 9000 days!' : '>9000d';
+    if (formattedTime > 777600000)
+      return longFormat ? 'Over 9000 days!' : '>9000d';
     str +=
       y > 0
         ? `${y + (longFormat ? (y === 1 ? ' year' : ' years') : 'y')}, `

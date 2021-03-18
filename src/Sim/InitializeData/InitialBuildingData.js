@@ -29,9 +29,9 @@ export default function InitialBuildingData(buildingName) {
       if (SimHas('Nonillion fingers')) add *= 20;
       let mult = 1;
       let num = 0;
-      for (const i in SimObjects) {
+      Object.keys(SimObjects).forEach((i) => {
         if (SimObjects[i].name !== 'Cursor') num += SimObjects[i].amount;
-      }
+      });
       add *= num;
       mult *= SimGetTieredCpsMult(it);
       mult *= Game.magicCpS('Cursor');
@@ -49,9 +49,9 @@ export default function InitialBuildingData(buildingName) {
   } else if (me.name === 'Grandma') {
     you.cps = function (it) {
       let mult = 1;
-      for (const i in Game.GrandmaSynergies) {
+      Object.keys(Game.GrandmaSynergies).forEach((i) => {
         if (SimHas(Game.GrandmaSynergies[i])) mult *= 2;
-      }
+      });
       if (SimHas('Bingo center/Research facility')) mult *= 4;
       if (SimHas('Ritual rolling pins')) mult *= 2;
       if (SimHas('Naughty list')) mult *= 2;
@@ -75,9 +75,9 @@ export default function InitialBuildingData(buildingName) {
       if (SimHas('Elder Pact')) add += SimObjects.Portal.amount * 0.05;
 
       let num = 0;
-      for (const i in SimObjects) {
+      Object.keys(SimObjects).forEach((i) => {
         if (SimObjects[i].name !== 'Grandma') num += SimObjects[i].amount;
-      }
+      });
       // if (Game.hasAura('Elder Battalion')) mult*=1+0.01*num;
       mult *= 1 + SimAuraMult('Elder Battalion') * 0.01 * num;
 

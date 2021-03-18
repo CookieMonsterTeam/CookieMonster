@@ -3,6 +3,7 @@ import LoopCache from '../Cache/CacheLoop';
 import CacheNoGoldSwitchCPS from '../Cache/CPS/NoGoldSwitchCPS';
 import CacheSellAllForChoEgg from '../Cache/CPS/SellChoEgg';
 import CacheDragonCost from '../Cache/Dragon/Dragon';
+import CachePantheonGods from '../Cache/PantheonGods/CacheGods';
 import {
   CacheBuildingsPrices,
   CacheIncome,
@@ -57,6 +58,7 @@ export default function CMLoop() {
       CacheAllMissingUpgrades();
       CacheChain();
       CacheDragonCost();
+      CachePantheonGods();
 
       CacheSeasonSpec();
       CacheSellAllForChoEgg();

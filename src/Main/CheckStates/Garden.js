@@ -13,7 +13,7 @@ export default function CheckGardenTick() {
   ) {
     if (LastGardenNextStep !== 0 && LastGardenNextStep < Date.now()) {
       Flash(3, 'GardFlash');
-      PlaySound(CMOptions.GardSoundURL, 'GardSound', 'GardVolume');
+      PlaySound(CMOptions.GardSoundURL, 'GardSound', 'GardVolume', false);
     }
     LastGardenNextStep = Game.Objects.Farm.minigame.nextStep;
   }

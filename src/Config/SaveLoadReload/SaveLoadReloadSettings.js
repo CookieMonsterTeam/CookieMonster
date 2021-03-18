@@ -1,5 +1,5 @@
-import { default as ConfigDefault } from '../../Data/SettingsDefault';
-import { default as ConfigData } from '../../Data/SettingsData';
+import ConfigDefault from '../../Data/SettingsDefault';
+import ConfigData from '../../Data/SettingsData';
 import { CMOptions } from '../VariablesAndData';
 import save from '../../InitSaveLoad/save';
 import CMLoop from '../../Main/Loop';
@@ -43,7 +43,7 @@ export function LoadConfig(settings) {
 
     // Check values
     let mod = false;
-    for (const i in ConfigDefault) {
+    Object.keys(ConfigDefault).forEach((i) => {
       if (typeof CMOptions[i] === 'undefined') {
         mod = true;
         CMOptions[i] = ConfigDefault[i];
@@ -61,7 +61,7 @@ export function LoadConfig(settings) {
           CMOptions[i] = ConfigDefault[i];
         }
       } else if (i === 'Header') {
-        for (const j in ConfigDefault.Header) {
+        Object.keys(ConfigDefault.Header).forEach((j) => {
           if (
             typeof CMOptions[i][j] === 'undefined' ||
             !(CMOptions[i][j] > -1 && CMOptions[i][j] < 2)
@@ -69,10 +69,10 @@ export function LoadConfig(settings) {
             mod = true;
             CMOptions[i][j] = ConfigDefault[i][j];
           }
-        }
+        });
       } else {
         // Colors
-        for (const j in ConfigDefault.Colors) {
+        Object.keys(ConfigDefault.Colors).forEach((j) => {
           if (
             typeof CMOptions[i][j] === 'undefined' ||
             typeof CMOptions[i][j] !== 'string'
@@ -80,16 +80,16 @@ export function LoadConfig(settings) {
             mod = true;
             CMOptions[i][j] = ConfigDefault[i][j];
           }
-        }
+        });
       }
-    }
+    });
     if (mod) SaveConfig();
     CMLoop(); // Do loop once
-    for (const i in ConfigDefault) {
+    Object.keys(ConfigDefault).forEach((i) => {
       if (i !== 'Header' && typeof ConfigData[i].func !== 'undefined') {
         ConfigData[i].func();
       }
-    }
+    });
   } else {
     // Default values
     LoadConfig(ConfigDefault);

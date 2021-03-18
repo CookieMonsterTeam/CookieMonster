@@ -6,7 +6,7 @@ import {
 import { CMOptions } from '../../Config/VariablesAndData';
 import CreateGCTimer from '../../Disp/GoldenCookieTimers/GoldenCookieTimers';
 import Flash from '../../Disp/Notifications/Flash';
-import Notification from '../../Disp/Notifications/Notification';
+import CreateNotification from '../../Disp/Notifications/Notification';
 import PlaySound from '../../Disp/Notifications/Sound';
 import { UpdateFavicon } from '../../Disp/TabTitle/FavIcon';
 import { GCTimers } from '../../Disp/VariablesAndData';
@@ -24,13 +24,13 @@ import {
 function FindShimmer() {
   CurrSpawnedGoldenCookieState = 0;
   CacheGoldenShimmersByID = {};
-  for (const i of Object.keys(Game.shimmers)) {
+  Object.keys(Game.shimmers).forEach((i) => {
     CacheGoldenShimmersByID[Game.shimmers[i].id] = Game.shimmers[i];
     if (Game.shimmers[i].spawnLead && Game.shimmers[i].type === 'golden') {
       CacheSpawnedGoldenShimmer = Game.shimmers[i];
       CurrSpawnedGoldenCookieState += 1;
     }
-  }
+  });
 }
 
 /**
@@ -39,42 +39,42 @@ function FindShimmer() {
  */
 export default function CheckGoldenCookie() {
   FindShimmer();
-  for (const i of Object.keys(GCTimers)) {
+  Object.keys(GCTimers).forEach((i) => {
     if (typeof CacheGoldenShimmersByID[i] === 'undefined') {
       GCTimers[i].parentNode.removeChild(GCTimers[i]);
       delete GCTimers[i];
     }
-  }
+  });
   if (LastGoldenCookieState !== Game.shimmerTypes.golden.n) {
     LastGoldenCookieState = Game.shimmerTypes.golden.n;
     if (LastGoldenCookieState) {
       if (LastSpawnedGoldenCookieState < CurrSpawnedGoldenCookieState) {
         Flash(3, 'GCFlash');
-        PlaySound(CMOptions.GCSoundURL, 'GCSound', 'GCVolume');
-        Notification(
+        PlaySound(CMOptions.GCSoundURL, 'GCSound', 'GCVolume', false);
+        CreateNotification(
           'GCNotification',
           'Golden Cookie Spawned',
           'A Golden Cookie has spawned. Click it now!',
         );
       }
 
-      for (const i of Object.keys(Game.shimmers)) {
+      Object.keys(Game.shimmers).forEach((i) => {
         if (typeof GCTimers[Game.shimmers[i].id] === 'undefined') {
           CreateGCTimer(Game.shimmers[i]);
         }
-      }
+      });
     }
     UpdateFavicon();
     LastSpawnedGoldenCookieState = CurrSpawnedGoldenCookieState;
     if (CurrSpawnedGoldenCookieState === 0) CacheSpawnedGoldenShimmer = 0;
   } else if (CMOptions.GCTimer === 1 && LastGoldenCookieState) {
-    for (const i of Object.keys(GCTimers)) {
+    Object.keys(GCTimers).forEach((i) => {
       GCTimers[i].style.opacity = CacheGoldenShimmersByID[i].l.style.opacity;
       GCTimers[i].style.transform =
         CacheGoldenShimmersByID[i].l.style.transform;
       GCTimers[i].textContent = Math.ceil(
         CacheGoldenShimmersByID[i].life / Game.fps,
       );
-    }
+    });
   }
 }

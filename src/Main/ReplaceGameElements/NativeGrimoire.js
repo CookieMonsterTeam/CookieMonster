@@ -20,7 +20,7 @@ function ReplaceNativeGrimoireDraw() {
     !HasReplaceNativeGrimoireDraw &&
     Game.Objects['Wizard tower'].minigameLoaded
   ) {
-    const minigame = Game.Objects['Wizard tower'].minigame;
+    const { minigame } = Game.Objects['Wizard tower'];
     BackupGrimoireDraw = minigame.draw;
     Game.Objects['Wizard tower'].minigame.draw = function () {
       BackupGrimoireDraw();
@@ -46,7 +46,7 @@ function ReplaceNativeGrimoireLaunch() {
     !HasReplaceNativeGrimoireLaunch &&
     Game.Objects['Wizard tower'].minigameLoaded
   ) {
-    const minigame = Game.Objects['Wizard tower'].minigame;
+    const { minigame } = Game.Objects['Wizard tower'];
     BackupGrimoireLaunch = minigame.launch;
     BackupGrimoireLaunchMod = new Function(
       `return ${minigame.launch

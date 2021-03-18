@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /** Section: Functions related to the Golden Cookie Timers */
 
 import { CMOptions } from '../../Config/VariablesAndData';

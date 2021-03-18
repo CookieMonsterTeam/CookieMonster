@@ -31,15 +31,15 @@ export default function CalculateGains() {
   let mult = 1;
   // Include minigame effects
   const effs = {};
-  for (const i of Object.keys(Game.Objects)) {
+  Object.keys(Game.Objects).forEach((i) => {
     if (Game.Objects[i].minigameLoaded && Game.Objects[i].minigame.effs) {
       const myEffs = Game.Objects[i].minigame.effs;
-      for (const ii in myEffs) {
+      Object.keys(myEffs).forEach((ii) => {
         if (effs[ii]) effs[ii] *= myEffs[ii];
         else effs[ii] = myEffs[ii];
-      }
+      });
     }
-  }
+  });
   SimEffs = effs;
 
   if (Game.ascensionMode !== 1)
@@ -54,7 +54,7 @@ export default function CalculateGains() {
   if (SimHas('Heralds') && Game.ascensionMode !== 1)
     mult *= 1 + 0.01 * Game.heralds;
 
-  for (const i of Object.keys(Game.cookieUpgrades)) {
+  Object.keys(Game.cookieUpgrades).forEach((i) => {
     const me = Game.cookieUpgrades[i];
     if (SimHas(me.name)) {
       // Some upgrades have a functio as .power (notably the valentine cookies)
@@ -64,7 +64,7 @@ export default function CalculateGains() {
         mult *= 1 + SimUpgrades[me.name].power(SimUpgrades[me.name]) * 0.01;
       } else mult *= 1 + me.power * 0.01;
     }
-  }
+  });
 
   if (SimHas('Specialized chocolate chips')) mult *= 1.01;
   if (SimHas('Designer cocoa beans')) mult *= 1.02;
@@ -160,7 +160,7 @@ export default function CalculateGains() {
   if (SimHas('Kitten angels')) catMult *= 1 + milkProgress * 0.1 * milkMult;
   if (SimHas('Fortune #103')) catMult *= 1 + milkProgress * 0.05 * milkMult;
 
-  for (const i of Object.keys(SimObjects)) {
+  Object.keys(SimObjects).forEach((i) => {
     const me = SimObjects[i];
     let storedCps = me.cps(me);
     if (Game.ascensionMode !== 1)
@@ -171,7 +171,7 @@ export default function CalculateGains() {
     )
       storedCps *= 1 + 0.05 * milkProgress * milkMult;
     SimCookiesPs += me.amount * storedCps;
-  }
+  });
 
   if (SimHas('"egg"')) SimCookiesPs += 9; // "egg"
 
@@ -210,14 +210,14 @@ export default function CalculateGains() {
   mult *= 1 + SimAuraMult('Radiant Appetite');
 
   const rawCookiesPs = SimCookiesPs * mult;
-  for (const i of Object.keys(Game.CpsAchievements)) {
+  Object.keys(Game.CpsAchievements).forEach((i) => {
     if (rawCookiesPs >= Game.CpsAchievements[i].threshold)
       SimWin(Game.CpsAchievements[i].name);
-  }
+  });
 
   SimCookiesPsRaw = rawCookiesPs;
 
-  const n = Game.shimmerTypes.golden.n;
+  const { n } = Game.shimmerTypes.golden;
   const auraMult = SimAuraMult("Dragon's Fortune");
   for (let i = 0; i < n; i++) {
     mult *= 1 + auraMult * 1.23;
@@ -233,9 +233,9 @@ export default function CalculateGains() {
     let goldenSwitchMult = 1.5;
     if (SimHas('Residual luck')) {
       const upgrades = Game.goldenCookieUpgrades;
-      for (const i of Object.keys(upgrades)) {
+      Object.keys(upgrades).forEach((i) => {
         if (SimHas(upgrades[i])) goldenSwitchMult += 0.1;
-      }
+      });
     }
     mult *= goldenSwitchMult;
   }
