@@ -38,22 +38,24 @@ function CreateUpgradeBarLegend() {
     return div;
   };
 
-  legend.appendChild(legendLine(ColorBlue, 'Better than best PP building'));
-  legend.appendChild(legendLine(ColorGreen, 'Same as best PP building'));
   legend.appendChild(
-    legendLine(
-      ColorYellow,
-      'Between best and worst PP buildings closer to best',
-    ),
+    legendLine(ColorBlue, 'Better than the best PP of a building option'),
   );
   legend.appendChild(
-    legendLine(
-      ColorOrange,
-      'Between best and worst PP buildings closer to worst',
-    ),
+    legendLine(ColorGreen, 'Same as the best PP building option'),
   );
-  legend.appendChild(legendLine(ColorRed, 'Same as worst PP building'));
-  legend.appendChild(legendLine(ColorPurple, 'Worse than worst PP building'));
+  legend.appendChild(
+    legendLine(ColorYellow, 'Within the top 10 of PP for buildings'),
+  );
+  legend.appendChild(
+    legendLine(ColorOrange, 'Within the top 20 of PP for buildings'),
+  );
+  legend.appendChild(
+    legendLine(ColorRed, 'Within the top 30 of PP for buildings'),
+  );
+  legend.appendChild(
+    legendLine(ColorPurple, 'Outside of the top 30 of PP for buildings'),
+  );
   legend.appendChild(legendLine(ColorGray, 'Negative or infinity PP'));
   return legend;
 }
