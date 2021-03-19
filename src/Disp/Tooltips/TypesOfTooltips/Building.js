@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import {
   CacheObjects1,
   CacheObjects10,
@@ -76,6 +75,9 @@ export default function Building() {
     // Add "production left till next achievement"-bar
     l('CMTooltipProductionHeader').style.display = 'none';
     l('CMTooltipTime').style.marginBottom = '0px';
+
+    // Can this ESLint error be solved while retaining the functionality of break?
+    // eslint-disable-next-line no-restricted-syntax
     for (const i of Object.keys(Game.Objects[TooltipName].productionAchievs)) {
       if (
         !Game.HasAchiev(

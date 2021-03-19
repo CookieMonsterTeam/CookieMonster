@@ -2,6 +2,7 @@ import {
   CacheWrinklersFattest,
   CacheWrinklersTotal,
 } from '../../../Cache/VariablesAndData';
+import { Beautify } from '../../BeautifyAndFormatting/BeautifyFormatting';
 import { TooltipName } from '../../VariablesAndData';
 import * as Create from '../CreateTooltip';
 
@@ -16,9 +17,9 @@ export default function WrinklerButton() {
   const WrinklerReward = document.createElement('div');
   WrinklerReward.id = 'CMWrinklerReward';
   if (TooltipName === 'PopAll') {
-    WrinklerReward.textContent = CacheWrinklersTotal;
+    WrinklerReward.textContent = Beautify(CacheWrinklersTotal);
   } else if (TooltipName === 'PopFattest') {
-    WrinklerReward.textContent = CacheWrinklersFattest[0];
+    WrinklerReward.textContent = Beautify(CacheWrinklersFattest[0]);
   }
 
   l('tooltip').appendChild(WrinklerReward);
