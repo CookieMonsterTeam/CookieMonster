@@ -19,6 +19,10 @@ import ColourOfPP from './ColourOfPP';
  */
 function CacheColor(target, amount) {
   Object.keys(target).forEach((i) => {
+    if (CMOptions.PPRigidelMode && amount === 1) {
+      target.color = ColorGray;
+      return;
+    }
     target[i].color = ColourOfPP(
       target[i],
       Game.Objects[i].getSumPrice(amount),
@@ -39,7 +43,8 @@ function CachePP(target, amount) {
           Game.cookiesPs +
         price / target[i].bonus;
     } else target[i].pp = price / target[i].bonus;
-    CachePPArray.push([target[i].pp, amount]);
+    if (!(CMOptions.PPRigidelMode && amount === 1))
+      CachePPArray.push([target[i].pp, amount]);
   });
 }
 

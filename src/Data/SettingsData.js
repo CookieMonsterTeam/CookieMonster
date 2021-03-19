@@ -221,6 +221,13 @@ const Config = {
     'Makes CookieMonster ignore the 1st, 2nd or 3rd best buildings in labeling and colouring PP values',
     true,
   ),
+  PPRigidelMode: new SettingStandard(
+    'bool',
+    'Calculation',
+    ["Don't Ignore Any", 'Ignore All Buy 1 Options'],
+    'Makes CookieMonster ignore all "buy 1" options when colouring PP in order to stay at a total building count ending in 10 for pantheon god Rigidel',
+    true,
+  ),
   PPSecondsLowerLimit: new SettingInputNumber(
     'numscale',
     'Calculation',
