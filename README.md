@@ -16,7 +16,8 @@ max(cost - cookies in bank, 0)/cps + cost/Δ cps
 
 Cookie Monster also indicates the time left before being able to buy an upgrade or building, and takes it into consideration. It will take *everything* in consideration, meaning if buying a building also unlocks an achievement which boosts your income, which unlocks an achievement, it will know and highlight that building's value.
 
-This index is computed for buildings and upgrades. If the relevant option is enabled, it will color-code each of them based on their value:
+This index is computed for buildings and upgrades. If the relevant option is enabled, it will color-code each of them based on their value. It compares the PP across all possible buy options: if a buy 10 option is better than any of the buy 1 options Cookie Monster will colour them accordingly.
+Cookie Monster uses the following standard colours:
 
 * Light Blue: (upgrades) This item has a better PP than the best building to buy
 * Green: This building has the best PP

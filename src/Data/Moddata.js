@@ -29,6 +29,7 @@ This update also implements the following functions:</br>
 - Added option to show buttons that can hide the upgrade and building section</br>
 - Added option to display PP as a time unit, note that these are only approximations. PP does not translate directly into time (the name is deceptive, we know...)</br>
 - Statistics page now shows chance for random drops when they have not been achieved</br>
+- In a later hotfix we have added a Rigidel mode that will colour all buy 1 options grey</br>
 </br>
 This update fixes the following bugs:</br>
 - Incorrect amount for "required for max plant reward" in statistics page</br>
