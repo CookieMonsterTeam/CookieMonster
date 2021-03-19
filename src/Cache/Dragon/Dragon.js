@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-unused-vars */
 /** Functions related to the Dragon */
 
@@ -52,28 +51,27 @@ export default function CacheDragonCost() {
       } else {
         let cost = 0;
         CopyData();
-        for (const j of Object.keys(Game.Objects)) {
+        Object.keys(Game.Objects).forEach((j) => {
           target = j;
           if (Game.Objects[target].amount < amount) {
             CacheCostDragonUpgrade = 'Not enough buildings to sell';
-            break;
-          } else {
-            for (let i = 0; i < amount; i++) {
-              let price =
-                SimObjects[target].basePrice *
-                Game.priceIncrease **
-                  Math.max(
-                    0,
-                    SimObjects[target].amount - 1 - SimObjects[target].free,
-                  );
-              price = Game.modifyBuildingPrice(SimObjects[target], price);
-              price = Math.ceil(price);
-              cost += price;
-              SimObjects[target].amount -= 1;
-            }
+            return;
+          }
+          for (let i = 0; i < amount; i++) {
+            let price =
+              SimObjects[target].basePrice *
+              Game.priceIncrease **
+                Math.max(
+                  0,
+                  SimObjects[target].amount - 1 - SimObjects[target].free,
+                );
+            price = Game.modifyBuildingPrice(SimObjects[target], price);
+            price = Math.ceil(price);
+            cost += price;
+            SimObjects[target].amount -= 1;
           }
           CacheCostDragonUpgrade = `Cost to rebuy: ${Beautify(cost)}`;
-        }
+        });
       }
     }
     CacheLastDragonLevel = Game.dragonLevel;

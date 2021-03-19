@@ -13,6 +13,7 @@ const ConfigDefault = {
   AvgCPSHist: 3,
   AvgClicksHist: 0,
   PPExcludeTop: 0,
+  PPRigidelMode: 0,
   PPSecondsLowerLimit: 0,
   PPOnlyConsiderBuyable: 0,
   ToolWarnBon: 1,
