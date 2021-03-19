@@ -20,7 +20,7 @@ import ColourOfPP from './ColourOfPP';
 function CacheColor(target, amount) {
   Object.keys(target).forEach((i) => {
     if (CMOptions.PPRigidelMode && amount === 1) {
-      target.color = ColorGray;
+      target[i].color = ColorGray;
       return;
     }
     target[i].color = ColourOfPP(

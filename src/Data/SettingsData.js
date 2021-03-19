@@ -224,7 +224,7 @@ const Config = {
   PPRigidelMode: new SettingStandard(
     'bool',
     'Calculation',
-    ["Don't Ignore Any", 'Ignore All Buy 1 Options'],
+    ['Rigidel Mode OFF', 'Rigidel Mode ON'],
     'Makes CookieMonster ignore all "buy 1" options when colouring PP in order to stay at a total building count ending in 10 for pantheon god Rigidel',
     true,
   ),
