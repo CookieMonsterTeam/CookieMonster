@@ -34,7 +34,7 @@ export function MaxChainCookieReward(digit, maxPayout, mult) {
   let nextRequired = 0;
   let chain =
     1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
-  while (nextMoni < maxPayout) {
+  while (nextMoni < maxPayout * mult) {
     moni = Math.max(
       digit,
       Math.min(
