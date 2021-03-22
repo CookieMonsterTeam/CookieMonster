@@ -11,11 +11,7 @@ import UpdateTitle from '../../Disp/TabTitle/TabTitle';
 import ReplaceAscendTooltip from '../../Disp/Tooltips/AscendButton';
 import UpdateTooltipLocation from '../../Disp/Tooltips/PositionLocation';
 import { CMSayTime, Title } from '../../Disp/VariablesAndData';
-import {
-  SimDateAges,
-  SimDateCentury,
-  SimDoSims,
-} from '../../Sim/VariablesAndData';
+import { SimDoSims } from '../../Sim/VariablesAndData';
 import ReplaceTooltipUpgrade from '../ReplaceGameElements/TooltipUpgrades';
 import { BackupFunctions } from '../VariablesAndData';
 import FixMouseY from './FixMouse';
@@ -33,8 +29,6 @@ export default function ReplaceNative() {
   Game.CalculateGains = function () {
     BackupFunctions.CalculateGains();
     SimDoSims = 1;
-    SimDateAges = Date.now();
-    SimDateCentury = Date.now();
   };
 
   BackupFunctions.tooltip = {};
