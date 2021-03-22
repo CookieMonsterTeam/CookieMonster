@@ -24,8 +24,8 @@ import {
  * @param	{amount}	amount	Amount to be bought
  * @parem	{string}	target	The target Cache object ("Objects1", "Objects10" or "Objects100")
  */
-function CacheBuildingIncome(amount, target) {
-  const result = [];
+function CacheBuildingIncome(amount) {
+  const result = {};
   Object.keys(Game.Objects).forEach((i) => {
     result[i] = {};
     result[i].bonus = BuyBuildingsBonusIncome(i, amount);
