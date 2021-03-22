@@ -17,7 +17,5 @@ export let SimGod2;
 export let SimGod3;
 export let SimDoSims;
 export let SimEffs;
-export let SimDateCentury = Game.startDate;
-export let SimDateAges = Game.startDate;
 export let SimCookiesPs;
 export let SimCookiesPsRaw;

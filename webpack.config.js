@@ -8,6 +8,9 @@ module.exports = function (env) {
   return {
     mode: 'production',
     devtool: env.production ? 'source-map' : 'eval-source-map',
+    optimization: {
+      minimize: !!env.production,
+    },
     entry: {
       CookieMonster: {
         import: './src/CookieMonster.js',
