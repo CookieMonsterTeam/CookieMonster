@@ -53,10 +53,12 @@ export default function Draw() {
   RefreshMenu();
 
   // Replace Cookies counter because Orteil uses very weird code to "pad" it...
-  let str = l('cookies').innerHTML.replace(
-    /.*(?=<br>)/i,
-    Beautify(Game.cookies),
-  );
-  if (Game.prefs.monospace) str = `<span class="monospace">${str}</span>`;
-  l('cookies').innerHTML = str;
+  if (CMOptions.Scale) {
+    let str = l('cookies').innerHTML.replace(
+      /.*(?=<br>)/i,
+      Beautify(Game.cookies),
+    );
+    if (Game.prefs.monospace) str = `<span class="monospace">${str}</span>`;
+    l('cookies').innerHTML = str;
+  }
 }
