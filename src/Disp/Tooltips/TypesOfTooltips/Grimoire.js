@@ -2,11 +2,11 @@ import { CacheNoGoldSwitchCookiesPS } from '../../../Cache/VariablesAndData';
 import { CMOptions } from '../../../Config/VariablesAndData';
 import {
   Beautify,
-  GetTimeColor,
+  GetTimeColour,
 } from '../../BeautifyAndFormatting/BeautifyFormatting';
 import CalculateGrimoireRefillTime from '../../HelperFunctions/CalculateGrimoireRefillTime';
 import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
-import { ColorTextPre, TooltipName } from '../../VariablesAndData';
+import { ColourTextPre, TooltipName } from '../../VariablesAndData';
 import * as Create from '../CreateTooltip';
 
 /**
@@ -25,11 +25,11 @@ export default function Grimoire() {
     const time = document.createElement('div');
     time.id = 'CMTooltipTime';
     tooltipBox.appendChild(time);
-    const timeColor = GetTimeColor(
+    const timeColour = GetTimeColour(
       CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, spellCost),
     );
-    time.textContent = timeColor.text;
-    time.className = ColorTextPre + timeColor.color;
+    time.textContent = timeColour.text;
+    time.className = ColourTextPre + timeColour.color;
 
     // Time left untill magic spent is recovered
     if (spellCost <= minigame.magic) {
@@ -37,15 +37,15 @@ export default function Grimoire() {
       const recover = document.createElement('div');
       recover.id = 'CMTooltipRecover';
       tooltipBox.appendChild(recover);
-      const recoverColor = GetTimeColor(
+      const recoverColour = GetTimeColour(
         CalculateGrimoireRefillTime(
           Math.max(0, minigame.magic - spellCost),
           minigame.magicM,
           minigame.magic,
         ),
       );
-      recover.textContent = recoverColor.text;
-      recover.className = ColorTextPre + recoverColor.color;
+      recover.textContent = recoverColour.text;
+      recover.className = ColourTextPre + recoverColour.color;
     }
 
     // Extra information on cookies gained when spell is Conjure Baked Goods (Name === 0)

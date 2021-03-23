@@ -19,9 +19,9 @@ import {
 import Config from '../../Data/SettingsData';
 import ConfigDefault from '../../Data/SettingsDefault';
 import RefreshScale from '../HelperFunctions/RefreshScale';
-import UpdateColors from '../HelperFunctions/UpdateColors';
+import UpdateColours from '../HelperFunctions/UpdateColours';
 import PlaySound from '../Notifications/Sound';
-import { Colors } from '../VariablesAndData';
+import { Colours } from '../VariablesAndData';
 
 /**
  * This function creates a header-object for the options page
@@ -169,24 +169,24 @@ function CreatePrefOption(config) {
   }
   if (Config[config].type === 'color') {
     div.className = '';
-    for (let i = 0; i < Colors.length; i++) {
+    for (let i = 0; i < Colours.length; i++) {
       const innerDiv = document.createElement('div');
       innerDiv.className = 'listing';
       const input = document.createElement('input');
-      input.id = Colors[i];
+      input.id = Colours[i];
       input.style.width = '65px';
-      input.setAttribute('value', CMOptions.Colors[Colors[i]]);
+      input.setAttribute('value', CMOptions.Colours[Colours[i]]);
       innerDiv.appendChild(input);
       const change = function () {
-        CMOptions.Colors[this.targetElement.id] = this.toHEXString();
-        UpdateColors();
+        CMOptions.Colours[this.targetElement.id] = this.toHEXString();
+        UpdateColours();
         SaveConfig();
         Game.UpdateMenu();
       };
       // eslint-disable-next-line no-new
       new JsColor(input, { hash: true, position: 'right', onInput: change });
       const label = document.createElement('label');
-      label.textContent = Config.Colors.desc[Colors[i]];
+      label.textContent = Config.Colours.desc[Colours[i]];
       innerDiv.appendChild(label);
       div.appendChild(innerDiv);
     }

@@ -1,6 +1,6 @@
 import { CMOptions } from '../../../Config/VariablesAndData';
-import GetLumpColor from '../../HelperFunctions/GetLumpColor';
-import { ColorTextPre } from '../../VariablesAndData';
+import GetLumpColour from '../../HelperFunctions/GetLumpColour';
+import { ColourTextPre } from '../../VariablesAndData';
 import * as Create from '../CreateTooltip';
 /**
  * This function adds extra info to the Sugar Lump tooltip
@@ -15,8 +15,8 @@ export default function SugarLump() {
     const lumpType = document.createElement('div');
     lumpType.id = 'CMTooltipTime';
     tooltipBox.appendChild(lumpType);
-    const lumpColor = GetLumpColor(Game.lumpCurrentType);
-    lumpType.textContent = lumpColor.text;
-    lumpType.className = ColorTextPre + lumpColor.color;
+    const lumpColour = GetLumpColour(Game.lumpCurrentType);
+    lumpType.textContent = lumpColour.text;
+    lumpType.className = ColourTextPre + lumpColour.color;
   } else l('CMTooltipArea').style.display = 'none';
 }

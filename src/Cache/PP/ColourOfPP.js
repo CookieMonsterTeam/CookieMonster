@@ -1,13 +1,13 @@
 import { CMOptions } from '../../Config/VariablesAndData';
 import GetCPS from '../../Disp/HelperFunctions/GetCPS';
 import {
-  ColorBlue,
-  ColorGray,
-  ColorGreen,
-  ColorOrange,
-  ColorPurple,
-  ColorRed,
-  ColorYellow,
+  ColourBlue,
+  ColourGray,
+  ColourGreen,
+  ColourOrange,
+  ColourPurple,
+  ColourRed,
+  ColourYellow,
 } from '../../Disp/VariablesAndData';
 import { CacheMinPP, CachePPArray } from '../VariablesAndData';
 
@@ -21,22 +21,22 @@ import { CacheMinPP, CachePPArray } from '../VariablesAndData';
 export default function ColourOfPP(me, price) {
   let color = '';
   // Colour based on PP
-  if (me.pp <= 0 || me.pp === Infinity) color = ColorGray;
-  else if (me.pp < CacheMinPP) color = ColorBlue;
-  else if (me.pp === CacheMinPP) color = ColorGreen;
-  else if (me.pp < CachePPArray[10][0]) color = ColorYellow;
-  else if (me.pp < CachePPArray[20][0]) color = ColorOrange;
-  else if (me.pp > CachePPArray[30][0]) color = ColorRed;
-  else color = ColorPurple;
+  if (me.pp <= 0 || me.pp === Infinity) color = ColourGray;
+  else if (me.pp < CacheMinPP) color = ColourBlue;
+  else if (me.pp === CacheMinPP) color = ColourGreen;
+  else if (me.pp < CachePPArray[10][0]) color = ColourYellow;
+  else if (me.pp < CachePPArray[20][0]) color = ColourOrange;
+  else if (me.pp > CachePPArray[30][0]) color = ColourRed;
+  else color = ColourPurple;
 
   // Colour based on price in terms of CPS
   if (Number(CMOptions.PPSecondsLowerLimit) !== 0) {
     if (price / GetCPS() < Number(CMOptions.PPSecondsLowerLimit))
-      color = ColorBlue;
+      color = ColourBlue;
   }
   // Colour based on being able to purchase
   if (CMOptions.PPOnlyConsiderBuyable) {
-    if (price - Game.cookies > 0) color = ColorRed;
+    if (price - Game.cookies > 0) color = ColourRed;
   }
   return color;
 }

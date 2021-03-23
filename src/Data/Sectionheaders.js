@@ -2,12 +2,13 @@
 
 /** Display titles of the headers of the Cookie Monster settings section */
 export const ConfigGroups = {
-  BarsColors: 'Bars/Colors',
   Calculation: 'Calculation',
-  Notification: 'Notification',
-  Tooltip: 'Tooltips and additional insights',
-  Statistics: 'Statistics',
   Notation: 'Notation',
+  Colours: 'Colours and colour coding',
+  BarsDisplay: 'Infobars and visual settings',
+  Tooltip: 'Tooltips',
+  Statistics: 'Statistics',
+  Notification: 'Notifications',
   Miscellaneous: 'Miscellaneous',
 };
 

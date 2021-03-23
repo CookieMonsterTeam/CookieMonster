@@ -3,7 +3,7 @@ import UpdateTooltips, * as UpdateTooltip from './UpdateTooltips';
 import { TooltipCreateTooltipBox } from './CreateTooltip';
 import {
   Beautify,
-  GetTimeColor,
+  GetTimeColour,
 } from '../BeautifyAndFormatting/BeautifyFormatting';
 import CopyData from '../../Sim/SimulationData/CopyData';
 import {
@@ -65,7 +65,7 @@ export function CreateTooltip(type, name) {
             `so far<br/>&bull; <b>${Beautify(amortizeAmount)}</b> ${
               Math.floor(amortizeAmount) === 1 ? 'cookie' : 'cookies'
             } left to amortize (${
-              GetTimeColor(
+              GetTimeColour(
                 (buildPrice - Game.Objects[name].totalCookies) /
                   (Game.Objects[name].storedTotalCps * Game.globalCpsMult),
               ).text
