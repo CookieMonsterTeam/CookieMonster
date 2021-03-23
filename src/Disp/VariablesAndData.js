@@ -7,32 +7,32 @@ export let DispCSS;
 /**
  * These are variables used to create DOM object names and id (e.g., 'CMTextTooltip)
  */
-export const ColorTextPre = 'CMText';
-export const ColorBackPre = 'CMBack';
-export const ColorBorderPre = 'CMBorder';
+export const ColourTextPre = 'CMText';
+export const ColourBackPre = 'CMBack';
+export const ColourBorderPre = 'CMBorder';
 
 /**
  * These are variables which can be set in the options by the user to standardize colours throughout CookieMonster
  */
-export const ColorBlue = 'Blue';
-export const ColorGreen = 'Green';
-export const ColorYellow = 'Yellow';
-export const ColorOrange = 'Orange';
-export const ColorRed = 'Red';
-export const ColorPurple = 'Purple';
-export const ColorGray = 'Gray';
-export const ColorPink = 'Pink';
-export const ColorBrown = 'Brown';
-export const Colors = [
-  ColorGray,
-  ColorBlue,
-  ColorGreen,
-  ColorYellow,
-  ColorOrange,
-  ColorRed,
-  ColorPurple,
-  ColorPink,
-  ColorBrown,
+export const ColourBlue = 'Blue';
+export const ColourGreen = 'Green';
+export const ColourYellow = 'Yellow';
+export const ColourOrange = 'Orange';
+export const ColourRed = 'Red';
+export const ColourPurple = 'Purple';
+export const ColourGray = 'Gray';
+export const ColourPink = 'Pink';
+export const ColourBrown = 'Brown';
+export const Colours = [
+  ColourGray,
+  ColourBlue,
+  ColourGreen,
+  ColourYellow,
+  ColourOrange,
+  ColourRed,
+  ColourPurple,
+  ColourPink,
+  ColourBrown,
 ];
 
 /**
@@ -116,13 +116,13 @@ export const ClickTimes = [1, 5, 10, 15, 30];
 /**
  * This array is used to give certain timers specific colours
  */
-export const BuffColors = {
-  Frenzy: ColorYellow,
-  'Dragon Harvest': ColorBrown,
-  'Elder frenzy': ColorGreen,
-  Clot: ColorRed,
-  'Click frenzy': ColorBlue,
-  Dragonflight: ColorPink,
+export const BuffColours = {
+  Frenzy: ColourYellow,
+  'Dragon Harvest': ColourBrown,
+  'Elder frenzy': ColourGreen,
+  Clot: ColourRed,
+  'Click frenzy': ColourBlue,
+  Dragonflight: ColourPink,
 };
 
 /**

@@ -3,11 +3,11 @@
 import { UpdateBotTimerBarPosition } from '../../Config/SpecificToggles';
 import { CMOptions } from '../../Config/VariablesAndData';
 import {
-  BuffColors,
-  ColorBackPre,
-  ColorGray,
-  ColorOrange,
-  ColorPurple,
+  BuffColours,
+  ColourBackPre,
+  ColourGray,
+  ColourOrange,
+  ColourPurple,
   LastNumberOfTimers,
 } from '../VariablesAndData';
 import { CreateTimer } from './CreateDOMElements';
@@ -23,19 +23,19 @@ export function CreateTimerBar() {
   TimerBar.style.height = '0px';
   TimerBar.style.fontSize = '10px';
   TimerBar.style.fontWeight = 'bold';
-  TimerBar.style.backgroundColor = 'black';
+  TimerBar.style.backgroundColour = 'black';
 
   // Create standard Golden Cookie bar
   const CMTimerBarGC = CreateTimer('CMTimerBarGC', 'Next Cookie', [
-    { id: 'CMTimerBarGCMinBar', color: ColorGray },
-    { id: 'CMTimerBarGCBar', color: ColorPurple },
+    { id: 'CMTimerBarGCMinBar', color: ColourGray },
+    { id: 'CMTimerBarGCBar', color: ColourPurple },
   ]);
   TimerBar.appendChild(CMTimerBarGC);
 
   // Create standard Reindeer bar
   const CMTimerBarRen = CreateTimer('CMTimerBarRen', 'Next Reindeer', [
-    { id: 'CMTimerBarRenMinBar', color: ColorGray },
-    { id: 'CMTimerBarRenBar', color: ColorOrange },
+    { id: 'CMTimerBarRenMinBar', color: ColourGray },
+    { id: 'CMTimerBarRenBar', color: ColourOrange },
   ]);
   TimerBar.appendChild(CMTimerBarRen);
   const TimerBarBuffTimers = document.createElement('div');
@@ -166,12 +166,12 @@ export function UpdateTimerBar() {
           { id: `${Game.buffs[i].name}Bar` },
         ]);
         timer.style.display = '';
-        let classColor = '';
+        let classColour = '';
         // Gives specific timers specific colors
-        if (typeof BuffColors[Game.buffs[i].name] !== 'undefined') {
-          classColor = BuffColors[Game.buffs[i].name];
-        } else classColor = ColorPurple;
-        timer.lastChild.children[1].className = ColorBackPre + classColor;
+        if (typeof BuffColours[Game.buffs[i].name] !== 'undefined') {
+          classColour = BuffColours[Game.buffs[i].name];
+        } else classColour = ColourPurple;
+        timer.lastChild.children[1].className = ColourBackPre + classColour;
         timer.lastChild.children[1].style.color = 'black';
         if (CMOptions.TimerBarOverlay === 2)
           timer.lastChild.children[1].textContent = `${Math.round(

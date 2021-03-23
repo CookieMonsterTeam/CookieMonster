@@ -45,7 +45,7 @@ import {
 
 import GetCPS from '../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../HelperFunctions/GetWrinkConfigBank';
-import { ColorGreen, ColorRed, ColorTextPre } from '../VariablesAndData';
+import { ColourGreen, ColourRed, ColourTextPre } from '../VariablesAndData';
 import { StatsListing, StatsHeader, StatsMissDisp } from './CreateDOMElements';
 
 /**
@@ -61,8 +61,8 @@ export function LuckySection() {
   const section = document.createElement('div');
   section.className = 'CMStatsLuckySection';
 
-  const luckyColor =
-    Game.cookies + GetWrinkConfigBank() < CacheLucky ? ColorRed : ColorGreen;
+  const luckyColour =
+    Game.cookies + GetWrinkConfigBank() < CacheLucky ? ColourRed : ColourGreen;
   const luckyTime =
     Game.cookies + GetWrinkConfigBank() < CacheLucky
       ? FormatTime(
@@ -72,7 +72,7 @@ export function LuckySection() {
   const luckyReqFrag = document.createDocumentFragment();
   const luckyReqSpan = document.createElement('span');
   luckyReqSpan.style.fontWeight = 'bold';
-  luckyReqSpan.className = ColorTextPre + luckyColor;
+  luckyReqSpan.className = ColourTextPre + luckyColour;
   luckyReqSpan.textContent = Beautify(CacheLucky);
   luckyReqFrag.appendChild(luckyReqSpan);
   if (luckyTime !== '') {
@@ -89,10 +89,10 @@ export function LuckySection() {
     ),
   );
 
-  const luckyColorFrenzy =
+  const luckyColourFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheLuckyFrenzy
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const luckyTimeFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheLuckyFrenzy
       ? FormatTime(
@@ -102,7 +102,7 @@ export function LuckySection() {
   const luckyReqFrenFrag = document.createDocumentFragment();
   const luckyReqFrenSpan = document.createElement('span');
   luckyReqFrenSpan.style.fontWeight = 'bold';
-  luckyReqFrenSpan.className = ColorTextPre + luckyColorFrenzy;
+  luckyReqFrenSpan.className = ColourTextPre + luckyColourFrenzy;
   luckyReqFrenSpan.textContent = Beautify(CacheLuckyFrenzy);
   luckyReqFrenFrag.appendChild(luckyReqFrenSpan);
   if (luckyTimeFrenzy !== '') {
@@ -123,7 +123,7 @@ export function LuckySection() {
 
   const luckyRewardMaxSpan = document.createElement('span');
   luckyRewardMaxSpan.style.fontWeight = 'bold';
-  luckyRewardMaxSpan.className = ColorTextPre + CacheLuckyReward;
+  luckyRewardMaxSpan.className = ColourTextPre + CacheLuckyReward;
   luckyRewardMaxSpan.textContent =
     Beautify(CacheLuckyReward) +
     (luckySplit ? ` / ${Beautify(CacheLuckyWrathReward)}` : '');
@@ -138,7 +138,7 @@ export function LuckySection() {
 
   const luckyRewardFrenzyMaxSpan = document.createElement('span');
   luckyRewardFrenzyMaxSpan.style.fontWeight = 'bold';
-  luckyRewardFrenzyMaxSpan.className = ColorTextPre + luckyRewardFrenzyMaxSpan;
+  luckyRewardFrenzyMaxSpan.className = ColourTextPre + luckyRewardFrenzyMaxSpan;
   luckyRewardFrenzyMaxSpan.textContent =
     Beautify(CacheLuckyRewardFrenzy) +
     (luckySplit ? ` / ${Beautify(CacheLuckyWrathRewardFrenzy)}` : '');
@@ -158,7 +158,7 @@ export function LuckySection() {
     ) + 13;
   const luckyCurSpan = document.createElement('span');
   luckyCurSpan.style.fontWeight = 'bold';
-  luckyCurSpan.className = ColorTextPre + luckyCurSpan;
+  luckyCurSpan.className = ColourTextPre + luckyCurSpan;
   luckyCurSpan.textContent =
     Beautify(CacheGoldenCookiesMult * luckyCurBase) +
     (luckySplit ? ` / ${Beautify(CacheWrathCookiesMult * luckyCurBase)}` : '');
@@ -186,10 +186,10 @@ export function ChainSection() {
   const section = document.createElement('div');
   section.className = 'CMStatsChainSection';
 
-  const chainColor =
+  const chainColour =
     Game.cookies + GetWrinkConfigBank() < CacheChainRequired
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const chainTime =
     Game.cookies + GetWrinkConfigBank() < CacheChainRequired
       ? FormatTime(
@@ -200,7 +200,7 @@ export function ChainSection() {
   const chainReqFrag = document.createDocumentFragment();
   const chainReqSpan = document.createElement('span');
   chainReqSpan.style.fontWeight = 'bold';
-  chainReqSpan.className = ColorTextPre + chainColor;
+  chainReqSpan.className = ColourTextPre + chainColour;
   chainReqSpan.textContent = Beautify(CacheChainRequired);
   chainReqFrag.appendChild(chainReqSpan);
   if (chainTime !== '') {
@@ -217,10 +217,10 @@ export function ChainSection() {
     ),
   );
 
-  const chainWrathColor =
+  const chainWrathColour =
     Game.cookies + GetWrinkConfigBank() < CacheChainWrathRequired
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const chainWrathTime =
     Game.cookies + GetWrinkConfigBank() < CacheChainWrathRequired
       ? FormatTime(
@@ -231,7 +231,7 @@ export function ChainSection() {
   const chainWrathReqFrag = document.createDocumentFragment();
   const chainWrathReqSpan = document.createElement('span');
   chainWrathReqSpan.style.fontWeight = 'bold';
-  chainWrathReqSpan.className = ColorTextPre + chainWrathColor;
+  chainWrathReqSpan.className = ColourTextPre + chainWrathColour;
   chainWrathReqSpan.textContent = Beautify(CacheChainWrathRequired);
   chainWrathReqFrag.appendChild(chainWrathReqSpan);
   if (chainWrathTime !== '') {
@@ -248,10 +248,10 @@ export function ChainSection() {
     ),
   );
 
-  const chainColorFrenzy =
+  const chainColourFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyRequired
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const chainTimeFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyRequired
       ? FormatTime(
@@ -262,7 +262,7 @@ export function ChainSection() {
   const chainReqFrenFrag = document.createDocumentFragment();
   const chainReqFrenSpan = document.createElement('span');
   chainReqFrenSpan.style.fontWeight = 'bold';
-  chainReqFrenSpan.className = ColorTextPre + chainColorFrenzy;
+  chainReqFrenSpan.className = ColourTextPre + chainColourFrenzy;
   chainReqFrenSpan.textContent = Beautify(CacheChainFrenzyRequired);
   chainReqFrenFrag.appendChild(chainReqFrenSpan);
   if (chainTimeFrenzy !== '') {
@@ -279,10 +279,10 @@ export function ChainSection() {
     ),
   );
 
-  const chainWrathColorFrenzy =
+  const chainWrathColourFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyWrathRequired
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const chainWrathTimeFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyWrathRequired
       ? FormatTime(
@@ -294,7 +294,7 @@ export function ChainSection() {
   const chainWrathReqFrenFrag = document.createDocumentFragment();
   const chainWrathReqFrenSpan = document.createElement('span');
   chainWrathReqFrenSpan.style.fontWeight = 'bold';
-  chainWrathReqFrenSpan.className = ColorTextPre + chainWrathColorFrenzy;
+  chainWrathReqFrenSpan.className = ColourTextPre + chainWrathColourFrenzy;
   chainWrathReqFrenSpan.textContent = Beautify(CacheChainFrenzyWrathRequired);
   chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSpan);
   if (chainWrathTimeFrenzy !== '') {
@@ -397,8 +397,10 @@ export function SpellsSection() {
   const section = document.createElement('div');
   section.className = 'CMStatsSpellsSection';
 
-  const conjureColor =
-    Game.cookies + GetWrinkConfigBank() < CacheConjure ? ColorRed : ColorGreen;
+  const conjureColour =
+    Game.cookies + GetWrinkConfigBank() < CacheConjure
+      ? ColourRed
+      : ColourGreen;
   const conjureTime =
     Game.cookies + GetWrinkConfigBank() < CacheConjure
       ? FormatTime(
@@ -409,7 +411,7 @@ export function SpellsSection() {
   const conjureReqFrag = document.createDocumentFragment();
   const conjureReqSpan = document.createElement('span');
   conjureReqSpan.style.fontWeight = 'bold';
-  conjureReqSpan.className = ColorTextPre + conjureColor;
+  conjureReqSpan.className = ColourTextPre + conjureColour;
   conjureReqSpan.textContent = Beautify(CacheConjure);
   conjureReqFrag.appendChild(conjureReqSpan);
   if (conjureTime !== '') {
@@ -434,10 +436,10 @@ export function SpellsSection() {
     ),
   );
 
-  const conjureFrenzyColor =
+  const conjureFrenzyColour =
     Game.cookies + GetWrinkConfigBank() < CacheConjure * 7
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const conjureFrenzyCur = Math.min(
     (Game.cookies + GetWrinkConfigBank()) * 0.15,
     CacheNoGoldSwitchCookiesPS * 60 * 30,
@@ -452,7 +454,7 @@ export function SpellsSection() {
   const conjureFrenzyReqFrag = document.createDocumentFragment();
   const conjureFrenzyReqSpan = document.createElement('span');
   conjureFrenzyReqSpan.style.fontWeight = 'bold';
-  conjureFrenzyReqSpan.className = ColorTextPre + conjureFrenzyColor;
+  conjureFrenzyReqSpan.className = ColourTextPre + conjureFrenzyColour;
   conjureFrenzyReqSpan.textContent = Beautify(CacheConjure * 7);
   conjureFrenzyReqFrag.appendChild(conjureFrenzyReqSpan);
   if (conjureFrenzyTime !== '') {
@@ -507,11 +509,11 @@ export function GardenSection() {
   const section = document.createElement('div');
   section.className = 'CMStatsGardenSection';
 
-  const bakeberryColor =
-    Game.cookies < Game.cookiesPs * 60 * 10 * 100 ? ColorRed : ColorGreen;
+  const bakeberryColour =
+    Game.cookies < Game.cookiesPs * 60 * 10 * 100 ? ColourRed : ColourGreen;
   const bakeberryFrag = document.createElement('span');
   bakeberryFrag.style.fontWeight = 'bold';
-  bakeberryFrag.className = ColorTextPre + bakeberryColor;
+  bakeberryFrag.className = ColourTextPre + bakeberryColour;
   bakeberryFrag.textContent = Beautify(Game.cookiesPs * 60 * 10 * 100);
   section.appendChild(
     StatsListing(
@@ -521,11 +523,11 @@ export function GardenSection() {
     ),
   );
 
-  const chocorootColor =
-    Game.cookies < Game.cookiesPs * 60 * 100 ? ColorRed : ColorGreen;
+  const chocorootColour =
+    Game.cookies < Game.cookiesPs * 60 * 100 ? ColourRed : ColourGreen;
   const chocorootFrag = document.createElement('span');
   chocorootFrag.style.fontWeight = 'bold';
-  chocorootFrag.className = ColorTextPre + chocorootColor;
+  chocorootFrag.className = ColourTextPre + chocorootColour;
   chocorootFrag.textContent = Beautify(Game.cookiesPs * 60 * 100);
   section.appendChild(
     StatsListing(
@@ -535,11 +537,11 @@ export function GardenSection() {
     ),
   );
 
-  const queenbeetColor =
-    Game.cookies < Game.cookiesPs * 60 * 60 * 25 ? ColorRed : ColorGreen;
+  const queenbeetColour =
+    Game.cookies < Game.cookiesPs * 60 * 60 * 25 ? ColourRed : ColourGreen;
   const queenbeetFrag = document.createElement('span');
   queenbeetFrag.style.fontWeight = 'bold';
-  queenbeetFrag.className = ColorTextPre + queenbeetColor;
+  queenbeetFrag.className = ColourTextPre + queenbeetColour;
   queenbeetFrag.textContent = Beautify(Game.cookiesPs * 60 * 60 * 25);
   section.appendChild(
     StatsListing(
@@ -549,11 +551,11 @@ export function GardenSection() {
     ),
   );
 
-  const duketaterColor =
-    Game.cookies < Game.cookiesPs * 60 * 15 * 100 ? ColorRed : ColorGreen;
+  const duketaterColour =
+    Game.cookies < Game.cookiesPs * 60 * 15 * 100 ? ColourRed : ColourGreen;
   const duketaterFrag = document.createElement('span');
   duketaterFrag.style.fontWeight = 'bold';
-  duketaterFrag.className = ColorTextPre + duketaterColor;
+  duketaterFrag.className = ColourTextPre + duketaterColour;
   duketaterFrag.textContent = Beautify(Game.cookiesPs * 60 * 15 * 100);
   section.appendChild(
     StatsListing(

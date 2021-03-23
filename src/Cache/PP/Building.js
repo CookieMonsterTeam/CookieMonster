@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import { CMOptions } from '../../Config/VariablesAndData';
 import GetWrinkConfigBank from '../../Disp/HelperFunctions/GetWrinkConfigBank';
-import { ColorGray } from '../../Disp/VariablesAndData';
+import { ColourGray } from '../../Disp/VariablesAndData';
 import {
   CacheMinPP,
   CacheObjects1,
@@ -17,10 +17,10 @@ import ColourOfPP from './ColourOfPP';
  * It saves all date in CM.Cache.Objects...
  * It is called by CM.Cache.CacheBuildingsPP()
  */
-function CacheColor(target, amount) {
+function CacheColour(target, amount) {
   Object.keys(target).forEach((i) => {
     if (CMOptions.PPRigidelMode && amount === 1) {
-      target[i].color = ColorGray;
+      target[i].color = ColourGray;
       return;
     }
     target[i].color = ColourOfPP(
@@ -29,7 +29,7 @@ function CacheColor(target, amount) {
     );
     // Colour based on excluding certain top-buildings
     for (let j = 0; j < CMOptions.PPExcludeTop; j++) {
-      if (target[i].pp === CachePPArray[j][0]) target[i].color = ColorGray;
+      if (target[i].pp === CachePPArray[j][0]) target[i].color = ColourGray;
     }
   });
 }
@@ -75,7 +75,7 @@ export default function CacheBuildingsPP() {
   }
   CacheMinPP = CachePPArray[CMOptions.PPExcludeTop][indexOfMin];
 
-  CacheColor(CacheObjects1, 1);
-  CacheColor(CacheObjects10, 10);
-  CacheColor(CacheObjects100, 100);
+  CacheColour(CacheObjects1, 1);
+  CacheColour(CacheObjects10, 10);
+  CacheColour(CacheObjects100, 100);
 }

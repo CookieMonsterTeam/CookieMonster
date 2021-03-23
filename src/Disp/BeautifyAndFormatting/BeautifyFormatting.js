@@ -5,10 +5,10 @@ import { CMOptions } from '../../Config/VariablesAndData';
 import { metric, shortScale, shortScaleAbbreviated } from '../../Data/Scales';
 import { BackupFunctions } from '../../Main/VariablesAndData';
 import {
-  ColorGreen,
-  ColorOrange,
-  ColorRed,
-  ColorYellow,
+  ColourGreen,
+  ColourOrange,
+  ColourRed,
+  ColourYellow,
 } from '../VariablesAndData';
 
 /**
@@ -134,18 +134,18 @@ export function FormatTime(time, longFormat) {
  * @param	{number}			time			Time to be coloured
  * @returns {{string, string}}	{text, color}	Both the formatted time and color as strings in an array
  */
-export function GetTimeColor(time) {
+export function GetTimeColour(time) {
   let color;
   let text;
   if (time <= 0) {
     if (CMOptions.TimeFormat) text = '00:00:00:00:00';
     else text = 'Done!';
-    color = ColorGreen;
+    color = ColourGreen;
   } else {
     text = FormatTime(time);
-    if (time > 300) color = ColorRed;
-    else if (time > 60) color = ColorOrange;
-    else color = ColorYellow;
+    if (time > 300) color = ColourRed;
+    else if (time > 60) color = ColourOrange;
+    else color = ColourYellow;
   }
   return { text, color };
 }

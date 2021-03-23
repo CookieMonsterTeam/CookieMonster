@@ -1,13 +1,13 @@
 /* eslint-disable no-param-reassign */
 import { CMOptions } from '../../Config/VariablesAndData';
 import {
-  ColorTextPre,
-  ColorBorderPre,
-  ColorGray,
-  ColorBlue,
-  ColorRed,
-  ColorYellow,
-  ColorPurple,
+  ColourTextPre,
+  ColourBorderPre,
+  ColourGray,
+  ColourBlue,
+  ColourRed,
+  ColourYellow,
+  ColourPurple,
   TooltipType,
 } from '../VariablesAndData';
 
@@ -24,7 +24,7 @@ export function TooltipCreateTooltipBox() {
   tooltipBox.style.padding = '4px';
   tooltipBox.style.margin = '0px -4px';
   tooltipBox.id = 'CMTooltipBorder';
-  tooltipBox.className = ColorTextPre + ColorGray;
+  tooltipBox.className = ColourTextPre + ColourGray;
   return tooltipBox;
 }
 
@@ -37,7 +37,7 @@ export function TooltipCreateHeader(text) {
   const div = document.createElement('div');
   div.style.fontWeight = 'bold';
   div.id = `${text}Title`;
-  div.className = ColorTextPre + ColorBlue;
+  div.className = ColourTextPre + ColourBlue;
   div.textContent = text;
   return div;
 }
@@ -66,13 +66,13 @@ export function TooltipCreateWarningSection() {
     box.id = boxId;
     box.style.display = 'none';
     box.style.transition = 'opacity 0.1s ease-out';
-    box.className = ColorBorderPre + color;
+    box.className = ColourBorderPre + color;
     box.style.padding = '2px';
     box.style.background = '#000 url(img/darkNoise.png)';
     const labelDiv = document.createElement('div');
     box.appendChild(labelDiv);
     const labelSpan = document.createElement('span');
-    labelSpan.className = ColorTextPre + color;
+    labelSpan.className = ColourTextPre + color;
     labelSpan.style.fontWeight = 'bold';
     labelSpan.textContent = labelTextFront;
     labelDiv.appendChild(labelSpan);
@@ -89,7 +89,7 @@ export function TooltipCreateWarningSection() {
   TooltipWarn.appendChild(
     create(
       'CMDispTooltipWarnLucky',
-      ColorRed,
+      ColourRed,
       'Warning: ',
       'Purchase of this item will put you under the number of Cookies required for "Lucky!"',
       'CMDispTooltipWarnLuckyText',
@@ -99,7 +99,7 @@ export function TooltipCreateWarningSection() {
   TooltipWarn.appendChild(
     create(
       'CMDispTooltipWarnLuckyFrenzy',
-      ColorYellow,
+      ColourYellow,
       'Warning: ',
       'Purchase of this item will put you under the number of Cookies required for "Lucky!" (Frenzy)',
       'CMDispTooltipWarnLuckyFrenzyText',
@@ -109,7 +109,7 @@ export function TooltipCreateWarningSection() {
   TooltipWarn.appendChild(
     create(
       'CMDispTooltipWarnConjure',
-      ColorPurple,
+      ColourPurple,
       'Warning: ',
       'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods"',
       'CMDispTooltipWarnConjureText',
@@ -119,7 +119,7 @@ export function TooltipCreateWarningSection() {
   TooltipWarn.appendChild(
     create(
       'CMDispTooltipWarnConjureFrenzy',
-      ColorPurple,
+      ColourPurple,
       'Warning: ',
       'Purchase of this item will put you under the number of Cookies required for "Conjure Baked Goods" (Frenzy)',
       'CMDispTooltipWarnConjureFrenzyText',
@@ -129,7 +129,7 @@ export function TooltipCreateWarningSection() {
   TooltipWarn.appendChild(
     create(
       'CMDispTooltipWarnEdifice',
-      ColorPurple,
+      ColourPurple,
       'Warning: ',
       'Purchase of this item will put you under the number of Cookies needed for "Spontaneous Edifice" to possibly give you your most expensive building"',
       'CMDispTooltipWarnEdificeText',
@@ -139,7 +139,7 @@ export function TooltipCreateWarningSection() {
   TooltipWarn.appendChild(
     create(
       'CMDispTooltipWarnUser',
-      ColorRed,
+      ColourRed,
       'Warning: ',
       `Purchase of this item will put you under the number of Cookies equal to ${CMOptions.ToolWarnUser} seconds of CPS`,
       'CMDispTooltipWarnUserText',

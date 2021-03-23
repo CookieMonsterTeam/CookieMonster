@@ -8,12 +8,12 @@ import { SimObjects } from '../../../Sim/VariablesAndData';
 import {
   Beautify,
   FormatTime,
-  GetTimeColor,
+  GetTimeColour,
 } from '../../BeautifyAndFormatting/BeautifyFormatting';
 import GetCPS from '../../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
 import {
-  ColorTextPre,
+  ColourTextPre,
   LastTargetTooltipBuilding,
   TooltipBonusIncome,
   TooltipName,
@@ -54,22 +54,23 @@ export default function Building() {
           CMOptions.ScaleSeparator ? ',' : '.'
         }01% of income)`;
       }
-      l('CMTooltipBorder').className = ColorTextPre + target[TooltipName].color;
+      l('CMTooltipBorder').className =
+        ColourTextPre + target[TooltipName].color;
       if (CMOptions.PPDisplayTime)
         l('CMTooltipPP').textContent = FormatTime(target[TooltipName].pp);
       else l('CMTooltipPP').textContent = Beautify(target[TooltipName].pp, 2);
-      l('CMTooltipPP').className = ColorTextPre + target[TooltipName].color;
-      const timeColor = GetTimeColor(
+      l('CMTooltipPP').className = ColourTextPre + target[TooltipName].color;
+      const timeColour = GetTimeColour(
         (TooltipPrice - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
       );
-      l('CMTooltipTime').textContent = timeColor.text;
+      l('CMTooltipTime').textContent = timeColour.text;
       if (
-        timeColor.text === 'Done!' &&
+        timeColour.text === 'Done!' &&
         Game.cookies < target[TooltipName].price
       ) {
-        l('CMTooltipTime').textContent = `${timeColor.text} (with Wrink)`;
-      } else l('CMTooltipTime').textContent = timeColor.text;
-      l('CMTooltipTime').className = ColorTextPre + timeColor.color;
+        l('CMTooltipTime').textContent = `${timeColour.text} (with Wrink)`;
+      } else l('CMTooltipTime').textContent = timeColour.text;
+      l('CMTooltipTime').className = ColourTextPre + timeColour.color;
     }
 
     // Add "production left till next achievement"-bar
