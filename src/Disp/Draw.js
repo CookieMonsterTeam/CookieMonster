@@ -1,3 +1,4 @@
+import ToggleWrinklerButtons from '../Config/Toggles/ToggleWrinklerButtons';
 import { CMOptions } from '../Config/VariablesAndData';
 import { Beautify } from './BeautifyAndFormatting/BeautifyFormatting';
 import UpdateBuildings from './BuildingsUpgrades/Buildings';
@@ -51,6 +52,9 @@ export default function Draw() {
 
   // Change menu refresh interval
   RefreshMenu();
+
+  // Update display of wrinkler buttons, this checks if Elder Pledge has been bought and if they should be disabled
+  ToggleWrinklerButtons();
 
   // Replace Cookies counter because Orteil uses very weird code to "pad" it...
   if (CMOptions.Scale) {

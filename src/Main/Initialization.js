@@ -59,6 +59,7 @@ export default function InitializeCookieMonster() {
   Game.CalculateGains();
 
   LoadConfig(); // Must be after all things are created!
+  Game.UpdateMenu();
   CMLastAscendState = Game.OnAscend;
 
   if (Game.prefs.popups)
