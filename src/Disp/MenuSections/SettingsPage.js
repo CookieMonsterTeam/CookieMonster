@@ -22,6 +22,7 @@ import RefreshScale from '../HelperFunctions/RefreshScale';
 import UpdateColours from '../HelperFunctions/UpdateColours';
 import Flash from '../Notifications/Flash';
 import PlaySound from '../Notifications/Sound';
+import CookieMonsterPrompt from './Prompt';
 
 /**
  * This function creates a header-object for the options page
@@ -147,17 +148,22 @@ function CreatePrefOption(config) {
     const a = document.createElement('a');
     a.className = 'option';
     a.onclick = function () {
-      Game.Prompt(inputPrompt.outerHTML, [
+      CookieMonsterPrompt(inputPrompt.outerHTML, [
         [
           'Save',
           function () {
-            CMOptions[`${config}`] = l(`${ConfigPrefix}${config}Prompt`).value;
+            CMOptions[config] = l(`${ConfigPrefix}${config}Prompt`).value;
             SaveConfig();
             Game.ClosePrompt();
             Game.UpdateMenu();
           },
         ],
-        'Cancel',
+        [
+          'Cancel',
+          function () {
+            Game.ClosePrompt();
+          },
+        ],
       ]);
     };
     a.textContent = 'Edit';
