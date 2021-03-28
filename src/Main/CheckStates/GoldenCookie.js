@@ -49,7 +49,7 @@ export default function CheckGoldenCookie() {
     LastGoldenCookieState = Game.shimmerTypes.golden.n;
     if (LastGoldenCookieState) {
       if (LastSpawnedGoldenCookieState < CurrSpawnedGoldenCookieState) {
-        Flash(3, 'GCFlash');
+        Flash(3, 'GCFlash', false);
         PlaySound(CMOptions.GCSoundURL, 'GCSound', 'GCVolume', false);
         CreateNotification(
           'GCNotification',

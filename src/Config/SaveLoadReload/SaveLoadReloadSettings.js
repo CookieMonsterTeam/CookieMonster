@@ -3,6 +3,7 @@ import ConfigData from '../../Data/SettingsData';
 import { CMOptions } from '../VariablesAndData';
 import save from '../../InitSaveLoad/save';
 import CMLoop from '../../Main/Loop';
+import UpdateColours from '../../Disp/HelperFunctions/UpdateColours';
 
 /** Functions related to saving, loading and restoring all settings */
 
@@ -41,41 +42,24 @@ export function LoadConfig(settings) {
   if (settings !== undefined) {
     CMOptions = settings;
 
+    if (typeof CMOptions.Colors !== 'undefined') {
+      delete CMOptions.Colors;
+    }
+    if (typeof CMOptions.Colours !== 'undefined') {
+      delete CMOptions.Colours;
+    }
+
     // Check values
     let mod = false;
     Object.keys(ConfigDefault).forEach((i) => {
       if (typeof CMOptions[i] === 'undefined') {
         mod = true;
         CMOptions[i] = ConfigDefault[i];
-      } else if (i !== 'Header' && i !== 'Colors') {
-        if (i.indexOf('SoundURL') === -1) {
-          if (
-            !(CMOptions[i] > -1 && CMOptions[i] < ConfigData[i].label.length)
-          ) {
-            mod = true;
-            CMOptions[i] = ConfigDefault[i];
-          }
-        } else if (typeof CMOptions[i] !== 'string') {
-          // Sound URLs
-          mod = true;
-          CMOptions[i] = ConfigDefault[i];
-        }
       } else if (i === 'Header') {
         Object.keys(ConfigDefault.Header).forEach((j) => {
           if (
             typeof CMOptions[i][j] === 'undefined' ||
             !(CMOptions[i][j] > -1 && CMOptions[i][j] < 2)
-          ) {
-            mod = true;
-            CMOptions[i][j] = ConfigDefault[i][j];
-          }
-        });
-      } else {
-        // Colors
-        Object.keys(ConfigDefault.Colors).forEach((j) => {
-          if (
-            typeof CMOptions[i][j] === 'undefined' ||
-            typeof CMOptions[i][j] !== 'string'
           ) {
             mod = true;
             CMOptions[i][j] = ConfigDefault[i][j];
@@ -94,4 +78,6 @@ export function LoadConfig(settings) {
     // Default values
     LoadConfig(ConfigDefault);
   }
+  Game.UpdateMenu();
+  UpdateColours();
 }

@@ -18,7 +18,7 @@ export default function CheckSeasonPopup() {
         CacheSeasonPopShimmer = Game.shimmers[i];
       }
     });
-    Flash(3, 'SeaFlash');
+    Flash(3, 'SeaFlash', false);
     PlaySound(CMOptions.SeaSoundURL, 'SeaSound', 'SeaVolume', false);
     CreateNotification(
       'SeaNotification',

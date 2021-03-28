@@ -9,7 +9,7 @@ import {
   ColourOrange,
   ColourPurple,
   ColourRed,
-  Colours,
+  ColoursOrdering,
   ColourYellow,
 } from '../VariablesAndData';
 
@@ -81,9 +81,9 @@ export default function UpdateUpgrades() {
 
   if (CMOptions.SortUpgrades) {
     arr.sort(function (a, b) {
-      return Colours.indexOf(a.color) > Colours.indexOf(b.color)
+      return ColoursOrdering.indexOf(a.color) > ColoursOrdering.indexOf(b.color)
         ? 1
-        : Colours.indexOf(a.color) < Colours.indexOf(b.color)
+        : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color)
         ? -1
         : a.pp < b.pp
         ? -1
