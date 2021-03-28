@@ -7,7 +7,7 @@ import {
 import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingSell from '../../Sim/SimulationEvents/SellBuilding';
 import { Beautify } from '../BeautifyAndFormatting/BeautifyFormatting';
-import { Colours, LastTargetBuildings } from '../VariablesAndData';
+import { ColoursOrdering, LastTargetBuildings } from '../VariablesAndData';
 
 /**
  * Section: Functions related to right column of the screen (buildings/upgrades)
@@ -33,7 +33,7 @@ export default function UpdateBuildings() {
     if (CMOptions.BuildColour === 1) {
       Object.keys(target).forEach((i) => {
         l(`productPrice${Game.Objects[i].id}`).style.color =
-          CMOptions.Colours[target[i].color];
+          CMOptions[`Colour${target[i].color}`];
       });
     } else {
       Object.keys(Game.Objects).forEach((i) => {
@@ -72,9 +72,10 @@ export default function UpdateBuildings() {
       });
 
       arr.sort(function (a, b) {
-        return Colours.indexOf(a.color) > Colours.indexOf(b.color)
+        return ColoursOrdering.indexOf(a.color) >
+          ColoursOrdering.indexOf(b.color)
           ? 1
-          : Colours.indexOf(a.color) < Colours.indexOf(b.color)
+          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color)
           ? -1
           : a.pp < b.pp
           ? -1
@@ -89,9 +90,10 @@ export default function UpdateBuildings() {
       });
 
       arr.sort(function (a, b) {
-        return Colours.indexOf(a.color) > Colours.indexOf(b.color)
+        return ColoursOrdering.indexOf(a.color) >
+          ColoursOrdering.indexOf(b.color)
           ? 1
-          : Colours.indexOf(a.color) < Colours.indexOf(b.color)
+          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color)
           ? -1
           : a.pp < b.pp
           ? -1

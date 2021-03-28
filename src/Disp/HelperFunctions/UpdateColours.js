@@ -3,7 +3,7 @@ import UpdateBuildings from '../BuildingsUpgrades/Buildings';
 import {
   ColourBackPre,
   ColourBorderPre,
-  Colours,
+  ColoursOrdering,
   ColourTextPre,
 } from '../VariablesAndData';
 
@@ -13,19 +13,19 @@ import {
  */
 export default function UpdateColours() {
   let str = '';
-  for (let i = 0; i < Colours.length; i++) {
-    str += `.${ColourTextPre}${Colours[i]} { color: ${
-      CMOptions.Colours[Colours[i]]
+  for (let i = 0; i < ColoursOrdering.length; i++) {
+    str += `.${ColourTextPre}${ColoursOrdering[i]} { color: ${
+      CMOptions[`Colour${ColoursOrdering[i]}`]
     }; }\n`;
   }
-  for (let i = 0; i < Colours.length; i++) {
-    str += `.${ColourBackPre}${Colours[i]} { background-color: ${
-      CMOptions.Colours[Colours[i]]
+  for (let i = 0; i < ColoursOrdering.length; i++) {
+    str += `.${ColourBackPre}${ColoursOrdering[i]} { background-color: ${
+      CMOptions[`Colour${ColoursOrdering[i]}`]
     }; }\n`;
   }
-  for (let i = 0; i < Colours.length; i++) {
-    str += `.${ColourBorderPre}${Colours[i]} { border: 1px solid ${
-      CMOptions.Colours[Colours[i]]
+  for (let i = 0; i < ColoursOrdering.length; i++) {
+    str += `.${ColourBorderPre}${ColoursOrdering[i]} { border: 1px solid ${
+      CMOptions[`Colour${ColoursOrdering[i]}`]
     }; }\n`;
   }
   l('CMCSS').textContent = str;

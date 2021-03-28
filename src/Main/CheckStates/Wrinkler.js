@@ -20,9 +20,9 @@ export default function CheckWrinklerCount() {
         CurrentWrinklers === Game.getWrinklersMax() &&
         CMOptions.WrinklerMaxFlash
       ) {
-        Flash(3, 'WrinklerMaxFlash');
+        Flash(3, 'WrinklerMaxFlash', false);
       } else {
-        Flash(3, 'WrinklerFlash');
+        Flash(3, 'WrinklerFlash', false);
       }
       if (
         CurrentWrinklers === Game.getWrinklersMax() &&

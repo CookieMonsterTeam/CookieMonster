@@ -20,8 +20,8 @@ import Config from '../../Data/SettingsData';
 import ConfigDefault from '../../Data/SettingsDefault';
 import RefreshScale from '../HelperFunctions/RefreshScale';
 import UpdateColours from '../HelperFunctions/UpdateColours';
+import Flash from '../Notifications/Flash';
 import PlaySound from '../Notifications/Sound';
-import { Colours } from '../VariablesAndData';
 
 /**
  * This function creates a header-object for the options page
@@ -167,29 +167,36 @@ function CreatePrefOption(config) {
     div.appendChild(label);
     return div;
   }
-  if (Config[config].type === 'color') {
+  if (Config[config].type === 'colour') {
     div.className = '';
-    for (let i = 0; i < Colours.length; i++) {
-      const innerDiv = document.createElement('div');
-      innerDiv.className = 'listing';
-      const input = document.createElement('input');
-      input.id = Colours[i];
-      input.style.width = '65px';
-      input.setAttribute('value', CMOptions.Colours[Colours[i]]);
-      innerDiv.appendChild(input);
-      const change = function () {
-        CMOptions.Colours[this.targetElement.id] = this.toHEXString();
-        UpdateColours();
-        SaveConfig();
-        Game.UpdateMenu();
+    const innerDiv = document.createElement('div');
+    innerDiv.className = 'listing';
+    const input = document.createElement('input');
+    input.id = config;
+    input.style.width = '65px';
+    input.setAttribute('value', CMOptions[config]);
+    innerDiv.appendChild(input);
+    const change = function () {
+      CMOptions[this.targetElement.id] = this.toHEXString();
+      UpdateColours();
+      SaveConfig();
+      Game.UpdateMenu();
+    };
+    // eslint-disable-next-line no-new
+    new JsColor(input, { hash: true, position: 'right', onInput: change });
+    const label = document.createElement('label');
+    label.textContent = Config[config].desc;
+    innerDiv.appendChild(label);
+    if (config.includes('Flash')) {
+      const a = document.createElement('a');
+      a.className = 'option';
+      a.onclick = function () {
+        Flash(3, config.replace('Colour', ''), true);
       };
-      // eslint-disable-next-line no-new
-      new JsColor(input, { hash: true, position: 'right', onInput: change });
-      const label = document.createElement('label');
-      label.textContent = Config.Colours.desc[Colours[i]];
-      innerDiv.appendChild(label);
-      div.appendChild(innerDiv);
+      a.textContent = 'Test flash';
+      innerDiv.appendChild(a);
     }
+    div.appendChild(innerDiv);
     jscolor.init();
     return div;
   }

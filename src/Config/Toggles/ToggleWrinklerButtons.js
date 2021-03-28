@@ -5,7 +5,7 @@ import { CMOptions } from '../VariablesAndData';
  * It is called by changes in CM.Options.WrinklerButtons
  */
 export default function ToggleWrinklerButtons() {
-  if (CMOptions.WrinklerButtons) {
+  if (CMOptions.WrinklerButtons && Game.elderWrath) {
     l('PopAllNormalWrinklerButton').style.display = '';
     l('PopFattestWrinklerButton').style.display = '';
   } else {

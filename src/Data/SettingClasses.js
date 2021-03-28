@@ -23,10 +23,9 @@ export class SettingStandard extends Setting {
 }
 /** The colour picker setting class */
 export class SettingColours extends Setting {
-  constructor(type, group, desc, func) {
+  constructor(type, group, desc) {
     super(type, group);
     this.desc = desc;
-    this.func = func;
   }
 }
 

@@ -1,9 +1,9 @@
 /**
  * This function creates a white square over the full screen and appends it to l('wrapper')
  */
-export default function CreateWhiteScreen() {
+export default function CreateFlashScreen() {
   const WhiteScreen = document.createElement('div');
-  WhiteScreen.id = 'CMWhiteScreen';
+  WhiteScreen.id = 'CMFlashScreen';
   WhiteScreen.style.width = '100%';
   WhiteScreen.style.height = '100%';
   WhiteScreen.style.backgroundColor = 'white';

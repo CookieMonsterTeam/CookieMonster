@@ -13,7 +13,6 @@ import { CMOptions } from '../Config/VariablesAndData';
 import UpdateBuildings from '../Disp/BuildingsUpgrades/Buildings';
 import UpdateUpgrades from '../Disp/BuildingsUpgrades/Upgrades';
 import RefreshScale from '../Disp/HelperFunctions/RefreshScale';
-import UpdateColours from '../Disp/HelperFunctions/UpdateColours';
 import { UpdateFavicon } from '../Disp/TabTitle/FavIcon';
 import { SimDoSims } from '../Sim/VariablesAndData';
 import {
@@ -193,30 +192,50 @@ const Config = {
     0,
     Infinity,
   ),
-  Colours: new SettingColours(
+  ColourBlue: new SettingColours(
     'colour',
     'Colours',
-    {
-      Blue:
-        'Standard colour is blue. Used to show upgrades better than best PP building, for Click Frenzy bar, and for various labels',
-      Green:
-        'Standard colour is green. Used to show best PP building, for Blood Frenzy bar, and for various labels',
-      Yellow:
-        'Standard colour is yellow. Used to show buildings within the top 10 of PP, for Frenzy bar, and for various labels',
-      Orange:
-        'Standard colour is orange. Used to show buildings within the top 20 of PP, for Next Reindeer bar, and for various labels',
-      Red:
-        'Standard colour is Red. Used to show buildings within the top 30 of PP, for Clot bar, and for various labels',
-      Purple:
-        'Standard colour is purple. Used to show buildings outside of the top 30 of PP, for Next Cookie bar, and for various labels',
-      Gray:
-        'Standard colour is gray. Used to show negative or infinity PP, and for Next Cookie/Next Reindeer bar',
-      Pink: 'Standard colour is pink. Used for Dragonflight bar',
-      Brown: 'Standard colour is brown. Used for Dragon Harvest bar',
-    },
-    function () {
-      UpdateColours();
-    },
+    'Standard colour is blue. Used to show upgrades better than best PP building, for Click Frenzy bar, and for various labels',
+  ),
+  ColourGreen: new SettingColours(
+    'colour',
+    'Colours',
+    'Standard colour is green. Used to show best PP building, for Blood Frenzy bar, and for various labels',
+  ),
+  ColourYellow: new SettingColours(
+    'colour',
+    'Colours',
+    'Standard colour is yellow. Used to show buildings within the top 10 of PP, for Frenzy bar, and for various labels',
+  ),
+  ColourOrange: new SettingColours(
+    'colour',
+    'Colours',
+    'Standard colour is orange. Used to show buildings within the top 20 of PP, for Next Reindeer bar, and for various labels',
+  ),
+  ColourRed: new SettingColours(
+    'colour',
+    'Colours',
+    'Standard colour is Red. Used to show buildings within the top 30 of PP, for Clot bar, and for various labels',
+  ),
+  ColourPurple: new SettingColours(
+    'colour',
+    'Colours',
+    'Standard colour is purple. Used to show buildings outside of the top 30 of PP, for Next Cookie bar, and for various labels',
+  ),
+  ColourGray: new SettingColours(
+    'colour',
+    'Colours',
+    'Standard colour is gray. Used to show negative or infinity PP, and for Next Cookie/Next Reindeer bar',
+  ),
+  ColourPink: new SettingColours(
+    'colour',
+    'Colours',
+    'Standard colour is pink. Used for Dragonflight bar',
+  ),
+  ColourBrown: new SettingColours(
+    'colour',
+    'Colours',
+    'Standard colour is brown. Used for Dragon Harvest bar',
   ),
 
   // BarsDisplay
@@ -561,6 +580,11 @@ const Config = {
     'Flash screen on golden cookie',
     true,
   ),
+  ColourGCFlash: new SettingColours(
+    'colour',
+    'NotificationGC',
+    'The colour of the GC flash, standard colour is white',
+  ),
   GCSound: new SettingStandard(
     'bool',
     'NotificationGC',
@@ -591,6 +615,11 @@ const Config = {
     ['Flash OFF', 'Flash ON'],
     'Flash screen on fortune cookie spawn',
     true,
+  ),
+  ColourFortuneFlash: new SettingColours(
+    'colour',
+    'NotificationFC',
+    'The colour of the fortune flash, standard colour is white',
   ),
   FortuneSound: new SettingStandard(
     'bool',
@@ -623,6 +652,11 @@ const Config = {
     'Flash screen on season popup',
     true,
   ),
+  ColourSeaFlash: new SettingColours(
+    'colour',
+    'NotificationSea',
+    'The colour of the season popup flash, standard colour is white',
+  ),
   SeaSound: new SettingStandard(
     'bool',
     'NotificationSea',
@@ -643,6 +677,11 @@ const Config = {
     ['Garden Tick Flash OFF', 'Flash ON'],
     'Flash screen on garden tick',
     true,
+  ),
+  ColourGardFlash: new SettingColours(
+    'colour',
+    'NotificationGard',
+    'The colour of the garden flash, standard colour is white',
   ),
   GardSound: new SettingStandard(
     'bool',
@@ -675,6 +714,11 @@ const Config = {
     'Flash screen when magic reaches maximum',
     true,
   ),
+  ColourMagicFlash: new SettingColours(
+    'colour',
+    'NotificationMagi',
+    'The colour of the magic flash, standard colour is white',
+  ),
   MagicSound: new SettingStandard(
     'bool',
     'NotificationMagi',
@@ -706,6 +750,11 @@ const Config = {
     'Flash screen when a wrinkler appears',
     true,
   ),
+  ColourWrinklerFlash: new SettingColours(
+    'colour',
+    'NotificationWrink',
+    'The colour of the wrinkler flash, standard colour is white',
+  ),
   WrinklerSound: new SettingStandard(
     'bool',
     'NotificationWrink',
@@ -736,6 +785,11 @@ const Config = {
     ['Flash OFF', 'Flash ON'],
     'Flash screen when the maximum amount of Wrinklers has appeared',
     true,
+  ),
+  ColourWrinklerMaxFlash: new SettingColours(
+    'colour',
+    'NotificationWrinkMax',
+    'The colour of the maximum wrinkler flash, standard colour is white',
   ),
   WrinklerMaxSound: new SettingStandard(
     'bool',

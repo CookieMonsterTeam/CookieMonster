@@ -4,13 +4,14 @@ import { CacheStatsCookies } from '../Cache/Stats/Stats';
 import { LoadConfig } from '../Config/SaveLoadReload/SaveLoadReloadSettings';
 import { VersionMajor, VersionMinor } from '../Data/Moddata';
 import CreateUpgradeBar from '../Disp/BuildingsUpgrades/UpgradeBar';
+import UpdateColours from '../Disp/HelperFunctions/UpdateColours';
 import { CreateBotBar } from '../Disp/InfoBars/BottomBar';
 import { CreateTimerBar } from '../Disp/InfoBars/TimerBar';
 import CreateSectionHideButtons from '../Disp/Initialization/CreateSectionHideButtons';
 import CreateWrinklerButtons from '../Disp/Initialization/CreateWrinklerButton';
 import CreateCssArea from '../Disp/Initialization/CssArea';
 import UpdateBuildingUpgradeStyle from '../Disp/Initialization/UpdateBuildingUpgradeStyle';
-import CreateWhiteScreen from '../Disp/Initialization/WhiteScreen';
+import CreateFlashScreen from '../Disp/Initialization/FlashScreen';
 import { CreateFavicon } from '../Disp/TabTitle/FavIcon';
 import { CreateSimpleTooltip } from '../Disp/Tooltips/Tooltip';
 import { CMLastAscendState, TooltipText } from '../Disp/VariablesAndData';
@@ -37,7 +38,7 @@ export default function InitializeCookieMonster() {
   CreateBotBar();
   CreateTimerBar();
   CreateUpgradeBar();
-  CreateWhiteScreen();
+  CreateFlashScreen();
   CreateSectionHideButtons();
   CreateFavicon();
   Object.keys(TooltipText).forEach((i) => {
@@ -58,7 +59,7 @@ export default function InitializeCookieMonster() {
   ReplaceNativeGrimoire();
   Game.CalculateGains();
 
-  LoadConfig(); // Must be after all things are created!
+  LoadConfig();
   CMLastAscendState = Game.OnAscend;
 
   if (Game.prefs.popups)

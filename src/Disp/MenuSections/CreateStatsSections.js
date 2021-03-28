@@ -564,6 +564,21 @@ export function GardenSection() {
       duketaterFrag,
     ),
   );
+  const missingPlantDrops = [];
+  Object.keys(GameData.PlantDrops).forEach((i) => {
+    if (!Game.HasUnlocked(GameData.PlantDrops[i])) {
+      missingPlantDrops.push(GameData.PlantDrops[i]);
+    }
+  });
+  if (missingPlantDrops.length !== 0) {
+    section.appendChild(
+      StatsListing(
+        'basic',
+        'Rare plant drops left to unlock',
+        StatsMissDisp(missingPlantDrops),
+      ),
+    );
+  }
   return section;
 }
 
@@ -791,13 +806,6 @@ export function SeasonSection() {
       specDisp = true;
     }
   });
-  const missingPlantDrops = [];
-  Object.keys(GameData.PlantDrops).forEach((i) => {
-    if (!Game.HasUnlocked(GameData.PlantDrops[i])) {
-      missingPlantDrops.push(GameData.PlantDrops[i]);
-      specDisp = true;
-    }
-  });
   const choEgg =
     Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg');
   const centEgg = Game.Has('Century egg');
@@ -823,13 +831,16 @@ export function SeasonSection() {
           else if (godLvl === 2) failRateHalloween *= 0.95;
           else if (godLvl === 3) failRateHalloween *= 0.97;
         }
+        const obtainedCookiesChance = missingHalloweenCookies.length / 7;
         section.appendChild(
           StatsListing(
             'basic',
             'Chance of receiving a cookie from wrinkler/shiny wrinkler',
             document.createTextNode(
-              `${Beautify((1 - failRateHalloween) * 100)}% / ${Beautify(
-                (1 - failRateHalloween * 0.9) * 100,
+              `${Beautify(
+                (1 - failRateHalloween) * obtainedCookiesChance * 100,
+              )}% / ${Beautify(
+                (1 - failRateHalloween * 0.9) * obtainedCookiesChance * 100,
               )}%`,
             ),
           ),
@@ -853,12 +864,15 @@ export function SeasonSection() {
           else if (godLvl === 2) failRateChristmas *= 0.95;
           else if (godLvl === 3) failRateChristmas *= 0.97;
         }
+        const obtainedCookiesChance = missingChristmasCookies.length / 7;
         section.appendChild(
           StatsListing(
             'basic',
             'Chance of receiving a cookie from reindeer',
             document.createTextNode(
-              `${Beautify((1 - failRateChristmas) * 100)}%`,
+              `${Beautify(
+                (1 - failRateChristmas) * obtainedCookiesChance * 100,
+              )}%`,
             ),
           ),
         );
@@ -942,15 +956,6 @@ export function SeasonSection() {
                 dropRateEgg(0.9)[1] * 100,
               )}%`,
             ),
-          ),
-        );
-      }
-      if (missingPlantDrops.length !== 0) {
-        section.appendChild(
-          StatsListing(
-            'basic',
-            'Rare plant drops left to unlock',
-            StatsMissDisp(missingPlantDrops),
           ),
         );
       }
