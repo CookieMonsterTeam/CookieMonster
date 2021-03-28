@@ -23,5 +23,14 @@ module.exports = {
     'no-alert': 'off',
     'no-restricted-globals': 'off',
     'prefer-destructuring': ['error', { object: true, array: false }],
+    'max-len': [
+      1,
+      {
+        code: 100,
+        ignoreComments: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+      },
+    ],
   },
 };
