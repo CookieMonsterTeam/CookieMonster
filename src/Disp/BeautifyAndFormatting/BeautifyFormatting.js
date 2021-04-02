@@ -30,6 +30,9 @@ export function Beautify(num, floats, forced) {
     return BackupFunctions.Beautify(num, floats);
   }
   if (Number.isFinite(num)) {
+    if (num < 0) {
+      return `-${Beautify(Math.abs(num))}`;
+    }
     let answer = '';
     if (num === 0) {
       return num.toString();
