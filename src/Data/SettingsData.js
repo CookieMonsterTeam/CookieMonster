@@ -815,9 +815,23 @@ const Config = {
   BulkBuyBlock: new SettingStandard(
     'bool',
     'Miscellaneous',
-    ['Block Bulk Buying OFF', 'Block Bulk Buying ON'],
+    ['Block bulk buying OFF', 'Block bulk buying ON'],
     "Block clicking bulk buying when you can't buy all. This prevents buying 7 of a building when you are in buy-10 or buy-100 mode.",
     true,
+  ),
+  FavouriteSettings: new SettingStandard(
+    'bool',
+    'Miscellaneous',
+    [
+      'Favourite settings section OFF',
+      'Favourite settings section ON',
+      'Favourite settings section ON (Locked)',
+    ],
+    "Show stars before each setting which allows selecting it for a 'favourites' section at the top of the Cookie Monster settings. Setting this to Locked removes the stars but shows the 'favourites' section",
+    true,
+    function () {
+      Game.UpdateMenu();
+    },
   ),
 };
 
