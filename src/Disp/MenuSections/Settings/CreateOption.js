@@ -1,70 +1,42 @@
-/** Functions related to the Options/Preferences page */
-
 import jscolor, * as JsColor from '@eastdesire/jscolor';
-import {
-  LoadConfig,
-  SaveConfig,
-} from '../../Config/SaveLoadReload/SaveLoadReloadSettings';
+import ToggleFavouriteSetting from '../../../Config/Toggles/ToggleFavourites';
+import { SaveConfig } from '../../../Config/SaveLoadReload/SaveLoadReloadSettings';
 import {
   ConfigPrefix,
   ToggleConfig,
   ToggleConfigVolume,
-  ToggleHeader,
-} from '../../Config/ToggleSetting';
-import { CMOptions } from '../../Config/VariablesAndData';
-import {
-  ConfigGroups,
-  ConfigGroupsNotification,
-} from '../../Data/Sectionheaders';
-import Config from '../../Data/SettingsData';
-import ConfigDefault from '../../Data/SettingsDefault';
-import RefreshScale from '../HelperFunctions/RefreshScale';
-import UpdateColours from '../HelperFunctions/UpdateColours';
-import Flash from '../Notifications/Flash';
-import PlaySound from '../Notifications/Sound';
-import CookieMonsterPrompt from './Prompt';
-
-/**
- * This function creates a header-object for the options page
- * @param 	{string}		config	The name of the Config-group
- * @param 	{string}		text	The to-be displayed name of the header
- * @returns	{object}		div		The header object
- */
-function CreatePrefHeader(config, text) {
-  const div = document.createElement('div');
-  div.className = 'title';
-
-  div.style.opacity = '0.7';
-  div.style.fontSize = '17px';
-  div.appendChild(document.createTextNode(`${text} `));
-  const span = document.createElement('span'); // Creates the +/- button
-  span.style.cursor = 'pointer';
-  span.style.display = 'inline-block';
-  span.style.height = '14px';
-  span.style.width = '14px';
-  span.style.borderRadius = '7px';
-  span.style.textAlign = 'center';
-  span.style.backgroundColor = '#C0C0C0';
-  span.style.color = 'black';
-  span.style.fontSize = '13px';
-  span.style.verticalAlign = 'middle';
-  span.textContent = CMOptions.Header[config] ? '-' : '+';
-  span.onclick = function () {
-    ToggleHeader(config);
-    Game.UpdateMenu();
-  };
-  div.appendChild(span);
-  return div;
-}
+} from '../../../Config/ToggleSetting';
+import { CMOptions } from '../../../Config/VariablesAndData';
+import {} from '../../../Data/Sectionheaders';
+import Config from '../../../Data/SettingsData';
+import RefreshScale from '../../HelperFunctions/RefreshScale';
+import UpdateColours from '../../HelperFunctions/UpdateColours';
+import Flash from '../../Notifications/Flash';
+import PlaySound from '../../Notifications/Sound';
+import { FavouriteSettings } from '../../VariablesAndData';
+import CookieMonsterPrompt from '../Prompt';
 
 /**
  * This function creates an option-object for the options page
  * @param 	{string}		config	The name of the option
  * @returns	{object}		div		The option object
  */
-function CreatePrefOption(config) {
+export default function CreatePrefOption(config) {
   const div = document.createElement('div');
   div.className = 'listing';
+  if (CMOptions.FavouriteSettings === 1) {
+    const FavStar = document.createElement('a');
+    if (FavouriteSettings.includes(config)) FavStar.innerText = '★';
+    else FavStar.innerText = '☆';
+    FavStar.className = 'option';
+    FavStar.onclick = function () {
+      ToggleFavouriteSetting(config);
+      SaveConfig();
+      Game.UpdateMenu();
+    };
+    div.appendChild(FavStar);
+    div.appendChild(document.createTextNode(' '));
+  }
   if (Config[config].type === 'bool') {
     const a = document.createElement('a');
     if (Config[config].toggle && CMOptions[config] === 0) {
@@ -174,14 +146,13 @@ function CreatePrefOption(config) {
     return div;
   }
   if (Config[config].type === 'colour') {
-    div.className = '';
-    const innerDiv = document.createElement('div');
-    innerDiv.className = 'listing';
+    const innerSpan = document.createElement('span');
+    innerSpan.className = 'option';
     const input = document.createElement('input');
     input.id = config;
     input.style.width = '65px';
     input.setAttribute('value', CMOptions[config]);
-    innerDiv.appendChild(input);
+    innerSpan.appendChild(input);
     const change = function () {
       CMOptions[this.targetElement.id] = this.toHEXString();
       UpdateColours();
@@ -192,7 +163,7 @@ function CreatePrefOption(config) {
     new JsColor(input, { hash: true, position: 'right', onInput: change });
     const label = document.createElement('label');
     label.textContent = Config[config].desc;
-    innerDiv.appendChild(label);
+    innerSpan.appendChild(label);
     if (config.includes('Flash')) {
       const a = document.createElement('a');
       a.className = 'option';
@@ -200,9 +171,9 @@ function CreatePrefOption(config) {
         Flash(3, config.replace('Colour', ''), true);
       };
       a.textContent = 'Test flash';
-      innerDiv.appendChild(a);
+      innerSpan.appendChild(a);
     }
-    div.appendChild(innerDiv);
+    div.appendChild(innerSpan);
     jscolor.init();
     return div;
   }
@@ -232,63 +203,4 @@ function CreatePrefOption(config) {
     return div;
   }
   return div;
-}
-
-/**
- * This function adds the options/settings of CookieMonster to the options page
- * It is called by CM.Disp.AddMenu
- * @param {object} title	On object that includes the title of the menu
- */
-export default function AddMenuPref(title) {
-  const frag = document.createDocumentFragment();
-  frag.appendChild(title);
-
-  Object.keys(ConfigGroups).forEach((group) => {
-    const groupObject = CreatePrefHeader(group, ConfigGroups[group]); // (group, display-name of group)
-    frag.appendChild(groupObject);
-    if (CMOptions.Header[group]) {
-      // 0 is show, 1 is collapsed
-      // Make sub-sections of Notification section
-      if (group === 'Notification') {
-        Object.keys(ConfigGroupsNotification).forEach((subGroup) => {
-          const subGroupObject = CreatePrefHeader(
-            subGroup,
-            ConfigGroupsNotification[subGroup],
-          ); // (group, display-name of group)
-          subGroupObject.style.fontSize = '15px';
-          subGroupObject.style.opacity = '0.5';
-          frag.appendChild(subGroupObject);
-          if (CMOptions.Header[subGroup]) {
-            Object.keys(Config).forEach((option) => {
-              if (Config[option].group === subGroup)
-                frag.appendChild(CreatePrefOption(option));
-            });
-          }
-        });
-      } else {
-        Object.keys(Config).forEach((option) => {
-          if (Config[option].group === group)
-            frag.appendChild(CreatePrefOption(option));
-        });
-      }
-    }
-  });
-
-  const resDef = document.createElement('div');
-  resDef.className = 'listing';
-  const resDefBut = document.createElement('a');
-  resDefBut.className = 'option';
-  resDefBut.onclick = function () {
-    LoadConfig(ConfigDefault);
-  };
-  resDefBut.textContent = 'Restore Default';
-  resDef.appendChild(resDefBut);
-  frag.appendChild(resDef);
-
-  l('menu').childNodes[2].insertBefore(
-    frag,
-    l('menu').childNodes[2].childNodes[
-      l('menu').childNodes[2].childNodes.length - 1
-    ],
-  );
 }

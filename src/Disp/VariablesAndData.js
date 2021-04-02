@@ -143,3 +143,8 @@ export let TooltipBonusMouse;
 
 export let LastAscendState;
 export let LastNumberOfTimers;
+
+/**
+ * This stores the names of settings shown in the favourites section
+ */
+export let FavouriteSettings = [];

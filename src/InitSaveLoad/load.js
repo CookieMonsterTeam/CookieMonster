@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { LoadConfig } from '../Config/SaveLoadReload/SaveLoadReloadSettings';
 import { VersionMajor, VersionMinor } from '../Data/Moddata';
+import { FavouriteSettings } from '../Disp/VariablesAndData';
 import InitData from '../Sim/InitializeData/InitData';
 
 /**
@@ -9,6 +11,9 @@ import InitData from '../Sim/InitializeData/InitData';
 export default function load(str) {
   const save = JSON.parse(str);
   InitData();
+  // The if-statement is a failsafe for old saves
+  if (typeof save.favouriteSettings !== 'undefined')
+    FavouriteSettings = save.favouriteSettings;
   LoadConfig(save.settings);
   if (save.version !== `${VersionMajor}.${VersionMinor}`) {
     if (Game.prefs.popups)

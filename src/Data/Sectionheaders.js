@@ -2,6 +2,7 @@
 
 /** Display titles of the headers of the Cookie Monster settings section */
 export const ConfigGroups = {
+  Favourite: 'Favourite Settings',
   Calculation: 'Calculation',
   Notation: 'Notation',
   Colours: 'Colours and colour coding',

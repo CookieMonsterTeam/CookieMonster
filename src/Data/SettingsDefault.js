@@ -109,7 +109,9 @@ const ConfigDefault = {
   WrinklerMaxSoundURL:
     'https://freesound.org/data/previews/152/152743_15663-lq.mp3',
   BulkBuyBlock: 0,
+  FavouriteSettings: 1,
   Header: {
+    Favourite: 1,
     Calculation: 1,
     Notation: 1,
     Colours: 1,
