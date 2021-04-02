@@ -26,7 +26,7 @@ export default function ColourOfPP(me, price) {
   else if (me.pp === CacheMinPP) color = ColourGreen;
   else if (me.pp < CachePPArray[10][0]) color = ColourYellow;
   else if (me.pp < CachePPArray[20][0]) color = ColourOrange;
-  else if (me.pp > CachePPArray[30][0]) color = ColourRed;
+  else if (me.pp < CachePPArray[30][0]) color = ColourRed;
   else color = ColourPurple;
 
   // Colour based on price in terms of CPS
