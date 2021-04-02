@@ -46,7 +46,7 @@ export default function CacheDragonCost() {
             cost += price;
             SimObjects[target].amount -= 1;
           }
-          CacheCostDragonUpgrade = `Cost to rebuy: ${cost}`;
+          CacheCostDragonUpgrade = `Cost to rebuy: ${Beautify(cost)}`;
         }
       } else {
         let cost = 0;
