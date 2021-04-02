@@ -38,7 +38,7 @@ export default function CalculateChangeAura(aura) {
     SimDragonAura2 !== CacheDragonAura2
   ) {
     for (let i = Game.ObjectsById.length - 1; i > -1; --i) {
-      if (Game.ObjectsById[i - 1].amount > 0) {
+      if (Game.ObjectsById[i].amount > 0) {
         const highestBuilding = SimObjects[Game.ObjectsById[i].name].name;
         SimObjects[highestBuilding].amount -= 1;
         SimBuildingsOwned -= 1;
