@@ -84,7 +84,7 @@ const Config = {
       "Game's setting scale",
       'Metric',
       'Short scale',
-      'Short scale (Aabreviated)',
+      'Short scale (Abbreviated)',
       'Scientific notation',
       'Engineering notation',
     ],
