@@ -26,8 +26,10 @@ export default function CreatePrefOption(config) {
   div.className = 'listing';
   if (CMOptions.FavouriteSettings === 1) {
     const FavStar = document.createElement('a');
-    if (FavouriteSettings.includes(config)) FavStar.innerText = '★';
-    else FavStar.innerText = '☆';
+    if (FavouriteSettings.includes(config)) {
+      FavStar.innerText = '★';
+      FavStar.style.color = 'yellow';
+    } else FavStar.innerText = '☆';
     FavStar.className = 'option';
     FavStar.onclick = function () {
       ToggleFavouriteSetting(config);
