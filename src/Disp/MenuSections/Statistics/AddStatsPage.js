@@ -115,7 +115,7 @@ export default function AddMenuStats(title) {
     stats.appendChild(
       CreateElements.StatsListing(
         'basic',
-        `Average Cookies Per Second (Past ${
+        `Average cookies per second (past ${
           CookieTimes[CMOptions.AvgCPSHist] < 60
             ? `${CookieTimes[CMOptions.AvgCPSHist]} seconds`
             : CookieTimes[CMOptions.AvgCPSHist] / 60 +
@@ -127,7 +127,7 @@ export default function AddMenuStats(title) {
     stats.appendChild(
       CreateElements.StatsListing(
         'basic',
-        `Average Cookie Clicks Per Second (Past ${
+        `Average cookie clicks per second (past ${
           ClickTimes[CMOptions.AvgClicksHist]
         }${CMOptions.AvgClicksHist === 0 ? ' second' : ' seconds'})`,
         document.createTextNode(Beautify(CacheAverageClicks, 1)),
@@ -136,7 +136,7 @@ export default function AddMenuStats(title) {
     stats.appendChild(
       CreateElements.StatsListing(
         'basic',
-        `Cookies from clicking (Past ${ClickTimes[CMOptions.AvgClicksHist]}${
+        `Cookies from clicking (past ${ClickTimes[CMOptions.AvgClicksHist]}${
           CMOptions.AvgClicksHist === 0 ? ' second' : ' seconds'
         })`,
         document.createTextNode(
@@ -168,7 +168,7 @@ export default function AddMenuStats(title) {
       stats.appendChild(
         CreateElements.StatsListing(
           'basic',
-          'Missed Golden Cookies',
+          'Missed golden cookies',
           document.createTextNode(Beautify(Game.missedGoldenClicks)),
         ),
       );

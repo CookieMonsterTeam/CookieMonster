@@ -83,7 +83,7 @@ export function LuckySection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Lucky!" Cookies Required',
+      '"Lucky!" cookies required',
       luckyReqFrag,
       goldCookTooltip,
     ),
@@ -113,7 +113,7 @@ export function LuckySection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Lucky!" Cookies Required (Frenzy)',
+      '"Lucky!" cookies required (frenzy)',
       luckyReqFrenFrag,
       goldCookTooltip,
     ),
@@ -130,7 +130,7 @@ export function LuckySection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      `"Lucky!" Reward (MAX)${luckySplit ? ' (Golden / Wrath)' : ''}`,
+      `"Lucky!" reward (max)${luckySplit ? ' (golden / wrath)' : ''}`,
       luckyRewardMaxSpan,
       goldCookTooltip,
     ),
@@ -145,7 +145,7 @@ export function LuckySection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      `"Lucky!" Reward (MAX) (Frenzy)${luckySplit ? ' (Golden / Wrath)' : ''}`,
+      `"Lucky!" reward (max) (frenzy)${luckySplit ? ' (golden / wrath)' : ''}`,
       luckyRewardFrenzyMaxSpan,
       goldCookTooltip,
     ),
@@ -165,7 +165,7 @@ export function LuckySection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      `"Lucky!" Reward (CUR)${luckySplit ? ' (Golden / Wrath)' : ''}`,
+      `"Lucky!" reward (cur)${luckySplit ? ' (golden / wrath)' : ''}`,
       luckyCurSpan,
       goldCookTooltip,
     ),
@@ -211,7 +211,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Cookies Required',
+      '"Chain" cookies required',
       chainReqFrag,
       goldCookTooltip,
     ),
@@ -242,7 +242,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Cookies Required (Wrath)',
+      '"Chain" cookies required (Wrath)',
       chainWrathReqFrag,
       goldCookTooltip,
     ),
@@ -273,7 +273,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Cookies Required (Frenzy)',
+      '"Chain" cookies required (Frenzy)',
       chainReqFrenFrag,
       goldCookTooltip,
     ),
@@ -305,7 +305,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Cookies Required (Frenzy) (Wrath)',
+      '"Chain" cookies required (frenzy) (Wrath)',
       chainWrathReqFrenFrag,
       goldCookTooltip,
     ),
@@ -314,7 +314,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Reward (MAX) (Golden / Wrath)',
+      '"Chain" reward (max) (golden / wrath)',
       document.createTextNode(
         `${Beautify(CacheChainMaxReward[0])} / ${Beautify(
           CacheChainWrathMaxReward[0],
@@ -327,7 +327,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Reward (MAX) (Frenzy) (Golden / Wrath)',
+      '"Chain" reward (max) (frenzy) (golden / wrath)',
       document.createTextNode(
         `${Beautify(CacheChainFrenzyMaxReward[0])} / ${Beautify(
           CacheChainFrenzyMaxReward[0],
@@ -354,7 +354,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Reward (CUR) (Golden / Wrath)',
+      '"Chain" reward (cur) (golden / wrath)',
       document.createTextNode(
         `${Beautify(chainCur)} / ${Beautify(chainCurWrath)}`,
       ),
@@ -365,7 +365,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'CPS Needed For Next Level (G / W)',
+      'CPS needed for next level (g / w)',
       document.createTextNode(
         `${Beautify(CacheChainRequiredNext)} / ${Beautify(
           CacheChainWrathRequiredNext,
@@ -377,7 +377,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'CPS Needed For Next Level (Frenzy) (G / W)',
+      'CPS needed for next level (frenzy) (g / w)',
       document.createTextNode(
         `${Beautify(CacheChainFrenzyRequiredNext)} / ${Beautify(
           CacheChainFrenzyWrathRequiredNext,
@@ -422,7 +422,7 @@ export function SpellsSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Conjure Baked Goods" Cookies Required',
+      '"Conjure Baked Goods" cookies required',
       conjureReqFrag,
       'GoldCookTooltipPlaceholder',
     ),
@@ -430,7 +430,7 @@ export function SpellsSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Conjure Baked Goods" Reward (MAX)',
+      '"Conjure Baked Goods" reward (max)',
       document.createTextNode(Beautify(CacheConjureReward)),
       'GoldCookTooltipPlaceholder',
     ),
@@ -465,7 +465,7 @@ export function SpellsSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Conjure Baked Goods" Cookies Required (Frenzy)',
+      '"Conjure Baked Goods" cookies required (frenzy)',
       conjureFrenzyReqFrag,
       'GoldCookTooltipPlaceholder',
     ),
@@ -473,7 +473,7 @@ export function SpellsSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Conjure Baked Goods" Reward (MAX) (Frenzy)',
+      '"Conjure Baked Goods" reward (max) (frenzy)',
       document.createTextNode(Beautify(CacheConjureReward * 7)),
       'GoldCookTooltipPlaceholder',
     ),
@@ -481,7 +481,7 @@ export function SpellsSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Conjure Baked Goods" Reward (CUR)',
+      '"Conjure Baked Goods" reward (cur)',
       document.createTextNode(Beautify(conjureFrenzyCur)),
       'GoldCookTooltipPlaceholder',
     ),
@@ -490,7 +490,7 @@ export function SpellsSection() {
     section.appendChild(
       StatsListing(
         'withTooltip',
-        '"Spontaneous Edifice" Cookies Required (most expensive building)',
+        '"Spontaneous Edifice" cookies required (most expensive building)',
         document.createTextNode(
           `${Beautify(CacheEdifice)} (${CacheEdificeBuilding})`,
         ),
@@ -603,7 +603,7 @@ export function PrestigeSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'Prestige Level (CUR / MAX)',
+      'Prestige level (cur / max)',
       document.createTextNode(
         `${Beautify(Game.prestige)} / ${Beautify(possiblePresMax)}`,
       ),
@@ -636,7 +636,7 @@ export function PrestigeSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'Cookies To Next Level',
+      'Cookies to next level',
       cookiesNextFrag,
       'NextPrestTooltipPlaceholder',
     ),
@@ -645,7 +645,7 @@ export function PrestigeSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'Heavenly Chips (CUR / MAX)',
+      'Heavenly chips (cur / max)',
       document.createTextNode(
         `${Beautify(Game.heavenlyChips)} / ${Beautify(
           possiblePresMax - Game.prestige + Game.heavenlyChips,
@@ -658,7 +658,7 @@ export function PrestigeSection() {
   section.appendChild(
     StatsListing(
       'basic',
-      'Heavenly Chips Per Second (last 5 seconds)',
+      'Heavenly chips per second (last 5 seconds)',
       document.createTextNode(Beautify(CacheHCPerSecond, 2)),
     ),
   );
@@ -672,14 +672,14 @@ export function PrestigeSection() {
       section.appendChild(
         StatsListing(
           'basic',
-          'Heavenly Chips To Target Set In Settings (CUR)',
+          'Heavenly chips to target set in settings (cur)',
           document.createTextNode(Beautify(CookiesTillTarget)),
         ),
       );
       section.appendChild(
         StatsListing(
           'basic',
-          'Time To Target (CUR, Current 5 Second Average)',
+          'Time till target (cur, current 5 second average)',
           document.createTextNode(
             FormatTime(CookiesTillTarget / CacheHCPerSecond),
           ),
@@ -700,7 +700,7 @@ export function PrestigeSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'Reset Bonus Income',
+      'Reset bonus income',
       resetFrag,
       'ResetTooltipPlaceholder',
     ),
