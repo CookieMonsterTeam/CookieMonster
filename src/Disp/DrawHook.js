@@ -16,7 +16,7 @@ import {
  * This function handles all custom drawing for the Game.Draw() function.
  * It is hooked on 'draw' by CM.RegisterHooks()
  */
-export default function Draw() {
+export default function CMDrawHook() {
   // Draw autosave timer in stats menu, this must be done here to make it count down correctly
   if (
     Game.prefs.autosave &&
