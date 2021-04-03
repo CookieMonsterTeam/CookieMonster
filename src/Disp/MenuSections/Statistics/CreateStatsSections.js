@@ -1,7 +1,7 @@
 /** Functions to create the individual sections of the Statistics page */
 
-import * as GameData from '../../Data/Gamedata';
-import { MaxChainCookieReward } from '../../Cache/Stats/ChainCookies';
+import * as GameData from '../../../Data/Gamedata';
+import { MaxChainCookieReward } from '../../../Cache/Stats/ChainCookies';
 import {
   CacheAvgCPSWithChoEgg,
   CacheCentEgg,
@@ -35,17 +35,17 @@ import {
   CacheSeaSpec,
   CacheWrathCookiesMult,
   CacheWrinklersTotal,
-} from '../../Cache/VariablesAndData';
-import { CMOptions } from '../../Config/VariablesAndData';
-import ResetBonus from '../../Sim/SimulationEvents/ResetAscension';
+} from '../../../Cache/VariablesAndData';
+import { CMOptions } from '../../../Config/VariablesAndData';
+import ResetBonus from '../../../Sim/SimulationEvents/ResetAscension';
 import {
   Beautify,
   FormatTime,
-} from '../BeautifyAndFormatting/BeautifyFormatting';
+} from '../../BeautifyAndFormatting/BeautifyFormatting';
 
-import GetCPS from '../HelperFunctions/GetCPS';
-import GetWrinkConfigBank from '../HelperFunctions/GetWrinkConfigBank';
-import { ColourGreen, ColourRed, ColourTextPre } from '../VariablesAndData';
+import GetCPS from '../../HelperFunctions/GetCPS';
+import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
+import { ColourGreen, ColourRed, ColourTextPre } from '../../VariablesAndData';
 import { StatsListing, StatsHeader, StatsMissDisp } from './CreateDOMElements';
 
 /**

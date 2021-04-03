@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { crateMissing } from '../../Disp/MenuSections/CreateMissingUpgrades';
+import { crateMissing } from '../../Disp/MenuSections/Statistics/CreateMissingUpgrades';
 import {
   CacheMissingUpgrades,
   CacheMissingUpgradesCookies,

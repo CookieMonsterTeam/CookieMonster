@@ -13,8 +13,41 @@ import RefreshScale from '../../HelperFunctions/RefreshScale';
 import UpdateColours from '../../HelperFunctions/UpdateColours';
 import Flash from '../../Notifications/Flash';
 import PlaySound from '../../Notifications/Sound';
-import { FavouriteSettings } from '../../VariablesAndData';
+import {
+  FavouriteSettings,
+  SimpleTooltipElements,
+} from '../../VariablesAndData';
 import CookieMonsterPrompt from '../Prompt';
+
+/**
+ * This function creates the favourite setting star object
+ * @param 	{string}		config	The name of the option
+ * @returns	{object}		div		The option object
+ */
+function CreateFavouriteStar(config) {
+  const FavStar = document.createElement('a');
+  if (FavouriteSettings.includes(config)) {
+    FavStar.innerText = '★';
+    FavStar.style.color = 'yellow';
+  } else FavStar.innerText = '☆';
+  FavStar.className = 'option';
+  FavStar.onclick = function () {
+    ToggleFavouriteSetting(config);
+    SaveConfig();
+    Game.UpdateMenu();
+  };
+  FavStar.onmouseover = function () {
+    Game.tooltip.draw(
+      this,
+      escape(SimpleTooltipElements.FavouriteSettingPlaceholder.innerHTML),
+    );
+  };
+  FavStar.onmouseout = function () {
+    Game.tooltip.hide();
+  };
+  FavStar.appendChild(document.createTextNode(' '));
+  return FavStar;
+}
 
 /**
  * This function creates an option-object for the options page
@@ -25,17 +58,7 @@ export default function CreatePrefOption(config) {
   const div = document.createElement('div');
   div.className = 'listing';
   if (CMOptions.FavouriteSettings === 1) {
-    const FavStar = document.createElement('a');
-    if (FavouriteSettings.includes(config)) FavStar.innerText = '★';
-    else FavStar.innerText = '☆';
-    FavStar.className = 'option';
-    FavStar.onclick = function () {
-      ToggleFavouriteSetting(config);
-      SaveConfig();
-      Game.UpdateMenu();
-    };
-    div.appendChild(FavStar);
-    div.appendChild(document.createTextNode(' '));
+    div.appendChild(CreateFavouriteStar(config));
   }
   if (Config[config].type === 'bool') {
     const a = document.createElement('a');
@@ -52,6 +75,7 @@ export default function CreatePrefOption(config) {
     div.appendChild(a);
     const label = document.createElement('label');
     label.textContent = Config[config].desc;
+    label.style.lineHeight = '1.6';
     div.appendChild(label);
     return div;
   }
@@ -102,6 +126,7 @@ export default function CreatePrefOption(config) {
     const span = document.createElement('span');
     span.className = 'option';
     span.textContent = `${Config[config].label} `;
+    span.style.lineHeight = '1.6';
     div.appendChild(span);
     const input = document.createElement('input');
     input.id = ConfigPrefix + config;
@@ -142,6 +167,7 @@ export default function CreatePrefOption(config) {
     div.appendChild(a);
     const label = document.createElement('label');
     label.textContent = Config[config].desc;
+    label.style.lineHeight = '1.6';
     div.appendChild(label);
     return div;
   }
@@ -163,6 +189,7 @@ export default function CreatePrefOption(config) {
     new JsColor(input, { hash: true, position: 'right', onInput: change });
     const label = document.createElement('label');
     label.textContent = Config[config].desc;
+    label.style.lineHeight = '1.6';
     innerSpan.appendChild(label);
     if (config.includes('Flash')) {
       const a = document.createElement('a');
@@ -181,6 +208,7 @@ export default function CreatePrefOption(config) {
     const span = document.createElement('span');
     span.className = 'option';
     span.textContent = `${Config[config].label} `;
+    span.style.lineHeight = '1.6';
     div.appendChild(span);
     const input = document.createElement('input');
     input.id = ConfigPrefix + config;
@@ -199,6 +227,7 @@ export default function CreatePrefOption(config) {
     div.appendChild(document.createTextNode(' '));
     const label = document.createElement('label');
     label.textContent = Config[config].desc;
+    label.style.lineHeight = '1.6';
     div.appendChild(label);
     return div;
   }

@@ -1,4 +1,3 @@
-/* eslint-disable no-return-assign */
 /** Creates a Prompt similar to the base game without some of the stuff breaking them */
 export default function CookieMonsterPrompt(content, options) {
   Game.promptWrapL.className = 'framed';
