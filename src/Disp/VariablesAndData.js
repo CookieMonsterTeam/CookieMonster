@@ -79,6 +79,11 @@ export const TooltipText = [
     'Cheated cookies might break this formula',
     '250px',
   ],
+  [
+    'FavouriteSettingPlaceholder',
+    "Click to set this setting as favourite and show it in 'favourite' settings at the top of the Cookie Monster Settings",
+    '250px',
+  ],
 ];
 export const SimpleTooltipElements = {};
 
