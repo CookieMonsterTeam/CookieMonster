@@ -1,6 +1,6 @@
 import { CMOptions } from '../../Config/VariablesAndData';
-import AddMenuStats from './AddStatsPage';
-import AddMenuInfo from './InfoPage';
+import AddMenuStats from './Statistics/AddStatsPage';
+import AddMenuInfo from './Info/InfoPage';
 import AddMenuPref from './Settings/SettingsPage';
 
 /**

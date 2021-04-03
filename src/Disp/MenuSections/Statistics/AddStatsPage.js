@@ -3,19 +3,19 @@
 import { AddMissingUpgrades } from './CreateMissingUpgrades';
 import * as CreateSections from './CreateStatsSections';
 import * as CreateElements from './CreateDOMElements';
-import * as GameData from '../../Data/Gamedata';
-import { CMOptions } from '../../Config/VariablesAndData';
+import * as GameData from '../../../Data/Gamedata';
+import { CMOptions } from '../../../Config/VariablesAndData';
 
 import {
   CacheAverageClicks,
   CacheWrinklersFattest,
   CacheWrinklersNormal,
   CacheWrinklersTotal,
-} from '../../Cache/VariablesAndData';
-import PopAllNormalWrinklers from '../HelperFunctions/PopWrinklers';
-import { ClickTimes, CookieTimes } from '../VariablesAndData';
-import GetCPS from '../HelperFunctions/GetCPS';
-import { Beautify } from '../BeautifyAndFormatting/BeautifyFormatting';
+} from '../../../Cache/VariablesAndData';
+import PopAllNormalWrinklers from '../../HelperFunctions/PopWrinklers';
+import { ClickTimes, CookieTimes } from '../../VariablesAndData';
+import GetCPS from '../../HelperFunctions/GetCPS';
+import { Beautify } from '../../BeautifyAndFormatting/BeautifyFormatting';
 
 /**
  * This function adds stats created by CookieMonster to the stats page

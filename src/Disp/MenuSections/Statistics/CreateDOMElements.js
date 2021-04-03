@@ -1,8 +1,8 @@
 /** Section: Functions related to the creation of basic DOM elements page */
 
-import { ToggleHeader } from '../../Config/ToggleSetting';
-import { CMOptions } from '../../Config/VariablesAndData';
-import { SimpleTooltipElements } from '../VariablesAndData';
+import { ToggleHeader } from '../../../Config/ToggleSetting';
+import { CMOptions } from '../../../Config/VariablesAndData';
+import { SimpleTooltipElements } from '../../VariablesAndData';
 
 /**
  * This function creates a header-object for the stats page

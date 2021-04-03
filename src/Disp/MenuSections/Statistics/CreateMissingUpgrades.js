@@ -4,7 +4,7 @@ import {
   CacheMissingUpgrades,
   CacheMissingUpgradesCookies,
   CacheMissingUpgradesPrestige,
-} from '../../Cache/VariablesAndData';
+} from '../../../Cache/VariablesAndData';
 
 /**
  * This function creates the missing upgrades sections for prestige, normal and cookie upgrades

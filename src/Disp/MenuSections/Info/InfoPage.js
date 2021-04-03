@@ -1,8 +1,8 @@
 /** Functions related to the Stats page */
 
-import { ToggleHeader } from '../../Config/ToggleSetting';
-import { CMOptions } from '../../Config/VariablesAndData';
-import { LatestReleaseNotes, ModDescription } from '../../Data/Moddata';
+import { ToggleHeader } from '../../../Config/ToggleSetting';
+import { CMOptions } from '../../../Config/VariablesAndData';
+import { LatestReleaseNotes, ModDescription } from '../../../Data/Moddata';
 
 /**
  * This function adds stats created by CookieMonster to the stats page
