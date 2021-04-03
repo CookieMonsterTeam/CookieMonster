@@ -39,6 +39,7 @@ export let CacheCurrWrinklerCount = 0;
 export let CacheUpgrades = {};
 
 export let CacheAverageClicks = {};
+export let CacheAverageCookiesFromClicks;
 
 export let CacheMissingUpgrades = {};
 export let CacheMissingUpgradesPrestige = {};

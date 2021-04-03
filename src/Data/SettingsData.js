@@ -389,7 +389,7 @@ const Config = {
     'Tooltip',
     [
       'Building/upgrade tooltip information OFF',
-      'Building/upgrade  tooltip information ON',
+      'Building/upgrade tooltip information ON',
     ],
     'Extra information in building/upgrade tooltips',
     true,
