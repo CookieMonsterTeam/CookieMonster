@@ -50,6 +50,14 @@ export class CMAvgQueue {
     }
     return ret / time;
   }
+
+  calcSum(timePeriod) {
+    let time = timePeriod;
+    if (time > this.maxLength) time = this.maxLength;
+    if (time > this.queue.length) time = this.queue.length;
+    if (time === 0) return 0;
+    return this.queue.slice(-time).reduce((a, b) => a + b, 0);
+  }
 }
 
 /**

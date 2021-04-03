@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { VersionMajor, VersionMinor } from '../Data/Moddata';
 import Draw from '../Disp/Draw';
+import CMClickHook from '../Main/ClickHook';
 import InitializeCookieMonster from '../Main/Initialization';
-import CMLoop from '../Main/Loop';
+import CMLoopHook from '../Main/LoopHook';
 import { isInitializing } from './Variables';
 
 /**
@@ -22,7 +23,8 @@ export default function init() {
   if (proceed) {
     InitializeCookieMonster();
     Game.registerHook('draw', Draw);
-    Game.registerHook('logic', CMLoop);
+    Game.registerHook('logic', CMLoopHook);
+    Game.registerHook('click', CMClickHook);
     isInitializing = false;
   }
 }

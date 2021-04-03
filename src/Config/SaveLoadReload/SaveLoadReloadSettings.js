@@ -2,7 +2,7 @@ import ConfigDefault from '../../Data/SettingsDefault';
 import ConfigData from '../../Data/SettingsData';
 import { CMOptions } from '../VariablesAndData';
 import save from '../../InitSaveLoad/save';
-import CMLoop from '../../Main/Loop';
+import CMLoopHook from '../../Main/LoopHook';
 import UpdateColours from '../../Disp/HelperFunctions/UpdateColours';
 
 /** Functions related to saving, loading and restoring all settings */
@@ -68,7 +68,7 @@ export function LoadConfig(settings) {
       }
     });
     if (mod) SaveConfig();
-    CMLoop(); // Do loop once
+    CMLoopHook(); // Do loop once
     Object.keys(ConfigDefault).forEach((i) => {
       if (i !== 'Header' && typeof ConfigData[i].func !== 'undefined') {
         ConfigData[i].func();

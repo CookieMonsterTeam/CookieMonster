@@ -8,6 +8,7 @@ import { CMOptions } from '../../../Config/VariablesAndData';
 
 import {
   CacheAverageClicks,
+  CacheAverageCookiesFromClicks,
   CacheWrinklersFattest,
   CacheWrinklersNormal,
   CacheWrinklersTotal,
@@ -130,6 +131,21 @@ export default function AddMenuStats(title) {
           ClickTimes[CMOptions.AvgClicksHist]
         }${CMOptions.AvgClicksHist === 0 ? ' second' : ' seconds'})`,
         document.createTextNode(Beautify(CacheAverageClicks, 1)),
+      ),
+    );
+    stats.appendChild(
+      CreateElements.StatsListing(
+        'basic',
+        `Cookies from clicking (Past ${ClickTimes[CMOptions.AvgClicksHist]}${
+          CMOptions.AvgClicksHist === 0 ? ' second' : ' seconds'
+        })`,
+        document.createTextNode(
+          Beautify(
+            CacheAverageCookiesFromClicks.calcSum(
+              CacheAverageClicks * ClickTimes[CMOptions.AvgClicksHist],
+            ),
+          ),
+        ),
       ),
     );
     if (Game.Has('Fortune cookies')) {
