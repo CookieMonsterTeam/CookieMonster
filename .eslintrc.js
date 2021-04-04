@@ -15,6 +15,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 12,
   },
+  ignorePatterns: ['*CookieMonster*.js', 'dist/*', 'node_modules/*'],
   rules: {
     'import/no-mutable-exports': 'off',
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
