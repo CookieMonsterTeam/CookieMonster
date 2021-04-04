@@ -22,8 +22,8 @@ export let LastWrinklerCount;
 
 /** Stores the date at Game.CalculateGains for God Cyclius
  */
-export let CycliusDateAtBeginLoop;
+export let CycliusDateAtBeginLoop = Date.now(); // eslint-disable-line prefer-const
 
 /** Stores the date at Game.CalculateGains for the Century egg
  */
-export let CenturyDateAtBeginLoop;
+export let CenturyDateAtBeginLoop = Date.now(); // eslint-disable-line prefer-const
