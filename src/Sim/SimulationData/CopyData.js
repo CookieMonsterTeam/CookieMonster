@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import CacheDragonAuras from '../../Cache/Dragon/CacheDragonAuras';
 import {
   CacheDragonAura,
@@ -30,11 +29,11 @@ import {
  */
 export default function CopyData() {
   // Other variables
-  SimUpgradesOwned = Game.UpgradesOwned;
-  SimPledges = Game.pledges;
-  SimAchievementsOwned = Game.AchievementsOwned;
-  SimHeavenlyPower = Game.heavenlyPower;
-  SimPrestige = Game.prestige;
+  SimUpgradesOwned = Game.UpgradesOwned; // eslint-disable-line no-unused-vars
+  SimPledges = Game.pledges; // eslint-disable-line no-unused-vars
+  SimAchievementsOwned = Game.AchievementsOwned; // eslint-disable-line no-unused-vars
+  SimHeavenlyPower = Game.heavenlyPower; // eslint-disable-line no-unused-vars
+  SimPrestige = Game.prestige; // eslint-disable-line no-unused-vars
 
   // Buildings
   Object.keys(Game.Objects).forEach((i) => {
@@ -53,9 +52,9 @@ export default function CopyData() {
     you.free = me.free;
     if (me.minigameLoaded) {
       if (me.name === 'Temple') {
-        SimGod1 = me.minigame.slot[0];
-        SimGod2 = me.minigame.slot[1];
-        SimGod3 = me.minigame.slot[2];
+        SimGod1 = me.minigame.slot[0]; // eslint-disable-line no-unused-vars
+        SimGod2 = me.minigame.slot[1]; // eslint-disable-line no-unused-vars
+        SimGod3 = me.minigame.slot[2]; // eslint-disable-line no-unused-vars
       }
       you.minigameLoaded = me.minigameLoaded;
       you.minigame = me.minigame;
@@ -89,6 +88,6 @@ export default function CopyData() {
 
   // Auras
   CacheDragonAuras();
-  SimDragonAura = CacheDragonAura;
-  SimDragonAura2 = CacheDragonAura2;
+  SimDragonAura = CacheDragonAura; // eslint-disable-line no-unused-vars
+  SimDragonAura2 = CacheDragonAura2; // eslint-disable-line no-unused-vars
 }

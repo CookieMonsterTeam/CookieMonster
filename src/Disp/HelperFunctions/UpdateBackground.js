@@ -11,4 +11,5 @@ export default function UpdateBackground() {
     Game.LeftBackground.canvas.parentNode.offsetWidth;
   Game.LeftBackground.canvas.height =
     Game.LeftBackground.canvas.parentNode.offsetHeight;
+  Game.DrawBackground();
 }

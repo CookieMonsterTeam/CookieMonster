@@ -1,9 +1,8 @@
-/* eslint-disable prefer-const */
 /** All variables used by simulation functions */
 
-export let SimObjects = [];
-export let SimUpgrades = [];
-export let SimAchievements = [];
+export let SimObjects = []; // eslint-disable-line prefer-const
+export let SimUpgrades = []; // eslint-disable-line prefer-const
+export let SimAchievements = []; // eslint-disable-line prefer-const
 export let SimBuildingsOwned;
 export let SimUpgradesOwned;
 export let SimPledges;

@@ -35,7 +35,7 @@ import { LastModCount } from './VariablesAndData';
  * Main loop of Cookie Monster
  * CM.init registers it to the "logic" hook provided by the modding api
  */
-export default function CMLoop() {
+export default function CMLoopHook() {
   if (LastAscendState !== Game.OnAscend) {
     LastAscendState = Game.OnAscend;
     UpdateAscendState();

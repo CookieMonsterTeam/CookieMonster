@@ -17,7 +17,7 @@ export default function CheckMagicMeter() {
     if (minigame.magic < minigame.magicM) LastMagicBarFull = false;
     else if (!LastMagicBarFull) {
       LastMagicBarFull = true;
-      Flash(3, 'MagicFlash');
+      Flash(3, 'MagicFlash', false);
       PlaySound(CMOptions.MagicSoundURL, 'MagicSound', 'MagicVolume', false);
       CreateNotification(
         'MagicNotification',

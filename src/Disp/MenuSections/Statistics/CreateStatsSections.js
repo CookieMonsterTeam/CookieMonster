@@ -1,7 +1,7 @@
 /** Functions to create the individual sections of the Statistics page */
 
-import * as GameData from '../../Data/Gamedata';
-import { MaxChainCookieReward } from '../../Cache/Stats/ChainCookies';
+import * as GameData from '../../../Data/Gamedata';
+import { MaxChainCookieReward } from '../../../Cache/Stats/ChainCookies';
 import {
   CacheAvgCPSWithChoEgg,
   CacheCentEgg,
@@ -35,17 +35,17 @@ import {
   CacheSeaSpec,
   CacheWrathCookiesMult,
   CacheWrinklersTotal,
-} from '../../Cache/VariablesAndData';
-import { CMOptions } from '../../Config/VariablesAndData';
-import ResetBonus from '../../Sim/SimulationEvents/ResetAscension';
+} from '../../../Cache/VariablesAndData';
+import { CMOptions } from '../../../Config/VariablesAndData';
+import ResetBonus from '../../../Sim/SimulationEvents/ResetAscension';
 import {
   Beautify,
   FormatTime,
-} from '../BeautifyAndFormatting/BeautifyFormatting';
+} from '../../BeautifyAndFormatting/BeautifyFormatting';
 
-import GetCPS from '../HelperFunctions/GetCPS';
-import GetWrinkConfigBank from '../HelperFunctions/GetWrinkConfigBank';
-import { ColorGreen, ColorRed, ColorTextPre } from '../VariablesAndData';
+import GetCPS from '../../HelperFunctions/GetCPS';
+import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
+import { ColourGreen, ColourRed, ColourTextPre } from '../../VariablesAndData';
 import { StatsListing, StatsHeader, StatsMissDisp } from './CreateDOMElements';
 
 /**
@@ -61,8 +61,8 @@ export function LuckySection() {
   const section = document.createElement('div');
   section.className = 'CMStatsLuckySection';
 
-  const luckyColor =
-    Game.cookies + GetWrinkConfigBank() < CacheLucky ? ColorRed : ColorGreen;
+  const luckyColour =
+    Game.cookies + GetWrinkConfigBank() < CacheLucky ? ColourRed : ColourGreen;
   const luckyTime =
     Game.cookies + GetWrinkConfigBank() < CacheLucky
       ? FormatTime(
@@ -72,7 +72,7 @@ export function LuckySection() {
   const luckyReqFrag = document.createDocumentFragment();
   const luckyReqSpan = document.createElement('span');
   luckyReqSpan.style.fontWeight = 'bold';
-  luckyReqSpan.className = ColorTextPre + luckyColor;
+  luckyReqSpan.className = ColourTextPre + luckyColour;
   luckyReqSpan.textContent = Beautify(CacheLucky);
   luckyReqFrag.appendChild(luckyReqSpan);
   if (luckyTime !== '') {
@@ -83,16 +83,16 @@ export function LuckySection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Lucky!" Cookies Required',
+      '"Lucky!" cookies required',
       luckyReqFrag,
       goldCookTooltip,
     ),
   );
 
-  const luckyColorFrenzy =
+  const luckyColourFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheLuckyFrenzy
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const luckyTimeFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheLuckyFrenzy
       ? FormatTime(
@@ -102,7 +102,7 @@ export function LuckySection() {
   const luckyReqFrenFrag = document.createDocumentFragment();
   const luckyReqFrenSpan = document.createElement('span');
   luckyReqFrenSpan.style.fontWeight = 'bold';
-  luckyReqFrenSpan.className = ColorTextPre + luckyColorFrenzy;
+  luckyReqFrenSpan.className = ColourTextPre + luckyColourFrenzy;
   luckyReqFrenSpan.textContent = Beautify(CacheLuckyFrenzy);
   luckyReqFrenFrag.appendChild(luckyReqFrenSpan);
   if (luckyTimeFrenzy !== '') {
@@ -113,7 +113,7 @@ export function LuckySection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Lucky!" Cookies Required (Frenzy)',
+      '"Lucky!" cookies required (frenzy)',
       luckyReqFrenFrag,
       goldCookTooltip,
     ),
@@ -123,14 +123,14 @@ export function LuckySection() {
 
   const luckyRewardMaxSpan = document.createElement('span');
   luckyRewardMaxSpan.style.fontWeight = 'bold';
-  luckyRewardMaxSpan.className = ColorTextPre + CacheLuckyReward;
+  luckyRewardMaxSpan.className = ColourTextPre + CacheLuckyReward;
   luckyRewardMaxSpan.textContent =
     Beautify(CacheLuckyReward) +
     (luckySplit ? ` / ${Beautify(CacheLuckyWrathReward)}` : '');
   section.appendChild(
     StatsListing(
       'withTooltip',
-      `"Lucky!" Reward (MAX)${luckySplit ? ' (Golden / Wrath)' : ''}`,
+      `"Lucky!" reward (max)${luckySplit ? ' (golden / wrath)' : ''}`,
       luckyRewardMaxSpan,
       goldCookTooltip,
     ),
@@ -138,14 +138,14 @@ export function LuckySection() {
 
   const luckyRewardFrenzyMaxSpan = document.createElement('span');
   luckyRewardFrenzyMaxSpan.style.fontWeight = 'bold';
-  luckyRewardFrenzyMaxSpan.className = ColorTextPre + luckyRewardFrenzyMaxSpan;
+  luckyRewardFrenzyMaxSpan.className = ColourTextPre + luckyRewardFrenzyMaxSpan;
   luckyRewardFrenzyMaxSpan.textContent =
     Beautify(CacheLuckyRewardFrenzy) +
     (luckySplit ? ` / ${Beautify(CacheLuckyWrathRewardFrenzy)}` : '');
   section.appendChild(
     StatsListing(
       'withTooltip',
-      `"Lucky!" Reward (MAX) (Frenzy)${luckySplit ? ' (Golden / Wrath)' : ''}`,
+      `"Lucky!" reward (max) (frenzy)${luckySplit ? ' (golden / wrath)' : ''}`,
       luckyRewardFrenzyMaxSpan,
       goldCookTooltip,
     ),
@@ -158,14 +158,14 @@ export function LuckySection() {
     ) + 13;
   const luckyCurSpan = document.createElement('span');
   luckyCurSpan.style.fontWeight = 'bold';
-  luckyCurSpan.className = ColorTextPre + luckyCurSpan;
+  luckyCurSpan.className = ColourTextPre + luckyCurSpan;
   luckyCurSpan.textContent =
     Beautify(CacheGoldenCookiesMult * luckyCurBase) +
     (luckySplit ? ` / ${Beautify(CacheWrathCookiesMult * luckyCurBase)}` : '');
   section.appendChild(
     StatsListing(
       'withTooltip',
-      `"Lucky!" Reward (CUR)${luckySplit ? ' (Golden / Wrath)' : ''}`,
+      `"Lucky!" reward (cur)${luckySplit ? ' (golden / wrath)' : ''}`,
       luckyCurSpan,
       goldCookTooltip,
     ),
@@ -186,10 +186,10 @@ export function ChainSection() {
   const section = document.createElement('div');
   section.className = 'CMStatsChainSection';
 
-  const chainColor =
+  const chainColour =
     Game.cookies + GetWrinkConfigBank() < CacheChainRequired
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const chainTime =
     Game.cookies + GetWrinkConfigBank() < CacheChainRequired
       ? FormatTime(
@@ -200,7 +200,7 @@ export function ChainSection() {
   const chainReqFrag = document.createDocumentFragment();
   const chainReqSpan = document.createElement('span');
   chainReqSpan.style.fontWeight = 'bold';
-  chainReqSpan.className = ColorTextPre + chainColor;
+  chainReqSpan.className = ColourTextPre + chainColour;
   chainReqSpan.textContent = Beautify(CacheChainRequired);
   chainReqFrag.appendChild(chainReqSpan);
   if (chainTime !== '') {
@@ -211,16 +211,16 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Cookies Required',
+      '"Chain" cookies required',
       chainReqFrag,
       goldCookTooltip,
     ),
   );
 
-  const chainWrathColor =
+  const chainWrathColour =
     Game.cookies + GetWrinkConfigBank() < CacheChainWrathRequired
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const chainWrathTime =
     Game.cookies + GetWrinkConfigBank() < CacheChainWrathRequired
       ? FormatTime(
@@ -231,7 +231,7 @@ export function ChainSection() {
   const chainWrathReqFrag = document.createDocumentFragment();
   const chainWrathReqSpan = document.createElement('span');
   chainWrathReqSpan.style.fontWeight = 'bold';
-  chainWrathReqSpan.className = ColorTextPre + chainWrathColor;
+  chainWrathReqSpan.className = ColourTextPre + chainWrathColour;
   chainWrathReqSpan.textContent = Beautify(CacheChainWrathRequired);
   chainWrathReqFrag.appendChild(chainWrathReqSpan);
   if (chainWrathTime !== '') {
@@ -242,16 +242,16 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Cookies Required (Wrath)',
+      '"Chain" cookies required (Wrath)',
       chainWrathReqFrag,
       goldCookTooltip,
     ),
   );
 
-  const chainColorFrenzy =
+  const chainColourFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyRequired
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const chainTimeFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyRequired
       ? FormatTime(
@@ -262,7 +262,7 @@ export function ChainSection() {
   const chainReqFrenFrag = document.createDocumentFragment();
   const chainReqFrenSpan = document.createElement('span');
   chainReqFrenSpan.style.fontWeight = 'bold';
-  chainReqFrenSpan.className = ColorTextPre + chainColorFrenzy;
+  chainReqFrenSpan.className = ColourTextPre + chainColourFrenzy;
   chainReqFrenSpan.textContent = Beautify(CacheChainFrenzyRequired);
   chainReqFrenFrag.appendChild(chainReqFrenSpan);
   if (chainTimeFrenzy !== '') {
@@ -273,16 +273,16 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Cookies Required (Frenzy)',
+      '"Chain" cookies required (Frenzy)',
       chainReqFrenFrag,
       goldCookTooltip,
     ),
   );
 
-  const chainWrathColorFrenzy =
+  const chainWrathColourFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyWrathRequired
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const chainWrathTimeFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyWrathRequired
       ? FormatTime(
@@ -294,7 +294,7 @@ export function ChainSection() {
   const chainWrathReqFrenFrag = document.createDocumentFragment();
   const chainWrathReqFrenSpan = document.createElement('span');
   chainWrathReqFrenSpan.style.fontWeight = 'bold';
-  chainWrathReqFrenSpan.className = ColorTextPre + chainWrathColorFrenzy;
+  chainWrathReqFrenSpan.className = ColourTextPre + chainWrathColourFrenzy;
   chainWrathReqFrenSpan.textContent = Beautify(CacheChainFrenzyWrathRequired);
   chainWrathReqFrenFrag.appendChild(chainWrathReqFrenSpan);
   if (chainWrathTimeFrenzy !== '') {
@@ -305,7 +305,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Cookies Required (Frenzy) (Wrath)',
+      '"Chain" cookies required (frenzy) (Wrath)',
       chainWrathReqFrenFrag,
       goldCookTooltip,
     ),
@@ -314,7 +314,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Reward (MAX) (Golden / Wrath)',
+      '"Chain" reward (max) (golden / wrath)',
       document.createTextNode(
         `${Beautify(CacheChainMaxReward[0])} / ${Beautify(
           CacheChainWrathMaxReward[0],
@@ -327,7 +327,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Reward (MAX) (Frenzy) (Golden / Wrath)',
+      '"Chain" reward (max) (frenzy) (golden / wrath)',
       document.createTextNode(
         `${Beautify(CacheChainFrenzyMaxReward[0])} / ${Beautify(
           CacheChainFrenzyMaxReward[0],
@@ -354,7 +354,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Chain" Reward (CUR) (Golden / Wrath)',
+      '"Chain" reward (cur) (golden / wrath)',
       document.createTextNode(
         `${Beautify(chainCur)} / ${Beautify(chainCurWrath)}`,
       ),
@@ -365,7 +365,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'CPS Needed For Next Level (G / W)',
+      'CPS needed for next level (g / w)',
       document.createTextNode(
         `${Beautify(CacheChainRequiredNext)} / ${Beautify(
           CacheChainWrathRequiredNext,
@@ -377,7 +377,7 @@ export function ChainSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'CPS Needed For Next Level (Frenzy) (G / W)',
+      'CPS needed for next level (frenzy) (g / w)',
       document.createTextNode(
         `${Beautify(CacheChainFrenzyRequiredNext)} / ${Beautify(
           CacheChainFrenzyWrathRequiredNext,
@@ -397,8 +397,10 @@ export function SpellsSection() {
   const section = document.createElement('div');
   section.className = 'CMStatsSpellsSection';
 
-  const conjureColor =
-    Game.cookies + GetWrinkConfigBank() < CacheConjure ? ColorRed : ColorGreen;
+  const conjureColour =
+    Game.cookies + GetWrinkConfigBank() < CacheConjure
+      ? ColourRed
+      : ColourGreen;
   const conjureTime =
     Game.cookies + GetWrinkConfigBank() < CacheConjure
       ? FormatTime(
@@ -409,7 +411,7 @@ export function SpellsSection() {
   const conjureReqFrag = document.createDocumentFragment();
   const conjureReqSpan = document.createElement('span');
   conjureReqSpan.style.fontWeight = 'bold';
-  conjureReqSpan.className = ColorTextPre + conjureColor;
+  conjureReqSpan.className = ColourTextPre + conjureColour;
   conjureReqSpan.textContent = Beautify(CacheConjure);
   conjureReqFrag.appendChild(conjureReqSpan);
   if (conjureTime !== '') {
@@ -420,7 +422,7 @@ export function SpellsSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Conjure Baked Goods" Cookies Required',
+      '"Conjure Baked Goods" cookies required',
       conjureReqFrag,
       'GoldCookTooltipPlaceholder',
     ),
@@ -428,16 +430,16 @@ export function SpellsSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Conjure Baked Goods" Reward (MAX)',
+      '"Conjure Baked Goods" reward (max)',
       document.createTextNode(Beautify(CacheConjureReward)),
       'GoldCookTooltipPlaceholder',
     ),
   );
 
-  const conjureFrenzyColor =
+  const conjureFrenzyColour =
     Game.cookies + GetWrinkConfigBank() < CacheConjure * 7
-      ? ColorRed
-      : ColorGreen;
+      ? ColourRed
+      : ColourGreen;
   const conjureFrenzyCur = Math.min(
     (Game.cookies + GetWrinkConfigBank()) * 0.15,
     CacheNoGoldSwitchCookiesPS * 60 * 30,
@@ -452,7 +454,7 @@ export function SpellsSection() {
   const conjureFrenzyReqFrag = document.createDocumentFragment();
   const conjureFrenzyReqSpan = document.createElement('span');
   conjureFrenzyReqSpan.style.fontWeight = 'bold';
-  conjureFrenzyReqSpan.className = ColorTextPre + conjureFrenzyColor;
+  conjureFrenzyReqSpan.className = ColourTextPre + conjureFrenzyColour;
   conjureFrenzyReqSpan.textContent = Beautify(CacheConjure * 7);
   conjureFrenzyReqFrag.appendChild(conjureFrenzyReqSpan);
   if (conjureFrenzyTime !== '') {
@@ -463,7 +465,7 @@ export function SpellsSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Conjure Baked Goods" Cookies Required (Frenzy)',
+      '"Conjure Baked Goods" cookies required (frenzy)',
       conjureFrenzyReqFrag,
       'GoldCookTooltipPlaceholder',
     ),
@@ -471,7 +473,7 @@ export function SpellsSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Conjure Baked Goods" Reward (MAX) (Frenzy)',
+      '"Conjure Baked Goods" reward (max) (frenzy)',
       document.createTextNode(Beautify(CacheConjureReward * 7)),
       'GoldCookTooltipPlaceholder',
     ),
@@ -479,7 +481,7 @@ export function SpellsSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      '"Conjure Baked Goods" Reward (CUR)',
+      '"Conjure Baked Goods" reward (cur)',
       document.createTextNode(Beautify(conjureFrenzyCur)),
       'GoldCookTooltipPlaceholder',
     ),
@@ -488,7 +490,7 @@ export function SpellsSection() {
     section.appendChild(
       StatsListing(
         'withTooltip',
-        '"Spontaneous Edifice" Cookies Required (most expensive building)',
+        '"Spontaneous Edifice" cookies required (most expensive building)',
         document.createTextNode(
           `${Beautify(CacheEdifice)} (${CacheEdificeBuilding})`,
         ),
@@ -507,11 +509,11 @@ export function GardenSection() {
   const section = document.createElement('div');
   section.className = 'CMStatsGardenSection';
 
-  const bakeberryColor =
-    Game.cookies < Game.cookiesPs * 60 * 10 * 100 ? ColorRed : ColorGreen;
+  const bakeberryColour =
+    Game.cookies < Game.cookiesPs * 60 * 10 * 100 ? ColourRed : ColourGreen;
   const bakeberryFrag = document.createElement('span');
   bakeberryFrag.style.fontWeight = 'bold';
-  bakeberryFrag.className = ColorTextPre + bakeberryColor;
+  bakeberryFrag.className = ColourTextPre + bakeberryColour;
   bakeberryFrag.textContent = Beautify(Game.cookiesPs * 60 * 10 * 100);
   section.appendChild(
     StatsListing(
@@ -521,11 +523,11 @@ export function GardenSection() {
     ),
   );
 
-  const chocorootColor =
-    Game.cookies < Game.cookiesPs * 60 * 100 ? ColorRed : ColorGreen;
+  const chocorootColour =
+    Game.cookies < Game.cookiesPs * 60 * 100 ? ColourRed : ColourGreen;
   const chocorootFrag = document.createElement('span');
   chocorootFrag.style.fontWeight = 'bold';
-  chocorootFrag.className = ColorTextPre + chocorootColor;
+  chocorootFrag.className = ColourTextPre + chocorootColour;
   chocorootFrag.textContent = Beautify(Game.cookiesPs * 60 * 100);
   section.appendChild(
     StatsListing(
@@ -535,11 +537,11 @@ export function GardenSection() {
     ),
   );
 
-  const queenbeetColor =
-    Game.cookies < Game.cookiesPs * 60 * 60 * 25 ? ColorRed : ColorGreen;
+  const queenbeetColour =
+    Game.cookies < Game.cookiesPs * 60 * 60 * 25 ? ColourRed : ColourGreen;
   const queenbeetFrag = document.createElement('span');
   queenbeetFrag.style.fontWeight = 'bold';
-  queenbeetFrag.className = ColorTextPre + queenbeetColor;
+  queenbeetFrag.className = ColourTextPre + queenbeetColour;
   queenbeetFrag.textContent = Beautify(Game.cookiesPs * 60 * 60 * 25);
   section.appendChild(
     StatsListing(
@@ -549,11 +551,11 @@ export function GardenSection() {
     ),
   );
 
-  const duketaterColor =
-    Game.cookies < Game.cookiesPs * 60 * 15 * 100 ? ColorRed : ColorGreen;
+  const duketaterColour =
+    Game.cookies < Game.cookiesPs * 60 * 15 * 100 ? ColourRed : ColourGreen;
   const duketaterFrag = document.createElement('span');
   duketaterFrag.style.fontWeight = 'bold';
-  duketaterFrag.className = ColorTextPre + duketaterColor;
+  duketaterFrag.className = ColourTextPre + duketaterColour;
   duketaterFrag.textContent = Beautify(Game.cookiesPs * 60 * 15 * 100);
   section.appendChild(
     StatsListing(
@@ -562,6 +564,21 @@ export function GardenSection() {
       duketaterFrag,
     ),
   );
+  const missingPlantDrops = [];
+  Object.keys(GameData.PlantDrops).forEach((i) => {
+    if (!Game.HasUnlocked(GameData.PlantDrops[i])) {
+      missingPlantDrops.push(GameData.PlantDrops[i]);
+    }
+  });
+  if (missingPlantDrops.length !== 0) {
+    section.appendChild(
+      StatsListing(
+        'basic',
+        'Rare plant drops left to unlock',
+        StatsMissDisp(missingPlantDrops),
+      ),
+    );
+  }
   return section;
 }
 
@@ -586,7 +603,7 @@ export function PrestigeSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'Prestige Level (CUR / MAX)',
+      'Prestige level (cur / max)',
       document.createTextNode(
         `${Beautify(Game.prestige)} / ${Beautify(possiblePresMax)}`,
       ),
@@ -619,7 +636,7 @@ export function PrestigeSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'Cookies To Next Level',
+      'Cookies to next level',
       cookiesNextFrag,
       'NextPrestTooltipPlaceholder',
     ),
@@ -628,7 +645,7 @@ export function PrestigeSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'Heavenly Chips (CUR / MAX)',
+      'Heavenly chips (cur / max)',
       document.createTextNode(
         `${Beautify(Game.heavenlyChips)} / ${Beautify(
           possiblePresMax - Game.prestige + Game.heavenlyChips,
@@ -641,7 +658,7 @@ export function PrestigeSection() {
   section.appendChild(
     StatsListing(
       'basic',
-      'Heavenly Chips Per Second (last 5 seconds)',
+      'Heavenly chips per second (last 5 seconds)',
       document.createTextNode(Beautify(CacheHCPerSecond, 2)),
     ),
   );
@@ -655,14 +672,14 @@ export function PrestigeSection() {
       section.appendChild(
         StatsListing(
           'basic',
-          'Heavenly Chips To Target Set In Settings (CUR)',
+          'Heavenly chips to target set in settings (cur)',
           document.createTextNode(Beautify(CookiesTillTarget)),
         ),
       );
       section.appendChild(
         StatsListing(
           'basic',
-          'Time To Target (CUR, Current 5 Second Average)',
+          'Time till target (cur, current 5 second average)',
           document.createTextNode(
             FormatTime(CookiesTillTarget / CacheHCPerSecond),
           ),
@@ -683,7 +700,7 @@ export function PrestigeSection() {
   section.appendChild(
     StatsListing(
       'withTooltip',
-      'Reset Bonus Income',
+      'Reset bonus income',
       resetFrag,
       'ResetTooltipPlaceholder',
     ),
@@ -789,13 +806,6 @@ export function SeasonSection() {
       specDisp = true;
     }
   });
-  const missingPlantDrops = [];
-  Object.keys(GameData.PlantDrops).forEach((i) => {
-    if (!Game.HasUnlocked(GameData.PlantDrops[i])) {
-      missingPlantDrops.push(GameData.PlantDrops[i]);
-      specDisp = true;
-    }
-  });
   const choEgg =
     Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg');
   const centEgg = Game.Has('Century egg');
@@ -821,13 +831,16 @@ export function SeasonSection() {
           else if (godLvl === 2) failRateHalloween *= 0.95;
           else if (godLvl === 3) failRateHalloween *= 0.97;
         }
+        const obtainedCookiesChance = missingHalloweenCookies.length / 7;
         section.appendChild(
           StatsListing(
             'basic',
             'Chance of receiving a cookie from wrinkler/shiny wrinkler',
             document.createTextNode(
-              `${Beautify((1 - failRateHalloween) * 100)}% / ${Beautify(
-                (1 - failRateHalloween * 0.9) * 100,
+              `${Beautify(
+                (1 - failRateHalloween) * obtainedCookiesChance * 100,
+              )}% / ${Beautify(
+                (1 - failRateHalloween * 0.9) * obtainedCookiesChance * 100,
               )}%`,
             ),
           ),
@@ -851,12 +864,15 @@ export function SeasonSection() {
           else if (godLvl === 2) failRateChristmas *= 0.95;
           else if (godLvl === 3) failRateChristmas *= 0.97;
         }
+        const obtainedCookiesChance = missingChristmasCookies.length / 7;
         section.appendChild(
           StatsListing(
             'basic',
             'Chance of receiving a cookie from reindeer',
             document.createTextNode(
-              `${Beautify((1 - failRateChristmas) * 100)}%`,
+              `${Beautify(
+                (1 - failRateChristmas) * obtainedCookiesChance * 100,
+              )}%`,
             ),
           ),
         );
@@ -940,15 +956,6 @@ export function SeasonSection() {
                 dropRateEgg(0.9)[1] * 100,
               )}%`,
             ),
-          ),
-        );
-      }
-      if (missingPlantDrops.length !== 0) {
-        section.appendChild(
-          StatsListing(
-            'basic',
-            'Rare plant drops left to unlock',
-            StatsMissDisp(missingPlantDrops),
           ),
         );
       }

@@ -1,6 +1,9 @@
-/* eslint-disable no-unused-vars */
 import GetCPSBuffMult from '../../Cache/CPS/GetCPSBuffMult';
 import { CacheCentEgg } from '../../Cache/VariablesAndData';
+import {
+  CenturyDateAtBeginLoop,
+  CycliusDateAtBeginLoop,
+} from '../../Main/VariablesAndData';
 import SimAuraMult from '../ReplacedGameFunctions/SimAuraMult';
 import SimEff from '../ReplacedGameFunctions/SimEff';
 import SimGetHeavenlyMultiplier from '../ReplacedGameFunctions/SimGetHeavenlyMultiplier';
@@ -38,7 +41,7 @@ export default function CalculateGains() {
       });
     }
   });
-  SimEffs = effs;
+  SimEffs = effs; // eslint-disable-line no-unused-vars
 
   if (Game.ascensionMode !== 1)
     mult +=
@@ -92,13 +95,25 @@ export default function CalculateGains() {
     godLvl = SimHasGod('ages');
     if (godLvl === 1)
       mult *=
-        1 + 0.15 * Math.sin((Date.now() / 1000 / (60 * 60 * 3)) * Math.PI * 2);
+        1 +
+        0.15 *
+          Math.sin(
+            (CycliusDateAtBeginLoop / 1000 / (60 * 60 * 3)) * Math.PI * 2,
+          );
     else if (godLvl === 2)
       mult *=
-        1 + 0.15 * Math.sin((Date.now() / 1000 / (60 * 60 * 12)) * Math.PI * 2);
+        1 +
+        0.15 *
+          Math.sin(
+            (CycliusDateAtBeginLoop / 1000 / (60 * 60 * 12)) * Math.PI * 2,
+          );
     else if (godLvl === 3)
       mult *=
-        1 + 0.15 * Math.sin((Date.now() / 1000 / (60 * 60 * 24)) * Math.PI * 2);
+        1 +
+        0.15 *
+          Math.sin(
+            (CycliusDateAtBeginLoop / 1000 / (60 * 60 * 24)) * Math.PI * 2,
+          );
 
     godLvl = SimHasGod('decadence');
     if (godLvl === 1) buildMult *= 0.93;
@@ -189,7 +204,7 @@ export default function CalculateGains() {
   if (SimHas('Century egg')) {
     // The boost increases a little every day, with diminishing returns up to +10% on the 100th day
     let day =
-      (Math.floor((Date.now() - Game.startDate) / 1000 / 10) * 10) /
+      (Math.floor((CenturyDateAtBeginLoop - Game.startDate) / 1000 / 10) * 10) /
       60 /
       60 /
       24;
@@ -211,7 +226,7 @@ export default function CalculateGains() {
       SimWin(Game.CpsAchievements[i].name);
   });
 
-  SimCookiesPsRaw = rawCookiesPs;
+  SimCookiesPsRaw = rawCookiesPs; // eslint-disable-line no-unused-vars
 
   const { n } = Game.shimmerTypes.golden;
   const auraMult = SimAuraMult("Dragon's Fortune");

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { ClickTimes, CookieTimes } from '../../Disp/VariablesAndData';
 import {
   ChoEggDiff,
@@ -50,6 +49,14 @@ export class CMAvgQueue {
     }
     return ret / time;
   }
+
+  calcSum(timePeriod) {
+    let time = timePeriod;
+    if (time > this.maxLength) time = this.maxLength;
+    if (time > this.queue.length) time = this.queue.length;
+    if (time === 0) return 0;
+    return this.queue.slice(-time).reduce((a, b) => a + b, 0);
+  }
 }
 
 /**
@@ -57,9 +64,9 @@ export class CMAvgQueue {
  * Called by CM.Cache.InitCache()
  */
 export function InitCookiesDiff() {
-  CookiesDiff = new CMAvgQueue(CookieTimes[CookieTimes.length - 1]);
-  WrinkDiff = new CMAvgQueue(CookieTimes[CookieTimes.length - 1]);
-  WrinkFattestDiff = new CMAvgQueue(CookieTimes[CookieTimes.length - 1]);
-  ChoEggDiff = new CMAvgQueue(CookieTimes[CookieTimes.length - 1]);
-  ClicksDiff = new CMAvgQueue(ClickTimes[ClickTimes.length - 1]);
+  CookiesDiff = new CMAvgQueue(CookieTimes[CookieTimes.length - 1]); // eslint-disable-line no-unused-vars
+  WrinkDiff = new CMAvgQueue(CookieTimes[CookieTimes.length - 1]); // eslint-disable-line no-unused-vars
+  WrinkFattestDiff = new CMAvgQueue(CookieTimes[CookieTimes.length - 1]); // eslint-disable-line no-unused-vars
+  ChoEggDiff = new CMAvgQueue(CookieTimes[CookieTimes.length - 1]); // eslint-disable-line no-unused-vars
+  ClicksDiff = new CMAvgQueue(ClickTimes[ClickTimes.length - 1]); // eslint-disable-line no-unused-vars
 }

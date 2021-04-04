@@ -1,14 +1,13 @@
-/* eslint-disable no-nested-ternary */
 /** General functions to format or beautify strings */
 
 import { CMOptions } from '../../Config/VariablesAndData';
 import { metric, shortScale, shortScaleAbbreviated } from '../../Data/Scales';
 import { BackupFunctions } from '../../Main/VariablesAndData';
 import {
-  ColorGreen,
-  ColorOrange,
-  ColorRed,
-  ColorYellow,
+  ColourGreen,
+  ColourOrange,
+  ColourRed,
+  ColourYellow,
 } from '../VariablesAndData';
 
 /**
@@ -30,6 +29,9 @@ export function Beautify(num, floats, forced) {
     return BackupFunctions.Beautify(num, floats);
   }
   if (Number.isFinite(num)) {
+    if (num < 0) {
+      return `-${Beautify(Math.abs(num))}`;
+    }
     let answer = '';
     if (num === 0) {
       return num.toString();
@@ -75,6 +77,7 @@ export function Beautify(num, floats, forced) {
       }
     }
     if (answer === '') {
+      // eslint-disable-next-line no-console
       console.log(
         `Could not beautify number with Cookie Monster Beautify: ${num}`,
       );
@@ -83,7 +86,7 @@ export function Beautify(num, floats, forced) {
     if (CMOptions.ScaleSeparator) answer = answer.replace('.', ',');
     return answer;
   }
-  console.log(`Could not beautify number with Cookie Monster Beautify: ${num}`);
+  console.log(`Could not beautify number with Cookie Monster Beautify: ${num}`); // eslint-disable-line no-console
   return BackupFunctions.Beautify(num, floats);
 }
 
@@ -116,15 +119,15 @@ export function FormatTime(time, longFormat) {
       return longFormat ? 'Over 9000 days!' : '>9000d';
     str +=
       y > 0
-        ? `${y + (longFormat ? (y === 1 ? ' year' : ' years') : 'y')}, `
+        ? `${y + (longFormat ? (y === 1 ? ' year' : ' years') : 'y')}, ` // eslint-disable-line no-nested-ternary
         : '';
     str +=
-      d > 0 ? `${d + (longFormat ? (d === 1 ? ' day' : ' days') : 'd')}, ` : '';
+      d > 0 ? `${d + (longFormat ? (d === 1 ? ' day' : ' days') : 'd')}, ` : ''; // eslint-disable-line no-nested-ternary
     if (str.length > 0 || h > 0)
-      str += `${h + (longFormat ? (h === 1 ? ' hour' : ' hours') : 'h')}, `;
+      str += `${h + (longFormat ? (h === 1 ? ' hour' : ' hours') : 'h')}, `; // eslint-disable-line no-nested-ternary
     if (str.length > 0 || m > 0)
-      str += `${m + (longFormat ? (m === 1 ? ' minute' : ' minutes') : 'm')}, `;
-    str += s + (longFormat ? (s === 1 ? ' second' : ' seconds') : 's');
+      str += `${m + (longFormat ? (m === 1 ? ' minute' : ' minutes') : 'm')}, `; // eslint-disable-line no-nested-ternary
+    str += s + (longFormat ? (s === 1 ? ' second' : ' seconds') : 's'); // eslint-disable-line no-nested-ternary
   }
   return str;
 }
@@ -134,18 +137,18 @@ export function FormatTime(time, longFormat) {
  * @param	{number}			time			Time to be coloured
  * @returns {{string, string}}	{text, color}	Both the formatted time and color as strings in an array
  */
-export function GetTimeColor(time) {
+export function GetTimeColour(time) {
   let color;
   let text;
   if (time <= 0) {
     if (CMOptions.TimeFormat) text = '00:00:00:00:00';
     else text = 'Done!';
-    color = ColorGreen;
+    color = ColourGreen;
   } else {
     text = FormatTime(time);
-    if (time > 300) color = ColorRed;
-    else if (time > 60) color = ColorOrange;
-    else color = ColorYellow;
+    if (time > 300) color = ColourRed;
+    else if (time > 60) color = ColourOrange;
+    else color = ColourYellow;
   }
   return { text, color };
 }

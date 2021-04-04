@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+import { ClickTimes } from '../Disp/VariablesAndData';
 import { CMAvgQueue, InitCookiesDiff } from './CPS/AverageQueue';
 import CacheAvgCPS from './CPS/CPS';
 import CacheDragonAuras from './Dragon/CacheDragonAuras';
@@ -15,7 +15,10 @@ import {
   CacheGoldenAndWrathCookiesMults,
   CacheStatsCookies,
 } from './Stats/Stats';
-import { HeavenlyChipsDiff } from './VariablesAndData';
+import {
+  CacheAverageCookiesFromClicks,
+  HeavenlyChipsDiff,
+} from './VariablesAndData';
 import CacheWrinklers from './Wrinklers/Wrinklers';
 
 /**
@@ -30,7 +33,11 @@ export default function InitCache() {
   CacheAllMissingUpgrades();
   CacheSeasonSpec();
   InitCookiesDiff();
-  HeavenlyChipsDiff = new CMAvgQueue(5); // Used by CM.Cache.CacheHeavenlyChipsPS()
+  /** Used by CM.Cache.CacheHeavenlyChipsPS() */
+  HeavenlyChipsDiff = new CMAvgQueue(5); // eslint-disable-line no-unused-vars
+  CacheAverageCookiesFromClicks = new CMAvgQueue( // eslint-disable-line no-unused-vars
+    ClickTimes[ClickTimes.length - 1] * 20,
+  );
   CacheHeavenlyChipsPS();
   CacheAvgCPS();
   CacheIncome();

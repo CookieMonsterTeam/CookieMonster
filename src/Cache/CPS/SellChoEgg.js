@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import SellBuildingsForChoEgg from '../../Sim/SimulationEvents/SellBuildingForChoEgg';
 import { CacheSellForChoEgg } from '../VariablesAndData';
 
@@ -21,5 +20,5 @@ export default function CacheSellAllForChoEgg() {
   }
   // Compute cookies earned by selling all buildings with optimal auras (ES + RB)
   sellTotal += SellBuildingsForChoEgg();
-  CacheSellForChoEgg = sellTotal;
+  CacheSellForChoEgg = sellTotal; // eslint-disable-line no-unused-vars
 }

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import InitCache from '../Cache/CacheInit';
 import { CacheStatsCookies } from '../Cache/Stats/Stats';
 import { LoadConfig } from '../Config/SaveLoadReload/SaveLoadReloadSettings';
@@ -10,7 +9,7 @@ import CreateSectionHideButtons from '../Disp/Initialization/CreateSectionHideBu
 import CreateWrinklerButtons from '../Disp/Initialization/CreateWrinklerButton';
 import CreateCssArea from '../Disp/Initialization/CssArea';
 import UpdateBuildingUpgradeStyle from '../Disp/Initialization/UpdateBuildingUpgradeStyle';
-import CreateWhiteScreen from '../Disp/Initialization/WhiteScreen';
+import CreateFlashScreen from '../Disp/Initialization/FlashScreen';
 import { CreateFavicon } from '../Disp/TabTitle/FavIcon';
 import { CreateSimpleTooltip } from '../Disp/Tooltips/Tooltip';
 import { CMLastAscendState, TooltipText } from '../Disp/VariablesAndData';
@@ -30,14 +29,14 @@ export default function InitializeCookieMonster() {
   InitCache();
 
   // Stored to check if we need to re-initiliaze data
-  LastModCount = Object.keys(Game.mods).length;
+  LastModCount = Object.keys(Game.mods).length; // eslint-disable-line no-unused-vars
 
   // Creating visual elements
   CreateCssArea();
   CreateBotBar();
   CreateTimerBar();
   CreateUpgradeBar();
-  CreateWhiteScreen();
+  CreateFlashScreen();
   CreateSectionHideButtons();
   CreateFavicon();
   Object.keys(TooltipText).forEach((i) => {
@@ -58,8 +57,8 @@ export default function InitializeCookieMonster() {
   ReplaceNativeGrimoire();
   Game.CalculateGains();
 
-  LoadConfig(); // Must be after all things are created!
-  CMLastAscendState = Game.OnAscend;
+  LoadConfig();
+  CMLastAscendState = Game.OnAscend; // eslint-disable-line no-unused-vars
 
   if (Game.prefs.popups)
     Game.Popup(

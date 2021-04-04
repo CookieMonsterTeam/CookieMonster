@@ -3,19 +3,21 @@
 import { AddMissingUpgrades } from './CreateMissingUpgrades';
 import * as CreateSections from './CreateStatsSections';
 import * as CreateElements from './CreateDOMElements';
-import * as GameData from '../../Data/Gamedata';
-import { CMOptions } from '../../Config/VariablesAndData';
+import * as GameData from '../../../Data/Gamedata';
+import { CMOptions } from '../../../Config/VariablesAndData';
 
 import {
   CacheAverageClicks,
+  CacheAverageCookiesFromClicks,
   CacheWrinklersFattest,
   CacheWrinklersNormal,
   CacheWrinklersTotal,
-} from '../../Cache/VariablesAndData';
-import PopAllNormalWrinklers from '../HelperFunctions/PopWrinklers';
-import { ClickTimes, CookieTimes } from '../VariablesAndData';
-import GetCPS from '../HelperFunctions/GetCPS';
-import { Beautify } from '../BeautifyAndFormatting/BeautifyFormatting';
+} from '../../../Cache/VariablesAndData';
+import PopAllNormalWrinklers from '../../HelperFunctions/PopWrinklers';
+import { ClickTimes, CookieTimes } from '../../VariablesAndData';
+import GetCPS from '../../HelperFunctions/GetCPS';
+import { Beautify } from '../../BeautifyAndFormatting/BeautifyFormatting';
+import AddMissingAchievements from './CreateMissingAchievements';
 
 /**
  * This function adds stats created by CookieMonster to the stats page
@@ -114,7 +116,7 @@ export default function AddMenuStats(title) {
     stats.appendChild(
       CreateElements.StatsListing(
         'basic',
-        `Average Cookies Per Second (Past ${
+        `Average cookies per second (past ${
           CookieTimes[CMOptions.AvgCPSHist] < 60
             ? `${CookieTimes[CMOptions.AvgCPSHist]} seconds`
             : CookieTimes[CMOptions.AvgCPSHist] / 60 +
@@ -126,10 +128,25 @@ export default function AddMenuStats(title) {
     stats.appendChild(
       CreateElements.StatsListing(
         'basic',
-        `Average Cookie Clicks Per Second (Past ${
+        `Average cookie clicks per second (past ${
           ClickTimes[CMOptions.AvgClicksHist]
         }${CMOptions.AvgClicksHist === 0 ? ' second' : ' seconds'})`,
         document.createTextNode(Beautify(CacheAverageClicks, 1)),
+      ),
+    );
+    stats.appendChild(
+      CreateElements.StatsListing(
+        'basic',
+        `Cookies from clicking (past ${ClickTimes[CMOptions.AvgClicksHist]}${
+          CMOptions.AvgClicksHist === 0 ? ' second' : ' seconds'
+        })`,
+        document.createTextNode(
+          Beautify(
+            CacheAverageCookiesFromClicks.calcSum(
+              CacheAverageClicks * ClickTimes[CMOptions.AvgClicksHist],
+            ),
+          ),
+        ),
       ),
     );
     if (Game.Has('Fortune cookies')) {
@@ -152,7 +169,7 @@ export default function AddMenuStats(title) {
       stats.appendChild(
         CreateElements.StatsListing(
           'basic',
-          'Missed Golden Cookies',
+          'Missed golden cookies',
           document.createTextNode(Beautify(Game.missedGoldenClicks)),
         ),
       );
@@ -174,5 +191,8 @@ export default function AddMenuStats(title) {
 
   if (CMOptions.MissingUpgrades) {
     AddMissingUpgrades();
+  }
+  if (CMOptions.MissingAchievements) {
+    AddMissingAchievements();
   }
 }

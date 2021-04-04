@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /** Caches data related to Wrinklers */
 
 import { SimObjects } from '../../Sim/VariablesAndData';
@@ -32,9 +31,9 @@ export default function CacheWrinklers() {
       else if (godLvl === 2) sucked *= 1.1;
       else if (godLvl === 3) sucked *= 1.05;
     }
-    CacheWrinklersTotal += sucked;
+    CacheWrinklersTotal += sucked; // eslint-disable-line no-unused-vars
     if (Game.wrinklers[i].type === 0) {
-      CacheWrinklersNormal += sucked;
+      CacheWrinklersNormal += sucked; // eslint-disable-line no-unused-vars
       if (sucked > CacheWrinklersFattest[0])
         CacheWrinklersFattest = [sucked, i];
     }
