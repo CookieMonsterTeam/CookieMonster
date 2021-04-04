@@ -17,6 +17,7 @@ import PopAllNormalWrinklers from '../../HelperFunctions/PopWrinklers';
 import { ClickTimes, CookieTimes } from '../../VariablesAndData';
 import GetCPS from '../../HelperFunctions/GetCPS';
 import { Beautify } from '../../BeautifyAndFormatting/BeautifyFormatting';
+import AddMissingAchievements from './CreateMissingAchievements';
 
 /**
  * This function adds stats created by CookieMonster to the stats page
@@ -190,5 +191,8 @@ export default function AddMenuStats(title) {
 
   if (CMOptions.MissingUpgrades) {
     AddMissingUpgrades();
+  }
+  if (CMOptions.MissingAchievements) {
+    AddMissingAchievements();
   }
 }

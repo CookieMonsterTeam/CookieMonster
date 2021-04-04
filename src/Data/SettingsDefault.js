@@ -57,6 +57,7 @@ const ConfigDefault = {
   TooltipAscendButton: 1,
   Stats: 1,
   MissingUpgrades: 1,
+  MissingAchievements: 0,
   UpStats: 1,
   HeavenlyChipsTarget: 1,
   ShowMissedGC: 1,
