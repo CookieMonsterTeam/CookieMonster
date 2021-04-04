@@ -21,3 +21,8 @@ export let LastSpawnedGoldenCookieState;
 export let LastMagicBarFull;
 export let CurrSpawnedGoldenCookieState;
 export let LastWrinklerCount;
+
+/** Stores the date at the beginning of a Main loop
+ * Calculations depending on time (God Cyclius) will all use same time
+ */
+export let DateAtBeginLoop;

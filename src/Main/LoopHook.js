@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import InitCache from '../Cache/CacheInit';
 import LoopCache from '../Cache/CacheLoop';
 import CacheNoGoldSwitchCPS from '../Cache/CPS/NoGoldSwitchCPS';
@@ -29,13 +30,14 @@ import CheckMagicMeter from './CheckStates/Grimoire';
 import CheckSeasonPopup from './CheckStates/Season';
 import CheckTickerFortune from './CheckStates/Ticker';
 import CheckWrinklerCount from './CheckStates/Wrinkler';
-import { LastModCount } from './VariablesAndData';
+import { DateAtBeginLoop, LastModCount } from './VariablesAndData';
 
 /**
  * Main loop of Cookie Monster
  * CM.init registers it to the "logic" hook provided by the modding api
  */
 export default function CMLoopHook() {
+  DateAtBeginLoop = Date.now();
   if (LastAscendState !== Game.OnAscend) {
     LastAscendState = Game.OnAscend;
     UpdateAscendState();
