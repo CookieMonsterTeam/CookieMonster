@@ -67,7 +67,7 @@ export default function CreateUpgradeBar() {
   const UpgradeBar = document.createElement('div');
   UpgradeBar.id = 'CMUpgradeBar';
   UpgradeBar.style.width = '100%';
-  UpgradeBar.style.backgroundColour = 'black';
+  UpgradeBar.style.backgroundColor = 'black';
   UpgradeBar.style.textAlign = 'center';
   UpgradeBar.style.fontWeight = 'bold';
   UpgradeBar.style.display = 'none';
