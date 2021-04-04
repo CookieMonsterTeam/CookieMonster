@@ -10,14 +10,14 @@ import { VersionMajor, VersionMinor } from '../../Data/Moddata';
 import {
   Beautify,
   FormatTime,
-  GetTimeColor,
+  GetTimeColour,
 } from '../BeautifyAndFormatting/BeautifyFormatting';
 import GetCPS from '../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../HelperFunctions/GetWrinkConfigBank';
 import {
-  ColorBlue,
-  ColorTextPre,
-  ColorYellow,
+  ColourBlue,
+  ColourTextPre,
+  ColourYellow,
   LastTargetBotBar,
 } from '../VariablesAndData';
 import { CreateBotBarBuildingColumn } from './CreateDOMElements';
@@ -32,7 +32,7 @@ export function CreateBotBar() {
   BotBar.style.width = '100%';
   BotBar.style.position = 'absolute';
   BotBar.style.display = 'none';
-  BotBar.style.backgroundColor = '#262224';
+  BotBar.style.backgroundColour = '#262224';
   BotBar.style.backgroundImage = 'linear-gradient(to bottom, #4d4548, #000000)';
   BotBar.style.borderTop = '1px solid black';
   BotBar.style.overflow = 'auto';
@@ -48,19 +48,21 @@ export function CreateBotBar() {
   const firstCol = function (text, color) {
     const td = document.createElement('td');
     td.style.textAlign = 'right';
-    td.className = ColorTextPre + color;
+    td.className = ColourTextPre + color;
     td.textContent = text;
     return td;
   };
   const type = tbody.appendChild(document.createElement('tr'));
   type.style.fontWeight = 'bold';
-  type.appendChild(firstCol(`CM ${VersionMajor}.${VersionMinor}`, ColorYellow));
+  type.appendChild(
+    firstCol(`CM ${VersionMajor}.${VersionMinor}`, ColourYellow),
+  );
   const bonus = tbody.appendChild(document.createElement('tr'));
-  bonus.appendChild(firstCol('Bonus Income', ColorBlue));
+  bonus.appendChild(firstCol('Bonus Income', ColourBlue));
   const pp = tbody.appendChild(document.createElement('tr'));
-  pp.appendChild(firstCol('Payback Period', ColorBlue));
+  pp.appendChild(firstCol('Payback Period', ColourBlue));
   const time = tbody.appendChild(document.createElement('tr'));
-  time.appendChild(firstCol('Time Left', ColorBlue));
+  time.appendChild(firstCol('Time Left', ColourBlue));
 
   l('wrapper').appendChild(BotBar);
 
@@ -94,7 +96,7 @@ export function UpdateBotBar() {
       ].textContent = Beautify(target[i].bonus, 2);
       l('CMBotBar').firstChild.firstChild.childNodes[2].childNodes[
         count
-      ].className = ColorTextPre + target[i].color;
+      ].className = ColourTextPre + target[i].color;
       let PPString;
       if (CMOptions.PPDisplayTime)
         PPString = FormatTime(Math.round(target[i].pp));
@@ -102,24 +104,24 @@ export function UpdateBotBar() {
       l('CMBotBar').firstChild.firstChild.childNodes[2].childNodes[
         count
       ].textContent = PPString;
-      const timeColor = GetTimeColor(
+      const timeColour = GetTimeColour(
         (Game.Objects[i].bulkPrice - (Game.cookies + GetWrinkConfigBank())) /
           GetCPS(),
       );
       l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[
         count
-      ].className = ColorTextPre + timeColor.color;
+      ].className = ColourTextPre + timeColour.color;
       if (
-        timeColor.text === 'Done!' &&
+        timeColour.text === 'Done!' &&
         Game.cookies < Game.Objects[i].bulkPrice
       ) {
         l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[
           count
-        ].textContent = `${timeColor.text} (with Wrink)`;
+        ].textContent = `${timeColour.text} (with Wrink)`;
       } else
         l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[
           count
-        ].textContent = timeColor.text;
+        ].textContent = timeColour.text;
     });
   }
 }

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   TooltipWrinklerArea,
   TooltipWrinklerBeingShown,
@@ -13,7 +12,7 @@ export default function AddWrinklerAreaDetect() {
     TooltipWrinklerArea = 1;
   };
   l('backgroundLeftCanvas').onmouseout = function () {
-    TooltipWrinklerArea = 0;
+    TooltipWrinklerArea = 0; // eslint-disable-line no-unused-vars
     Game.tooltip.hide();
     Object.keys(Game.wrinklers).forEach((i) => {
       TooltipWrinklerBeingShown[i] = 0;

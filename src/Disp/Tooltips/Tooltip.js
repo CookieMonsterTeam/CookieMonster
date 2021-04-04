@@ -1,11 +1,8 @@
-/* eslint-disable no-unused-vars */
-import UpdateTooltips, * as UpdateTooltip from './UpdateTooltips';
-import { TooltipCreateTooltipBox } from './CreateTooltip';
+import UpdateTooltips from './UpdateTooltips';
 import {
   Beautify,
-  GetTimeColor,
+  GetTimeColour,
 } from '../BeautifyAndFormatting/BeautifyFormatting';
-import CopyData from '../../Sim/SimulationData/CopyData';
 import {
   SimpleTooltipElements,
   TooltipName,
@@ -65,7 +62,7 @@ export function CreateTooltip(type, name) {
             `so far<br/>&bull; <b>${Beautify(amortizeAmount)}</b> ${
               Math.floor(amortizeAmount) === 1 ? 'cookie' : 'cookies'
             } left to amortize (${
-              GetTimeColor(
+              GetTimeColour(
                 (buildPrice - Game.Objects[name].totalCookies) /
                   (Game.Objects[name].storedTotalCps * Game.globalCpsMult),
               ).text
@@ -143,8 +140,8 @@ export function CreateTooltip(type, name) {
   }
 
   // Sets global variables used by CM.Disp.UpdateTooltip()
-  TooltipType = type;
-  TooltipName = name;
+  TooltipType = type; // eslint-disable-line no-unused-vars
+  TooltipName = name; // eslint-disable-line no-unused-vars
 
   UpdateTooltips();
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-return-assign */
 import { CacheGoldenShimmersByID } from '../../Cache/VariablesAndData';
 import { GCTimers } from '../../Disp/VariablesAndData';
 import { CMOptions } from '../VariablesAndData';
@@ -15,6 +14,7 @@ export default function ToggleGCTimer() {
       GCTimers[i].style.top = CacheGoldenShimmersByID[i].l.style.top;
     });
   } else {
+    // eslint-disable-next-line no-return-assign
     Object.keys(GCTimers).forEach((i) => (GCTimers[i].style.display = 'none'));
   }
 }

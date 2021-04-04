@@ -55,7 +55,7 @@ export default function ReplaceAscendTooltip() {
   )} more cookies</b> for the next level.<br>`;
   str += `${
     CMOptions.TooltipAscendButton
-      ? `<div class='line'></div>It takes ${CacheTimeTillNextPrestige} to reach the next level and you are making ${Beautify(
+      ? `<div class='line'></div>It takes ${CacheTimeTillNextPrestige} to reach the next level and you were making ${Beautify(
           CacheHCPerSecond,
           2,
         )} chips on average in the last 5 seconds.<br>`

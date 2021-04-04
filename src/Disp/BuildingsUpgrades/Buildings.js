@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import {
   CacheObjects1,
   CacheObjects10,
@@ -7,7 +6,7 @@ import {
 import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingSell from '../../Sim/SimulationEvents/SellBuilding';
 import { Beautify } from '../BeautifyAndFormatting/BeautifyFormatting';
-import { Colors, LastTargetBuildings } from '../VariablesAndData';
+import { ColoursOrdering, LastTargetBuildings } from '../VariablesAndData';
 
 /**
  * Section: Functions related to right column of the screen (buildings/upgrades)
@@ -15,8 +14,8 @@ import { Colors, LastTargetBuildings } from '../VariablesAndData';
 /**
  * This function adjusts some things in the column of buildings.
  * It colours them, helps display the correct sell-price and shuffles the order when CM.Options.SortBuildings is set
- * The function is called by CM.Disp.Draw(), CM.Disp.UpdateColors() & CM.Disp.RefreshScale()
- * And by changes in CM.Options.BuildColor, CM.Options.SortBuild & CM.Data.Config.BulkBuildColor
+ * The function is called by CM.Disp.Draw(), CM.Disp.UpdateColours() & CM.Disp.RefreshScale()
+ * And by changes in CM.Options.BuildColour, CM.Options.SortBuild & CM.Data.Config.BulkBuildColour
  */
 export default function UpdateBuildings() {
   let target = Game.buyBulk;
@@ -30,10 +29,10 @@ export default function UpdateBuildings() {
   else if (target === 100) target = CacheObjects100;
 
   if (Game.buyMode === 1) {
-    if (CMOptions.BuildColor === 1) {
+    if (CMOptions.BuildColour === 1) {
       Object.keys(target).forEach((i) => {
         l(`productPrice${Game.Objects[i].id}`).style.color =
-          CMOptions.Colors[target[i].color];
+          CMOptions[`Colour${target[i].color}`];
       });
     } else {
       Object.keys(Game.Objects).forEach((i) => {
@@ -72,9 +71,10 @@ export default function UpdateBuildings() {
       });
 
       arr.sort(function (a, b) {
-        return Colors.indexOf(a.color) > Colors.indexOf(b.color)
+        return ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
+          ColoursOrdering.indexOf(b.color)
           ? 1
-          : Colors.indexOf(a.color) < Colors.indexOf(b.color)
+          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
           ? -1
           : a.pp < b.pp
           ? -1
@@ -89,9 +89,10 @@ export default function UpdateBuildings() {
       });
 
       arr.sort(function (a, b) {
-        return Colors.indexOf(a.color) > Colors.indexOf(b.color)
+        return ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
+          ColoursOrdering.indexOf(b.color)
           ? 1
-          : Colors.indexOf(a.color) < Colors.indexOf(b.color)
+          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
           ? -1
           : a.pp < b.pp
           ? -1

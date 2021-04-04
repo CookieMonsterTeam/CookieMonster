@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = function (env) {
   return {
     mode: 'production',
-    devtool: env.production ? 'source-map' : 'eval-source-map',
+    devtool: env.production ? 'source-map' : 'inline-source-map',
     optimization: {
       minimize: !!env.production,
     },

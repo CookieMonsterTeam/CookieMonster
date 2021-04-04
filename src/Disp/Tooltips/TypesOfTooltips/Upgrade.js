@@ -6,12 +6,12 @@ import { CMOptions } from '../../../Config/VariablesAndData';
 import {
   Beautify,
   FormatTime,
-  GetTimeColor,
+  GetTimeColour,
 } from '../../BeautifyAndFormatting/BeautifyFormatting';
 import GetCPS from '../../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
 import {
-  ColorTextPre,
+  ColourTextPre,
   TooltipBonusIncome,
   TooltipBonusMouse,
   TooltipName,
@@ -56,7 +56,7 @@ export default function Upgrade() {
         }01% of income)`;
       }
       l('CMTooltipBorder').className =
-        ColorTextPre +
+        ColourTextPre +
         CacheUpgrades[Game.UpgradesInStore[TooltipName].name].color;
       // If clicking power upgrade
       if (TooltipBonusMouse) {
@@ -81,21 +81,21 @@ export default function Upgrade() {
             2,
           );
         l('CMTooltipPP').className =
-          ColorTextPre +
+          ColourTextPre +
           CacheUpgrades[Game.UpgradesInStore[TooltipName].name].color;
       }
     }
-    const timeColor = GetTimeColor(
+    const timeColour = GetTimeColour(
       (TooltipPrice - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
     );
-    l('CMTooltipTime').textContent = timeColor.text;
+    l('CMTooltipTime').textContent = timeColour.text;
     if (
-      timeColor.text === 'Done!' &&
+      timeColour.text === 'Done!' &&
       Game.cookies < Game.UpgradesInStore[TooltipName].getPrice()
     ) {
-      l('CMTooltipTime').textContent = `${timeColor.text} (with Wrink)`;
-    } else l('CMTooltipTime').textContent = timeColor.text;
-    l('CMTooltipTime').className = ColorTextPre + timeColor.color;
+      l('CMTooltipTime').textContent = `${timeColour.text} (with Wrink)`;
+    } else l('CMTooltipTime').textContent = timeColour.text;
+    l('CMTooltipTime').className = ColourTextPre + timeColour.color;
 
     // Add extra info to Chocolate egg tooltip
     if (Game.UpgradesInStore[TooltipName].name === 'Chocolate egg') {

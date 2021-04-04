@@ -1,6 +1,0 @@
-CookieMonster.js
-CookieMonster.user.js
-src/*.js
-!src/CookieMonster.js
-!src/*/*
-dist/*

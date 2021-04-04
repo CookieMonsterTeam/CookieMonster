@@ -1,7 +1,7 @@
 import { CMOptions } from '../../Config/VariablesAndData';
-import AddMenuStats from './AddStatsPage';
-import AddMenuInfo from './InfoPage';
-import AddMenuPref from './SettingsPage';
+import AddMenuStats from './Statistics/AddStatsPage';
+import AddMenuInfo from './Info/InfoPage';
+import AddMenuPref from './Settings/SettingsPage';
 
 /**
  * This function adds the calll the functions to add extra info to the stats and options pages

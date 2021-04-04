@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /** Section: Functions related to the Golden Cookie Timers */
 
 import { CMOptions } from '../../Config/VariablesAndData';
@@ -28,14 +27,14 @@ export default function CreateGCTimer(cookie) {
     cookie.pop();
   };
   GCTimer.onmouseover = function () {
-    cookie.l.style.filter =
+    cookie.l.style.filter = // eslint-disable-line no-param-reassign
       'brightness(125%) drop-shadow(0px 0px 3px rgba(255,255,255,1))';
-    cookie.l.style.webkitFilter =
+    cookie.l.style.webkitFilter = // eslint-disable-line no-param-reassign
       'brightness(125%) drop-shadow(0px 0px 3px rgba(255,255,255,1))';
   };
   GCTimer.onmouseout = function () {
-    cookie.l.style.filter = '';
-    cookie.l.style.webkitFilter = '';
+    cookie.l.style.filter = ''; // eslint-disable-line no-param-reassign
+    cookie.l.style.webkitFilter = ''; // eslint-disable-line no-param-reassign
   };
 
   GCTimers[cookie.id] = GCTimer;

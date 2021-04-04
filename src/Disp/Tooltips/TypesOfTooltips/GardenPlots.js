@@ -16,7 +16,7 @@ export default function GardenPlots() {
     const mature =
       minigame.plot[TooltipName[1]][TooltipName[0]][1] >
       minigame.plantsById[minigame.plot[TooltipName[1]][TooltipName[0]][0] - 1]
-        .matureBase;
+        .mature;
     const plantName =
       minigame.plantsById[minigame.plot[TooltipName[1]][TooltipName[0]][0] - 1]
         .name;

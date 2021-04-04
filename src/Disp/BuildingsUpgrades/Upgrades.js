@@ -1,27 +1,26 @@
-/* eslint-disable no-nested-ternary */
 import { CacheUpgrades } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import {
-  ColorBackPre,
-  ColorBlue,
-  ColorGray,
-  ColorGreen,
-  ColorOrange,
-  ColorPurple,
-  ColorRed,
-  Colors,
-  ColorYellow,
+  ColourBackPre,
+  ColourBlue,
+  ColourGray,
+  ColourGreen,
+  ColourOrange,
+  ColourPurple,
+  ColourRed,
+  ColoursOrdering,
+  ColourYellow,
 } from '../VariablesAndData';
 
 /**
  * This function adjusts some things in the upgrades section
  * It colours them and shuffles the order when CM.Options.SortBuildings is set
- * The function is called by CM.Disp.Draw(), CM.Disp.ToggleUpgradeBarAndColor & CM.Disp.RefreshScale()
+ * The function is called by CM.Disp.Draw(), CM.Disp.ToggleUpgradeBarAndColour & CM.Disp.RefreshScale()
  * And by changes in CM.Options.SortUpgrades
  */
 export default function UpdateUpgrades() {
   // This counts the amount of upgrades for each pp group and updates the Upgrade Bar
-  if (CMOptions.UpBarColor > 0) {
+  if (CMOptions.UpBarColour > 0) {
     let blue = 0;
     let green = 0;
     let yellow = 0;
@@ -32,31 +31,31 @@ export default function UpdateUpgrades() {
 
     Object.keys(Game.UpgradesInStore).forEach((i) => {
       const me = Game.UpgradesInStore[i];
-      let addedColor = false;
+      let addedColour = false;
       for (let j = 0; j < l(`upgrade${i}`).childNodes.length; j += 1) {
         if (
-          l(`upgrade${i}`).childNodes[j].className.indexOf(ColorBackPre) !== -1
+          l(`upgrade${i}`).childNodes[j].className.indexOf(ColourBackPre) !== -1
         ) {
           l(`upgrade${i}`).childNodes[j].className =
-            ColorBackPre + CacheUpgrades[me.name].color;
-          addedColor = true;
+            ColourBackPre + CacheUpgrades[me.name].color;
+          addedColour = true;
           break;
         }
       }
-      if (!addedColor) {
+      if (!addedColour) {
         const div = document.createElement('div');
         div.style.width = '10px';
         div.style.height = '10px';
-        div.className = ColorBackPre + CacheUpgrades[me.name].color;
+        div.className = ColourBackPre + CacheUpgrades[me.name].color;
         l(`upgrade${i}`).appendChild(div);
       }
-      if (CacheUpgrades[me.name].color === ColorBlue) blue += 1;
-      else if (CacheUpgrades[me.name].color === ColorGreen) green += 1;
-      else if (CacheUpgrades[me.name].color === ColorYellow) yellow += 1;
-      else if (CacheUpgrades[me.name].color === ColorOrange) orange += 1;
-      else if (CacheUpgrades[me.name].color === ColorRed) red += 1;
-      else if (CacheUpgrades[me.name].color === ColorPurple) purple += 1;
-      else if (CacheUpgrades[me.name].color === ColorGray) gray += 1;
+      if (CacheUpgrades[me.name].color === ColourBlue) blue += 1;
+      else if (CacheUpgrades[me.name].color === ColourGreen) green += 1;
+      else if (CacheUpgrades[me.name].color === ColourYellow) yellow += 1;
+      else if (CacheUpgrades[me.name].color === ColourOrange) orange += 1;
+      else if (CacheUpgrades[me.name].color === ColourRed) red += 1;
+      else if (CacheUpgrades[me.name].color === ColourPurple) purple += 1;
+      else if (CacheUpgrades[me.name].color === ColourGray) gray += 1;
     });
 
     l('CMUpgradeBarBlue').textContent = blue;
@@ -81,9 +80,9 @@ export default function UpdateUpgrades() {
 
   if (CMOptions.SortUpgrades) {
     arr.sort(function (a, b) {
-      return Colors.indexOf(a.color) > Colors.indexOf(b.color)
+      return ColoursOrdering.indexOf(a.color) > ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
         ? 1
-        : Colors.indexOf(a.color) < Colors.indexOf(b.color)
+        : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
         ? -1
         : a.pp < b.pp
         ? -1

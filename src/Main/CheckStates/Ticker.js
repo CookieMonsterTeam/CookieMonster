@@ -16,7 +16,7 @@ export default function CheckTickerFortune() {
     LastTickerFortuneState =
       Game.TickerEffect && Game.TickerEffect.type === 'fortune';
     if (LastTickerFortuneState) {
-      Flash(3, 'FortuneFlash');
+      Flash(3, 'FortuneFlash', false);
       PlaySound(
         CMOptions.FortuneSoundURL,
         'FortuneSound',

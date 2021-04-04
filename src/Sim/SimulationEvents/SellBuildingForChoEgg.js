@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import CopyData from '../SimulationData/CopyData';
 import {
   SimBuildingsOwned,
@@ -38,7 +37,7 @@ export default function SellBuildingsForChoEgg() {
       }
     });
     SimObjects[highestBuilding].amount -= 1;
-    SimBuildingsOwned -= 1;
+    SimBuildingsOwned -= 1; // eslint-disable-line no-unused-vars
   }
 
   // Get money made by selling all remaining buildings
