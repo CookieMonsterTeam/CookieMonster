@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import CalculateGains from '../Calculations/CalculateGains';
 import CheckOtherAchiev from '../Calculations/CheckOtherAchiev';
 import CopyData from '../SimulationData/CopyData';
@@ -19,9 +18,11 @@ import {
  */
 export default function CalculateChangeGod(god, slot) {
   CopyData();
+  /* eslint-disable no-unused-vars */
   if (slot === 0) SimGod1 = god;
   else if (slot === 1) SimGod2 = god;
   else if (slot === 2) SimGod3 = god;
+  /* eslint-enable no-unused-vars */
 
   const lastAchievementsOwned = SimAchievementsOwned;
   CalculateGains();

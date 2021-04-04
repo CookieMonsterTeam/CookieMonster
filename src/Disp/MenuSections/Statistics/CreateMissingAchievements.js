@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { CMOptions } from '../../../Config/VariablesAndData';
 
 function CrateTooltipLockedAchievements(me) {
@@ -58,9 +57,11 @@ export default function AddMissingAchievements() {
       if (!achievsCrate.className.includes('enabled')) {
         const id = achievsCrate.onclick.toString().match(/(?<=\[).*(?=\])/g)[0];
         const { icon } = Game.AchievementsById[id];
+        // eslint-disable-next-line no-param-reassign
         achievsCrate.style.backgroundPosition = `${-icon[0] * 48}px ${
           -icon[1] * 48
         }px`;
+        // eslint-disable-next-line no-param-reassign
         achievsCrate.onmouseover = function () {
           if (!Game.mouseDown) {
             Game.setOnCrate(this);

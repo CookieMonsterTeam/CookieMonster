@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-unused-vars */
 /** Functions related to replacing tooltips */
 
 import { CreateTooltip } from '../../Disp/Tooltips/Tooltip';
@@ -39,7 +37,7 @@ function ReplaceTooltipBuild() {
  */
 function ReplaceTooltipLump() {
   if (Game.canLumps()) {
-    TooltipLumpBackup = l('lumps').onmouseover;
+    TooltipLumpBackup = l('lumps').onmouseover; // eslint-disable-line no-unused-vars
     l('lumps').onmouseover = function () {
       Game.tooltip.dynamic = 1;
       Game.tooltip.draw(
@@ -72,6 +70,7 @@ function ReplaceTooltipGarden() {
     };
     Array.from(l('gardenPlot').children).forEach((child) => {
       const coords = child.id.slice(-3);
+      // eslint-disable-next-line no-param-reassign
       child.onmouseover = function () {
         Game.tooltip.dynamic = 1;
         Game.tooltip.draw(

@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { CMOptions } from '../../Config/VariablesAndData';
 import {
   ColourTextPre,
@@ -163,7 +162,7 @@ export function TooltipCreateCalculationSection(tooltip) {
   tooltip.appendChild(income);
 
   tooltip.appendChild(TooltipCreateHeader('Bonus Cookies per Click'));
-  tooltip.lastChild.style.display = 'none';
+  tooltip.lastChild.style.display = 'none'; // eslint-disable-line no-param-reassign
   const click = document.createElement('div');
   click.style.marginBottom = '4px';
   click.style.color = 'white';
@@ -186,7 +185,8 @@ export function TooltipCreateCalculationSection(tooltip) {
     tooltip.appendChild(
       TooltipCreateHeader('Production left till next achievement'),
     );
-    tooltip.lastChild.id = 'CMTooltipProductionHeader'; // Assign a id in order to hid when no achiev's are left
+    // Assign a id in order to hide when no achiev's are left
+    tooltip.lastChild.id = 'CMTooltipProductionHeader'; // eslint-disable-line no-param-reassign
     const production = document.createElement('div');
     production.id = 'CMTooltipProduction';
     tooltip.appendChild(production);

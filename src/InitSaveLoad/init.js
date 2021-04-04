@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { VersionMajor, VersionMinor } from '../Data/Moddata';
 import CMDrawHook from '../Disp/DrawHook';
 import CMClickHook from '../Main/ClickHook';
@@ -16,6 +15,7 @@ export default function init() {
   isInitializing = true;
   let proceed = true;
   if (Game.version !== Number(VersionMajor)) {
+    // eslint-disable-next-line no-restricted-globals, no-alert
     proceed = confirm(
       `Cookie Monster version ${VersionMajor}.${VersionMinor} is meant for Game version ${VersionMajor}. Loading a different version may cause errors. Do you still want to load Cookie Monster?`,
     );
@@ -25,6 +25,6 @@ export default function init() {
     Game.registerHook('draw', CMDrawHook);
     Game.registerHook('logic', CMLoopHook);
     Game.registerHook('click', CMClickHook);
-    isInitializing = false;
+    isInitializing = false; // eslint-disable-line no-unused-vars
   }
 }

@@ -218,7 +218,6 @@ export default function CreatePrefOption(config) {
     input.min = Config[config].min;
     input.max = Config[config].max;
     input.oninput = function () {
-      if (this.value > this.max) console.log('TEST');
       CMOptions[config] = this.value;
       SaveConfig();
       RefreshScale();

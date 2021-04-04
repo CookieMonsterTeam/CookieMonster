@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import InitCache from '../Cache/CacheInit';
 import LoopCache from '../Cache/CacheLoop';
 import CacheNoGoldSwitchCPS from '../Cache/CPS/NoGoldSwitchCPS';

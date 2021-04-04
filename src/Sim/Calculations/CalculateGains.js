@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import GetCPSBuffMult from '../../Cache/CPS/GetCPSBuffMult';
 import { CacheCentEgg } from '../../Cache/VariablesAndData';
 import {
@@ -42,7 +41,7 @@ export default function CalculateGains() {
       });
     }
   });
-  SimEffs = effs;
+  SimEffs = effs; // eslint-disable-line no-unused-vars
 
   if (Game.ascensionMode !== 1)
     mult +=
@@ -227,7 +226,7 @@ export default function CalculateGains() {
       SimWin(Game.CpsAchievements[i].name);
   });
 
-  SimCookiesPsRaw = rawCookiesPs;
+  SimCookiesPsRaw = rawCookiesPs; // eslint-disable-line no-unused-vars
 
   const { n } = Game.shimmerTypes.golden;
   const auraMult = SimAuraMult("Dragon's Fortune");

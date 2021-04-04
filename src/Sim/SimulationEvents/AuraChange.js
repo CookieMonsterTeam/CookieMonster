@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   CacheDragonAura,
   CacheDragonAura2,
@@ -41,7 +40,7 @@ export default function CalculateChangeAura(aura) {
       if (Game.ObjectsById[i].amount > 0) {
         const highestBuilding = SimObjects[Game.ObjectsById[i].name].name;
         SimObjects[highestBuilding].amount -= 1;
-        SimBuildingsOwned -= 1;
+        SimBuildingsOwned -= 1; // eslint-disable-line no-unused-vars
         price =
           SimObjects[highestBuilding].basePrice *
           Game.priceIncrease **

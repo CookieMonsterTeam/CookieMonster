@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { FormatTime } from '../Disp/BeautifyAndFormatting/BeautifyFormatting';
 import GetCPS from '../Disp/HelperFunctions/GetCPS';
 import CacheAvgCPS from './CPS/CPS';
@@ -27,5 +26,5 @@ export default function LoopCache() {
         1,
     ) -
     (Game.cookiesEarned + Game.cookiesReset);
-  CacheTimeTillNextPrestige = FormatTime(cookiesToNext / GetCPS());
+  CacheTimeTillNextPrestige = FormatTime(cookiesToNext / GetCPS()); // eslint-disable-line no-unused-vars
 }

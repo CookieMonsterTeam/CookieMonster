@@ -1,4 +1,3 @@
-/* eslint-disable prefer-const */
 /**
  * Section: Variables used in Disp functions */
 
@@ -91,15 +90,15 @@ export const SimpleTooltipElements = {};
  * These are variables used by the functions that create tooltips for wrinklers
  * See CM.Disp.CheckWrinklerTooltip(), CM.Disp.UpdateWrinklerTooltip() and CM.Main.AddWrinklerAreaDetect()
  */
-export let TooltipWrinklerArea = 0;
-export let TooltipWrinkler = -1;
+export let TooltipWrinklerArea = 0; // eslint-disable-line prefer-const
+export let TooltipWrinkler = -1; // eslint-disable-line prefer-const
 
 /**
  * This array is used to store whether a Wrinkler tooltip is being shown or not
  * [i] = 1 means tooltip is being shown, [i] = 0 means hidden
  * It is used by CM.Disp.CheckWrinklerTooltip() and CM.Main.AddWrinklerAreaDetect()
  */
-export let TooltipWrinklerBeingShown = [];
+export let TooltipWrinklerBeingShown = []; // eslint-disable-line prefer-const
 
 export let CMLastAscendState;
 export let CMSayTime;
@@ -107,9 +106,9 @@ export let CMSayTime;
 /**
  * These are variables used to create various displays when the game is loaded on the "sell all" screen
  */
-export let LastTargetBotBar = 1;
-export let LastTargetBuildings = 1;
-export let LastTargetTooltipBuilding = 1;
+export let LastTargetBotBar = 1; // eslint-disable-line prefer-const
+export let LastTargetBuildings = 1; // eslint-disable-line prefer-const
+export let LastTargetTooltipBuilding = 1; // eslint-disable-line prefer-const
 
 /**
  * These arrays are used in the stats page to show
@@ -133,12 +132,12 @@ export const BuffColours = {
 /**
  * This array is used to track GC timers
  */
-export let GCTimers = {};
+export let GCTimers = {}; // eslint-disable-line prefer-const
 
 /**
  * Used to store the number of cookies to be displayed in the tab-title
  */
-export let Title = '';
+export let Title = ''; // eslint-disable-line prefer-const
 
 export let TooltipPrice;
 export let TooltipBonusIncome;
@@ -152,4 +151,4 @@ export let LastNumberOfTimers;
 /**
  * This stores the names of settings shown in the favourites section
  */
-export let FavouriteSettings = [];
+export let FavouriteSettings = []; // eslint-disable-line prefer-const

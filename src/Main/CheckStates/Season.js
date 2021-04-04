@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { CacheSeasonPopShimmer } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import Flash from '../../Disp/Notifications/Flash';
@@ -15,7 +14,7 @@ export default function CheckSeasonPopup() {
     LastSeasonPopupState = Game.shimmerTypes.reindeer.spawned;
     Object.keys(Game.shimmers).forEach((i) => {
       if (Game.shimmers[i].spawnLead && Game.shimmers[i].type === 'reindeer') {
-        CacheSeasonPopShimmer = Game.shimmers[i];
+        CacheSeasonPopShimmer = Game.shimmers[i]; // eslint-disable-line no-unused-vars
       }
     });
     Flash(3, 'SeaFlash', false);

@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-unused-vars */
 import { CMOptions } from '../../Config/VariablesAndData';
 import GetWrinkConfigBank from '../../Disp/HelperFunctions/GetWrinkConfigBank';
 import { ColourGray } from '../../Disp/VariablesAndData';
@@ -20,16 +18,17 @@ import ColourOfPP from './ColourOfPP';
 function CacheColour(target, amount) {
   Object.keys(target).forEach((i) => {
     if (CMOptions.PPRigidelMode && amount === 1) {
-      target[i].color = ColourGray;
+      target[i].color = ColourGray; // eslint-disable-line no-param-reassign
       return;
     }
+    // eslint-disable-next-line no-param-reassign
     target[i].color = ColourOfPP(
       target[i],
       Game.Objects[i].getSumPrice(amount),
     );
     // Colour based on excluding certain top-buildings
     for (let j = 0; j < CMOptions.PPExcludeTop; j++) {
-      if (target[i].pp === CachePPArray[j][0]) target[i].color = ColourGray;
+      if (target[i].pp === CachePPArray[j][0]) target[i].color = ColourGray; // eslint-disable-line no-param-reassign
     }
   });
 }
@@ -38,11 +37,11 @@ function CachePP(target, amount) {
   Object.keys(target).forEach((i) => {
     const price = Game.Objects[i].getSumPrice(amount);
     if (Game.cookiesPs) {
-      target[i].pp =
+      target[i].pp = // eslint-disable-line no-param-reassign
         Math.max(price - (Game.cookies + GetWrinkConfigBank()), 0) /
           Game.cookiesPs +
         price / target[i].bonus;
-    } else target[i].pp = price / target[i].bonus;
+    } else target[i].pp = price / target[i].bonus; // eslint-disable-line no-param-reassign
     if (!(CMOptions.PPRigidelMode && amount === 1))
       CachePPArray.push([target[i].pp, amount]);
   });
@@ -73,7 +72,7 @@ export default function CacheBuildingsPP() {
       }
     }
   }
-  CacheMinPP = CachePPArray[CMOptions.PPExcludeTop][indexOfMin];
+  CacheMinPP = CachePPArray[CMOptions.PPExcludeTop][indexOfMin]; // eslint-disable-line no-unused-vars
 
   CacheColour(CacheObjects1, 1);
   CacheColour(CacheObjects10, 10);

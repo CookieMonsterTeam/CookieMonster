@@ -18,7 +18,7 @@ function CheckNotificationPermissions(ToggleOnOff) {
 
     // Check if the browser supports notifications and which type
     if (!('Notification' in window)) {
-      console.log('This browser does not support notifications.');
+      console.log('This browser does not support notifications.'); // eslint-disable-line no-console
     } else if (checkNotificationPromise()) {
       Notification.requestPermission().then();
     } else {

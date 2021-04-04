@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import { CacheUpgrades } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import {
@@ -81,9 +80,9 @@ export default function UpdateUpgrades() {
 
   if (CMOptions.SortUpgrades) {
     arr.sort(function (a, b) {
-      return ColoursOrdering.indexOf(a.color) > ColoursOrdering.indexOf(b.color)
+      return ColoursOrdering.indexOf(a.color) > ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
         ? 1
-        : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color)
+        : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
         ? -1
         : a.pp < b.pp
         ? -1
