@@ -30,14 +30,13 @@ import CheckMagicMeter from './CheckStates/Grimoire';
 import CheckSeasonPopup from './CheckStates/Season';
 import CheckTickerFortune from './CheckStates/Ticker';
 import CheckWrinklerCount from './CheckStates/Wrinkler';
-import { DateAtBeginLoop, LastModCount } from './VariablesAndData';
+import { LastModCount } from './VariablesAndData';
 
 /**
  * Main loop of Cookie Monster
  * CM.init registers it to the "logic" hook provided by the modding api
  */
 export default function CMLoopHook() {
-  DateAtBeginLoop = Date.now();
   if (LastAscendState !== Game.OnAscend) {
     LastAscendState = Game.OnAscend;
     UpdateAscendState();

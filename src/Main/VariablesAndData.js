@@ -22,7 +22,10 @@ export let LastMagicBarFull;
 export let CurrSpawnedGoldenCookieState;
 export let LastWrinklerCount;
 
-/** Stores the date at the beginning of a Main loop
- * Calculations depending on time (God Cyclius) will all use same time
+/** Stores the date at Game.CalculateGains for God Cyclius
  */
-export let DateAtBeginLoop;
+export let CycliusDateAtBeginLoop;
+
+/** Stores the date at Game.CalculateGains for the Century egg
+ */
+export let CenturyDateAtBeginLoop;

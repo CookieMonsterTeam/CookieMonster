@@ -13,7 +13,11 @@ import UpdateTooltipLocation from '../../Disp/Tooltips/PositionLocation';
 import { CMSayTime, Title } from '../../Disp/VariablesAndData';
 import { SimDoSims } from '../../Sim/VariablesAndData';
 import ReplaceTooltipUpgrade from '../ReplaceGameElements/TooltipUpgrades';
-import { BackupFunctions } from '../VariablesAndData';
+import {
+  BackupFunctions,
+  CenturyDateAtBeginLoop,
+  CycliusDateAtBeginLoop,
+} from '../VariablesAndData';
 import FixMouseY from './FixMouse';
 
 /**
@@ -29,6 +33,8 @@ export default function ReplaceNative() {
   Game.CalculateGains = function () {
     BackupFunctions.CalculateGains();
     SimDoSims = 1;
+    CycliusDateAtBeginLoop = Date.now();
+    CenturyDateAtBeginLoop = Date.now();
   };
 
   BackupFunctions.tooltip = {};
