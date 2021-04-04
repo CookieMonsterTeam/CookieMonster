@@ -32,7 +32,7 @@ export function CreateBotBar() {
   BotBar.style.width = '100%';
   BotBar.style.position = 'absolute';
   BotBar.style.display = 'none';
-  BotBar.style.backgroundColour = '#262224';
+  BotBar.style.backgroundColor = '#262224';
   BotBar.style.backgroundImage = 'linear-gradient(to bottom, #4d4548, #000000)';
   BotBar.style.borderTop = '1px solid black';
   BotBar.style.overflow = 'auto';

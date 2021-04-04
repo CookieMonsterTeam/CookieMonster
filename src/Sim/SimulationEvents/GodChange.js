@@ -17,6 +17,7 @@ import {
  * @returns {number} 	CM.Sim.cookiesPs - Game.cookiesPs   The bonus cps and the price of the change
  */
 export default function CalculateChangeGod(god, slot) {
+  if (!Game.Objects.Temple.minigameLoaded) return 0;
   CopyData();
   const { minigame } = Game.Objects.Temple;
   const CurrentSlot = minigame.godsById[god].slot;
