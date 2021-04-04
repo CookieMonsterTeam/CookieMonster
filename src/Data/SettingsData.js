@@ -522,8 +522,15 @@ const Config = {
     'bool',
     'Statistics',
     ['Missing upgrades OFF', 'Missing upgrades ON'],
-    'Shows missing upgrades in stats menu',
+    'Shows missing upgrades in statistics menu',
     true,
+  ),
+  MissingAchievements: new SettingStandard(
+    'bool',
+    'Statistics',
+    ['Missing Achievements OFF', 'Missing Normal Achievements ON'],
+    'Shows missing normal achievements in statistics menu.',
+    false,
   ),
   UpStats: new SettingStandard(
     'bool',
