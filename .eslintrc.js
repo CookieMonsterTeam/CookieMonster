@@ -15,14 +15,11 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 12,
   },
+  ignorePatterns: ['*CookieMonster*.js', 'dist/*', 'node_modules/*'],
   rules: {
     'import/no-mutable-exports': 'off',
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
-    'no-new-func': 'off',
     'func-names': 'off',
-    'no-console': 'off',
-    'no-alert': 'off',
-    'no-restricted-globals': 'off',
     'prefer-destructuring': ['error', { object: true, array: false }],
     'max-len': [
       1,

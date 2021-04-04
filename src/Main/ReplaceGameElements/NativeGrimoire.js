@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { CMOptions } from '../../Config/VariablesAndData';
 import { FormatTime } from '../../Disp/BeautifyAndFormatting/BeautifyFormatting';
 
@@ -47,8 +46,8 @@ function ReplaceNativeGrimoireLaunch() {
     Game.Objects['Wizard tower'].minigameLoaded
   ) {
     const { minigame } = Game.Objects['Wizard tower'];
-    BackupGrimoireLaunch = minigame.launch;
-    BackupGrimoireLaunchMod = new Function(
+    BackupGrimoireLaunch = minigame.launch; // eslint-disable-line no-unused-vars
+    BackupGrimoireLaunchMod = new Function( // eslint-disable-line no-new-func
       `return ${minigame.launch
         .toString()
         .split('=this')

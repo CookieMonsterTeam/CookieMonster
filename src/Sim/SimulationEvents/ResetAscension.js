@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { CacheRealCookiesEarned } from '../../Cache/VariablesAndData';
 import CalculateGains from '../Calculations/CalculateGains';
 import CheckOtherAchiev from '../Calculations/CheckOtherAchiev';
@@ -96,7 +95,7 @@ export default function ResetBonus(newHeavenlyChips) {
   const ResetCPS = SimCookiesPs - curCPS;
 
   // Reset Pretige level after calculation as it is used in CM.Sim.CalculateGains() so can't be local
-  SimPrestige = Game.prestige;
+  SimPrestige = Game.prestige; // eslint-disable-line no-unused-vars
 
   return ResetCPS;
 }

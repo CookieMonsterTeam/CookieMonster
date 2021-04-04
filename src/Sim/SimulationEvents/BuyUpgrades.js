@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import CalculateGains from '../Calculations/CalculateGains';
 import CheckOtherAchiev from '../Calculations/CheckOtherAchiev';
 import SimAuraMult from '../ReplacedGameFunctions/SimAuraMult';
@@ -130,9 +129,8 @@ export default function BuyUpgradesBonusIncome(upgrade) {
     } else {
       SimUpgrades[upgrade].bought = (SimUpgrades[upgrade].bought + 1) % 2;
     }
-    const me = SimUpgrades[upgrade];
     if (Game.CountsAsUpgradeOwned(Game.Upgrades[upgrade].pool))
-      SimUpgradesOwned += 1;
+      SimUpgradesOwned += 1; // eslint-disable-line no-unused-vars
 
     if (upgrade === 'Elder Pledge') {
       SimPledges += 1;

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import GetCPSBuffMult from '../CPS/GetCPSBuffMult';
 import {
   CacheChainFrenzyMaxReward,
@@ -89,8 +88,8 @@ export function CacheChain() {
     maxPayout,
     CacheGoldenCookiesMult,
   );
-  CacheChainRequired = (CacheChainMaxReward[1] * 2) / CacheGoldenCookiesMult;
-  CacheChainRequiredNext =
+  CacheChainRequired = (CacheChainMaxReward[1] * 2) / CacheGoldenCookiesMult; // eslint-disable-line no-unused-vars
+  CacheChainRequiredNext = // eslint-disable-line no-unused-vars
     CacheChainMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment;
 
   CacheChainWrathMaxReward = MaxChainCookieReward(
@@ -98,9 +97,9 @@ export function CacheChain() {
     maxPayout,
     CacheWrathCookiesMult,
   );
-  CacheChainWrathRequired =
+  CacheChainWrathRequired = // eslint-disable-line no-unused-vars
     (CacheChainWrathMaxReward[1] * 2) / CacheWrathCookiesMult;
-  CacheChainWrathRequiredNext =
+  CacheChainWrathRequiredNext = // eslint-disable-line no-unused-vars
     CacheChainWrathMaxReward[2] /
     60 /
     60 /
@@ -112,9 +111,9 @@ export function CacheChain() {
     maxPayout * 7,
     CacheGoldenCookiesMult,
   );
-  CacheChainFrenzyRequired =
+  CacheChainFrenzyRequired = // eslint-disable-line no-unused-vars
     (CacheChainFrenzyMaxReward[1] * 2) / CacheGoldenCookiesMult;
-  CacheChainFrenzyRequiredNext =
+  CacheChainFrenzyRequiredNext = // eslint-disable-line no-unused-vars
     CacheChainFrenzyMaxReward[2] /
     60 /
     60 /
@@ -126,9 +125,9 @@ export function CacheChain() {
     maxPayout * 7,
     CacheWrathCookiesMult,
   );
-  CacheChainFrenzyWrathRequired =
+  CacheChainFrenzyWrathRequired = // eslint-disable-line no-unused-vars
     (CacheChainFrenzyWrathMaxReward[1] * 2) / CacheWrathCookiesMult;
-  CacheChainFrenzyWrathRequiredNext =
+  CacheChainFrenzyWrathRequiredNext = // eslint-disable-line no-unused-vars
     CacheChainFrenzyWrathMaxReward[2] /
     60 /
     60 /

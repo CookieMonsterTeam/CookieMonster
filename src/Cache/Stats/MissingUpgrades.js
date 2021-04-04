@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { crateMissing } from '../../Disp/MenuSections/Statistics/CreateMissingUpgrades';
 import {
   CacheMissingUpgrades,
@@ -36,6 +35,7 @@ export default function CacheAllMissingUpgrades() {
       let str = '';
 
       str += crateMissing(me);
+      /* eslint-disable no-unused-vars */
       if (me.pool === 'prestige') CacheMissingUpgradesPrestige += str;
       else if (me.pool === 'cookie') CacheMissingUpgradesCookies += str;
       else if (
@@ -44,6 +44,7 @@ export default function CacheAllMissingUpgrades() {
         me.pool !== 'debug'
       )
         CacheMissingUpgrades += str;
+      /* eslint-enable no-unused-vars */
     }
   });
 }

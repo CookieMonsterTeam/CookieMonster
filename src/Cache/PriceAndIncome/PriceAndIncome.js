@@ -1,13 +1,10 @@
-/* eslint-disable no-unused-vars */
 /** Section: Functions related to caching income */
 
 import { CMOptions } from '../../Config/VariablesAndData';
-import GetCPS from '../../Disp/HelperFunctions/GetCPS';
 import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 import BuyBuildingsBonusIncome from '../../Sim/SimulationEvents/BuyBuildingBonusIncome';
 import BuyUpgradesBonusIncome from '../../Sim/SimulationEvents/BuyUpgrades';
 import {
-  CacheAverageCPS,
   CacheAverageGainBank,
   CacheAverageGainWrink,
   CacheAverageGainWrinkFattest,
@@ -30,7 +27,7 @@ function CacheBuildingIncome(amount) {
     result[i] = {};
     result[i].bonus = BuyBuildingsBonusIncome(i, amount);
     if (amount !== 1) {
-      CacheDoRemakeBuildPrices = 1;
+      CacheDoRemakeBuildPrices = 1; // eslint-disable-line no-unused-vars
     }
   });
   return result;

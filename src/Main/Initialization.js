@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-vars */
 import InitCache from '../Cache/CacheInit';
 import { CacheStatsCookies } from '../Cache/Stats/Stats';
 import { LoadConfig } from '../Config/SaveLoadReload/SaveLoadReloadSettings';
 import { VersionMajor, VersionMinor } from '../Data/Moddata';
 import CreateUpgradeBar from '../Disp/BuildingsUpgrades/UpgradeBar';
-import UpdateColours from '../Disp/HelperFunctions/UpdateColours';
 import { CreateBotBar } from '../Disp/InfoBars/BottomBar';
 import { CreateTimerBar } from '../Disp/InfoBars/TimerBar';
 import CreateSectionHideButtons from '../Disp/Initialization/CreateSectionHideButtons';
@@ -31,7 +29,7 @@ export default function InitializeCookieMonster() {
   InitCache();
 
   // Stored to check if we need to re-initiliaze data
-  LastModCount = Object.keys(Game.mods).length;
+  LastModCount = Object.keys(Game.mods).length; // eslint-disable-line no-unused-vars
 
   // Creating visual elements
   CreateCssArea();
@@ -60,7 +58,7 @@ export default function InitializeCookieMonster() {
   Game.CalculateGains();
 
   LoadConfig();
-  CMLastAscendState = Game.OnAscend;
+  CMLastAscendState = Game.OnAscend; // eslint-disable-line no-unused-vars
 
   if (Game.prefs.popups)
     Game.Popup(

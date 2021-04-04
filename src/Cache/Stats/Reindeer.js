@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { CacheSeaSpec } from '../VariablesAndData';
 
 /**
@@ -12,6 +11,6 @@ export default function CacheSeasonSpec() {
     if (Game.hasBuff('Elder frenzy')) val *= 0.5;
     if (Game.hasBuff('Frenzy')) val *= 0.75;
     CacheSeaSpec = Math.max(25, val);
-    if (Game.Has('Ho ho ho-flavored frosting')) CacheSeaSpec *= 2;
+    if (Game.Has('Ho ho ho-flavored frosting')) CacheSeaSpec *= 2; // eslint-disable-line no-unused-vars
   }
 }

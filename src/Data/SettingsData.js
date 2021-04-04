@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import CheckNotificationPermissions from '../Config/CheckNotificationPermissions';
 import { ToggleTimerBar, ToggleTimerBarPos } from '../Config/SpecificToggles';
 import ToggleBotBar from '../Config/Toggles/ToggleBotBar';
@@ -72,7 +71,7 @@ const Config = {
     'Calculate times and average Cookies Per Second with (only the single non-shiny fattest) wrinklers',
     true,
     function () {
-      SimDoSims = true;
+      SimDoSims = true; // eslint-disable-line no-unused-vars
     },
   ),
 

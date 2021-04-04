@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import {
   CacheObjects1,
   CacheObjects10,
@@ -72,10 +71,10 @@ export default function UpdateBuildings() {
       });
 
       arr.sort(function (a, b) {
-        return ColoursOrdering.indexOf(a.color) >
+        return ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
           ColoursOrdering.indexOf(b.color)
           ? 1
-          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color)
+          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
           ? -1
           : a.pp < b.pp
           ? -1
@@ -90,10 +89,10 @@ export default function UpdateBuildings() {
       });
 
       arr.sort(function (a, b) {
-        return ColoursOrdering.indexOf(a.color) >
+        return ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
           ColoursOrdering.indexOf(b.color)
           ? 1
-          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color)
+          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
           ? -1
           : a.pp < b.pp
           ? -1

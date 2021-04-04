@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import jscolor from '@eastdesire/jscolor';
 import { CMOptions } from '../../Config/VariablesAndData';
 import {
@@ -13,7 +12,11 @@ import UpdateTooltipLocation from '../../Disp/Tooltips/PositionLocation';
 import { CMSayTime, Title } from '../../Disp/VariablesAndData';
 import { SimDoSims } from '../../Sim/VariablesAndData';
 import ReplaceTooltipUpgrade from '../ReplaceGameElements/TooltipUpgrades';
-import { BackupFunctions } from '../VariablesAndData';
+import {
+  BackupFunctions,
+  CenturyDateAtBeginLoop,
+  CycliusDateAtBeginLoop,
+} from '../VariablesAndData';
 import FixMouseY from './FixMouse';
 
 /**
@@ -28,12 +31,14 @@ export default function ReplaceNative() {
   BackupFunctions.CalculateGains = Game.CalculateGains;
   Game.CalculateGains = function () {
     BackupFunctions.CalculateGains();
-    SimDoSims = 1;
+    SimDoSims = 1; // eslint-disable-line no-unused-vars
+    CycliusDateAtBeginLoop = Date.now(); // eslint-disable-line no-unused-vars
+    CenturyDateAtBeginLoop = Date.now(); // eslint-disable-line no-unused-vars
   };
 
   BackupFunctions.tooltip = {};
   BackupFunctions.tooltip.draw = Game.tooltip.draw;
-  BackupFunctions.tooltip.drawMod = new Function(
+  BackupFunctions.tooltip.drawMod = new Function( // eslint-disable-line no-new-func
     `return ${Game.tooltip.draw.toString().split('this').join('Game.tooltip')}`,
   )();
   Game.tooltip.draw = function (from, text, origin) {
@@ -41,7 +46,7 @@ export default function ReplaceNative() {
   };
 
   BackupFunctions.tooltip.update = Game.tooltip.update;
-  BackupFunctions.tooltip.updateMod = new Function(
+  BackupFunctions.tooltip.updateMod = new Function( // eslint-disable-line no-new-func
     `return ${Game.tooltip.update
       .toString()
       .split('this.')
@@ -126,6 +131,7 @@ export default function ReplaceNative() {
   };
 
   BackupFunctions.sayTime = Game.sayTime;
+  // eslint-disable-next-line no-unused-vars
   CMSayTime = function (time, detail) {
     if (Number.isNaN(time) || time <= 0)
       return BackupFunctions.sayTime(time, detail);
@@ -139,6 +145,7 @@ export default function ReplaceNative() {
     // Update tab title
     let title = 'Cookie Clicker';
     if (Game.season === 'fools') title = 'Cookie Baker';
+    // eslint-disable-next-line no-unused-vars
     Title = `${Game.OnAscend ? 'Ascending! ' : ''}${CMBeautify(Game.cookies)} ${
       Game.cookies === 1 ? 'cookie' : 'cookies'
     } - ${title}`;
