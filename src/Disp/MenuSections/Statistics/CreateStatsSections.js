@@ -1,6 +1,6 @@
 /** Functions to create the individual sections of the Statistics page */
 
-import * as GameData from '../../../Data/Gamedata';
+import * as GameData from '../../../Data/Gamedata.ts';
 import { MaxChainCookieReward } from '../../../Cache/Stats/ChainCookies';
 import {
   CacheAvgCPSWithChoEgg,

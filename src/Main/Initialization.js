@@ -1,7 +1,7 @@
 import InitCache from '../Cache/CacheInit';
 import { CacheStatsCookies } from '../Cache/Stats/Stats';
 import { LoadConfig } from '../Config/SaveLoadReload/SaveLoadReloadSettings';
-import { VersionMajor, VersionMinor } from '../Data/Moddata';
+import { VersionMajor, VersionMinor } from '../Data/Moddata.ts';
 import CreateUpgradeBar from '../Disp/BuildingsUpgrades/UpgradeBar';
 import { CreateBotBar } from '../Disp/InfoBars/BottomBar';
 import { CreateTimerBar } from '../Disp/InfoBars/TimerBar';

@@ -6,7 +6,7 @@ import {
   CacheObjects100,
 } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
-import { VersionMajor, VersionMinor } from '../../Data/Moddata';
+import { VersionMajor, VersionMinor } from '../../Data/Moddata.ts';
 import {
   Beautify,
   FormatTime,

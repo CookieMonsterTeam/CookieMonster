@@ -1,5 +1,5 @@
 import { LoadConfig } from '../Config/SaveLoadReload/SaveLoadReloadSettings';
-import { VersionMajor, VersionMinor } from '../Data/Moddata';
+import { VersionMajor, VersionMinor } from '../Data/Moddata.ts';
 import { FavouriteSettings } from '../Disp/VariablesAndData';
 import InitData from '../Sim/InitializeData/InitData';
 

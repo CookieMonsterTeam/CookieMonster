@@ -1,7 +1,11 @@
 /** General functions to format or beautify strings */
 
 import { CMOptions } from '../../Config/VariablesAndData';
-import { metric, shortScale, shortScaleAbbreviated } from '../../Data/Scales';
+import {
+  metric,
+  shortScale,
+  shortScaleAbbreviated,
+} from '../../Data/Scales.ts';
 import { BackupFunctions } from '../../Main/VariablesAndData';
 import {
   ColourGreen,
