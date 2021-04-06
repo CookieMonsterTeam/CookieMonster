@@ -7,11 +7,18 @@ module.exports = function (env) {
     optimization: {
       minimize: !!env.production,
     },
-    entry: {
-      CookieMonster: {
-        import: './src/CookieMonster.js',
-        filename: './CookieMonster.js',
-      },
+    entry: './src/CookieMonster.js',
+    resolve: {
+      extensions: ['.ts', '.js'],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.tsx?/,
+          use: 'ts-loader',
+          exclude: /node_modules/,
+        },
+      ],
     },
     output: {
       filename: 'CookieMonster.js',

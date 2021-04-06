@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "ES2020",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "target": "ES6",
+    "strictNullChecks": true,
+  }
+}
