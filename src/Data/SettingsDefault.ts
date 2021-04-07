@@ -1,5 +1,7 @@
 /** This array describes all default settings */
-const ConfigDefault = {
+const ConfigDefault: {
+  [index: string]: string | number | { [index: string]: number };
+} = {
   CPSMode: 1,
   AvgCPSHist: 3,
   AvgClicksHist: 0,

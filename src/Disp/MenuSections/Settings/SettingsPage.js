@@ -3,9 +3,9 @@ import { CMOptions } from '../../../Config/VariablesAndData';
 import {
   ConfigGroups,
   ConfigGroupsNotification,
-} from '../../../Data/Sectionheaders';
+} from '../../../Data/Sectionheaders.ts';
 import Config from '../../../Data/SettingsData';
-import ConfigDefault from '../../../Data/SettingsDefault';
+import ConfigDefault from '../../../Data/SettingsDefault.ts';
 import { FavouriteSettings } from '../../VariablesAndData';
 import CreatePrefHeader from './CreateHeader';
 import CreatePrefOption from './CreateOption';

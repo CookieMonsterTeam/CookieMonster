@@ -1,5 +1,5 @@
 import { CMOptions } from '../Config/VariablesAndData';
-import { VersionMajor, VersionMinor } from '../Data/Moddata';
+import { VersionMajor, VersionMinor } from '../Data/Moddata.ts';
 import { FavouriteSettings } from '../Disp/VariablesAndData';
 
 /**

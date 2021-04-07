@@ -7,7 +7,7 @@ import {
   ToggleConfigVolume,
 } from '../../../Config/ToggleSetting';
 import { CMOptions } from '../../../Config/VariablesAndData';
-import {} from '../../../Data/Sectionheaders';
+import {} from '../../../Data/Sectionheaders.ts';
 import Config from '../../../Data/SettingsData';
 import RefreshScale from '../../HelperFunctions/RefreshScale';
 import UpdateColours from '../../HelperFunctions/UpdateColours';
