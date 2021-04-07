@@ -1,7 +1,7 @@
 /** Data copied directly from the game */
 
 /** Array of the names of all fortune cookies obtainable from the ticker */
-export const Fortunes = [
+export const Fortunes: string[] = [
   'Fortune #001',
   'Fortune #002',
   'Fortune #003',
@@ -28,7 +28,7 @@ export const Fortunes = [
 ];
 
 /** Array of the names of all Halloween cookies */
-export const HalloCookies = [
+export const HalloCookies: string[] = [
   'Skull cookies',
   'Ghost cookies',
   'Bat cookies',
@@ -39,7 +39,7 @@ export const HalloCookies = [
 ];
 
 /** Array of the names of all Christmas cookies */
-export const ChristCookies = [
+export const ChristCookies: string[] = [
   'Christmas tree biscuits',
   'Snowflake biscuits',
   'Snowman biscuits',
@@ -50,7 +50,7 @@ export const ChristCookies = [
 ];
 
 /** Array of the names of all Valentine cookies */
-export const ValCookies = [
+export const ValCookies: string[] = [
   'Pure heart biscuits',
   'Ardent heart biscuits',
   'Sour heart biscuits',
@@ -61,7 +61,7 @@ export const ValCookies = [
 ];
 
 /** Array of the names of all plant drops */
-export const PlantDrops = [
+export const PlantDrops: string[] = [
   'Elderwort biscuits',
   'Bakeberry cookies',
   'Duketater cookies',
@@ -72,7 +72,7 @@ export const PlantDrops = [
 ];
 
 /** All possible effects plants and other items can have with a display-title */
-export const Effects = {
+export const Effects: { [index: string]: string } = {
   buildingCost: 'Building prices',
   click: 'Cookies per click',
   cps: 'Total CPS',
