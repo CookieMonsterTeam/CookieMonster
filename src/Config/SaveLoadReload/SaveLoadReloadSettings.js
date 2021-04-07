@@ -1,4 +1,4 @@
-import ConfigDefault from '../../Data/SettingsDefault';
+import ConfigDefault from '../../Data/SettingsDefault.ts';
 import ConfigData from '../../Data/SettingsData';
 import { CMOptions } from '../VariablesAndData';
 import save from '../../InitSaveLoad/save';

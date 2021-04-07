@@ -55,7 +55,7 @@ export default function AddMissingAchievements() {
   if (CMOptions.MissingAchievements) {
     Object.values(achievs.children).forEach((achievsCrate) => {
       if (!achievsCrate.className.includes('enabled')) {
-        const id = achievsCrate.onclick.toString().match(/(?<=\[).*(?=\])/g)[0];
+        const id = achievsCrate.onclick.toString().split(/\[(.*)\]/gi)[1];
         const { icon } = Game.AchievementsById[id];
         // eslint-disable-next-line no-param-reassign
         achievsCrate.style.backgroundPosition = `${-icon[0] * 48}px ${

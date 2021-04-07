@@ -1,4 +1,4 @@
-import { VersionMajor, VersionMinor } from '../Data/Moddata';
+import { VersionMajor, VersionMinor } from '../Data/Moddata.ts';
 import CMDrawHook from '../Disp/DrawHook';
 import CMClickHook from '../Main/ClickHook';
 import InitializeCookieMonster from '../Main/Initialization';

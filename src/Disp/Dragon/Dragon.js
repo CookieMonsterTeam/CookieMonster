@@ -19,7 +19,9 @@ export function AddAuraInfo(aura) {
     const timeToRecover = FormatTime(
       priceOfChange / (bonusCPS + Game.cookiesPs),
     );
-    const bonusCPSPercentage = Beautify((bonusCPS / Game.cookiesPs) * 100);
+    let bonusCPSPercentage;
+    if (Game.cookiesPs === 0) bonusCPSPercentage = Beautify(Infinity);
+    else bonusCPSPercentage = Beautify((bonusCPS / Game.cookiesPs) * 100);
 
     l('dragonAuraInfo').style.minHeight = '60px';
     l('dragonAuraInfo').style.margin = '8px';

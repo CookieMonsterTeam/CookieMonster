@@ -14,12 +14,10 @@ import UpdateUpgrades from '../Disp/BuildingsUpgrades/Upgrades';
 import RefreshScale from '../Disp/HelperFunctions/RefreshScale';
 import { UpdateFavicon } from '../Disp/TabTitle/FavIcon';
 import { SimDoSims } from '../Sim/VariablesAndData';
-import {
-  SettingStandard,
-  SettingColours,
-  SettingVolume,
-  SettingInputNumber,
-} from './SettingClasses';
+import SettingColours from './SettingClasses/SettingColours.ts';
+import SettingInputNumber from './SettingClasses/SettingInputNumber.ts';
+import SettingStandard from './SettingClasses/SettingStandard.ts';
+import SettingVolume from './SettingClasses/SettingVolume.ts';
 
 /** This includes all options of CookieMonster and their relevant data */
 const Config = {
@@ -529,7 +527,7 @@ const Config = {
     'Statistics',
     ['Missing Achievements OFF', 'Missing Normal Achievements ON'],
     'Shows missing normal achievements in statistics menu.',
-    false,
+    true,
   ),
   UpStats: new SettingStandard(
     'bool',

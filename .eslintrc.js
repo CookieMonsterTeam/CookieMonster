@@ -15,12 +15,24 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 12,
   },
+  plugins: ['@typescript-eslint'],
+  overrides: [
+    {
+      files: ['src/**/*.{ts,tsx}'],
+      extends: ['plugin:@typescript-eslint/recommended'],
+      parser: '@typescript-eslint/parser',
+      rules: {
+        'import/extensions': 'off', // To allow importing .ts without errors
+        'import/no-unresolved': 'off', // To allow importing .ts without errors
+      },
+    },
+  ],
   ignorePatterns: ['*CookieMonster*.js', 'dist/*', 'node_modules/*'],
   rules: {
-    'import/no-mutable-exports': 'off',
+    'import/no-mutable-exports': 'off', // We need to this throughout Cookie Monster
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
-    'func-names': 'off',
-    'prefer-destructuring': ['error', { object: true, array: false }],
+    'func-names': 'off', // To allow unnamed arrow functions
+    'prefer-destructuring': ['error', { object: true, array: false }], // Importing arrays and then destructuring them seems to fail
     'max-len': [
       1,
       {

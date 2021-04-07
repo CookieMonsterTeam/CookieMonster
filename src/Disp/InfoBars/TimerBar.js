@@ -23,7 +23,7 @@ export function CreateTimerBar() {
   TimerBar.style.height = '0px';
   TimerBar.style.fontSize = '10px';
   TimerBar.style.fontWeight = 'bold';
-  TimerBar.style.backgroundColour = 'black';
+  TimerBar.style.backgroundColor = 'black';
 
   // Create standard Golden Cookie bar
   const CMTimerBarGC = CreateTimer('CMTimerBarGC', 'Next Cookie', [

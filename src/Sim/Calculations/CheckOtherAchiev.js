@@ -1,4 +1,4 @@
-import { ChristCookies, HalloCookies } from '../../Data/Gamedata';
+import { ChristCookies, HalloCookies } from '../../Data/Gamedata.ts';
 import SimHas from '../ReplacedGameFunctions/SimHas';
 import SimHasAchiev from '../ReplacedGameFunctions/SimHasAchiev';
 import SimWin from '../SimulationData/SimWin';
