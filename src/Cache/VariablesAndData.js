@@ -28,6 +28,7 @@ export let CacheLastChoEgg = 0;
 export let CacheObjects1 = {};
 export let CacheObjects10 = {};
 export let CacheObjects100 = {};
+export let CacheObjectsNextAchievement = {};
 
 export let CacheWrinklersTotal = 0;
 export let CacheWrinklersNormal = 0;
