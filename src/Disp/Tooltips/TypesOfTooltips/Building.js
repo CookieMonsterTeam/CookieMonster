@@ -2,6 +2,7 @@ import {
   CacheObjects1,
   CacheObjects10,
   CacheObjects100,
+  CacheObjectsNextAchievement,
 } from '../../../Cache/VariablesAndData';
 import { CMOptions } from '../../../Config/VariablesAndData';
 import { SimObjects } from '../../../Sim/VariablesAndData';
@@ -74,10 +75,9 @@ export default function Building() {
     }
 
     // Add "production left till next achievement"-bar
-    l('CMTooltipProductionHeader').style.display = 'none';
+    l('CMTooltipProductionLeftHeader').style.display = 'none';
     l('CMTooltipTime').style.marginBottom = '0px';
 
-    // Can this ESLint error be solved while retaining the functionality of break?
     // eslint-disable-next-line no-restricted-syntax
     for (const i of Object.keys(Game.Objects[TooltipName].productionAchievs)) {
       if (
@@ -88,15 +88,29 @@ export default function Building() {
         const nextProductionAchiev =
           Game.Objects[TooltipName].productionAchievs[i];
         l('CMTooltipTime').style.marginBottom = '4px';
-        l('CMTooltipProductionHeader').style.display = '';
-        l('CMTooltipProduction').className = `ProdAchievement${TooltipName}`;
-        l('CMTooltipProduction').textContent = Beautify(
+        l('CMTooltipProductionLeftHeader').style.display = '';
+        l(
+          'CMTooltipProductionLeft',
+        ).className = `ProdAchievement${TooltipName}`;
+        l('CMTooltipProductionLeft').textContent = Beautify(
           nextProductionAchiev.pow - SimObjects[TooltipName].totalCookies,
           15,
         );
-        l('CMTooltipProduction').style.color = 'white';
+        l('CMTooltipProductionLeft').style.color = 'white';
         break;
       }
+    }
+
+    if (CacheObjectsNextAchievement[TooltipName].AmountNeeded < 101) {
+      l('CMTooltipProductionLeft').style.marginBottom = '4px';
+      l('CMTooltipNextAchievementHeader').style.display = '';
+      l('CMTooltipNextAchievement').textContent = Beautify(
+        CacheObjectsNextAchievement[TooltipName].AmountNeeded,
+      );
+      l('CMTooltipNextAchievement').style.color = 'white';
+    } else {
+      l('CMTooltipNextAchievementHeader').style.display = 'none';
+      l('CMTooltipProductionLeft').style.marginBottom = '0px';
     }
   } else l('CMTooltipArea').style.display = 'none';
 }

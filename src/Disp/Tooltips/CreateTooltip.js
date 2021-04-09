@@ -185,10 +185,18 @@ export function TooltipCreateCalculationSection(tooltip) {
     tooltip.appendChild(
       TooltipCreateHeader('Production left till next achievement'),
     );
-    // Assign a id in order to hide when no achiev's are left
-    tooltip.lastChild.id = 'CMTooltipProductionHeader'; // eslint-disable-line no-param-reassign
+    tooltip.lastChild.id = 'CMTooltipProductionLeftHeader'; // eslint-disable-line no-param-reassign
     const production = document.createElement('div');
-    production.id = 'CMTooltipProduction';
+    production.id = 'CMTooltipProductionLeft';
+    tooltip.appendChild(production);
+  }
+  if (TooltipType === 'b') {
+    tooltip.appendChild(
+      TooltipCreateHeader('Buildings left till next additional achievement'),
+    );
+    tooltip.lastChild.id = 'CMTooltipNextAchievementHeader'; // eslint-disable-line no-param-reassign
+    const production = document.createElement('div');
+    production.id = 'CMTooltipNextAchievement';
     tooltip.appendChild(production);
   }
 }
