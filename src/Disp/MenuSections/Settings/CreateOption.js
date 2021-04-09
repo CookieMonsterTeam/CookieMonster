@@ -70,6 +70,7 @@ export default function CreatePrefOption(config) {
     a.id = ConfigPrefix + config;
     a.onclick = function () {
       ToggleConfig(config);
+      Game.UpdateMenu();
     };
     a.textContent = Config[config].label[CMOptions[config]];
     div.appendChild(a);
@@ -102,9 +103,11 @@ export default function CreatePrefOption(config) {
     slider.value = CMOptions[config];
     slider.oninput = function () {
       ToggleConfigVolume(config);
+      Game.UpdateMenu();
     };
     slider.onchange = function () {
       ToggleConfigVolume(config);
+      Game.UpdateMenu();
     };
     volume.appendChild(slider);
     div.appendChild(volume);
@@ -221,6 +224,7 @@ export default function CreatePrefOption(config) {
       CMOptions[config] = this.value;
       SaveConfig();
       RefreshScale();
+      Game.UpdateMenu();
     };
     div.appendChild(input);
     div.appendChild(document.createTextNode(' '));

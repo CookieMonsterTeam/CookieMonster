@@ -25,8 +25,6 @@ export function ToggleConfig(config) {
     ConfigData[config].func();
   }
 
-  l(ConfigPrefix + config).innerHTML =
-    ConfigData[config].label[CMOptions[config]];
   SaveConfig();
 }
 
