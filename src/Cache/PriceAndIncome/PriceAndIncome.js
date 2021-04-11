@@ -12,6 +12,7 @@ import {
   CacheObjects1,
   CacheObjects10,
   CacheObjects100,
+  CacheObjectsNextAchievement,
   CacheUpgrades,
 } from '../VariablesAndData';
 
@@ -81,6 +82,13 @@ export function CacheBuildingsPrices() {
       Game.Objects[i].amount,
       Game.Objects[i].free,
       100,
+    );
+    CacheObjectsNextAchievement[i].price = BuildingGetPrice(
+      Game.Objects[i],
+      Game.Objects[i].basePrice,
+      Game.Objects[i].amount,
+      Game.Objects[i].free,
+      CacheObjectsNextAchievement[i].AmountNeeded,
     );
   });
 }

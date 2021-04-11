@@ -15,6 +15,7 @@ import {
   CacheGoldenAndWrathCookiesMults,
   CacheStatsCookies,
 } from './Stats/Stats';
+import AllAmountTillNextAchievement from './TillNextAchievement/AllAmountTillNextAchievement';
 import {
   CacheAverageCookiesFromClicks,
   HeavenlyChipsDiff,
@@ -39,6 +40,7 @@ export default function InitCache() {
     ClickTimes[ClickTimes.length - 1] * 20,
   );
   CacheHeavenlyChipsPS();
+  AllAmountTillNextAchievement();
   CacheAvgCPS();
   CacheIncome();
   CacheBuildingsPrices();
