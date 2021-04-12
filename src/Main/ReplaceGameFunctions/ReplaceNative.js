@@ -1,6 +1,6 @@
 import jscolor from '@eastdesire/jscolor';
 import { CMOptions } from '../../Config/VariablesAndData';
-import Beautify from '../../Disp/BeautifyAndFormatting/Beautify';
+import CMBeautify from '../../Disp/BeautifyAndFormatting/Beautify';
 import FormatTime from '../../Disp/BeautifyAndFormatting/FormatTime';
 import { AddAuraInfo, AddDragonLevelUpTooltip } from '../../Disp/Dragon/Dragon';
 import AddMenu from '../../Disp/MenuSections/AddMenus';
@@ -144,7 +144,7 @@ export default function ReplaceNative() {
     let title = 'Cookie Clicker';
     if (Game.season === 'fools') title = 'Cookie Baker';
     // eslint-disable-next-line no-unused-vars
-    Title = `${Game.OnAscend ? 'Ascending! ' : ''}${Beautify(Game.cookies)} ${
+    Title = `${Game.OnAscend ? 'Ascending! ' : ''}${CMBeautify(Game.cookies)} ${
       Game.cookies === 1 ? 'cookie' : 'cookies'
     } - ${title}`;
     UpdateTitle();
