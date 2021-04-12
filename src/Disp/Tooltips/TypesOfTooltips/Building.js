@@ -8,11 +8,9 @@ import {
 import { CMOptions } from '../../../Config/VariablesAndData';
 import BuyBuildingsBonusIncome from '../../../Sim/SimulationEvents/BuyBuildingBonusIncome';
 import { SimObjects } from '../../../Sim/VariablesAndData';
-import {
-  Beautify,
-  FormatTime,
-  GetTimeColour,
-} from '../../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../../BeautifyAndFormatting/Beautify';
+import FormatTime from '../../BeautifyAndFormatting/FormatTime';
+import GetTimeColour from '../../BeautifyAndFormatting/GetTimeColour';
 import GetCPS from '../../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
 import {

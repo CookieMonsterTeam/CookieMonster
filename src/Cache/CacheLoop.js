@@ -1,4 +1,4 @@
-import { FormatTime } from '../Disp/BeautifyAndFormatting/BeautifyFormatting';
+import FormatTime from '../Disp/BeautifyAndFormatting/FormatTime';
 import GetCPS from '../Disp/HelperFunctions/GetCPS';
 import CacheAvgCPS from './CPS/CPS';
 import CacheCurrWrinklerCPS from './CPS/CurrWrinklerCPS';

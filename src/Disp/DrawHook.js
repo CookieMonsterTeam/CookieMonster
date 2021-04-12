@@ -1,6 +1,6 @@
 import ToggleWrinklerButtons from '../Config/Toggles/ToggleWrinklerButtons';
 import { CMOptions } from '../Config/VariablesAndData';
-import { Beautify } from './BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from './BeautifyAndFormatting/Beautify';
 import UpdateBuildings from './BuildingsUpgrades/Buildings';
 import UpdateUpgrades from './BuildingsUpgrades/Upgrades';
 import { UpdateBotBar } from './InfoBars/BottomBar';

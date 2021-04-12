@@ -5,7 +5,7 @@ import {
 } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingSell from '../../Sim/SimulationEvents/SellBuilding';
-import { Beautify } from '../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../BeautifyAndFormatting/Beautify';
 import { ColoursOrdering, LastTargetBuildings } from '../VariablesAndData';
 
 /**

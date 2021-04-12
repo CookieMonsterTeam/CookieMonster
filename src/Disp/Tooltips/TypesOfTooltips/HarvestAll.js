@@ -1,5 +1,5 @@
 import { CMOptions } from '../../../Config/VariablesAndData';
-import { Beautify } from '../../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../../BeautifyAndFormatting/Beautify';
 import * as Create from '../CreateTooltip';
 
 /**

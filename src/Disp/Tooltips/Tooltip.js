@@ -1,15 +1,13 @@
 import UpdateTooltips from './UpdateTooltips';
 import {
-  Beautify,
-  GetTimeColour,
-} from '../BeautifyAndFormatting/BeautifyFormatting';
-import {
   SimpleTooltipElements,
   TooltipName,
   TooltipType,
 } from '../VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
+import GetTimeColour from '../BeautifyAndFormatting/GetTimeColour';
+import Beautify from '../BeautifyAndFormatting/Beautify';
 
 /** All general functions related to creating and updating tooltips */
 

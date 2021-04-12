@@ -2,11 +2,8 @@ import GetCPSBuffMult from '../../../Cache/CPS/GetCPSBuffMult';
 import { CacheEdifice, CacheLucky } from '../../../Cache/VariablesAndData';
 import ToggleToolWarnPos from '../../../Config/Toggles/ToggleToolWarnPos';
 import { CMOptions } from '../../../Config/VariablesAndData';
-
-import {
-  Beautify,
-  FormatTime,
-} from '../../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../../BeautifyAndFormatting/Beautify';
+import FormatTime from '../../BeautifyAndFormatting/FormatTime';
 import GetCPS from '../../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
 import {

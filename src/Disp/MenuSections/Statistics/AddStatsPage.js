@@ -16,7 +16,7 @@ import {
 import PopAllNormalWrinklers from '../../HelperFunctions/PopWrinklers';
 import { ClickTimes, CookieTimes } from '../../VariablesAndData';
 import GetCPS from '../../HelperFunctions/GetCPS';
-import { Beautify } from '../../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../../BeautifyAndFormatting/Beautify';
 import AddMissingAchievements from './CreateMissingAchievements';
 
 /**

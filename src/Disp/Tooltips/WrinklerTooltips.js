@@ -1,6 +1,6 @@
 import { CMOptions } from '../../Config/VariablesAndData';
 import { SimObjects } from '../../Sim/VariablesAndData';
-import { Beautify } from '../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../BeautifyAndFormatting/Beautify';
 import {
   TooltipWrinkler,
   TooltipWrinklerArea,

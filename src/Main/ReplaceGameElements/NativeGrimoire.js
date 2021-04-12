@@ -1,6 +1,5 @@
 import { CMOptions } from '../../Config/VariablesAndData';
-import { FormatTime } from '../../Disp/BeautifyAndFormatting/BeautifyFormatting';
-
+import FormatTime from '../../Disp/BeautifyAndFormatting/FormatTime';
 import CalculateGrimoireRefillTime from '../../Disp/HelperFunctions/CalculateGrimoireRefillTime';
 import {
   BackupGrimoireDraw,
