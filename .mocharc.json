@@ -1,4 +1,5 @@
 {
     "recursive": true,
-    "require": "esm"
+    "require": "esm",
+    "reporter": "min"
 }
