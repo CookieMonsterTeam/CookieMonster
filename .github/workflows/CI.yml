@@ -1,31 +1,29 @@
 name: CI
 on: pull_request
 jobs:
-  Check_ESLint:
+  Check_linting_test_and_build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository code
+      uses: actions/checkout@v2
+    - name: Install dependencies
+      run: npm ci
     - name: Run ESLint
-      run: |
-        npm install
-        npx eslint src
-  Check_main_file:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
+      run: npx eslint src
+    - name: Run Mocha tests
+      run: npx mocha
     - name: Check if CookieMonster.js is built correctly 
       run: |
-        npm install
-        npx webpack -o ./test --env production
-        if cmp <(head -n 2 dist/CookieMonster.js) <(head -n 2 test/CookieMonster.js); then
+        npx webpack -o ./tmp --env production
+        if cmp <(head -n 2 dist/CookieMonster.js) <(head -n 2 tmp/CookieMonster.js); then
             echo '### SUCCESS: CookieMonster is correctly built! ###'
         else
             echo '### WARNING: CookieMonster.js does not seem to be correct. Make sure to run "npm run build" after saving all your changes! ###'
             exit 1
         fi
-        if cmp <(head -n 2 CookieMonster.js) <(head -n 2 test/CookieMonster.js); then
+        if cmp <(head -n 2 CookieMonster.js) <(head -n 2 tmp/CookieMonster.js); then
             echo '### SUCCESS: CookieMonster is correctly built! ###'
         else
-            echo '### WARNING: Make sure to move the file from the /dist folder to the main folder. Otherwise Github Pages won't notice it ###'
+            echo '### WARNING: CookieMonster.js does not seem to be correct. Make sure to run "npm run build" after saving all your changes! ###'
             exit 1
         fi
