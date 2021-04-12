@@ -38,15 +38,12 @@ import {
 } from '../../../Cache/VariablesAndData';
 import { CMOptions } from '../../../Config/VariablesAndData';
 import ResetBonus from '../../../Sim/SimulationEvents/ResetAscension';
-import {
-  Beautify,
-  FormatTime,
-} from '../../BeautifyAndFormatting/BeautifyFormatting';
-
 import GetCPS from '../../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
 import { ColourGreen, ColourRed, ColourTextPre } from '../../VariablesAndData';
 import { StatsListing, StatsHeader, StatsMissDisp } from './CreateDOMElements';
+import Beautify from '../../BeautifyAndFormatting/Beautify';
+import FormatTime from '../../BeautifyAndFormatting/FormatTime';
 
 /**
  * This function creates the "Lucky" section of the stats page

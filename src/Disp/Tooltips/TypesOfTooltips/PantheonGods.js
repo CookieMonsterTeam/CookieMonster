@@ -1,6 +1,6 @@
 import { CacheGods } from '../../../Cache/VariablesAndData';
 import { CMOptions } from '../../../Config/VariablesAndData';
-import { Beautify } from '../../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../../BeautifyAndFormatting/Beautify';
 import { TooltipName, TooltipType } from '../../VariablesAndData';
 import * as Create from '../CreateTooltip';
 

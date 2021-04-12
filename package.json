@@ -1,71 +1,76 @@
 {
-    "name": "cookiemonster-mod",
-    "version": "2.031.7",
-    "description": "Cookie Monster is an add-on that you can load into Cookie Clicker which offers a wide range of tools and statistics to enhance the game. It is not a cheat interface – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want. This is a helper and everything is an option.",
-    "main": "CookieMonster.js",
-    "keywords": [
-        "Cookie Clicker",
-        "javascript",
-        "mod",
-        "Dashnet",
-        "Orteil"
-    ],
-    "scripts": {
-        "copy-file": "cp dist/CookieMonster.js CookieMonster.js",
-        "eslint-src": "eslint src",
-        "build": "run-s eslint-src pack-prod remove-comment copy-file",
-        "build-test": "run-s pack-dev",
-        "pack-prod": "webpack --env production",
-        "pack-dev": "webpack",
-        "remove-comment": "sed -i '' -e '/\\/\\/# sourceMappingURL.*/d' dist/CookieMonster.js"
+  "name": "cookiemonster-mod",
+  "version": "2.031.7",
+  "description": "Cookie Monster is an add-on that you can load into Cookie Clicker which offers a wide range of tools and statistics to enhance the game. It is not a cheat interface – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want. This is a helper and everything is an option.",
+  "main": "CookieMonster.js",
+  "keywords": [
+    "Cookie Clicker",
+    "javascript",
+    "mod",
+    "Dashnet",
+    "Orteil"
+  ],
+  "scripts": {
+    "copy-file": "cp dist/CookieMonster.js CookieMonster.js",
+    "eslint-src": "eslint src",
+    "build": "run-s eslint-src pack-prod remove-comment copy-file test",
+    "build-test": "run-s pack-dev",
+    "pack-prod": "webpack --env production",
+    "pack-dev": "webpack",
+    "remove-comment": "sed -i '' -e '/\\/\\/# sourceMappingURL.*/d' dist/CookieMonster.js",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aktanusa/CookieMonster.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Aktanusa",
+    "email": "chanam.geo@yahoo.com"
+  },
+  "contributors": [
+    {
+      "name": "Daniël van Noord",
+      "email": "13665637+DanielNoord@users.noreply.github.com"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Aktanusa/CookieMonster.git"
-    },
-    "license": "MIT",
-    "author": {
-        "name": "Aktanusa",
-        "email": "chanam.geo@yahoo.com"
-    },
-    "contributors": [
-        {
-            "name": "Daniël van Noord",
-            "email": "13665637+DanielNoord@users.noreply.github.com"
-        },
-        {
-            "name": "Aran Leite",
-            "email": "hyoretsu@gmail.com",
-            "url": "https://www.linkedin.com/in/aranleite"
-        }
-    ],
-    "bugs": {
-        "url": "https://github.com/Aktanusa/CookieMonster/issues"
-    },
-    "homepage": "https://github.com/Aktanusa/CookieMonster#readme",
-    "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "^4.21.0",
-        "@typescript-eslint/parser": "^4.21.0",
-        "eslint": "^7.23.0",
-        "eslint-config-airbnb-base": "^14.2.1",
-        "eslint-config-prettier": "^8.1.0",
-        "eslint-plugin-import": "^2.22.1",
-        "eslint-plugin-prettier": "^3.3.1",
-        "npm-run-all": "^4.1.5",
-        "prettier": "2.2.1",
-        "ts-loader": "^8.1.0",
-        "typescript": "^4.2.3",
-        "webpack": "^5.24.4",
-        "webpack-cli": "^4.5.0"
-    },
-    "ccrepo": {
-        "icon": [
-            10,
-            0
-        ],
-        "name": "Cookie Monster"
-    },
-    "dependencies": {
-        "@eastdesire/jscolor": "^2.4.5"
+    {
+      "name": "Aran Leite",
+      "email": "hyoretsu@gmail.com",
+      "url": "https://www.linkedin.com/in/aranleite"
     }
+  ],
+  "bugs": {
+    "url": "https://github.com/Aktanusa/CookieMonster/issues"
+  },
+  "homepage": "https://github.com/Aktanusa/CookieMonster#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
+    "chai": "^4.3.4",
+    "eslint": "^7.23.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "esm": "^3.2.25",
+    "mocha": "^8.3.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "2.2.1",
+    "sinon": "^10.0.0",
+    "ts-loader": "^8.1.0",
+    "typescript": "^4.2.3",
+    "webpack": "^5.24.4",
+    "webpack-cli": "^4.5.0"
+  },
+  "ccrepo": {
+    "icon": [
+      10,
+      0
+    ],
+    "name": "Cookie Monster"
+  },
+  "dependencies": {
+    "@eastdesire/jscolor": "^2.4.5"
+  }
 }

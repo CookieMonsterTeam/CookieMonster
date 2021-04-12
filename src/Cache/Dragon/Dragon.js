@@ -1,6 +1,6 @@
 /** Functions related to the Dragon */
 
-import { Beautify } from '../../Disp/BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../../Disp/BeautifyAndFormatting/Beautify';
 import CopyData from '../../Sim/SimulationData/CopyData';
 import { SimDoSims, SimObjects } from '../../Sim/VariablesAndData';
 import {

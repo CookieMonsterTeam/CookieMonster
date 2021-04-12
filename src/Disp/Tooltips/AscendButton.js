@@ -4,7 +4,7 @@ import {
   CacheTimeTillNextPrestige,
 } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
-import { Beautify } from '../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../BeautifyAndFormatting/Beautify';
 
 /**
  * This function creates a header object for tooltips.

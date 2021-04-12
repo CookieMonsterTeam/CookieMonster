@@ -7,11 +7,10 @@ import {
 } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import { VersionMajor, VersionMinor } from '../../Data/Moddata.ts';
-import {
-  Beautify,
-  FormatTime,
-  GetTimeColour,
-} from '../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../BeautifyAndFormatting/Beautify';
+import FormatTime from '../BeautifyAndFormatting/FormatTime';
+import GetTimeColour from '../BeautifyAndFormatting/GetTimeColour';
+
 import GetCPS from '../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../HelperFunctions/GetWrinkConfigBank';
 import {

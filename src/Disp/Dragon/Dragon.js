@@ -4,10 +4,8 @@ import CacheDragonCost from '../../Cache/Dragon/Dragon';
 import { CacheCostDragonUpgrade } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import CalculateChangeAura from '../../Sim/SimulationEvents/AuraChange';
-import {
-  Beautify,
-  FormatTime,
-} from '../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../BeautifyAndFormatting/Beautify';
+import FormatTime from '../BeautifyAndFormatting/FormatTime';
 
 /**
  * This functions adds the two extra lines about CPS and time to recover to the aura picker infoscreen

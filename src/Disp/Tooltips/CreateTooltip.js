@@ -192,7 +192,7 @@ export function TooltipCreateCalculationSection(tooltip) {
   }
   if (TooltipType === 'b') {
     tooltip.appendChild(
-      TooltipCreateHeader('Buildings left till next additional achievement'),
+      TooltipCreateHeader('Buildings (price / PP) left till next achievement'),
     );
     tooltip.lastChild.id = 'CMTooltipNextAchievementHeader'; // eslint-disable-line no-param-reassign
     const production = document.createElement('div');

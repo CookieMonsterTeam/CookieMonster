@@ -7,12 +7,6 @@ import {
   shortScaleAbbreviated,
 } from '../../Data/Scales.ts';
 import { BackupFunctions } from '../../Main/VariablesAndData';
-import {
-  ColourGreen,
-  ColourOrange,
-  ColourRed,
-  ColourYellow,
-} from '../VariablesAndData';
 
 /**
  * This function returns formats number based on the Scale setting
@@ -21,7 +15,7 @@ import {
  * @param	{number}	forced	Used to force (type 3) in certains cases
  * @returns	{string}			Formatted number
  */
-export function Beautify(num, floats, forced) {
+export default function Beautify(num, floats, forced) {
   const decimals = CMOptions.ScaleDecimals + 1;
   if (num === Infinity) {
     return 'Infinity';
@@ -92,67 +86,4 @@ export function Beautify(num, floats, forced) {
   }
   console.log(`Could not beautify number with Cookie Monster Beautify: ${num}`); // eslint-disable-line no-console
   return BackupFunctions.Beautify(num, floats);
-}
-
-/**
- * This function returns time as a string depending on TimeFormat setting
- * @param  	{number} 	time		Time to be formatted
- * @param  	{number}	longFormat 	1 or 0
- * @returns	{string}				Formatted time
- */
-export function FormatTime(time, longFormat) {
-  let formattedTime = time;
-  if (time === Infinity) return time;
-  if (time < 0) return 'Negative time period';
-  formattedTime = Math.ceil(time);
-  const y = Math.floor(formattedTime / 31557600);
-  const d = Math.floor((formattedTime % 31557600) / 86400);
-  const h = Math.floor((formattedTime % 86400) / 3600);
-  const m = Math.floor((formattedTime % 3600) / 60);
-  const s = Math.floor(formattedTime % 60);
-  let str = '';
-  if (CMOptions.TimeFormat) {
-    if (formattedTime > 3155760000) return 'XX:XX:XX:XX:XX';
-    str += `${(y < 10 ? '0' : '') + y}:`;
-    str += `${(d < 10 ? '0' : '') + d}:`;
-    str += `${(h < 10 ? '0' : '') + h}:`;
-    str += `${(m < 10 ? '0' : '') + m}:`;
-    str += (s < 10 ? '0' : '') + s;
-  } else {
-    if (formattedTime > 777600000)
-      return longFormat ? 'Over 9000 days!' : '>9000d';
-    str +=
-      y > 0
-        ? `${y + (longFormat ? (y === 1 ? ' year' : ' years') : 'y')}, ` // eslint-disable-line no-nested-ternary
-        : '';
-    str +=
-      d > 0 ? `${d + (longFormat ? (d === 1 ? ' day' : ' days') : 'd')}, ` : ''; // eslint-disable-line no-nested-ternary
-    if (str.length > 0 || h > 0)
-      str += `${h + (longFormat ? (h === 1 ? ' hour' : ' hours') : 'h')}, `; // eslint-disable-line no-nested-ternary
-    if (str.length > 0 || m > 0)
-      str += `${m + (longFormat ? (m === 1 ? ' minute' : ' minutes') : 'm')}, `; // eslint-disable-line no-nested-ternary
-    str += s + (longFormat ? (s === 1 ? ' second' : ' seconds') : 's'); // eslint-disable-line no-nested-ternary
-  }
-  return str;
-}
-
-/**
- * This function returns the color to be used for time-strings
- * @param	{number}			time			Time to be coloured
- * @returns {{string, string}}	{text, color}	Both the formatted time and color as strings in an array
- */
-export function GetTimeColour(time) {
-  let color;
-  let text;
-  if (time <= 0) {
-    if (CMOptions.TimeFormat) text = '00:00:00:00:00';
-    else text = 'Done!';
-    color = ColourGreen;
-  } else {
-    text = FormatTime(time);
-    if (time > 300) color = ColourRed;
-    else if (time > 60) color = ColourOrange;
-    else color = ColourYellow;
-  }
-  return { text, color };
 }

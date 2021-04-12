@@ -1,3 +1,4 @@
+import ColourOfPP from '../../../Cache/PP/ColourOfPP';
 import {
   CacheObjects1,
   CacheObjects10,
@@ -5,12 +6,11 @@ import {
   CacheObjectsNextAchievement,
 } from '../../../Cache/VariablesAndData';
 import { CMOptions } from '../../../Config/VariablesAndData';
+import BuyBuildingsBonusIncome from '../../../Sim/SimulationEvents/BuyBuildingBonusIncome';
 import { SimObjects } from '../../../Sim/VariablesAndData';
-import {
-  Beautify,
-  FormatTime,
-  GetTimeColour,
-} from '../../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../../BeautifyAndFormatting/Beautify';
+import FormatTime from '../../BeautifyAndFormatting/FormatTime';
+import GetTimeColour from '../../BeautifyAndFormatting/GetTimeColour';
 import GetCPS from '../../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
 import {
@@ -101,13 +101,36 @@ export default function Building() {
       }
     }
 
-    if (CacheObjectsNextAchievement[TooltipName].AmountNeeded < 101) {
+    const ObjectsTillNext = CacheObjectsNextAchievement[TooltipName];
+    if (ObjectsTillNext.AmountNeeded < 101) {
       l('CMTooltipProductionLeft').style.marginBottom = '4px';
       l('CMTooltipNextAchievementHeader').style.display = '';
-      l('CMTooltipNextAchievement').textContent = Beautify(
-        CacheObjectsNextAchievement[TooltipName].AmountNeeded,
-      );
+
+      let PPOfAmount;
+      if (Game.cookiesPs) {
+        PPOfAmount =
+          Math.max(
+            ObjectsTillNext.price - (Game.cookies + GetWrinkConfigBank()),
+            0,
+          ) /
+            Game.cookiesPs +
+          ObjectsTillNext.price /
+            BuyBuildingsBonusIncome(TooltipName, ObjectsTillNext.AmountNeeded);
+      } else
+        PPOfAmount =
+          ObjectsTillNext.price /
+          BuyBuildingsBonusIncome(TooltipName, ObjectsTillNext.AmountNeeded);
+
+      l('CMTooltipNextAchievement').textContent = `${Beautify(
+        ObjectsTillNext.AmountNeeded,
+      )} / ${Beautify(ObjectsTillNext.price)} / `;
       l('CMTooltipNextAchievement').style.color = 'white';
+      const PPFrag = document.createElement('span');
+      if (CMOptions.PPDisplayTime) PPFrag.textContent = FormatTime(PPOfAmount);
+      else PPFrag.textContent = Beautify(PPOfAmount);
+      PPFrag.className =
+        ColourTextPre + ColourOfPP({ pp: PPOfAmount }, ObjectsTillNext.price);
+      l('CMTooltipNextAchievement').appendChild(PPFrag);
     } else {
       l('CMTooltipNextAchievementHeader').style.display = 'none';
       l('CMTooltipProductionLeft').style.marginBottom = '0px';

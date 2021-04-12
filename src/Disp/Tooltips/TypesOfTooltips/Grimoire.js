@@ -1,9 +1,7 @@
 import { CacheNoGoldSwitchCookiesPS } from '../../../Cache/VariablesAndData';
 import { CMOptions } from '../../../Config/VariablesAndData';
-import {
-  Beautify,
-  GetTimeColour,
-} from '../../BeautifyAndFormatting/BeautifyFormatting';
+import Beautify from '../../BeautifyAndFormatting/Beautify';
+import GetTimeColour from '../../BeautifyAndFormatting/GetTimeColour';
 import CalculateGrimoireRefillTime from '../../HelperFunctions/CalculateGrimoireRefillTime';
 import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
 import { ColourTextPre, TooltipName } from '../../VariablesAndData';
