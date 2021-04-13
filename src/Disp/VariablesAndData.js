@@ -101,7 +101,7 @@ export let TooltipWrinkler = -1; // eslint-disable-line prefer-const
 export let TooltipWrinklerBeingShown = []; // eslint-disable-line prefer-const
 
 export let CMLastAscendState;
-export let CMSayTime;
+export let CMSayTime = function () {}; // eslint-disable-line prefer-const
 
 /**
  * These are variables used to create various displays when the game is loaded on the "sell all" screen

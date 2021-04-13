@@ -1,6 +1,6 @@
 import { before, beforeEach, describe, it } from 'mocha';
 import { assert } from 'chai';
-import { l, Game } from '../../GlobalsForTesting'; // eslint-disable-line no-unused-vars
+import { l, Game } from '../../GlobalsForTesting';
 
 import ToggleBotBar from '../../../src/Config/Toggles/ToggleBotBar';
 import { CMOptions } from '../../../src/Config/VariablesAndData';

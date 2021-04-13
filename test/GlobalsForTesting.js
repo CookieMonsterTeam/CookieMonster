@@ -4,7 +4,9 @@ export function l(id) {
 }
 
 export const Game = {
-  DrawBackground() {},
   Background: { canvas: { parentNode: {} } },
+  DrawBackground() {},
   LeftBackground: { canvas: { parentNode: {} } },
+  RebuildUpgrades() {},
+  UpgradesInStore: {},
 };
