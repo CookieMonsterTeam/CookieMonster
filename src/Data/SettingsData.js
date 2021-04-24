@@ -14,10 +14,12 @@ import UpdateUpgrades from '../Disp/BuildingsUpgrades/Upgrades';
 import RefreshScale from '../Disp/HelperFunctions/RefreshScale';
 import { UpdateFavicon } from '../Disp/TabTitle/FavIcon';
 import { SimDoSims } from '../Sim/VariablesAndData';
-import SettingColours from './SettingClasses/SettingColours.ts';
-import SettingInputNumber from './SettingClasses/SettingInputNumber.ts';
-import SettingStandard from './SettingClasses/SettingStandard.ts';
-import SettingVolume from './SettingClasses/SettingVolume.ts';
+import {
+  SettingColours,
+  SettingInputNumber,
+  SettingStandard,
+  SettingVolume,
+} from './SettingClasses.ts';
 
 /** This includes all options of CookieMonster and their relevant data */
 const Config = {
