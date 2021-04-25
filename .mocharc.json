@@ -1,5 +1,5 @@
 {
-    "recursive": true,
-    "require": "esm",
-    "reporter": "min"
+  "recursive": true,
+  "require": "esm",
+  "reporter": "min"
 }

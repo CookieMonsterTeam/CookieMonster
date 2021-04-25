@@ -11,11 +11,11 @@
     "BeautifyAll": "readonly",
     "PlaySound": "readonly"
   },
-  "extends": ["airbnb-base", "plugin:prettier/recommended"],
+  "extends": ["airbnb-base", "plugin:prettier/recommended", "prettier"],
   "parserOptions": {
     "ecmaVersion": 12
   },
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "prettier"],
   "overrides": [
     {
       "files": ["src/**/*.ts"],
@@ -53,15 +53,7 @@
         "array": false
       }
     ],
-    "max-len": [
-      1,
-      {
-        "code": 100,
-        "ignoreComments": true,
-        "ignoreStrings": true,
-        "ignoreTemplateLiterals": true
-      }
-    ]
+    "prettier/prettier": "error"
   },
   "settings": {
     "import/resolver": {

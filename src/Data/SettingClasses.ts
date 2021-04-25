@@ -42,7 +42,12 @@ class SettingStandard extends Setting {
 
 /** The volume level setting class */
 class SettingVolume extends Setting {
-  constructor(type: string, group: string, public label: string[], desc: string) {
+  constructor(
+    type: string,
+    group: string,
+    public label: string[],
+    desc: string,
+  ) {
     super(type, group, desc);
 
     for (let i = 0; i < 101; i++) {
