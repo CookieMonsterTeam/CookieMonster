@@ -87,11 +87,12 @@ export default function CMLoopHook() {
     LoopCache();
 
     // Check all changing minigames and game-states
-    CheckGoldenCookie();
     CheckTickerFortune();
     CheckSeasonPopup();
     CheckGardenTick();
     CheckMagicMeter();
     CheckWrinklerCount();
   }
+  // To remove Timers when ascending
+  CheckGoldenCookie();
 }
