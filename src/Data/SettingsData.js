@@ -7,6 +7,7 @@ import ToggleSectionHideButtons from '../Config/Toggles/ToggleSectionHideButtons
 import ToggleToolWarnPos from '../Config/Toggles/ToggleToolWarnPos';
 import ToggleUpgradeBarAndColour from '../Config/Toggles/ToggleUpgradeBarAndColour';
 import ToggleUpgradeBarFixedPos from '../Config/Toggles/ToggleUpgradeBarFixedPos';
+import ToggleUpgradeSectionsAlwaysExpanded from '../Config/Toggles/ToggleUpgradeSectionsAlwaysExpanded';
 import ToggleWrinklerButtons from '../Config/Toggles/ToggleWrinklerButtons';
 import { CMOptions } from '../Config/VariablesAndData';
 import UpdateBuildings from '../Disp/BuildingsUpgrades/Buildings';
@@ -68,7 +69,7 @@ const Config = {
     ],
     'Calculate times and average Cookies Per Second with (only the single non-shiny fattest) wrinklers',
     true,
-    function () {
+    () => {
       SimDoSims = true; // eslint-disable-line no-unused-vars
     },
   ),
@@ -87,7 +88,7 @@ const Config = {
     ],
     'Change how long numbers are formatted',
     false,
-    function () {
+    () => {
       RefreshScale();
     },
   ),
@@ -97,7 +98,7 @@ const Config = {
     ['1 decimals', '2 decimals', '3 decimals'],
     `Set the number of decimals used when applicable. This only works with Cookie Monster scales and not with "Game's Setting Scale"`,
     false,
-    function () {
+    () => {
       RefreshScale();
     },
   ),
@@ -107,7 +108,7 @@ const Config = {
     ['. for decimals (standard)', '. for thousands'],
     'Set the separator used for decimals and thousands',
     false,
-    function () {
+    () => {
       RefreshScale();
     },
   ),
@@ -132,7 +133,7 @@ const Config = {
     ['Detailed time OFF', 'Detailed time ON'],
     'Change how time is displayed in certain statistics and tooltips',
     true,
-    function () {
+    () => {
       ToggleDetailedTime();
     },
   ),
@@ -151,7 +152,7 @@ const Config = {
     ['Building colours OFF', 'Building colours ON'],
     'Colour code buildings',
     true,
-    function () {
+    () => {
       UpdateBuildings();
     },
   ),
@@ -242,7 +243,7 @@ const Config = {
     ['Bottom bar OFF', 'Bottom bar ON'],
     'Building information',
     true,
-    function () {
+    () => {
       ToggleBotBar();
     },
   ),
@@ -252,7 +253,7 @@ const Config = {
     ['Timer bar OFF', 'Timer bar ON'],
     'Bar with timers for golden cookie, season popup, Frenzy (Normal, Clot, Elder), Click Frenzy',
     true,
-    function () {
+    () => {
       ToggleTimerBar();
     },
   ),
@@ -262,32 +263,24 @@ const Config = {
     ['Timer bar position (top left)', 'Timer bar position (bottom)'],
     'Placement of the timer bar',
     false,
-    function () {
+    () => {
       ToggleTimerBarPos();
     },
   ),
   TimerBarOverlay: new SettingStandard(
     'bool',
     'BarsDisplay',
-    [
-      'Timer bar overlay OFF',
-      'Timer bar overlay only seconds',
-      'Timer bar overlay full',
-    ],
+    ['Timer bar overlay OFF', 'Timer bar overlay only seconds', 'Timer bar overlay full'],
     'Overlay on timers displaying seconds and/or percentage left',
     true,
   ),
   UpBarColour: new SettingStandard(
     'bool',
     'BarsDisplay',
-    [
-      'Upgrade colours/bar OFF',
-      'Upgrade colours with bar ON',
-      'Upgrade colours without bar ON',
-    ],
+    ['Upgrade colours/bar OFF', 'Upgrade colours with bar ON', 'Upgrade colours without bar ON'],
     'Colour code upgrades and optionally add a counter bar',
     false,
-    function () {
+    () => {
       ToggleUpgradeBarAndColour();
     },
   ),
@@ -297,7 +290,7 @@ const Config = {
     ['Upgrade bar fixed position OFF', 'Upgrade bar fixed position ON'],
     'Lock the upgrade bar at top of the screen to prevent it from moving ofscreen when scrolling',
     true,
-    function () {
+    () => {
       ToggleUpgradeBarFixedPos();
     },
   ),
@@ -311,7 +304,7 @@ const Config = {
     ],
     'Sort the display of buildings in either default order or by PP',
     false,
-    function () {
+    () => {
       UpdateBuildings();
     },
   ),
@@ -321,8 +314,18 @@ const Config = {
     ['Sort upgrades: default', 'Sort upgrades: PP'],
     'Sort the display of upgrades in either default order or by PP',
     false,
-    function () {
+    () => {
       UpdateUpgrades();
+    },
+  ),
+  UpgradesNeverCollapse: new SettingStandard(
+    'bool',
+    'BarsDisplay',
+    ['Upgrades always expanded OFF', 'Upgrades always expanded ON'],
+    'Toggle to make the upgrades sections always expanded to the size needed to display all upgrades',
+    true,
+    () => {
+      ToggleUpgradeSectionsAlwaysExpanded();
     },
   ),
   DragonAuraInfo: new SettingStandard(
@@ -345,7 +348,7 @@ const Config = {
     ['Golden cookie timer OFF', 'Golden cookie timer ON'],
     'A timer on the golden cookie when it has been spawned',
     true,
-    function () {
+    () => {
       ToggleGCTimer();
     },
   ),
@@ -355,7 +358,7 @@ const Config = {
     ['Favicon OFF', 'Favicon ON'],
     'Update favicon with golden/wrath cookie',
     true,
-    function () {
+    () => {
       UpdateFavicon();
     },
   ),
@@ -365,7 +368,7 @@ const Config = {
     ['Extra wrinkler buttons OFF', 'Extra wrinkler buttons ON'],
     'Show buttons for popping wrinklers at bottom of cookie section',
     true,
-    function () {
+    () => {
       ToggleWrinklerButtons();
     },
   ),
@@ -375,7 +378,7 @@ const Config = {
     ['Hide buildings/upgrades button OFF', 'Hide buildings/upgrades button ON'],
     'Show buttons for hiding and showing the buildings and upgrades sections in the right column',
     true,
-    function () {
+    () => {
       ToggleSectionHideButtons();
     },
   ),
@@ -384,10 +387,7 @@ const Config = {
   TooltipBuildUpgrade: new SettingStandard(
     'bool',
     'Tooltip',
-    [
-      'Building/upgrade tooltip information OFF',
-      'Building/upgrade tooltip information ON',
-    ],
+    ['Building/upgrade tooltip information OFF', 'Building/upgrade tooltip information ON'],
     'Extra information in building/upgrade tooltips',
     true,
   ),
@@ -447,10 +447,7 @@ const Config = {
   ToolWarnBon: new SettingStandard(
     'bool',
     'Tooltip',
-    [
-      'Calculate tooltip warning with bonus CPS OFF',
-      'Calculate tooltip warning with bonus CPS ON',
-    ],
+    ['Calculate tooltip warning with bonus CPS OFF', 'Calculate tooltip warning with bonus CPS ON'],
     'Calculate the warning with or without the bonus CPS you get from buying',
     true,
   ),
@@ -460,7 +457,7 @@ const Config = {
     ['Tooltip warning position (left)', 'Tooltip warning position (bottom)'],
     'Placement of the warning boxes',
     false,
-    function () {
+    () => {
       ToggleToolWarnPos();
     },
   ),
@@ -573,7 +570,7 @@ const Config = {
     ['Notification OFF', 'Notification ON'],
     'Create a notification when golden cookie spawns',
     true,
-    function () {
+    () => {
       CheckNotificationPermissions(CMOptions.GCNotification);
     },
   ),
@@ -609,7 +606,7 @@ const Config = {
     ['Notification OFF', 'Notification ON'],
     'Create a notification when fortune cookie is on the ticker',
     true,
-    function () {
+    () => {
       CheckNotificationPermissions(CMOptions.FortuneNotification);
     },
   ),
@@ -645,7 +642,7 @@ const Config = {
     ['Notification OFF', 'Notification ON'],
     'Create a notification on season popup',
     true,
-    function () {
+    () => {
       CheckNotificationPermissions(CMOptions.SeaNotification);
     },
   ),
@@ -707,7 +704,7 @@ const Config = {
     ['Notification OFF', 'Notification ON'],
     'Create a notification when magic reaches maximum',
     true,
-    function () {
+    () => {
       CheckNotificationPermissions(CMOptions.MagicNotification);
     },
   ),
@@ -743,7 +740,7 @@ const Config = {
     ['Notification OFF', 'Notification ON'],
     'Create a notification when a wrinkler appears',
     true,
-    function () {
+    () => {
       CheckNotificationPermissions(CMOptions.WrinklerNotification);
     },
   ),
@@ -779,7 +776,7 @@ const Config = {
     ['Notification OFF', 'Notification ON'],
     'Create a notification when the maximum amount of wrinklers has appeared',
     true,
-    function () {
+    () => {
       CheckNotificationPermissions(CMOptions.WrinklerMaxNotification);
     },
   ),
@@ -802,12 +799,7 @@ const Config = {
     'Play a sound when the maximum amount of wrinklers has appeared',
     true,
   ),
-  WrinklerMaxVolume: new SettingVolume(
-    'vol',
-    'NotificationWrinkMax',
-    [],
-    'Volume',
-  ),
+  WrinklerMaxVolume: new SettingVolume('vol', 'NotificationWrinkMax', [], 'Volume'),
   WrinklerMaxSoundURL: new SettingStandard(
     'url',
     'NotificationWrinkMax',
@@ -833,7 +825,7 @@ const Config = {
     ],
     "Show stars before each setting which allows selecting it for a 'favourites' section at the top of the Cookie Monster settings. Setting this to Locked removes the stars but shows the 'favourites' section",
     true,
-    function () {
+    () => {
       Game.UpdateMenu();
     },
   ),
