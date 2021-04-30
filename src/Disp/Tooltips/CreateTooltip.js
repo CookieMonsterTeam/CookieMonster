@@ -54,13 +54,7 @@ export function TooltipCreateWarningSection() {
   TooltipWarn.style.bottom = 'auto';
   TooltipWarn.id = 'CMDispTooltipWarningParent';
 
-  const create = function (
-    boxId,
-    color,
-    labelTextFront,
-    labelTextBack,
-    deficitId,
-  ) {
+  const create = function (boxId, color, labelTextFront, labelTextBack, deficitId) {
     const box = document.createElement('div');
     box.id = boxId;
     box.style.display = 'none';
@@ -182,18 +176,14 @@ export function TooltipCreateCalculationSection(tooltip) {
   tooltip.appendChild(time);
 
   if (TooltipType === 'b') {
-    tooltip.appendChild(
-      TooltipCreateHeader('Production left till next achievement'),
-    );
+    tooltip.appendChild(TooltipCreateHeader('Production left till next achievement'));
     tooltip.lastChild.id = 'CMTooltipProductionLeftHeader'; // eslint-disable-line no-param-reassign
     const production = document.createElement('div');
     production.id = 'CMTooltipProductionLeft';
     tooltip.appendChild(production);
   }
   if (TooltipType === 'b') {
-    tooltip.appendChild(
-      TooltipCreateHeader('Buildings (price / PP) left till next achievement'),
-    );
+    tooltip.appendChild(TooltipCreateHeader('Buildings (price / PP) left till next achievement'));
     tooltip.lastChild.id = 'CMTooltipNextAchievementHeader'; // eslint-disable-line no-param-reassign
     const production = document.createElement('div');
     production.id = 'CMTooltipNextAchievement';

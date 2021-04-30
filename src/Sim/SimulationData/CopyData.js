@@ -1,8 +1,5 @@
 import CacheDragonAuras from '../../Cache/Dragon/CacheDragonAuras';
-import {
-  CacheDragonAura,
-  CacheDragonAura2,
-} from '../../Cache/VariablesAndData';
+import { CacheDragonAura, CacheDragonAura2 } from '../../Cache/VariablesAndData';
 import { CreateBotBarBuildingColumn } from '../../Disp/InfoBars/CreateDOMElements';
 import InitAchievement from '../InitializeData/InitAchievement';
 import InitialBuildingData from '../InitializeData/InitialBuildingData';
