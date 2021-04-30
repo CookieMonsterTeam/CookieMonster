@@ -6,8 +6,6 @@ import { FavouriteSettings } from '../../Disp/VariablesAndData';
  */
 export default function ToggleFavouriteSetting(config) {
   if (FavouriteSettings.includes(config))
-    FavouriteSettings = FavouriteSettings.filter(function (ele) {
-      return ele !== config;
-    });
+    FavouriteSettings = FavouriteSettings.filter((ele) => ele !== config);
   else FavouriteSettings.push(config);
 }

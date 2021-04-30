@@ -79,15 +79,13 @@ export default function UpdateUpgrades() {
   }
 
   if (CMOptions.SortUpgrades) {
-    arr.sort(function (a, b) {
-      return ColoursOrdering.indexOf(a.color) > ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
+    arr.sort((a, b) => ColoursOrdering.indexOf(a.color) > ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
         ? 1
         : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
         ? -1
         : a.pp < b.pp
         ? -1
-        : 0;
-    });
+        : 0);
   } else {
     arr.sort((a, b) => a.price - b.price);
   }

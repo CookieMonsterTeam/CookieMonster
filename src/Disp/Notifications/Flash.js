@@ -21,17 +21,17 @@ export default function Flash(mode, config, forced) {
     l('CMFlashScreen').style.opacity = '0.5';
     if (mode === 3) {
       l('CMFlashScreen').style.display = 'inline';
-      setTimeout(function () {
+      setTimeout(() => {
         Flash(2, config, true);
       }, 1000 / Game.fps);
     } else {
-      setTimeout(function () {
+      setTimeout(() => {
         Flash(0, config, true);
       }, 1000 / Game.fps);
     }
   } else if (mode === 2) {
     l('CMFlashScreen').style.opacity = '1';
-    setTimeout(function () {
+    setTimeout(() => {
       Flash(1, config, true);
     }, 1000 / Game.fps);
   } else if (mode === 0) l('CMFlashScreen').style.display = 'none';

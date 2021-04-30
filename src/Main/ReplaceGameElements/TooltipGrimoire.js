@@ -14,9 +14,7 @@ export default function ReplaceTooltipGrimoire() {
             Game.tooltip.dynamic = 1;
             Game.tooltip.draw(
               this,
-              function () {
-                return CreateTooltip('g', `${i}`);
-              },
+              () => CreateTooltip('g', `${i}`),
               'this',
             );
             Game.tooltip.wobble();

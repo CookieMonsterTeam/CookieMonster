@@ -17,9 +17,7 @@ export default function ReplaceTooltipUpgrade() {
           Game.tooltip.dynamic = 1;
           Game.tooltip.draw(
             this,
-            function () {
-              return CreateTooltip('u', `${i}`);
-            },
+            () => CreateTooltip('u', `${i}`),
             'store',
           );
           Game.tooltip.wobble();

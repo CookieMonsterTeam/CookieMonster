@@ -7,10 +7,10 @@ import ToggleGCTimer from '../../../src/Config/Toggles/ToggleGCTimer';
 import { GCTimers } from '../../../src/Disp/VariablesAndData';
 import { CacheGoldenShimmersByID } from '../../../src/Cache/VariablesAndData';
 
-describe('ToggleGCTimer', function () {
+describe('ToggleGCTimer', () => {
   global.l = l;
 
-  beforeEach(function () {
+  beforeEach(() => {
     global.domids = {};
     GCTimers[0] = { style: {} };
     GCTimers[1] = { style: {} };
@@ -23,20 +23,20 @@ describe('ToggleGCTimer', function () {
     ToggleGCTimer();
   });
 
-  describe('GCTimer = 0', function () {
-    before(function () {
+  describe('GCTimer = 0', () => {
+    before(() => {
       CMOptions.GCTimer = 0;
     });
-    it('Toggle style correctly', function () {
+    it('Toggle style correctly', () => {
       assert.equal(GCTimers[0].style.display, 'none');
       assert.equal(GCTimers[1].style.display, 'none');
     });
   });
-  describe('GCTimer = 1', function () {
-    before(function () {
+  describe('GCTimer = 1', () => {
+    before(() => {
       CMOptions.GCTimer = 1;
     });
-    it('Toggle style correctly', function () {
+    it('Toggle style correctly', () => {
       assert.equal(GCTimers[0].style.display, 'block');
       assert.equal(GCTimers[0].style.left, 'Test00');
       assert.equal(GCTimers[0].style.top, 'Test01');

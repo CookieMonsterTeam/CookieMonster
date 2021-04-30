@@ -68,13 +68,11 @@ export default function AddMissingAchievements() {
             Game.tooltip.dynamic = 1;
             Game.tooltip.draw(
               this,
-              function () {
-                return (function () {
+              () => (function () {
                   return CrateTooltipLockedAchievements(
                     Game.AchievementsById[id],
                   );
-                })();
-              },
+                })(),
               'top',
             );
             Game.tooltip.wobble();

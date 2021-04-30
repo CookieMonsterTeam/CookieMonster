@@ -35,6 +35,7 @@ const ConfigDefault: {
   UpgradeBarFixedPos: 1,
   SortBuildings: 0,
   SortUpgrades: 0,
+  UpgradesNeverCollapse: 0,
   DragonAuraInfo: 1,
   GrimoireBar: 1,
   GCTimer: 1,

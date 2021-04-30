@@ -5,27 +5,27 @@ import { l } from '../../GlobalsForTesting';
 import { CMOptions } from '../../../src/Config/VariablesAndData';
 import ToggleUpgradeBarFixedPos from '../../../src/Config/Toggles/ToggleUpgradeBarFixedPos';
 
-describe('ToggleUpgradeBarFixedPos', function () {
+describe('ToggleUpgradeBarFixedPos', () => {
   global.l = l;
 
-  beforeEach(function () {
+  beforeEach(() => {
     global.domids = {};
     ToggleUpgradeBarFixedPos();
   });
 
-  describe('UpgradeBarFixedPos = 0', function () {
-    before(function () {
+  describe('UpgradeBarFixedPos = 0', () => {
+    before(() => {
       CMOptions.UpgradeBarFixedPos = 0;
     });
-    it('Toggle style correctly', function () {
+    it('Toggle style correctly', () => {
       assert.equal(domids.CMUpgradeBar.style.position, ''); // eslint-disable-line no-undef
     });
   });
-  describe('UpgradeBarFixedPos = 1', function () {
-    before(function () {
+  describe('UpgradeBarFixedPos = 1', () => {
+    before(() => {
       CMOptions.UpgradeBarFixedPos = 1;
     });
-    it('Toggle style correctly', function () {
+    it('Toggle style correctly', () => {
       assert.equal(domids.CMUpgradeBar.style.position, 'sticky'); // eslint-disable-line no-undef
       assert.equal(domids.CMUpgradeBar.style.top, '0px'); // eslint-disable-line no-undef
     });
