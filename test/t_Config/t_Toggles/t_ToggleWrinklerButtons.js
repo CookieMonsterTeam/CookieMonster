@@ -5,56 +5,56 @@ import { l, Game } from '../../GlobalsForTesting';
 import { CMOptions } from '../../../src/Config/VariablesAndData';
 import ToggleWrinklerButtons from '../../../src/Config/Toggles/ToggleWrinklerButtons';
 
-describe('ToggleWrinklerButtons', function () {
+describe('ToggleWrinklerButtons', () => {
   global.l = l;
   global.Game = Game;
 
-  beforeEach(function () {
+  beforeEach(() => {
     global.domids = {};
     ToggleWrinklerButtons();
   });
 
-  describe('WrinklerButtons = 0', function () {
-    before(function () {
+  describe('WrinklerButtons = 0', () => {
+    before(() => {
       CMOptions.WrinklerButtons = 0;
     });
-    describe('Game.elderWrath = 0', function () {
-      before(function () {
+    describe('Game.elderWrath = 0', () => {
+      before(() => {
         Game.elderWrath = 0;
       });
-      it('Toggle style correctly', function () {
+      it('Toggle style correctly', () => {
         assert.equal(domids.PopAllNormalWrinklerButton.style.display, 'none'); // eslint-disable-line no-undef
         assert.equal(domids.PopFattestWrinklerButton.style.display, 'none'); // eslint-disable-line no-undef
       });
     });
-    describe('Game.elderWrath = 1', function () {
-      before(function () {
+    describe('Game.elderWrath = 1', () => {
+      before(() => {
         Game.elderWrath = 1;
       });
-      it('Toggle style correctly', function () {
+      it('Toggle style correctly', () => {
         assert.equal(domids.PopAllNormalWrinklerButton.style.display, 'none'); // eslint-disable-line no-undef
         assert.equal(domids.PopFattestWrinklerButton.style.display, 'none'); // eslint-disable-line no-undef
       });
     });
   });
-  describe('WrinklerButtons = 1', function () {
-    before(function () {
+  describe('WrinklerButtons = 1', () => {
+    before(() => {
       CMOptions.WrinklerButtons = 1;
     });
-    describe('Game.elderWrath = 0', function () {
-      before(function () {
+    describe('Game.elderWrath = 0', () => {
+      before(() => {
         Game.elderWrath = 0;
       });
-      it('Toggle style correctly', function () {
+      it('Toggle style correctly', () => {
         assert.equal(domids.PopAllNormalWrinklerButton.style.display, 'none'); // eslint-disable-line no-undef
         assert.equal(domids.PopFattestWrinklerButton.style.display, 'none'); // eslint-disable-line no-undef
       });
     });
-    describe('Game.elderWrath = 1', function () {
-      before(function () {
+    describe('Game.elderWrath = 1', () => {
+      before(() => {
         Game.elderWrath = 1;
       });
-      it('Toggle style correctly', function () {
+      it('Toggle style correctly', () => {
         assert.equal(domids.PopAllNormalWrinklerButton.style.display, ''); // eslint-disable-line no-undef
         assert.equal(domids.PopFattestWrinklerButton.style.display, ''); // eslint-disable-line no-undef
       });
