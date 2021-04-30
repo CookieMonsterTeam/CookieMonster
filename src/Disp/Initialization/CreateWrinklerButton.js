@@ -20,9 +20,7 @@ export default function CreateWrinklerButtons() {
     Game.tooltip.dynamic = 1;
     Game.tooltip.draw(
       this,
-      function () {
-        return CreateTooltip('wb', 'PopAll');
-      },
+      () => CreateTooltip('wb', 'PopAll'),
       'this',
     );
     Game.tooltip.wobble();
@@ -43,9 +41,7 @@ export default function CreateWrinklerButtons() {
     Game.tooltip.dynamic = 1;
     Game.tooltip.draw(
       this,
-      function () {
-        return CreateTooltip('wb', 'PopFattest');
-      },
+      () => CreateTooltip('wb', 'PopFattest'),
       'this',
     );
     Game.tooltip.wobble();

@@ -70,16 +70,14 @@ export default function UpdateBuildings() {
         return o;
       });
 
-      arr.sort(function (a, b) {
-        return ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
+      arr.sort((a, b) => ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
           ColoursOrdering.indexOf(b.color)
           ? 1
           : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
           ? -1
           : a.pp < b.pp
           ? -1
-          : 0;
-      });
+          : 0);
     } else if (CMOptions.SortBuildings === 2) {
       arr = Object.keys(target).map((k) => {
         const o = target[k];
@@ -88,16 +86,14 @@ export default function UpdateBuildings() {
         return o;
       });
 
-      arr.sort(function (a, b) {
-        return ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
+      arr.sort((a, b) => ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
           ColoursOrdering.indexOf(b.color)
           ? 1
           : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
           ? -1
           : a.pp < b.pp
           ? -1
-          : 0;
-      });
+          : 0);
     }
 
     for (let x = 0; x < arr.length; x++) {

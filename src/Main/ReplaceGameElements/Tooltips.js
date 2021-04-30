@@ -21,9 +21,7 @@ function ReplaceTooltipBuild() {
         Game.tooltip.dynamic = 1;
         Game.tooltip.draw(
           this,
-          function () {
-            return CreateTooltip('b', `${i}`);
-          },
+          () => CreateTooltip('b', `${i}`),
           'store',
         );
         Game.tooltip.wobble();
@@ -42,9 +40,7 @@ function ReplaceTooltipLump() {
       Game.tooltip.dynamic = 1;
       Game.tooltip.draw(
         this,
-        function () {
-          return CreateTooltip('s', 'Lump');
-        },
+        () => CreateTooltip('s', 'Lump'),
         'this',
       );
       Game.tooltip.wobble();
@@ -61,9 +57,7 @@ function ReplaceTooltipGarden() {
       Game.tooltip.dynamic = 1;
       Game.tooltip.draw(
         this,
-        function () {
-          return CreateTooltip('ha', 'HarvestAllButton');
-        },
+        () => CreateTooltip('ha', 'HarvestAllButton'),
         'this',
       );
       Game.tooltip.wobble();
@@ -75,9 +69,7 @@ function ReplaceTooltipGarden() {
         Game.tooltip.dynamic = 1;
         Game.tooltip.draw(
           this,
-          function () {
-            return CreateTooltip('p', [`${coords[0]}`, `${coords[2]}`]);
-          },
+          () => CreateTooltip('p', [`${coords[0]}`, `${coords[2]}`]),
           'this',
         );
         Game.tooltip.wobble();
@@ -93,9 +85,7 @@ function ReplaceTooltipPantheon() {
         Game.tooltip.dynamic = 1;
         Game.tooltip.draw(
           this,
-          function () {
-            return CreateTooltip('pag', i);
-          },
+          () => CreateTooltip('pag', i),
           'this',
         );
         Game.tooltip.wobble();
@@ -106,12 +96,10 @@ function ReplaceTooltipPantheon() {
         Game.tooltip.dynamic = 1;
         Game.tooltip.draw(
           this,
-          function () {
-            return CreateTooltip('pas', [
+          () => CreateTooltip('pas', [
               i,
               Game.Objects.Temple.minigame.slot[i],
-            ]);
-          },
+            ]),
           'this',
         );
         Game.tooltip.wobble();
