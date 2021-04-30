@@ -53,6 +53,7 @@
     "eslint": "^7.23.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.22.1",
     "esm": "^3.2.25",
     "mocha": "^8.3.2",
     "npm-run-all": "^4.1.5",
