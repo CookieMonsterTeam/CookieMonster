@@ -12,22 +12,16 @@ import {
 export function AddMissingUpgrades() {
   l('menu').childNodes.forEach((menuSection) => {
     if (menuSection.children[0]) {
-      if (
-        menuSection.children[0].innerHTML === 'Prestige' &&
-        CacheMissingUpgradesPrestige
-      ) {
+      if (menuSection.children[0].innerHTML === 'Prestige' && CacheMissingUpgradesPrestige) {
         const prestigeUpgradesMissing =
-          CacheMissingUpgradesPrestige.match(new RegExp('div', 'g') || [])
-            .length / 2;
+          CacheMissingUpgradesPrestige.match(new RegExp('div', 'g') || []).length / 2;
         const title = document.createElement('div');
         title.id = 'CMMissingUpgradesPrestigeTitle';
         title.className = 'listing';
         const titlefrag = document.createElement('div');
         titlefrag.innerHTML = `<b>Missing Prestige upgrades:</b> ${prestigeUpgradesMissing}/${
           Game.PrestigeUpgrades.length
-        } (${Math.floor(
-          (prestigeUpgradesMissing / Game.PrestigeUpgrades.length) * 100,
-        )}%)`;
+        } (${Math.floor((prestigeUpgradesMissing / Game.PrestigeUpgrades.length) * 100)}%)`;
         title.appendChild(titlefrag);
         menuSection.appendChild(title);
         const upgrades = document.createElement('div');
@@ -46,8 +40,7 @@ export function AddMissingUpgrades() {
             Game.UpgradesByPool[''].length + Game.UpgradesByPool.tech.length
           } (${Math.floor(
             (normalUpgradesMissing /
-              (Game.UpgradesByPool[''].length +
-                Game.UpgradesByPool.tech.length)) *
+              (Game.UpgradesByPool[''].length + Game.UpgradesByPool.tech.length)) *
               100,
           )}%)`;
           title.appendChild(titlefrag);
@@ -62,17 +55,14 @@ export function AddMissingUpgrades() {
         }
         if (CacheMissingUpgradesCookies) {
           const cookieUpgradesMissing =
-            CacheMissingUpgradesCookies.match(new RegExp('div', 'g') || [])
-              .length / 2;
+            CacheMissingUpgradesCookies.match(new RegExp('div', 'g') || []).length / 2;
           const title = document.createElement('div');
           title.id = 'CMMissingUpgradesCookiesTitle';
           title.className = 'listing';
           const titlefrag = document.createElement('div');
           titlefrag.innerHTML = `<b>Missing Cookie upgrades:</b> ${cookieUpgradesMissing}/${
             Game.UpgradesByPool.cookie.length
-          } (${Math.floor(
-            (cookieUpgradesMissing / Game.UpgradesByPool.cookie.length) * 100,
-          )}%)`;
+          } (${Math.floor((cookieUpgradesMissing / Game.UpgradesByPool.cookie.length) * 100)}%)`;
           title.appendChild(titlefrag);
           menuSection.appendChild(title);
           const upgrades = document.createElement('div');
@@ -104,8 +94,8 @@ export function crateMissing(me) {
   const tooltip = `function() {return Game.crateTooltip(Game.UpgradesById[${me.id}], 'stats');}`;
   return `<div class="${classes}"
 	${Game.getDynamicTooltip(tooltip, 'top', true)}
-	style = "${`${
-    icon[2] ? `background-image: url(${icon[2]});` : ''
-  }background-position:${-icon[0] * 48}px ${-icon[1] * 48}px`};">
+	style = "${`${icon[2] ? `background-image: url(${icon[2]});` : ''}background-position:${
+    -icon[0] * 48
+  }px ${-icon[1] * 48}px`};">
 	</div>`;
 }

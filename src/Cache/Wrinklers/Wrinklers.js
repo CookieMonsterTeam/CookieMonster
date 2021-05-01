@@ -34,8 +34,7 @@ export default function CacheWrinklers() {
     CacheWrinklersTotal += sucked; // eslint-disable-line no-unused-vars
     if (Game.wrinklers[i].type === 0) {
       CacheWrinklersNormal += sucked; // eslint-disable-line no-unused-vars
-      if (sucked > CacheWrinklersFattest[0])
-        CacheWrinklersFattest = [sucked, i];
+      if (sucked > CacheWrinklersFattest[0]) CacheWrinklersFattest = [sucked, i];
     }
   }
 }

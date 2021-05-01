@@ -1,11 +1,7 @@
 /** General functions to format or beautify strings */
 
 import { CMOptions } from '../../Config/VariablesAndData';
-import {
-  metric,
-  shortScale,
-  shortScaleAbbreviated,
-} from '../../Data/Scales.ts';
+import { metric, shortScale, shortScaleAbbreviated } from '../../Data/Scales.ts';
 import { BackupFunctions } from '../../Main/VariablesAndData';
 
 /**
@@ -44,12 +40,8 @@ export default function Beautify(num, floats, forced) {
       answer = num.toExponential(decimals).toString().replace('e', 'E');
     } else {
       const exponential = num.toExponential().toString();
-      const AmountOfTenPowerThree = Math.floor(
-        exponential.slice(exponential.indexOf('e') + 1) / 3,
-      );
-      answer = (num / Number(`1e${AmountOfTenPowerThree * 3}`)).toFixed(
-        decimals,
-      );
+      const AmountOfTenPowerThree = Math.floor(exponential.slice(exponential.indexOf('e') + 1) / 3);
+      answer = (num / Number(`1e${AmountOfTenPowerThree * 3}`)).toFixed(decimals);
       // answer is now "xxx.xx" (e.g., 123456789 would be 123.46)
       if ((CMOptions.Scale === 1 && !forced) || forced === 1) {
         // Metric scale, 123456789 => 123.457 M
@@ -63,10 +55,7 @@ export default function Beautify(num, floats, forced) {
         } else answer = Beautify(num, 0, 4); // If number is too large or little, revert to scientific notation
       } else if ((CMOptions.Scale === 3 && !forced) || forced === 3) {
         // Short scale, 123456789 => 123.457 M
-        if (
-          num >= 0.01 &&
-          num < Number(`1e${shortScaleAbbreviated.length * 3}`)
-        ) {
+        if (num >= 0.01 && num < Number(`1e${shortScaleAbbreviated.length * 3}`)) {
           answer += ` ${shortScaleAbbreviated[AmountOfTenPowerThree]}`;
         } else answer = Beautify(num, 0, 4); // If number is too large or little, revert to scientific notation
       } else if ((CMOptions.Scale === 5 && !forced) || forced === 5) {
@@ -76,9 +65,7 @@ export default function Beautify(num, floats, forced) {
     }
     if (answer === '') {
       // eslint-disable-next-line no-console
-      console.log(
-        `Could not beautify number with Cookie Monster Beautify: ${num}`,
-      );
+      console.log(`Could not beautify number with Cookie Monster Beautify: ${num}`);
       answer = BackupFunctions.Beautify(num, floats);
     }
     if (CMOptions.ScaleSeparator) answer = answer.replace('.', ',');

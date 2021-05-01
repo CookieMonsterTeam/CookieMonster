@@ -31,10 +31,8 @@ export function CacheStatsCookies() {
   CacheLuckyReward = CacheGoldenCookiesMult * (CacheLucky * 0.15) + 13; // eslint-disable-line no-unused-vars
   CacheLuckyWrathReward = CacheWrathCookiesMult * (CacheLucky * 0.15) + 13; // eslint-disable-line no-unused-vars
   CacheLuckyFrenzy = CacheLucky * 7;
-  CacheLuckyRewardFrenzy = // eslint-disable-line no-unused-vars
-    CacheGoldenCookiesMult * (CacheLuckyFrenzy * 0.15) + 13;
-  CacheLuckyWrathRewardFrenzy = // eslint-disable-line no-unused-vars
-    CacheWrathCookiesMult * (CacheLuckyFrenzy * 0.15) + 13;
+  CacheLuckyRewardFrenzy = CacheGoldenCookiesMult * (CacheLuckyFrenzy * 0.15) + 13; // eslint-disable-line no-unused-vars
+  CacheLuckyWrathRewardFrenzy = CacheWrathCookiesMult * (CacheLuckyFrenzy * 0.15) + 13; // eslint-disable-line no-unused-vars
   CacheConjure = CacheLucky * 2;
   CacheConjureReward = CacheConjure * 0.15; // eslint-disable-line no-unused-vars
 
@@ -84,7 +82,6 @@ export function CacheGoldenAndWrathCookiesMults() {
   // Otherwise, the aura effect will be factored in the base CPS making the multiplier not requiring adjustment.
   CacheDragonsFortuneMultAdjustment = 1;
   if (Game.shimmerTypes.golden.n === 0) {
-    CacheDragonsFortuneMultAdjustment *=
-      1 + Game.auraMult("Dragon's Fortune") * 1.23;
+    CacheDragonsFortuneMultAdjustment *= 1 + Game.auraMult("Dragon's Fortune") * 1.23;
   }
 }

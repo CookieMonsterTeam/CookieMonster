@@ -15,12 +15,9 @@ export default function CreateSectionHideButtons() {
       l('vaultUpgrades').style.display = 'none';
     } else {
       l('upgrades').style.display = 'flex';
-      if (l('toggleUpgrades').children.length !== 0)
-        l('toggleUpgrades').style.display = 'block';
-      if (l('techUpgrades').children.length !== 0)
-        l('techUpgrades').style.display = 'block';
-      if (l('vaultUpgrades').children.length !== 0)
-        l('vaultUpgrades').style.display = 'block';
+      if (l('toggleUpgrades').children.length !== 0) l('toggleUpgrades').style.display = 'block';
+      if (l('techUpgrades').children.length !== 0) l('techUpgrades').style.display = 'block';
+      if (l('vaultUpgrades').children.length !== 0) l('vaultUpgrades').style.display = 'block';
     }
   };
   a.textContent = 'Hide/Show Upgrades';
@@ -28,8 +25,7 @@ export default function CreateSectionHideButtons() {
   const b = document.createElement('a');
   b.className = 'option';
   b.onclick = function () {
-    if (l('products').style.display === 'grid')
-      l('products').style.display = 'none';
+    if (l('products').style.display === 'grid') l('products').style.display = 'none';
     else l('products').style.display = 'grid';
   };
   b.textContent = 'Hide/Show Buildings';

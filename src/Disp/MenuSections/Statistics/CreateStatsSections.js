@@ -58,13 +58,10 @@ export function LuckySection() {
   const section = document.createElement('div');
   section.className = 'CMStatsLuckySection';
 
-  const luckyColour =
-    Game.cookies + GetWrinkConfigBank() < CacheLucky ? ColourRed : ColourGreen;
+  const luckyColour = Game.cookies + GetWrinkConfigBank() < CacheLucky ? ColourRed : ColourGreen;
   const luckyTime =
     Game.cookies + GetWrinkConfigBank() < CacheLucky
-      ? FormatTime(
-          (CacheLucky - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
-        )
+      ? FormatTime((CacheLucky - (Game.cookies + GetWrinkConfigBank())) / GetCPS())
       : '';
   const luckyReqFrag = document.createDocumentFragment();
   const luckyReqSpan = document.createElement('span');
@@ -78,23 +75,14 @@ export function LuckySection() {
     luckyReqFrag.appendChild(luckyReqSmall);
   }
   section.appendChild(
-    StatsListing(
-      'withTooltip',
-      '"Lucky!" cookies required',
-      luckyReqFrag,
-      goldCookTooltip,
-    ),
+    StatsListing('withTooltip', '"Lucky!" cookies required', luckyReqFrag, goldCookTooltip),
   );
 
   const luckyColourFrenzy =
-    Game.cookies + GetWrinkConfigBank() < CacheLuckyFrenzy
-      ? ColourRed
-      : ColourGreen;
+    Game.cookies + GetWrinkConfigBank() < CacheLuckyFrenzy ? ColourRed : ColourGreen;
   const luckyTimeFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheLuckyFrenzy
-      ? FormatTime(
-          (CacheLuckyFrenzy - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
-        )
+      ? FormatTime((CacheLuckyFrenzy - (Game.cookies + GetWrinkConfigBank())) / GetCPS())
       : '';
   const luckyReqFrenFrag = document.createDocumentFragment();
   const luckyReqFrenSpan = document.createElement('span');
@@ -122,8 +110,7 @@ export function LuckySection() {
   luckyRewardMaxSpan.style.fontWeight = 'bold';
   luckyRewardMaxSpan.className = ColourTextPre + CacheLuckyReward;
   luckyRewardMaxSpan.textContent =
-    Beautify(CacheLuckyReward) +
-    (luckySplit ? ` / ${Beautify(CacheLuckyWrathReward)}` : '');
+    Beautify(CacheLuckyReward) + (luckySplit ? ` / ${Beautify(CacheLuckyWrathReward)}` : '');
   section.appendChild(
     StatsListing(
       'withTooltip',
@@ -184,15 +171,10 @@ export function ChainSection() {
   section.className = 'CMStatsChainSection';
 
   const chainColour =
-    Game.cookies + GetWrinkConfigBank() < CacheChainRequired
-      ? ColourRed
-      : ColourGreen;
+    Game.cookies + GetWrinkConfigBank() < CacheChainRequired ? ColourRed : ColourGreen;
   const chainTime =
     Game.cookies + GetWrinkConfigBank() < CacheChainRequired
-      ? FormatTime(
-          (CacheChainRequired - (Game.cookies + GetWrinkConfigBank())) /
-            GetCPS(),
-        )
+      ? FormatTime((CacheChainRequired - (Game.cookies + GetWrinkConfigBank())) / GetCPS())
       : '';
   const chainReqFrag = document.createDocumentFragment();
   const chainReqSpan = document.createElement('span');
@@ -206,24 +188,14 @@ export function ChainSection() {
     chainReqFrag.appendChild(chainReqSmall);
   }
   section.appendChild(
-    StatsListing(
-      'withTooltip',
-      '"Chain" cookies required',
-      chainReqFrag,
-      goldCookTooltip,
-    ),
+    StatsListing('withTooltip', '"Chain" cookies required', chainReqFrag, goldCookTooltip),
   );
 
   const chainWrathColour =
-    Game.cookies + GetWrinkConfigBank() < CacheChainWrathRequired
-      ? ColourRed
-      : ColourGreen;
+    Game.cookies + GetWrinkConfigBank() < CacheChainWrathRequired ? ColourRed : ColourGreen;
   const chainWrathTime =
     Game.cookies + GetWrinkConfigBank() < CacheChainWrathRequired
-      ? FormatTime(
-          (CacheChainWrathRequired - (Game.cookies + GetWrinkConfigBank())) /
-            GetCPS(),
-        )
+      ? FormatTime((CacheChainWrathRequired - (Game.cookies + GetWrinkConfigBank())) / GetCPS())
       : '';
   const chainWrathReqFrag = document.createDocumentFragment();
   const chainWrathReqSpan = document.createElement('span');
@@ -246,15 +218,10 @@ export function ChainSection() {
   );
 
   const chainColourFrenzy =
-    Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyRequired
-      ? ColourRed
-      : ColourGreen;
+    Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyRequired ? ColourRed : ColourGreen;
   const chainTimeFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyRequired
-      ? FormatTime(
-          (CacheChainFrenzyRequired - (Game.cookies + GetWrinkConfigBank())) /
-            GetCPS(),
-        )
+      ? FormatTime((CacheChainFrenzyRequired - (Game.cookies + GetWrinkConfigBank())) / GetCPS())
       : '';
   const chainReqFrenFrag = document.createDocumentFragment();
   const chainReqFrenSpan = document.createElement('span');
@@ -277,15 +244,11 @@ export function ChainSection() {
   );
 
   const chainWrathColourFrenzy =
-    Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyWrathRequired
-      ? ColourRed
-      : ColourGreen;
+    Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyWrathRequired ? ColourRed : ColourGreen;
   const chainWrathTimeFrenzy =
     Game.cookies + GetWrinkConfigBank() < CacheChainFrenzyWrathRequired
       ? FormatTime(
-          (CacheChainFrenzyWrathRequired -
-            (Game.cookies + GetWrinkConfigBank())) /
-            GetCPS(),
+          (CacheChainFrenzyWrathRequired - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
         )
       : '';
   const chainWrathReqFrenFrag = document.createDocumentFragment();
@@ -313,9 +276,7 @@ export function ChainSection() {
       'withTooltip',
       '"Chain" reward (max) (golden / wrath)',
       document.createTextNode(
-        `${Beautify(CacheChainMaxReward[0])} / ${Beautify(
-          CacheChainWrathMaxReward[0],
-        )}`,
+        `${Beautify(CacheChainMaxReward[0])} / ${Beautify(CacheChainWrathMaxReward[0])}`,
       ),
       goldCookTooltip,
     ),
@@ -326,9 +287,7 @@ export function ChainSection() {
       'withTooltip',
       '"Chain" reward (max) (frenzy) (golden / wrath)',
       document.createTextNode(
-        `${Beautify(CacheChainFrenzyMaxReward[0])} / ${Beautify(
-          CacheChainFrenzyMaxReward[0],
-        )}`,
+        `${Beautify(CacheChainFrenzyMaxReward[0])} / ${Beautify(CacheChainFrenzyMaxReward[0])}`,
       ),
       goldCookTooltip,
     ),
@@ -338,23 +297,13 @@ export function ChainSection() {
     Game.cookiesPs * 60 * 60 * 6 * CacheDragonsFortuneMultAdjustment,
     Game.cookies * 0.5,
   );
-  const chainCur = MaxChainCookieReward(
-    7,
-    chainCurMax,
-    CacheGoldenCookiesMult,
-  )[0];
-  const chainCurWrath = MaxChainCookieReward(
-    6,
-    chainCurMax,
-    CacheWrathCookiesMult,
-  )[0];
+  const chainCur = MaxChainCookieReward(7, chainCurMax, CacheGoldenCookiesMult)[0];
+  const chainCurWrath = MaxChainCookieReward(6, chainCurMax, CacheWrathCookiesMult)[0];
   section.appendChild(
     StatsListing(
       'withTooltip',
       '"Chain" reward (cur) (golden / wrath)',
-      document.createTextNode(
-        `${Beautify(chainCur)} / ${Beautify(chainCurWrath)}`,
-      ),
+      document.createTextNode(`${Beautify(chainCur)} / ${Beautify(chainCurWrath)}`),
       goldCookTooltip,
     ),
   );
@@ -364,9 +313,7 @@ export function ChainSection() {
       'withTooltip',
       'CPS needed for next level (g / w)',
       document.createTextNode(
-        `${Beautify(CacheChainRequiredNext)} / ${Beautify(
-          CacheChainWrathRequiredNext,
-        )}`,
+        `${Beautify(CacheChainRequiredNext)} / ${Beautify(CacheChainWrathRequiredNext)}`,
       ),
       'ChainNextLevelPlaceholder',
     ),
@@ -395,14 +342,10 @@ export function SpellsSection() {
   section.className = 'CMStatsSpellsSection';
 
   const conjureColour =
-    Game.cookies + GetWrinkConfigBank() < CacheConjure
-      ? ColourRed
-      : ColourGreen;
+    Game.cookies + GetWrinkConfigBank() < CacheConjure ? ColourRed : ColourGreen;
   const conjureTime =
     Game.cookies + GetWrinkConfigBank() < CacheConjure
-      ? FormatTime(
-          (CacheConjure - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
-        )
+      ? FormatTime((CacheConjure - (Game.cookies + GetWrinkConfigBank())) / GetCPS())
       : '';
 
   const conjureReqFrag = document.createDocumentFragment();
@@ -434,18 +377,14 @@ export function SpellsSection() {
   );
 
   const conjureFrenzyColour =
-    Game.cookies + GetWrinkConfigBank() < CacheConjure * 7
-      ? ColourRed
-      : ColourGreen;
+    Game.cookies + GetWrinkConfigBank() < CacheConjure * 7 ? ColourRed : ColourGreen;
   const conjureFrenzyCur = Math.min(
     (Game.cookies + GetWrinkConfigBank()) * 0.15,
     CacheNoGoldSwitchCookiesPS * 60 * 30,
   );
   const conjureFrenzyTime =
     Game.cookies + GetWrinkConfigBank() < CacheConjure * 7
-      ? FormatTime(
-          (CacheConjure * 7 - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
-        )
+      ? FormatTime((CacheConjure * 7 - (Game.cookies + GetWrinkConfigBank())) / GetCPS())
       : '';
 
   const conjureFrenzyReqFrag = document.createDocumentFragment();
@@ -488,9 +427,7 @@ export function SpellsSection() {
       StatsListing(
         'withTooltip',
         '"Spontaneous Edifice" cookies required (most expensive building)',
-        document.createTextNode(
-          `${Beautify(CacheEdifice)} (${CacheEdificeBuilding})`,
-        ),
+        document.createTextNode(`${Beautify(CacheEdifice)} (${CacheEdificeBuilding})`),
         'GoldCookTooltipPlaceholder',
       ),
     );
@@ -506,60 +443,40 @@ export function GardenSection() {
   const section = document.createElement('div');
   section.className = 'CMStatsGardenSection';
 
-  const bakeberryColour =
-    Game.cookies < Game.cookiesPs * 60 * 10 * 100 ? ColourRed : ColourGreen;
+  const bakeberryColour = Game.cookies < Game.cookiesPs * 60 * 10 * 100 ? ColourRed : ColourGreen;
   const bakeberryFrag = document.createElement('span');
   bakeberryFrag.style.fontWeight = 'bold';
   bakeberryFrag.className = ColourTextPre + bakeberryColour;
   bakeberryFrag.textContent = Beautify(Game.cookiesPs * 60 * 10 * 100);
   section.appendChild(
-    StatsListing(
-      'basic',
-      'Cookies required for max reward of Bakeberry: ',
-      bakeberryFrag,
-    ),
+    StatsListing('basic', 'Cookies required for max reward of Bakeberry: ', bakeberryFrag),
   );
 
-  const chocorootColour =
-    Game.cookies < Game.cookiesPs * 60 * 100 ? ColourRed : ColourGreen;
+  const chocorootColour = Game.cookies < Game.cookiesPs * 60 * 100 ? ColourRed : ColourGreen;
   const chocorootFrag = document.createElement('span');
   chocorootFrag.style.fontWeight = 'bold';
   chocorootFrag.className = ColourTextPre + chocorootColour;
   chocorootFrag.textContent = Beautify(Game.cookiesPs * 60 * 100);
   section.appendChild(
-    StatsListing(
-      'basic',
-      'Cookies required for max reward of Chocoroot: ',
-      chocorootFrag,
-    ),
+    StatsListing('basic', 'Cookies required for max reward of Chocoroot: ', chocorootFrag),
   );
 
-  const queenbeetColour =
-    Game.cookies < Game.cookiesPs * 60 * 60 * 25 ? ColourRed : ColourGreen;
+  const queenbeetColour = Game.cookies < Game.cookiesPs * 60 * 60 * 25 ? ColourRed : ColourGreen;
   const queenbeetFrag = document.createElement('span');
   queenbeetFrag.style.fontWeight = 'bold';
   queenbeetFrag.className = ColourTextPre + queenbeetColour;
   queenbeetFrag.textContent = Beautify(Game.cookiesPs * 60 * 60 * 25);
   section.appendChild(
-    StatsListing(
-      'basic',
-      'Cookies required for max reward of Queenbeet: ',
-      queenbeetFrag,
-    ),
+    StatsListing('basic', 'Cookies required for max reward of Queenbeet: ', queenbeetFrag),
   );
 
-  const duketaterColour =
-    Game.cookies < Game.cookiesPs * 60 * 15 * 100 ? ColourRed : ColourGreen;
+  const duketaterColour = Game.cookies < Game.cookiesPs * 60 * 15 * 100 ? ColourRed : ColourGreen;
   const duketaterFrag = document.createElement('span');
   duketaterFrag.style.fontWeight = 'bold';
   duketaterFrag.className = ColourTextPre + duketaterColour;
   duketaterFrag.textContent = Beautify(Game.cookiesPs * 60 * 15 * 100);
   section.appendChild(
-    StatsListing(
-      'basic',
-      'Cookies required for max reward of Duketater: ',
-      duketaterFrag,
-    ),
+    StatsListing('basic', 'Cookies required for max reward of Duketater: ', duketaterFrag),
   );
   const missingPlantDrops = [];
   Object.keys(GameData.PlantDrops).forEach((i) => {
@@ -569,11 +486,7 @@ export function GardenSection() {
   });
   if (missingPlantDrops.length !== 0) {
     section.appendChild(
-      StatsListing(
-        'basic',
-        'Rare plant drops left to unlock',
-        StatsMissDisp(missingPlantDrops),
-      ),
+      StatsListing('basic', 'Rare plant drops left to unlock', StatsMissDisp(missingPlantDrops)),
     );
   }
   return section;
@@ -592,18 +505,14 @@ export function PrestigeSection() {
       CacheRealCookiesEarned +
         Game.cookiesReset +
         CacheWrinklersTotal +
-        (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')
-          ? CacheLastChoEgg
-          : 0),
+        (Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg') ? CacheLastChoEgg : 0),
     ),
   );
   section.appendChild(
     StatsListing(
       'withTooltip',
       'Prestige level (cur / max)',
-      document.createTextNode(
-        `${Beautify(Game.prestige)} / ${Beautify(possiblePresMax)}`,
-      ),
+      document.createTextNode(`${Beautify(Game.prestige)} / ${Beautify(possiblePresMax)}`),
       'PrestMaxTooltipPlaceholder',
     ),
   );
@@ -614,21 +523,14 @@ export function PrestigeSection() {
       (CacheRealCookiesEarned +
         Game.cookiesReset +
         CacheWrinklersTotal +
-        ((
-          Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg')
-            ? CacheLastChoEgg
-            : 0
-        )
+        ((Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg') ? CacheLastChoEgg : 0)
           ? CacheLastChoEgg
           : 0)),
   );
   const cookiesNextFrag = document.createDocumentFragment();
   cookiesNextFrag.appendChild(document.createTextNode(Beautify(neededCook)));
   const cookiesNextSmall = document.createElement('small');
-  cookiesNextSmall.textContent = ` (${FormatTime(
-    neededCook / CacheAvgCPSWithChoEgg,
-    1,
-  )})`;
+  cookiesNextSmall.textContent = ` (${FormatTime(neededCook / CacheAvgCPSWithChoEgg, 1)})`;
   cookiesNextFrag.appendChild(cookiesNextSmall);
   section.appendChild(
     StatsListing(
@@ -663,8 +565,7 @@ export function PrestigeSection() {
   const HCTarget = Number(CMOptions.HeavenlyChipsTarget);
   if (!Number.isNaN(HCTarget)) {
     const CookiesTillTarget =
-      HCTarget -
-      Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
+      HCTarget - Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
     if (CookiesTillTarget > 0) {
       section.appendChild(
         StatsListing(
@@ -677,9 +578,7 @@ export function PrestigeSection() {
         StatsListing(
           'basic',
           'Time till target (cur, current 5 second average)',
-          document.createTextNode(
-            FormatTime(CookiesTillTarget / CacheHCPerSecond),
-          ),
+          document.createTextNode(FormatTime(CookiesTillTarget / CacheHCPerSecond)),
         ),
       );
     }
@@ -695,18 +594,11 @@ export function PrestigeSection() {
     resetFrag.appendChild(resetSmall);
   }
   section.appendChild(
-    StatsListing(
-      'withTooltip',
-      'Reset bonus income',
-      resetFrag,
-      'ResetTooltipPlaceholder',
-    ),
+    StatsListing('withTooltip', 'Reset bonus income', resetFrag, 'ResetTooltipPlaceholder'),
   );
 
   const currentPrestige = Math.floor(Game.HowMuchPrestige(Game.cookiesReset));
-  const willHave = Math.floor(
-    Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned),
-  );
+  const willHave = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
   const willGet = willHave - currentPrestige;
   if (!Game.Has('Lucky digit')) {
     let delta7 = 7 - (willHave % 10);
@@ -719,9 +611,7 @@ export function PrestigeSection() {
         `${next7Total.toLocaleString()} / ${next7Reset.toLocaleString()} (+${delta7})`,
       ),
     );
-    section.appendChild(
-      StatsListing('basic', 'Next "Lucky Digit" (total / reset)', frag7),
-    );
+    section.appendChild(StatsListing('basic', 'Next "Lucky Digit" (total / reset)', frag7));
   }
 
   if (!Game.Has('Lucky number')) {
@@ -735,9 +625,7 @@ export function PrestigeSection() {
         `${next777Total.toLocaleString()} / ${next777Reset.toLocaleString()} (+${delta777})`,
       ),
     );
-    section.appendChild(
-      StatsListing('basic', 'Next "Lucky Number" (total / reset)', frag777),
-    );
+    section.appendChild(StatsListing('basic', 'Next "Lucky Number" (total / reset)', frag777));
   }
 
   if (!Game.Has('Lucky payout')) {
@@ -751,9 +639,7 @@ export function PrestigeSection() {
         `${next777777Total.toLocaleString()} / ${next777777Reset.toLocaleString()} (+${delta777777})`,
       ),
     );
-    section.appendChild(
-      StatsListing('basic', 'Next "Lucky Payout" (total / reset)', frag777777),
-    );
+    section.appendChild(StatsListing('basic', 'Next "Lucky Payout" (total / reset)', frag777777));
   }
 
   return section;
@@ -803,8 +689,7 @@ export function SeasonSection() {
       specDisp = true;
     }
   });
-  const choEgg =
-    Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg');
+  const choEgg = Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg');
   const centEgg = Game.Has('Century egg');
 
   if (Game.season === 'christmas' || specDisp || choEgg || centEgg) {
@@ -834,9 +719,7 @@ export function SeasonSection() {
             'basic',
             'Chance of receiving a cookie from wrinkler/shiny wrinkler',
             document.createTextNode(
-              `${Beautify(
-                (1 - failRateHalloween) * obtainedCookiesChance * 100,
-              )}% / ${Beautify(
+              `${Beautify((1 - failRateHalloween) * obtainedCookiesChance * 100)}% / ${Beautify(
                 (1 - failRateHalloween * 0.9) * obtainedCookiesChance * 100,
               )}%`,
             ),
@@ -867,9 +750,7 @@ export function SeasonSection() {
             'basic',
             'Chance of receiving a cookie from reindeer',
             document.createTextNode(
-              `${Beautify(
-                (1 - failRateChristmas) * obtainedCookiesChance * 100,
-              )}%`,
+              `${Beautify((1 - failRateChristmas) * obtainedCookiesChance * 100)}%`,
             ),
           ),
         );
@@ -897,23 +778,14 @@ export function SeasonSection() {
         // Calculations courtesy of @svschouw, at https://github.com/Aktanusa/CookieMonster/issues/25
         const succesRateEgg = 1 - failRateEgg;
         const obtainedEggs = Game.eggDrops.length - missingNormalEggs.length;
-        const obtainedRareEggs =
-          Game.rareEggDrops.length - missingRareEggs.length;
-        const pNormal1 =
-          succesRateEgg * 0.9 * (1 - obtainedEggs / Game.eggDrops.length);
-        const pRare1 =
-          succesRateEgg *
-          0.1 *
-          (1 - obtainedRareEggs / Game.rareEggDrops.length);
-        const pRedropNormal =
-          succesRateEgg * 0.9 * (obtainedEggs / Game.eggDrops.length);
-        const pRedropRare =
-          succesRateEgg * 0.1 * (obtainedRareEggs / Game.rareEggDrops.length);
+        const obtainedRareEggs = Game.rareEggDrops.length - missingRareEggs.length;
+        const pNormal1 = succesRateEgg * 0.9 * (1 - obtainedEggs / Game.eggDrops.length);
+        const pRare1 = succesRateEgg * 0.1 * (1 - obtainedRareEggs / Game.rareEggDrops.length);
+        const pRedropNormal = succesRateEgg * 0.9 * (obtainedEggs / Game.eggDrops.length);
+        const pRedropRare = succesRateEgg * 0.1 * (obtainedRareEggs / Game.rareEggDrops.length);
         const pRedrop = pRedropNormal + pRedropRare;
-        const pNormal2 =
-          pRedrop * 0.9 * (1 - obtainedEggs / Game.eggDrops.length);
-        const pRare2 =
-          pRedrop * 0.1 * (1 - obtainedRareEggs / Game.rareEggDrops.length);
+        const pNormal2 = pRedrop * 0.9 * (1 - obtainedEggs / Game.eggDrops.length);
+        const pRare2 = pRedrop * 0.1 * (1 - obtainedRareEggs / Game.rareEggDrops.length);
         return [pNormal1 + pNormal2, pRare1 + pRare2];
       };
       if (missingNormalEggs.length !== 0) {
@@ -929,29 +801,21 @@ export function SeasonSection() {
             'basic',
             'Chance of receiving an egg from wrinkler/golden cookie',
             document.createTextNode(
-              `${Beautify(dropRateEgg(0.98)[0] * 100)}% / ${Beautify(
-                dropRateEgg(0.9)[0] * 100,
-              )}%`,
+              `${Beautify(dropRateEgg(0.98)[0] * 100)}% / ${Beautify(dropRateEgg(0.9)[0] * 100)}%`,
             ),
           ),
         );
       }
       if (missingRareEggs.length !== 0) {
         section.appendChild(
-          StatsListing(
-            'basic',
-            'Rare easter eggs left to unlock',
-            StatsMissDisp(missingRareEggs),
-          ),
+          StatsListing('basic', 'Rare easter eggs left to unlock', StatsMissDisp(missingRareEggs)),
         );
         section.appendChild(
           StatsListing(
             'basic',
             'Chance of receiving a rare egg from wrinkler/golden cookie',
             document.createTextNode(
-              `${Beautify(dropRateEgg(0.98)[1] * 100)}% / ${Beautify(
-                dropRateEgg(0.9)[1] * 100,
-              )}%`,
+              `${Beautify(dropRateEgg(0.98)[1] * 100)}% / ${Beautify(dropRateEgg(0.9)[1] * 100)}%`,
             ),
           ),
         );
@@ -959,11 +823,7 @@ export function SeasonSection() {
 
       if (Game.season === 'christmas')
         section.appendChild(
-          StatsListing(
-            'basic',
-            'Reindeer reward',
-            document.createTextNode(Beautify(CacheSeaSpec)),
-          ),
+          StatsListing('basic', 'Reindeer reward', document.createTextNode(Beautify(CacheSeaSpec))),
         );
       if (choEgg) {
         section.appendChild(
@@ -980,9 +840,7 @@ export function SeasonSection() {
           StatsListing(
             'basic',
             'Century egg multiplier',
-            document.createTextNode(
-              `${Math.round((CacheCentEgg - 1) * 10000) / 100}%`,
-            ),
+            document.createTextNode(`${Math.round((CacheCentEgg - 1) * 10000) / 100}%`),
           ),
         );
       }

@@ -1,7 +1,4 @@
-import {
-  CacheWrinklersFattest,
-  CacheWrinklersTotal,
-} from '../../Cache/VariablesAndData';
+import { CacheWrinklersFattest, CacheWrinklersTotal } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 
 /**

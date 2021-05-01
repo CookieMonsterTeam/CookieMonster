@@ -25,8 +25,7 @@ export default function FormatTime(time, longFormat) {
     str += `${(m < 10 ? '0' : '') + m}:`;
     str += (s < 10 ? '0' : '') + s;
   } else {
-    if (formattedTime > 777600000)
-      return longFormat ? 'Over 9000 days!' : '>9000d';
+    if (formattedTime > 777600000) return longFormat ? 'Over 9000 days!' : '>9000d';
     str +=
       y > 0
         ? `${y + (longFormat ? (y === 1 ? ' year' : ' years') : 'y')}, ` // eslint-disable-line no-nested-ternary

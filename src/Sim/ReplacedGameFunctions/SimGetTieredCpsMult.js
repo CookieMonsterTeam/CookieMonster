@@ -7,19 +7,14 @@ import SimHas from './SimHas';
 export default function SimGetTieredCpsMult(me) {
   let mult = 1;
   Object.keys(me.tieredUpgrades).forEach((i) => {
-    if (
-      !Game.Tiers[me.tieredUpgrades[i].tier].special &&
-      SimHas(me.tieredUpgrades[i].name)
-    )
+    if (!Game.Tiers[me.tieredUpgrades[i].tier].special && SimHas(me.tieredUpgrades[i].name))
       mult *= 2;
   });
   Object.keys(me.synergies).forEach((i) => {
     if (SimHas(me.synergies[i].name)) {
       const syn = me.synergies[i];
-      if (syn.buildingTie1.name === me.name)
-        mult *= 1 + 0.05 * syn.buildingTie2.amount;
-      else if (syn.buildingTie2.name === me.name)
-        mult *= 1 + 0.001 * syn.buildingTie1.amount;
+      if (syn.buildingTie1.name === me.name) mult *= 1 + 0.05 * syn.buildingTie2.amount;
+      else if (syn.buildingTie2.name === me.name) mult *= 1 + 0.001 * syn.buildingTie1.amount;
     }
   });
   if (me.fortune && SimHas(me.fortune.name)) mult *= 1.07;

@@ -35,10 +35,7 @@ export default function UpdateTooltips() {
       HarvestAll();
     } else if (TooltipType === 'wb') {
       WrinklerButton();
-    } else if (
-      TooltipType === 'pag' ||
-      (TooltipType === 'pas' && TooltipName[1] !== -1)
-    ) {
+    } else if (TooltipType === 'pag' || (TooltipType === 'pas' && TooltipName[1] !== -1)) {
       PantheonGods();
     }
     Warnings();

@@ -11,8 +11,7 @@ export default function load(str) {
   const save = JSON.parse(str);
   InitData();
   // The if-statement is a failsafe for old saves
-  if (typeof save.favouriteSettings !== 'undefined')
-    FavouriteSettings = save.favouriteSettings; // eslint-disable-line no-unused-vars
+  if (typeof save.favouriteSettings !== 'undefined') FavouriteSettings = save.favouriteSettings; // eslint-disable-line no-unused-vars
   LoadConfig(save.settings);
   if (save.version !== `${VersionMajor}.${VersionMinor}`) {
     if (Game.prefs.popups)

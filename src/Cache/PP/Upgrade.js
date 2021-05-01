@@ -10,20 +10,12 @@ export default function CacheUpgradePP() {
   Object.keys(CacheUpgrades).forEach((i) => {
     if (Game.cookiesPs) {
       CacheUpgrades[i].pp =
-        Math.max(
-          Game.Upgrades[i].getPrice() - (Game.cookies + GetWrinkConfigBank()),
-          0,
-        ) /
+        Math.max(Game.Upgrades[i].getPrice() - (Game.cookies + GetWrinkConfigBank()), 0) /
           Game.cookiesPs +
         Game.Upgrades[i].getPrice() / CacheUpgrades[i].bonus;
-    } else
-      CacheUpgrades[i].pp =
-        Game.Upgrades[i].getPrice() / CacheUpgrades[i].bonus;
+    } else CacheUpgrades[i].pp = Game.Upgrades[i].getPrice() / CacheUpgrades[i].bonus;
     if (Number.isNaN(CacheUpgrades[i].pp)) CacheUpgrades[i].pp = Infinity;
 
-    CacheUpgrades[i].color = ColourOfPP(
-      CacheUpgrades[i],
-      Game.Upgrades[i].getPrice(),
-    );
+    CacheUpgrades[i].color = ColourOfPP(CacheUpgrades[i], Game.Upgrades[i].getPrice());
   });
 }

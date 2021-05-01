@@ -3,10 +3,7 @@
 import Beautify from '../../Disp/BeautifyAndFormatting/Beautify';
 import CopyData from '../../Sim/SimulationData/CopyData';
 import { SimDoSims, SimObjects } from '../../Sim/VariablesAndData';
-import {
-  CacheCostDragonUpgrade,
-  CacheLastDragonLevel,
-} from '../VariablesAndData';
+import { CacheCostDragonUpgrade, CacheLastDragonLevel } from '../VariablesAndData';
 
 /**
  * This functions caches the current cost of upgrading the dragon level so it can be displayed in the tooltip
@@ -17,9 +14,7 @@ export default function CacheDragonCost() {
       Game.dragonLevel < 25 &&
       Game.dragonLevels[Game.dragonLevel].buy.toString().includes('sacrifice')
     ) {
-      let target = Game.dragonLevels[Game.dragonLevel].buy
-        .toString()
-        .match(/Objects\[(.*)\]/)[1];
+      let target = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/Objects\[(.*)\]/)[1];
       const amount = Game.dragonLevels[Game.dragonLevel].buy
         .toString()
         .match(/sacrifice\((.*?)\)/)[1];
@@ -34,10 +29,7 @@ export default function CacheDragonCost() {
             let price =
               SimObjects[target].basePrice *
               Game.priceIncrease **
-                Math.max(
-                  0,
-                  SimObjects[target].amount - 1 - SimObjects[target].free,
-                );
+                Math.max(0, SimObjects[target].amount - 1 - SimObjects[target].free);
             price = Game.modifyBuildingPrice(SimObjects[target], price);
             price = Math.ceil(price);
             cost += price;
@@ -58,10 +50,7 @@ export default function CacheDragonCost() {
             let price =
               SimObjects[target].basePrice *
               Game.priceIncrease **
-                Math.max(
-                  0,
-                  SimObjects[target].amount - 1 - SimObjects[target].free,
-                );
+                Math.max(0, SimObjects[target].amount - 1 - SimObjects[target].free);
             price = Game.modifyBuildingPrice(SimObjects[target], price);
             price = Math.ceil(price);
             cost += price;

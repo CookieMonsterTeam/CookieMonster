@@ -1,10 +1,5 @@
 import { CMOptions } from '../../Config/VariablesAndData';
-import {
-  ColourGreen,
-  ColourOrange,
-  ColourRed,
-  ColourYellow,
-} from '../VariablesAndData';
+import { ColourGreen, ColourOrange, ColourRed, ColourYellow } from '../VariablesAndData';
 import FormatTime from './FormatTime';
 
 /**

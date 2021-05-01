@@ -31,8 +31,7 @@ export default function ColourOfPP(me, price) {
 
   // Colour based on price in terms of CPS
   if (Number(CMOptions.PPSecondsLowerLimit) !== 0) {
-    if (price / GetCPS() < Number(CMOptions.PPSecondsLowerLimit))
-      color = ColourBlue;
+    if (price / GetCPS() < Number(CMOptions.PPSecondsLowerLimit)) color = ColourBlue;
   }
   // Colour based on being able to purchase
   if (CMOptions.PPOnlyConsiderBuyable) {

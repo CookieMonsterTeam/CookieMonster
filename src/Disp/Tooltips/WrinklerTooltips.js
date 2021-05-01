@@ -20,10 +20,7 @@ export function CheckWrinklerTooltip() {
       const me = Game.wrinklers[i];
       if (me.phase > 0 && me.selected) {
         showingTooltip = true;
-        if (
-          TooltipWrinklerBeingShown[i] === 0 ||
-          TooltipWrinklerBeingShown[i] === undefined
-        ) {
+        if (TooltipWrinklerBeingShown[i] === 0 || TooltipWrinklerBeingShown[i] === undefined) {
           const placeholder = document.createElement('div');
           const wrinkler = document.createElement('div');
           wrinkler.style.minWidth = '120px';

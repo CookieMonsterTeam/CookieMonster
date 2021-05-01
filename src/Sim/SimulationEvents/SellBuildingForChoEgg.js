@@ -1,10 +1,5 @@
 import CopyData from '../SimulationData/CopyData';
-import {
-  SimBuildingsOwned,
-  SimDragonAura,
-  SimDragonAura2,
-  SimObjects,
-} from '../VariablesAndData';
+import { SimBuildingsOwned, SimDragonAura, SimDragonAura2, SimObjects } from '../VariablesAndData';
 import BuildingSell from './SellBuilding';
 
 /**

@@ -73,11 +73,7 @@ export const TooltipText = [
     'The amount of cookies you would get from popping all wrinklers with Skruuia god in Diamond slot, selling all stock market goods, selling all buildings with Earth Shatterer and Reality Bending auras, and then buying Chocolate egg',
     '300px',
   ],
-  [
-    'ChainNextLevelPlaceholder',
-    'Cheated cookies might break this formula',
-    '250px',
-  ],
+  ['ChainNextLevelPlaceholder', 'Cheated cookies might break this formula', '250px'],
   [
     'FavouriteSettingPlaceholder',
     "Click to set this setting as favourite and show it in 'favourite' settings at the top of the Cookie Monster Settings",

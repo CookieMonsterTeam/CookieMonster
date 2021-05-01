@@ -12,9 +12,7 @@ import { isInitializing } from '../../InitSaveLoad/Variables';
 export default function Flash(mode, config, forced) {
   // The arguments check makes the sound not play upon initialization of the mod
   if (
-    ((CMOptions[config] === 1 || forced) &&
-      mode === 3 &&
-      isInitializing === false) ||
+    ((CMOptions[config] === 1 || forced) && mode === 3 && isInitializing === false) ||
     mode === 1
   ) {
     l('CMFlashScreen').style.backgroundColor = CMOptions[`Colour${config}`];

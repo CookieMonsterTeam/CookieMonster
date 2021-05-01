@@ -38,24 +38,12 @@ function CreateUpgradeBarLegend() {
     return div;
   };
 
-  legend.appendChild(
-    legendLine(ColourBlue, 'Better than the best PP of a building option'),
-  );
-  legend.appendChild(
-    legendLine(ColourGreen, 'Same as the best PP building option'),
-  );
-  legend.appendChild(
-    legendLine(ColourYellow, 'Within the top 10 of PP for buildings'),
-  );
-  legend.appendChild(
-    legendLine(ColourOrange, 'Within the top 20 of PP for buildings'),
-  );
-  legend.appendChild(
-    legendLine(ColourRed, 'Within the top 30 of PP for buildings'),
-  );
-  legend.appendChild(
-    legendLine(ColourPurple, 'Outside of the top 30 of PP for buildings'),
-  );
+  legend.appendChild(legendLine(ColourBlue, 'Better than the best PP of a building option'));
+  legend.appendChild(legendLine(ColourGreen, 'Same as the best PP building option'));
+  legend.appendChild(legendLine(ColourYellow, 'Within the top 10 of PP for buildings'));
+  legend.appendChild(legendLine(ColourOrange, 'Within the top 20 of PP for buildings'));
+  legend.appendChild(legendLine(ColourRed, 'Within the top 30 of PP for buildings'));
+  legend.appendChild(legendLine(ColourPurple, 'Outside of the top 30 of PP for buildings'));
   legend.appendChild(legendLine(ColourGray, 'Negative or infinity PP'));
   return legend;
 }
@@ -99,8 +87,5 @@ export default function CreateUpgradeBar() {
   UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarPurple', ColourPurple));
   UpgradeBar.appendChild(upgradeNumber('CMUpgradeBarGray', ColourGray));
 
-  l('upgrades').parentNode.insertBefore(
-    UpgradeBar,
-    l('upgrades').parentNode.childNodes[3],
-  );
+  l('upgrades').parentNode.insertBefore(UpgradeBar, l('upgrades').parentNode.childNodes[3]);
 }

@@ -15,15 +15,12 @@ export default function CacheHeavenlyChipsPS() {
   // Only calculate every new second
   if ((Game.T / Game.fps) % 1 === 0) {
     const chipsOwned = Game.HowMuchPrestige(Game.cookiesReset);
-    const ascendNowToOwn = Math.floor(
-      Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned),
-    );
+    const ascendNowToOwn = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
     const ascendNowToGet = ascendNowToOwn - Math.floor(chipsOwned);
 
     // Add recent gains to AvgQueue's
     const timeDiff = currDate - CacheLastHeavenlyCheck;
-    const heavenlyChipsDiffAvg =
-      Math.max(0, ascendNowToGet - CacheLastHeavenlyChips) / timeDiff;
+    const heavenlyChipsDiffAvg = Math.max(0, ascendNowToGet - CacheLastHeavenlyChips) / timeDiff;
     for (let i = 0; i < timeDiff; i++) {
       HeavenlyChipsDiff.addLatest(heavenlyChipsDiffAvg);
     }

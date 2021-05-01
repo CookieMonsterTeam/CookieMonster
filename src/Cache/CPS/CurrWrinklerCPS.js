@@ -1,8 +1,5 @@
 import { SimObjects } from '../../Sim/VariablesAndData';
-import {
-  CacheCurrWrinklerCount,
-  CacheCurrWrinklerCPSMult,
-} from '../VariablesAndData';
+import { CacheCurrWrinklerCount, CacheCurrWrinklerCPSMult } from '../VariablesAndData';
 
 /**
  * This functions caches the current Wrinkler CPS multiplier

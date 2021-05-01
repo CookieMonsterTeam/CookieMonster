@@ -5,11 +5,7 @@
  * @param	{number}	targetMagic			The target magic level
  * @returns	{number}	count / Game.fps	The time it takes to reach targetMagic
  */
-export default function CalculateGrimoireRefillTime(
-  currentMagic,
-  maxMagic,
-  targetMagic,
-) {
+export default function CalculateGrimoireRefillTime(currentMagic, maxMagic, targetMagic) {
   let magic = currentMagic;
   let count = 0;
   while (magic < targetMagic) {

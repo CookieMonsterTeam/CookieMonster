@@ -18,16 +18,10 @@ export default function GetCPS() {
     return Game.cookiesPs * (1 - Game.cpsSucked);
   }
   if (CMOptions.CalcWrink === 1) {
-    return (
-      Game.cookiesPs *
-      (CacheCurrWrinklerCPSMult + (1 - CacheCurrWrinklerCount * 0.05))
-    );
+    return Game.cookiesPs * (CacheCurrWrinklerCPSMult + (1 - CacheCurrWrinklerCount * 0.05));
   }
   if (CacheWrinklersFattest[1] !== null)
-    if (
-      CMOptions.CalcWrink === 2 &&
-      Game.wrinklers[CacheWrinklersFattest[1]].type === 1
-    ) {
+    if (CMOptions.CalcWrink === 2 && Game.wrinklers[CacheWrinklersFattest[1]].type === 1) {
       return (
         Game.cookiesPs *
         ((CacheCurrWrinklerCPSMult * 3) / CacheCurrWrinklerCount +
@@ -36,7 +30,6 @@ export default function GetCPS() {
     }
   return (
     Game.cookiesPs *
-    (CacheCurrWrinklerCPSMult / CacheCurrWrinklerCount +
-      (1 - CacheCurrWrinklerCount * 0.05))
+    (CacheCurrWrinklerCPSMult / CacheCurrWrinklerCount + (1 - CacheCurrWrinklerCount * 0.05))
   );
 }

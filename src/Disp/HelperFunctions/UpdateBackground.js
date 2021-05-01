@@ -5,11 +5,8 @@
  */
 export default function UpdateBackground() {
   Game.Background.canvas.width = Game.Background.canvas.parentNode.offsetWidth;
-  Game.Background.canvas.height =
-    Game.Background.canvas.parentNode.offsetHeight;
-  Game.LeftBackground.canvas.width =
-    Game.LeftBackground.canvas.parentNode.offsetWidth;
-  Game.LeftBackground.canvas.height =
-    Game.LeftBackground.canvas.parentNode.offsetHeight;
+  Game.Background.canvas.height = Game.Background.canvas.parentNode.offsetHeight;
+  Game.LeftBackground.canvas.width = Game.LeftBackground.canvas.parentNode.offsetWidth;
+  Game.LeftBackground.canvas.height = Game.LeftBackground.canvas.parentNode.offsetHeight;
   Game.DrawBackground();
 }

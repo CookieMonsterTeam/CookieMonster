@@ -57,28 +57,19 @@ export function UpdateTimerBar() {
     let numberOfTimers = 0;
 
     // Regulates visibility of Golden Cookie timer
-    if (
-      Game.shimmerTypes.golden.spawned === 0 &&
-      !Game.Has('Golden switch [off]')
-    ) {
+    if (Game.shimmerTypes.golden.spawned === 0 && !Game.Has('Golden switch [off]')) {
       l('CMTimerBarGC').style.display = '';
       l('CMTimerBarGCMinBar').style.width = `${Math.round(
-        (Math.max(
-          0,
-          Game.shimmerTypes.golden.minTime - Game.shimmerTypes.golden.time,
-        ) *
+        (Math.max(0, Game.shimmerTypes.golden.minTime - Game.shimmerTypes.golden.time) *
           maxWidthTwoBar) /
           Game.shimmerTypes.golden.maxTime,
       )}px`;
       if (CMOptions.TimerBarOverlay >= 1)
         l('CMTimerBarGCMinBar').textContent = Math.ceil(
-          (Game.shimmerTypes.golden.minTime - Game.shimmerTypes.golden.time) /
-            Game.fps,
+          (Game.shimmerTypes.golden.minTime - Game.shimmerTypes.golden.time) / Game.fps,
         );
       else l('CMTimerBarGCMinBar').textContent = '';
-      if (
-        Game.shimmerTypes.golden.minTime === Game.shimmerTypes.golden.maxTime
-      ) {
+      if (Game.shimmerTypes.golden.minTime === Game.shimmerTypes.golden.maxTime) {
         l('CMTimerBarGCMinBar').style.borderTopRightRadius = '10px';
         l('CMTimerBarGCMinBar').style.borderBottomRightRadius = '10px';
       } else {
@@ -102,37 +93,27 @@ export function UpdateTimerBar() {
         );
       else l('CMTimerBarGCBar').textContent = '';
       l('CMTimerBarGCTime').textContent = Math.ceil(
-        (Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.time) /
-          Game.fps,
+        (Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.time) / Game.fps,
       );
       numberOfTimers += 1;
     } else l('CMTimerBarGC').style.display = 'none';
 
     // Regulates visibility of Reindeer timer
-    if (
-      Game.season === 'christmas' &&
-      Game.shimmerTypes.reindeer.spawned === 0
-    ) {
+    if (Game.season === 'christmas' && Game.shimmerTypes.reindeer.spawned === 0) {
       l('CMTimerBarRen').style.display = '';
       l('CMTimerBarRenMinBar').style.width = `${Math.round(
-        (Math.max(
-          0,
-          Game.shimmerTypes.reindeer.minTime - Game.shimmerTypes.reindeer.time,
-        ) *
+        (Math.max(0, Game.shimmerTypes.reindeer.minTime - Game.shimmerTypes.reindeer.time) *
           maxWidthTwoBar) /
           Game.shimmerTypes.reindeer.maxTime,
       )}px`;
       if (CMOptions.TimerBarOverlay >= 1)
         l('CMTimerBarRenMinBar').textContent = Math.ceil(
-          (Game.shimmerTypes.reindeer.minTime -
-            Game.shimmerTypes.reindeer.time) /
-            Game.fps,
+          (Game.shimmerTypes.reindeer.minTime - Game.shimmerTypes.reindeer.time) / Game.fps,
         );
       else l('CMTimerBarRenMinBar').textContent = '';
       l('CMTimerBarRenBar').style.width = `${Math.round(
         (Math.min(
-          Game.shimmerTypes.reindeer.maxTime -
-            Game.shimmerTypes.reindeer.minTime,
+          Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.minTime,
           Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.time,
         ) *
           maxWidthTwoBar) /
@@ -141,16 +122,13 @@ export function UpdateTimerBar() {
       if (CMOptions.TimerBarOverlay >= 1)
         l('CMTimerBarRenBar').textContent = Math.ceil(
           Math.min(
-            Game.shimmerTypes.reindeer.maxTime -
-              Game.shimmerTypes.reindeer.minTime,
-            Game.shimmerTypes.reindeer.maxTime -
-              Game.shimmerTypes.reindeer.time,
+            Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.minTime,
+            Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.time,
           ) / Game.fps,
         );
       else l('CMTimerBarRenBar').textContent = '';
       l('CMTimerBarRenTime').textContent = Math.ceil(
-        (Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.time) /
-          Game.fps,
+        (Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.time) / Game.fps,
       );
       numberOfTimers += 1;
     } else {
@@ -180,13 +158,10 @@ export function UpdateTimerBar() {
         else timer.lastChild.children[1].textContent = '';
         timer.lastChild.children[1].style.width = `${Math.round(
           (Game.buffs[i].time *
-            (maxWidthOneBar -
-              Math.ceil(Game.buffs[i].time / Game.fps).toString().length * 8)) /
+            (maxWidthOneBar - Math.ceil(Game.buffs[i].time / Game.fps).toString().length * 8)) /
             Game.buffs[i].maxTime,
         )}px`;
-        timer.lastChild.children[2].textContent = Math.ceil(
-          Game.buffs[i].time / Game.fps,
-        );
+        timer.lastChild.children[2].textContent = Math.ceil(Game.buffs[i].time / Game.fps);
         numberOfTimers += 1;
         BuffTimerBars[Game.buffs[i].name] = timer;
       }

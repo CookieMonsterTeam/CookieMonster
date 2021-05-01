@@ -22,15 +22,11 @@ export default function PantheonGods() {
     cps1.id = 'CMPantheonTooltipPosition1';
     if (CacheGods[GodID][0] !== 0) {
       cps1.textContent = Beautify(CacheGods[GodID][0]);
-      const increase = Math.round(
-        (CacheGods[GodID][0] / Game.cookiesPs) * 10000,
-      );
+      const increase = Math.round((CacheGods[GodID][0] / Game.cookiesPs) * 10000);
       if (Number.isFinite(increase) && increase !== 0) {
         cps1.textContent += ` (${increase / 100}% of income)`;
       } else {
-        cps1.textContent += ` (<0${
-          CMOptions.ScaleSeparator ? ',' : '.'
-        }01% of income)`;
+        cps1.textContent += ` (<0${CMOptions.ScaleSeparator ? ',' : '.'}01% of income)`;
       }
     } else cps1.textContent = 'No effect to CPS';
     tooltipBox.appendChild(cps1);
@@ -40,15 +36,11 @@ export default function PantheonGods() {
     cps2.id = 'CMPantheonTooltipPosition2';
     if (CacheGods[GodID][1] !== 0) {
       cps2.textContent = Beautify(CacheGods[GodID][1]);
-      const increase = Math.round(
-        (CacheGods[GodID][1] / Game.cookiesPs) * 10000,
-      );
+      const increase = Math.round((CacheGods[GodID][1] / Game.cookiesPs) * 10000);
       if (Number.isFinite(increase) && increase !== 0) {
         cps2.textContent += ` (${increase / 100}% of income)`;
       } else {
-        cps2.textContent += ` (<0${
-          CMOptions.ScaleSeparator ? ',' : '.'
-        }01% of income)`;
+        cps2.textContent += ` (<0${CMOptions.ScaleSeparator ? ',' : '.'}01% of income)`;
       }
     } else cps2.textContent = 'No effect to CPS';
     tooltipBox.appendChild(cps2);
@@ -58,15 +50,11 @@ export default function PantheonGods() {
     cps3.id = 'CMPantheonTooltipPosition2';
     if (CacheGods[GodID][2] !== 0) {
       cps3.textContent = Beautify(CacheGods[GodID][2]);
-      const increase = Math.round(
-        (CacheGods[GodID][2] / Game.cookiesPs) * 10000,
-      );
+      const increase = Math.round((CacheGods[GodID][2] / Game.cookiesPs) * 10000);
       if (Number.isFinite(increase) && increase !== 0) {
         cps3.textContent += ` (${increase / 100}% of income)`;
       } else {
-        cps3.textContent += ` (<0${
-          CMOptions.ScaleSeparator ? ',' : '.'
-        }01% of income)`;
+        cps3.textContent += ` (<0${CMOptions.ScaleSeparator ? ',' : '.'}01% of income)`;
       }
     } else cps3.textContent = 'No effect to CPS';
     tooltipBox.appendChild(cps3);

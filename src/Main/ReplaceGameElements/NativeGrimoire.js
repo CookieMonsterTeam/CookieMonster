@@ -14,21 +14,14 @@ import ReplaceTooltipGrimoire from './TooltipGrimoire';
  * This function fixes replaces the .draw function of the Grimoire
  */
 function ReplaceNativeGrimoireDraw() {
-  if (
-    !HasReplaceNativeGrimoireDraw &&
-    Game.Objects['Wizard tower'].minigameLoaded
-  ) {
+  if (!HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
     const { minigame } = Game.Objects['Wizard tower'];
     BackupGrimoireDraw = minigame.draw;
     Game.Objects['Wizard tower'].minigame.draw = function () {
       BackupGrimoireDraw();
       if (CMOptions.GrimoireBar === 1 && minigame.magic < minigame.magicM) {
         minigame.magicBarTextL.innerHTML += ` (${FormatTime(
-          CalculateGrimoireRefillTime(
-            minigame.magic,
-            minigame.magicM,
-            minigame.magicM,
-          ),
+          CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM),
         )})`;
       }
     };
@@ -40,10 +33,7 @@ function ReplaceNativeGrimoireDraw() {
  * This function fixes replaces the .launch function of the Grimoire
  */
 function ReplaceNativeGrimoireLaunch() {
-  if (
-    !HasReplaceNativeGrimoireLaunch &&
-    Game.Objects['Wizard tower'].minigameLoaded
-  ) {
+  if (!HasReplaceNativeGrimoireLaunch && Game.Objects['Wizard tower'].minigameLoaded) {
     const { minigame } = Game.Objects['Wizard tower'];
     BackupGrimoireLaunch = minigame.launch; // eslint-disable-line no-unused-vars
     BackupGrimoireLaunchMod = new Function( // eslint-disable-line no-new-func

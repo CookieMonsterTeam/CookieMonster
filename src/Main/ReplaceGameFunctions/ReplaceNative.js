@@ -45,10 +45,7 @@ export default function ReplaceNative() {
 
   BackupFunctions.tooltip.update = Game.tooltip.update;
   BackupFunctions.tooltip.updateMod = new Function( // eslint-disable-line no-new-func
-    `return ${Game.tooltip.update
-      .toString()
-      .split('this.')
-      .join('Game.tooltip.')}`,
+    `return ${Game.tooltip.update.toString().split('this.').join('Game.tooltip.')}`,
   )();
   Game.tooltip.update = function () {
     BackupFunctions.tooltip.updateMod();
@@ -119,10 +116,7 @@ export default function ReplaceNative() {
 
   BackupFunctions.UpdateMenu = Game.UpdateMenu;
   Game.UpdateMenu = function () {
-    if (
-      typeof jscolor.picker === 'undefined' ||
-      typeof jscolor.picker.owner === 'undefined'
-    ) {
+    if (typeof jscolor.picker === 'undefined' || typeof jscolor.picker.owner === 'undefined') {
       BackupFunctions.UpdateMenu();
       AddMenu();
     }
@@ -131,8 +125,7 @@ export default function ReplaceNative() {
   BackupFunctions.sayTime = Game.sayTime;
   // eslint-disable-next-line no-unused-vars
   CMSayTime = function (time, detail) {
-    if (Number.isNaN(time) || time <= 0)
-      return BackupFunctions.sayTime(time, detail);
+    if (Number.isNaN(time) || time <= 0) return BackupFunctions.sayTime(time, detail);
     return FormatTime(time / Game.fps, 1);
   };
 

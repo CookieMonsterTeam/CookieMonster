@@ -64,9 +64,7 @@ export default function AddMenuStats(title) {
       const popAllFrag = document.createDocumentFragment();
       popAllFrag.appendChild(
         document.createTextNode(
-          `${Beautify(CacheWrinklersTotal)} / ${Beautify(
-            CacheWrinklersNormal,
-          )} `,
+          `${Beautify(CacheWrinklersTotal)} / ${Beautify(CacheWrinklersNormal)} `,
         ),
       );
       const popAllA = document.createElement('a');
@@ -77,31 +75,22 @@ export default function AddMenuStats(title) {
       };
       popAllFrag.appendChild(popAllA);
       stats.appendChild(
-        CreateElements.StatsListing(
-          'basic',
-          'Rewards of Popping (All/Normal)',
-          popAllFrag,
-        ),
+        CreateElements.StatsListing('basic', 'Rewards of Popping (All/Normal)', popAllFrag),
       );
       const popFattestFrag = document.createDocumentFragment();
-      popFattestFrag.appendChild(
-        document.createTextNode(`${Beautify(CacheWrinklersFattest[0])} `),
-      );
+      popFattestFrag.appendChild(document.createTextNode(`${Beautify(CacheWrinklersFattest[0])} `));
       const popFattestA = document.createElement('a');
       popFattestA.textContent = 'Pop Single Fattest';
       popFattestA.className = 'option';
       popFattestA.onclick = function () {
-        if (CacheWrinklersFattest[1] !== null)
-          Game.wrinklers[CacheWrinklersFattest[1]].hp = 0;
+        if (CacheWrinklersFattest[1] !== null) Game.wrinklers[CacheWrinklersFattest[1]].hp = 0;
       };
       popFattestFrag.appendChild(popFattestA);
       stats.appendChild(
         CreateElements.StatsListing(
           'basic',
           `Rewards of Popping Single Fattest Non-Shiny Wrinkler (id: ${
-            CacheWrinklersFattest[1] !== null
-              ? CacheWrinklersFattest[1]
-              : 'None'
+            CacheWrinklersFattest[1] !== null ? CacheWrinklersFattest[1] : 'None'
           })`,
           popFattestFrag,
         ),
@@ -128,9 +117,9 @@ export default function AddMenuStats(title) {
     stats.appendChild(
       CreateElements.StatsListing(
         'basic',
-        `Average cookie clicks per second (past ${
-          ClickTimes[CMOptions.AvgClicksHist]
-        }${CMOptions.AvgClicksHist === 0 ? ' second' : ' seconds'})`,
+        `Average cookie clicks per second (past ${ClickTimes[CMOptions.AvgClicksHist]}${
+          CMOptions.AvgClicksHist === 0 ? ' second' : ' seconds'
+        })`,
         document.createTextNode(Beautify(CacheAverageClicks, 1)),
       ),
     );
@@ -181,9 +170,7 @@ export default function AddMenuStats(title) {
         Game.fps * 60 - (Game.OnAscend ? 0 : Game.T % (Game.fps * 60)),
         4,
       );
-      stats.appendChild(
-        CreateElements.StatsListing('basic', 'Time till autosave', timer),
-      );
+      stats.appendChild(CreateElements.StatsListing('basic', 'Time till autosave', timer));
     }
   }
 

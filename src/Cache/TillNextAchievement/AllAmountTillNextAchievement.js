@@ -10,8 +10,7 @@ export default function AllAmountTillNextAchievement() {
       CacheObjectsNextAchievement[i].TotalNeeded > Game.Objects[i].amount
     ) {
       result[i] = {
-        AmountNeeded:
-          CacheObjectsNextAchievement[i].TotalNeeded - Game.Objects[i].amount,
+        AmountNeeded: CacheObjectsNextAchievement[i].TotalNeeded - Game.Objects[i].amount,
         TotalNeeded: CacheObjectsNextAchievement[i].TotalNeeded,
       };
     } else {

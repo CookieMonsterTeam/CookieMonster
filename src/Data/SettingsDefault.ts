@@ -77,15 +77,13 @@ const ConfigDefault: {
   ColourFortuneFlash: '#ffffff',
   FortuneSound: 1,
   FortuneVolume: 100,
-  FortuneSoundURL:
-    'https://freesound.org/data/previews/174/174027_3242494-lq.mp3',
+  FortuneSoundURL: 'https://freesound.org/data/previews/174/174027_3242494-lq.mp3',
   SeaNotification: 0,
   SeaFlash: 1,
   ColourSeaFlash: '#ffffff',
   SeaSound: 1,
   SeaVolume: 100,
-  SeaSoundURL:
-    'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3',
+  SeaSoundURL: 'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3',
   GardFlash: 1,
   ColourGardFlash: '#ffffff',
   GardSound: 1,
@@ -96,22 +94,19 @@ const ConfigDefault: {
   ColourMagicFlash: '#ffffff',
   MagicSound: 1,
   MagicVolume: 100,
-  MagicSoundURL:
-    'https://freesound.org/data/previews/221/221683_1015240-lq.mp3',
+  MagicSoundURL: 'https://freesound.org/data/previews/221/221683_1015240-lq.mp3',
   WrinklerNotification: 0,
   WrinklerFlash: 1,
   ColourWrinklerFlash: '#ffffff',
   WrinklerSound: 1,
   WrinklerVolume: 100,
-  WrinklerSoundURL:
-    'https://freesound.org/data/previews/124/124186_8043-lq.mp3',
+  WrinklerSoundURL: 'https://freesound.org/data/previews/124/124186_8043-lq.mp3',
   WrinklerMaxNotification: 0,
   WrinklerMaxFlash: 1,
   ColourWrinklerMaxFlash: '#ffffff',
   WrinklerMaxSound: 1,
   WrinklerMaxVolume: 100,
-  WrinklerMaxSoundURL:
-    'https://freesound.org/data/previews/152/152743_15663-lq.mp3',
+  WrinklerMaxSoundURL: 'https://freesound.org/data/previews/152/152743_15663-lq.mp3',
   BulkBuyBlock: 0,
   FavouriteSettings: 1,
   Header: {

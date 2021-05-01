@@ -55,16 +55,10 @@ describe('FormatTime', () => {
         assert.equal(FormatTime(3601, 1), '1 hour, 0 minutes, 1 second');
       });
       it('Format when time is over 1 day', () => {
-        assert.equal(
-          FormatTime(86401, 1),
-          '1 day, 0 hours, 0 minutes, 1 second',
-        );
+        assert.equal(FormatTime(86401, 1), '1 day, 0 hours, 0 minutes, 1 second');
       });
       it('Format when time is over 1 year', () => {
-        assert.equal(
-          FormatTime(31536001, 1),
-          '1 year, 0 days, 0 hours, 0 minutes, 1 second',
-        );
+        assert.equal(FormatTime(31536001, 1), '1 year, 0 days, 0 hours, 0 minutes, 1 second');
       });
       it('Format when time is over >9000 days', () => {
         assert.equal(FormatTime(777600001, 1), 'Over 9000 days!');

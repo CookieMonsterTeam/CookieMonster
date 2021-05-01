@@ -14,8 +14,7 @@ export default function PlaySound(url, sndConfig, volConfig, forced) {
   if ((CMOptions[sndConfig] === 1 || forced) && isInitializing === false) {
     // eslint-disable-next-line new-cap
     const sound = new Audio(url);
-    if (CMOptions.GeneralSound)
-      sound.volume = (CMOptions[volConfig] / 100) * (Game.volume / 100);
+    if (CMOptions.GeneralSound) sound.volume = (CMOptions[volConfig] / 100) * (Game.volume / 100);
     else sound.volume = CMOptions[volConfig] / 100;
     sound.play();
   }

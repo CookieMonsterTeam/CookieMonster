@@ -1,14 +1,8 @@
 /** Functions related to updating the tab in the browser's tab-bar */
 
-import {
-  CacheSeasonPopShimmer,
-  CacheSpawnedGoldenShimmer,
-} from '../../Cache/VariablesAndData';
+import { CacheSeasonPopShimmer, CacheSpawnedGoldenShimmer } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
-import {
-  LastSeasonPopupState,
-  LastTickerFortuneState,
-} from '../../Main/VariablesAndData';
+import { LastSeasonPopupState, LastTickerFortuneState } from '../../Main/VariablesAndData';
 import { Title } from '../VariablesAndData';
 
 /**
@@ -28,14 +22,10 @@ export default function UpdateTitle() {
     if (CacheSpawnedGoldenShimmer) {
       if (CacheSpawnedGoldenShimmer.wrath)
         titleGC = `[W${Math.ceil(CacheSpawnedGoldenShimmer.life / Game.fps)}]`;
-      else
-        titleGC = `[G${Math.ceil(CacheSpawnedGoldenShimmer.life / Game.fps)}]`;
+      else titleGC = `[G${Math.ceil(CacheSpawnedGoldenShimmer.life / Game.fps)}]`;
     } else if (!Game.Has('Golden switch [off]')) {
-      titleGC = `[${
-        Number(l('CMTimerBarGCMinBar').textContent) < 0 ? '!' : ''
-      }${Math.ceil(
-        (Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.time) /
-          Game.fps,
+      titleGC = `[${Number(l('CMTimerBarGCMinBar').textContent) < 0 ? '!' : ''}${Math.ceil(
+        (Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.time) / Game.fps,
       )}]`;
     } else titleGC = '[GS]';
 
@@ -46,15 +36,10 @@ export default function UpdateTitle() {
 
     if (Game.season === 'christmas') {
       addSP = true;
-      if (LastSeasonPopupState)
-        titleSP = `[R${Math.ceil(CacheSeasonPopShimmer.life / Game.fps)}]`;
+      if (LastSeasonPopupState) titleSP = `[R${Math.ceil(CacheSeasonPopShimmer.life / Game.fps)}]`;
       else {
-        titleSP = `[${
-          Number(l('CMTimerBarRenMinBar').textContent) < 0 ? '!' : ''
-        }${Math.ceil(
-          (Game.shimmerTypes.reindeer.maxTime -
-            Game.shimmerTypes.reindeer.time) /
-            Game.fps,
+        titleSP = `[${Number(l('CMTimerBarRenMinBar').textContent) < 0 ? '!' : ''}${Math.ceil(
+          (Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.time) / Game.fps,
         )}]`;
       }
     }
@@ -64,9 +49,7 @@ export default function UpdateTitle() {
     if (str.charAt(0) === '[') {
       str = str.substring(str.lastIndexOf(']') + 1);
     }
-    document.title = `${
-      titleGC + (addFC ? titleFC : '') + (addSP ? titleSP : '')
-    } ${str}`;
+    document.title = `${titleGC + (addFC ? titleFC : '') + (addSP ? titleSP : '')} ${str}`;
   } else if (CMOptions.Title === 2) {
     let str = '';
     let spawn = false;

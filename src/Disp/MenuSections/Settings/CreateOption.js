@@ -1,11 +1,7 @@
 import jscolor, * as JsColor from '@eastdesire/jscolor';
 import ToggleFavouriteSetting from '../../../Config/Toggles/ToggleFavourites';
 import { SaveConfig } from '../../../Config/SaveLoadReload/SaveLoadReloadSettings';
-import {
-  ConfigPrefix,
-  ToggleConfig,
-  ToggleConfigVolume,
-} from '../../../Config/ToggleSetting';
+import { ConfigPrefix, ToggleConfig, ToggleConfigVolume } from '../../../Config/ToggleSetting';
 import { CMOptions } from '../../../Config/VariablesAndData';
 import {} from '../../../Data/Sectionheaders.ts';
 import Config from '../../../Data/SettingsData';
@@ -13,10 +9,7 @@ import RefreshScale from '../../HelperFunctions/RefreshScale';
 import UpdateColours from '../../HelperFunctions/UpdateColours';
 import Flash from '../../Notifications/Flash';
 import PlaySound from '../../Notifications/Sound';
-import {
-  FavouriteSettings,
-  SimpleTooltipElements,
-} from '../../VariablesAndData';
+import { FavouriteSettings, SimpleTooltipElements } from '../../VariablesAndData';
 import CookieMonsterPrompt from '../Prompt';
 
 /**
@@ -37,10 +30,7 @@ function CreateFavouriteStar(config) {
     Game.UpdateMenu();
   };
   FavStar.onmouseover = function () {
-    Game.tooltip.draw(
-      this,
-      escape(SimpleTooltipElements.FavouriteSettingPlaceholder.innerHTML),
-    );
+    Game.tooltip.draw(this, escape(SimpleTooltipElements.FavouriteSettingPlaceholder.innerHTML));
   };
   FavStar.onmouseout = function () {
     Game.tooltip.hide();

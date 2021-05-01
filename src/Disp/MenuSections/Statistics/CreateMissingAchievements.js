@@ -7,8 +7,7 @@ function CrateTooltipLockedAchievements(me) {
   tags.push('Locked', 0);
 
   let neuromancy = 0;
-  if (Game.Has('Neuromancy') || (Game.sesame && me.pool === 'debug'))
-    neuromancy = 1;
+  if (Game.Has('Neuromancy') || (Game.sesame && me.pool === 'debug')) neuromancy = 1;
   if (neuromancy && me.won === 0) tags.push('Click to win!', '#00c462');
   else if (neuromancy && me.won > 0) tags.push('Click to lose!', '#00c462');
 
@@ -21,9 +20,9 @@ function CrateTooltipLockedAchievements(me) {
   let tagsStr = '';
   for (let i = 0; i < tags.length; i += 2) {
     if (i % 2 === 0)
-      tagsStr += ` <div class="tag" style="color:${
-        tags[i + 1] === 0 ? '#fff' : tags[i + 1]
-      };">[${tags[i]}]</div>`;
+      tagsStr += ` <div class="tag" style="color:${tags[i + 1] === 0 ? '#fff' : tags[i + 1]};">[${
+        tags[i]
+      }]</div>`;
   }
   tagsStr = tagsStr.substring(1);
 
@@ -35,9 +34,9 @@ function CrateTooltipLockedAchievements(me) {
   ${tagsStr}<div class="line"></div><div class="description">${desc}</div></div>
   ${
     Game.sesame
-      ? `<div style="font-size:9px;">Id : ${me.id} | Order : ${Math.floor(
-          me.order,
-        )}${me.tier ? ` | Tier : ${me.tier}` : ''}</div>`
+      ? `<div style="font-size:9px;">Id : ${me.id} | Order : ${Math.floor(me.order)}${
+          me.tier ? ` | Tier : ${me.tier}` : ''
+        }</div>`
       : ''
   }`;
 }
@@ -58,9 +57,7 @@ export default function AddMissingAchievements() {
         const id = achievsCrate.onclick.toString().split(/\[(.*)\]/gi)[1];
         const { icon } = Game.AchievementsById[id];
         // eslint-disable-next-line no-param-reassign
-        achievsCrate.style.backgroundPosition = `${-icon[0] * 48}px ${
-          -icon[1] * 48
-        }px`;
+        achievsCrate.style.backgroundPosition = `${-icon[0] * 48}px ${-icon[1] * 48}px`;
         // eslint-disable-next-line no-param-reassign
         achievsCrate.onmouseover = function () {
           if (!Game.mouseDown) {
@@ -68,10 +65,9 @@ export default function AddMissingAchievements() {
             Game.tooltip.dynamic = 1;
             Game.tooltip.draw(
               this,
-              () => (function () {
-                  return CrateTooltipLockedAchievements(
-                    Game.AchievementsById[id],
-                  );
+              () =>
+                (function () {
+                  return CrateTooltipLockedAchievements(Game.AchievementsById[id]);
                 })(),
               'top',
             );
