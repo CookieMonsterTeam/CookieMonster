@@ -7,10 +7,10 @@ import ToggleSectionHideButtons from '../Config/Toggles/ToggleSectionHideButtons
 import ToggleToolWarnPos from '../Config/Toggles/ToggleToolWarnPos';
 import ToggleUpgradeBarAndColour from '../Config/Toggles/ToggleUpgradeBarAndColour';
 import ToggleUpgradeBarFixedPos from '../Config/Toggles/ToggleUpgradeBarFixedPos';
-import ToggleUpgradeSectionsAlwaysExpanded from '../Config/Toggles/ToggleUpgradeSectionsAlwaysExpanded';
 import ToggleWrinklerButtons from '../Config/Toggles/ToggleWrinklerButtons';
 import { CMOptions } from '../Config/VariablesAndData';
 import UpdateBuildings from '../Disp/BuildingsUpgrades/Buildings';
+import UpdateUpgradeSectionsHeight from '../Disp/BuildingsUpgrades/UpdateUpgradeSectionsHeight';
 import UpdateUpgrades from '../Disp/BuildingsUpgrades/Upgrades';
 import RefreshScale from '../Disp/HelperFunctions/RefreshScale';
 import { UpdateFavicon } from '../Disp/TabTitle/FavIcon';
@@ -325,7 +325,7 @@ const Config = {
     'Toggle to make the upgrades sections always expanded to the size needed to display all upgrades',
     true,
     () => {
-      ToggleUpgradeSectionsAlwaysExpanded();
+      UpdateUpgradeSectionsHeight();
     },
   ),
   DragonAuraInfo: new SettingStandard(
