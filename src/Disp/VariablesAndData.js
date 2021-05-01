@@ -23,7 +23,6 @@ export const ColourGray = 'Gray';
 export const ColourPink = 'Pink';
 export const ColourBrown = 'Brown';
 export const ColoursOrdering = [
-  ColourGray,
   ColourBlue,
   ColourGreen,
   ColourYellow,
@@ -32,6 +31,7 @@ export const ColoursOrdering = [
   ColourPurple,
   ColourPink,
   ColourBrown,
+  ColourGray,
 ];
 
 /**
