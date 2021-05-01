@@ -22,3 +22,5 @@ If applicable, add screenshots to help explain your problem.
 Please add a save file here.
 This makes debugging much easier as we do not always have a good test save to debug the issue
 ```
+**Browser**
+Please specify your current browser. This can help find/fix the bug!
