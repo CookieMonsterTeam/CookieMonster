@@ -1,7 +1,4 @@
-import {
-  TooltipWrinklerArea,
-  TooltipWrinklerBeingShown,
-} from '../../Disp/VariablesAndData';
+import { TooltipWrinklerArea, TooltipWrinklerBeingShown } from '../../Disp/VariablesAndData';
 
 /**
  * This function creates .onmouseover/out events that determine if the mouse is hovering-over a Wrinkler

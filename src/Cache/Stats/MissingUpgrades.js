@@ -38,11 +38,7 @@ export default function CacheAllMissingUpgrades() {
       /* eslint-disable no-unused-vars */
       if (me.pool === 'prestige') CacheMissingUpgradesPrestige += str;
       else if (me.pool === 'cookie') CacheMissingUpgradesCookies += str;
-      else if (
-        me.pool !== 'toggle' &&
-        me.pool !== 'unused' &&
-        me.pool !== 'debug'
-      )
+      else if (me.pool !== 'toggle' && me.pool !== 'unused' && me.pool !== 'debug')
         CacheMissingUpgrades += str;
       /* eslint-enable no-unused-vars */
     }

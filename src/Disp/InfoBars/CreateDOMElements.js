@@ -77,9 +77,7 @@ export function CreateBotBarBuildingColumn(buildingName) {
     const i = buildingName;
     const header = type.appendChild(document.createElement('td'));
     header.appendChild(
-      document.createTextNode(
-        `${i.indexOf(' ') !== -1 ? i.substring(0, i.indexOf(' ')) : i} (`,
-      ),
+      document.createTextNode(`${i.indexOf(' ') !== -1 ? i.substring(0, i.indexOf(' ')) : i} (`),
     );
 
     const span = header.appendChild(document.createElement('span'));

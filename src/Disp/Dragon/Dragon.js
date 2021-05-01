@@ -14,17 +14,14 @@ import FormatTime from '../BeautifyAndFormatting/FormatTime';
 export function AddAuraInfo(aura) {
   if (CMOptions.DragonAuraInfo === 1) {
     const [bonusCPS, priceOfChange] = CalculateChangeAura(aura);
-    const timeToRecover = FormatTime(
-      priceOfChange / (bonusCPS + Game.cookiesPs),
-    );
+    const timeToRecover = FormatTime(priceOfChange / (bonusCPS + Game.cookiesPs));
     let bonusCPSPercentage;
     if (Game.cookiesPs === 0) bonusCPSPercentage = Beautify(Infinity);
     else bonusCPSPercentage = Beautify((bonusCPS / Game.cookiesPs) * 100);
 
     l('dragonAuraInfo').style.minHeight = '60px';
     l('dragonAuraInfo').style.margin = '8px';
-    l('dragonAuraInfo').appendChild(document.createElement('div')).className =
-      'line';
+    l('dragonAuraInfo').appendChild(document.createElement('div')).className = 'line';
     const div = document.createElement('div');
     div.style.minWidth = '200px';
     div.style.textAlign = 'center';

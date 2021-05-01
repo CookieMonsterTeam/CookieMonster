@@ -4,22 +4,13 @@ import CacheNoGoldSwitchCPS from '../Cache/CPS/NoGoldSwitchCPS';
 import CacheSellAllForChoEgg from '../Cache/CPS/SellChoEgg';
 import CacheDragonCost from '../Cache/Dragon/Dragon';
 import CachePantheonGods from '../Cache/PantheonGods/CacheGods';
-import {
-  CacheBuildingsPrices,
-  CacheIncome,
-} from '../Cache/PriceAndIncome/PriceAndIncome';
+import { CacheBuildingsPrices, CacheIncome } from '../Cache/PriceAndIncome/PriceAndIncome';
 import { CacheChain } from '../Cache/Stats/ChainCookies';
 import CacheAllMissingUpgrades from '../Cache/Stats/MissingUpgrades';
 import CacheSeasonSpec from '../Cache/Stats/Reindeer';
-import {
-  CacheGoldenAndWrathCookiesMults,
-  CacheStatsCookies,
-} from '../Cache/Stats/Stats';
+import { CacheGoldenAndWrathCookiesMults, CacheStatsCookies } from '../Cache/Stats/Stats';
 import AllAmountTillNextAchievement from '../Cache/TillNextAchievement/AllAmountTillNextAchievement';
-import {
-  CacheDoRemakeBuildPrices,
-  CacheHadBuildAura,
-} from '../Cache/VariablesAndData';
+import { CacheDoRemakeBuildPrices, CacheHadBuildAura } from '../Cache/VariablesAndData';
 import UpdateAscendState from '../Disp/HelperFunctions/UpdateAscendState';
 import { LastAscendState } from '../Disp/VariablesAndData';
 import InitData from '../Sim/InitializeData/InitData';

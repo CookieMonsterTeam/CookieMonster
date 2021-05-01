@@ -19,14 +19,8 @@ export function SaveConfig() {
   );
   const CookieMonsterSave = saveString.match(/CookieMonster.*(;|$)/);
   if (CookieMonsterSave !== null) {
-    const newSaveString = saveString.replace(
-      CookieMonsterSave[0],
-      `CookieMonster:${save()}`,
-    );
-    localStorage.setItem(
-      'CookieClickerGame',
-      escape(`${utf8_to_b64(newSaveString)}!END!`),
-    );
+    const newSaveString = saveString.replace(CookieMonsterSave[0], `CookieMonster:${save()}`);
+    localStorage.setItem('CookieClickerGame', escape(`${utf8_to_b64(newSaveString)}!END!`));
   }
 }
 

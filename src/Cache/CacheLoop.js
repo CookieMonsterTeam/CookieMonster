@@ -22,8 +22,7 @@ export default function LoopCache() {
 
   const cookiesToNext =
     Game.HowManyCookiesReset(
-      Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) +
-        1,
+      Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned)) + 1,
     ) -
     (Game.cookiesEarned + Game.cookiesReset);
   CacheTimeTillNextPrestige = FormatTime(cookiesToNext / GetCPS()); // eslint-disable-line no-unused-vars

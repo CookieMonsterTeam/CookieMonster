@@ -20,12 +20,7 @@ export function CreateFavicon() {
 export function UpdateFavicon() {
   if (CMOptions.Favicon === 1 && LastGoldenCookieState > 0) {
     if (CacheSpawnedGoldenShimmer.wrath)
-      l('CMFavicon').href =
-        'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
-    else
-      l('CMFavicon').href =
-        'https://aktanusa.github.io/CookieMonster/favicon/goldenCookie.ico';
-  } else
-    l('CMFavicon').href =
-      'https://orteil.dashnet.org/cookieclicker/favicon.ico';
+      l('CMFavicon').href = 'https://aktanusa.github.io/CookieMonster/favicon/wrathCookie.ico';
+    else l('CMFavicon').href = 'https://aktanusa.github.io/CookieMonster/favicon/goldenCookie.ico';
+  } else l('CMFavicon').href = 'https://orteil.dashnet.org/cookieclicker/favicon.ico';
 }

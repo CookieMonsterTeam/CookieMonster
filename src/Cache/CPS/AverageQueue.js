@@ -37,11 +37,7 @@ export class CMAvgQueue {
     if (time > this.maxLength) time = this.maxLength;
     if (time > this.queue.length) time = this.queue.length;
     let ret = 0;
-    for (
-      let i = this.queue.length - 1;
-      i >= 0 && i > this.queue.length - 1 - time;
-      i--
-    ) {
+    for (let i = this.queue.length - 1; i >= 0 && i > this.queue.length - 1 - time; i--) {
       ret += this.queue[i];
     }
     if (ret === 0) {

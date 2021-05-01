@@ -64,10 +64,7 @@ export function StatsListing(type, name, text, placeholder) {
       Game.tooltip.hide();
     };
     tooltip.onmouseover = function () {
-      Game.tooltip.draw(
-        this,
-        escape(SimpleTooltipElements[placeholder].innerHTML),
-      );
+      Game.tooltip.draw(this, escape(SimpleTooltipElements[placeholder].innerHTML));
     };
     tooltip.style.cursor = 'default';
     tooltip.style.display = 'inline-block';

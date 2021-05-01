@@ -40,11 +40,7 @@ export default function InitializeCookieMonster() {
   CreateSectionHideButtons();
   CreateFavicon();
   Object.keys(TooltipText).forEach((i) => {
-    CreateSimpleTooltip(
-      TooltipText[i][0],
-      TooltipText[i][1],
-      TooltipText[i][2],
-    );
+    CreateSimpleTooltip(TooltipText[i][0], TooltipText[i][1], TooltipText[i][2]);
   });
   CreateWrinklerButtons();
   UpdateBuildingUpgradeStyle();
@@ -61,17 +57,8 @@ export default function InitializeCookieMonster() {
   CMLastAscendState = Game.OnAscend; // eslint-disable-line no-unused-vars
 
   if (Game.prefs.popups)
-    Game.Popup(
-      `Cookie Monster version ${VersionMajor}.${VersionMinor} loaded!`,
-    );
-  else
-    Game.Notify(
-      `Cookie Monster version ${VersionMajor}.${VersionMinor} loaded!`,
-      '',
-      '',
-      1,
-      1,
-    );
+    Game.Popup(`Cookie Monster version ${VersionMajor}.${VersionMinor} loaded!`);
+  else Game.Notify(`Cookie Monster version ${VersionMajor}.${VersionMinor} loaded!`, '', '', 1, 1);
 
   Game.Win('Third-party');
 }

@@ -15,11 +15,7 @@ export default function ReplaceTooltipUpgrade() {
         if (!Game.mouseDown) {
           Game.setOnCrate(this);
           Game.tooltip.dynamic = 1;
-          Game.tooltip.draw(
-            this,
-            () => CreateTooltip('u', `${i}`),
-            'store',
-          );
+          Game.tooltip.draw(this, () => CreateTooltip('u', `${i}`), 'store');
           Game.tooltip.wobble();
         }
       };

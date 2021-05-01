@@ -18,11 +18,7 @@ export default function CreateWrinklerButtons() {
   };
   popAllA.onmouseover = function () {
     Game.tooltip.dynamic = 1;
-    Game.tooltip.draw(
-      this,
-      () => CreateTooltip('wb', 'PopAll'),
-      'this',
-    );
+    Game.tooltip.draw(this, () => CreateTooltip('wb', 'PopAll'), 'this');
     Game.tooltip.wobble();
   };
   l('sectionLeftExtra').children[0].append(popAllA);
@@ -31,19 +27,14 @@ export default function CreateWrinklerButtons() {
   popFattestA.textContent = 'Pop Single Fattest';
   popFattestA.className = 'option';
   popFattestA.onclick = function () {
-    if (CacheWrinklersFattest[1] !== null)
-      Game.wrinklers[CacheWrinklersFattest[1]].hp = 0;
+    if (CacheWrinklersFattest[1] !== null) Game.wrinklers[CacheWrinklersFattest[1]].hp = 0;
   };
   popFattestA.onmouseout = function () {
     Game.tooltip.shouldHide = 1;
   };
   popFattestA.onmouseover = function () {
     Game.tooltip.dynamic = 1;
-    Game.tooltip.draw(
-      this,
-      () => CreateTooltip('wb', 'PopFattest'),
-      'this',
-    );
+    Game.tooltip.draw(this, () => CreateTooltip('wb', 'PopFattest'), 'this');
     Game.tooltip.wobble();
   };
   l('sectionLeftExtra').children[0].append(popFattestA);

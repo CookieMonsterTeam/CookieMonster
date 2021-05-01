@@ -5,10 +5,6 @@ import { SimUpgrades } from '../VariablesAndData';
  */
 export default function SimHas(what) {
   const it = SimUpgrades[what];
-  if (
-    Game.ascensionMode === 1 &&
-    (it.pool === 'prestige' || it.tier === 'fortune')
-  )
-    return 0;
+  if (Game.ascensionMode === 1 && (it.pool === 'prestige' || it.tier === 'fortune')) return 0;
   return it ? it.bought : 0;
 }

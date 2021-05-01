@@ -16,36 +16,17 @@ export default function CheckWrinklerCount() {
     });
     if (CurrentWrinklers > LastWrinklerCount) {
       LastWrinklerCount = CurrentWrinklers;
-      if (
-        CurrentWrinklers === Game.getWrinklersMax() &&
-        CMOptions.WrinklerMaxFlash
-      ) {
+      if (CurrentWrinklers === Game.getWrinklersMax() && CMOptions.WrinklerMaxFlash) {
         Flash(3, 'WrinklerMaxFlash', false);
       } else {
         Flash(3, 'WrinklerFlash', false);
       }
-      if (
-        CurrentWrinklers === Game.getWrinklersMax() &&
-        CMOptions.WrinklerMaxSound
-      ) {
-        PlaySound(
-          CMOptions.WrinklerMaxSoundURL,
-          'WrinklerMaxSound',
-          'WrinklerMaxVolume',
-          false,
-        );
+      if (CurrentWrinklers === Game.getWrinklersMax() && CMOptions.WrinklerMaxSound) {
+        PlaySound(CMOptions.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume', false);
       } else {
-        PlaySound(
-          CMOptions.WrinklerSoundURL,
-          'WrinklerSound',
-          'WrinklerVolume',
-          false,
-        );
+        PlaySound(CMOptions.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume', false);
       }
-      if (
-        CurrentWrinklers === Game.getWrinklersMax() &&
-        CMOptions.WrinklerMaxNotification
-      ) {
+      if (CurrentWrinklers === Game.getWrinklersMax() && CMOptions.WrinklerMaxNotification) {
         CreateNotification(
           'WrinklerMaxNotification',
           'Maximum Wrinklers Reached',

@@ -2,11 +2,7 @@ import CalculateGains from '../Calculations/CalculateGains';
 import CheckOtherAchiev from '../Calculations/CheckOtherAchiev';
 import CopyData from '../SimulationData/CopyData';
 import SimWin from '../SimulationData/SimWin';
-import {
-  SimAchievementsOwned,
-  SimCookiesPs,
-  SimObjects,
-} from '../VariablesAndData';
+import { SimAchievementsOwned, SimCookiesPs, SimObjects } from '../VariablesAndData';
 
 /**
  * This function calculates the bonus income of buying a building
@@ -34,10 +30,7 @@ export default function BuyBuildingsBonusIncome(building, amount) {
     if (me.amount >= 800) SimWin("The devil's workshop");
   } else {
     Object.keys(Game.Objects[me.name].tieredAchievs).forEach((j) => {
-      if (
-        me.amount >=
-        Game.Tiers[Game.Objects[me.name].tieredAchievs[j].tier].achievUnlock
-      ) {
+      if (me.amount >= Game.Tiers[Game.Objects[me.name].tieredAchievs[j].tier].achievUnlock) {
         SimWin(Game.Objects[me.name].tieredAchievs[j].name);
       }
     });

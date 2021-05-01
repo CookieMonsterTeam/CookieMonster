@@ -1,9 +1,6 @@
 import { LoadConfig } from '../../../Config/SaveLoadReload/SaveLoadReloadSettings';
 import { CMOptions } from '../../../Config/VariablesAndData';
-import {
-  ConfigGroups,
-  ConfigGroupsNotification,
-} from '../../../Data/Sectionheaders.ts';
+import { ConfigGroups, ConfigGroupsNotification } from '../../../Data/Sectionheaders.ts';
 import Config from '../../../Data/SettingsData';
 import ConfigDefault from '../../../Data/SettingsDefault.ts';
 import { FavouriteSettings } from '../../VariablesAndData';
@@ -35,24 +32,19 @@ export default function AddMenuPref(title) {
         // Make sub-sections of Notification section
         if (group === 'Notification') {
           Object.keys(ConfigGroupsNotification).forEach((subGroup) => {
-            const subGroupObject = CreatePrefHeader(
-              subGroup,
-              ConfigGroupsNotification[subGroup],
-            ); // (group, display-name of group)
+            const subGroupObject = CreatePrefHeader(subGroup, ConfigGroupsNotification[subGroup]); // (group, display-name of group)
             subGroupObject.style.fontSize = '15px';
             subGroupObject.style.opacity = '0.5';
             frag.appendChild(subGroupObject);
             if (CMOptions.Header[subGroup]) {
               Object.keys(Config).forEach((option) => {
-                if (Config[option].group === subGroup)
-                  frag.appendChild(CreatePrefOption(option));
+                if (Config[option].group === subGroup) frag.appendChild(CreatePrefOption(option));
               });
             }
           });
         } else {
           Object.keys(Config).forEach((option) => {
-            if (Config[option].group === group)
-              frag.appendChild(CreatePrefOption(option));
+            if (Config[option].group === group) frag.appendChild(CreatePrefOption(option));
           });
         }
       }
@@ -72,8 +64,6 @@ export default function AddMenuPref(title) {
 
   l('menu').childNodes[2].insertBefore(
     frag,
-    l('menu').childNodes[2].childNodes[
-      l('menu').childNodes[2].childNodes.length - 1
-    ],
+    l('menu').childNodes[2].childNodes[l('menu').childNodes[2].childNodes.length - 1],
   );
 }

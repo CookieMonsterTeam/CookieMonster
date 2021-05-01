@@ -1,9 +1,5 @@
 import UpdateTooltips from './UpdateTooltips';
-import {
-  SimpleTooltipElements,
-  TooltipName,
-  TooltipType,
-} from '../VariablesAndData';
+import { SimpleTooltipElements, TooltipName, TooltipType } from '../VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 import GetTimeColour from '../BeautifyAndFormatting/GetTimeColour';
@@ -93,32 +89,20 @@ export function CreateTooltip(type, name) {
   } else if (type === 'u') {
     // Upgrades
     if (!Game.UpgradesInStore[name]) return '';
-    l('tooltip').innerHTML = Game.crateTooltip(
-      Game.UpgradesInStore[name],
-      'store',
-    );
+    l('tooltip').innerHTML = Game.crateTooltip(Game.UpgradesInStore[name], 'store');
   } else if (type === 's') l('tooltip').innerHTML = Game.lumpTooltip();
   // Sugar Lumps
   else if (type === 'g')
-    l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(
-      name,
-    )();
+    l('tooltip').innerHTML = Game.Objects['Wizard tower'].minigame.spellTooltip(name)();
   // Grimoire
   else if (type === 'p')
-    l('tooltip').innerHTML = Game.ObjectsById[2].minigame.tileTooltip(
-      name[0],
-      name[1],
-    )();
+    l('tooltip').innerHTML = Game.ObjectsById[2].minigame.tileTooltip(name[0], name[1])();
   // Harvest all button in garden
-  else if (type === 'ha')
-    l('tooltip').innerHTML = Game.ObjectsById[2].minigame.toolTooltip(1)();
+  else if (type === 'ha') l('tooltip').innerHTML = Game.ObjectsById[2].minigame.toolTooltip(1)();
   else if (type === 'wb') l('tooltip').innerHTML = '';
-  else if (type === 'pag')
-    l('tooltip').innerHTML = Game.Objects.Temple.minigame.godTooltip(name)();
+  else if (type === 'pag') l('tooltip').innerHTML = Game.Objects.Temple.minigame.godTooltip(name)();
   else if (type === 'pas')
-    l('tooltip').innerHTML = Game.Objects.Temple.minigame.slotTooltip(
-      name[0],
-    )();
+    l('tooltip').innerHTML = Game.Objects.Temple.minigame.slotTooltip(name[0])();
 
   // Adds area for extra tooltip-sections
   if (

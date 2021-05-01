@@ -31,22 +31,15 @@ export function MaxChainCookieReward(digit, maxPayout, mult) {
   let moni = 0;
   let nextMoni = 0;
   let nextRequired = 0;
-  let chain =
-    1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
+  let chain = 1 + Math.max(0, Math.ceil(Math.log(Game.cookies) / Math.LN10) - 10);
   while (nextMoni < maxPayout * mult) {
     moni = Math.max(
       digit,
-      Math.min(
-        Math.floor((1 / 9) * 10 ** chain * digit * mult),
-        maxPayout * mult,
-      ),
+      Math.min(Math.floor((1 / 9) * 10 ** chain * digit * mult), maxPayout * mult),
     );
     nextMoni = Math.max(
       digit,
-      Math.min(
-        Math.floor((1 / 9) * 10 ** (chain + 1) * digit * mult),
-        maxPayout * mult,
-      ),
+      Math.min(Math.floor((1 / 9) * 10 ** (chain + 1) * digit * mult), maxPayout * mult),
     );
     nextRequired = Math.floor((1 / 9) * 10 ** (chain + 1) * digit * mult);
     totalFromChain += moni;
@@ -72,65 +65,28 @@ export function MaxChainCookieReward(digit, maxPayout, mult) {
  * @global	{number}			CM.Cache.ChainFrenzyWrathRequiredNext		Total cookies needed for next level for wrath frenzy chain
  */
 export function CacheChain() {
-  let maxPayout =
-    CacheNoGoldSwitchCookiesPS *
-    60 *
-    60 *
-    6 *
-    CacheDragonsFortuneMultAdjustment;
+  let maxPayout = CacheNoGoldSwitchCookiesPS * 60 * 60 * 6 * CacheDragonsFortuneMultAdjustment;
   // Removes effect of Frenzy etc.
   const cpsBuffMult = GetCPSBuffMult();
   if (cpsBuffMult > 0) maxPayout /= cpsBuffMult;
   else maxPayout = 0;
 
-  CacheChainMaxReward = MaxChainCookieReward(
-    7,
-    maxPayout,
-    CacheGoldenCookiesMult,
-  );
+  CacheChainMaxReward = MaxChainCookieReward(7, maxPayout, CacheGoldenCookiesMult);
   CacheChainRequired = (CacheChainMaxReward[1] * 2) / CacheGoldenCookiesMult; // eslint-disable-line no-unused-vars
-  CacheChainRequiredNext = // eslint-disable-line no-unused-vars
-    CacheChainMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment;
+  CacheChainRequiredNext = CacheChainMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment; // eslint-disable-line no-unused-vars
 
-  CacheChainWrathMaxReward = MaxChainCookieReward(
-    6,
-    maxPayout,
-    CacheWrathCookiesMult,
-  );
-  CacheChainWrathRequired = // eslint-disable-line no-unused-vars
-    (CacheChainWrathMaxReward[1] * 2) / CacheWrathCookiesMult;
+  CacheChainWrathMaxReward = MaxChainCookieReward(6, maxPayout, CacheWrathCookiesMult);
+  CacheChainWrathRequired = (CacheChainWrathMaxReward[1] * 2) / CacheWrathCookiesMult; // eslint-disable-line no-unused-vars
   CacheChainWrathRequiredNext = // eslint-disable-line no-unused-vars
-    CacheChainWrathMaxReward[2] /
-    60 /
-    60 /
-    6 /
-    CacheDragonsFortuneMultAdjustment;
+    CacheChainWrathMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment;
 
-  CacheChainFrenzyMaxReward = MaxChainCookieReward(
-    7,
-    maxPayout * 7,
-    CacheGoldenCookiesMult,
-  );
-  CacheChainFrenzyRequired = // eslint-disable-line no-unused-vars
-    (CacheChainFrenzyMaxReward[1] * 2) / CacheGoldenCookiesMult;
+  CacheChainFrenzyMaxReward = MaxChainCookieReward(7, maxPayout * 7, CacheGoldenCookiesMult);
+  CacheChainFrenzyRequired = (CacheChainFrenzyMaxReward[1] * 2) / CacheGoldenCookiesMult; // eslint-disable-line no-unused-vars
   CacheChainFrenzyRequiredNext = // eslint-disable-line no-unused-vars
-    CacheChainFrenzyMaxReward[2] /
-    60 /
-    60 /
-    6 /
-    CacheDragonsFortuneMultAdjustment;
+    CacheChainFrenzyMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment;
 
-  CacheChainFrenzyWrathMaxReward = MaxChainCookieReward(
-    6,
-    maxPayout * 7,
-    CacheWrathCookiesMult,
-  );
-  CacheChainFrenzyWrathRequired = // eslint-disable-line no-unused-vars
-    (CacheChainFrenzyWrathMaxReward[1] * 2) / CacheWrathCookiesMult;
+  CacheChainFrenzyWrathMaxReward = MaxChainCookieReward(6, maxPayout * 7, CacheWrathCookiesMult);
+  CacheChainFrenzyWrathRequired = (CacheChainFrenzyWrathMaxReward[1] * 2) / CacheWrathCookiesMult; // eslint-disable-line no-unused-vars
   CacheChainFrenzyWrathRequiredNext = // eslint-disable-line no-unused-vars
-    CacheChainFrenzyWrathMaxReward[2] /
-    60 /
-    60 /
-    6 /
-    CacheDragonsFortuneMultAdjustment;
+    CacheChainFrenzyWrathMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment;
 }

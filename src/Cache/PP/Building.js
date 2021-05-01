@@ -22,10 +22,7 @@ function CacheColour(target, amount) {
       return;
     }
     // eslint-disable-next-line no-param-reassign
-    target[i].color = ColourOfPP(
-      target[i],
-      Game.Objects[i].getSumPrice(amount),
-    );
+    target[i].color = ColourOfPP(target[i], Game.Objects[i].getSumPrice(amount));
     // Colour based on excluding certain top-buildings
     for (let j = 0; j < CMOptions.PPExcludeTop; j++) {
       if (target[i].pp === CachePPArray[j][0]) target[i].color = ColourGray; // eslint-disable-line no-param-reassign
@@ -38,12 +35,10 @@ function CachePP(target, amount) {
     const price = Game.Objects[i].getSumPrice(amount);
     if (Game.cookiesPs) {
       target[i].pp = // eslint-disable-line no-param-reassign
-        Math.max(price - (Game.cookies + GetWrinkConfigBank()), 0) /
-          Game.cookiesPs +
+        Math.max(price - (Game.cookies + GetWrinkConfigBank()), 0) / Game.cookiesPs +
         price / target[i].bonus;
     } else target[i].pp = price / target[i].bonus; // eslint-disable-line no-param-reassign
-    if (!(CMOptions.PPRigidelMode && amount === 1))
-      CachePPArray.push([target[i].pp, amount]);
+    if (!(CMOptions.PPRigidelMode && amount === 1)) CachePPArray.push([target[i].pp, amount]);
   });
 }
 

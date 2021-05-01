@@ -1,7 +1,4 @@
-import {
-  CacheSpawnedGoldenShimmer,
-  CacheGoldenShimmersByID,
-} from '../../Cache/VariablesAndData';
+import { CacheSpawnedGoldenShimmer, CacheGoldenShimmersByID } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import CreateGCTimer from '../../Disp/GoldenCookieTimers/GoldenCookieTimers';
 import Flash from '../../Disp/Notifications/Flash';
@@ -69,11 +66,8 @@ export default function CheckGoldenCookie() {
   } else if (CMOptions.GCTimer === 1 && LastGoldenCookieState) {
     Object.keys(GCTimers).forEach((i) => {
       GCTimers[i].style.opacity = CacheGoldenShimmersByID[i].l.style.opacity;
-      GCTimers[i].style.transform =
-        CacheGoldenShimmersByID[i].l.style.transform;
-      GCTimers[i].textContent = Math.ceil(
-        CacheGoldenShimmersByID[i].life / Game.fps,
-      );
+      GCTimers[i].style.transform = CacheGoldenShimmersByID[i].l.style.transform;
+      GCTimers[i].textContent = Math.ceil(CacheGoldenShimmersByID[i].life / Game.fps);
     });
   }
 }

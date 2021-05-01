@@ -70,8 +70,7 @@ export default function InitialBuildingData(buildingName) {
 
       let add = 0;
       if (SimHas('One mind')) add += SimObjects.Grandma.amount * 0.02;
-      if (SimHas('Communal brainsweep'))
-        add += SimObjects.Grandma.amount * 0.02;
+      if (SimHas('Communal brainsweep')) add += SimObjects.Grandma.amount * 0.02;
       if (SimHas('Elder Pact')) add += SimObjects.Portal.amount * 0.05;
 
       let num = 0;

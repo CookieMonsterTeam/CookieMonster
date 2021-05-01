@@ -3,12 +3,7 @@ import CalculateGains from '../Calculations/CalculateGains';
 import CheckOtherAchiev from '../Calculations/CheckOtherAchiev';
 import CopyData from '../SimulationData/CopyData';
 import SimWin from '../SimulationData/SimWin';
-import {
-  SimAchievementsOwned,
-  SimCookiesPs,
-  SimPrestige,
-  SimUpgrades,
-} from '../VariablesAndData';
+import { SimAchievementsOwned, SimCookiesPs, SimPrestige, SimUpgrades } from '../VariablesAndData';
 
 /**
  * This function calculates the cookies per click difference betwene current and after a ascension
@@ -41,37 +36,23 @@ export default function ResetBonus(newHeavenlyChips) {
   if (CacheRealCookiesEarned >= 1000000000000) SimWin('From scratch');
   if (CacheRealCookiesEarned >= 1000000000000000) SimWin('Nihilism');
   if (CacheRealCookiesEarned >= 1000000000000000000) SimWin('Dematerialize');
-  if (CacheRealCookiesEarned >= 1000000000000000000000)
-    SimWin('Nil zero zilch');
-  if (CacheRealCookiesEarned >= 1000000000000000000000000)
-    SimWin('Transcendence');
-  if (CacheRealCookiesEarned >= 1000000000000000000000000000)
-    SimWin('Obliterate');
-  if (CacheRealCookiesEarned >= 1000000000000000000000000000000)
-    SimWin('Negative void');
-  if (CacheRealCookiesEarned >= 1000000000000000000000000000000000)
-    SimWin('To crumbs, you say?');
-  if (CacheRealCookiesEarned >= 1000000000000000000000000000000000000)
-    SimWin('You get nothing');
+  if (CacheRealCookiesEarned >= 1000000000000000000000) SimWin('Nil zero zilch');
+  if (CacheRealCookiesEarned >= 1000000000000000000000000) SimWin('Transcendence');
+  if (CacheRealCookiesEarned >= 1000000000000000000000000000) SimWin('Obliterate');
+  if (CacheRealCookiesEarned >= 1000000000000000000000000000000) SimWin('Negative void');
+  if (CacheRealCookiesEarned >= 1000000000000000000000000000000000) SimWin('To crumbs, you say?');
+  if (CacheRealCookiesEarned >= 1000000000000000000000000000000000000) SimWin('You get nothing');
   if (CacheRealCookiesEarned >= 1000000000000000000000000000000000000000)
     SimWin('Humble rebeginnings');
   if (CacheRealCookiesEarned >= 1000000000000000000000000000000000000000000)
     SimWin('The end of the world');
   if (CacheRealCookiesEarned >= 1000000000000000000000000000000000000000000000)
     SimWin("Oh, you're back");
-  if (
-    CacheRealCookiesEarned >= 1000000000000000000000000000000000000000000000000
-  )
+  if (CacheRealCookiesEarned >= 1000000000000000000000000000000000000000000000000)
     SimWin('Lazarus');
-  if (
-    CacheRealCookiesEarned >=
-    1000000000000000000000000000000000000000000000000000
-  )
+  if (CacheRealCookiesEarned >= 1000000000000000000000000000000000000000000000000000)
     SimWin('Smurf account');
-  if (
-    CacheRealCookiesEarned >=
-    1000000000000000000000000000000000000000000000000000000
-  )
+  if (CacheRealCookiesEarned >= 1000000000000000000000000000000000000000000000000000000)
     SimWin("If at first you don't succeed");
 
   SimUpgrades['Heavenly chip secret'].bought = 1;

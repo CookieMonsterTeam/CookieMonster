@@ -1,8 +1,4 @@
-import {
-  CacheObjects1,
-  CacheObjects10,
-  CacheObjects100,
-} from '../../Cache/VariablesAndData';
+import { CacheObjects1, CacheObjects10, CacheObjects100 } from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingSell from '../../Sim/SimulationEvents/SellBuilding';
 import Beautify from '../BeautifyAndFormatting/Beautify';
@@ -31,8 +27,7 @@ export default function UpdateBuildings() {
   if (Game.buyMode === 1) {
     if (CMOptions.BuildColour === 1) {
       Object.keys(target).forEach((i) => {
-        l(`productPrice${Game.Objects[i].id}`).style.color =
-          CMOptions[`Colour${target[i].color}`];
+        l(`productPrice${Game.Objects[i].id}`).style.color = CMOptions[`Colour${target[i].color}`];
       });
     } else {
       Object.keys(Game.Objects).forEach((i) => {
@@ -70,14 +65,16 @@ export default function UpdateBuildings() {
         return o;
       });
 
-      arr.sort((a, b) => ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
-          ColoursOrdering.indexOf(b.color)
+      arr.sort((a, b) =>
+        ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
+        ColoursOrdering.indexOf(b.color)
           ? 1
           : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
           ? -1
           : a.pp < b.pp
           ? -1
-          : 0);
+          : 0,
+      );
     } else if (CMOptions.SortBuildings === 2) {
       arr = Object.keys(target).map((k) => {
         const o = target[k];
@@ -86,14 +83,16 @@ export default function UpdateBuildings() {
         return o;
       });
 
-      arr.sort((a, b) => ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
-          ColoursOrdering.indexOf(b.color)
+      arr.sort((a, b) =>
+        ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
+        ColoursOrdering.indexOf(b.color)
           ? 1
           : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
           ? -1
           : a.pp < b.pp
           ? -1
-          : 0);
+          : 0,
+      );
     }
 
     for (let x = 0; x < arr.length; x++) {

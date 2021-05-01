@@ -12,7 +12,7 @@ jobs:
       run: npx eslint src
     - name: Run Mocha tests
       run: npx mocha
-    - name: Check if CookieMonster.js is built correctly 
+    - name: Check if CookieMonster.js is built correctly
       run: |
         npx webpack -o ./tmp --env production
         if cmp <(head -n 2 dist/CookieMonster.js) <(head -n 2 tmp/CookieMonster.js); then

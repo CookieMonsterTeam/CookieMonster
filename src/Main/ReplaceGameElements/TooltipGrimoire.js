@@ -6,21 +6,15 @@ import { TooltipGrimoireBackup } from '../VariablesAndData';
  */
 export default function ReplaceTooltipGrimoire() {
   if (Game.Objects['Wizard tower'].minigameLoaded) {
-    Object.keys(Game.Objects['Wizard tower'].minigame.spellsById).forEach(
-      (i) => {
-        if (l(`grimoireSpell${i}`).onmouseover !== null) {
-          TooltipGrimoireBackup[i] = l(`grimoireSpell${i}`).onmouseover;
-          l(`grimoireSpell${i}`).onmouseover = function () {
-            Game.tooltip.dynamic = 1;
-            Game.tooltip.draw(
-              this,
-              () => CreateTooltip('g', `${i}`),
-              'this',
-            );
-            Game.tooltip.wobble();
-          };
-        }
-      },
-    );
+    Object.keys(Game.Objects['Wizard tower'].minigame.spellsById).forEach((i) => {
+      if (l(`grimoireSpell${i}`).onmouseover !== null) {
+        TooltipGrimoireBackup[i] = l(`grimoireSpell${i}`).onmouseover;
+        l(`grimoireSpell${i}`).onmouseover = function () {
+          Game.tooltip.dynamic = 1;
+          Game.tooltip.draw(this, () => CreateTooltip('g', `${i}`), 'this');
+          Game.tooltip.wobble();
+        };
+      }
+    });
   }
 }

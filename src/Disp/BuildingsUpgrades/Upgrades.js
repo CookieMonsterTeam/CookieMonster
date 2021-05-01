@@ -33,11 +33,8 @@ export default function UpdateUpgrades() {
       const me = Game.UpgradesInStore[i];
       let addedColour = false;
       for (let j = 0; j < l(`upgrade${i}`).childNodes.length; j += 1) {
-        if (
-          l(`upgrade${i}`).childNodes[j].className.indexOf(ColourBackPre) !== -1
-        ) {
-          l(`upgrade${i}`).childNodes[j].className =
-            ColourBackPre + CacheUpgrades[me.name].color;
+        if (l(`upgrade${i}`).childNodes[j].className.indexOf(ColourBackPre) !== -1) {
+          l(`upgrade${i}`).childNodes[j].className = ColourBackPre + CacheUpgrades[me.name].color;
           addedColour = true;
           break;
         }
@@ -79,13 +76,15 @@ export default function UpdateUpgrades() {
   }
 
   if (CMOptions.SortUpgrades) {
-    arr.sort((a, b) => ColoursOrdering.indexOf(a.color) > ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
+    arr.sort((a, b) =>
+      ColoursOrdering.indexOf(a.color) > ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
         ? 1
         : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
         ? -1
         : a.pp < b.pp
         ? -1
-        : 0);
+        : 0,
+    );
   } else {
     arr.sort((a, b) => a.price - b.price);
   }
@@ -94,7 +93,6 @@ export default function UpdateUpgrades() {
     return arr2.findIndex((e) => e.name === upgrade.name);
   };
   for (let x = 0; x < Game.UpgradesInStore.length; x += 1) {
-    l(`upgrade${x}`).style.order =
-      nameChecker(arr, Game.UpgradesInStore[x]) + 1;
+    l(`upgrade${x}`).style.order = nameChecker(arr, Game.UpgradesInStore[x]) + 1;
   }
 }

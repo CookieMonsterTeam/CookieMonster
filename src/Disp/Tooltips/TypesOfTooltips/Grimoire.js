@@ -48,9 +48,7 @@ export default function Grimoire() {
 
     // Extra information on cookies gained when spell is Conjure Baked Goods (Name === 0)
     if (TooltipName === '0') {
-      tooltipBox.appendChild(
-        Create.TooltipCreateHeader('Cookies to be gained/lost'),
-      );
+      tooltipBox.appendChild(Create.TooltipCreateHeader('Cookies to be gained/lost'));
       const conjure = document.createElement('div');
       conjure.id = 'x';
       tooltipBox.appendChild(conjure);
