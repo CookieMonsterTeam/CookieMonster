@@ -72,6 +72,7 @@ export default function UpdateUpgrades() {
     o.name = Game.UpgradesInStore[x].name;
     o.price = Game.UpgradesInStore[x].basePrice;
     o.pp = CacheUpgrades[o.name].pp;
+    o.color = CacheUpgrades[o.name].color;
     arr.push(o);
   }
 
