@@ -12,12 +12,21 @@ jobs:
       run: npx eslint src
     - name: Run Mocha tests
       run: npx mocha
-    - name: Check if CookieMonster.js is built correctly
+    - name: Check if CookieMonsterDev.js is built correctly
       run: |
         npx webpack -o ./tmp --env production
-        if cmp <(head -n 2 dist/CookieMonster.js) <(head -n 2 tmp/CookieMonster.js); then
+        if cmp <(head -n 2 dist/CookieMonsterDev.js) <(head -n 2 tmp/CookieMonsterDev.js); then
+            echo '### SUCCESS: CookieMonsterDev is correctly built! ###'
+        else
+            echo '### WARNING: CookieMonsterDev.js does not seem to be correct. Make sure to run "npm run build" after saving all your changes! ###'
+            exit 1
+        fi
+    - name: Check if CookieMonster.js is built correctly
+      if: github.ref == 'refs/heads/master'
+      run: |
+       if cmp <(head -n 2 dist/CookieMonsterDev.js) <(head -n 2 dist/CookieMonster.js); then
             echo '### SUCCESS: CookieMonster is correctly built! ###'
         else
-            echo '### WARNING: CookieMonster.js does not seem to be correct. Make sure to run "npm run build" after saving all your changes! ###'
+            echo '### WARNING: CookieMonster.js does not seem to be correct. Make sure to copy CookieMonsterDev.js into CookieMonster.js before merging to master! ###'
             exit 1
         fi
