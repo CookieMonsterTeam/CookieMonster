@@ -11,7 +11,6 @@ import {
   TooltipBonusMouse,
   TooltipName,
   TooltipPrice,
-  TooltipType,
 } from '../../VariablesAndData';
 import * as Create from '../CreateTooltip';
 
@@ -30,7 +29,7 @@ export default function Upgrade() {
     l('CMTooltipIncome').textContent = Beautify(TooltipBonusIncome, 2);
     const increase = Math.round((TooltipBonusIncome / Game.cookiesPs) * 10000);
     // Don't display certain parts of tooltip if not applicable
-    if (l('CMTooltipIncome').textContent === '0' && (TooltipType === 'b' || TooltipType === 'u')) {
+    if (l('CMTooltipIncome').textContent === '0') {
       l('Bonus IncomeTitle').style.display = 'none';
       l('CMTooltipIncome').style.display = 'none';
       l('Payback PeriodTitle').style.display = 'none';
