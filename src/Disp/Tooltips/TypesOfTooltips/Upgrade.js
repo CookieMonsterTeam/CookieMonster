@@ -11,7 +11,6 @@ import {
   TooltipBonusMouse,
   TooltipName,
   TooltipPrice,
-  TooltipType,
 } from '../../VariablesAndData';
 import * as Create from '../CreateTooltip';
 
@@ -30,7 +29,7 @@ export default function Upgrade() {
     l('CMTooltipIncome').textContent = Beautify(TooltipBonusIncome, 2);
     const increase = Math.round((TooltipBonusIncome / Game.cookiesPs) * 10000);
     // Don't display certain parts of tooltip if not applicable
-    if (l('CMTooltipIncome').textContent === '0' && (TooltipType === 'b' || TooltipType === 'u')) {
+    if (l('CMTooltipIncome').textContent === '0') {
       l('Bonus IncomeTitle').style.display = 'none';
       l('CMTooltipIncome').style.display = 'none';
       l('Payback PeriodTitle').style.display = 'none';
@@ -45,29 +44,32 @@ export default function Upgrade() {
       }
       l('CMTooltipBorder').className =
         ColourTextPre + CacheUpgrades[Game.UpgradesInStore[TooltipName].name].color;
-      // If clicking power upgrade
-      if (TooltipBonusMouse) {
-        l('CMTooltipCookiePerClick').textContent = Beautify(TooltipBonusMouse);
-        l('CMTooltipCookiePerClick').style.display = 'block';
-        l('CMTooltipCookiePerClick').previousSibling.style.display = 'block';
-      }
-      // If only a clicking power upgrade change PP to click-based period
-      if (TooltipBonusIncome === 0 && TooltipBonusMouse) {
-        l('CMTooltipPP').textContent = `${Beautify(TooltipPrice / TooltipBonusMouse)} Clicks`;
-        l('CMTooltipPP').style.color = 'white';
-      } else {
-        if (CMOptions.PPDisplayTime)
-          l('CMTooltipPP').textContent = FormatTime(
-            CacheUpgrades[Game.UpgradesInStore[TooltipName].name].pp,
-          );
-        else
-          l('CMTooltipPP').textContent = Beautify(
-            CacheUpgrades[Game.UpgradesInStore[TooltipName].name].pp,
-            2,
-          );
-        l('CMTooltipPP').className =
-          ColourTextPre + CacheUpgrades[Game.UpgradesInStore[TooltipName].name].color;
-      }
+    }
+
+    // If clicking power upgrade
+    if (TooltipBonusMouse) {
+      l('CMTooltipCookiePerClick').textContent = Beautify(TooltipBonusMouse);
+      l('CMTooltipCookiePerClick').style.display = 'block';
+      l('CMTooltipCookiePerClick').previousSibling.style.display = 'block';
+    }
+    // If only a clicking power upgrade change PP to click-based period
+    if (!TooltipBonusIncome && TooltipBonusMouse) {
+      l('CMTooltipPP').textContent = `${Beautify(TooltipPrice / TooltipBonusMouse)} Clicks`;
+      l('CMTooltipPP').style.color = 'white';
+      l('Payback PeriodTitle').style.display = 'block';
+      l('CMTooltipPP').style.display = 'block';
+    } else {
+      if (CMOptions.PPDisplayTime)
+        l('CMTooltipPP').textContent = FormatTime(
+          CacheUpgrades[Game.UpgradesInStore[TooltipName].name].pp,
+        );
+      else
+        l('CMTooltipPP').textContent = Beautify(
+          CacheUpgrades[Game.UpgradesInStore[TooltipName].name].pp,
+          2,
+        );
+      l('CMTooltipPP').className =
+        ColourTextPre + CacheUpgrades[Game.UpgradesInStore[TooltipName].name].color;
     }
     const timeColour = GetTimeColour(
       (TooltipPrice - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
