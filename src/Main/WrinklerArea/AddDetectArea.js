@@ -1,4 +1,4 @@
-import { TooltipWrinklerArea, TooltipWrinklerBeingShown } from '../../Disp/VariablesAndData';
+import { TooltipWrinklerArea, TooltipWrinklerBeingShown } from '../../Disp/VariablesAndData'; // eslint-disable-line no-unused-vars
 
 /**
  * This function creates .onmouseover/out events that determine if the mouse is hovering-over a Wrinkler
@@ -9,7 +9,7 @@ export default function AddWrinklerAreaDetect() {
     TooltipWrinklerArea = 1;
   };
   l('backgroundLeftCanvas').onmouseout = function () {
-    TooltipWrinklerArea = 0; // eslint-disable-line no-unused-vars
+    TooltipWrinklerArea = 0;
     Game.tooltip.hide();
     Object.keys(Game.wrinklers).forEach((i) => {
       TooltipWrinklerBeingShown[i] = 0;

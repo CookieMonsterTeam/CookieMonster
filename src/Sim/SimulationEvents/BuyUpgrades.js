@@ -12,7 +12,7 @@ import {
   SimObjects,
   SimPledges,
   SimUpgrades,
-  SimUpgradesOwned,
+  SimUpgradesOwned, // eslint-disable-line no-unused-vars
 } from '../VariablesAndData';
 
 /**
@@ -122,7 +122,7 @@ export default function BuyUpgradesBonusIncome(upgrade) {
     } else {
       SimUpgrades[upgrade].bought = (SimUpgrades[upgrade].bought + 1) % 2;
     }
-    if (Game.CountsAsUpgradeOwned(Game.Upgrades[upgrade].pool)) SimUpgradesOwned += 1; // eslint-disable-line no-unused-vars
+    if (Game.CountsAsUpgradeOwned(Game.Upgrades[upgrade].pool)) SimUpgradesOwned += 1;
 
     if (upgrade === 'Elder Pledge') {
       SimPledges += 1;

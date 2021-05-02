@@ -7,13 +7,13 @@ import AddMenu from '../../Disp/MenuSections/AddMenus';
 import UpdateTitle from '../../Disp/TabTitle/TabTitle';
 import ReplaceAscendTooltip from '../../Disp/Tooltips/AscendButton';
 import UpdateTooltipLocation from '../../Disp/Tooltips/PositionLocation';
-import { CMSayTime, Title } from '../../Disp/VariablesAndData';
-import { SimDoSims } from '../../Sim/VariablesAndData';
+import { CMSayTime, Title } from '../../Disp/VariablesAndData'; // eslint-disable-line no-unused-vars
+import { SimDoSims } from '../../Sim/VariablesAndData'; // eslint-disable-line no-unused-vars
 import ReplaceTooltipUpgrade from '../ReplaceGameElements/TooltipUpgrades';
 import {
   BackupFunctions,
-  CenturyDateAtBeginLoop,
-  CycliusDateAtBeginLoop,
+  CenturyDateAtBeginLoop, // eslint-disable-line no-unused-vars
+  CycliusDateAtBeginLoop, // eslint-disable-line no-unused-vars
 } from '../VariablesAndData';
 import FixMouseY from './FixMouse';
 
@@ -29,9 +29,9 @@ export default function ReplaceNative() {
   BackupFunctions.CalculateGains = Game.CalculateGains;
   Game.CalculateGains = function () {
     BackupFunctions.CalculateGains();
-    SimDoSims = 1; // eslint-disable-line no-unused-vars
-    CycliusDateAtBeginLoop = Date.now(); // eslint-disable-line no-unused-vars
-    CenturyDateAtBeginLoop = Date.now(); // eslint-disable-line no-unused-vars
+    SimDoSims = 1;
+    CycliusDateAtBeginLoop = Date.now();
+    CenturyDateAtBeginLoop = Date.now();
   };
 
   BackupFunctions.tooltip = {};

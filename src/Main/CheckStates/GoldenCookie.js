@@ -1,4 +1,4 @@
-import { CacheSpawnedGoldenShimmer, CacheGoldenShimmersByID } from '../../Cache/VariablesAndData';
+import { CacheSpawnedGoldenShimmer, CacheGoldenShimmersByID } from '../../Cache/VariablesAndData'; // eslint-disable-line no-unused-vars
 import { CMOptions } from '../../Config/VariablesAndData';
 import CreateGCTimer from '../../Disp/GoldenCookieTimers/GoldenCookieTimers';
 import Flash from '../../Disp/Notifications/Flash';
@@ -62,7 +62,7 @@ export default function CheckGoldenCookie() {
     }
     UpdateFavicon();
     LastSpawnedGoldenCookieState = CurrSpawnedGoldenCookieState;
-    if (CurrSpawnedGoldenCookieState === 0) CacheSpawnedGoldenShimmer = 0; // eslint-disable-line no-unused-vars
+    if (CurrSpawnedGoldenCookieState === 0) CacheSpawnedGoldenShimmer = 0;
   } else if (CMOptions.GCTimer === 1 && LastGoldenCookieState) {
     Object.keys(GCTimers).forEach((i) => {
       GCTimers[i].style.opacity = CacheGoldenShimmersByID[i].l.style.opacity;

@@ -10,7 +10,7 @@ import CacheAllMissingUpgrades from './Stats/MissingUpgrades';
 import CacheSeasonSpec from './Stats/Reindeer';
 import { CacheGoldenAndWrathCookiesMults, CacheStatsCookies } from './Stats/Stats';
 import AllAmountTillNextAchievement from './TillNextAchievement/AllAmountTillNextAchievement';
-import { CacheAverageCookiesFromClicks, HeavenlyChipsDiff } from './VariablesAndData';
+import { CacheAverageCookiesFromClicks, HeavenlyChipsDiff } from './VariablesAndData'; // eslint-disable-line no-unused-vars
 import CacheWrinklers from './Wrinklers/Wrinklers';
 
 /**
@@ -26,8 +26,8 @@ export default function InitCache() {
   CacheSeasonSpec();
   InitCookiesDiff();
   /** Used by CM.Cache.CacheHeavenlyChipsPS() */
-  HeavenlyChipsDiff = new CMAvgQueue(5); // eslint-disable-line no-unused-vars
-  CacheAverageCookiesFromClicks = new CMAvgQueue(ClickTimes[ClickTimes.length - 1] * 20); // eslint-disable-line no-unused-vars
+  HeavenlyChipsDiff = new CMAvgQueue(5);
+  CacheAverageCookiesFromClicks = new CMAvgQueue(ClickTimes[ClickTimes.length - 1] * 20);
   CacheHeavenlyChipsPS();
   AllAmountTillNextAchievement();
   CacheAvgCPS();

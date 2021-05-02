@@ -1,7 +1,7 @@
 /** Functions related to replacing tooltips */
 
 import { CreateTooltip } from '../../Disp/Tooltips/Tooltip';
-import { LoadMinigames, TooltipBuildBackup, TooltipLumpBackup } from '../VariablesAndData';
+import { LoadMinigames, TooltipBuildBackup, TooltipLumpBackup } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
 import ReplaceNativeGrimoire from './NativeGrimoire';
 import ReplaceTooltipGrimoire from './TooltipGrimoire';
 
@@ -27,7 +27,7 @@ function ReplaceTooltipBuild() {
  */
 function ReplaceTooltipLump() {
   if (Game.canLumps()) {
-    TooltipLumpBackup = l('lumps').onmouseover; // eslint-disable-line no-unused-vars
+    TooltipLumpBackup = l('lumps').onmouseover;
     l('lumps').onmouseover = function () {
       Game.tooltip.dynamic = 1;
       Game.tooltip.draw(this, () => CreateTooltip('s', 'Lump'), 'this');

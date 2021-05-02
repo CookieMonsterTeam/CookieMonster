@@ -1,7 +1,7 @@
 import CalculateGains from '../Calculations/CalculateGains';
 import CheckOtherAchiev from '../Calculations/CheckOtherAchiev';
 import CopyData from '../SimulationData/CopyData';
-import { SimAchievementsOwned, SimCookiesPs, SimGod1, SimGod2, SimGod3 } from '../VariablesAndData';
+import { SimAchievementsOwned, SimCookiesPs, SimGod1, SimGod2, SimGod3 } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
 
 /**
  * This functions calculates the cps and cost of changing a Dragon Aura

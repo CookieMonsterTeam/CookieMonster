@@ -3,7 +3,7 @@ import CMDrawHook from '../Disp/DrawHook';
 import CMClickHook from '../Main/ClickHook';
 import InitializeCookieMonster from '../Main/Initialization';
 import CMLoopHook from '../Main/LoopHook';
-import { isInitializing } from './Variables';
+import { isInitializing } from './Variables'; // eslint-disable-line no-unused-vars
 
 /**
  * This creates a init function for the CM object. Per Game code/comments:
@@ -26,6 +26,6 @@ export default function init() {
     Game.registerHook('draw', CMDrawHook);
     Game.registerHook('logic', CMLoopHook);
 
-    isInitializing = false; // eslint-disable-line no-unused-vars
+    isInitializing = false;
   }
 }

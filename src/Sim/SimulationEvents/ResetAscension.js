@@ -3,7 +3,7 @@ import CalculateGains from '../Calculations/CalculateGains';
 import CheckOtherAchiev from '../Calculations/CheckOtherAchiev';
 import CopyData from '../SimulationData/CopyData';
 import SimWin from '../SimulationData/SimWin';
-import { SimAchievementsOwned, SimCookiesPs, SimPrestige, SimUpgrades } from '../VariablesAndData';
+import { SimAchievementsOwned, SimCookiesPs, SimPrestige, SimUpgrades } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
 
 /**
  * This function calculates the cookies per click difference betwene current and after a ascension
@@ -76,7 +76,7 @@ export default function ResetBonus(newHeavenlyChips) {
   const ResetCPS = SimCookiesPs - curCPS;
 
   // Reset Pretige level after calculation as it is used in CM.Sim.CalculateGains() so can't be local
-  SimPrestige = Game.prestige; // eslint-disable-line no-unused-vars
+  SimPrestige = Game.prestige;
 
   return ResetCPS;
 }

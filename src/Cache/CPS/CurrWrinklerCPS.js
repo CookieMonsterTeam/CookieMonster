@@ -1,5 +1,5 @@
 import { SimObjects } from '../../Sim/VariablesAndData';
-import { CacheCurrWrinklerCount, CacheCurrWrinklerCPSMult } from '../VariablesAndData';
+import { CacheCurrWrinklerCount, CacheCurrWrinklerCPSMult } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
 
 /**
  * This functions caches the current Wrinkler CPS multiplier
@@ -19,8 +19,8 @@ export default function CacheCurrWrinklerCPS() {
     else if (godLvl === 2) godMult *= 1.1;
     else if (godLvl === 3) godMult *= 1.05;
   }
-  CacheCurrWrinklerCount = count; // eslint-disable-line no-unused-vars
-  CacheCurrWrinklerCPSMult = // eslint-disable-line no-unused-vars
+  CacheCurrWrinklerCount = count;
+  CacheCurrWrinklerCPSMult =
     count *
     (count * 0.05 * 1.1) *
     (Game.Has('Sacrilegious corruption') * 0.05 + 1) *
