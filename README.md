@@ -7,7 +7,7 @@ The mod helps you to *whichever* degree you want, if you only need some help sho
 ### Current version
 The `master` branch hosts the latest production version intended for general users. 
 All development and pull requests should target the `dev` branch.
-Github Pages is hosted from the 'gh-pages' branch
+Github Pages is hosted from the `gh-pages` branch
 
 ### What it does
 
