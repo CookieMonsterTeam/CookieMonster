@@ -5,19 +5,21 @@
 The mod helps you to *whichever* degree you want, if you only need some help shortening long numbers, it does that. If you need to be accompanied by hand to pick the best buildings to buy, it does that, but **everything is an option**.
 
 ### Current version
-The `gh-pages` branch hosts the latest version intended for general users. All development and pull requests should target the `dev` branch.
+The `master` branch hosts the latest production version intended for general users. 
+All development and pull requests should target the `dev` branch.
+Github Pages is hosted from the 'gh-pages' branch
 
 ### What it does
 
-At its core, Cookie Monster computes an index for both buildings and upgrades: the **Payback Period (PP)**. This indicates how much a building is worth by using the following formula: 
+At its core, Cookie Monster computes an index for both buildings and upgrades: the **Payback Period (PP)**. CM will take *everything* in consideration, meaning if buying a building also unlocks an achievement which boosts your income, which unlocks an achievement, CM will know and highlight that building's value. CM uses the following formula to calculate the PP: 
+
 ```
 max(cost - cookies in bank, 0)/cps + cost/Δ cps
 ```
 
-Cookie Monster also indicates the time left before being able to buy an upgrade or building, and takes it into consideration. It will take *everything* in consideration, meaning if buying a building also unlocks an achievement which boosts your income, which unlocks an achievement, it will know and highlight that building's value.
+If the relevant option is enabled, CM will color-code each of them based on their value. CM compares the PP across all possible buy options: if a buy 10 option is better than any of the buy 1 options Cookie Monster will colour them accordingly. Note that sometimes it is better to buy 10 of a building than to buy only 1, CM will also indicate this!
 
-This index is computed for buildings and upgrades. If the relevant option is enabled, it will color-code each of them based on their value. It compares the PP across all possible buy options: if a buy 10 option is better than any of the buy 1 options Cookie Monster will colour them accordingly.
-Cookie Monster uses the following standard colours:
+The following standard colours are used:
 
 * Light Blue: (upgrades) This item has a better PP than the best building to buy
 * Green: This building has the best PP
@@ -37,7 +39,7 @@ Copy this code and save it as a bookmark. Paste it in the URL section. To activa
 
 ```javascript
 javascript: (function () {
-	Game.LoadMod('https://aktanusa.github.io/CookieMonster/CookieMonster.js');
+	Game.LoadMod('https://cookiemonsterteam.github.io/CookieMonster/dist/CookieMonster.js');
 }());
 ```
 
@@ -51,9 +53,9 @@ If you'd rather use the addon as a [userscript](https://en.wikipedia.org/wiki/Us
 
 ## Bugs and suggestions
 
-Any bug or suggestion should be **opened as an issue** [in the repository](https://github.com/Aktanusa/CookieMonster/issues) for easier tracking. This allows us to close issues once they're fixed.
+Any bug or suggestion should be **opened as an issue** [in the repository](https://github.com/CookieMonsterTeam/CookieMonster/issues) for easier tracking. This allows us to close issues once they're fixed.
 
-Before submitting a bug, make sure to give a shot at the latest version of the addon on the `dev` branch. This version can be tested by copying the `CookieMonster.js` file of the dev branch into your console. If the bug is still here, you can submit an issue for it. Please do so by using the bug report template.
+Before submitting a bug, make sure to give a shot at the latest version of the addon on the `dev` branch. This version can be tested by copying the `CookieMonsterDev.js` file of the dev branch into your console. You can also load the dev-version by using `https://cookiemonsterteam.github.io/CookieMonster/dist/CookieMonsterDev.js` to load the mod. If the bug is still here, you can submit an issue for it. Please do so by using the bug report template.
 
 All suggestions are welcome, even the smallest ones.
 
@@ -61,14 +63,14 @@ All suggestions are welcome, even the smallest ones.
 
 To contribute you can fork and clone the repository and run `npm install`.
 
-Please also remember to run `npm run build` after saving all your changes to build the final `CookieMonster.js` file.
+Please also remember to run `npm run build` after saving all your changes to build the final `CookieMonsterDev.js` file.
+
+Before pushing a new version to master and Github pages copy the `Dev` files into the normal files.
 
 ## Contributors
 
 * **[Raving_Kumquat](https://cookieclicker.wikia.com/wiki/User:Raving_Kumquat)**: Original author
 * **[Maxime Fabre](https://github.com/Anahkiasen)**: Previous maintainer
-* **[Alderi Tokori](http://forum.dashnet.org/profile/Alderi)**: ROI calculations (unused now)
-* **[Alhifar](https://github.com/Alhifar)**: Missed Golden Cookie Stat
 * **[BlackenedGem](https://github.com/BlackenedGem)**: Golden/Wrath Cookie Favicons
 * **[Sandworm](https://github.com/svschouw)**: Modified PP calculation
 * **[Aktanusa](https://github.com/Aktanusa)**: Current maintainer
