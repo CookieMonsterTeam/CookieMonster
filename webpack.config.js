@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = function (env) {
   return {
@@ -21,8 +22,15 @@ module.exports = function (env) {
       ],
     },
     output: {
-      filename: 'CookieMonster.js',
+      filename: 'CookieMonsterDev.js',
       path: path.resolve(__dirname, 'dist'),
     },
+    plugins: [
+      new webpack.SourceMapDevToolPlugin({
+        filename: 'CookieMonsterDev.js.map',
+        publicPath: 'https://cookiemonsterteam.github.io/CookieMonster/dist/',
+        fileContext: 'public',
+      }),
+    ],
   };
 };

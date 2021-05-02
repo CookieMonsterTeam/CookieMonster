@@ -11,13 +11,11 @@
     "Orteil"
   ],
   "scripts": {
-    "copy-file": "cp dist/CookieMonster.js CookieMonster.js",
     "eslint-src": "eslint src test",
-    "build": "run-s eslint-src pack-prod remove-comment copy-file test",
+    "build": "run-s eslint-src pack-prod test",
     "build-test": "run-s pack-dev",
     "pack-prod": "webpack --env production",
     "pack-dev": "webpack",
-    "remove-comment": "sed -i '' -e '/\\/\\/# sourceMappingURL.*/d' dist/CookieMonster.js",
     "test": "mocha"
   },
   "repository": {
