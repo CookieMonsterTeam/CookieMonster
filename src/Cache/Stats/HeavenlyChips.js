@@ -1,5 +1,5 @@
 import {
-  CacheHCPerSecond,
+  CacheHCPerSecond, // eslint-disable-line no-unused-vars
   CacheLastHeavenlyCheck,
   CacheLastHeavenlyChips,
   HeavenlyChipsDiff,
@@ -30,6 +30,6 @@ export default function CacheHeavenlyChipsPS() {
     CacheLastHeavenlyChips = ascendNowToGet;
 
     // Get average gain over period of 5 seconds
-    CacheHCPerSecond = HeavenlyChipsDiff.calcAverage(5); // eslint-disable-line no-unused-vars
+    CacheHCPerSecond = HeavenlyChipsDiff.calcAverage(5);
   }
 }

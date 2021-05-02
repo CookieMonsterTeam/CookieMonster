@@ -2,7 +2,7 @@ import { CMOptions } from '../../Config/VariablesAndData';
 import GetWrinkConfigBank from '../../Disp/HelperFunctions/GetWrinkConfigBank';
 import { ColourGray } from '../../Disp/VariablesAndData';
 import {
-  CacheMinPP,
+  CacheMinPP, // eslint-disable-line no-unused-vars
   CacheObjects1,
   CacheObjects10,
   CacheObjects100,
@@ -67,7 +67,7 @@ export default function CacheBuildingsPP() {
       }
     }
   }
-  CacheMinPP = CachePPArray[CMOptions.PPExcludeTop][indexOfMin]; // eslint-disable-line no-unused-vars
+  CacheMinPP = CachePPArray[CMOptions.PPExcludeTop][indexOfMin];
 
   CacheColour(CacheObjects1, 1);
   CacheColour(CacheObjects10, 10);

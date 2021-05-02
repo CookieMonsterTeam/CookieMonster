@@ -4,7 +4,7 @@ import CheckOtherAchiev from '../Calculations/CheckOtherAchiev';
 import CopyData from '../SimulationData/CopyData';
 import {
   SimAchievementsOwned,
-  SimBuildingsOwned,
+  SimBuildingsOwned, // eslint-disable-line no-unused-vars
   SimCookiesPs,
   SimDragonAura,
   SimDragonAura2,
@@ -32,7 +32,7 @@ export default function CalculateChangeAura(aura) {
       if (Game.ObjectsById[i].amount > 0) {
         const highestBuilding = SimObjects[Game.ObjectsById[i].name].name;
         SimObjects[highestBuilding].amount -= 1;
-        SimBuildingsOwned -= 1; // eslint-disable-line no-unused-vars
+        SimBuildingsOwned -= 1;
         price =
           SimObjects[highestBuilding].basePrice *
           Game.priceIncrease **

@@ -14,7 +14,7 @@ import UpdateUpgradeSectionsHeight from '../Disp/BuildingsUpgrades/UpdateUpgrade
 import UpdateUpgrades from '../Disp/BuildingsUpgrades/Upgrades';
 import RefreshScale from '../Disp/HelperFunctions/RefreshScale';
 import { UpdateFavicon } from '../Disp/TabTitle/FavIcon';
-import { SimDoSims } from '../Sim/VariablesAndData';
+import { SimDoSims } from '../Sim/VariablesAndData'; // eslint-disable-line no-unused-vars
 import SettingColours from './SettingClasses/SettingColours.ts';
 import SettingInputNumber from './SettingClasses/SettingInputNumber.ts';
 import SettingStandard from './SettingClasses/SettingStandard.ts';
@@ -70,7 +70,7 @@ const Config = {
     'Calculate times and average Cookies Per Second with (only the single non-shiny fattest) wrinklers',
     true,
     () => {
-      SimDoSims = true; // eslint-disable-line no-unused-vars
+      SimDoSims = true;
     },
   ),
 
