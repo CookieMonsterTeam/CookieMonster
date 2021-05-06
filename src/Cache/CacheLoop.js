@@ -4,6 +4,7 @@ import CacheAvgCPS from './CPS/CPS';
 import CacheCurrWrinklerCPS from './CPS/CurrWrinklerCPS';
 import CachePP from './PP/PP';
 import CacheHeavenlyChipsPS from './Stats/HeavenlyChips';
+import AllAmountTillNextAchievement from './TillNextAchievement/AllAmountTillNextAchievement';
 import { CacheTimeTillNextPrestige } from './VariablesAndData'; // eslint-disable-line no-unused-vars
 import CacheWrinklers from './Wrinklers/Wrinklers';
 
@@ -16,6 +17,7 @@ export default function LoopCache() {
   CacheWrinklers();
 
   CachePP();
+  AllAmountTillNextAchievement(false);
   CacheCurrWrinklerCPS();
   CacheAvgCPS();
   CacheHeavenlyChipsPS();
