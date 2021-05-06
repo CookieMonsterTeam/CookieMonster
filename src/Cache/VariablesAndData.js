@@ -69,6 +69,8 @@ export let CacheTimeTillNextPrestige = 0;
 
 /** Stores lowest PP value */
 export let CacheMinPP = 0;
+/** Stores lowest PP value category */
+export let CacheMinPPBulk = 0;
 /** Stores all PP values of all buildings for all buy settings (1, 10, 100) */
 export let CachePPArray = [];
 

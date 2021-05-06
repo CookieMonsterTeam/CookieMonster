@@ -1,4 +1,9 @@
-import { CacheObjects1, CacheObjects10, CacheObjects100 } from '../../Cache/VariablesAndData';
+import {
+  CacheMinPPBulk,
+  CacheObjects1,
+  CacheObjects10,
+  CacheObjects100,
+} from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingSell from '../../Sim/SimulationEvents/SellBuilding';
 import Beautify from '../BeautifyAndFormatting/Beautify';
@@ -24,11 +29,17 @@ export default function UpdateBuildings() {
   else if (target === 10) target = CacheObjects10;
   else if (target === 100) target = CacheObjects100;
 
+  // Remove colour if applied
+  l(`storeBulk1`).style.removeProperty('color');
+  l(`storeBulk10`).style.removeProperty('color');
+  l(`storeBulk100`).style.removeProperty('color');
+
   if (Game.buyMode === 1) {
     if (CMOptions.BuildColour === 1) {
       Object.keys(target).forEach((i) => {
         l(`productPrice${Game.Objects[i].id}`).style.color = CMOptions[`Colour${target[i].color}`];
       });
+      l(`storeBulk${CacheMinPPBulk}`).style.color = CMOptions.ColourGreen;
     } else {
       Object.keys(Game.Objects).forEach((i) => {
         l(`productPrice${Game.Objects[i].id}`).style.removeProperty('color');
