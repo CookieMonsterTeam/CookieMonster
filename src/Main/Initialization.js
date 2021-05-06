@@ -24,6 +24,9 @@ import AddWrinklerAreaDetect from './WrinklerArea/AddDetectArea';
  * Initialization loop of Cookie Monster
  */
 export default function InitializeCookieMonster() {
+  // Create global data object
+  window.CookieMonsterData = {};
+
   InitData();
   CacheStatsCookies();
   InitCache();
