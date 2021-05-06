@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "eslint-src": "eslint src test",
-    "build": "run-s eslint-src pack-prod test",
+    "build": "run-s eslint-src test pack-prod",
     "build-test": "run-s pack-dev",
     "pack-prod": "webpack --env production",
     "pack-dev": "webpack",
