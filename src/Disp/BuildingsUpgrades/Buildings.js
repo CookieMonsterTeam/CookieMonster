@@ -75,17 +75,6 @@ export default function UpdateBuildings() {
         o.id = Game.Objects[k].id;
         return o;
       });
-
-      arr.sort((a, b) =>
-        ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
-        ColoursOrdering.indexOf(b.color)
-          ? 1
-          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
-          ? -1
-          : a.pp < b.pp
-          ? -1
-          : 0,
-      );
     } else if (CMOptions.SortBuildings === 2) {
       arr = Object.keys(target).map((k) => {
         const o = target[k];
@@ -93,19 +82,13 @@ export default function UpdateBuildings() {
         o.id = Game.Objects[k].id;
         return o;
       });
-
-      arr.sort((a, b) =>
-        ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
-        ColoursOrdering.indexOf(b.color)
-          ? 1
-          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
-          ? -1
-          : a.pp < b.pp
-          ? -1
-          : 0,
-      );
     }
-
+    // Sort by pp colour group, then by pp.
+    arr.sort((a, b) =>
+      ColoursOrdering.indexOf(a.color) === ColoursOrdering.indexOf(b.color)
+        ? a.pp - b.pp
+        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color)
+    );
     for (let x = 0; x < arr.length; x++) {
       Game.Objects[arr[x].name].l.style.gridRow = `${x + 2}/${x + 2}`;
     }

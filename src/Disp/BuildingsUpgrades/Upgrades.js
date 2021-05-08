@@ -77,9 +77,9 @@ export default function UpdateUpgrades() {
   }
 
   if (CMOptions.SortUpgrades) {
-    // Sort by pp group, then by pp. Put gray upgrades last.
+    // Sort by pp colour group, then by pp.
     arr.sort((a, b) =>
-      ColoursOrdering.indexOf(a.color) == ColoursOrdering.indexOf(b.color)
+      ColoursOrdering.indexOf(a.color) === ColoursOrdering.indexOf(b.color)
         ? a.pp - b.pp
         : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color)
     );
