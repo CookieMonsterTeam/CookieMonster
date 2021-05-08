@@ -69,17 +69,19 @@ export default function UpdateBuildings() {
   if (Game.buyMode === 1 && CMOptions.SortBuildings) {
     let arr;
     if (CMOptions.SortBuildings === 1) {
-      arr = Object.keys(CacheObjects1).map((k) => {
-        const o = CacheObjects1[k];
+      arr = Object.keys(CacheObjects1).map(k => {
+        const o = {};
         o.name = k;
-        o.id = Game.Objects[k].id;
+        o.pp = CacheObjects1[k].pp;
+        o.color = CacheObjects1[k].color;
         return o;
       });
     } else if (CMOptions.SortBuildings === 2) {
-      arr = Object.keys(target).map((k) => {
-        const o = target[k];
+      arr = Object.keys(target).map(k => {
+        const o = {};
         o.name = k;
-        o.id = Game.Objects[k].id;
+        o.pp = target[k].pp;
+        o.color = target[k].color;
         return o;
       });
     }
@@ -93,8 +95,8 @@ export default function UpdateBuildings() {
       Game.Objects[arr[x].name].l.style.gridRow = `${x + 2}/${x + 2}`;
     }
   } else {
-    const arr = Object.keys(CacheObjects1).map((k) => {
-      const o = CacheObjects1[k];
+    const arr = Object.keys(CacheObjects1).map(k => {
+      const o = {};
       o.name = k;
       o.id = Game.Objects[k].id;
       return o;
