@@ -77,14 +77,11 @@ export default function UpdateUpgrades() {
   }
 
   if (CMOptions.SortUpgrades) {
+    // Sort by pp colour group, then by pp.
     arr.sort((a, b) =>
-      ColoursOrdering.indexOf(a.color) > ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
-        ? 1
-        : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
-        ? -1
-        : a.pp < b.pp
-        ? -1
-        : 0,
+      ColoursOrdering.indexOf(a.color) === ColoursOrdering.indexOf(b.color)
+        ? a.pp - b.pp
+        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color)
     );
   } else {
     arr.sort((a, b) => a.price - b.price);
