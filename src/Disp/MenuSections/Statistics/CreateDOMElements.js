@@ -85,6 +85,28 @@ export function StatsListing(type, name, text, placeholder) {
 }
 
 /**
+ * This function creates an stats-listing-object for the stats page for missing items displays
+ * It is called by CM.Disp.AddMenuStats()
+ * @param 	{string}		type		The type fo the listing
+ * @param 	{string}		name		The name of the option
+ * @param 	{object}		text		The text-object of the option
+ * @param 	{bool}		  current Whether the season of the item is the current season
+ * @returns	{object}		div			The option object
+ */
+export function StatsMissDispListing(type, name, text, current) {
+  const div = document.createElement('div');
+  div.className = 'listing';
+
+  const listingName = document.createElement('b');
+  listingName.textContent = name;
+  if (current === true) listingName.style.color = CMOptions.ColourGreen;
+  div.appendChild(listingName);
+  div.appendChild(document.createTextNode(': '));
+  div.appendChild(text);
+  return div;
+}
+
+/**
  * This function creates a tooltip containing all missing holiday items contained in the list theMissDisp
  * @param 	{list}			theMissDisp		A list of the missing holiday items
  * @returns	{object}		frag			The tooltip object
