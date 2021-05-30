@@ -25,6 +25,12 @@ export function CreateTimerBar() {
   TimerBar.style.fontWeight = 'bold';
   TimerBar.style.backgroundColor = 'black';
 
+  // Create standard Autosave bar
+  const CMTimerBarAutosave = CreateTimer('CMTimerBarAutosave', 'Autosave', [
+    { id: 'CMTimerBarAutosaveBar', color: ColourPurple },
+  ]);
+  TimerBar.appendChild(CMTimerBarAutosave);
+
   // Create standard Golden Cookie bar
   const CMTimerBarGC = CreateTimer('CMTimerBarGC', 'Next Cookie', [
     { id: 'CMTimerBarGCMinBar', color: ColourGray },
@@ -55,6 +61,22 @@ export function UpdateTimerBar() {
     // label width: 113, div margin: 20, calculate timer width at runtime
     const maxWidthOneBar = l('CMTimerBar').offsetWidth - 133;
     let numberOfTimers = 0;
+
+    if (CMOptions.AutosaveTimerBar && Game.prefs.autosave) {
+      const timeTillNextAutosave =
+        (Game.fps * 60 - (Game.OnAscend ? 0 : Game.T % (Game.fps * 60))) / Game.fps;
+      l('CMTimerBarAutosave').style.display = '';
+      l('CMTimerBarAutosaveBar').style.width = `${Math.round(
+        (timeTillNextAutosave *
+          (maxWidthOneBar - Math.ceil(timeTillNextAutosave).toString().length * 8)) /
+          60,
+      )}px`;
+      if (CMOptions.TimerBarOverlay >= 1) {
+        l('CMTimerBarAutosaveBar').textContent = Math.ceil(timeTillNextAutosave);
+      } else l('CMTimerBarAutosaveBar').textContent = '';
+      l('CMTimerBarAutosaveTime').textContent = Math.ceil(timeTillNextAutosave);
+      numberOfTimers += 1;
+    } else l('CMTimerBarAutosave').style.display = 'none';
 
     // Regulates visibility of Golden Cookie timer
     if (Game.shimmerTypes.golden.spawned === 0 && !Game.Has('Golden switch [off]')) {
