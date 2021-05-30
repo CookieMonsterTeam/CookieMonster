@@ -26,9 +26,7 @@ export default function AllAmountTillNextAchievement(forceRecalc) {
       result[i] = {
         AmountNeeded: tillNext,
         TotalNeeded: Game.Objects[i].amount + tillNext,
-        price: Game.Objects[i].getSumPrice(
-          Game.Objects[i].amount + tillNext - Game.Objects[i].amount,
-        ),
+        price: Game.Objects[i].getSumPrice(tillNext),
       };
     }
   });
