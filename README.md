@@ -1,4 +1,4 @@
-![ESLint](https://github.com/Aktanusa/CookieMonster/workflows/ESLint/badge.svg?event=push)
+[![CI](https://github.com/CookieMonsterTeam/CookieMonster/actions/workflows/CI.yml/badge.svg)](https://github.com/CookieMonsterTeam/CookieMonster/actions/workflows/CI.yml)
 ## Cookie Monster
 
 **Cookie Monster** is an addon you can load into Cookie Clicker, that offers a wide range of tools and statistics to enhance the game. **It is not a cheat interface** – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.
