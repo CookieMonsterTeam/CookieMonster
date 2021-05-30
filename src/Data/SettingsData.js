@@ -274,6 +274,13 @@ const Config = {
     'Overlay on timers displaying seconds and/or percentage left',
     true,
   ),
+  AutosaveTimerBar: new SettingStandard(
+    'bool',
+    'BarsDisplay',
+    ['Autosave timer bar OFF', 'Autosave timer bar ON'],
+    'Show a timer counting down till next autosave in the timer bar',
+    true,
+  ),
   UpBarColour: new SettingStandard(
     'bool',
     'BarsDisplay',
@@ -339,7 +346,7 @@ const Config = {
     'bool',
     'BarsDisplay',
     ['Grimoire magic meter timer OFF', 'Grimoire magic meter timer ON'],
-    'A timer on how long before the Grimoire magic meter is full',
+    'A timer overlay showing how long till the Grimoire magic meter is full',
     true,
   ),
   GCTimer: new SettingStandard(
