@@ -3,7 +3,7 @@
 import Beautify from '../../Disp/BeautifyAndFormatting/Beautify';
 import CopyData from '../../Sim/SimulationData/CopyData';
 import { SimDoSims, SimObjects } from '../../Sim/VariablesAndData';
-import { CacheCostDragonUpgrade, CacheLastDragonLevel } from '../VariablesAndData';
+import { CacheCostDragonUpgrade, CacheLastDragonLevel } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
 
 /**
  * This functions caches the current cost of upgrading the dragon level so it can be displayed in the tooltip
@@ -56,7 +56,7 @@ export default function CacheDragonCost() {
             cost += price;
             SimObjects[target].amount -= 1;
           }
-          CacheCostDragonUpgrade = `Cost to rebuy: ${Beautify(cost)}`; // eslint-disable-line no-unused-vars
+          CacheCostDragonUpgrade = `Cost to rebuy: ${Beautify(cost)}`;
         });
       }
     }

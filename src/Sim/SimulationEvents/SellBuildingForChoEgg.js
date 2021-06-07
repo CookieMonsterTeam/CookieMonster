@@ -1,5 +1,5 @@
 import CopyData from '../SimulationData/CopyData';
-import { SimBuildingsOwned, SimDragonAura, SimDragonAura2, SimObjects } from '../VariablesAndData';
+import { SimBuildingsOwned, SimDragonAura, SimDragonAura2, SimObjects } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
 import BuildingSell from './SellBuilding';
 
 /**
@@ -32,7 +32,7 @@ export default function SellBuildingsForChoEgg() {
       }
     });
     SimObjects[highestBuilding].amount -= 1;
-    SimBuildingsOwned -= 1; // eslint-disable-line no-unused-vars
+    SimBuildingsOwned -= 1;
   }
 
   // Get money made by selling all remaining buildings

@@ -1,4 +1,4 @@
-![ESLint](https://github.com/Aktanusa/CookieMonster/workflows/ESLint/badge.svg?event=push)
+[![CI](https://github.com/CookieMonsterTeam/CookieMonster/actions/workflows/CI.yml/badge.svg)](https://github.com/CookieMonsterTeam/CookieMonster/actions/workflows/CI.yml)
 ## Cookie Monster
 
 **Cookie Monster** is an addon you can load into Cookie Clicker, that offers a wide range of tools and statistics to enhance the game. **It is not a cheat interface** – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.
@@ -19,8 +19,9 @@ max(cost - cookies in bank, 0)/cps + cost/Δ cps
 
 If the relevant option is enabled, CM will color-code each of them based on their value. CM compares the PP across all possible buy options: if a buy 10 option is better than any of the buy 1 options Cookie Monster will colour them accordingly. Note that sometimes it is better to buy 10 of a building than to buy only 1, CM will also indicate this!
 
-The following standard colours are used:
-
+<details>
+  <summary>The following standard colours are used:</summary>
+  
 * Light Blue: (upgrades) This item has a better PP than the best building to buy
 * Green: This building has the best PP
 * Yellow: This building is within the top 10 of best PP's
@@ -28,6 +29,8 @@ The following standard colours are used:
 * Red: This building is within the top 30 of best PP's
 * Purple: This building is worse than the top 10 of best PP's
 * Gray: This item does not have a PP, often this means that there is no change to CPS
+
+</details>
 
 Note: For this index, **lower is better**, meaning a building with a PP of 1 is more interesting than one with a PP of 3.
 
@@ -58,6 +61,12 @@ Any bug or suggestion should be **opened as an issue** [in the repository](https
 Before submitting a bug, make sure to give a shot at the latest version of the addon on the `dev` branch. This version can be tested by copying the `CookieMonsterDev.js` file of the dev branch into your console. You can also load the dev-version by using `https://cookiemonsterteam.github.io/CookieMonster/dist/CookieMonsterDev.js` to load the mod. If the bug is still here, you can submit an issue for it. Please do so by using the bug report template.
 
 All suggestions are welcome, even the smallest ones.
+
+## For developers
+
+Cookie Monster exposes some of the data it creates to the global scope. This data can be found in the `CookieMonsterData` object after loading Cookie Monster.
+
+Currently we exposes relevant data for buildings and upgrades (PP, colour and bonus income). If you would like us to add any aditional data, please feel free to open an issue or create a PR doing so!
 
 ## Contributing
 

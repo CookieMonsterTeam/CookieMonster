@@ -1,4 +1,9 @@
-import { CacheObjects1, CacheObjects10, CacheObjects100 } from '../../Cache/VariablesAndData';
+import {
+  CacheMinPPBulk,
+  CacheObjects1,
+  CacheObjects10,
+  CacheObjects100,
+} from '../../Cache/VariablesAndData';
 import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingSell from '../../Sim/SimulationEvents/SellBuilding';
 import Beautify from '../BeautifyAndFormatting/Beautify';
@@ -24,11 +29,17 @@ export default function UpdateBuildings() {
   else if (target === 10) target = CacheObjects10;
   else if (target === 100) target = CacheObjects100;
 
+  // Remove colour if applied
+  l(`storeBulk1`).style.removeProperty('color');
+  l(`storeBulk10`).style.removeProperty('color');
+  l(`storeBulk100`).style.removeProperty('color');
+
   if (Game.buyMode === 1) {
     if (CMOptions.BuildColour === 1) {
       Object.keys(target).forEach((i) => {
         l(`productPrice${Game.Objects[i].id}`).style.color = CMOptions[`Colour${target[i].color}`];
       });
+      l(`storeBulk${CacheMinPPBulk}`).style.color = CMOptions.ColourGreen;
     } else {
       Object.keys(Game.Objects).forEach((i) => {
         l(`productPrice${Game.Objects[i].id}`).style.removeProperty('color');
@@ -58,49 +69,34 @@ export default function UpdateBuildings() {
   if (Game.buyMode === 1 && CMOptions.SortBuildings) {
     let arr;
     if (CMOptions.SortBuildings === 1) {
-      arr = Object.keys(CacheObjects1).map((k) => {
-        const o = CacheObjects1[k];
+      arr = Object.keys(CacheObjects1).map(k => {
+        const o = {};
         o.name = k;
-        o.id = Game.Objects[k].id;
+        o.pp = CacheObjects1[k].pp;
+        o.color = CacheObjects1[k].color;
         return o;
       });
-
-      arr.sort((a, b) =>
-        ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
-        ColoursOrdering.indexOf(b.color)
-          ? 1
-          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
-          ? -1
-          : a.pp < b.pp
-          ? -1
-          : 0,
-      );
     } else if (CMOptions.SortBuildings === 2) {
-      arr = Object.keys(target).map((k) => {
-        const o = target[k];
+      arr = Object.keys(target).map(k => {
+        const o = {};
         o.name = k;
-        o.id = Game.Objects[k].id;
+        o.pp = target[k].pp;
+        o.color = target[k].color;
         return o;
       });
-
-      arr.sort((a, b) =>
-        ColoursOrdering.indexOf(a.color) > // eslint-disable-line no-nested-ternary
-        ColoursOrdering.indexOf(b.color)
-          ? 1
-          : ColoursOrdering.indexOf(a.color) < ColoursOrdering.indexOf(b.color) // eslint-disable-line no-nested-ternary
-          ? -1
-          : a.pp < b.pp
-          ? -1
-          : 0,
-      );
     }
-
+    // Sort by pp colour group, then by pp.
+    arr.sort((a, b) =>
+      ColoursOrdering.indexOf(a.color) === ColoursOrdering.indexOf(b.color)
+        ? a.pp - b.pp
+        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color)
+    );
     for (let x = 0; x < arr.length; x++) {
       Game.Objects[arr[x].name].l.style.gridRow = `${x + 2}/${x + 2}`;
     }
   } else {
-    const arr = Object.keys(CacheObjects1).map((k) => {
-      const o = CacheObjects1[k];
+    const arr = Object.keys(CacheObjects1).map(k => {
+      const o = {};
       o.name = k;
       o.id = Game.Objects[k].id;
       return o;

@@ -8,7 +8,7 @@ import {
   CacheAverageGainBank,
   CacheAverageGainWrink,
   CacheAverageGainWrinkFattest,
-  CacheDoRemakeBuildPrices,
+  CacheDoRemakeBuildPrices, // eslint-disable-line no-unused-vars
   CacheObjects1,
   CacheObjects10,
   CacheObjects100,
@@ -28,7 +28,7 @@ function CacheBuildingIncome(amount) {
     result[i] = {};
     result[i].bonus = BuyBuildingsBonusIncome(i, amount);
     if (amount !== 1) {
-      CacheDoRemakeBuildPrices = 1; // eslint-disable-line no-unused-vars
+      CacheDoRemakeBuildPrices = 1;
     }
   });
   return result;

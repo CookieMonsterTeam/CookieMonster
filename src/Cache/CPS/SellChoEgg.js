@@ -1,5 +1,5 @@
 import SellBuildingsForChoEgg from '../../Sim/SimulationEvents/SellBuildingForChoEgg';
-import { CacheSellForChoEgg } from '../VariablesAndData';
+import { CacheSellForChoEgg } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
 
 /**
  * This functions caches the reward for selling the Chocolate egg
@@ -20,5 +20,5 @@ export default function CacheSellAllForChoEgg() {
   }
   // Compute cookies earned by selling all buildings with optimal auras (ES + RB)
   sellTotal += SellBuildingsForChoEgg();
-  CacheSellForChoEgg = sellTotal; // eslint-disable-line no-unused-vars
+  CacheSellForChoEgg = sellTotal;
 }

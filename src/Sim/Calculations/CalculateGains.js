@@ -10,8 +10,8 @@ import SimWin from '../SimulationData/SimWin';
 import {
   SimAchievementsOwned,
   SimCookiesPs,
-  SimCookiesPsRaw,
-  SimEffs,
+  SimCookiesPsRaw, // eslint-disable-line no-unused-vars
+  SimEffs, // eslint-disable-line no-unused-vars
   SimHeavenlyPower,
   SimObjects,
   SimPrestige,
@@ -38,7 +38,7 @@ export default function CalculateGains() {
       });
     }
   });
-  SimEffs = effs; // eslint-disable-line no-unused-vars
+  SimEffs = effs;
 
   if (Game.ascensionMode !== 1)
     mult += parseFloat(SimPrestige) * 0.01 * SimHeavenlyPower * SimGetHeavenlyMultiplier();
@@ -189,7 +189,7 @@ export default function CalculateGains() {
     if (rawCookiesPs >= Game.CpsAchievements[i].threshold) SimWin(Game.CpsAchievements[i].name);
   });
 
-  SimCookiesPsRaw = rawCookiesPs; // eslint-disable-line no-unused-vars
+  SimCookiesPsRaw = rawCookiesPs;
 
   const { n } = Game.shimmerTypes.golden;
   const auraMult = SimAuraMult("Dragon's Fortune");

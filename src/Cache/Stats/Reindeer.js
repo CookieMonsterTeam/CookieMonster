@@ -1,4 +1,4 @@
-import { CacheSeaSpec } from '../VariablesAndData';
+import { CacheSeaSpec } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
 
 /**
  * This functions caches the reward of popping a reindeer
@@ -11,6 +11,6 @@ export default function CacheSeasonSpec() {
     if (Game.hasBuff('Elder frenzy')) val *= 0.5;
     if (Game.hasBuff('Frenzy')) val *= 0.75;
     CacheSeaSpec = Math.max(25, val);
-    if (Game.Has('Ho ho ho-flavored frosting')) CacheSeaSpec *= 2; // eslint-disable-line no-unused-vars
+    if (Game.Has('Ho ho ho-flavored frosting')) CacheSeaSpec *= 2;
   }
 }

@@ -31,6 +31,7 @@ const ConfigDefault: {
   TimerBar: 1,
   TimerBarPos: 0,
   TimerBarOverlay: 2,
+  AutosaveTimerBar: 0,
   UpBarColour: 1,
   UpgradeBarFixedPos: 1,
   SortBuildings: 0,

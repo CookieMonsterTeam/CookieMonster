@@ -1,5 +1,4 @@
 {
   "recursive": true,
-  "require": ["esm", "ts-node/register"],
-  "reporter": "min"
+  "require": ["esm", "ts-node/register"]
 }

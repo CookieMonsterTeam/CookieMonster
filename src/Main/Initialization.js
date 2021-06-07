@@ -12,24 +12,27 @@ import UpdateBuildingUpgradeStyle from '../Disp/Initialization/UpdateBuildingUpg
 import CreateFlashScreen from '../Disp/Initialization/FlashScreen';
 import { CreateFavicon } from '../Disp/TabTitle/FavIcon';
 import { CreateSimpleTooltip } from '../Disp/Tooltips/Tooltip';
-import { CMLastAscendState, TooltipText } from '../Disp/VariablesAndData';
+import { CMLastAscendState, TooltipText } from '../Disp/VariablesAndData'; // eslint-disable-line no-unused-vars
 import InitData from '../Sim/InitializeData/InitData';
 import ReplaceNativeGrimoire from './ReplaceGameElements/NativeGrimoire';
 import ReplaceTooltips from './ReplaceGameElements/Tooltips';
 import ReplaceNative from './ReplaceGameFunctions/ReplaceNative';
-import { LastModCount } from './VariablesAndData';
+import { LastModCount } from './VariablesAndData'; // eslint-disable-line no-unused-vars
 import AddWrinklerAreaDetect from './WrinklerArea/AddDetectArea';
 
 /**
  * Initialization loop of Cookie Monster
  */
 export default function InitializeCookieMonster() {
+  // Create global data object
+  window.CookieMonsterData = {};
+
   InitData();
   CacheStatsCookies();
   InitCache();
 
   // Stored to check if we need to re-initiliaze data
-  LastModCount = Object.keys(Game.mods).length; // eslint-disable-line no-unused-vars
+  LastModCount = Object.keys(Game.mods).length;
 
   // Creating visual elements
   CreateCssArea();
@@ -54,7 +57,7 @@ export default function InitializeCookieMonster() {
   Game.CalculateGains();
 
   LoadConfig();
-  CMLastAscendState = Game.OnAscend; // eslint-disable-line no-unused-vars
+  CMLastAscendState = Game.OnAscend;
 
   if (Game.prefs.popups)
     Game.Popup(`Cookie Monster version ${VersionMajor}.${VersionMinor} loaded!`);

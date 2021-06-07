@@ -2,7 +2,8 @@ import { CMOptions } from '../../Config/VariablesAndData';
 import GetWrinkConfigBank from '../../Disp/HelperFunctions/GetWrinkConfigBank';
 import { ColourGray } from '../../Disp/VariablesAndData';
 import {
-  CacheMinPP,
+  CacheMinPP, // eslint-disable-line no-unused-vars
+  CacheMinPPBulk, // eslint-disable-line no-unused-vars
   CacheObjects1,
   CacheObjects10,
   CacheObjects100,
@@ -38,7 +39,8 @@ function CachePP(target, amount) {
         Math.max(price - (Game.cookies + GetWrinkConfigBank()), 0) / Game.cookiesPs +
         price / target[i].bonus;
     } else target[i].pp = price / target[i].bonus; // eslint-disable-line no-param-reassign
-    if (!(CMOptions.PPRigidelMode && amount === 1)) CachePPArray.push([target[i].pp, amount]);
+    if (!(CMOptions.PPRigidelMode && amount === 1))
+      CachePPArray.push([target[i].pp, amount, price]);
   });
 }
 
@@ -58,16 +60,17 @@ export default function CacheBuildingsPP() {
 
   // Set CM.Cache.min to best non-excluded buidliung
   CachePPArray.sort((a, b) => a[0] - b[0]);
-  let indexOfMin = 0;
+  let indexOfMin = CMOptions.PPExcludeTop;
   if (CMOptions.PPOnlyConsiderBuyable) {
-    while (CachePPArray[indexOfMin][1] > Game.cookies) {
+    while (CachePPArray[indexOfMin][2] > Game.cookies) {
       indexOfMin += 1;
       if (CachePPArray.length === indexOfMin + 1) {
         break;
       }
     }
   }
-  CacheMinPP = CachePPArray[CMOptions.PPExcludeTop][indexOfMin]; // eslint-disable-line no-unused-vars
+  CacheMinPP = CachePPArray[indexOfMin][0];
+  CacheMinPPBulk = CachePPArray[indexOfMin][1];
 
   CacheColour(CacheObjects1, 1);
   CacheColour(CacheObjects10, 10);

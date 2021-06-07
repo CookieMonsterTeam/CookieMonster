@@ -6,18 +6,18 @@ import InitialBuildingData from '../InitializeData/InitialBuildingData';
 import InitUpgrade from '../InitializeData/InitUpgrade';
 import {
   SimAchievements,
-  SimAchievementsOwned,
-  SimDragonAura,
-  SimDragonAura2,
-  SimGod1,
-  SimGod2,
-  SimGod3,
-  SimHeavenlyPower,
+  SimAchievementsOwned, // eslint-disable-line no-unused-vars
+  SimDragonAura, // eslint-disable-line no-unused-vars
+  SimDragonAura2, // eslint-disable-line no-unused-vars
+  SimGod1, // eslint-disable-line no-unused-vars
+  SimGod2, // eslint-disable-line no-unused-vars
+  SimGod3, // eslint-disable-line no-unused-vars
+  SimHeavenlyPower, // eslint-disable-line no-unused-vars
   SimObjects,
-  SimPledges,
-  SimPrestige,
+  SimPledges, // eslint-disable-line no-unused-vars
+  SimPrestige, // eslint-disable-line no-unused-vars
   SimUpgrades,
-  SimUpgradesOwned,
+  SimUpgradesOwned, // eslint-disable-line no-unused-vars
 } from '../VariablesAndData';
 
 /**
@@ -26,11 +26,11 @@ import {
  */
 export default function CopyData() {
   // Other variables
-  SimUpgradesOwned = Game.UpgradesOwned; // eslint-disable-line no-unused-vars
-  SimPledges = Game.pledges; // eslint-disable-line no-unused-vars
-  SimAchievementsOwned = Game.AchievementsOwned; // eslint-disable-line no-unused-vars
-  SimHeavenlyPower = Game.heavenlyPower; // eslint-disable-line no-unused-vars
-  SimPrestige = Game.prestige; // eslint-disable-line no-unused-vars
+  SimUpgradesOwned = Game.UpgradesOwned;
+  SimPledges = Game.pledges;
+  SimAchievementsOwned = Game.AchievementsOwned;
+  SimHeavenlyPower = Game.heavenlyPower;
+  SimPrestige = Game.prestige;
 
   // Buildings
   Object.keys(Game.Objects).forEach((i) => {
@@ -49,9 +49,9 @@ export default function CopyData() {
     you.free = me.free;
     if (me.minigameLoaded) {
       if (me.name === 'Temple') {
-        SimGod1 = me.minigame.slot[0]; // eslint-disable-line no-unused-vars
-        SimGod2 = me.minigame.slot[1]; // eslint-disable-line no-unused-vars
-        SimGod3 = me.minigame.slot[2]; // eslint-disable-line no-unused-vars
+        SimGod1 = me.minigame.slot[0];
+        SimGod2 = me.minigame.slot[1];
+        SimGod3 = me.minigame.slot[2];
       }
       you.minigameLoaded = me.minigameLoaded;
       you.minigame = me.minigame;
@@ -85,6 +85,6 @@ export default function CopyData() {
 
   // Auras
   CacheDragonAuras();
-  SimDragonAura = CacheDragonAura; // eslint-disable-line no-unused-vars
-  SimDragonAura2 = CacheDragonAura2; // eslint-disable-line no-unused-vars
+  SimDragonAura = CacheDragonAura;
+  SimDragonAura2 = CacheDragonAura2;
 }

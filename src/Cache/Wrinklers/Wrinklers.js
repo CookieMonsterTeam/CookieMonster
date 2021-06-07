@@ -3,8 +3,8 @@
 import { SimObjects } from '../../Sim/VariablesAndData';
 import {
   CacheWrinklersFattest,
-  CacheWrinklersNormal,
-  CacheWrinklersTotal,
+  CacheWrinklersNormal, // eslint-disable-line no-unused-vars
+  CacheWrinklersTotal, // eslint-disable-line no-unused-vars
 } from '../VariablesAndData';
 
 /**
@@ -31,9 +31,9 @@ export default function CacheWrinklers() {
       else if (godLvl === 2) sucked *= 1.1;
       else if (godLvl === 3) sucked *= 1.05;
     }
-    CacheWrinklersTotal += sucked; // eslint-disable-line no-unused-vars
+    CacheWrinklersTotal += sucked;
     if (Game.wrinklers[i].type === 0) {
-      CacheWrinklersNormal += sucked; // eslint-disable-line no-unused-vars
+      CacheWrinklersNormal += sucked;
       if (sucked > CacheWrinklersFattest[0]) CacheWrinklersFattest = [sucked, i];
     }
   }

@@ -41,7 +41,12 @@ import ResetBonus from '../../../Sim/SimulationEvents/ResetAscension';
 import GetCPS from '../../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
 import { ColourGreen, ColourRed, ColourTextPre } from '../../VariablesAndData';
-import { StatsListing, StatsHeader, StatsMissDisp } from './CreateDOMElements';
+import {
+  StatsListing,
+  StatsHeader,
+  StatsMissDisp,
+  StatsMissDispListing,
+} from './CreateDOMElements';
 import Beautify from '../../BeautifyAndFormatting/Beautify';
 import FormatTime from '../../BeautifyAndFormatting/FormatTime';
 
@@ -697,10 +702,11 @@ export function SeasonSection() {
     if (CMOptions.Header.Sea) {
       if (missingHalloweenCookies.length !== 0) {
         section.appendChild(
-          StatsListing(
+          StatsMissDispListing(
             'basic',
             'Halloween cookies left to buy',
             StatsMissDisp(missingHalloweenCookies),
+            Game.season === 'halloween',
           ),
         );
         let failRateHalloween = 0.95;
@@ -715,7 +721,7 @@ export function SeasonSection() {
         }
         const obtainedCookiesChance = missingHalloweenCookies.length / 7;
         section.appendChild(
-          StatsListing(
+          StatsMissDispListing(
             'basic',
             'Chance of receiving a cookie from wrinkler/shiny wrinkler',
             document.createTextNode(
@@ -723,15 +729,17 @@ export function SeasonSection() {
                 (1 - failRateHalloween * 0.9) * obtainedCookiesChance * 100,
               )}%`,
             ),
+            Game.season === 'halloween',
           ),
         );
       }
       if (missingChristmasCookies.length !== 0) {
         section.appendChild(
-          StatsListing(
+          StatsMissDispListing(
             'basic',
             'Christmas cookies left to buy',
             StatsMissDisp(missingChristmasCookies),
+            Game.season === 'christmas',
           ),
         );
         let failRateChristmas = 0.8;
@@ -746,21 +754,23 @@ export function SeasonSection() {
         }
         const obtainedCookiesChance = missingChristmasCookies.length / 7;
         section.appendChild(
-          StatsListing(
+          StatsMissDispListing(
             'basic',
             'Chance of receiving a cookie from reindeer',
             document.createTextNode(
               `${Beautify((1 - failRateChristmas) * obtainedCookiesChance * 100)}%`,
             ),
+            Game.season === 'christmas',
           ),
         );
       }
       if (missingValentineCookies.length !== 0) {
         section.appendChild(
-          StatsListing(
+          StatsMissDispListing(
             'basic',
             'Valentine cookies left to buy',
             StatsMissDisp(missingValentineCookies),
+            Game.season === 'valentines',
           ),
         );
       }
@@ -790,40 +800,53 @@ export function SeasonSection() {
       };
       if (missingNormalEggs.length !== 0) {
         section.appendChild(
-          StatsListing(
+          StatsMissDispListing(
             'basic',
             'Normal easter eggs left to unlock',
             StatsMissDisp(missingNormalEggs),
+            Game.season === 'easter',
           ),
         );
         section.appendChild(
-          StatsListing(
+          StatsMissDispListing(
             'basic',
             'Chance of receiving an egg from wrinkler/golden cookie',
             document.createTextNode(
               `${Beautify(dropRateEgg(0.98)[0] * 100)}% / ${Beautify(dropRateEgg(0.9)[0] * 100)}%`,
             ),
+            Game.season === 'easter',
           ),
         );
       }
       if (missingRareEggs.length !== 0) {
         section.appendChild(
-          StatsListing('basic', 'Rare easter eggs left to unlock', StatsMissDisp(missingRareEggs)),
+          StatsMissDispListing(
+            'basic',
+            'Rare easter eggs left to unlock',
+            StatsMissDisp(missingRareEggs),
+            Game.season === 'easter',
+          ),
         );
         section.appendChild(
-          StatsListing(
+          StatsMissDispListing(
             'basic',
             'Chance of receiving a rare egg from wrinkler/golden cookie',
             document.createTextNode(
               `${Beautify(dropRateEgg(0.98)[1] * 100)}% / ${Beautify(dropRateEgg(0.9)[1] * 100)}%`,
             ),
+            Game.season === 'easter',
           ),
         );
       }
 
       if (Game.season === 'christmas')
         section.appendChild(
-          StatsListing('basic', 'Reindeer reward', document.createTextNode(Beautify(CacheSeaSpec))),
+          StatsMissDispListing(
+            'basic',
+            'Reindeer reward',
+            document.createTextNode(Beautify(CacheSeaSpec)),
+            true,
+          ),
         );
       if (choEgg) {
         section.appendChild(
