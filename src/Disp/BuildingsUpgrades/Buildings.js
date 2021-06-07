@@ -108,11 +108,16 @@ export default function UpdateBuildings() {
     arr = Object.keys(CacheObjectsNextAchievement).map(k => {
       const o = {};
       o.name = k;
+      o.id = Game.Objects[k].id;
       o.amountUntilNext = CacheObjectsNextAchievement[k].AmountNeeded;
       o.priceUntilNext = CacheObjectsNextAchievement[k].price;
       return o;
     });
-    // Sort by price until next achievement. Buildings that aren't close to an achievement are always last.
+    // First, sort using default order.
+    arr.sort((a, b) => a.id - b.id);
+    // Sort by price until next achievement.
+    // Buildings that aren't within 100 of an achievement are placed at the end, still in
+    // default order relative to each other because sort() is guaranteed stable.
     arr.sort((a, b) =>
       (a.amountUntilNext !== 101 ? a.priceUntilNext : Infinity) -
       (b.amountUntilNext !== 101 ? b.priceUntilNext : Infinity)
