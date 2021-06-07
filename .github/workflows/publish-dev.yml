@@ -3,7 +3,7 @@ on:
     branches:
       - "dev"
 jobs:
-  merge-branch:
+  publish-dev:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -12,4 +12,4 @@ jobs:
           github_token: ${{ github.token }}
           source_ref: 'dev'
           target_branch: 'gh-pages'
-          commit_message_template: '[Automated] Merged {source_ref} into {target_branch}'
+          commit_message_template: '[Automated] Merge {source_ref} into {target_branch}'
