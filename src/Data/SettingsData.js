@@ -308,8 +308,9 @@ const Config = {
       'Sort buildings: default',
       'Sort buildings: PP of x1 purchase',
       'Sort buildings: PP of selected bulk mode',
+      'Sort buildings: price until next achievement',
     ],
-    'Sort the display of buildings in either default order or by PP',
+    'Sort the display of buildings in default order, by PP, or until next achievement',
     false,
     () => {
       UpdateBuildings();
