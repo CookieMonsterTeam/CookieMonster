@@ -9,6 +9,7 @@ import { CMOptions } from '../../../Config/VariablesAndData';
 import {
   CacheAverageClicks,
   CacheAverageCookiesFromClicks,
+  CacheObjectsNextAchievement,
   CacheWrinklersFattest,
   CacheWrinklersNormal,
   CacheWrinklersTotal,
@@ -102,6 +103,18 @@ export default function AddMenuStats(title) {
 
   stats.appendChild(CreateElements.StatsHeader('Achievements', 'Achievs'));
   if (CMOptions.Header.Achievs) {
+    Object.keys(Game.Objects).forEach((i) => {
+      const ObjectsTillNext = CacheObjectsNextAchievement[i];
+      stats.appendChild(
+        CreateElements.StatsListing(
+          'basic',
+          i,
+          ObjectsTillNext.AmountNeeded < 101
+            ? document.createTextNode(`Next achievement in ${ObjectsTillNext.AmountNeeded}, price: ${Beautify(ObjectsTillNext.price)}`)
+            : document.createTextNode('No new achievement for next 100 buildings'),
+        ),
+      );
+    });
   }
 
   stats.appendChild(CreateElements.StatsHeader('Miscellaneous', 'Misc'));
