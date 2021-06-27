@@ -3,7 +3,7 @@ import FormatTime from '../../Disp/BeautifyAndFormatting/FormatTime';
 import CalculateGrimoireRefillTime from '../../Disp/HelperFunctions/CalculateGrimoireRefillTime';
 import {
   BackupGrimoireDraw,
-  BackupGrimoireLaunch,
+  BackupGrimoireLaunch, // eslint-disable-line no-unused-vars
   BackupGrimoireLaunchMod,
   HasReplaceNativeGrimoireDraw,
   HasReplaceNativeGrimoireLaunch,
@@ -35,7 +35,7 @@ function ReplaceNativeGrimoireDraw() {
 function ReplaceNativeGrimoireLaunch() {
   if (!HasReplaceNativeGrimoireLaunch && Game.Objects['Wizard tower'].minigameLoaded) {
     const { minigame } = Game.Objects['Wizard tower'];
-    BackupGrimoireLaunch = minigame.launch; // eslint-disable-line no-unused-vars
+    BackupGrimoireLaunch = minigame.launch;
     BackupGrimoireLaunchMod = new Function( // eslint-disable-line no-new-func
       `return ${minigame.launch
         .toString()

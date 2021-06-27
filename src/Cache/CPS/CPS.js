@@ -1,20 +1,20 @@
 import { CMOptions } from '../../Config/VariablesAndData';
 import { ClickTimes, CookieTimes } from '../../Disp/VariablesAndData';
 import {
-  CacheAverageClicks,
+  CacheAverageClicks, // eslint-disable-line no-unused-vars
   CacheAverageCPS,
   CacheAverageGainBank,
   CacheAverageGainChoEgg,
   CacheAverageGainWrink,
   CacheAverageGainWrinkFattest,
-  CacheAvgCPSWithChoEgg,
+  CacheAvgCPSWithChoEgg, // eslint-disable-line no-unused-vars
   CacheLastChoEgg,
   CacheLastClicks,
   CacheLastCookies,
   CacheLastCPSCheck,
   CacheLastWrinkCookies,
   CacheLastWrinkFattestCookies,
-  CacheRealCookiesEarned,
+  CacheRealCookiesEarned, // eslint-disable-line no-unused-vars
   CacheSellForChoEgg,
   CacheWrinklersFattest,
   CacheWrinklersTotal,
@@ -39,7 +39,7 @@ export default function CacheAvgCPS() {
   if ((Game.T / Game.fps) % 1 === 0) {
     let choEggTotal = Game.cookies + CacheSellForChoEgg;
     if (Game.cpsSucked > 0) choEggTotal += CacheWrinklersTotal;
-    CacheRealCookiesEarned = Math.max(Game.cookiesEarned, choEggTotal); // eslint-disable-line no-unused-vars
+    CacheRealCookiesEarned = Math.max(Game.cookiesEarned, choEggTotal);
     choEggTotal *= 0.05;
 
     // Add recent gains to AvgQueue's
@@ -81,7 +81,7 @@ export default function CacheAvgCPS() {
     if (choEgg || CMOptions.CalcWrink === 0) {
       CacheAvgCPSWithChoEgg =
         CacheAverageGainBank + CacheAverageGainWrink + (choEgg ? CacheAverageGainChoEgg : 0);
-    } else CacheAvgCPSWithChoEgg = CacheAverageCPS; // eslint-disable-line no-unused-vars
+    } else CacheAvgCPSWithChoEgg = CacheAverageCPS;
 
     // eslint-disable-next-line no-unused-vars
     CacheAverageClicks = ClicksDiff.calcAverage(ClickTimes[CMOptions.AvgClicksHist]);

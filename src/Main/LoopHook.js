@@ -42,8 +42,7 @@ export default function CMLoopHook() {
 
     // CM.Sim.DoSims is set whenever CPS has changed
     if (SimDoSims) {
-      AllAmountTillNextAchievement();
-
+      AllAmountTillNextAchievement(true);
       CacheIncome();
 
       CacheNoGoldSwitchCPS(); // Needed first

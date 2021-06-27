@@ -14,7 +14,7 @@ import UpdateUpgradeSectionsHeight from '../Disp/BuildingsUpgrades/UpdateUpgrade
 import UpdateUpgrades from '../Disp/BuildingsUpgrades/Upgrades';
 import RefreshScale from '../Disp/HelperFunctions/RefreshScale';
 import { UpdateFavicon } from '../Disp/TabTitle/FavIcon';
-import { SimDoSims } from '../Sim/VariablesAndData';
+import { SimDoSims } from '../Sim/VariablesAndData'; // eslint-disable-line no-unused-vars
 import SettingColours from './SettingClasses/SettingColours.ts';
 import SettingInputNumber from './SettingClasses/SettingInputNumber.ts';
 import SettingStandard from './SettingClasses/SettingStandard.ts';
@@ -70,7 +70,7 @@ const Config = {
     'Calculate times and average Cookies Per Second with (only the single non-shiny fattest) wrinklers',
     true,
     () => {
-      SimDoSims = true; // eslint-disable-line no-unused-vars
+      SimDoSims = true;
     },
   ),
 
@@ -274,6 +274,13 @@ const Config = {
     'Overlay on timers displaying seconds and/or percentage left',
     true,
   ),
+  AutosaveTimerBar: new SettingStandard(
+    'bool',
+    'BarsDisplay',
+    ['Autosave timer bar OFF', 'Autosave timer bar ON'],
+    'Show a timer counting down till next autosave in the timer bar',
+    true,
+  ),
   UpBarColour: new SettingStandard(
     'bool',
     'BarsDisplay',
@@ -301,8 +308,9 @@ const Config = {
       'Sort buildings: default',
       'Sort buildings: PP of x1 purchase',
       'Sort buildings: PP of selected bulk mode',
+      'Sort buildings: price until next achievement',
     ],
-    'Sort the display of buildings in either default order or by PP',
+    'Sort the display of buildings in default order, by PP, or until next achievement',
     false,
     () => {
       UpdateBuildings();
@@ -339,7 +347,7 @@ const Config = {
     'bool',
     'BarsDisplay',
     ['Grimoire magic meter timer OFF', 'Grimoire magic meter timer ON'],
-    'A timer on how long before the Grimoire magic meter is full',
+    'A timer overlay showing how long till the Grimoire magic meter is full',
     true,
   ),
   GCTimer: new SettingStandard(

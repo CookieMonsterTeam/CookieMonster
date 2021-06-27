@@ -18,7 +18,7 @@ export default function CreateWrinklerButtons() {
   };
   popAllA.onmouseover = function () {
     Game.tooltip.dynamic = 1;
-    Game.tooltip.draw(this, () => CreateTooltip('wb', 'PopAll'), 'this');
+    Game.tooltip.draw(this, () => CreateTooltip('wb', 'PopAllNormal'), 'this');
     Game.tooltip.wobble();
   };
   l('sectionLeftExtra').children[0].append(popAllA);

@@ -3,10 +3,24 @@ import { SimAchievementsOwned } from '../../Sim/VariablesAndData';
 
 export default function IndividualAmountTillNextAchievement(building) {
   const AchievementsAtStart = Game.AchievementsOwned;
-  for (let index = 0; index < 101; index++) {
+  let index = 100;
+  let lastIndexWithChange = 100;
+  while (index > -1) {
     BuyBuildingsBonusIncome(building, index);
     if (SimAchievementsOwned > AchievementsAtStart) {
-      return index;
+      lastIndexWithChange = index;
+      index -= 10;
+    } else if (index === 100) {
+      return 101;
+    } else {
+      index += 1;
+      while (index <= lastIndexWithChange) {
+        BuyBuildingsBonusIncome(building, index);
+        if (SimAchievementsOwned > AchievementsAtStart) {
+          return index;
+        }
+        index += 1;
+      }
     }
   }
   return 101;

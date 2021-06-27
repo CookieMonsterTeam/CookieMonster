@@ -1,5 +1,5 @@
 import UpdateTooltips from './UpdateTooltips';
-import { SimpleTooltipElements, TooltipName, TooltipType } from '../VariablesAndData';
+import { SimpleTooltipElements, TooltipName, TooltipType } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
 import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 import GetTimeColour from '../BeautifyAndFormatting/GetTimeColour';
@@ -122,8 +122,8 @@ export function CreateTooltip(type, name) {
   }
 
   // Sets global variables used by CM.Disp.UpdateTooltip()
-  TooltipType = type; // eslint-disable-line no-unused-vars
-  TooltipName = name; // eslint-disable-line no-unused-vars
+  TooltipType = type;
+  TooltipName = name;
 
   UpdateTooltips();
 

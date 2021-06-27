@@ -4,17 +4,17 @@ import SimHas from '../../Sim/ReplacedGameFunctions/SimHas';
 import GetCPSBuffMult from '../CPS/GetCPSBuffMult';
 import {
   CacheConjure,
-  CacheConjureReward,
+  CacheConjureReward, // eslint-disable-line no-unused-vars
   CacheDragonsFortuneMultAdjustment,
   CacheEdifice,
-  CacheEdificeBuilding,
+  CacheEdificeBuilding, // eslint-disable-line no-unused-vars
   CacheGoldenCookiesMult,
   CacheLucky,
   CacheLuckyFrenzy,
-  CacheLuckyReward,
-  CacheLuckyRewardFrenzy,
-  CacheLuckyWrathReward,
-  CacheLuckyWrathRewardFrenzy,
+  CacheLuckyReward, // eslint-disable-line no-unused-vars
+  CacheLuckyRewardFrenzy, // eslint-disable-line no-unused-vars
+  CacheLuckyWrathReward, // eslint-disable-line no-unused-vars
+  CacheLuckyWrathRewardFrenzy, // eslint-disable-line no-unused-vars
   CacheNoGoldSwitchCookiesPS,
   CacheWrathCookiesMult,
 } from '../VariablesAndData';
@@ -28,13 +28,13 @@ export function CacheStatsCookies() {
   const cpsBuffMult = GetCPSBuffMult();
   if (cpsBuffMult > 0) CacheLucky /= cpsBuffMult;
   else CacheLucky = 0;
-  CacheLuckyReward = CacheGoldenCookiesMult * (CacheLucky * 0.15) + 13; // eslint-disable-line no-unused-vars
-  CacheLuckyWrathReward = CacheWrathCookiesMult * (CacheLucky * 0.15) + 13; // eslint-disable-line no-unused-vars
+  CacheLuckyReward = CacheGoldenCookiesMult * (CacheLucky * 0.15) + 13;
+  CacheLuckyWrathReward = CacheWrathCookiesMult * (CacheLucky * 0.15) + 13;
   CacheLuckyFrenzy = CacheLucky * 7;
-  CacheLuckyRewardFrenzy = CacheGoldenCookiesMult * (CacheLuckyFrenzy * 0.15) + 13; // eslint-disable-line no-unused-vars
-  CacheLuckyWrathRewardFrenzy = CacheWrathCookiesMult * (CacheLuckyFrenzy * 0.15) + 13; // eslint-disable-line no-unused-vars
+  CacheLuckyRewardFrenzy = CacheGoldenCookiesMult * (CacheLuckyFrenzy * 0.15) + 13;
+  CacheLuckyWrathRewardFrenzy = CacheWrathCookiesMult * (CacheLuckyFrenzy * 0.15) + 13;
   CacheConjure = CacheLucky * 2;
-  CacheConjureReward = CacheConjure * 0.15; // eslint-disable-line no-unused-vars
+  CacheConjureReward = CacheConjure * 0.15;
 
   CacheEdifice = 0;
   let max = 0;
@@ -50,7 +50,7 @@ export function CacheStatsCookies() {
       Game.Objects[i].price * 2 > CacheEdifice
     ) {
       CacheEdifice = Game.Objects[i].price * 2;
-      CacheEdificeBuilding = i; // eslint-disable-line no-unused-vars
+      CacheEdificeBuilding = i;
     }
   });
 }

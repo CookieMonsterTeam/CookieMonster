@@ -1,0 +1,16 @@
+name: Publish
+on:
+  push:
+    branches:
+      - "dev"
+jobs:
+  publish-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: everlytic/branch-merge@1.1.0
+        with:
+          github_token: ${{ github.token }}
+          source_ref: 'dev'
+          target_branch: 'gh-pages'
+          commit_message_template: '[Automated] Merge {source_ref} into {target_branch}'

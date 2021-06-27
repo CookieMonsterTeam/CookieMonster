@@ -1,4 +1,4 @@
-import { SimAchievements, SimAchievementsOwned } from '../VariablesAndData';
+import { SimAchievements, SimAchievementsOwned } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
 
 /**
  * This function "wins" an achievement in the current sim data
@@ -10,7 +10,7 @@ export default function SimWin(what) {
   if (SimAchievements[what]) {
     if (SimAchievements[what].won === 0) {
       SimAchievements[what].won = 1;
-      if (Game.Achievements[what].pool !== 'shadow') SimAchievementsOwned += 1; // eslint-disable-line no-unused-vars
+      if (Game.Achievements[what].pool !== 'shadow') SimAchievementsOwned += 1;
     }
   }
 }
