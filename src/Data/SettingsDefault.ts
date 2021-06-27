@@ -135,6 +135,7 @@ const ConfigDefault: {
     Prestige: 1,
     Wrink: 1,
     Sea: 1,
+    Achievs: 1,
     Misc: 1,
     InfoTab: 1,
   },
