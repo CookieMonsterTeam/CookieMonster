@@ -100,6 +100,10 @@ export default function AddMenuStats(title) {
 
   stats.appendChild(CreateSections.SeasonSection());
 
+  stats.appendChild(CreateElements.StatsHeader('Achievements', 'Achievs'));
+  if (CMOptions.Header.Achievs) {
+  }
+
   stats.appendChild(CreateElements.StatsHeader('Miscellaneous', 'Misc'));
   if (CMOptions.Header.Misc) {
     stats.appendChild(
