@@ -5,7 +5,7 @@ import { CMOptions } from '../../../Config/VariablesAndData';
 import { LatestReleaseNotes, ModDescription } from '../../../Data/Moddata.ts';
 
 /**
- * This function adds stats created by CookieMonster to the stats page
+ * This function adds info about by CookieMonster to the info page
  * @param {object} title	On object that includes the title of the menu
  */
 export default function AddMenuInfo(title) {
