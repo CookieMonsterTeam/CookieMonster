@@ -20,6 +20,7 @@ export default function CreateGCTimer(cookie) {
   GCTimer.style.fontSize = '35px';
   GCTimer.style.cursor = 'pointer';
   GCTimer.style.display = 'block';
+  GCTimer.style.pointerEvents = 'none';
   if (CMOptions.GCTimer === 0) GCTimer.style.display = 'none';
   GCTimer.style.left = cookie.l.style.left;
   GCTimer.style.top = cookie.l.style.top;

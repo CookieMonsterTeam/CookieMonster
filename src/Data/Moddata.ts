@@ -16,6 +16,7 @@ export const ModDescription = `<div class="listing">
 /** Latest releasenotes of Cookie Monster to be displayed in the info section */
 export const LatestReleaseNotes = `<div class="listing">
 This update implements the following functions:</br>
+- HOTFIX: Fixed the possibility of clicking Golden Cookies multiple times with autoclickers</br>
 - For developers: we now expose some data calculated by Cookie Monster to the global scope. You can access it through the CookieMonsterData object</br>
 - The column with the most optimal building now has a green coloured indicator whenever colour coding is turned on</br>
 - The current season in the seasons statistics section is now displayed with green text for easier identification</br>
