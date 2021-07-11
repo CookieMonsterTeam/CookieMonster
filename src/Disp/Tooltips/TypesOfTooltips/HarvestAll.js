@@ -1,4 +1,3 @@
-import { CMOptions } from '../../../Config/VariablesAndData';
 import Beautify from '../../BeautifyAndFormatting/Beautify';
 import * as Create from '../CreateTooltip';
 
@@ -9,7 +8,7 @@ import * as Create from '../CreateTooltip';
  */
 export default function HarvestAll() {
   const { minigame } = Game.Objects.Farm;
-  if (CMOptions.TooltipLump) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipLump) {
     l('CMTooltipBorder').appendChild(Create.TooltipCreateHeader('Cookies gained from harvesting:'));
     let totalGain = 0;
     let mortal = 0;

@@ -1,2 +1,2 @@
-export let CMOptions = {}; // eslint-disable-line prefer-const
-export const ConfigPrefix = 'CMConfig';
+const ConfigPrefix = 'CMConfig';
+export default ConfigPrefix;

@@ -1,5 +1,4 @@
 import { CacheSpawnedGoldenShimmer } from '../../Cache/VariablesAndData';
-import { CMOptions } from '../../Config/VariablesAndData';
 import { LastGoldenCookieState } from '../../Main/VariablesAndData';
 
 /**
@@ -18,7 +17,10 @@ export function CreateFavicon() {
  * By relying on CM.Cache.spawnedGoldenShimmer it only changes for non-user spawned cookie
  */
 export function UpdateFavicon() {
-  if (CMOptions.Favicon === 1 && LastGoldenCookieState > 0) {
+  if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Favicon === 1 &&
+    LastGoldenCookieState > 0
+  ) {
     if (CacheSpawnedGoldenShimmer.wrath)
       l('CMFavicon').href =
         'https://CookieMonsterTeam.github.io/CookieMonster/favicon/wrathCookie.ico';

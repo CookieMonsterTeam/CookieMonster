@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import { isInitializing } from '../../InitSaveLoad/Variables';
 
 /**
@@ -11,11 +10,20 @@ import { isInitializing } from '../../InitSaveLoad/Variables';
  */
 export default function PlaySound(url, sndConfig, volConfig, forced) {
   // The arguments check makes the sound not play upon initialization of the mod
-  if ((CMOptions[sndConfig] === 1 || forced) && isInitializing === false) {
+  if (
+    (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[sndConfig] === 1 ||
+      forced) &&
+    isInitializing === false
+  ) {
     // eslint-disable-next-line new-cap
     const sound = new Audio(url);
-    if (CMOptions.GeneralSound) sound.volume = (CMOptions[volConfig] / 100) * (Game.volume / 100);
-    else sound.volume = CMOptions[volConfig] / 100;
+    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.GeneralSound)
+      sound.volume =
+        (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[volConfig] / 100) *
+        (Game.volume / 100);
+    else
+      sound.volume =
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[volConfig] / 100;
     sound.play();
   }
 }

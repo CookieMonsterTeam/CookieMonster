@@ -1,13 +1,12 @@
 import { UpdateBotBar } from '../../Disp/InfoBars/BottomBar';
 import { UpdateBotTimerBarPosition } from '../SpecificToggles';
-import { CMOptions } from '../VariablesAndData';
 
 /**
  * This function toggle the bottom bar
- * It is called by CM.Disp.UpdateAscendState() and a change in CMOptions.BotBar
+ * It is called by CM.Disp.UpdateAscendState() and a change in Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.BotBar
  */
 export default function ToggleBotBar() {
-  if (CMOptions.BotBar === 1) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.BotBar === 1) {
     l('CMBotBar').style.display = '';
     UpdateBotBar();
   } else {

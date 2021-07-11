@@ -1,5 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
-
 /**
  * This function updates the location of the tooltip
  * It is called by Game.tooltip.update() because of CM.Main.ReplaceNative()
@@ -8,8 +6,8 @@ export default function UpdateTooltipLocation() {
   if (Game.tooltip.origin === 'store') {
     let warnOffset = 0;
     if (
-      CMOptions.ToolWarnLucky === 1 &&
-      CMOptions.ToolWarnPos === 1 &&
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ToolWarnLucky === 1 &&
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ToolWarnPos === 1 &&
       l('CMDispTooltipWarningParent') !== null
     ) {
       warnOffset = l('CMDispTooltipWarningParent').clientHeight - 4;

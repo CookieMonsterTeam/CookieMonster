@@ -2,7 +2,6 @@ import { before, beforeEach, describe, it } from 'mocha';
 import { assert } from 'chai';
 import { l } from '../../GlobalsForTesting';
 
-import { CMOptions } from '../../../src/Config/VariablesAndData';
 import ToggleUpgradeBarFixedPos from '../../../src/Config/Toggles/ToggleUpgradeBarFixedPos';
 
 describe('ToggleUpgradeBarFixedPos', () => {
@@ -15,7 +14,7 @@ describe('ToggleUpgradeBarFixedPos', () => {
 
   describe('UpgradeBarFixedPos = 0', () => {
     before(() => {
-      CMOptions.UpgradeBarFixedPos = 0;
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.UpgradeBarFixedPos = 0;
     });
     it('Toggle style correctly', () => {
       assert.equal(domids.CMUpgradeBar.style.position, ''); // eslint-disable-line no-undef
@@ -23,7 +22,7 @@ describe('ToggleUpgradeBarFixedPos', () => {
   });
   describe('UpgradeBarFixedPos = 1', () => {
     before(() => {
-      CMOptions.UpgradeBarFixedPos = 1;
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.UpgradeBarFixedPos = 1;
     });
     it('Toggle style correctly', () => {
       assert.equal(domids.CMUpgradeBar.style.position, 'sticky'); // eslint-disable-line no-undef

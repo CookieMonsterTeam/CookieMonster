@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import Flash from '../../Disp/Notifications/Flash';
 import CreateNotification from '../../Disp/Notifications/Notification';
 import PlaySound from '../../Disp/Notifications/Sound';
@@ -9,13 +8,21 @@ import { LastMagicBarFull } from '../VariablesAndData';
  * It is called by CM.Main.Loop
  */
 export default function CheckMagicMeter() {
-  if (Game.Objects['Wizard tower'].minigameLoaded && CMOptions.GrimoireBar === 1) {
+  if (
+    Game.Objects['Wizard tower'].minigameLoaded &&
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.GrimoireBar === 1
+  ) {
     const { minigame } = Game.Objects['Wizard tower'];
     if (minigame.magic < minigame.magicM) LastMagicBarFull = false;
     else if (!LastMagicBarFull) {
       LastMagicBarFull = true;
       Flash(3, 'MagicFlash', false);
-      PlaySound(CMOptions.MagicSoundURL, 'MagicSound', 'MagicVolume', false);
+      PlaySound(
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.MagicSoundURL,
+        'MagicSound',
+        'MagicVolume',
+        false,
+      );
       CreateNotification(
         'MagicNotification',
         'Magic Meter full',

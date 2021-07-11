@@ -3,7 +3,6 @@ import {
   CacheLastHeavenlyChips,
   CacheTimeTillNextPrestige,
 } from '../../Cache/VariablesAndData';
-import { CMOptions } from '../../Config/VariablesAndData';
 import Beautify from '../BeautifyAndFormatting/Beautify';
 
 /**
@@ -45,7 +44,7 @@ export default function ReplaceAscendTooltip() {
   str += '<div class="line"></div>';
   str += `You need <b>${Beautify(cookiesToNext)} more cookies</b> for the next level.<br>`;
   str += `${
-    CMOptions.TooltipAscendButton
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipAscendButton
       ? `<div class='line'></div>It takes ${CacheTimeTillNextPrestige} to reach the next level and you were making ${Beautify(
           CacheHCPerSecond,
           2,

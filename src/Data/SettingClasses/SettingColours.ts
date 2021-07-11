@@ -4,8 +4,8 @@ import Setting from './BaseSetting';
 export default class SettingColours extends Setting {
   desc: string;
 
-  constructor(type: string, group: string, desc: string) {
-    super(type, group);
+  constructor(defaultValue: string | number,type: string, group: string, desc: string) {
+    super(defaultValue, type, group);
     this.desc = desc;
   }
 }

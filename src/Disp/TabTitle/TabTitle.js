@@ -1,7 +1,7 @@
 /** Functions related to updating the tab in the browser's tab-bar */
 
 import { CacheSeasonPopShimmer, CacheSpawnedGoldenShimmer } from '../../Cache/VariablesAndData';
-import { CMOptions } from '../../Config/VariablesAndData';
+
 import { LastSeasonPopupState, LastTickerFortuneState } from '../../Main/VariablesAndData';
 import { Title } from '../VariablesAndData';
 
@@ -10,9 +10,12 @@ import { Title } from '../VariablesAndData';
  * It is called on every loop by Game.Logic() which also sets CM.Disp.Title to Game.cookies
  */
 export default function UpdateTitle() {
-  if (Game.OnAscend || CMOptions.Title === 0) {
+  if (
+    Game.OnAscend ||
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Title === 0
+  ) {
     document.title = Title;
-  } else if (CMOptions.Title === 1) {
+  } else if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Title === 1) {
     let addFC = false;
     let addSP = false;
     let titleGC;
@@ -50,7 +53,7 @@ export default function UpdateTitle() {
       str = str.substring(str.lastIndexOf(']') + 1);
     }
     document.title = `${titleGC + (addFC ? titleFC : '') + (addSP ? titleSP : '')} ${str}`;
-  } else if (CMOptions.Title === 2) {
+  } else if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Title === 2) {
     let str = '';
     let spawn = false;
     if (CacheSpawnedGoldenShimmer) {

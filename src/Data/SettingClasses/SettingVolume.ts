@@ -6,8 +6,8 @@ export default class SettingVolume extends Setting {
 
   desc: string;
 
-  constructor(type: string, group: string, label: string[], desc: string) {
-    super(type, group);
+  constructor(defaultValue: string | number,type: string, group: string, label: string[], desc: string) {
+    super(defaultValue, type, group);
     this.label = label;
     this.desc = desc;
     for (let i = 0; i < 101; i++) {

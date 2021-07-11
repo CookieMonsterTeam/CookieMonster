@@ -1,5 +1,4 @@
 import { CacheWrinklersFattest, CacheWrinklersTotal } from '../../Cache/VariablesAndData';
-import { CMOptions } from '../../Config/VariablesAndData';
 
 /**
  * This function returns the total amount stored in the Wrinkler Bank
@@ -7,10 +6,10 @@ import { CMOptions } from '../../Config/VariablesAndData';
  * @returns	{number}	0 or the amount of cookies stored (CM.Cache.WrinklersTotal)
  */
 export default function GetWrinkConfigBank() {
-  if (CMOptions.CalcWrink === 1) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.CalcWrink === 1) {
     return CacheWrinklersTotal;
   }
-  if (CMOptions.CalcWrink === 2) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.CalcWrink === 2) {
     return CacheWrinklersFattest[0];
   }
   return 0;

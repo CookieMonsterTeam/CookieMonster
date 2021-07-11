@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import Flash from '../../Disp/Notifications/Flash';
 import CreateNotification from '../../Disp/Notifications/Notification';
 import PlaySound from '../../Disp/Notifications/Sound';
@@ -16,17 +15,36 @@ export default function CheckWrinklerCount() {
     });
     if (CurrentWrinklers > LastWrinklerCount) {
       LastWrinklerCount = CurrentWrinklers;
-      if (CurrentWrinklers === Game.getWrinklersMax() && CMOptions.WrinklerMaxFlash) {
+      if (
+        CurrentWrinklers === Game.getWrinklersMax() &&
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerMaxFlash
+      ) {
         Flash(3, 'WrinklerMaxFlash', false);
       } else {
         Flash(3, 'WrinklerFlash', false);
       }
-      if (CurrentWrinklers === Game.getWrinklersMax() && CMOptions.WrinklerMaxSound) {
-        PlaySound(CMOptions.WrinklerMaxSoundURL, 'WrinklerMaxSound', 'WrinklerMaxVolume', false);
+      if (
+        CurrentWrinklers === Game.getWrinklersMax() &&
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerMaxSound
+      ) {
+        PlaySound(
+          Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerMaxSoundURL,
+          'WrinklerMaxSound',
+          'WrinklerMaxVolume',
+          false,
+        );
       } else {
-        PlaySound(CMOptions.WrinklerSoundURL, 'WrinklerSound', 'WrinklerVolume', false);
+        PlaySound(
+          Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerSoundURL,
+          'WrinklerSound',
+          'WrinklerVolume',
+          false,
+        );
       }
-      if (CurrentWrinklers === Game.getWrinklersMax() && CMOptions.WrinklerMaxNotification) {
+      if (
+        CurrentWrinklers === Game.getWrinklersMax() &&
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerMaxNotification
+      ) {
         CreateNotification(
           'WrinklerMaxNotification',
           'Maximum Wrinklers Reached',

@@ -1,5 +1,4 @@
 import ToggleWrinklerButtons from '../Config/Toggles/ToggleWrinklerButtons';
-import { CMOptions } from '../Config/VariablesAndData';
 import Beautify from './BeautifyAndFormatting/Beautify';
 import UpdateBuildings from './BuildingsUpgrades/Buildings';
 import UpdateUpgradeSectionsHeight from './BuildingsUpgrades/UpdateUpgradeSectionsHeight';
@@ -20,7 +19,7 @@ export default function CMDrawHook() {
     Game.prefs.autosave &&
     Game.drawT % 10 === 0 && // with autosave ON and every 10 ticks
     Game.onMenu === 'stats' &&
-    CMOptions.Stats // while being on the stats menu only
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Stats // while being on the stats menu only
   ) {
     const timer = document.getElementById('CMStatsAutosaveTimer');
     if (timer) {
@@ -53,7 +52,7 @@ export default function CMDrawHook() {
   ToggleWrinklerButtons();
 
   // Replace Cookies counter because Orteil uses very weird code to "pad" it...
-  if (CMOptions.Scale) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Scale) {
     let str = l('cookies').innerHTML.replace(/.*(?=<br>)/i, Beautify(Game.cookies));
     if (Game.prefs.monospace) str = `<span class="monospace">${str}</span>`;
     l('cookies').innerHTML = str;

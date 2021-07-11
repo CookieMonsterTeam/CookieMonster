@@ -5,7 +5,6 @@ import {
   CacheObjects100,
   CacheObjectsNextAchievement,
 } from '../../Cache/VariablesAndData';
-import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingSell from '../../Sim/SimulationEvents/SellBuilding';
 import Beautify from '../BeautifyAndFormatting/Beautify';
 import { ColoursOrdering, LastTargetBuildings } from '../VariablesAndData';
@@ -36,11 +35,15 @@ export default function UpdateBuildings() {
   l(`storeBulk100`).style.removeProperty('color');
 
   if (Game.buyMode === 1) {
-    if (CMOptions.BuildColour === 1) {
+    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.BuildColour === 1) {
       Object.keys(target).forEach((i) => {
-        l(`productPrice${Game.Objects[i].id}`).style.color = CMOptions[`Colour${target[i].color}`];
+        l(`productPrice${Game.Objects[i].id}`).style.color =
+          Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[
+            `Colour${target[i].color}`
+          ];
       });
-      l(`storeBulk${CacheMinPPBulk}`).style.color = CMOptions.ColourGreen;
+      l(`storeBulk${CacheMinPPBulk}`).style.color =
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ColourGreen;
     } else {
       Object.keys(Game.Objects).forEach((i) => {
         l(`productPrice${Game.Objects[i].id}`).style.removeProperty('color');
@@ -67,8 +70,11 @@ export default function UpdateBuildings() {
   // Build array of pointers and sort according to the user's configured sort option.
   // This regulates sorting of buildings.
   let arr;
-  if (Game.buyMode !== 1 || !CMOptions.SortBuildings) {
-    arr = Object.keys(CacheObjects1).map(k => {
+  if (
+    Game.buyMode !== 1 ||
+    !Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.SortBuildings
+  ) {
+    arr = Object.keys(CacheObjects1).map((k) => {
       const o = {};
       o.name = k;
       o.id = Game.Objects[k].id;
@@ -76,8 +82,10 @@ export default function UpdateBuildings() {
     });
     // Sort using default order.
     arr.sort((a, b) => a.id - b.id);
-  } else if (CMOptions.SortBuildings === 1) {
-    arr = Object.keys(CacheObjects1).map(k => {
+  } else if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.SortBuildings === 1
+  ) {
+    arr = Object.keys(CacheObjects1).map((k) => {
       const o = {};
       o.name = k;
       o.pp = CacheObjects1[k].pp;
@@ -88,10 +96,12 @@ export default function UpdateBuildings() {
     arr.sort((a, b) =>
       ColoursOrdering.indexOf(a.color) === ColoursOrdering.indexOf(b.color)
         ? a.pp - b.pp
-        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color)
+        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color),
     );
-  } else if (CMOptions.SortBuildings === 2) {
-    arr = Object.keys(target).map(k => {
+  } else if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.SortBuildings === 2
+  ) {
+    arr = Object.keys(target).map((k) => {
       const o = {};
       o.name = k;
       o.pp = target[k].pp;
@@ -102,10 +112,12 @@ export default function UpdateBuildings() {
     arr.sort((a, b) =>
       ColoursOrdering.indexOf(a.color) === ColoursOrdering.indexOf(b.color)
         ? a.pp - b.pp
-        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color)
+        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color),
     );
-  } else if (CMOptions.SortBuildings === 3) {
-    arr = Object.keys(CacheObjectsNextAchievement).map(k => {
+  } else if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.SortBuildings === 3
+  ) {
+    arr = Object.keys(CacheObjectsNextAchievement).map((k) => {
       const o = {};
       o.name = k;
       o.id = Game.Objects[k].id;
@@ -118,9 +130,10 @@ export default function UpdateBuildings() {
     // Sort by price until next achievement.
     // Buildings that aren't within 100 of an achievement are placed at the end, still in
     // default order relative to each other because sort() is guaranteed stable.
-    arr.sort((a, b) =>
-      (a.amountUntilNext !== 101 ? a.priceUntilNext : Infinity) -
-      (b.amountUntilNext !== 101 ? b.priceUntilNext : Infinity)
+    arr.sort(
+      (a, b) =>
+        (a.amountUntilNext !== 101 ? a.priceUntilNext : Infinity) -
+        (b.amountUntilNext !== 101 ? b.priceUntilNext : Infinity),
     );
   }
 

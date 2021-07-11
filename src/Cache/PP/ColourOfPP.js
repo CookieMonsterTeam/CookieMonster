@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import GetCPS from '../../Disp/HelperFunctions/GetCPS';
 import {
   ColourBlue,
@@ -30,11 +29,21 @@ export default function ColourOfPP(me, price) {
   else color = ColourPurple;
 
   // Colour based on price in terms of CPS
-  if (Number(CMOptions.PPSecondsLowerLimit) !== 0) {
-    if (price / GetCPS() < Number(CMOptions.PPSecondsLowerLimit)) color = ColourBlue;
+  if (
+    Number(
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPSecondsLowerLimit,
+    ) !== 0
+  ) {
+    if (
+      price / GetCPS() <
+      Number(
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPSecondsLowerLimit,
+      )
+    )
+      color = ColourBlue;
   }
   // Colour based on being able to purchase
-  if (CMOptions.PPOnlyConsiderBuyable) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPOnlyConsiderBuyable) {
     if (price - Game.cookies > 0) color = ColourRed;
   }
   return color;

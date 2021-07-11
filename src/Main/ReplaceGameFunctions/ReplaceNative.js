@@ -1,5 +1,5 @@
 import jscolor from '@eastdesire/jscolor';
-import { CMOptions } from '../../Config/VariablesAndData';
+
 import CMBeautify from '../../Disp/BeautifyAndFormatting/Beautify';
 import FormatTime from '../../Disp/BeautifyAndFormatting/FormatTime';
 import { AddAuraInfo, AddDragonLevelUpTooltip } from '../../Disp/Dragon/Dragon';
@@ -86,7 +86,7 @@ export default function ReplaceNative() {
    */
   Game.ClickProduct = function (what) {
     if (
-      !CMOptions.BulkBuyBlock ||
+      !Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.BulkBuyBlock ||
       Game.ObjectsById[what].bulkPrice < Game.cookies ||
       Game.buyMode === -1
     ) {

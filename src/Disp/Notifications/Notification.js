@@ -1,6 +1,3 @@
-/** Functions related to the flashes/sound/notifications */
-
-import { CMOptions } from '../../Config/VariablesAndData';
 import { isInitializing } from '../../InitSaveLoad/Variables';
 
 /**
@@ -13,7 +10,7 @@ import { isInitializing } from '../../InitSaveLoad/Variables';
 export default function CreateNotification(notifyConfig, title, message) {
   // The arguments check makes the sound not play upon initialization of the mod
   if (
-    CMOptions[notifyConfig] === 1 &&
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[notifyConfig] === 1 &&
     document.visibilityState === 'hidden' &&
     isInitializing === false
   ) {
