@@ -1,7 +1,6 @@
 /** Functions related to the Bottom Bar */
 
 import { CacheObjects1, CacheObjects10, CacheObjects100 } from '../../Cache/VariablesAndData';
-import { CMOptions } from '../../Config/VariablesAndData';
 import { VersionMajor, VersionMinor } from '../../Data/Moddata.ts';
 import Beautify from '../BeautifyAndFormatting/Beautify';
 import FormatTime from '../BeautifyAndFormatting/FormatTime';
@@ -62,7 +61,11 @@ export function CreateBotBar() {
  * This function updates the bonus-, pp-, and time-rows in the the bottom bar
  */
 export function UpdateBotBar() {
-  if (CMOptions.BotBar === 1 && CacheObjects1 && Game.buyMode === 1) {
+  if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.BotBar === 1 &&
+    CacheObjects1 &&
+    Game.buyMode === 1
+  ) {
     let count = 0;
     Object.keys(CacheObjects1).forEach((i) => {
       let target = Game.buyBulk;
@@ -85,7 +88,8 @@ export function UpdateBotBar() {
       l('CMBotBar').firstChild.firstChild.childNodes[2].childNodes[count].className =
         ColourTextPre + target[i].color;
       let PPString;
-      if (CMOptions.PPDisplayTime) PPString = FormatTime(Math.round(target[i].pp));
+      if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPDisplayTime)
+        PPString = FormatTime(Math.round(target[i].pp));
       else PPString = Beautify(Math.round(target[i].pp), 2);
       l('CMBotBar').firstChild.firstChild.childNodes[2].childNodes[count].textContent = PPString;
       const timeColour = GetTimeColour(

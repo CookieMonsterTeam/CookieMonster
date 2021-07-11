@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import Flash from '../../Disp/Notifications/Flash';
 import PlaySound from '../../Disp/Notifications/Sound';
 import { LastGardenNextStep } from '../VariablesAndData';
@@ -13,7 +12,12 @@ export default function CheckGardenTick() {
   ) {
     if (LastGardenNextStep !== 0 && LastGardenNextStep < Date.now()) {
       Flash(3, 'GardFlash', false);
-      PlaySound(CMOptions.GardSoundURL, 'GardSound', 'GardVolume', false);
+      PlaySound(
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.GardSoundURL,
+        'GardSound',
+        'GardVolume',
+        false,
+      );
     }
     LastGardenNextStep = Game.Objects.Farm.minigame.nextStep;
   }

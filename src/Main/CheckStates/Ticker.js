@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import Flash from '../../Disp/Notifications/Flash';
 import CreateNotification from '../../Disp/Notifications/Notification';
 import PlaySound from '../../Disp/Notifications/Sound';
@@ -13,7 +12,12 @@ export default function CheckTickerFortune() {
     LastTickerFortuneState = Game.TickerEffect && Game.TickerEffect.type === 'fortune';
     if (LastTickerFortuneState) {
       Flash(3, 'FortuneFlash', false);
-      PlaySound(CMOptions.FortuneSoundURL, 'FortuneSound', 'FortuneVolume', false);
+      PlaySound(
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.FortuneSoundURL,
+        'FortuneSound',
+        'FortuneVolume',
+        false,
+      );
       CreateNotification(
         'FortuneNotification',
         'Fortune Cookie found',

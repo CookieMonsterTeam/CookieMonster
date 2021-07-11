@@ -1,6 +1,4 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import AddMenuStats from './Statistics/AddStatsPage';
-import AddMenuInfo from './Info/InfoPage';
 import AddMenuPref from './Settings/SettingsPage';
 
 /**
@@ -14,12 +12,9 @@ export default function AddMenu() {
     title.textContent = 'Cookie Monster Settings';
     AddMenuPref(title);
   } else if (Game.onMenu === 'stats') {
-    if (CMOptions.Stats) {
+    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Stats) {
       title.textContent = 'Cookie Monster Statistics';
       AddMenuStats(title);
     }
-  } else if (Game.onMenu === 'log') {
-    title.textContent = 'Cookie Monster '; // To create space between name and button
-    AddMenuInfo(title);
   }
 }

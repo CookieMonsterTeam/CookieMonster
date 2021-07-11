@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import { SimObjects } from '../../Sim/VariablesAndData';
 import Beautify from '../BeautifyAndFormatting/Beautify';
 import {
@@ -13,7 +12,10 @@ import {
  * As wrinklers are not appended to the DOM we us a different system than for other tooltips
  */
 export function CheckWrinklerTooltip() {
-  if (CMOptions.TooltipWrink === 1 && TooltipWrinklerArea === 1) {
+  if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipWrink === 1 &&
+    TooltipWrinklerArea === 1
+  ) {
     // Latter is set by CM.Main.AddWrinklerAreaDetect
     let showingTooltip = false;
     Object.keys(Game.wrinklers).forEach((i) => {
@@ -50,7 +52,10 @@ export function CheckWrinklerTooltip() {
  * As wrinklers are not appended to the DOM we us a different system than for other tooltips
  */
 export function UpdateWrinklerTooltip() {
-  if (CMOptions.TooltipWrink === 1 && l('CMTooltipWrinkler') !== null) {
+  if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipWrink === 1 &&
+    l('CMTooltipWrinkler') !== null
+  ) {
     let { sucked } = Game.wrinklers[TooltipWrinkler];
     let toSuck = 1.1;
     if (Game.Has('Sacrilegious corruption')) toSuck *= 1.05;

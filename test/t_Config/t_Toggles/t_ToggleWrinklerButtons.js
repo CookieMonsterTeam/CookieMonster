@@ -2,7 +2,6 @@ import { before, beforeEach, describe, it } from 'mocha';
 import { assert } from 'chai';
 import { l, Game } from '../../GlobalsForTesting';
 
-import { CMOptions } from '../../../src/Config/VariablesAndData';
 import ToggleWrinklerButtons from '../../../src/Config/Toggles/ToggleWrinklerButtons';
 
 describe('ToggleWrinklerButtons', () => {
@@ -16,7 +15,7 @@ describe('ToggleWrinklerButtons', () => {
 
   describe('WrinklerButtons = 0', () => {
     before(() => {
-      CMOptions.WrinklerButtons = 0;
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerButtons = 0;
     });
     describe('Game.elderWrath = 0', () => {
       before(() => {
@@ -39,7 +38,7 @@ describe('ToggleWrinklerButtons', () => {
   });
   describe('WrinklerButtons = 1', () => {
     before(() => {
-      CMOptions.WrinklerButtons = 1;
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerButtons = 1;
     });
     describe('Game.elderWrath = 0', () => {
       before(() => {

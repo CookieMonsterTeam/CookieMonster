@@ -1,13 +1,12 @@
 import { CacheGoldenShimmersByID } from '../../Cache/VariablesAndData';
 import { GCTimers } from '../../Disp/VariablesAndData';
-import { CMOptions } from '../VariablesAndData';
 
 /**
  * This function toggles GC Timers are visible
  * It is called by a change in CM.Options.GCTimer
  */
 export default function ToggleGCTimer() {
-  if (CMOptions.GCTimer === 1) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.GCTimer === 1) {
     Object.keys(GCTimers).forEach((i) => {
       GCTimers[i].style.display = 'block';
       GCTimers[i].style.left = CacheGoldenShimmersByID[i].l.style.left;

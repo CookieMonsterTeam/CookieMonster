@@ -1,3 +1,4 @@
+import { initFunctions } from '@cookiemonsterteam/cookiemonsterframework';
 import { VersionMajor, VersionMinor } from '../Data/Moddata.ts';
 import CMDrawHook from '../Disp/DrawHook';
 import CMClickHook from '../Main/ClickHook';
@@ -14,6 +15,11 @@ import { isInitializing } from './Variables'; // eslint-disable-line no-unused-v
 export default function init() {
   isInitializing = true;
   let proceed = true;
+
+  // Load Cookie Monster Mod Framework and register mod
+  initFunctions.initModFramework();
+  initFunctions.registerMod('cookieMonsterMod');
+
   if (Game.version !== Number(VersionMajor)) {
     // eslint-disable-next-line no-restricted-globals, no-alert
     proceed = confirm(

@@ -1,6 +1,5 @@
 import UpdateTooltips from './UpdateTooltips';
 import { SimpleTooltipElements, TooltipName, TooltipType } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
-import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 import GetTimeColour from '../BeautifyAndFormatting/GetTimeColour';
 import Beautify from '../BeautifyAndFormatting/Beautify';
@@ -40,7 +39,7 @@ export function CreateTooltip(type, name) {
     // Buildings
     l('tooltip').innerHTML = Game.Objects[name].tooltip();
     // Adds amortization info to the list of info per building
-    if (CMOptions.TooltipAmor === 1) {
+    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipAmor === 1) {
       const buildPrice = BuildingGetPrice(
         Game.Objects[name],
         Game.Objects[name].basePrice,

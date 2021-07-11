@@ -1,5 +1,4 @@
 import { ToggleHeader } from '../../../Config/ToggleSetting';
-import { CMOptions } from '../../../Config/VariablesAndData';
 
 /**
  * This function creates a header-object for the options page
@@ -25,7 +24,9 @@ export default function CreatePrefHeader(config, text) {
   span.style.color = 'black';
   span.style.fontSize = '13px';
   span.style.verticalAlign = 'middle';
-  span.textContent = CMOptions.Header[config] ? '-' : '+';
+  span.textContent = Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.headers[config]
+    ? '-'
+    : '+';
   span.onclick = function () {
     ToggleHeader(config);
     Game.UpdateMenu();

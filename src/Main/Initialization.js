@@ -1,6 +1,5 @@
 import InitCache from '../Cache/CacheInit';
 import { CacheStatsCookies } from '../Cache/Stats/Stats';
-import { LoadConfig } from '../Config/SaveLoadReload/SaveLoadReloadSettings';
 import { VersionMajor, VersionMinor } from '../Data/Moddata.ts';
 import CreateUpgradeBar from '../Disp/BuildingsUpgrades/UpgradeBar';
 import { CreateBotBar } from '../Disp/InfoBars/BottomBar';
@@ -20,6 +19,7 @@ import ReplaceNative from './ReplaceGameFunctions/ReplaceNative';
 import { LastModCount } from './VariablesAndData'; // eslint-disable-line no-unused-vars
 import AddWrinklerAreaDetect from './WrinklerArea/AddDetectArea';
 import CreateBuildingLockButtons from '../Disp/Buildings/CreateBuildingLockButtons';
+import createMenuInfo from '../Disp/MenuSections/createMenuInfo';
 
 /**
  * Initialization loop of Cookie Monster
@@ -27,6 +27,9 @@ import CreateBuildingLockButtons from '../Disp/Buildings/CreateBuildingLockButto
 export default function InitializeCookieMonster() {
   // Create global data object
   window.CookieMonsterData = {};
+
+  // Register listeners in Cookie Monster Mod Framework
+  Game.mods.cookieMonsterFramework.listeners.infoMenu.push(createMenuInfo);
 
   InitData();
   CacheStatsCookies();
@@ -58,7 +61,6 @@ export default function InitializeCookieMonster() {
   ReplaceNativeGrimoire();
   Game.CalculateGains();
 
-  LoadConfig();
   CMLastAscendState = Game.OnAscend;
 
   if (Game.prefs.popups)

@@ -8,7 +8,6 @@ import ToggleToolWarnPos from '../Config/Toggles/ToggleToolWarnPos';
 import ToggleUpgradeBarAndColour from '../Config/Toggles/ToggleUpgradeBarAndColour';
 import ToggleUpgradeBarFixedPos from '../Config/Toggles/ToggleUpgradeBarFixedPos';
 import ToggleWrinklerButtons from '../Config/Toggles/ToggleWrinklerButtons';
-import { CMOptions } from '../Config/VariablesAndData';
 import UpdateBuildings from '../Disp/BuildingsUpgrades/Buildings';
 import UpdateUpgradeSectionsHeight from '../Disp/BuildingsUpgrades/UpdateUpgradeSectionsHeight';
 import UpdateUpgrades from '../Disp/BuildingsUpgrades/Upgrades';
@@ -21,9 +20,10 @@ import SettingStandard from './SettingClasses/SettingStandard.ts';
 import SettingVolume from './SettingClasses/SettingVolume.ts';
 
 /** This includes all options of CookieMonster and their relevant data */
-const Config = {
+const settings = {
   // Calculation
   CPSMode: new SettingStandard(
+    1,
     'bool',
     'Calculation',
     ['Current cookies per second', 'Average cookies per second'],
@@ -31,6 +31,7 @@ const Config = {
     false,
   ),
   AvgCPSHist: new SettingStandard(
+    3,
     'bool',
     'Calculation',
     [
@@ -47,6 +48,7 @@ const Config = {
     false,
   ),
   AvgClicksHist: new SettingStandard(
+    0,
     'bool',
     'Calculation',
     [
@@ -60,6 +62,7 @@ const Config = {
     false,
   ),
   CalcWrink: new SettingStandard(
+    0,
     'bool',
     'Calculation',
     [
@@ -76,6 +79,7 @@ const Config = {
 
   // Notation
   Scale: new SettingStandard(
+    2,
     'bool',
     'Notation',
     [
@@ -93,6 +97,7 @@ const Config = {
     },
   ),
   ScaleDecimals: new SettingStandard(
+    2,
     'bool',
     'Notation',
     ['1 decimals', '2 decimals', '3 decimals'],
@@ -103,6 +108,7 @@ const Config = {
     },
   ),
   ScaleSeparator: new SettingStandard(
+    0,
     'bool',
     'Notation',
     ['. for decimals (standard)', '. for thousands'],
@@ -113,6 +119,7 @@ const Config = {
     },
   ),
   ScaleCutoff: new SettingInputNumber(
+    999999,
     'numscale',
     'Notation',
     'Notation cut-off point: ',
@@ -121,6 +128,7 @@ const Config = {
     999999999,
   ),
   TimeFormat: new SettingStandard(
+    0,
     'bool',
     'Notation',
     ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'],
@@ -128,6 +136,7 @@ const Config = {
     false,
   ),
   DetailedTime: new SettingStandard(
+    1,
     'bool',
     'Notation',
     ['Detailed time OFF', 'Detailed time ON'],
@@ -138,6 +147,7 @@ const Config = {
     },
   ),
   PPDisplayTime: new SettingStandard(
+    0,
     'bool',
     'Notation',
     ['PP as value (standard)', 'PP as time unit'],
@@ -147,6 +157,7 @@ const Config = {
 
   // Colours
   BuildColour: new SettingStandard(
+    1,
     'bool',
     'Colours',
     ['Building colours OFF', 'Building colours ON'],
@@ -157,6 +168,7 @@ const Config = {
     },
   ),
   PPOnlyConsiderBuyable: new SettingStandard(
+    0,
     'bool',
     'Colours',
     ["Don't ignore non-buyable", 'Ignore non-buyable'],
@@ -164,6 +176,7 @@ const Config = {
     true,
   ),
   PPExcludeTop: new SettingStandard(
+    0,
     'bool',
     'Colours',
     [
@@ -176,6 +189,7 @@ const Config = {
     true,
   ),
   PPRigidelMode: new SettingStandard(
+    0,
     'bool',
     'Colours',
     ['Rigidel mode OFF', 'Rigidel mode ON'],
@@ -183,6 +197,7 @@ const Config = {
     true,
   ),
   PPSecondsLowerLimit: new SettingInputNumber(
+    0,
     'numscale',
     'Colours',
     'Lower limit for PP (in seconds): ',
@@ -191,46 +206,55 @@ const Config = {
     Infinity,
   ),
   ColourBlue: new SettingColours(
+    '#4bb8f0',
     'colour',
     'Colours',
     'Standard colour is blue. Used to show upgrades better than best PP building, for Click Frenzy bar, and for various labels',
   ),
   ColourGreen: new SettingColours(
+    '#00ff00',
     'colour',
     'Colours',
     'Standard colour is green. Used to show best PP building, for Blood Frenzy bar, and for various labels',
   ),
   ColourYellow: new SettingColours(
+    '#ffff00',
     'colour',
     'Colours',
     'Standard colour is yellow. Used to show buildings within the top 10 of PP, for Frenzy bar, and for various labels',
   ),
   ColourOrange: new SettingColours(
+    '#ff7f00',
     'colour',
     'Colours',
     'Standard colour is orange. Used to show buildings within the top 20 of PP, for Next Reindeer bar, and for various labels',
   ),
   ColourRed: new SettingColours(
+    '#ff0000',
     'colour',
     'Colours',
     'Standard colour is Red. Used to show buildings within the top 30 of PP, for Clot bar, and for various labels',
   ),
   ColourPurple: new SettingColours(
+    '#ff00ff',
     'colour',
     'Colours',
     'Standard colour is purple. Used to show buildings outside of the top 30 of PP, for Next Cookie bar, and for various labels',
   ),
   ColourGray: new SettingColours(
+    '#b3b3b3',
     'colour',
     'Colours',
     'Standard colour is gray. Used to show negative or infinity PP, and for Next Cookie/Next Reindeer bar',
   ),
   ColourPink: new SettingColours(
+    '#ff1493',
     'colour',
     'Colours',
     'Standard colour is pink. Used for Dragonflight bar',
   ),
   ColourBrown: new SettingColours(
+    '#8b4513',
     'colour',
     'Colours',
     'Standard colour is brown. Used for Dragon Harvest bar',
@@ -238,6 +262,7 @@ const Config = {
 
   // BarsDisplay
   BotBar: new SettingStandard(
+    1,
     'bool',
     'BarsDisplay',
     ['Bottom bar OFF', 'Bottom bar ON'],
@@ -248,6 +273,7 @@ const Config = {
     },
   ),
   TimerBar: new SettingStandard(
+    1,
     'bool',
     'BarsDisplay',
     ['Timer bar OFF', 'Timer bar ON'],
@@ -258,6 +284,7 @@ const Config = {
     },
   ),
   TimerBarPos: new SettingStandard(
+    0,
     'bool',
     'BarsDisplay',
     ['Timer bar position (top left)', 'Timer bar position (bottom)'],
@@ -268,6 +295,7 @@ const Config = {
     },
   ),
   TimerBarOverlay: new SettingStandard(
+    2,
     'bool',
     'BarsDisplay',
     ['Timer bar overlay OFF', 'Timer bar overlay only seconds', 'Timer bar overlay full'],
@@ -275,6 +303,7 @@ const Config = {
     true,
   ),
   AutosaveTimerBar: new SettingStandard(
+    0,
     'bool',
     'BarsDisplay',
     ['Autosave timer bar OFF', 'Autosave timer bar ON'],
@@ -282,6 +311,7 @@ const Config = {
     true,
   ),
   UpBarColour: new SettingStandard(
+    1,
     'bool',
     'BarsDisplay',
     ['Upgrade colours/bar OFF', 'Upgrade colours with bar ON', 'Upgrade colours without bar ON'],
@@ -292,6 +322,7 @@ const Config = {
     },
   ),
   UpgradeBarFixedPos: new SettingStandard(
+    1,
     'bool',
     'BarsDisplay',
     ['Upgrade bar fixed position OFF', 'Upgrade bar fixed position ON'],
@@ -302,6 +333,7 @@ const Config = {
     },
   ),
   SortBuildings: new SettingStandard(
+    0,
     'bool',
     'BarsDisplay',
     [
@@ -317,6 +349,7 @@ const Config = {
     },
   ),
   SortUpgrades: new SettingStandard(
+    0,
     'bool',
     'BarsDisplay',
     ['Sort upgrades: default', 'Sort upgrades: PP'],
@@ -327,6 +360,7 @@ const Config = {
     },
   ),
   UpgradesNeverCollapse: new SettingStandard(
+    0,
     'bool',
     'BarsDisplay',
     ['Upgrades always expanded OFF', 'Upgrades always expanded ON'],
@@ -337,6 +371,7 @@ const Config = {
     },
   ),
   DragonAuraInfo: new SettingStandard(
+    1,
     'bool',
     'BarsDisplay',
     ['Extra dragon aura info OFF', 'Extra dragon aura info ON'],
@@ -344,6 +379,7 @@ const Config = {
     true,
   ),
   GrimoireBar: new SettingStandard(
+    1,
     'bool',
     'BarsDisplay',
     ['Grimoire magic meter timer OFF', 'Grimoire magic meter timer ON'],
@@ -351,6 +387,7 @@ const Config = {
     true,
   ),
   GCTimer: new SettingStandard(
+    1,
     'bool',
     'BarsDisplay',
     ['Golden cookie timer OFF', 'Golden cookie timer ON'],
@@ -361,6 +398,7 @@ const Config = {
     },
   ),
   Favicon: new SettingStandard(
+    1,
     'bool',
     'BarsDisplay',
     ['Favicon OFF', 'Favicon ON'],
@@ -371,6 +409,7 @@ const Config = {
     },
   ),
   WrinklerButtons: new SettingStandard(
+    1,
     'bool',
     'BarsDisplay',
     ['Extra wrinkler buttons OFF', 'Extra wrinkler buttons ON'],
@@ -381,6 +420,7 @@ const Config = {
     },
   ),
   HideSectionsButtons: new SettingStandard(
+    0,
     'bool',
     'BarsDisplay',
     ['Hide buildings/upgrades button OFF', 'Hide buildings/upgrades button ON'],
@@ -393,6 +433,7 @@ const Config = {
 
   // Tooltip
   TooltipBuildUpgrade: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Building/upgrade tooltip information OFF', 'Building/upgrade tooltip information ON'],
@@ -400,6 +441,7 @@ const Config = {
     true,
   ),
   TooltipAmor: new SettingStandard(
+    0,
     'bool',
     'Tooltip',
     [
@@ -410,6 +452,7 @@ const Config = {
     true,
   ),
   ToolWarnLucky: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Tooltip lucky warning OFF', 'Tooltip lucky warning ON'],
@@ -417,6 +460,7 @@ const Config = {
     true,
   ),
   ToolWarnLuckyFrenzy: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Tooltip lucky frenzy warning OFF', 'Tooltip lucky frenzy warning ON'],
@@ -424,6 +468,7 @@ const Config = {
     true,
   ),
   ToolWarnConjure: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Tooltip conjure warning OFF', 'Tooltip conjure warning ON'],
@@ -431,6 +476,7 @@ const Config = {
     true,
   ),
   ToolWarnConjureFrenzy: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Tooltip conjure frenzy warning OFF', 'Tooltip conjure frenzy warning ON'],
@@ -438,6 +484,7 @@ const Config = {
     true,
   ),
   ToolWarnEdifice: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Tooltip edifice warning OFF', 'Tooltip edifice warning ON'],
@@ -445,6 +492,7 @@ const Config = {
     true,
   ),
   ToolWarnUser: new SettingInputNumber(
+    0,
     'numscale',
     'Tooltip',
     'Tooltip warning at x times CPS: ',
@@ -453,6 +501,7 @@ const Config = {
     Infinity,
   ),
   ToolWarnBon: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Calculate tooltip warning with bonus CPS OFF', 'Calculate tooltip warning with bonus CPS ON'],
@@ -460,6 +509,7 @@ const Config = {
     true,
   ),
   ToolWarnPos: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Tooltip warning position (left)', 'Tooltip warning position (bottom)'],
@@ -470,6 +520,7 @@ const Config = {
     },
   ),
   TooltipGrim: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Grimoire tooltip information OFF', 'Grimoire tooltip information ON'],
@@ -477,6 +528,7 @@ const Config = {
     true,
   ),
   TooltipWrink: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Wrinkler tooltip OFF', 'Wrinkler tooltip ON'],
@@ -484,6 +536,7 @@ const Config = {
     true,
   ),
   TooltipLump: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Sugar lump tooltip OFF', 'Sugar lump tooltip ON'],
@@ -491,6 +544,7 @@ const Config = {
     true,
   ),
   TooltipPlots: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Garden plots tooltip OFF', 'Garden plots tooltip ON'],
@@ -498,6 +552,7 @@ const Config = {
     true,
   ),
   TooltipPantheon: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Pantheon tooltip OFF', 'Pantheon tooltip ON'],
@@ -505,6 +560,7 @@ const Config = {
     true,
   ),
   TooltipAscendButton: new SettingStandard(
+    1,
     'bool',
     'Tooltip',
     ['Show Extra Info Ascend Tooltip OFF', 'Show Extra Info Ascend Tooltip ON'],
@@ -514,6 +570,7 @@ const Config = {
 
   // Statistics
   Stats: new SettingStandard(
+    1,
     'bool',
     'Statistics',
     ['Statistics OFF', 'Statistics ON'],
@@ -521,6 +578,7 @@ const Config = {
     true,
   ),
   MissingUpgrades: new SettingStandard(
+    1,
     'bool',
     'Statistics',
     ['Missing upgrades OFF', 'Missing upgrades ON'],
@@ -528,6 +586,7 @@ const Config = {
     true,
   ),
   MissingAchievements: new SettingStandard(
+    0,
     'bool',
     'Statistics',
     ['Missing Achievements OFF', 'Missing Normal Achievements ON'],
@@ -535,6 +594,7 @@ const Config = {
     true,
   ),
   UpStats: new SettingStandard(
+    1,
     'bool',
     'Statistics',
     ['Statistics update rate (default)', 'Statistics update rate (1s)'],
@@ -542,6 +602,7 @@ const Config = {
     false,
   ),
   HeavenlyChipsTarget: new SettingInputNumber(
+    1,
     'numscale',
     'Statistics',
     'Heavenly chips target: ',
@@ -550,6 +611,7 @@ const Config = {
     Infinity,
   ),
   ShowMissedGC: new SettingStandard(
+    1,
     'bool',
     'Statistics',
     ['Missed GC OFF', 'Missed GC ON'],
@@ -559,6 +621,7 @@ const Config = {
 
   // Notification
   Title: new SettingStandard(
+    1,
     'bool',
     'NotificationGeneral',
     ['Title OFF', 'Title ON', 'Title pinned tab highlight'],
@@ -566,6 +629,7 @@ const Config = {
     true,
   ),
   GeneralSound: new SettingStandard(
+    1,
     'bool',
     'NotificationGeneral',
     ['Consider game volume setting OFF', 'Consider game volume setting ON'],
@@ -573,16 +637,20 @@ const Config = {
     true,
   ),
   GCNotification: new SettingStandard(
+    0,
     'bool',
     'NotificationGC',
     ['Notification OFF', 'Notification ON'],
     'Create a notification when golden cookie spawns',
     true,
     () => {
-      CheckNotificationPermissions(CMOptions.GCNotification);
+      CheckNotificationPermissions(
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.GCNotification,
+      );
     },
   ),
   GCFlash: new SettingStandard(
+    1,
     'bool',
     'NotificationGC',
     ['Flash OFF', 'Flash ON'],
@@ -590,35 +658,42 @@ const Config = {
     true,
   ),
   ColourGCFlash: new SettingColours(
+    '#ffffff',
     'colour',
     'NotificationGC',
     'The colour of the GC flash, standard colour is white',
   ),
   GCSound: new SettingStandard(
+    1,
     'bool',
     'NotificationGC',
     ['Sound OFF', 'Sound ON'],
     'Play a sound on golden cookie',
     true,
   ),
-  GCVolume: new SettingVolume('vol', 'NotificationGC', [], 'Volume'),
+  GCVolume: new SettingVolume(100, 'vol', 'NotificationGC', [], 'Volume'),
   GCSoundURL: new SettingStandard(
+    'https://freesound.org/data/previews/66/66717_931655-lq.mp3',
     'url',
     'NotificationGC',
     'Sound URL:',
     'URL of the sound to be played when a golden cookie spawns',
   ),
   FortuneNotification: new SettingStandard(
+    0,
     'bool',
     'NotificationFC',
     ['Notification OFF', 'Notification ON'],
     'Create a notification when fortune cookie is on the ticker',
     true,
     () => {
-      CheckNotificationPermissions(CMOptions.FortuneNotification);
+      CheckNotificationPermissions(
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.FortuneNotification,
+      );
     },
   ),
   FortuneFlash: new SettingStandard(
+    1,
     'bool',
     'NotificationFC',
     ['Flash OFF', 'Flash ON'],
@@ -626,35 +701,42 @@ const Config = {
     true,
   ),
   ColourFortuneFlash: new SettingColours(
+    '#ffffff',
     'colour',
     'NotificationFC',
     'The colour of the fortune flash, standard colour is white',
   ),
   FortuneSound: new SettingStandard(
+    1,
     'bool',
     'NotificationFC',
     ['Sound OFF', 'Sound ON'],
     'Play a sound on fortune cookie spawn',
     true,
   ),
-  FortuneVolume: new SettingVolume('vol', 'NotificationFC', [], 'Volume'),
+  FortuneVolume: new SettingVolume(100, 'vol', 'NotificationFC', [], 'Volume'),
   FortuneSoundURL: new SettingStandard(
+    'https://freesound.org/data/previews/174/174027_3242494-lq.mp3',
     'url',
     'NotificationFC',
     'Sound URL:',
     'URL of the sound to be played when the ticker has a fortune cookie',
   ),
   SeaNotification: new SettingStandard(
+    0,
     'bool',
     'NotificationSea',
     ['Notification OFF', 'Notification ON'],
     'Create a notification on season popup',
     true,
     () => {
-      CheckNotificationPermissions(CMOptions.SeaNotification);
+      CheckNotificationPermissions(
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.SeaNotification,
+      );
     },
   ),
   SeaFlash: new SettingStandard(
+    1,
     'bool',
     'NotificationSea',
     ['Flash OFF', 'Flash ON'],
@@ -662,25 +744,29 @@ const Config = {
     true,
   ),
   ColourSeaFlash: new SettingColours(
+    '#ffffff',
     'colour',
     'NotificationSea',
     'The colour of the season popup flash, standard colour is white',
   ),
   SeaSound: new SettingStandard(
+    1,
     'bool',
     'NotificationSea',
     ['Sound OFF', 'Sound ON'],
     'Play a sound on season popup',
     true,
   ),
-  SeaVolume: new SettingVolume('vol', 'NotificationSea', [], 'Volume'),
+  SeaVolume: new SettingVolume(100, 'vol', 'NotificationSea', [], 'Volume'),
   SeaSoundURL: new SettingStandard(
+    'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3',
     'url',
     'NotificationSea',
     'Sound URL:',
     'URL of the sound to be played when on season popup spawns',
   ),
   GardFlash: new SettingStandard(
+    1,
     'bool',
     'NotificationGard',
     ['Garden Tick Flash OFF', 'Flash ON'],
@@ -688,35 +774,42 @@ const Config = {
     true,
   ),
   ColourGardFlash: new SettingColours(
+    '#ffffff',
     'colour',
     'NotificationGard',
     'The colour of the garden flash, standard colour is white',
   ),
   GardSound: new SettingStandard(
+    1,
     'bool',
     'NotificationGard',
     ['Sound OFF', 'Sound ON'],
     'Play a sound on garden tick',
     true,
   ),
-  GardVolume: new SettingVolume('vol', 'NotificationGard', [], 'Volume'),
+  GardVolume: new SettingVolume(100, 'vol', 'NotificationGard', [], 'Volume'),
   GardSoundURL: new SettingStandard(
+    'https://freesound.org/data/previews/103/103046_861714-lq.mp3',
     'url',
     'NotificationGard',
     'Garden Tick Sound URL:',
     'URL of the sound to be played when the garden ticks',
   ),
   MagicNotification: new SettingStandard(
+    0,
     'bool',
     'NotificationMagi',
     ['Notification OFF', 'Notification ON'],
     'Create a notification when magic reaches maximum',
     true,
     () => {
-      CheckNotificationPermissions(CMOptions.MagicNotification);
+      CheckNotificationPermissions(
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.MagicNotification,
+      );
     },
   ),
   MagicFlash: new SettingStandard(
+    1,
     'bool',
     'NotificationMagi',
     ['Flash OFF', 'Flash ON'],
@@ -724,35 +817,42 @@ const Config = {
     true,
   ),
   ColourMagicFlash: new SettingColours(
+    '#ffffff',
     'colour',
     'NotificationMagi',
     'The colour of the magic flash, standard colour is white',
   ),
   MagicSound: new SettingStandard(
+    1,
     'bool',
     'NotificationMagi',
     ['Sound OFF', 'Sound ON'],
     'Play a sound when magic reaches maximum',
     true,
   ),
-  MagicVolume: new SettingVolume('vol', 'NotificationMagi', [], 'Volume'),
+  MagicVolume: new SettingVolume(100, 'vol', 'NotificationMagi', [], 'Volume'),
   MagicSoundURL: new SettingStandard(
+    'https://freesound.org/data/previews/221/221683_1015240-lq.mp3',
     'url',
     'NotificationMagi',
     'Sound URL:',
     'URL of the sound to be played when magic reaches maxium',
   ),
   WrinklerNotification: new SettingStandard(
+    0,
     'bool',
     'NotificationWrink',
     ['Notification OFF', 'Notification ON'],
     'Create a notification when a wrinkler appears',
     true,
     () => {
-      CheckNotificationPermissions(CMOptions.WrinklerNotification);
+      CheckNotificationPermissions(
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerNotification,
+      );
     },
   ),
   WrinklerFlash: new SettingStandard(
+    1,
     'bool',
     'NotificationWrink',
     ['Flash OFF', 'Flash ON'],
@@ -760,35 +860,42 @@ const Config = {
     true,
   ),
   ColourWrinklerFlash: new SettingColours(
+    '#ffffff',
     'colour',
     'NotificationWrink',
     'The colour of the wrinkler flash, standard colour is white',
   ),
   WrinklerSound: new SettingStandard(
+    1,
     'bool',
     'NotificationWrink',
     ['Sound OFF', 'Sound ON'],
     'Play a sound when a wrinkler appears',
     true,
   ),
-  WrinklerVolume: new SettingVolume('vol', 'NotificationWrink', [], 'Volume'),
+  WrinklerVolume: new SettingVolume(100, 'vol', 'NotificationWrink', [], 'Volume'),
   WrinklerSoundURL: new SettingStandard(
+    'https://freesound.org/data/previews/124/124186_8043-lq.mp3',
     'url',
     'NotificationWrink',
     'Sound URL:',
     'URL of the sound to be played when a wrinkler appears',
   ),
   WrinklerMaxNotification: new SettingStandard(
+    0,
     'bool',
     'NotificationWrinkMax',
     ['Notification OFF', 'Notification ON'],
     'Create a notification when the maximum amount of wrinklers has appeared',
     true,
     () => {
-      CheckNotificationPermissions(CMOptions.WrinklerMaxNotification);
+      CheckNotificationPermissions(
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerMaxNotification,
+      );
     },
   ),
   WrinklerMaxFlash: new SettingStandard(
+    1,
     'bool',
     'NotificationWrinkMax',
     ['Flash OFF', 'Flash ON'],
@@ -796,19 +903,22 @@ const Config = {
     true,
   ),
   ColourWrinklerMaxFlash: new SettingColours(
+    '#ffffff',
     'colour',
     'NotificationWrinkMax',
     'The colour of the maximum wrinkler flash, standard colour is white',
   ),
   WrinklerMaxSound: new SettingStandard(
+    1,
     'bool',
     'NotificationWrinkMax',
     ['Sound OFF', 'Sound ON'],
     'Play a sound when the maximum amount of wrinklers has appeared',
     true,
   ),
-  WrinklerMaxVolume: new SettingVolume('vol', 'NotificationWrinkMax', [], 'Volume'),
+  WrinklerMaxVolume: new SettingVolume(100, 'vol', 'NotificationWrinkMax', [], 'Volume'),
   WrinklerMaxSoundURL: new SettingStandard(
+    'https://freesound.org/data/previews/152/152743_15663-lq.mp3',
     'url',
     'NotificationWrinkMax',
     'Sound URL:',
@@ -817,6 +927,7 @@ const Config = {
 
   // Miscellaneous
   BulkBuyBlock: new SettingStandard(
+    1,
     'bool',
     'Miscellaneous',
     ['Block bulk buying OFF', 'Block bulk buying ON'],
@@ -824,6 +935,7 @@ const Config = {
     true,
   ),
   FavouriteSettings: new SettingStandard(
+    1,
     'bool',
     'Miscellaneous',
     [
@@ -839,4 +951,4 @@ const Config = {
   ),
 };
 
-export default Config;
+export default settings;

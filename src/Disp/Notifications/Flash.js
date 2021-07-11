@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import { isInitializing } from '../../InitSaveLoad/Variables';
 
 /**
@@ -12,10 +11,14 @@ import { isInitializing } from '../../InitSaveLoad/Variables';
 export default function Flash(mode, config, forced) {
   // The arguments check makes the sound not play upon initialization of the mod
   if (
-    ((CMOptions[config] === 1 || forced) && mode === 3 && isInitializing === false) ||
+    ((Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config] === 1 ||
+      forced) &&
+      mode === 3 &&
+      isInitializing === false) ||
     mode === 1
   ) {
-    l('CMFlashScreen').style.backgroundColor = CMOptions[`Colour${config}`];
+    l('CMFlashScreen').style.backgroundColor =
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[`Colour${config}`];
     l('CMFlashScreen').style.opacity = '0.5';
     if (mode === 3) {
       l('CMFlashScreen').style.display = 'inline';

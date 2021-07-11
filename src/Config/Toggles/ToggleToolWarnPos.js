@@ -1,5 +1,3 @@
-import { CMOptions } from '../VariablesAndData';
-
 /**
  * This function toggles the position of the warnings created by CM.Disp.TooltipCreateWarningSection()
  * It is called by a change in CM.Options.ToolWarnPos
@@ -7,7 +5,7 @@ import { CMOptions } from '../VariablesAndData';
  */
 export default function ToggleToolWarnPos() {
   if (l('CMDispTooltipWarningParent') !== null) {
-    if (CMOptions.ToolWarnPos === 0) {
+    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ToolWarnPos === 0) {
       l('CMDispTooltipWarningParent').style.top = 'auto';
       l('CMDispTooltipWarningParent').style.margin = '4px -4px';
       l('CMDispTooltipWarningParent').style.padding = '3px 4px';
