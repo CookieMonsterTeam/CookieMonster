@@ -1,10 +1,9 @@
+import saveFramework from '@cookiemonsterteam/cookiemonsterframework/src/saveDataFunctions/saveFramework';
 import jscolor, * as JsColor from '@eastdesire/jscolor';
 import ToggleFavouriteSetting from '../../../Config/Toggles/ToggleFavourites';
-import { SaveConfig } from '../../../Config/SaveLoadReload/SaveLoadReloadSettings';
 import { ConfigPrefix, ToggleConfig, ToggleConfigVolume } from '../../../Config/ToggleSetting';
-import { CMOptions } from '../../../Config/VariablesAndData';
 import {} from '../../../Data/Sectionheaders.ts';
-import Config from '../../../Data/SettingsData';
+import settings from '../../../Data/settings';
 import RefreshScale from '../../HelperFunctions/RefreshScale';
 import UpdateColours from '../../HelperFunctions/UpdateColours';
 import Flash from '../../Notifications/Flash';
@@ -26,7 +25,7 @@ function CreateFavouriteStar(config) {
   FavStar.className = 'option';
   FavStar.onclick = function () {
     ToggleFavouriteSetting(config);
-    SaveConfig();
+    saveFramework();
     Game.UpdateMenu();
   };
   FavStar.onmouseover = function () {
@@ -47,12 +46,15 @@ function CreateFavouriteStar(config) {
 export default function CreatePrefOption(config) {
   const div = document.createElement('div');
   div.className = 'listing';
-  if (CMOptions.FavouriteSettings === 1) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.FavouriteSettings === 1) {
     div.appendChild(CreateFavouriteStar(config));
   }
-  if (Config[config].type === 'bool') {
+  if (settings[config].type === 'bool') {
     const a = document.createElement('a');
-    if (Config[config].toggle && CMOptions[config] === 0) {
+    if (
+      settings[config].toggle &&
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config] === 0
+    ) {
       a.className = 'option off';
     } else {
       a.className = 'option';
@@ -62,25 +64,28 @@ export default function CreatePrefOption(config) {
       ToggleConfig(config);
       Game.UpdateMenu();
     };
-    a.textContent = Config[config].label[CMOptions[config]];
+    a.textContent =
+      settings[config].label[
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config]
+      ];
     div.appendChild(a);
     const label = document.createElement('label');
-    label.textContent = Config[config].desc;
+    label.textContent = settings[config].desc;
     label.style.lineHeight = '1.6';
     div.appendChild(label);
     return div;
   }
-  if (Config[config].type === 'vol') {
+  if (settings[config].type === 'vol') {
     const volume = document.createElement('div');
     volume.className = 'sliderBox';
     const title = document.createElement('div');
     title.style.float = 'left';
-    title.innerHTML = Config[config].desc;
+    title.innerHTML = settings[config].desc;
     volume.appendChild(title);
     const percent = document.createElement('div');
     percent.id = `slider${config}right`;
     percent.style.float = 'right';
-    percent.innerHTML = `${CMOptions[config]}%`;
+    percent.innerHTML = `${Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config]}%`;
     volume.appendChild(percent);
     const slider = document.createElement('input');
     slider.className = 'slider';
@@ -90,7 +95,7 @@ export default function CreatePrefOption(config) {
     slider.min = '0';
     slider.max = '100';
     slider.step = '1';
-    slider.value = CMOptions[config];
+    slider.value = Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config];
     slider.oninput = function () {
       ToggleConfigVolume(config);
       Game.UpdateMenu();
@@ -105,7 +110,9 @@ export default function CreatePrefOption(config) {
     a.className = 'option';
     a.onclick = function () {
       PlaySound(
-        CMOptions[config.replace('Volume', 'SoundURL')],
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[
+          config.replace('Volume', 'SoundURL')
+        ],
         config.replace('Volume', 'Sound'),
         config,
         true,
@@ -115,10 +122,10 @@ export default function CreatePrefOption(config) {
     div.appendChild(a);
     return div;
   }
-  if (Config[config].type === 'url') {
+  if (settings[config].type === 'url') {
     const span = document.createElement('span');
     span.className = 'option';
-    span.textContent = `${Config[config].label} `;
+    span.textContent = `${settings[config].label} `;
     span.style.lineHeight = '1.6';
     div.appendChild(span);
     const input = document.createElement('input');
@@ -126,7 +133,10 @@ export default function CreatePrefOption(config) {
     input.className = 'option';
     input.type = 'text';
     input.readOnly = true;
-    input.setAttribute('value', CMOptions[config]);
+    input.setAttribute(
+      'value',
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config],
+    );
     input.style.width = '300px';
     div.appendChild(input);
     div.appendChild(document.createTextNode(' '));
@@ -134,7 +144,10 @@ export default function CreatePrefOption(config) {
     inputPrompt.id = `${ConfigPrefix + config}Prompt`;
     inputPrompt.className = 'option';
     inputPrompt.type = 'text';
-    inputPrompt.setAttribute('value', CMOptions[config]);
+    inputPrompt.setAttribute(
+      'value',
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config],
+    );
     const a = document.createElement('a');
     a.className = 'option';
     a.onclick = function () {
@@ -142,8 +155,10 @@ export default function CreatePrefOption(config) {
         [
           'Save',
           function () {
-            CMOptions[config] = l(`${ConfigPrefix}${config}Prompt`).value;
-            SaveConfig();
+            Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config] = l(
+              `${ConfigPrefix}${config}Prompt`,
+            ).value;
+            saveFramework();
             Game.ClosePrompt();
             Game.UpdateMenu();
           },
@@ -159,29 +174,33 @@ export default function CreatePrefOption(config) {
     a.textContent = 'Edit';
     div.appendChild(a);
     const label = document.createElement('label');
-    label.textContent = Config[config].desc;
+    label.textContent = settings[config].desc;
     label.style.lineHeight = '1.6';
     div.appendChild(label);
     return div;
   }
-  if (Config[config].type === 'colour') {
+  if (settings[config].type === 'colour') {
     const innerSpan = document.createElement('span');
     innerSpan.className = 'option';
     const input = document.createElement('input');
     input.id = config;
     input.style.width = '65px';
-    input.setAttribute('value', CMOptions[config]);
+    input.setAttribute(
+      'value',
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config],
+    );
     innerSpan.appendChild(input);
     const change = function () {
-      CMOptions[this.targetElement.id] = this.toHEXString();
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[this.targetElement.id] =
+        this.toHEXString();
       UpdateColours();
-      SaveConfig();
+      saveFramework();
       Game.UpdateMenu();
     };
     // eslint-disable-next-line no-new
     new JsColor(input, { hash: true, position: 'right', onInput: change });
     const label = document.createElement('label');
-    label.textContent = Config[config].desc;
+    label.textContent = settings[config].desc;
     label.style.lineHeight = '1.6';
     innerSpan.appendChild(label);
     if (config.includes('Flash')) {
@@ -197,29 +216,29 @@ export default function CreatePrefOption(config) {
     jscolor.init();
     return div;
   }
-  if (Config[config].type === 'numscale') {
+  if (settings[config].type === 'numscale') {
     const span = document.createElement('span');
     span.className = 'option';
-    span.textContent = `${Config[config].label} `;
+    span.textContent = `${settings[config].label} `;
     span.style.lineHeight = '1.6';
     div.appendChild(span);
     const input = document.createElement('input');
     input.id = ConfigPrefix + config;
     input.className = 'option';
     input.type = 'number';
-    input.value = CMOptions[config];
-    input.min = Config[config].min;
-    input.max = Config[config].max;
+    input.value = Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config];
+    input.min = settings[config].min;
+    input.max = settings[config].max;
     input.oninput = function () {
-      CMOptions[config] = this.value;
-      SaveConfig();
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config] = this.value;
+      saveFramework();
       RefreshScale();
       Game.UpdateMenu();
     };
     div.appendChild(input);
     div.appendChild(document.createTextNode(' '));
     const label = document.createElement('label');
-    label.textContent = Config[config].desc;
+    label.textContent = settings[config].desc;
     label.style.lineHeight = '1.6';
     div.appendChild(label);
     return div;

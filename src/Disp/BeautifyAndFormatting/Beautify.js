@@ -1,6 +1,5 @@
 /** General functions to format or beautify strings */
 
-import { CMOptions } from '../../Config/VariablesAndData';
 import { metric, shortScale, shortScaleAbbreviated } from '../../Data/Scales.ts';
 import { BackupFunctions } from '../../Main/VariablesAndData';
 
@@ -12,14 +11,15 @@ import { BackupFunctions } from '../../Main/VariablesAndData';
  * @returns	{string}			Formatted number
  */
 export default function Beautify(num, floats, forced) {
-  const decimals = CMOptions.ScaleDecimals + 1;
+  const decimals =
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleDecimals + 1;
   if (num === Infinity) {
     return 'Infinity';
   }
   if (typeof num === 'undefined') {
     return '0';
   }
-  if (CMOptions.Scale === 0) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Scale === 0) {
     return BackupFunctions.Beautify(num, floats);
   }
   if (Number.isFinite(num)) {
@@ -30,12 +30,20 @@ export default function Beautify(num, floats, forced) {
     if (num === 0) {
       return num.toString();
     }
-    if (num > 0.001 && num < CMOptions.ScaleCutoff) {
-      if (CMOptions.ScaleSeparator) answer = num.toLocaleString('nl');
+    if (
+      num > 0.001 &&
+      num < Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleCutoff
+    ) {
+      if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleSeparator)
+        answer = num.toLocaleString('nl');
       else answer = num.toLocaleString('en');
       return answer;
     }
-    if ((CMOptions.Scale === 4 && !forced) || forced === 4) {
+    if (
+      (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Scale === 4 &&
+        !forced) ||
+      forced === 4
+    ) {
       // Scientific notation, 123456789 => 1.235E+8
       answer = num.toExponential(decimals).toString().replace('e', 'E');
     } else {
@@ -43,22 +51,38 @@ export default function Beautify(num, floats, forced) {
       const AmountOfTenPowerThree = Math.floor(exponential.slice(exponential.indexOf('e') + 1) / 3);
       answer = (num / Number(`1e${AmountOfTenPowerThree * 3}`)).toFixed(decimals);
       // answer is now "xxx.xx" (e.g., 123456789 would be 123.46)
-      if ((CMOptions.Scale === 1 && !forced) || forced === 1) {
+      if (
+        (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Scale === 1 &&
+          !forced) ||
+        forced === 1
+      ) {
         // Metric scale, 123456789 => 123.457 M
         if (num >= 0.01 && num < Number(`1e${metric.length * 3}`)) {
           answer += ` ${metric[AmountOfTenPowerThree]}`;
         } else answer = Beautify(num, 0, 4); // If number is too large or little, revert to scientific notation
-      } else if ((CMOptions.Scale === 2 && !forced) || forced === 2) {
+      } else if (
+        (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Scale === 2 &&
+          !forced) ||
+        forced === 2
+      ) {
         // Short scale, 123456789 => 123.457 M
         if (num >= 0.01 && num < Number(`1e${shortScale.length * 3}`)) {
           answer += ` ${shortScale[AmountOfTenPowerThree]}`;
         } else answer = Beautify(num, 0, 4); // If number is too large or little, revert to scientific notation
-      } else if ((CMOptions.Scale === 3 && !forced) || forced === 3) {
+      } else if (
+        (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Scale === 3 &&
+          !forced) ||
+        forced === 3
+      ) {
         // Short scale, 123456789 => 123.457 M
         if (num >= 0.01 && num < Number(`1e${shortScaleAbbreviated.length * 3}`)) {
           answer += ` ${shortScaleAbbreviated[AmountOfTenPowerThree]}`;
         } else answer = Beautify(num, 0, 4); // If number is too large or little, revert to scientific notation
-      } else if ((CMOptions.Scale === 5 && !forced) || forced === 5) {
+      } else if (
+        (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Scale === 5 &&
+          !forced) ||
+        forced === 5
+      ) {
         // Engineering notation, 123456789 => 123.457E+6
         answer += `E${AmountOfTenPowerThree * 3}`;
       }
@@ -68,7 +92,8 @@ export default function Beautify(num, floats, forced) {
       console.log(`Could not beautify number with Cookie Monster Beautify: ${num}`);
       answer = BackupFunctions.Beautify(num, floats);
     }
-    if (CMOptions.ScaleSeparator) answer = answer.replace('.', ',');
+    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleSeparator)
+      answer = answer.replace('.', ',');
     return answer;
   }
   console.log(`Could not beautify number with Cookie Monster Beautify: ${num}`); // eslint-disable-line no-console

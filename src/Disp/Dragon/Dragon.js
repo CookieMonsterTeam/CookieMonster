@@ -2,7 +2,6 @@
 
 import CacheDragonCost from '../../Cache/Dragon/Dragon';
 import { CacheCostDragonUpgrade } from '../../Cache/VariablesAndData';
-import { CMOptions } from '../../Config/VariablesAndData';
 import CalculateChangeAura from '../../Sim/SimulationEvents/AuraChange';
 import Beautify from '../BeautifyAndFormatting/Beautify';
 import FormatTime from '../BeautifyAndFormatting/FormatTime';
@@ -12,7 +11,7 @@ import FormatTime from '../BeautifyAndFormatting/FormatTime';
  * @param	{number}	aura	The number of the aura currently selected by the mouse/user
  */
 export function AddAuraInfo(aura) {
-  if (CMOptions.DragonAuraInfo === 1) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.DragonAuraInfo === 1) {
     const [bonusCPS, priceOfChange] = CalculateChangeAura(aura);
     const timeToRecover = FormatTime(priceOfChange / (bonusCPS + Game.cookiesPs));
     let bonusCPSPercentage;

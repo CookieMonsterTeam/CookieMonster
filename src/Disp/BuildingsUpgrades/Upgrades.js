@@ -1,5 +1,4 @@
 import { CacheUpgrades } from '../../Cache/VariablesAndData';
-import { CMOptions } from '../../Config/VariablesAndData';
 import {
   ColourBackPre,
   ColourBlue,
@@ -20,7 +19,7 @@ import {
  */
 export default function UpdateUpgrades() {
   // This counts the amount of upgrades for each pp group and updates the Upgrade Bar
-  if (CMOptions.UpBarColour > 0) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.UpBarColour > 0) {
     let blue = 0;
     let green = 0;
     let yellow = 0;
@@ -76,12 +75,12 @@ export default function UpdateUpgrades() {
     arr.push(o);
   }
 
-  if (CMOptions.SortUpgrades) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.SortUpgrades) {
     // Sort by pp colour group, then by pp.
     arr.sort((a, b) =>
       ColoursOrdering.indexOf(a.color) === ColoursOrdering.indexOf(b.color)
         ? a.pp - b.pp
-        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color)
+        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color),
     );
   } else {
     arr.sort((a, b) => a.price - b.price);

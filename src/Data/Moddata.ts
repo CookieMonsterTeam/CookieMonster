@@ -4,18 +4,15 @@ export const VersionMajor = '2.031';
 export const VersionMinor = '9';
 
 /** Information about Cookie Monster to be displayed in the info section */
-export const ModDescription = `<div class="listing">
- <a href="https://github.com/CookieMonsterTeam/CookieMonster" target="blank">Cookie Monster</a>
+export const ModDescription = `<a href="https://github.com/CookieMonsterTeam/CookieMonster" target="blank">Cookie Monster</a>
  offers a wide range of tools and statistics to enhance your game experience.
  It is not a cheat interface – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.</br>
  Progess on new updates and all previous release notes can be found on the GitHub page linked above!</br>
  Please also report any bugs you may find over there!</br>
- </div>
  `;
 
 /** Latest releasenotes of Cookie Monster to be displayed in the info section */
-export const LatestReleaseNotes = `<div class="listing">
-This update implements the following functions:</br>
+export const LatestReleaseNotes = `This update implements the following functions:</br>
 - HOTFIX: Fixed the possibility of clicking Golden Cookies multiple times with autoclickers</br>
 - For developers: we now expose some data calculated by Cookie Monster to the global scope. You can access it through the CookieMonsterData object</br>
 - The column with the most optimal building now has a green coloured indicator whenever colour coding is turned on</br>
@@ -29,5 +26,4 @@ This update fixes the following bugs:</br>
 - Fixed some issues related to "left till achievement"</br>
 - Fixed some cases where upgrades and buildings were not correctly sorted</br>
 - Fixed the tooltip of "Pop all normal wrinklers" displaying an incorrect reward when Shiny's are present</br>
-</div>
 `;

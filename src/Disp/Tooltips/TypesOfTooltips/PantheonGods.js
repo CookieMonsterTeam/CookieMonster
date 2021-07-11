@@ -1,5 +1,4 @@
 import { CacheGods } from '../../../Cache/VariablesAndData';
-import { CMOptions } from '../../../Config/VariablesAndData';
 import Beautify from '../../BeautifyAndFormatting/Beautify';
 import { TooltipName, TooltipType } from '../../VariablesAndData';
 import * as Create from '../CreateTooltip';
@@ -10,7 +9,7 @@ import * as Create from '../CreateTooltip';
  * It adds to the additional information to l('CMTooltipArea')
  */
 export default function PantheonGods() {
-  if (CMOptions.TooltipPantheon === 1) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipPantheon === 1) {
     const tooltipBox = l('CMTooltipBorder');
     let GodID;
     if (TooltipType === 'pas') GodID = TooltipName[1];
@@ -26,7 +25,11 @@ export default function PantheonGods() {
       if (Number.isFinite(increase) && increase !== 0) {
         cps1.textContent += ` (${increase / 100}% of income)`;
       } else {
-        cps1.textContent += ` (<0${CMOptions.ScaleSeparator ? ',' : '.'}01% of income)`;
+        cps1.textContent += ` (<0${
+          Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleSeparator
+            ? ','
+            : '.'
+        }01% of income)`;
       }
     } else cps1.textContent = 'No effect to CPS';
     tooltipBox.appendChild(cps1);
@@ -40,7 +43,11 @@ export default function PantheonGods() {
       if (Number.isFinite(increase) && increase !== 0) {
         cps2.textContent += ` (${increase / 100}% of income)`;
       } else {
-        cps2.textContent += ` (<0${CMOptions.ScaleSeparator ? ',' : '.'}01% of income)`;
+        cps2.textContent += ` (<0${
+          Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleSeparator
+            ? ','
+            : '.'
+        }01% of income)`;
       }
     } else cps2.textContent = 'No effect to CPS';
     tooltipBox.appendChild(cps2);
@@ -54,7 +61,11 @@ export default function PantheonGods() {
       if (Number.isFinite(increase) && increase !== 0) {
         cps3.textContent += ` (${increase / 100}% of income)`;
       } else {
-        cps3.textContent += ` (<0${CMOptions.ScaleSeparator ? ',' : '.'}01% of income)`;
+        cps3.textContent += ` (<0${
+          Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleSeparator
+            ? ','
+            : '.'
+        }01% of income)`;
       }
     } else cps3.textContent = 'No effect to CPS';
     tooltipBox.appendChild(cps3);

@@ -2,7 +2,6 @@ import { before, beforeEach, describe, it } from 'mocha';
 import { assert } from 'chai';
 import { l } from '../../GlobalsForTesting';
 
-import { CMOptions } from '../../../src/Config/VariablesAndData';
 import ToggleToolWarnPos from '../../../src/Config/Toggles/ToggleToolWarnPos';
 
 describe('ToggleToolWarnPos', () => {
@@ -15,7 +14,7 @@ describe('ToggleToolWarnPos', () => {
 
   describe('ToolWarnPos = 0', () => {
     before(() => {
-      CMOptions.ToolWarnPos = 0;
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ToolWarnPos = 0;
     });
     it('Toggle style correctly', () => {
       assert.equal(domids.CMDispTooltipWarningParent.style.top, 'auto'); // eslint-disable-line no-undef
@@ -25,7 +24,7 @@ describe('ToggleToolWarnPos', () => {
   });
   describe('ToolWarnPos = 1', () => {
     before(() => {
-      CMOptions.ToolWarnPos = 1;
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ToolWarnPos = 1;
     });
     it('Toggle style correctly', () => {
       assert.equal(domids.CMDispTooltipWarningParent.style.right, 'auto'); // eslint-disable-line no-undef

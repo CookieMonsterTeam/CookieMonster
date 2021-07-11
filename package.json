@@ -70,6 +70,7 @@
     "name": "Cookie Monster"
   },
   "dependencies": {
-    "@eastdesire/jscolor": "^2.4.5"
+    "@eastdesire/jscolor": "^2.4.5",
+    "@cookiemonsterteam/cookiemonsterframework": "^0.1.0"
   }
 }

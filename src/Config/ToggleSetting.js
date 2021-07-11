@@ -1,6 +1,5 @@
-import ConfigData from '../Data/SettingsData';
-import { SaveConfig } from './SaveLoadReload/SaveLoadReloadSettings';
-import { CMOptions } from './VariablesAndData';
+import saveFramework from '@cookiemonsterteam/cookiemonsterframework/src/saveDataFunctions/saveFramework';
+import settings from '../Data/settings';
 
 /** Functions related to toggling or changing an individual setting */
 
@@ -13,18 +12,21 @@ export const ConfigPrefix = 'CMConfig';
  * @param 	{string}	config	The name of the option
  */
 export function ToggleConfig(config) {
-  CMOptions[config] += 1;
+  Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config] += 1;
 
-  if (CMOptions[config] === ConfigData[config].label.length) {
-    CMOptions[config] = 0;
-    if (ConfigData[config].toggle) l(ConfigPrefix + config).className = 'option off';
+  if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config] ===
+    settings[config].label.length
+  ) {
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config] = 0;
+    if (settings[config].toggle) l(ConfigPrefix + config).className = 'option off';
   } else l(ConfigPrefix + config).className = 'option';
 
-  if (typeof ConfigData[config].func !== 'undefined') {
-    ConfigData[config].func();
+  if (typeof settings[config].func !== 'undefined') {
+    settings[config].func();
   }
 
-  SaveConfig();
+  saveFramework();
 }
 
 /**
@@ -35,9 +37,11 @@ export function ToggleConfig(config) {
 export function ToggleConfigVolume(config) {
   if (l(`slider${config}`) !== null) {
     l(`slider${config}right`).innerHTML = `${l(`slider${config}`).value}%`;
-    CMOptions[config] = Math.round(l(`slider${config}`).value);
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[config] = Math.round(
+      l(`slider${config}`).value,
+    );
   }
-  SaveConfig();
+  saveFramework();
 }
 
 /**
@@ -46,7 +50,8 @@ export function ToggleConfigVolume(config) {
  * @param 	{string}	config	The name of the header
  */
 export function ToggleHeader(config) {
-  CMOptions.Header[config] += 1;
-  if (CMOptions.Header[config] > 1) CMOptions.Header[config] = 0;
-  SaveConfig();
+  Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.headers[config] += 1;
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.headers[config] > 1)
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.headers[config] = 0;
+  saveFramework();
 }

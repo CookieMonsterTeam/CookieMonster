@@ -1,5 +1,3 @@
-import { CMOptions } from '../../../Config/VariablesAndData';
-
 function CrateTooltipLockedAchievements(me) {
   const tags = [];
   if (me.pool === 'shadow') tags.push('Shadow Achievement', '#9700cf');
@@ -51,7 +49,7 @@ export default function AddMissingAchievements() {
       achievs = i.parentElement.querySelectorAll('div.listing.crateBox')[0];
     }
   });
-  if (CMOptions.MissingAchievements) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.MissingAchievements) {
     Object.values(achievs.children).forEach((achievsCrate) => {
       if (!achievsCrate.className.includes('enabled')) {
         const id = achievsCrate.onclick.toString().split(/\[(.*)\]/gi)[1];

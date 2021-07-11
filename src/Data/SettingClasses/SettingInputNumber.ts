@@ -11,6 +11,7 @@ export default class SettingInputNumber extends Setting {
   max: number;
 
   constructor(
+    defaultValue: string | number,
     type: string,
     group: string,
     label: string[],
@@ -18,7 +19,7 @@ export default class SettingInputNumber extends Setting {
     min: number,
     max: number,
   ) {
-    super(type, group);
+    super(defaultValue, type, group);
     this.label = label;
     this.desc = desc;
     this.min = min;

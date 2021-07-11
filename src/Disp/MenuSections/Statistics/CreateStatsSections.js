@@ -36,7 +36,6 @@ import {
   CacheWrathCookiesMult,
   CacheWrinklersTotal,
 } from '../../../Cache/VariablesAndData';
-import { CMOptions } from '../../../Config/VariablesAndData';
 import ResetBonus from '../../../Sim/SimulationEvents/ResetAscension';
 import GetCPS from '../../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
@@ -567,7 +566,9 @@ export function PrestigeSection() {
     ),
   );
 
-  const HCTarget = Number(CMOptions.HeavenlyChipsTarget);
+  const HCTarget = Number(
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.HeavenlyChipsTarget,
+  );
   if (!Number.isNaN(HCTarget)) {
     const CookiesTillTarget =
       HCTarget - Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
@@ -699,7 +700,7 @@ export function SeasonSection() {
 
   if (Game.season === 'christmas' || specDisp || choEgg || centEgg) {
     section.appendChild(StatsHeader('Season Specials', 'Sea'));
-    if (CMOptions.Header.Sea) {
+    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.headers.Sea) {
       if (missingHalloweenCookies.length !== 0) {
         section.appendChild(
           StatsMissDispListing(

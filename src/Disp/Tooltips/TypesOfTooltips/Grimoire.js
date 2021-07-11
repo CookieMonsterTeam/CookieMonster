@@ -1,5 +1,5 @@
 import { CacheNoGoldSwitchCookiesPS } from '../../../Cache/VariablesAndData';
-import { CMOptions } from '../../../Config/VariablesAndData';
+
 import Beautify from '../../BeautifyAndFormatting/Beautify';
 import GetTimeColour from '../../BeautifyAndFormatting/GetTimeColour';
 import CalculateGrimoireRefillTime from '../../HelperFunctions/CalculateGrimoireRefillTime';
@@ -15,7 +15,10 @@ export default function Grimoire() {
   const { minigame } = Game.Objects['Wizard tower'];
   const spellCost = minigame.getSpellCost(minigame.spellsById[TooltipName]);
 
-  if (CMOptions.TooltipGrim === 1 && spellCost <= minigame.magicM) {
+  if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipGrim === 1 &&
+    spellCost <= minigame.magicM
+  ) {
     const tooltipBox = l('CMTooltipBorder');
 
     // Time left till enough magic for spell

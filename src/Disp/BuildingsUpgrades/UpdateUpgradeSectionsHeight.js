@@ -1,5 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
-
 /**
  * This function toggles the upgrade to be always expanded
  * It is called by a change in CM.Options.ToolWarnPos
@@ -7,7 +5,10 @@ import { CMOptions } from '../../Config/VariablesAndData';
  */
 export default function UpdateUpgradeSectionsHeight() {
   Object.values(document.getElementsByClassName('storeSection')).forEach((section) => {
-    if (CMOptions.UpgradesNeverCollapse || section.id === 'products') {
+    if (
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.UpgradesNeverCollapse ||
+      section.id === 'products'
+    ) {
       section.style.height = 'auto'; // eslint-disable-line no-param-reassign
     } else if (section.id === 'vaultUpgrades') {
       section.style.height = ''; // eslint-disable-line no-param-reassign

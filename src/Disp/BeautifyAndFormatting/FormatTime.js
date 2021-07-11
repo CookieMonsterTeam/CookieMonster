@@ -1,5 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
-
 /**
  * This function returns time as a string depending on TimeFormat setting
  * @param  	{number} 	time		Time to be formatted
@@ -17,7 +15,7 @@ export default function FormatTime(time, longFormat) {
   const m = Math.floor((((formattedTime % 31536000) % 86400) % 3600) / 60);
   const s = Math.floor((((formattedTime % 31536000) % 86400) % 3600) % 60);
   let str = '';
-  if (CMOptions.TimeFormat) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimeFormat) {
     if (formattedTime > 3155760000) return 'XX:XX:XX:XX:XX';
     str += `${(y < 10 ? '0' : '') + y}:`;
     str += `${(d < 10 ? '0' : '') + d}:`;

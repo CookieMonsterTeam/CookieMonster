@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import {
   ColourTextPre,
   ColourBorderPre,
@@ -134,7 +133,7 @@ export function TooltipCreateWarningSection() {
       'CMDispTooltipWarnUser',
       ColourRed,
       'Warning: ',
-      `Purchase of this item will put you under the number of Cookies equal to ${CMOptions.ToolWarnUser} seconds of CPS`,
+      `Purchase of this item will put you under the number of Cookies equal to ${Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ToolWarnUser} seconds of CPS`,
       'CMDispTooltipWarnUserText',
     ),
   );

@@ -1,7 +1,6 @@
 /** Functions related to the Timer Bar */
 
 import { UpdateBotTimerBarPosition } from '../../Config/SpecificToggles';
-import { CMOptions } from '../../Config/VariablesAndData';
 import {
   BuffColours,
   ColourBackPre,
@@ -55,14 +54,17 @@ export function CreateTimerBar() {
  * This function updates indivudual timers in the timer bar
  */
 export function UpdateTimerBar() {
-  if (CMOptions.TimerBar === 1) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimerBar === 1) {
     // label width: 113, timer width: 30, div margin: 20
     const maxWidthTwoBar = l('CMTimerBar').offsetWidth - 163;
     // label width: 113, div margin: 20, calculate timer width at runtime
     const maxWidthOneBar = l('CMTimerBar').offsetWidth - 133;
     let numberOfTimers = 0;
 
-    if (CMOptions.AutosaveTimerBar && Game.prefs.autosave) {
+    if (
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.AutosaveTimerBar &&
+      Game.prefs.autosave
+    ) {
       const timeTillNextAutosave =
         (Game.fps * 60 - (Game.OnAscend ? 0 : Game.T % (Game.fps * 60))) / Game.fps;
       l('CMTimerBarAutosave').style.display = '';
@@ -71,7 +73,9 @@ export function UpdateTimerBar() {
           (maxWidthOneBar - Math.ceil(timeTillNextAutosave).toString().length * 8)) /
           60,
       )}px`;
-      if (CMOptions.TimerBarOverlay >= 1) {
+      if (
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimerBarOverlay >= 1
+      ) {
         l('CMTimerBarAutosaveBar').textContent = Math.ceil(timeTillNextAutosave);
       } else l('CMTimerBarAutosaveBar').textContent = '';
       l('CMTimerBarAutosaveTime').textContent = Math.ceil(timeTillNextAutosave);
@@ -86,7 +90,7 @@ export function UpdateTimerBar() {
           maxWidthTwoBar) /
           Game.shimmerTypes.golden.maxTime,
       )}px`;
-      if (CMOptions.TimerBarOverlay >= 1)
+      if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimerBarOverlay >= 1)
         l('CMTimerBarGCMinBar').textContent = Math.ceil(
           (Game.shimmerTypes.golden.minTime - Game.shimmerTypes.golden.time) / Game.fps,
         );
@@ -106,7 +110,7 @@ export function UpdateTimerBar() {
           maxWidthTwoBar) /
           Game.shimmerTypes.golden.maxTime,
       )}px`;
-      if (CMOptions.TimerBarOverlay >= 1)
+      if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimerBarOverlay >= 1)
         l('CMTimerBarGCBar').textContent = Math.ceil(
           Math.min(
             Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.minTime,
@@ -128,7 +132,7 @@ export function UpdateTimerBar() {
           maxWidthTwoBar) /
           Game.shimmerTypes.reindeer.maxTime,
       )}px`;
-      if (CMOptions.TimerBarOverlay >= 1)
+      if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimerBarOverlay >= 1)
         l('CMTimerBarRenMinBar').textContent = Math.ceil(
           (Game.shimmerTypes.reindeer.minTime - Game.shimmerTypes.reindeer.time) / Game.fps,
         );
@@ -141,7 +145,7 @@ export function UpdateTimerBar() {
           maxWidthTwoBar) /
           Game.shimmerTypes.reindeer.maxTime,
       )}px`;
-      if (CMOptions.TimerBarOverlay >= 1)
+      if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimerBarOverlay >= 1)
         l('CMTimerBarRenBar').textContent = Math.ceil(
           Math.min(
             Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.minTime,
@@ -173,7 +177,9 @@ export function UpdateTimerBar() {
         } else classColour = ColourPurple;
         timer.lastChild.children[1].className = ColourBackPre + classColour;
         timer.lastChild.children[1].style.color = 'black';
-        if (CMOptions.TimerBarOverlay === 2)
+        if (
+          Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimerBarOverlay === 2
+        )
           timer.lastChild.children[1].textContent = `${Math.round(
             100 * (Game.buffs[i].time / Game.buffs[i].maxTime),
           )}%`;

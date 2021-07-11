@@ -1,7 +1,7 @@
 /** Section: Functions related to the creation of basic DOM elements page */
 
 import { ToggleHeader } from '../../../Config/ToggleSetting';
-import { CMOptions } from '../../../Config/VariablesAndData';
+
 import { SimpleTooltipElements } from '../../VariablesAndData';
 
 /**
@@ -30,7 +30,9 @@ export function StatsHeader(text, config) {
   span.style.color = 'black';
   span.style.fontSize = '13px';
   span.style.verticalAlign = 'middle';
-  span.textContent = CMOptions.Header[config] ? '-' : '+';
+  span.textContent = Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.headers[config]
+    ? '-'
+    : '+';
   span.onclick = function () {
     ToggleHeader(config);
     Game.UpdateMenu();
@@ -99,7 +101,9 @@ export function StatsMissDispListing(type, name, text, current) {
 
   const listingName = document.createElement('b');
   listingName.textContent = name;
-  if (current === true) listingName.style.color = CMOptions.ColourGreen;
+  if (current === true)
+    listingName.style.color =
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ColourGreen;
   div.appendChild(listingName);
   div.appendChild(document.createTextNode(': '));
   div.appendChild(text);

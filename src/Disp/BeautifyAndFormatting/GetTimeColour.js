@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import { ColourGreen, ColourOrange, ColourRed, ColourYellow } from '../VariablesAndData';
 import FormatTime from './FormatTime';
 
@@ -11,7 +10,8 @@ export default function GetTimeColour(time) {
   let color;
   let text;
   if (time <= 0) {
-    if (CMOptions.TimeFormat) text = '00:00:00:00:00';
+    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimeFormat)
+      text = '00:00:00:00:00';
     else text = 'Done!';
     color = ColourGreen;
   } else {

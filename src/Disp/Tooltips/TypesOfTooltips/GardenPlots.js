@@ -1,4 +1,3 @@
-import { CMOptions } from '../../../Config/VariablesAndData';
 import Beautify from '../../BeautifyAndFormatting/Beautify';
 import { TooltipName } from '../../VariablesAndData';
 import * as Create from '../CreateTooltip';
@@ -9,7 +8,10 @@ import * as Create from '../CreateTooltip';
  */
 export default function GardenPlots() {
   const { minigame } = Game.Objects.Farm;
-  if (CMOptions.TooltipPlots && minigame.plot[TooltipName[1]][TooltipName[0]][0] !== 0) {
+  if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipPlots &&
+    minigame.plot[TooltipName[1]][TooltipName[0]][0] !== 0
+  ) {
     const mature =
       minigame.plot[TooltipName[1]][TooltipName[0]][1] >
       minigame.plantsById[minigame.plot[TooltipName[1]][TooltipName[0]][0] - 1].mature;

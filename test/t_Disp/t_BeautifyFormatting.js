@@ -2,7 +2,6 @@ import { before, describe, it } from 'mocha';
 import { assert } from 'chai';
 
 import FormatTime from '../../src/Disp/BeautifyAndFormatting/FormatTime';
-import { CMOptions } from '../../src/Config/VariablesAndData';
 
 describe('FormatTime', () => {
   it('Format when time is Infinity', () => {
@@ -13,7 +12,7 @@ describe('FormatTime', () => {
   });
   describe('TimeFormat = 0', () => {
     before(() => {
-      CMOptions.TimeFormat = 0;
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimeFormat = 0;
     });
     describe('Longformat = 0', () => {
       it('Format when time is 0', () => {
@@ -70,7 +69,7 @@ describe('FormatTime', () => {
   });
   describe('TimeFormat = 1', () => {
     before(() => {
-      CMOptions.TimeFormat = 1;
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimeFormat = 1;
     });
     it('Format when time is 0', () => {
       assert.equal(FormatTime(0, 0), '00:00:00:00:00');

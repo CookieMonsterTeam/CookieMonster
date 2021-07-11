@@ -1,5 +1,5 @@
 import { CacheLastChoEgg, CacheUpgrades } from '../../../Cache/VariablesAndData';
-import { CMOptions } from '../../../Config/VariablesAndData';
+
 import Beautify from '../../BeautifyAndFormatting/Beautify';
 import FormatTime from '../../BeautifyAndFormatting/FormatTime';
 import GetTimeColour from '../../BeautifyAndFormatting/GetTimeColour';
@@ -25,7 +25,9 @@ export default function Upgrade() {
   TooltipPrice = Game.Upgrades[Game.UpgradesInStore[TooltipName].name].getPrice();
   TooltipBonusMouse = CacheUpgrades[Game.UpgradesInStore[TooltipName].name].bonusMouse;
 
-  if (CMOptions.TooltipBuildUpgrade === 1) {
+  if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipBuildUpgrade === 1
+  ) {
     l('CMTooltipIncome').textContent = Beautify(TooltipBonusIncome, 2);
     const increase = Math.round((TooltipBonusIncome / Game.cookiesPs) * 10000);
     // Don't display certain parts of tooltip if not applicable
@@ -39,7 +41,9 @@ export default function Upgrade() {
         l('CMTooltipIncome').textContent += ` (${increase / 100}% of income)`;
       } else {
         l('CMTooltipIncome').textContent += ` (<0${
-          CMOptions.ScaleSeparator ? ',' : '.'
+          Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleSeparator
+            ? ','
+            : '.'
         }01% of income)`;
       }
       l('CMTooltipBorder').className =
@@ -59,7 +63,7 @@ export default function Upgrade() {
       l('Payback PeriodTitle').style.display = 'block';
       l('CMTooltipPP').style.display = 'block';
     } else {
-      if (CMOptions.PPDisplayTime)
+      if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPDisplayTime)
         l('CMTooltipPP').textContent = FormatTime(
           CacheUpgrades[Game.UpgradesInStore[TooltipName].name].pp,
         );

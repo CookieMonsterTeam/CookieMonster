@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import UpdateBuildings from '../BuildingsUpgrades/Buildings';
 import {
   ColourBackPre,
@@ -15,17 +14,23 @@ export default function UpdateColours() {
   let str = '';
   for (let i = 0; i < ColoursOrdering.length; i++) {
     str += `.${ColourTextPre}${ColoursOrdering[i]} { color: ${
-      CMOptions[`Colour${ColoursOrdering[i]}`]
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[
+        `Colour${ColoursOrdering[i]}`
+      ]
     }; }\n`;
   }
   for (let i = 0; i < ColoursOrdering.length; i++) {
     str += `.${ColourBackPre}${ColoursOrdering[i]} { background-color: ${
-      CMOptions[`Colour${ColoursOrdering[i]}`]
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[
+        `Colour${ColoursOrdering[i]}`
+      ]
     }; }\n`;
   }
   for (let i = 0; i < ColoursOrdering.length; i++) {
     str += `.${ColourBorderPre}${ColoursOrdering[i]} { border: 1px solid ${
-      CMOptions[`Colour${ColoursOrdering[i]}`]
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[
+        `Colour${ColoursOrdering[i]}`
+      ]
     }; }\n`;
   }
   l('CMCSS').textContent = str;

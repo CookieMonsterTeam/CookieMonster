@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import GetWrinkConfigBank from '../../Disp/HelperFunctions/GetWrinkConfigBank';
 import { ColourGray } from '../../Disp/VariablesAndData';
 import {
@@ -18,14 +17,21 @@ import ColourOfPP from './ColourOfPP';
  */
 function CacheColour(target, amount) {
   Object.keys(target).forEach((i) => {
-    if (CMOptions.PPRigidelMode && amount === 1) {
+    if (
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPRigidelMode &&
+      amount === 1
+    ) {
       target[i].color = ColourGray; // eslint-disable-line no-param-reassign
       return;
     }
     // eslint-disable-next-line no-param-reassign
     target[i].color = ColourOfPP(target[i], Game.Objects[i].getSumPrice(amount));
     // Colour based on excluding certain top-buildings
-    for (let j = 0; j < CMOptions.PPExcludeTop; j++) {
+    for (
+      let j = 0;
+      j < Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPExcludeTop;
+      j++
+    ) {
       if (target[i].pp === CachePPArray[j][0]) target[i].color = ColourGray; // eslint-disable-line no-param-reassign
     }
   });
@@ -39,7 +45,12 @@ function CachePP(target, amount) {
         Math.max(price - (Game.cookies + GetWrinkConfigBank()), 0) / Game.cookiesPs +
         price / target[i].bonus;
     } else target[i].pp = price / target[i].bonus; // eslint-disable-line no-param-reassign
-    if (!(CMOptions.PPRigidelMode && amount === 1))
+    if (
+      !(
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPRigidelMode &&
+        amount === 1
+      )
+    )
       CachePPArray.push([target[i].pp, amount, price]);
   });
 }
@@ -51,7 +62,11 @@ function CachePP(target, amount) {
 export default function CacheBuildingsPP() {
   CacheMinPP = Infinity;
   CachePPArray = [];
-  if (typeof CMOptions.PPExcludeTop === 'undefined') CMOptions.PPExcludeTop = 0; // Otherwise breaks during initialization
+  if (
+    typeof Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPExcludeTop ===
+    'undefined'
+  )
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPExcludeTop = 0; // Otherwise breaks during initialization
 
   // Calculate PP and colors
   CachePP(CacheObjects1, 1);
@@ -60,8 +75,8 @@ export default function CacheBuildingsPP() {
 
   // Set CM.Cache.min to best non-excluded buidliung
   CachePPArray.sort((a, b) => a[0] - b[0]);
-  let indexOfMin = CMOptions.PPExcludeTop;
-  if (CMOptions.PPOnlyConsiderBuyable) {
+  let indexOfMin = Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPExcludeTop;
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPOnlyConsiderBuyable) {
     while (CachePPArray[indexOfMin][2] > Game.cookies) {
       indexOfMin += 1;
       if (CachePPArray.length === indexOfMin + 1) {

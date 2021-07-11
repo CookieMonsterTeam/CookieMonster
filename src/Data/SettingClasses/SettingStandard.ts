@@ -11,6 +11,7 @@ export default class SettingStandard extends Setting {
   func: () => void;
 
   constructor(
+    defaultValue: string | number,
     type: string,
     group: string,
     label: string[],
@@ -18,7 +19,7 @@ export default class SettingStandard extends Setting {
     toggle: boolean,
     func?: () => void,
   ) {
-    super(type, group);
+    super(defaultValue, type, group);
     this.label = label;
     this.desc = desc;
     this.toggle = toggle;

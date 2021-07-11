@@ -9,4 +9,5 @@ export const Game = {
   LeftBackground: { canvas: { parentNode: {} } },
   RebuildUpgrades() {},
   UpgradesInStore: {},
+  mods: { cookieMonsterFramework: { saveData: { cookieMonsterMod: { settings: {} } } } },
 };

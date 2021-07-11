@@ -1,4 +1,3 @@
-import { CMOptions } from '../../Config/VariablesAndData';
 import { ClickTimes, CookieTimes } from '../../Disp/VariablesAndData';
 import {
   CacheAverageClicks, // eslint-disable-line no-unused-vars
@@ -67,23 +66,31 @@ export default function CacheAvgCPS() {
     CacheLastClicks = Game.cookieClicks;
 
     // Get average gain over period of cpsLength seconds
-    const cpsLength = CookieTimes[CMOptions.AvgCPSHist];
+    const cpsLength =
+      CookieTimes[Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.AvgCPSHist];
     CacheAverageGainBank = CookiesDiff.calcAverage(cpsLength);
     CacheAverageGainWrink = WrinkDiff.calcAverage(cpsLength);
     CacheAverageGainWrinkFattest = WrinkFattestDiff.calcAverage(cpsLength);
     CacheAverageGainChoEgg = ChoEggDiff.calcAverage(cpsLength);
     CacheAverageCPS = CacheAverageGainBank;
-    if (CMOptions.CalcWrink === 1) CacheAverageCPS += CacheAverageGainWrink;
-    if (CMOptions.CalcWrink === 2) CacheAverageCPS += CacheAverageGainWrinkFattest;
+    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.CalcWrink === 1)
+      CacheAverageCPS += CacheAverageGainWrink;
+    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.CalcWrink === 2)
+      CacheAverageCPS += CacheAverageGainWrinkFattest;
 
     const choEgg = Game.HasUnlocked('Chocolate egg') && !Game.Has('Chocolate egg');
 
-    if (choEgg || CMOptions.CalcWrink === 0) {
+    if (
+      choEgg ||
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.CalcWrink === 0
+    ) {
       CacheAvgCPSWithChoEgg =
         CacheAverageGainBank + CacheAverageGainWrink + (choEgg ? CacheAverageGainChoEgg : 0);
     } else CacheAvgCPSWithChoEgg = CacheAverageCPS;
 
     // eslint-disable-next-line no-unused-vars
-    CacheAverageClicks = ClicksDiff.calcAverage(ClickTimes[CMOptions.AvgClicksHist]);
+    CacheAverageClicks = ClicksDiff.calcAverage(
+      ClickTimes[Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.AvgClicksHist],
+    );
   }
 }

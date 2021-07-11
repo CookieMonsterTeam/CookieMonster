@@ -1,6 +1,5 @@
 /** Section: Functions related to caching income */
 
-import { CMOptions } from '../../Config/VariablesAndData';
 import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 import BuyBuildingsBonusIncome from '../../Sim/SimulationEvents/BuyBuildingBonusIncome';
 import BuyUpgradesBonusIncome from '../../Sim/SimulationEvents/BuyUpgrades';
@@ -44,8 +43,10 @@ function CacheUpgradeIncome() {
     const bonusIncome = BuyUpgradesBonusIncome(i);
     if (i === 'Elder Pledge') {
       CacheUpgrades[i] = { bonus: Game.cookiesPs - CacheAverageGainBank };
-      if (CMOptions.CalcWrink === 1) CacheUpgrades[i].bonus -= CacheAverageGainWrink;
-      else if (CMOptions.CalcWrink === 2) CacheUpgrades[i].bonus -= CacheAverageGainWrinkFattest;
+      if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.CalcWrink === 1)
+        CacheUpgrades[i].bonus -= CacheAverageGainWrink;
+      else if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.CalcWrink === 2)
+        CacheUpgrades[i].bonus -= CacheAverageGainWrinkFattest;
       if (!Number.isFinite(CacheUpgrades[i].bonus)) CacheUpgrades[i].bonus = 0;
     } else {
       CacheUpgrades[i] = {};

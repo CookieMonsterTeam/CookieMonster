@@ -5,7 +5,7 @@ import {
   CacheObjects100,
   CacheObjectsNextAchievement,
 } from '../../../Cache/VariablesAndData';
-import { CMOptions } from '../../../Config/VariablesAndData';
+
 import BuyBuildingsBonusIncome from '../../../Sim/SimulationEvents/BuyBuildingBonusIncome';
 import { SimObjects } from '../../../Sim/VariablesAndData';
 import Beautify from '../../BeautifyAndFormatting/Beautify';
@@ -26,7 +26,10 @@ import * as Create from '../CreateTooltip';
  * This function adds extra info to the Building tooltips
  */
 export default function Building() {
-  if (CMOptions.TooltipBuildUpgrade === 1 && Game.buyMode === 1) {
+  if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipBuildUpgrade === 1 &&
+    Game.buyMode === 1
+  ) {
     const tooltipBox = l('CMTooltipBorder');
     Create.TooltipCreateCalculationSection(tooltipBox);
 
@@ -43,18 +46,24 @@ export default function Building() {
     TooltipPrice = Game.Objects[TooltipName].bulkPrice;
     TooltipBonusIncome = target[TooltipName].bonus;
 
-    if (CMOptions.TooltipBuildUpgrade === 1 && Game.buyMode === 1) {
+    if (
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipBuildUpgrade ===
+        1 &&
+      Game.buyMode === 1
+    ) {
       l('CMTooltipIncome').textContent = Beautify(TooltipBonusIncome, 2);
       const increase = Math.round((TooltipBonusIncome / Game.cookiesPs) * 10000);
       if (Number.isFinite(increase) && increase !== 0) {
         l('CMTooltipIncome').textContent += ` (${increase / 100}% of income)`;
       } else {
         l('CMTooltipIncome').textContent += ` (<0${
-          CMOptions.ScaleSeparator ? ',' : '.'
+          Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleSeparator
+            ? ','
+            : '.'
         }01% of income)`;
       }
       l('CMTooltipBorder').className = ColourTextPre + target[TooltipName].color;
-      if (CMOptions.PPDisplayTime)
+      if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPDisplayTime)
         l('CMTooltipPP').textContent = FormatTime(target[TooltipName].pp);
       else l('CMTooltipPP').textContent = Beautify(target[TooltipName].pp, 2);
       l('CMTooltipPP').className = ColourTextPre + target[TooltipName].color;
@@ -110,7 +119,8 @@ export default function Building() {
       )} / ${Beautify(ObjectsTillNext.price)} / `;
       l('CMTooltipNextAchievement').style.color = 'white';
       const PPFrag = document.createElement('span');
-      if (CMOptions.PPDisplayTime) PPFrag.textContent = FormatTime(PPOfAmount);
+      if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPDisplayTime)
+        PPFrag.textContent = FormatTime(PPOfAmount);
       else PPFrag.textContent = Beautify(PPOfAmount);
       PPFrag.className = ColourTextPre + ColourOfPP({ pp: PPOfAmount }, ObjectsTillNext.price);
       l('CMTooltipNextAchievement').appendChild(PPFrag);

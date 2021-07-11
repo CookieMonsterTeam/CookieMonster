@@ -1,5 +1,4 @@
 import { CacheSpawnedGoldenShimmer, CacheGoldenShimmersByID } from '../../Cache/VariablesAndData'; // eslint-disable-line no-unused-vars
-import { CMOptions } from '../../Config/VariablesAndData';
 import CreateGCTimer from '../../Disp/GoldenCookieTimers/GoldenCookieTimers';
 import Flash from '../../Disp/Notifications/Flash';
 import CreateNotification from '../../Disp/Notifications/Notification';
@@ -46,7 +45,12 @@ export default function CheckGoldenCookie() {
     if (LastGoldenCookieState) {
       if (LastSpawnedGoldenCookieState < CurrSpawnedGoldenCookieState) {
         Flash(3, 'GCFlash', false);
-        PlaySound(CMOptions.GCSoundURL, 'GCSound', 'GCVolume', false);
+        PlaySound(
+          Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.GCSoundURL,
+          'GCSound',
+          'GCVolume',
+          false,
+        );
         CreateNotification(
           'GCNotification',
           'Golden Cookie Spawned',
@@ -63,7 +67,10 @@ export default function CheckGoldenCookie() {
     UpdateFavicon();
     LastSpawnedGoldenCookieState = CurrSpawnedGoldenCookieState;
     if (CurrSpawnedGoldenCookieState === 0) CacheSpawnedGoldenShimmer = 0;
-  } else if (CMOptions.GCTimer === 1 && LastGoldenCookieState) {
+  } else if (
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.GCTimer === 1 &&
+    LastGoldenCookieState
+  ) {
     Object.keys(GCTimers).forEach((i) => {
       GCTimers[i].style.opacity = CacheGoldenShimmersByID[i].l.style.opacity;
       GCTimers[i].style.transform = CacheGoldenShimmersByID[i].l.style.transform;
