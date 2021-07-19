@@ -1,5 +1,11 @@
 name: CI
-on: pull_request
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - gh-pages
+  pull_request:
 jobs:
   Check_linting_test_and_build:
     runs-on: ubuntu-latest
