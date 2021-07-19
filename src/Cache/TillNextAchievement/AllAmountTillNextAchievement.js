@@ -1,3 +1,4 @@
+import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 import { CacheObjectsNextAchievement } from '../VariablesAndData';
 import IndividualAmountTillNextAchievement from './IndividualAmountTillNextAchievement';
 
@@ -17,7 +18,11 @@ export default function AllAmountTillNextAchievement(forceRecalc) {
       result[i] = {
         AmountNeeded: CacheObjectsNextAchievement[i].TotalNeeded - Game.Objects[i].amount,
         TotalNeeded: CacheObjectsNextAchievement[i].TotalNeeded,
-        price: Game.Objects[i].getSumPrice(
+        price: BuildingGetPrice(
+          i,
+          Game.Objects[i].basePrice,
+          Game.Objects[i].amount,
+          Game.Objects[i].free,
           CacheObjectsNextAchievement[i].TotalNeeded - Game.Objects[i].amount,
         ),
       };
@@ -26,7 +31,13 @@ export default function AllAmountTillNextAchievement(forceRecalc) {
       result[i] = {
         AmountNeeded: tillNext,
         TotalNeeded: Game.Objects[i].amount + tillNext,
-        price: Game.Objects[i].getSumPrice(tillNext),
+        price: BuildingGetPrice(
+          i,
+          Game.Objects[i].basePrice,
+          Game.Objects[i].amount,
+          Game.Objects[i].free,
+          tillNext,
+        ),
       };
     }
   });

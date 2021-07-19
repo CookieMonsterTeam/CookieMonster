@@ -38,22 +38,25 @@ function CacheBuildingIncome(amount) {
  * It is called by CM.Cache.CacheIncome()
  */
 function CacheUpgradeIncome() {
-  CacheUpgrades = [];
-  Object.keys(Game.Upgrades).forEach((i) => {
-    const bonusIncome = BuyUpgradesBonusIncome(i);
-    if (i === 'Elder Pledge') {
-      CacheUpgrades[i] = { bonus: Game.cookiesPs - CacheAverageGainBank };
+  CacheUpgrades = {};
+  for (let i = 0; i < Game.UpgradesInStore.length; i++) {
+    const upgradeName = Game.UpgradesInStore[i].name;
+    const bonusIncome = BuyUpgradesBonusIncome(upgradeName);
+    if (upgradeName === 'Elder Pledge') {
+      CacheUpgrades[upgradeName] = {
+        bonus: Game.cookiesPs - CacheAverageGainBank,
+      };
       if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.CalcWrink === 1)
-        CacheUpgrades[i].bonus -= CacheAverageGainWrink;
+        CacheUpgrades[upgradeName].bonus -= CacheAverageGainWrink;
       else if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.CalcWrink === 2)
-        CacheUpgrades[i].bonus -= CacheAverageGainWrinkFattest;
-      if (!Number.isFinite(CacheUpgrades[i].bonus)) CacheUpgrades[i].bonus = 0;
+        CacheUpgrades[upgradeName].bonus -= CacheAverageGainWrinkFattest;
+      if (!Number.isFinite(CacheUpgrades[upgradeName].bonus)) CacheUpgrades[upgradeName].bonus = 0;
     } else {
-      CacheUpgrades[i] = {};
-      if (bonusIncome[0]) CacheUpgrades[i].bonus = bonusIncome[0];
-      if (bonusIncome[1]) CacheUpgrades[i].bonusMouse = bonusIncome[1];
+      CacheUpgrades[upgradeName] = {};
+      if (bonusIncome[0]) CacheUpgrades[upgradeName].bonus = bonusIncome[0];
+      if (bonusIncome[1]) CacheUpgrades[upgradeName].bonusMouse = bonusIncome[1];
     }
-  });
+  }
 }
 
 /**
@@ -62,28 +65,28 @@ function CacheUpgradeIncome() {
 export function CacheBuildingsPrices() {
   Object.keys(Game.Objects).forEach((i) => {
     CacheObjects1[i].price = BuildingGetPrice(
-      Game.Objects[i],
+      i,
       Game.Objects[i].basePrice,
       Game.Objects[i].amount,
       Game.Objects[i].free,
       1,
     );
     CacheObjects10[i].price = BuildingGetPrice(
-      Game.Objects[i],
+      i,
       Game.Objects[i].basePrice,
       Game.Objects[i].amount,
       Game.Objects[i].free,
       10,
     );
     CacheObjects100[i].price = BuildingGetPrice(
-      Game.Objects[i],
+      i,
       Game.Objects[i].basePrice,
       Game.Objects[i].amount,
       Game.Objects[i].free,
       100,
     );
     CacheObjectsNextAchievement[i].price = BuildingGetPrice(
-      Game.Objects[i],
+      i,
       Game.Objects[i].basePrice,
       Game.Objects[i].amount,
       Game.Objects[i].free,
