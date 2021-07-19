@@ -1,19 +1,21 @@
 [![CI](https://github.com/CookieMonsterTeam/CookieMonster/actions/workflows/CI.yml/badge.svg)](https://github.com/CookieMonsterTeam/CookieMonster/actions/workflows/CI.yml)
+
 ## Cookie Monster
 
 **Cookie Monster** is an addon you can load into Cookie Clicker, that offers a wide range of tools and statistics to enhance the game. **It is not a cheat interface** – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.
 The mod helps you to *whichever* degree you want, if you only need some help shortening long numbers, it does that. If you need to be accompanied by hand to pick the best buildings to buy, it does that, but **everything is an option**.
 
 ### Current version
-The `master` branch hosts the latest production version intended for general users. 
+
+The `master` branch hosts the latest production version intended for general users.
 All development and pull requests should target the `dev` branch.
 Github Pages is hosted from the `gh-pages` branch
 
 ### What it does
 
-At its core, Cookie Monster computes an index for both buildings and upgrades: the **Payback Period (PP)**. CM will take *everything* in consideration, meaning if buying a building also unlocks an achievement which boosts your income, which unlocks an achievement, CM will know and highlight that building's value. CM uses the following formula to calculate the PP: 
+At its core, Cookie Monster computes an index for both buildings and upgrades: the **Payback Period (PP)**. CM will take *everything* in consideration, meaning if buying a building also unlocks an achievement which boosts your income, which unlocks an achievement, CM will know and highlight that building's value. CM uses the following formula to calculate the PP:
 
-```
+```javascript
 max(cost - cookies in bank, 0)/cps + cost/Δ cps
 ```
 
@@ -42,7 +44,7 @@ Copy this code and save it as a bookmark. Paste it in the URL section. To activa
 
 ```javascript
 javascript: (function () {
-	Game.LoadMod('https://cookiemonsterteam.github.io/CookieMonster/dist/CookieMonster.js');
+  Game.LoadMod('https://cookiemonsterteam.github.io/CookieMonster/dist/CookieMonster.js');
 }());
 ```
 
@@ -70,7 +72,7 @@ Currently we exposes relevant data for buildings and upgrades (PP, colour and bo
 
 ## Contributing
 
-To contribute you can fork and clone the repository and run `npm install`.
+To contribute you can fork and clone the repository and run `npm install`. Note that you will need to authenticate to the GitHub Package Registery (see [this documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages)). After creating a Public Access Token you should export this variable to $GITHUB_REGISTERY_PAT as defined in `.npmrc`.
 
 Please also remember to run `npm run build` after saving all your changes to build the final `CookieMonsterDev.js` file.
 
