@@ -65,28 +65,28 @@ function CacheUpgradeIncome() {
 export function CacheBuildingsPrices() {
   Object.keys(Game.Objects).forEach((i) => {
     CacheObjects1[i].price = BuildingGetPrice(
-      Game.Objects[i],
+      i,
       Game.Objects[i].basePrice,
       Game.Objects[i].amount,
       Game.Objects[i].free,
       1,
     );
     CacheObjects10[i].price = BuildingGetPrice(
-      Game.Objects[i],
+      i,
       Game.Objects[i].basePrice,
       Game.Objects[i].amount,
       Game.Objects[i].free,
       10,
     );
     CacheObjects100[i].price = BuildingGetPrice(
-      Game.Objects[i],
+      i,
       Game.Objects[i].basePrice,
       Game.Objects[i].amount,
       Game.Objects[i].free,
       100,
     );
     CacheObjectsNextAchievement[i].price = BuildingGetPrice(
-      Game.Objects[i],
+      i,
       Game.Objects[i].basePrice,
       Game.Objects[i].amount,
       Game.Objects[i].free,
