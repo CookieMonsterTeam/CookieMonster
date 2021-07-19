@@ -1,5 +1,6 @@
 import GetWrinkConfigBank from '../../Disp/HelperFunctions/GetWrinkConfigBank';
 import { ColourGray } from '../../Disp/VariablesAndData';
+import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 import {
   CacheMinPP, // eslint-disable-line no-unused-vars
   CacheMinPPBulk, // eslint-disable-line no-unused-vars
@@ -25,7 +26,16 @@ function CacheColour(target, amount) {
       return;
     }
     // eslint-disable-next-line no-param-reassign
-    target[i].color = ColourOfPP(target[i], Game.Objects[i].getSumPrice(amount));
+    target[i].color = ColourOfPP(
+      target[i],
+      BuildingGetPrice(
+        i,
+        Game.Objects[i].basePrice,
+        Game.Objects[i].amount,
+        Game.Objects[i].free,
+        amount,
+      ),
+    );
     // Colour based on excluding certain top-buildings
     for (
       let j = 0;
@@ -39,7 +49,13 @@ function CacheColour(target, amount) {
 
 function CachePP(target, amount) {
   Object.keys(target).forEach((i) => {
-    const price = Game.Objects[i].getSumPrice(amount);
+    const price = BuildingGetPrice(
+      i,
+      Game.Objects[i].basePrice,
+      Game.Objects[i].amount,
+      Game.Objects[i].free,
+      amount,
+    );
     if (Game.cookiesPs) {
       target[i].pp = // eslint-disable-line no-param-reassign
         Math.max(price - (Game.cookies + GetWrinkConfigBank()), 0) / Game.cookiesPs +
