@@ -4,7 +4,7 @@ jobs:
   Check_linting_test_and_build:
     runs-on: ubuntu-latest
     env:
-      NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_REGISTERY_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
