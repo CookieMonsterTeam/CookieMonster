@@ -4,7 +4,6 @@ import CMDrawHook from '../Disp/DrawHook';
 import CMClickHook from '../Main/ClickHook';
 import InitializeCookieMonster from '../Main/Initialization';
 import CMLoopHook from '../Main/LoopHook';
-import { isInitializing } from './Variables'; // eslint-disable-line no-unused-vars
 
 /**
  * This creates a init function for the CM object. Per Game code/comments:
@@ -13,11 +12,11 @@ import { isInitializing } from './Variables'; // eslint-disable-line no-unused-v
  * It starts the further initialization of CookieMonster and registers hooks
  */
 export default function init() {
-  isInitializing = true;
   let proceed = true;
 
   // Load Cookie Monster Mod Framework and register mod
   initFunctions.initModFramework();
+  window.cookieMonsterFrameworkData.isInitializing = true;
   initFunctions.registerMod('cookieMonsterMod');
 
   if (Game.version !== Number(VersionMajor)) {
@@ -31,7 +30,6 @@ export default function init() {
     Game.registerHook('click', CMClickHook);
     Game.registerHook('draw', CMDrawHook);
     Game.registerHook('logic', CMLoopHook);
-
-    isInitializing = false;
   }
+  window.cookieMonsterFrameworkData.isInitializing = false;
 }

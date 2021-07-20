@@ -13,8 +13,8 @@ export default function createMenuInfo() {
   );
 
   if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.headers.infoMenu) {
-    menuDiv.appendChild(menuFunctions.createInfoListing(ModDescription));
-    menuDiv.appendChild(menuFunctions.createInfoListing(LatestReleaseNotes));
+    menuDiv.appendChild(menuFunctions.listings.createInfoListing(ModDescription));
+    menuDiv.appendChild(menuFunctions.listings.createInfoListing(LatestReleaseNotes));
   }
 
   return menuDiv;
