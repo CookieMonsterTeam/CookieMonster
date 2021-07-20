@@ -8,7 +8,6 @@ import CreateSectionHideButtons from '../Disp/Initialization/CreateSectionHideBu
 import CreateWrinklerButtons from '../Disp/Initialization/CreateWrinklerButton';
 import CreateCssArea from '../Disp/Initialization/CssArea';
 import UpdateBuildingUpgradeStyle from '../Disp/Initialization/UpdateBuildingUpgradeStyle';
-import CreateFlashScreen from '../Disp/Initialization/FlashScreen';
 import { CreateFavicon } from '../Disp/TabTitle/FavIcon';
 import { CreateSimpleTooltip } from '../Disp/Tooltips/Tooltip';
 import { CMLastAscendState, TooltipText } from '../Disp/VariablesAndData'; // eslint-disable-line no-unused-vars
@@ -20,6 +19,7 @@ import { LastModCount } from './VariablesAndData'; // eslint-disable-line no-unu
 import AddWrinklerAreaDetect from './WrinklerArea/AddDetectArea';
 import CreateBuildingLockButtons from '../Disp/Buildings/CreateBuildingLockButtons';
 import createMenuInfo from '../Disp/MenuSections/createMenuInfo';
+import createMenuOptions from '../Disp/MenuSections/createMenuOptions';
 
 /**
  * Initialization loop of Cookie Monster
@@ -30,6 +30,7 @@ export default function InitializeCookieMonster() {
 
   // Register listeners in Cookie Monster Mod Framework
   Game.mods.cookieMonsterFramework.listeners.infoMenu.push(createMenuInfo);
+  Game.mods.cookieMonsterFramework.listeners.optionsMenu.push(createMenuOptions);
 
   InitData();
   CacheStatsCookies();
@@ -43,7 +44,6 @@ export default function InitializeCookieMonster() {
   CreateBotBar();
   CreateTimerBar();
   CreateUpgradeBar();
-  CreateFlashScreen();
   CreateSectionHideButtons();
   CreateFavicon();
   Object.keys(TooltipText).forEach((i) => {

@@ -1,6 +1,4 @@
-import Flash from '../../Disp/Notifications/Flash';
-import CreateNotification from '../../Disp/Notifications/Notification';
-import PlaySound from '../../Disp/Notifications/Sound';
+import { notificationsFunctions as nF } from '@cookiemonsterteam/cookiemonsterframework/src/index';
 import { LastWrinklerCount } from '../VariablesAndData';
 
 /**
@@ -19,22 +17,24 @@ export default function CheckWrinklerCount() {
         CurrentWrinklers === Game.getWrinklersMax() &&
         Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerMaxFlash
       ) {
-        Flash(3, 'WrinklerMaxFlash', false);
+        nF.createFlash('cookieMonsterMod', 3, 'WrinklerMaxFlash', false);
       } else {
-        Flash(3, 'WrinklerFlash', false);
+        nF.createFlash('cookieMonsterMod', 3, 'WrinklerFlash', false);
       }
       if (
         CurrentWrinklers === Game.getWrinklersMax() &&
         Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerMaxSound
       ) {
-        PlaySound(
+        nF.playCMSound(
+          'cookieMonsterMod',
           Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerMaxSoundURL,
           'WrinklerMaxSound',
           'WrinklerMaxVolume',
           false,
         );
       } else {
-        PlaySound(
+        nF.playCMSound(
+          'cookieMonsterMod',
           Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerSoundURL,
           'WrinklerSound',
           'WrinklerVolume',
@@ -45,13 +45,15 @@ export default function CheckWrinklerCount() {
         CurrentWrinklers === Game.getWrinklersMax() &&
         Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.WrinklerMaxNotification
       ) {
-        CreateNotification(
+        nF.createNotification(
+          'cookieMonsterMod',
           'WrinklerMaxNotification',
           'Maximum Wrinklers Reached',
           'You have reached your maximum ammount of wrinklers',
         );
       } else {
-        CreateNotification(
+        nF.createNotification(
+          'cookieMonsterMod',
           'WrinklerNotification',
           'A Wrinkler appeared',
           'A new wrinkler has appeared',
