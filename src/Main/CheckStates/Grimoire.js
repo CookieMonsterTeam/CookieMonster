@@ -1,6 +1,4 @@
-import Flash from '../../Disp/Notifications/Flash';
-import CreateNotification from '../../Disp/Notifications/Notification';
-import PlaySound from '../../Disp/Notifications/Sound';
+import { notificationsFunctions as nF } from '@cookiemonsterteam/cookiemonsterframework/src/index';
 import { LastMagicBarFull } from '../VariablesAndData';
 
 /**
@@ -16,14 +14,16 @@ export default function CheckMagicMeter() {
     if (minigame.magic < minigame.magicM) LastMagicBarFull = false;
     else if (!LastMagicBarFull) {
       LastMagicBarFull = true;
-      Flash(3, 'MagicFlash', false);
-      PlaySound(
+      nF.createFlash('cookieMonsterMod', 3, 'MagicFlash', false);
+      nF.playCMSound(
+        'cookieMonsterMod',
         Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.MagicSoundURL,
         'MagicSound',
         'MagicVolume',
         false,
       );
-      CreateNotification(
+      nF.createNotification(
+        'cookieMonsterMod',
         'MagicNotification',
         'Magic Meter full',
         'Your Magic Meter is full. Cast a spell!',

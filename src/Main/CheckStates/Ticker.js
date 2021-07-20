@@ -1,6 +1,4 @@
-import Flash from '../../Disp/Notifications/Flash';
-import CreateNotification from '../../Disp/Notifications/Notification';
-import PlaySound from '../../Disp/Notifications/Sound';
+import { notificationsFunctions as nF } from '@cookiemonsterteam/cookiemonsterframework/src/index';
 import { LastTickerFortuneState } from '../VariablesAndData';
 
 /**
@@ -11,14 +9,16 @@ export default function CheckTickerFortune() {
   if (LastTickerFortuneState !== (Game.TickerEffect && Game.TickerEffect.type === 'fortune')) {
     LastTickerFortuneState = Game.TickerEffect && Game.TickerEffect.type === 'fortune';
     if (LastTickerFortuneState) {
-      Flash(3, 'FortuneFlash', false);
-      PlaySound(
+      nF.createFlash('cookieMonsterMod', 3, 'FortuneFlash', false);
+      nF.playCMSound(
+        'cookieMonsterMod',
         Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.FortuneSoundURL,
         'FortuneSound',
         'FortuneVolume',
         false,
       );
-      CreateNotification(
+      nF.createNotification(
+        'cookieMonsterMod',
         'FortuneNotification',
         'Fortune Cookie found',
         'A Fortune Cookie has appeared on the Ticker.',
