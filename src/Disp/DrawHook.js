@@ -52,7 +52,7 @@ export default function CMDrawHook() {
   ToggleWrinklerButtons();
 
   // Replace Cookies counter because Orteil uses very weird code to "pad" it...
-  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Scale) {
+  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Scale && !Game.OnAscend) {
     let str = l('cookies').innerHTML.replace(/.*(?=<br>)/i, Beautify(Game.cookies));
     if (Game.prefs.monospace) str = `<span class="monospace">${str}</span>`;
     l('cookies').innerHTML = str;
