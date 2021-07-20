@@ -1,5 +1,4 @@
-import Flash from '../../Disp/Notifications/Flash';
-import PlaySound from '../../Disp/Notifications/Sound';
+import { notificationsFunctions as nF } from '@cookiemonsterteam/cookiemonsterframework/src/index';
 import { LastGardenNextStep } from '../VariablesAndData';
 
 /**
@@ -11,8 +10,9 @@ export default function CheckGardenTick() {
     LastGardenNextStep !== Game.Objects.Farm.minigame.nextStep
   ) {
     if (LastGardenNextStep !== 0 && LastGardenNextStep < Date.now()) {
-      Flash(3, 'GardFlash', false);
-      PlaySound(
+      nF.createFlash('cookieMonsterMod', 3, 'GardFlash', false);
+      nF.playCMSound(
+        'cookieMonsterMod',
         Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.GardSoundURL,
         'GardSound',
         'GardVolume',

@@ -1,4 +1,4 @@
-import loadMod from '@cookiemonsterteam/cookiemonsterframework/src/saveDataFunctions/loadMod';
+import { saveAndLoadingFunctions } from '@cookiemonsterteam/cookiemonsterframework/src/index';
 
 import headers from '../Data/headers';
 import { VersionMajor, VersionMinor } from '../Data/Moddata.ts';
@@ -13,7 +13,7 @@ import InitData from '../Sim/InitializeData/InitData';
  */
 export default function load(str) {
   InitData();
-  loadMod('cookieMonsterMod', str, settings, headers, CMLoopHook);
+  saveAndLoadingFunctions.loadMod('cookieMonsterMod', str, settings, headers, CMLoopHook);
   UpdateColours();
   if (
     Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.version !==
