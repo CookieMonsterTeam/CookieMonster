@@ -31,5 +31,4 @@ export default function init() {
     Game.registerHook('draw', CMDrawHook);
     Game.registerHook('logic', CMLoopHook);
   }
-  window.cookieMonsterFrameworkData.isInitializing = false;
 }
