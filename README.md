@@ -74,9 +74,9 @@ Currently we exposes relevant data for buildings and upgrades (PP, colour and bo
 
 To contribute you can fork and clone the repository and run `npm install`. Note that you will need to authenticate to the GitHub Package Registery (see [this documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages)). After creating a Public Access Token you should export this variable to $GITHUB_REGISTERY_PAT as defined in `.npmrc`.
 
-Please also remember to run `npm run build` after saving all your changes to build the final `CookieMonsterDev.js` file.
+Please also remember to run `npm run build-dev` after saving all your changes to build the final `CookieMonsterDev.js` file.
 
-Before pushing a new version to master and Github pages copy the `Dev` files into the normal files.
+Before pushing a new version to `main` and Github pages use the `build-final` command to build the final file.
 
 ## Contributors
 
