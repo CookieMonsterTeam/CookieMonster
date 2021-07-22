@@ -11,11 +11,12 @@
     "Orteil"
   ],
   "scripts": {
-    "eslint-src": "eslint src test",
-    "build": "run-s eslint-src test pack-prod",
-    "build-test": "run-s pack-dev",
-    "pack-prod": "webpack --env production",
-    "pack-dev": "webpack",
+    "build-dev": "run-s eslint test pack-prod",
+    "build-final": "run-s eslint test pack-final",
+    "build-test": "webpack",
+    "eslint": "eslint src test",
+    "pack-prod": "webpack --env minimize",
+    "pack-final": "webpack --env minimize --env finalfile",
     "test": "mocha"
   },
   "repository": {
