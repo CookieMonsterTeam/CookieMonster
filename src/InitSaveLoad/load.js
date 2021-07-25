@@ -13,11 +13,18 @@ import InitData from '../Sim/InitializeData/InitData';
  */
 export default function load(str) {
   InitData();
+
+  // Load saveData
   saveAndLoadingFunctions.loadMod('cookieMonsterMod', str, settings, headers, CMLoopHook);
+
+  // Update display
   UpdateColours();
+
+  // Notify of update
   if (
+    typeof Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.version !== 'undefined' &&
     Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.version !==
-    `${VersionMajor}.${VersionMinor}`
+      `${VersionMajor}.${VersionMinor}`
   ) {
     if (Game.prefs.popups)
       Game.Popup(
