@@ -118,9 +118,17 @@ export function UpdateTimerBar() {
           ) / Game.fps,
         );
       else l('CMTimerBarGCBar').textContent = '';
-      l('CMTimerBarGCTime').textContent = Math.ceil(
+      const chanceToSpawn =
+        Math.max(
+          0,
+          (Game.shimmerTypes.golden.time - Game.shimmerTypes.golden.minTime) /
+            (Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.minTime),
+        ) ** 5;
+      l('CMTimerBarGCTime').textContent = `${Math.ceil(
         (Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.time) / Game.fps,
-      );
+      )} ${chanceToSpawn < 0.01 ? '<' : ''}${chanceToSpawn.toLocaleString('en', {
+        style: 'percent',
+      })}`;
       numberOfTimers += 1;
     } else l('CMTimerBarGC').style.display = 'none';
 
@@ -153,9 +161,17 @@ export function UpdateTimerBar() {
           ) / Game.fps,
         );
       else l('CMTimerBarRenBar').textContent = '';
-      l('CMTimerBarRenTime').textContent = Math.ceil(
+      const chanceToSpawn =
+        Math.max(
+          0,
+          (Game.shimmerTypes.reindeer.time - Game.shimmerTypes.reindeer.minTime) /
+            (Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.minTime),
+        ) ** 5;
+      l('CMTimerBarRenTime').textContent = `${Math.ceil(
         (Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.time) / Game.fps,
-      );
+      )} ${chanceToSpawn < 0.01 ? '<' : ''}${chanceToSpawn.toLocaleString('en', {
+        style: 'percent',
+      })}`;
       numberOfTimers += 1;
     } else {
       l('CMTimerBarRen').style.display = 'none';
