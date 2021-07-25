@@ -41,7 +41,7 @@ export function CreateTooltip(type, name) {
     // Adds amortization info to the list of info per building
     if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipAmor === 1) {
       const buildPrice = BuildingGetPrice(
-        Game.Objects[name],
+        name,
         Game.Objects[name].basePrice,
         0,
         Game.Objects[name].free,
