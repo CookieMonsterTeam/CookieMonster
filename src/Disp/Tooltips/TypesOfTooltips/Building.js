@@ -26,25 +26,25 @@ import * as Create from '../CreateTooltip';
  * This function adds extra info to the Building tooltips
  */
 export default function Building() {
+  let target;
+  if (Game.buyMode === 1) {
+    LastTargetTooltipBuilding = target;
+  } else {
+    target = LastTargetTooltipBuilding;
+  }
+  if (Game.buyBulk === 1) target = CacheObjects1;
+  else if (Game.buyBulk === 10) target = CacheObjects10;
+  else if (Game.buyBulk === 100) target = CacheObjects100;
+
+  TooltipPrice = Game.Objects[TooltipName].bulkPrice;
+  TooltipBonusIncome = target[TooltipName].bonus;
+
   if (
     Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipBuildUpgrade === 1 &&
     Game.buyMode === 1
   ) {
     const tooltipBox = l('CMTooltipBorder');
     Create.TooltipCreateCalculationSection(tooltipBox);
-
-    let target;
-    if (Game.buyMode === 1) {
-      LastTargetTooltipBuilding = target;
-    } else {
-      target = LastTargetTooltipBuilding;
-    }
-    if (Game.buyBulk === 1) target = CacheObjects1;
-    else if (Game.buyBulk === 10) target = CacheObjects10;
-    else if (Game.buyBulk === 100) target = CacheObjects100;
-
-    TooltipPrice = Game.Objects[TooltipName].bulkPrice;
-    TooltipBonusIncome = target[TooltipName].bonus;
 
     if (
       Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipBuildUpgrade ===
@@ -62,11 +62,11 @@ export default function Building() {
             : '.'
         }01% of income)`;
       }
-      l('CMTooltipBorder').className = ColourTextPre + target[TooltipName].color;
+      l('CMTooltipBorder').className = ColourTextPre + target[TooltipName].colour;
       if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPDisplayTime)
         l('CMTooltipPP').textContent = FormatTime(target[TooltipName].pp);
       else l('CMTooltipPP').textContent = Beautify(target[TooltipName].pp, 2);
-      l('CMTooltipPP').className = ColourTextPre + target[TooltipName].color;
+      l('CMTooltipPP').className = ColourTextPre + target[TooltipName].colour;
       const timeColour = GetTimeColour(
         (TooltipPrice - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
       );
@@ -74,7 +74,7 @@ export default function Building() {
       if (timeColour.text === 'Done!' && Game.cookies < target[TooltipName].price) {
         l('CMTooltipTime').textContent = `${timeColour.text} (with Wrink)`;
       } else l('CMTooltipTime').textContent = timeColour.text;
-      l('CMTooltipTime').className = ColourTextPre + timeColour.color;
+      l('CMTooltipTime').className = ColourTextPre + timeColour.colour;
     }
 
     // Add "production left till next achievement"-bar

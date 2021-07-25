@@ -33,7 +33,7 @@ export default function UpdateUpgrades() {
       let addedColour = false;
       for (let j = 0; j < l(`upgrade${i}`).childNodes.length; j += 1) {
         if (l(`upgrade${i}`).childNodes[j].className.indexOf(ColourBackPre) !== -1) {
-          l(`upgrade${i}`).childNodes[j].className = ColourBackPre + CacheUpgrades[me.name].color;
+          l(`upgrade${i}`).childNodes[j].className = ColourBackPre + CacheUpgrades[me.name].colour;
           addedColour = true;
           break;
         }
@@ -42,16 +42,16 @@ export default function UpdateUpgrades() {
         const div = document.createElement('div');
         div.style.width = '10px';
         div.style.height = '10px';
-        div.className = ColourBackPre + CacheUpgrades[me.name].color;
+        div.className = ColourBackPre + CacheUpgrades[me.name].colour;
         l(`upgrade${i}`).appendChild(div);
       }
-      if (CacheUpgrades[me.name].color === ColourBlue) blue += 1;
-      else if (CacheUpgrades[me.name].color === ColourGreen) green += 1;
-      else if (CacheUpgrades[me.name].color === ColourYellow) yellow += 1;
-      else if (CacheUpgrades[me.name].color === ColourOrange) orange += 1;
-      else if (CacheUpgrades[me.name].color === ColourRed) red += 1;
-      else if (CacheUpgrades[me.name].color === ColourPurple) purple += 1;
-      else if (CacheUpgrades[me.name].color === ColourGray) gray += 1;
+      if (CacheUpgrades[me.name].colour === ColourBlue) blue += 1;
+      else if (CacheUpgrades[me.name].colour === ColourGreen) green += 1;
+      else if (CacheUpgrades[me.name].colour === ColourYellow) yellow += 1;
+      else if (CacheUpgrades[me.name].colour === ColourOrange) orange += 1;
+      else if (CacheUpgrades[me.name].colour === ColourRed) red += 1;
+      else if (CacheUpgrades[me.name].colour === ColourPurple) purple += 1;
+      else if (CacheUpgrades[me.name].colour === ColourGray) gray += 1;
     });
 
     l('CMUpgradeBarBlue').textContent = blue;
@@ -71,16 +71,16 @@ export default function UpdateUpgrades() {
     o.name = Game.UpgradesInStore[x].name;
     o.price = Game.UpgradesInStore[x].basePrice;
     o.pp = CacheUpgrades[o.name].pp;
-    o.color = CacheUpgrades[o.name].color;
+    o.colour = CacheUpgrades[o.name].colour;
     arr.push(o);
   }
 
   if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.SortUpgrades) {
     // Sort by pp colour group, then by pp.
     arr.sort((a, b) =>
-      ColoursOrdering.indexOf(a.color) === ColoursOrdering.indexOf(b.color)
+      ColoursOrdering.indexOf(a.colour) === ColoursOrdering.indexOf(b.colour)
         ? a.pp - b.pp
-        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color),
+        : ColoursOrdering.indexOf(a.colour) - ColoursOrdering.indexOf(b.colour),
     );
   } else {
     arr.sort((a, b) => a.price - b.price);

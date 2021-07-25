@@ -2,23 +2,23 @@ import { ColourGreen, ColourOrange, ColourRed, ColourYellow } from '../Variables
 import FormatTime from './FormatTime';
 
 /**
- * This function returns the color to be used for time-strings
+ * This function returns the colour to be used for time-strings
  * @param	{number}			time			Time to be coloured
- * @returns {{string, string}}	{text, color}	Both the formatted time and color as strings in an array
+ * @returns {{string, string}}	{text, colour}	Both the formatted time and colour as strings in an array
  */
 export default function GetTimeColour(time) {
-  let color;
+  let colour;
   let text;
   if (time <= 0) {
     if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimeFormat)
       text = '00:00:00:00:00';
     else text = 'Done!';
-    color = ColourGreen;
+    colour = ColourGreen;
   } else {
     text = FormatTime(time);
-    if (time > 300) color = ColourRed;
-    else if (time > 60) color = ColourOrange;
-    else color = ColourYellow;
+    if (time > 300) colour = ColourRed;
+    else if (time > 60) colour = ColourOrange;
+    else colour = ColourYellow;
   }
-  return { text, color };
+  return { text, colour };
 }

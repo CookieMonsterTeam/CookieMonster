@@ -22,11 +22,11 @@ function CacheColour(target, amount) {
       Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPRigidelMode &&
       amount === 1
     ) {
-      target[i].color = ColourGray; // eslint-disable-line no-param-reassign
+      target[i].colour = ColourGray; // eslint-disable-line no-param-reassign
       return;
     }
     // eslint-disable-next-line no-param-reassign
-    target[i].color = ColourOfPP(
+    target[i].colour = ColourOfPP(
       target[i],
       BuildingGetPrice(
         i,
@@ -42,7 +42,7 @@ function CacheColour(target, amount) {
       j < Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPExcludeTop;
       j++
     ) {
-      if (target[i].pp === CachePPArray[j][0]) target[i].color = ColourGray; // eslint-disable-line no-param-reassign
+      if (target[i].pp === CachePPArray[j][0]) target[i].colour = ColourGray; // eslint-disable-line no-param-reassign
     }
   });
 }
@@ -84,7 +84,7 @@ export default function CacheBuildingsPP() {
   )
     Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPExcludeTop = 0; // Otherwise breaks during initialization
 
-  // Calculate PP and colors
+  // Calculate PP and colours
   CachePP(CacheObjects1, 1);
   CachePP(CacheObjects10, 10);
   CachePP(CacheObjects100, 100);
