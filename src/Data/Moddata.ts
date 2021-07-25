@@ -1,7 +1,7 @@
 /** Data related directly to Cookie Monster */
 
 export const VersionMajor = '2.031';
-export const VersionMinor = '9';
+export const VersionMinor = '10';
 
 /** Information about Cookie Monster to be displayed in the info section */
 export const ModDescription = `<a href="https://github.com/CookieMonsterTeam/CookieMonster" target="blank">Cookie Monster</a>
@@ -13,17 +13,13 @@ export const ModDescription = `<a href="https://github.com/CookieMonsterTeam/Coo
 
 /** Latest releasenotes of Cookie Monster to be displayed in the info section */
 export const LatestReleaseNotes = `This update implements the following functions:</br>
-- HOTFIX: Fixed the possibility of clicking Golden Cookies multiple times with autoclickers</br>
-- For developers: we now expose some data calculated by Cookie Monster to the global scope. You can access it through the CookieMonsterData object</br>
-- The column with the most optimal building now has a green coloured indicator whenever colour coding is turned on</br>
-- The current season in the seasons statistics section is now displayed with green text for easier identification</br>
-- New option to show a timer bar that counts down till next autosave</br>
-- New option to sort buildings based on the "cost till next achievement"</br>
-- Added extra information about achievements in statistics page</br>
+- This updates adds a number of performance improvements which make CookieMonster about 33% more efficient</br>
+- Added a button to all buildings in the middle section that can "lock" the building. This makes the building unclickable, which might be useful for frantic clicking during cookie storms</br>
+- Added a percentage to the Golden Cookie timer bar</br>
 </br>
-This update fixes the following bugs:</br>
-- Fixed a bug where ignoring certain buildings in rare cases did not create a "most optimal building"</br>
-- Fixed some issues related to "left till achievement"</br>
-- Fixed some cases where upgrades and buildings were not correctly sorted</br>
-- Fixed the tooltip of "Pop all normal wrinklers" displaying an incorrect reward when Shiny's are present</br>
-`;
+This update fixes the following bugs:
+- Fix considerable lag on the Ascension screen when using the monospace font</br>
+- Fix sound playing at start-up</br>
+- Fix building tooltips and warnings not updating correctly</br>
+- Fix upgrade bar not displaying</br>
+- Fix loading of mod when no save was found</br>`;
