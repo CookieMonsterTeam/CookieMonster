@@ -27,7 +27,7 @@ export default function CMDrawHook() {
     }
   }
 
-  // Update colors
+  // Update colours
   UpdateBuildings();
   UpdateUpgrades();
   UpdateUpgradeSectionsHeight();

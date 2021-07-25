@@ -47,7 +47,7 @@ export default function Upgrade() {
         }01% of income)`;
       }
       l('CMTooltipBorder').className =
-        ColourTextPre + CacheUpgrades[Game.UpgradesInStore[TooltipName].name].color;
+        ColourTextPre + CacheUpgrades[Game.UpgradesInStore[TooltipName].name].colour;
     }
 
     // If clicking power upgrade
@@ -73,7 +73,7 @@ export default function Upgrade() {
           2,
         );
       l('CMTooltipPP').className =
-        ColourTextPre + CacheUpgrades[Game.UpgradesInStore[TooltipName].name].color;
+        ColourTextPre + CacheUpgrades[Game.UpgradesInStore[TooltipName].name].colour;
     }
     const timeColour = GetTimeColour(
       (TooltipPrice - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
@@ -85,7 +85,7 @@ export default function Upgrade() {
     ) {
       l('CMTooltipTime').textContent = `${timeColour.text} (with Wrink)`;
     } else l('CMTooltipTime').textContent = timeColour.text;
-    l('CMTooltipTime').className = ColourTextPre + timeColour.color;
+    l('CMTooltipTime').className = ColourTextPre + timeColour.colour;
 
     // Add extra info to Chocolate egg tooltip
     if (Game.UpgradesInStore[TooltipName].name === 'Chocolate egg') {

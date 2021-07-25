@@ -15,18 +15,18 @@ import { CacheMinPP, CachePPArray } from '../VariablesAndData';
  * It is called by CM.Cache.CacheBuildingsPP(), CM.Cache.CacheBuildingsBulkPP() and CM.Cache.CacheUpgradePP()
  * @params	{object}	obj		The obj of which the pp value should be checked
  * @params	{number}	price	The price of the object
- * @returns {string}	color	The colour assosciated with the pp value
+ * @returns {string}	colour	The colour assosciated with the pp value
  */
 export default function ColourOfPP(me, price) {
-  let color = '';
+  let colour = '';
   // Colour based on PP
-  if (me.pp <= 0 || me.pp === Infinity) color = ColourGray;
-  else if (me.pp < CacheMinPP) color = ColourBlue;
-  else if (me.pp === CacheMinPP) color = ColourGreen;
-  else if (me.pp < CachePPArray[10][0]) color = ColourYellow;
-  else if (me.pp < CachePPArray[20][0]) color = ColourOrange;
-  else if (me.pp < CachePPArray[30][0]) color = ColourRed;
-  else color = ColourPurple;
+  if (me.pp <= 0 || me.pp === Infinity) colour = ColourGray;
+  else if (me.pp < CacheMinPP) colour = ColourBlue;
+  else if (me.pp === CacheMinPP) colour = ColourGreen;
+  else if (me.pp < CachePPArray[10][0]) colour = ColourYellow;
+  else if (me.pp < CachePPArray[20][0]) colour = ColourOrange;
+  else if (me.pp < CachePPArray[30][0]) colour = ColourRed;
+  else colour = ColourPurple;
 
   // Colour based on price in terms of CPS
   if (
@@ -40,11 +40,11 @@ export default function ColourOfPP(me, price) {
         Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPSecondsLowerLimit,
       )
     )
-      color = ColourBlue;
+      colour = ColourBlue;
   }
   // Colour based on being able to purchase
   if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPOnlyConsiderBuyable) {
-    if (price - Game.cookies > 0) color = ColourRed;
+    if (price - Game.cookies > 0) colour = ColourRed;
   }
-  return color;
+  return colour;
 }

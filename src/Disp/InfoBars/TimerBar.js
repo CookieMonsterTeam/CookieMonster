@@ -26,21 +26,21 @@ export function CreateTimerBar() {
 
   // Create standard Autosave bar
   const CMTimerBarAutosave = CreateTimer('CMTimerBarAutosave', 'Autosave', [
-    { id: 'CMTimerBarAutosaveBar', color: ColourPurple },
+    { id: 'CMTimerBarAutosaveBar', colour: ColourPurple },
   ]);
   TimerBar.appendChild(CMTimerBarAutosave);
 
   // Create standard Golden Cookie bar
   const CMTimerBarGC = CreateTimer('CMTimerBarGC', 'Next Cookie', [
-    { id: 'CMTimerBarGCMinBar', color: ColourGray },
-    { id: 'CMTimerBarGCBar', color: ColourPurple },
+    { id: 'CMTimerBarGCMinBar', colour: ColourGray },
+    { id: 'CMTimerBarGCBar', colour: ColourPurple },
   ]);
   TimerBar.appendChild(CMTimerBarGC);
 
   // Create standard Reindeer bar
   const CMTimerBarRen = CreateTimer('CMTimerBarRen', 'Next Reindeer', [
-    { id: 'CMTimerBarRenMinBar', color: ColourGray },
-    { id: 'CMTimerBarRenBar', color: ColourOrange },
+    { id: 'CMTimerBarRenMinBar', colour: ColourGray },
+    { id: 'CMTimerBarRenBar', colour: ColourOrange },
   ]);
   TimerBar.appendChild(CMTimerBarRen);
   const TimerBarBuffTimers = document.createElement('div');
@@ -118,9 +118,17 @@ export function UpdateTimerBar() {
           ) / Game.fps,
         );
       else l('CMTimerBarGCBar').textContent = '';
-      l('CMTimerBarGCTime').textContent = Math.ceil(
+      const chanceToSpawn =
+        Math.max(
+          0,
+          (Game.shimmerTypes.golden.time - Game.shimmerTypes.golden.minTime) /
+            (Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.minTime),
+        ) ** 5;
+      l('CMTimerBarGCTime').textContent = `${Math.ceil(
         (Game.shimmerTypes.golden.maxTime - Game.shimmerTypes.golden.time) / Game.fps,
-      );
+      )} ${chanceToSpawn < 0.01 ? '<' : ''}${chanceToSpawn.toLocaleString('en', {
+        style: 'percent',
+      })}`;
       numberOfTimers += 1;
     } else l('CMTimerBarGC').style.display = 'none';
 
@@ -153,9 +161,17 @@ export function UpdateTimerBar() {
           ) / Game.fps,
         );
       else l('CMTimerBarRenBar').textContent = '';
-      l('CMTimerBarRenTime').textContent = Math.ceil(
+      const chanceToSpawn =
+        Math.max(
+          0,
+          (Game.shimmerTypes.reindeer.time - Game.shimmerTypes.reindeer.minTime) /
+            (Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.minTime),
+        ) ** 5;
+      l('CMTimerBarRenTime').textContent = `${Math.ceil(
         (Game.shimmerTypes.reindeer.maxTime - Game.shimmerTypes.reindeer.time) / Game.fps,
-      );
+      )} ${chanceToSpawn < 0.01 ? '<' : ''}${chanceToSpawn.toLocaleString('en', {
+        style: 'percent',
+      })}`;
       numberOfTimers += 1;
     } else {
       l('CMTimerBarRen').style.display = 'none';
@@ -171,7 +187,7 @@ export function UpdateTimerBar() {
         ]);
         timer.style.display = '';
         let classColour = '';
-        // Gives specific timers specific colors
+        // Gives specific timers specific colours
         if (typeof BuffColours[Game.buffs[i].name] !== 'undefined') {
           classColour = BuffColours[Game.buffs[i].name];
         } else classColour = ColourPurple;

@@ -4,6 +4,7 @@ import CMDrawHook from '../Disp/DrawHook';
 import CMClickHook from '../Main/ClickHook';
 import InitializeCookieMonster from '../Main/Initialization';
 import CMLoopHook from '../Main/LoopHook';
+import load from './load';
 
 /**
  * This creates a init function for the CM object. Per Game code/comments:
@@ -30,5 +31,10 @@ export default function init() {
     Game.registerHook('click', CMClickHook);
     Game.registerHook('draw', CMDrawHook);
     Game.registerHook('logic', CMLoopHook);
+
+    // Load default settings if no previous saveData is found
+    if (typeof Game.modSaveData.cookieMonsterMod === 'undefined') {
+      load('{}');
+    }
   }
 }
