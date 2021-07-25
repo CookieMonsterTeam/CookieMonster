@@ -33,10 +33,10 @@ export function CreateBotBar() {
   table.style.whiteSpace = 'nowrap';
   const tbody = table.appendChild(document.createElement('tbody'));
 
-  const firstCol = function (text, color) {
+  const firstCol = function (text, colour) {
     const td = document.createElement('td');
     td.style.textAlign = 'right';
-    td.className = ColourTextPre + color;
+    td.className = ColourTextPre + colour;
     td.textContent = text;
     return td;
   };
@@ -86,7 +86,7 @@ export function UpdateBotBar() {
         2,
       );
       l('CMBotBar').firstChild.firstChild.childNodes[2].childNodes[count].className =
-        ColourTextPre + target[i].color;
+        ColourTextPre + target[i].colour;
       let PPString;
       if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPDisplayTime)
         PPString = FormatTime(Math.round(target[i].pp));
@@ -96,7 +96,7 @@ export function UpdateBotBar() {
         (Game.Objects[i].bulkPrice - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
       );
       l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[count].className =
-        ColourTextPre + timeColour.color;
+        ColourTextPre + timeColour.colour;
       if (timeColour.text === 'Done!' && Game.cookies < Game.Objects[i].bulkPrice) {
         l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[
           count

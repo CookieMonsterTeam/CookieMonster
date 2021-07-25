@@ -30,7 +30,7 @@ export default function Grimoire() {
       CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, spellCost),
     );
     time.textContent = timeColour.text;
-    time.className = ColourTextPre + timeColour.color;
+    time.className = ColourTextPre + timeColour.colour;
 
     // Time left untill magic spent is recovered
     if (spellCost <= minigame.magic) {
@@ -46,7 +46,7 @@ export default function Grimoire() {
         ),
       );
       recover.textContent = recoverColour.text;
-      recover.className = ColourTextPre + recoverColour.color;
+      recover.className = ColourTextPre + recoverColour.colour;
     }
 
     // Extra information on cookies gained when spell is Conjure Baked Goods (Name === 0)

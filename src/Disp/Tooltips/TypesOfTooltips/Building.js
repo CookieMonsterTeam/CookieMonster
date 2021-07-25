@@ -62,11 +62,11 @@ export default function Building() {
             : '.'
         }01% of income)`;
       }
-      l('CMTooltipBorder').className = ColourTextPre + target[TooltipName].color;
+      l('CMTooltipBorder').className = ColourTextPre + target[TooltipName].colour;
       if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPDisplayTime)
         l('CMTooltipPP').textContent = FormatTime(target[TooltipName].pp);
       else l('CMTooltipPP').textContent = Beautify(target[TooltipName].pp, 2);
-      l('CMTooltipPP').className = ColourTextPre + target[TooltipName].color;
+      l('CMTooltipPP').className = ColourTextPre + target[TooltipName].colour;
       const timeColour = GetTimeColour(
         (TooltipPrice - (Game.cookies + GetWrinkConfigBank())) / GetCPS(),
       );
@@ -74,7 +74,7 @@ export default function Building() {
       if (timeColour.text === 'Done!' && Game.cookies < target[TooltipName].price) {
         l('CMTooltipTime').textContent = `${timeColour.text} (with Wrink)`;
       } else l('CMTooltipTime').textContent = timeColour.text;
-      l('CMTooltipTime').className = ColourTextPre + timeColour.color;
+      l('CMTooltipTime').className = ColourTextPre + timeColour.colour;
     }
 
     // Add "production left till next achievement"-bar

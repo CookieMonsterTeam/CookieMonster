@@ -26,21 +26,21 @@ export function CreateTimerBar() {
 
   // Create standard Autosave bar
   const CMTimerBarAutosave = CreateTimer('CMTimerBarAutosave', 'Autosave', [
-    { id: 'CMTimerBarAutosaveBar', color: ColourPurple },
+    { id: 'CMTimerBarAutosaveBar', colour: ColourPurple },
   ]);
   TimerBar.appendChild(CMTimerBarAutosave);
 
   // Create standard Golden Cookie bar
   const CMTimerBarGC = CreateTimer('CMTimerBarGC', 'Next Cookie', [
-    { id: 'CMTimerBarGCMinBar', color: ColourGray },
-    { id: 'CMTimerBarGCBar', color: ColourPurple },
+    { id: 'CMTimerBarGCMinBar', colour: ColourGray },
+    { id: 'CMTimerBarGCBar', colour: ColourPurple },
   ]);
   TimerBar.appendChild(CMTimerBarGC);
 
   // Create standard Reindeer bar
   const CMTimerBarRen = CreateTimer('CMTimerBarRen', 'Next Reindeer', [
-    { id: 'CMTimerBarRenMinBar', color: ColourGray },
-    { id: 'CMTimerBarRenBar', color: ColourOrange },
+    { id: 'CMTimerBarRenMinBar', colour: ColourGray },
+    { id: 'CMTimerBarRenBar', colour: ColourOrange },
   ]);
   TimerBar.appendChild(CMTimerBarRen);
   const TimerBarBuffTimers = document.createElement('div');
@@ -171,7 +171,7 @@ export function UpdateTimerBar() {
         ]);
         timer.style.display = '';
         let classColour = '';
-        // Gives specific timers specific colors
+        // Gives specific timers specific colours
         if (typeof BuffColours[Game.buffs[i].name] !== 'undefined') {
           classColour = BuffColours[Game.buffs[i].name];
         } else classColour = ColourPurple;

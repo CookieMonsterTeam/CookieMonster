@@ -6,7 +6,7 @@ import { ColourBackPre, ColourBlue, ColourTextPre } from '../VariablesAndData';
  * This function creates an indivudual timer for the timer bar
  * @param	{string}					id					An id to identify the timer
  * @param	{string}					name				The title of the timer
- * @param	[{{string}, {string}}, ...]	bars ([id, color])	The id and colours of individual parts of the timer
+ * @param	[{{string}, {string}}, ...]	bars ([id, colour])	The id and colours of individual parts of the timer
  */
 export function CreateTimer(id, name, bars) {
   const timerBar = document.createElement('div');
@@ -36,20 +36,20 @@ export function CreateTimer(id, name, bars) {
   div.appendChild(type);
 
   for (let i = 0; i < bars.length; i++) {
-    const colorBar = document.createElement('span');
-    colorBar.id = bars[i].id;
-    colorBar.style.display = 'inline-block';
-    colorBar.style.height = '10px';
-    colorBar.style.verticalAlign = 'text-top';
-    colorBar.style.textAlign = 'center';
+    const colourBar = document.createElement('span');
+    colourBar.id = bars[i].id;
+    colourBar.style.display = 'inline-block';
+    colourBar.style.height = '10px';
+    colourBar.style.verticalAlign = 'text-top';
+    colourBar.style.textAlign = 'center';
     if (bars.length - 1 === i) {
-      colorBar.style.borderTopRightRadius = '10px';
-      colorBar.style.borderBottomRightRadius = '10px';
+      colourBar.style.borderTopRightRadius = '10px';
+      colourBar.style.borderBottomRightRadius = '10px';
     }
-    if (typeof bars[i].color !== 'undefined') {
-      colorBar.className = ColourBackPre + bars[i].color;
+    if (typeof bars[i].colour !== 'undefined') {
+      colourBar.className = ColourBackPre + bars[i].colour;
     }
-    div.appendChild(colorBar);
+    div.appendChild(colourBar);
   }
 
   const timer = document.createElement('span');
