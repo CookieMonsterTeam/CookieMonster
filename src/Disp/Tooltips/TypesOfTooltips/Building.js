@@ -26,25 +26,25 @@ import * as Create from '../CreateTooltip';
  * This function adds extra info to the Building tooltips
  */
 export default function Building() {
+  let target;
+  if (Game.buyMode === 1) {
+    LastTargetTooltipBuilding = target;
+  } else {
+    target = LastTargetTooltipBuilding;
+  }
+  if (Game.buyBulk === 1) target = CacheObjects1;
+  else if (Game.buyBulk === 10) target = CacheObjects10;
+  else if (Game.buyBulk === 100) target = CacheObjects100;
+
+  TooltipPrice = Game.Objects[TooltipName].bulkPrice;
+  TooltipBonusIncome = target[TooltipName].bonus;
+
   if (
     Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipBuildUpgrade === 1 &&
     Game.buyMode === 1
   ) {
     const tooltipBox = l('CMTooltipBorder');
     Create.TooltipCreateCalculationSection(tooltipBox);
-
-    let target;
-    if (Game.buyMode === 1) {
-      LastTargetTooltipBuilding = target;
-    } else {
-      target = LastTargetTooltipBuilding;
-    }
-    if (Game.buyBulk === 1) target = CacheObjects1;
-    else if (Game.buyBulk === 10) target = CacheObjects10;
-    else if (Game.buyBulk === 100) target = CacheObjects100;
-
-    TooltipPrice = Game.Objects[TooltipName].bulkPrice;
-    TooltipBonusIncome = target[TooltipName].bonus;
 
     if (
       Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TooltipBuildUpgrade ===
