@@ -17,7 +17,7 @@ import ReplaceTooltips from './ReplaceGameElements/Tooltips';
 import ReplaceNative from './ReplaceGameFunctions/ReplaceNative';
 import { LastModCount } from './VariablesAndData'; // eslint-disable-line no-unused-vars
 import AddWrinklerAreaDetect from './WrinklerArea/AddDetectArea';
-import CreateBuildingLockButtons from '../Disp/Buildings/CreateBuildingLockButtons';
+import createBuildingLockButtons from '../Disp/buildingTiles/createBuildingLockButtons';
 import createMenuInfo from '../Disp/MenuSections/createMenuInfo';
 import createMenuOptions from '../Disp/MenuSections/createMenuOptions';
 
@@ -51,7 +51,7 @@ export default function InitializeCookieMonster() {
   });
   CreateWrinklerButtons();
   UpdateBuildingUpgradeStyle();
-  CreateBuildingLockButtons();
+  createBuildingLockButtons();
 
   ReplaceTooltips();
   AddWrinklerAreaDetect();

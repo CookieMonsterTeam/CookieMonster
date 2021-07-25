@@ -16,9 +16,27 @@ export default function load(str) {
 
   // Load saveData
   saveAndLoadingFunctions.loadMod('cookieMonsterMod', str, settings, headers, CMLoopHook);
+  if (
+    typeof Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.lockedMinigames ===
+    'undefined'
+  ) {
+    Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.lockedMinigames = [];
+  }
 
-  // Update display
+  // Update display with colours and locking of minigames
   UpdateColours();
+  for (
+    let index = 0;
+    index < Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.lockedMinigames.length;
+    index++
+  ) {
+    const buildingIndex =
+      Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.lockedMinigames[index];
+    l(`row${buildingIndex}`).style.pointerEvents = 'none';
+    l(`row${buildingIndex}`).style.opacity = '0.4';
+    l(`productLock${buildingIndex}`).innerHTML = 'Unlock';
+    l(`productLock${buildingIndex}`).style.pointerEvents = 'auto';
+  }
 
   // Notify of update
   if (
