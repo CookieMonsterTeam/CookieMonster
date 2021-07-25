@@ -1,6 +1,6 @@
 {
-  "name": "cookiemonster-mod",
-  "version": "2.031.7",
+  "name": "@cookiemonsterteam/cookiemonster-mod",
+  "version": "2.031.10",
   "description": "Cookie Monster is an add-on that you can load into Cookie Clicker which offers a wide range of tools and statistics to enhance the game. It is not a cheat interface – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want. This is a helper and everything is an option.",
   "main": "CookieMonster.js",
   "keywords": [
@@ -11,11 +11,12 @@
     "Orteil"
   ],
   "scripts": {
-    "eslint-src": "eslint src test",
-    "build": "run-s eslint-src test pack-prod",
-    "build-test": "run-s pack-dev",
-    "pack-prod": "webpack --env production",
-    "pack-dev": "webpack",
+    "build-dev": "run-s eslint test pack-prod",
+    "build-final": "run-s eslint test pack-final",
+    "build-test": "webpack",
+    "eslint": "eslint src test",
+    "pack-prod": "webpack --env minimize",
+    "pack-final": "webpack --env minimize --env finalfile",
     "test": "mocha"
   },
   "repository": {
@@ -44,9 +45,9 @@
   "homepage": "https://github.com/CookieMonsterTeam/CookieMonster#readme",
   "devDependencies": {
     "@types/chai": "^4.2.19",
-    "@types/mocha": "^8.2.2",
-    "@typescript-eslint/eslint-plugin": "^4.28.3",
-    "@typescript-eslint/parser": "^4.28.3",
+    "@types/mocha": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.4",
     "chai": "^4.3.4",
     "eslint": "^7.31.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -71,6 +72,6 @@
   },
   "dependencies": {
     "@eastdesire/jscolor": "^2.4.5",
-    "@cookiemonsterteam/cookiemonsterframework": "^0.2.0"
+    "@cookiemonsterteam/cookiemonsterframework": "^0.2.1"
   }
 }

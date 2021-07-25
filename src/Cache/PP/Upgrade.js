@@ -16,6 +16,6 @@ export default function CacheUpgradePP() {
     } else CacheUpgrades[i].pp = Game.Upgrades[i].getPrice() / CacheUpgrades[i].bonus;
     if (Number.isNaN(CacheUpgrades[i].pp)) CacheUpgrades[i].pp = Infinity;
 
-    CacheUpgrades[i].color = ColourOfPP(CacheUpgrades[i], Game.Upgrades[i].getPrice());
+    CacheUpgrades[i].colour = ColourOfPP(CacheUpgrades[i], Game.Upgrades[i].getPrice());
   });
 }

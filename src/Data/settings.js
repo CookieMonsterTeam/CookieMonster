@@ -1,5 +1,8 @@
+import { settingClasses } from '@cookiemonsterteam/cookiemonsterframework/src/index';
+
 import CheckNotificationPermissions from '../Config/CheckNotificationPermissions';
-import { ToggleTimerBar, ToggleTimerBarPos } from '../Config/SpecificToggles';
+import RefreshScale from '../Disp/HelperFunctions/RefreshScale';
+import { SimDoSims } from '../Sim/VariablesAndData'; // eslint-disable-line no-unused-vars
 import ToggleBotBar from '../Config/Toggles/ToggleBotBar';
 import ToggleDetailedTime from '../Config/Toggles/ToggleDetailedTime';
 import ToggleGCTimer from '../Config/Toggles/ToggleGCTimer';
@@ -9,20 +12,15 @@ import ToggleUpgradeBarAndColour from '../Config/Toggles/ToggleUpgradeBarAndColo
 import ToggleUpgradeBarFixedPos from '../Config/Toggles/ToggleUpgradeBarFixedPos';
 import ToggleWrinklerButtons from '../Config/Toggles/ToggleWrinklerButtons';
 import UpdateBuildings from '../Disp/BuildingsUpgrades/Buildings';
+import { UpdateFavicon } from '../Disp/TabTitle/FavIcon';
 import UpdateUpgradeSectionsHeight from '../Disp/BuildingsUpgrades/UpdateUpgradeSectionsHeight';
 import UpdateUpgrades from '../Disp/BuildingsUpgrades/Upgrades';
-import RefreshScale from '../Disp/HelperFunctions/RefreshScale';
-import { UpdateFavicon } from '../Disp/TabTitle/FavIcon';
-import { SimDoSims } from '../Sim/VariablesAndData'; // eslint-disable-line no-unused-vars
-import SettingColours from './SettingClasses/SettingColours.ts';
-import SettingInputNumber from './SettingClasses/SettingInputNumber.ts';
-import SettingStandard from './SettingClasses/SettingStandard.ts';
-import SettingVolume from './SettingClasses/SettingVolume.ts';
+import { ToggleTimerBar, ToggleTimerBarPos } from '../Config/SpecificToggles';
 
 /** This includes all options of CookieMonster and their relevant data */
 const settings = {
   // Calculation
-  CPSMode: new SettingStandard(
+  CPSMode: new settingClasses.SettingStandard(
     1,
     'bool',
     'Calculation',
@@ -30,7 +28,7 @@ const settings = {
     'Calculate times using current cookies per second or average cookies per second',
     false,
   ),
-  AvgCPSHist: new SettingStandard(
+  AvgCPSHist: new settingClasses.SettingStandard(
     3,
     'bool',
     'Calculation',
@@ -47,7 +45,7 @@ const settings = {
     'How much time average Cookies Per Second should consider',
     false,
   ),
-  AvgClicksHist: new SettingStandard(
+  AvgClicksHist: new settingClasses.SettingStandard(
     0,
     'bool',
     'Calculation',
@@ -61,7 +59,7 @@ const settings = {
     'How much time average Cookie Clicks should consider',
     false,
   ),
-  CalcWrink: new SettingStandard(
+  CalcWrink: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'Calculation',
@@ -78,7 +76,7 @@ const settings = {
   ),
 
   // Notation
-  Scale: new SettingStandard(
+  Scale: new settingClasses.SettingStandardWithFunc(
     2,
     'bool',
     'Notation',
@@ -96,7 +94,7 @@ const settings = {
       RefreshScale();
     },
   ),
-  ScaleDecimals: new SettingStandard(
+  ScaleDecimals: new settingClasses.SettingStandardWithFunc(
     2,
     'bool',
     'Notation',
@@ -107,7 +105,7 @@ const settings = {
       RefreshScale();
     },
   ),
-  ScaleSeparator: new SettingStandard(
+  ScaleSeparator: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'Notation',
@@ -118,7 +116,7 @@ const settings = {
       RefreshScale();
     },
   ),
-  ScaleCutoff: new SettingInputNumber(
+  ScaleCutoff: new settingClasses.SettingInputNumber(
     999999,
     'numscale',
     'Notation',
@@ -127,7 +125,7 @@ const settings = {
     1,
     999999999,
   ),
-  TimeFormat: new SettingStandard(
+  TimeFormat: new settingClasses.SettingStandard(
     0,
     'bool',
     'Notation',
@@ -135,7 +133,7 @@ const settings = {
     'Change the time format',
     false,
   ),
-  DetailedTime: new SettingStandard(
+  DetailedTime: new settingClasses.SettingStandardWithFunc(
     1,
     'bool',
     'Notation',
@@ -146,7 +144,7 @@ const settings = {
       ToggleDetailedTime();
     },
   ),
-  PPDisplayTime: new SettingStandard(
+  PPDisplayTime: new settingClasses.SettingStandard(
     0,
     'bool',
     'Notation',
@@ -156,7 +154,7 @@ const settings = {
   ),
 
   // Colours
-  BuildColour: new SettingStandard(
+  BuildColour: new settingClasses.SettingStandardWithFunc(
     1,
     'bool',
     'Colours',
@@ -167,7 +165,7 @@ const settings = {
       UpdateBuildings();
     },
   ),
-  PPOnlyConsiderBuyable: new SettingStandard(
+  PPOnlyConsiderBuyable: new settingClasses.SettingStandard(
     0,
     'bool',
     'Colours',
@@ -175,7 +173,7 @@ const settings = {
     "Makes Cookie Monster label buildings and upgrades you can't buy right now red, useful in those situations where you just want to spend your full bank 'most optimally'",
     true,
   ),
-  PPExcludeTop: new SettingStandard(
+  PPExcludeTop: new settingClasses.SettingStandard(
     0,
     'bool',
     'Colours',
@@ -188,7 +186,7 @@ const settings = {
     'Makes Cookie Monster ignore the 1st, 2nd or 3rd best buildings in labeling and colouring PP values',
     true,
   ),
-  PPRigidelMode: new SettingStandard(
+  PPRigidelMode: new settingClasses.SettingStandard(
     0,
     'bool',
     'Colours',
@@ -196,7 +194,7 @@ const settings = {
     'Makes Cookie Monster ignore all "buy 1" options when colouring PP in order to stay at a total building count ending in 10 for pantheon god Rigidel',
     true,
   ),
-  PPSecondsLowerLimit: new SettingInputNumber(
+  PPSecondsLowerLimit: new settingClasses.SettingInputNumber(
     0,
     'numscale',
     'Colours',
@@ -205,55 +203,55 @@ const settings = {
     0,
     Infinity,
   ),
-  ColourBlue: new SettingColours(
+  ColourBlue: new settingClasses.SettingColours(
     '#4bb8f0',
     'colour',
     'Colours',
     'Standard colour is blue. Used to show upgrades better than best PP building, for Click Frenzy bar, and for various labels',
   ),
-  ColourGreen: new SettingColours(
+  ColourGreen: new settingClasses.SettingColours(
     '#00ff00',
     'colour',
     'Colours',
     'Standard colour is green. Used to show best PP building, for Blood Frenzy bar, and for various labels',
   ),
-  ColourYellow: new SettingColours(
+  ColourYellow: new settingClasses.SettingColours(
     '#ffff00',
     'colour',
     'Colours',
     'Standard colour is yellow. Used to show buildings within the top 10 of PP, for Frenzy bar, and for various labels',
   ),
-  ColourOrange: new SettingColours(
+  ColourOrange: new settingClasses.SettingColours(
     '#ff7f00',
     'colour',
     'Colours',
     'Standard colour is orange. Used to show buildings within the top 20 of PP, for Next Reindeer bar, and for various labels',
   ),
-  ColourRed: new SettingColours(
+  ColourRed: new settingClasses.SettingColours(
     '#ff0000',
     'colour',
     'Colours',
     'Standard colour is Red. Used to show buildings within the top 30 of PP, for Clot bar, and for various labels',
   ),
-  ColourPurple: new SettingColours(
+  ColourPurple: new settingClasses.SettingColours(
     '#ff00ff',
     'colour',
     'Colours',
     'Standard colour is purple. Used to show buildings outside of the top 30 of PP, for Next Cookie bar, and for various labels',
   ),
-  ColourGray: new SettingColours(
+  ColourGray: new settingClasses.SettingColours(
     '#b3b3b3',
     'colour',
     'Colours',
     'Standard colour is gray. Used to show negative or infinity PP, and for Next Cookie/Next Reindeer bar',
   ),
-  ColourPink: new SettingColours(
+  ColourPink: new settingClasses.SettingColours(
     '#ff1493',
     'colour',
     'Colours',
     'Standard colour is pink. Used for Dragonflight bar',
   ),
-  ColourBrown: new SettingColours(
+  ColourBrown: new settingClasses.SettingColours(
     '#8b4513',
     'colour',
     'Colours',
@@ -261,7 +259,7 @@ const settings = {
   ),
 
   // BarsDisplay
-  BotBar: new SettingStandard(
+  BotBar: new settingClasses.SettingStandardWithFunc(
     1,
     'bool',
     'BarsDisplay',
@@ -272,7 +270,7 @@ const settings = {
       ToggleBotBar();
     },
   ),
-  TimerBar: new SettingStandard(
+  TimerBar: new settingClasses.SettingStandardWithFunc(
     1,
     'bool',
     'BarsDisplay',
@@ -283,7 +281,7 @@ const settings = {
       ToggleTimerBar();
     },
   ),
-  TimerBarPos: new SettingStandard(
+  TimerBarPos: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'BarsDisplay',
@@ -294,7 +292,7 @@ const settings = {
       ToggleTimerBarPos();
     },
   ),
-  TimerBarOverlay: new SettingStandard(
+  TimerBarOverlay: new settingClasses.SettingStandard(
     2,
     'bool',
     'BarsDisplay',
@@ -302,7 +300,7 @@ const settings = {
     'Overlay on timers displaying seconds and/or percentage left',
     true,
   ),
-  AutosaveTimerBar: new SettingStandard(
+  AutosaveTimerBar: new settingClasses.SettingStandard(
     0,
     'bool',
     'BarsDisplay',
@@ -310,7 +308,7 @@ const settings = {
     'Show a timer counting down till next autosave in the timer bar',
     true,
   ),
-  UpBarColour: new SettingStandard(
+  UpBarColour: new settingClasses.SettingStandardWithFunc(
     1,
     'bool',
     'BarsDisplay',
@@ -321,7 +319,7 @@ const settings = {
       ToggleUpgradeBarAndColour();
     },
   ),
-  UpgradeBarFixedPos: new SettingStandard(
+  UpgradeBarFixedPos: new settingClasses.SettingStandardWithFunc(
     1,
     'bool',
     'BarsDisplay',
@@ -332,7 +330,7 @@ const settings = {
       ToggleUpgradeBarFixedPos();
     },
   ),
-  SortBuildings: new SettingStandard(
+  SortBuildings: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'BarsDisplay',
@@ -348,7 +346,7 @@ const settings = {
       UpdateBuildings();
     },
   ),
-  SortUpgrades: new SettingStandard(
+  SortUpgrades: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'BarsDisplay',
@@ -359,7 +357,7 @@ const settings = {
       UpdateUpgrades();
     },
   ),
-  UpgradesNeverCollapse: new SettingStandard(
+  UpgradesNeverCollapse: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'BarsDisplay',
@@ -370,7 +368,7 @@ const settings = {
       UpdateUpgradeSectionsHeight();
     },
   ),
-  DragonAuraInfo: new SettingStandard(
+  DragonAuraInfo: new settingClasses.SettingStandard(
     1,
     'bool',
     'BarsDisplay',
@@ -378,7 +376,7 @@ const settings = {
     'Shows information about changes in CPS and costs in the dragon aura interface.',
     true,
   ),
-  GrimoireBar: new SettingStandard(
+  GrimoireBar: new settingClasses.SettingStandard(
     1,
     'bool',
     'BarsDisplay',
@@ -386,7 +384,7 @@ const settings = {
     'A timer overlay showing how long till the Grimoire magic meter is full',
     true,
   ),
-  GCTimer: new SettingStandard(
+  GCTimer: new settingClasses.SettingStandardWithFunc(
     1,
     'bool',
     'BarsDisplay',
@@ -397,7 +395,7 @@ const settings = {
       ToggleGCTimer();
     },
   ),
-  Favicon: new SettingStandard(
+  Favicon: new settingClasses.SettingStandardWithFunc(
     1,
     'bool',
     'BarsDisplay',
@@ -408,7 +406,7 @@ const settings = {
       UpdateFavicon();
     },
   ),
-  WrinklerButtons: new SettingStandard(
+  WrinklerButtons: new settingClasses.SettingStandardWithFunc(
     1,
     'bool',
     'BarsDisplay',
@@ -419,7 +417,7 @@ const settings = {
       ToggleWrinklerButtons();
     },
   ),
-  HideSectionsButtons: new SettingStandard(
+  HideSectionsButtons: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'BarsDisplay',
@@ -432,7 +430,7 @@ const settings = {
   ),
 
   // Tooltip
-  TooltipBuildUpgrade: new SettingStandard(
+  TooltipBuildUpgrade: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -440,7 +438,7 @@ const settings = {
     'Extra information in building/upgrade tooltips',
     true,
   ),
-  TooltipAmor: new SettingStandard(
+  TooltipAmor: new settingClasses.SettingStandard(
     0,
     'bool',
     'Tooltip',
@@ -451,7 +449,7 @@ const settings = {
     'Add amortization information to buildings tooltip',
     true,
   ),
-  ToolWarnLucky: new SettingStandard(
+  ToolWarnLucky: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -459,7 +457,7 @@ const settings = {
     'A warning when buying if it will put the bank under the amount needed for max "Lucky!" rewards',
     true,
   ),
-  ToolWarnLuckyFrenzy: new SettingStandard(
+  ToolWarnLuckyFrenzy: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -467,7 +465,7 @@ const settings = {
     'A warning when buying if it will put the bank under the amount needed for max "Lucky!" (Frenzy) rewards',
     true,
   ),
-  ToolWarnConjure: new SettingStandard(
+  ToolWarnConjure: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -475,7 +473,7 @@ const settings = {
     'A warning when buying if it will put the bank under the amount needed for max "Conjure Baked Goods" rewards',
     true,
   ),
-  ToolWarnConjureFrenzy: new SettingStandard(
+  ToolWarnConjureFrenzy: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -483,7 +481,7 @@ const settings = {
     'A warning when buying if it will put the bank under the amount needed for max "Conjure Baked Goods" rewards with Frenzy active',
     true,
   ),
-  ToolWarnEdifice: new SettingStandard(
+  ToolWarnEdifice: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -491,7 +489,7 @@ const settings = {
     'A warning when buying if it will put the bank under the amount needed for "Spontaneous Edifice" to possibly give you your most expensive building',
     true,
   ),
-  ToolWarnUser: new SettingInputNumber(
+  ToolWarnUser: new settingClasses.SettingInputNumber(
     0,
     'numscale',
     'Tooltip',
@@ -500,7 +498,7 @@ const settings = {
     0,
     Infinity,
   ),
-  ToolWarnBon: new SettingStandard(
+  ToolWarnBon: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -508,7 +506,7 @@ const settings = {
     'Calculate the warning with or without the bonus CPS you get from buying',
     true,
   ),
-  ToolWarnPos: new SettingStandard(
+  ToolWarnPos: new settingClasses.SettingStandardWithFunc(
     1,
     'bool',
     'Tooltip',
@@ -519,7 +517,7 @@ const settings = {
       ToggleToolWarnPos();
     },
   ),
-  TooltipGrim: new SettingStandard(
+  TooltipGrim: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -527,7 +525,7 @@ const settings = {
     'Extra information in tooltip for grimoire',
     true,
   ),
-  TooltipWrink: new SettingStandard(
+  TooltipWrink: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -535,7 +533,7 @@ const settings = {
     'Shows the amount of cookies a wrinkler will give when popping it',
     true,
   ),
-  TooltipLump: new SettingStandard(
+  TooltipLump: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -543,7 +541,7 @@ const settings = {
     'Shows the current Sugar Lump type in Sugar lump tooltip.',
     true,
   ),
-  TooltipPlots: new SettingStandard(
+  TooltipPlots: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -551,7 +549,7 @@ const settings = {
     'Shows a tooltip for plants that have a cookie reward.',
     true,
   ),
-  TooltipPantheon: new SettingStandard(
+  TooltipPantheon: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -559,7 +557,7 @@ const settings = {
     'Shows additional info in the pantheon tooltip',
     true,
   ),
-  TooltipAscendButton: new SettingStandard(
+  TooltipAscendButton: new settingClasses.SettingStandard(
     1,
     'bool',
     'Tooltip',
@@ -569,7 +567,7 @@ const settings = {
   ),
 
   // Statistics
-  Stats: new SettingStandard(
+  Stats: new settingClasses.SettingStandard(
     1,
     'bool',
     'Statistics',
@@ -577,7 +575,7 @@ const settings = {
     'Extra Cookie Monster statistics!',
     true,
   ),
-  MissingUpgrades: new SettingStandard(
+  MissingUpgrades: new settingClasses.SettingStandard(
     1,
     'bool',
     'Statistics',
@@ -585,7 +583,7 @@ const settings = {
     'Shows missing upgrades in statistics menu',
     true,
   ),
-  MissingAchievements: new SettingStandard(
+  MissingAchievements: new settingClasses.SettingStandard(
     0,
     'bool',
     'Statistics',
@@ -593,7 +591,7 @@ const settings = {
     'Shows missing normal achievements in statistics menu.',
     true,
   ),
-  UpStats: new SettingStandard(
+  UpStats: new settingClasses.SettingStandard(
     1,
     'bool',
     'Statistics',
@@ -601,7 +599,7 @@ const settings = {
     'Default rate is once every 5 seconds',
     false,
   ),
-  HeavenlyChipsTarget: new SettingInputNumber(
+  HeavenlyChipsTarget: new settingClasses.SettingInputNumber(
     1,
     'numscale',
     'Statistics',
@@ -610,7 +608,7 @@ const settings = {
     1,
     Infinity,
   ),
-  ShowMissedGC: new SettingStandard(
+  ShowMissedGC: new settingClasses.SettingStandard(
     1,
     'bool',
     'Statistics',
@@ -620,7 +618,7 @@ const settings = {
   ),
 
   // Notification
-  Title: new SettingStandard(
+  Title: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationGeneral',
@@ -628,7 +626,7 @@ const settings = {
     'Update title with colden cookie/season popup timers; pinned tab highlight only changes the title when a golden cookie/season popup spawns; "!" means that golden cookie/reindeer can spawn',
     true,
   ),
-  GeneralSound: new SettingStandard(
+  GeneralSound: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationGeneral',
@@ -636,7 +634,7 @@ const settings = {
     'Turning this toggle to "off" makes Cookie Monster no longer consider the volume setting of the base game, allowing mod notifications to play with base game volume turned down',
     true,
   ),
-  GCNotification: new SettingStandard(
+  GCNotification: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'NotificationGC',
@@ -649,7 +647,7 @@ const settings = {
       );
     },
   ),
-  GCFlash: new SettingStandard(
+  GCFlash: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationGC',
@@ -657,13 +655,13 @@ const settings = {
     'Flash screen on golden cookie',
     true,
   ),
-  ColourGCFlash: new SettingColours(
+  ColourGCFlash: new settingClasses.SettingColours(
     '#ffffff',
     'colour',
     'NotificationGC',
     'The colour of the GC flash, standard colour is white',
   ),
-  GCSound: new SettingStandard(
+  GCSound: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationGC',
@@ -671,15 +669,15 @@ const settings = {
     'Play a sound on golden cookie',
     true,
   ),
-  GCVolume: new SettingVolume(100, 'vol', 'NotificationGC', [], 'Volume'),
-  GCSoundURL: new SettingStandard(
+  GCVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationGC', [], 'Volume'),
+  GCSoundURL: new settingClasses.SettingStandard(
     'https://freesound.org/data/previews/66/66717_931655-lq.mp3',
     'url',
     'NotificationGC',
     'Sound URL:',
     'URL of the sound to be played when a golden cookie spawns',
   ),
-  FortuneNotification: new SettingStandard(
+  FortuneNotification: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'NotificationFC',
@@ -692,7 +690,7 @@ const settings = {
       );
     },
   ),
-  FortuneFlash: new SettingStandard(
+  FortuneFlash: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationFC',
@@ -700,13 +698,13 @@ const settings = {
     'Flash screen on fortune cookie spawn',
     true,
   ),
-  ColourFortuneFlash: new SettingColours(
+  ColourFortuneFlash: new settingClasses.SettingColours(
     '#ffffff',
     'colour',
     'NotificationFC',
     'The colour of the fortune flash, standard colour is white',
   ),
-  FortuneSound: new SettingStandard(
+  FortuneSound: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationFC',
@@ -714,15 +712,15 @@ const settings = {
     'Play a sound on fortune cookie spawn',
     true,
   ),
-  FortuneVolume: new SettingVolume(100, 'vol', 'NotificationFC', [], 'Volume'),
-  FortuneSoundURL: new SettingStandard(
+  FortuneVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationFC', [], 'Volume'),
+  FortuneSoundURL: new settingClasses.SettingStandard(
     'https://freesound.org/data/previews/174/174027_3242494-lq.mp3',
     'url',
     'NotificationFC',
     'Sound URL:',
     'URL of the sound to be played when the ticker has a fortune cookie',
   ),
-  SeaNotification: new SettingStandard(
+  SeaNotification: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'NotificationSea',
@@ -735,7 +733,7 @@ const settings = {
       );
     },
   ),
-  SeaFlash: new SettingStandard(
+  SeaFlash: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationSea',
@@ -743,13 +741,13 @@ const settings = {
     'Flash screen on season popup',
     true,
   ),
-  ColourSeaFlash: new SettingColours(
+  ColourSeaFlash: new settingClasses.SettingColours(
     '#ffffff',
     'colour',
     'NotificationSea',
     'The colour of the season popup flash, standard colour is white',
   ),
-  SeaSound: new SettingStandard(
+  SeaSound: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationSea',
@@ -757,15 +755,15 @@ const settings = {
     'Play a sound on season popup',
     true,
   ),
-  SeaVolume: new SettingVolume(100, 'vol', 'NotificationSea', [], 'Volume'),
-  SeaSoundURL: new SettingStandard(
+  SeaVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationSea', [], 'Volume'),
+  SeaSoundURL: new settingClasses.SettingStandard(
     'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3',
     'url',
     'NotificationSea',
     'Sound URL:',
     'URL of the sound to be played when on season popup spawns',
   ),
-  GardFlash: new SettingStandard(
+  GardFlash: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationGard',
@@ -773,13 +771,13 @@ const settings = {
     'Flash screen on garden tick',
     true,
   ),
-  ColourGardFlash: new SettingColours(
+  ColourGardFlash: new settingClasses.SettingColours(
     '#ffffff',
     'colour',
     'NotificationGard',
     'The colour of the garden flash, standard colour is white',
   ),
-  GardSound: new SettingStandard(
+  GardSound: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationGard',
@@ -787,15 +785,15 @@ const settings = {
     'Play a sound on garden tick',
     true,
   ),
-  GardVolume: new SettingVolume(100, 'vol', 'NotificationGard', [], 'Volume'),
-  GardSoundURL: new SettingStandard(
+  GardVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationGard', [], 'Volume'),
+  GardSoundURL: new settingClasses.SettingStandard(
     'https://freesound.org/data/previews/103/103046_861714-lq.mp3',
     'url',
     'NotificationGard',
     'Garden Tick Sound URL:',
     'URL of the sound to be played when the garden ticks',
   ),
-  MagicNotification: new SettingStandard(
+  MagicNotification: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'NotificationMagi',
@@ -808,7 +806,7 @@ const settings = {
       );
     },
   ),
-  MagicFlash: new SettingStandard(
+  MagicFlash: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationMagi',
@@ -816,13 +814,13 @@ const settings = {
     'Flash screen when magic reaches maximum',
     true,
   ),
-  ColourMagicFlash: new SettingColours(
+  ColourMagicFlash: new settingClasses.SettingColours(
     '#ffffff',
     'colour',
     'NotificationMagi',
     'The colour of the magic flash, standard colour is white',
   ),
-  MagicSound: new SettingStandard(
+  MagicSound: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationMagi',
@@ -830,15 +828,15 @@ const settings = {
     'Play a sound when magic reaches maximum',
     true,
   ),
-  MagicVolume: new SettingVolume(100, 'vol', 'NotificationMagi', [], 'Volume'),
-  MagicSoundURL: new SettingStandard(
+  MagicVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationMagi', [], 'Volume'),
+  MagicSoundURL: new settingClasses.SettingStandard(
     'https://freesound.org/data/previews/221/221683_1015240-lq.mp3',
     'url',
     'NotificationMagi',
     'Sound URL:',
     'URL of the sound to be played when magic reaches maxium',
   ),
-  WrinklerNotification: new SettingStandard(
+  WrinklerNotification: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'NotificationWrink',
@@ -851,7 +849,7 @@ const settings = {
       );
     },
   ),
-  WrinklerFlash: new SettingStandard(
+  WrinklerFlash: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationWrink',
@@ -859,13 +857,13 @@ const settings = {
     'Flash screen when a wrinkler appears',
     true,
   ),
-  ColourWrinklerFlash: new SettingColours(
+  ColourWrinklerFlash: new settingClasses.SettingColours(
     '#ffffff',
     'colour',
     'NotificationWrink',
     'The colour of the wrinkler flash, standard colour is white',
   ),
-  WrinklerSound: new SettingStandard(
+  WrinklerSound: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationWrink',
@@ -873,15 +871,15 @@ const settings = {
     'Play a sound when a wrinkler appears',
     true,
   ),
-  WrinklerVolume: new SettingVolume(100, 'vol', 'NotificationWrink', [], 'Volume'),
-  WrinklerSoundURL: new SettingStandard(
+  WrinklerVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationWrink', [], 'Volume'),
+  WrinklerSoundURL: new settingClasses.SettingStandard(
     'https://freesound.org/data/previews/124/124186_8043-lq.mp3',
     'url',
     'NotificationWrink',
     'Sound URL:',
     'URL of the sound to be played when a wrinkler appears',
   ),
-  WrinklerMaxNotification: new SettingStandard(
+  WrinklerMaxNotification: new settingClasses.SettingStandardWithFunc(
     0,
     'bool',
     'NotificationWrinkMax',
@@ -894,7 +892,7 @@ const settings = {
       );
     },
   ),
-  WrinklerMaxFlash: new SettingStandard(
+  WrinklerMaxFlash: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationWrinkMax',
@@ -902,13 +900,13 @@ const settings = {
     'Flash screen when the maximum amount of Wrinklers has appeared',
     true,
   ),
-  ColourWrinklerMaxFlash: new SettingColours(
+  ColourWrinklerMaxFlash: new settingClasses.SettingColours(
     '#ffffff',
     'colour',
     'NotificationWrinkMax',
     'The colour of the maximum wrinkler flash, standard colour is white',
   ),
-  WrinklerMaxSound: new SettingStandard(
+  WrinklerMaxSound: new settingClasses.SettingStandard(
     1,
     'bool',
     'NotificationWrinkMax',
@@ -916,8 +914,14 @@ const settings = {
     'Play a sound when the maximum amount of wrinklers has appeared',
     true,
   ),
-  WrinklerMaxVolume: new SettingVolume(100, 'vol', 'NotificationWrinkMax', [], 'Volume'),
-  WrinklerMaxSoundURL: new SettingStandard(
+  WrinklerMaxVolume: new settingClasses.SettingVolume(
+    100,
+    'vol',
+    'NotificationWrinkMax',
+    [],
+    'Volume',
+  ),
+  WrinklerMaxSoundURL: new settingClasses.SettingStandard(
     'https://freesound.org/data/previews/152/152743_15663-lq.mp3',
     'url',
     'NotificationWrinkMax',
@@ -926,7 +930,7 @@ const settings = {
   ),
 
   // Miscellaneous
-  BulkBuyBlock: new SettingStandard(
+  BulkBuyBlock: new settingClasses.SettingStandard(
     1,
     'bool',
     'Miscellaneous',
@@ -934,7 +938,7 @@ const settings = {
     "Block clicking bulk buying when you can't buy all. This prevents buying 7 of a building when you are in buy-10 or buy-100 mode.",
     true,
   ),
-  FavouriteSettings: new SettingStandard(
+  FavouriteSettings: new settingClasses.SettingStandardWithFunc(
     1,
     'bool',
     'Miscellaneous',

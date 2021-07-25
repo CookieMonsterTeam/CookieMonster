@@ -39,7 +39,7 @@ export default function UpdateBuildings() {
       Object.keys(target).forEach((i) => {
         l(`productPrice${Game.Objects[i].id}`).style.color =
           Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings[
-            `Colour${target[i].color}`
+            `Colour${target[i].colour}`
           ];
       });
       l(`storeBulk${CacheMinPPBulk}`).style.color =
@@ -89,14 +89,14 @@ export default function UpdateBuildings() {
       const o = {};
       o.name = k;
       o.pp = CacheObjects1[k].pp;
-      o.color = CacheObjects1[k].color;
+      o.colour = CacheObjects1[k].colour;
       return o;
     });
     // Sort by pp colour group, then by pp.
     arr.sort((a, b) =>
-      ColoursOrdering.indexOf(a.color) === ColoursOrdering.indexOf(b.color)
+      ColoursOrdering.indexOf(a.colour) === ColoursOrdering.indexOf(b.colour)
         ? a.pp - b.pp
-        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color),
+        : ColoursOrdering.indexOf(a.colour) - ColoursOrdering.indexOf(b.colour),
     );
   } else if (
     Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.SortBuildings === 2
@@ -105,14 +105,14 @@ export default function UpdateBuildings() {
       const o = {};
       o.name = k;
       o.pp = target[k].pp;
-      o.color = target[k].color;
+      o.colour = target[k].colour;
       return o;
     });
     // Sort by pp colour group, then by pp.
     arr.sort((a, b) =>
-      ColoursOrdering.indexOf(a.color) === ColoursOrdering.indexOf(b.color)
+      ColoursOrdering.indexOf(a.colour) === ColoursOrdering.indexOf(b.colour)
         ? a.pp - b.pp
-        : ColoursOrdering.indexOf(a.color) - ColoursOrdering.indexOf(b.color),
+        : ColoursOrdering.indexOf(a.colour) - ColoursOrdering.indexOf(b.colour),
     );
   } else if (
     Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.SortBuildings === 3

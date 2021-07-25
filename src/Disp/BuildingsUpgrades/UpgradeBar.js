@@ -24,11 +24,11 @@ function CreateUpgradeBarLegend() {
   title.textContent = 'Legend';
   legend.appendChild(title);
 
-  const legendLine = function (color, text) {
+  const legendLine = function (colour, text) {
     const div = document.createElement('div');
     div.style.verticalAlign = 'middle';
     const span = document.createElement('span');
-    span.className = ColourBackPre + color;
+    span.className = ColourBackPre + colour;
     span.style.display = 'inline-block';
     span.style.height = '10px';
     span.style.width = '10px';
@@ -70,10 +70,10 @@ export default function CreateUpgradeBar() {
     Game.tooltip.draw(this, escape(placeholder.innerHTML), 'store');
   };
 
-  const upgradeNumber = function (id, color) {
+  const upgradeNumber = function (id, colour) {
     const span = document.createElement('span');
     span.id = id;
-    span.className = ColourTextPre + color;
+    span.className = ColourTextPre + colour;
     span.style.width = '14.28571428571429%';
     span.style.display = 'inline-block';
     span.textContent = '0';

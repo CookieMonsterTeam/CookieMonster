@@ -16,6 +16,6 @@ export default function SugarLump() {
     tooltipBox.appendChild(lumpType);
     const lumpColour = GetLumpColour(Game.lumpCurrentType);
     lumpType.textContent = lumpColour.text;
-    lumpType.className = ColourTextPre + lumpColour.color;
+    lumpType.className = ColourTextPre + lumpColour.colour;
   } else l('CMTooltipArea').style.display = 'none';
 }
