@@ -49,7 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.28.4",
     "chai": "^4.3.4",
-    "eslint": "^7.31.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.4",
@@ -60,7 +60,7 @@
     "ts-loader": "^9.2.4",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.4",
-    "webpack": "^5.45.1",
+    "webpack": "^5.50.0",
     "webpack-cli": "^4.7.2"
   },
   "ccrepo": {
