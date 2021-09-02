@@ -66,8 +66,8 @@ export default function ReplaceNative() {
   l('bigCookie').removeEventListener('click', Game.ClickCookie, false);
   l('bigCookie').addEventListener(
     'click',
-    () => {
-      FixMouseY(Game.ClickCookie);
+    (event) => {
+      FixMouseY(()=> Game.ClickCookie(event,0));
     },
     false,
   );
