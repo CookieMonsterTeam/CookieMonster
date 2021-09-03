@@ -8,6 +8,11 @@ const CM = {
   save,
 };
 
+if (typeof Steam !== 'undefined') {
+  // Need to add a delay for steam
+  setTimeout(function () {}, 300);
+}
+
 Game.registerMod('CookieMonster', CM);
 
 // Game.registerMod also calls CM.load() which calls the loop hook
