@@ -13,7 +13,7 @@ import ReplaceTooltipGrimoire from './TooltipGrimoire';
  * This function fixes replaces the .draw function of the Grimoire
  */
 function ReplaceNativeGrimoireDraw() {
-  if (!HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
+  if (Game.drawT % 5 === 0 && !HasReplaceNativeGrimoireDraw && Game.Objects['Wizard tower'].minigameLoaded) {
     const { minigame } = Game.Objects['Wizard tower'];
     BackupGrimoireDraw = minigame.draw;
     Game.Objects['Wizard tower'].minigame.draw = function () {
