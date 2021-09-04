@@ -8,7 +8,16 @@ const CM = {
   save,
 };
 
-Game.registerMod('CookieMonster', CM);
+if (typeof Steam !== 'undefined') {
+  // Need to add a delay for steam
+  setTimeout(function () {
+    Game.registerMod('CookieMonster', CM);
+  }, 2000);
+} else {
+  Game.registerMod('CookieMonster', CM);
+}
+
+
 
 // Game.registerMod also calls CM.load() which calls the loop hook
 // Thus sounds normally play at start up as Season and Garden states are checked
