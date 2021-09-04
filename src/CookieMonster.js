@@ -10,7 +10,7 @@ const CM = {
 
 if (typeof Steam !== 'undefined') {
   // Need to add a delay for steam
-  setTimeout(function () {}, 300);
+  setTimeout(function () {}, 2000);
 }
 
 Game.registerMod('CookieMonster', CM);
