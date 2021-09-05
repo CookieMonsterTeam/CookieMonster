@@ -10,7 +10,7 @@ export default function GetTimeColour(time) {
   let colour;
   let text;
   if (time <= 0) {
-    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimeFormat)
+    if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimeFormat === 1)
       text = '00:00:00:00:00';
     else text = 'Done!';
     colour = ColourGreen;

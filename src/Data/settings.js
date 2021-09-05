@@ -129,7 +129,7 @@ const settings = {
     0,
     'bool',
     'Notation',
-    ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX'],
+    ['Time XXd, XXh, XXm, XXs', 'Time XX:XX:XX:XX:XX', 'Time XXx, XXx'],
     'Change the time format',
     false,
   ),
