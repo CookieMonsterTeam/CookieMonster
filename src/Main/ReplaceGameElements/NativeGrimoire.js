@@ -26,6 +26,7 @@ function ReplaceNativeGrimoireDraw() {
         minigame.magicBarTextL.innerHTML += ` (${FormatTime(
           CalculateGrimoireRefillTime(minigame.magic, minigame.magicM, minigame.magicM),
         )})`;
+        minigame.magicBarL.style.width = "";
       }
     };
     HasReplaceNativeGrimoireDraw = true;
