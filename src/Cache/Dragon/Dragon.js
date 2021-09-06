@@ -30,13 +30,14 @@ function GetDragonCostTooltipText() {
     // Early levels cost cookies, no extra calculation needed.
   } else if (Game.dragonLevel < 23) {
     // Dragon levels cost X number of a specific building
-    const match = Game.dragonLevels[Game.dragonLevel].costStr().toString().match(/(\d+) (.+)/);
-    if (!match) {
+    const target = Game.ObjectsById[Game.dragonLevel-5];
+    if (!target) {
       return 'Cost to rebuy: unknown'
     }
-    const targetName = match[2];
-    const target = Object.values(Game.Objects).find(x => x.bsingle === targetName || x.bplural === targetName);
-    if (!target) {
+
+    const match = Game.dragonLevels[Game.dragonLevel].buy.toString()
+      .match(/sacrifice\((.*?)\)/);
+    if (!match) {
       return 'Cost to rebuy: unknown'
     }
     const amount = parseInt(match[1], 10);
@@ -49,7 +50,8 @@ function GetDragonCostTooltipText() {
     return `Cost to rebuy: ${Beautify(cost)}`;
   } else if (Game.dragonLevel < 25) {
     // Dragon levels cost X of every building
-    const match = Game.dragonLevels[Game.dragonLevel].costStr().toString().match(/(\d+) (.+)/);
+    const match = Game.dragonLevels[Game.dragonLevel].buy.toString()
+      .match(/sacrifice\((.*?)\)/);
     if (!match) {
       return 'Cost to rebuy: unknown'
     }
