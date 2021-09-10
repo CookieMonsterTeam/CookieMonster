@@ -29,7 +29,7 @@ body:
       description:
         How can you reproduce the bug?
       placeholder: |
-        The steps needed to reproduce the behavior:
+        The steps needed to reproduce the behavior: |
         1.
     validations:
       required: true
