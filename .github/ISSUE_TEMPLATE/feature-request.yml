@@ -1,0 +1,29 @@
+name: ✨ Feature request
+description: Request a new feature for Cookie Monster
+labels: [Enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Thank you for wanting to suggest a new function for Cookie Monster!**
+
+        ⚠ Please make sure that this [feature wasn't already requested][issue search], or already implemented in the ``dev`` branch.
+
+
+        [issue search]: https://github.com/CookieMonsterTeam/CookieMonster/issues?q=is%3Aissue+is%3Aopen+
+
+  - type: textarea
+    id: what-is-wanted
+    attributes:
+      label: Feature description
+      description:
+        Describe the function you'd like to see added to CookieMonster
+      placeholder: |
+        # A clear and concise description of what you want to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional files
+      description: Add any other files such as save files or screenshots about the feature request here.
