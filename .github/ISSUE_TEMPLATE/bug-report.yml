@@ -1,0 +1,55 @@
+name: 🐛 Bug report
+description: Report a bug in Cookie Monster
+labels: [Bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Thank you for wanting to report a bug in Cookie Monster!**
+
+        ⚠ Please make sure that this [issue wasn't already requested][issue search], or already implemented in the ``dev`` branch.
+
+
+        [issue search]: https://github.com/CookieMonsterTeam/CookieMonster/issues?q=is%3Aissue+is%3Aopen+
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Bug description
+      description:
+        What is the bug about?
+      placeholder: |
+        # Please describe the bug and what you would have expected the mod to do
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: To reproduce
+      description:
+        How can you reproduce the bug?
+      placeholder: |
+        The steps needed to reproduce the behavior: 
+        1.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshot
+      description: Please provide any relevant screenshots
+  - type: textarea
+    id: savefile
+    attributes:
+      label: Save file
+      description: Please provide a save file and paste it in between the "```"
+      placeholder: |
+        ```SAVE FILE HERE```
+  - type: textarea
+    id: environment
+    attributes:
+      label: Browser / Steam / Version
+      description: Are you playing on browser (if so, which?) or Steam? And which version?
+      placeholder: Steam, version 2.04
+    validations:
+      required: true
