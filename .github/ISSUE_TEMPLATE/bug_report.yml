@@ -43,7 +43,8 @@ body:
     attributes:
       label: Save file
       description: Please provide a save file and paste it in between the "```"
-      placeholder: ```SAVE FILE HERE```
+      placeholder: |
+        ```SAVE FILE HERE```
   - type: textarea
     id: environment
     attributes:
