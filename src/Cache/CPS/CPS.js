@@ -1,19 +1,20 @@
 import { ClickTimes, CookieTimes } from '../../Disp/VariablesAndData';
+import FillCMDCache from '../FillCMDCache';
 import {
-  CacheAverageClicks, // eslint-disable-line no-unused-vars
+  CacheAverageClicks,
   CacheAverageCPS,
   CacheAverageGainBank,
   CacheAverageGainChoEgg,
   CacheAverageGainWrink,
   CacheAverageGainWrinkFattest,
-  CacheAvgCPSWithChoEgg, // eslint-disable-line no-unused-vars
+  CacheAvgCPSWithChoEgg,
   CacheLastChoEgg,
   CacheLastClicks,
   CacheLastCookies,
   CacheLastCPSCheck,
   CacheLastWrinkCookies,
   CacheLastWrinkFattestCookies,
-  CacheRealCookiesEarned, // eslint-disable-line no-unused-vars
+  CacheRealCookiesEarned,
   CacheSellForChoEgg,
   CacheWrinklersFattest,
   CacheWrinklersTotal,
@@ -93,4 +94,21 @@ export default function CacheAvgCPS() {
       ClickTimes[Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.AvgClicksHist],
     );
   }
+
+  FillCMDCache({
+    CacheRealCookiesEarned,
+    CacheLastCPSCheck,
+    CacheLastCookies,
+    CacheLastWrinkCookies,
+    CacheLastWrinkFattestCookies,
+    CacheLastChoEgg,
+    CacheLastClicks,
+    CacheAverageGainBank,
+    CacheAverageGainWrink,
+    CacheAverageGainWrinkFattest,
+    CacheAverageGainChoEgg,
+    CacheAverageCPS,
+    CacheAvgCPSWithChoEgg,
+    CacheAverageClicks,
+  });
 }

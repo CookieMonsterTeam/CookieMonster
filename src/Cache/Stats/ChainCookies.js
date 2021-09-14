@@ -1,17 +1,18 @@
 import GetCPSBuffMult from '../CPS/GetCPSBuffMult';
+import FillCMDCache from '../FillCMDCache';
 import {
   CacheChainFrenzyMaxReward,
-  CacheChainFrenzyRequired, // eslint-disable-line no-unused-vars
-  CacheChainFrenzyRequiredNext, // eslint-disable-line no-unused-vars
+  CacheChainFrenzyRequired,
+  CacheChainFrenzyRequiredNext,
   CacheChainFrenzyWrathMaxReward,
-  CacheChainFrenzyWrathRequired, // eslint-disable-line no-unused-vars
-  CacheChainFrenzyWrathRequiredNext, // eslint-disable-line no-unused-vars
+  CacheChainFrenzyWrathRequired,
+  CacheChainFrenzyWrathRequiredNext,
   CacheChainMaxReward,
-  CacheChainRequired, // eslint-disable-line no-unused-vars
-  CacheChainRequiredNext, // eslint-disable-line no-unused-vars
+  CacheChainRequired,
+  CacheChainRequiredNext,
   CacheChainWrathMaxReward,
-  CacheChainWrathRequired, // eslint-disable-line no-unused-vars
-  CacheChainWrathRequiredNext, // eslint-disable-line no-unused-vars
+  CacheChainWrathRequired,
+  CacheChainWrathRequiredNext,
   CacheDragonsFortuneMultAdjustment,
   CacheGoldenCookiesMult,
   CacheNoGoldSwitchCookiesPS,
@@ -89,4 +90,19 @@ export function CacheChain() {
   CacheChainFrenzyWrathRequired = (CacheChainFrenzyWrathMaxReward[1] * 2) / CacheWrathCookiesMult;
   CacheChainFrenzyWrathRequiredNext =
     CacheChainFrenzyWrathMaxReward[2] / 60 / 60 / 6 / CacheDragonsFortuneMultAdjustment;
+
+  FillCMDCache({
+    CacheChainMaxReward,
+    CacheChainRequired,
+    CacheChainRequiredNext,
+    CacheChainWrathMaxReward,
+    CacheChainWrathRequired,
+    CacheChainWrathRequiredNext,
+    CacheChainFrenzyMaxReward,
+    CacheChainFrenzyRequired,
+    CacheChainFrenzyRequiredNext,
+    CacheChainFrenzyWrathMaxReward,
+    CacheChainFrenzyWrathRequired,
+    CacheChainFrenzyWrathRequiredNext,
+  });
 }

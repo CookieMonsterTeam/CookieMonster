@@ -1,5 +1,6 @@
 import CalcNoGoldSwitchCPS from '../../Sim/Calculations/NoGoldenSwitchCalc';
-import { CacheNoGoldSwitchCookiesPS } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
+import FillCMDCache from '../FillCMDCache';
+import { CacheNoGoldSwitchCookiesPS } from '../VariablesAndData';
 
 /**
  * This function calculates CPS without the Golden Switch as it might be needed in other functions
@@ -10,4 +11,6 @@ export default function CacheNoGoldSwitchCPS() {
   if (Game.Has('Golden switch [off]')) {
     CacheNoGoldSwitchCookiesPS = CalcNoGoldSwitchCPS();
   } else CacheNoGoldSwitchCookiesPS = Game.cookiesPs;
+
+  FillCMDCache({ CacheNoGoldSwitchCookiesPS });
 }

@@ -3,6 +3,7 @@
 import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
 import BuyBuildingsBonusIncome from '../../Sim/SimulationEvents/BuyBuildingBonusIncome';
 import BuyUpgradesBonusIncome from '../../Sim/SimulationEvents/BuyUpgrades';
+import FillCMDCache from '../FillCMDCache';
 import {
   CacheAverageGainBank,
   CacheAverageGainWrink,
@@ -93,6 +94,8 @@ export function CacheBuildingsPrices() {
       CacheObjectsNextAchievement[i].AmountNeeded,
     );
   });
+
+  FillCMDCache({ CacheObjectsNextAchievement });
 }
 
 /**
