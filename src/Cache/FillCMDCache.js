@@ -12,7 +12,11 @@ export default function FillCMDCache(caches) {
   Object.keys(caches).forEach((name) => {
     const exportName = name.replace(/^Cache/, '');
 
-    // Passing through JSON ensures that no references are retained.
-    window.CookieMonsterData.Cache[exportName] = JSON.parse(JSON.stringify(caches[name]));
+    if (typeof caches[name] === 'undefined') {
+      window.CookieMonsterData.Cache[exportName] = undefined;
+    } else {
+      // Passing through JSON ensures that no references are retained.
+      window.CookieMonsterData.Cache[exportName] = JSON.parse(JSON.stringify(caches[name]));
+    }
   });
 }
