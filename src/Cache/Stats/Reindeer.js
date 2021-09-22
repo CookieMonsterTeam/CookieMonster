@@ -1,4 +1,5 @@
-import { CacheSeaSpec } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
+import FillCMDCache from '../FillCMDCache';
+import { CacheSeaSpec } from '../VariablesAndData';
 
 /**
  * This functions caches the reward of popping a reindeer
@@ -13,4 +14,6 @@ export default function CacheSeasonSpec() {
     CacheSeaSpec = Math.max(25, val);
     if (Game.Has('Ho ho ho-flavored frosting')) CacheSeaSpec *= 2;
   }
+
+  FillCMDCache({ CacheSeaSpec });
 }

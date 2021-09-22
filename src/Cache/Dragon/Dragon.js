@@ -3,6 +3,7 @@
 import Beautify from '../../Disp/BeautifyAndFormatting/Beautify';
 import CopyData from '../../Sim/SimulationData/CopyData';
 import { SimDoSims, SimObjects } from '../../Sim/VariablesAndData';
+import FillCMDCache from '../FillCMDCache';
 import { CacheCostDragonUpgrade, CacheLastDragonLevel } from '../VariablesAndData'; // eslint-disable-line no-unused-vars
 
 /**
@@ -63,4 +64,6 @@ export default function CacheDragonCost() {
     }
     CacheLastDragonLevel = Game.dragonLevel;
   }
+
+  FillCMDCache({ CacheLastDragonLevel });
 }

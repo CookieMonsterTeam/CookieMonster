@@ -2,19 +2,20 @@
 
 import SimHas from '../../Sim/ReplacedGameFunctions/SimHas';
 import GetCPSBuffMult from '../CPS/GetCPSBuffMult';
+import FillCMDCache from '../FillCMDCache';
 import {
   CacheConjure,
-  CacheConjureReward, // eslint-disable-line no-unused-vars
+  CacheConjureReward,
   CacheDragonsFortuneMultAdjustment,
   CacheEdifice,
-  CacheEdificeBuilding, // eslint-disable-line no-unused-vars
+  CacheEdificeBuilding,
   CacheGoldenCookiesMult,
   CacheLucky,
   CacheLuckyFrenzy,
-  CacheLuckyReward, // eslint-disable-line no-unused-vars
-  CacheLuckyRewardFrenzy, // eslint-disable-line no-unused-vars
-  CacheLuckyWrathReward, // eslint-disable-line no-unused-vars
-  CacheLuckyWrathRewardFrenzy, // eslint-disable-line no-unused-vars
+  CacheLuckyReward,
+  CacheLuckyRewardFrenzy,
+  CacheLuckyWrathReward,
+  CacheLuckyWrathRewardFrenzy,
   CacheNoGoldSwitchCookiesPS,
   CacheWrathCookiesMult,
 } from '../VariablesAndData';
@@ -53,6 +54,19 @@ export function CacheStatsCookies() {
       CacheEdificeBuilding = i;
     }
   });
+
+  FillCMDCache({
+    CacheLucky,
+    CacheLuckyReward,
+    CacheLuckyWrathReward,
+    CacheLuckyFrenzy,
+    CacheLuckyRewardFrenzy,
+    CacheLuckyWrathRewardFrenzy,
+    CacheConjure,
+    CacheConjureReward,
+    CacheEdifice,
+    CacheEdificeBuilding,
+  });
 }
 
 /**
@@ -84,4 +98,10 @@ export function CacheGoldenAndWrathCookiesMults() {
   if (Game.shimmerTypes.golden.n === 0) {
     CacheDragonsFortuneMultAdjustment *= 1 + Game.auraMult("Dragon's Fortune") * 1.23;
   }
+
+  FillCMDCache({
+    CacheGoldenCookiesMult,
+    CacheWrathCookiesMult,
+    CacheDragonsFortuneMultAdjustment,
+  });
 }

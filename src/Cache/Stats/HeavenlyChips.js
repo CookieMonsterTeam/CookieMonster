@@ -1,5 +1,6 @@
+import FillCMDCache from '../FillCMDCache';
 import {
-  CacheHCPerSecond, // eslint-disable-line no-unused-vars
+  CacheHCPerSecond,
   CacheLastHeavenlyCheck,
   CacheLastHeavenlyChips,
   HeavenlyChipsDiff,
@@ -32,4 +33,6 @@ export default function CacheHeavenlyChipsPS() {
     // Get average gain over period of 5 seconds
     CacheHCPerSecond = HeavenlyChipsDiff.calcAverage(5);
   }
+
+  FillCMDCache({ CacheLastHeavenlyCheck, CacheLastHeavenlyChips, CacheHCPerSecond });
 }

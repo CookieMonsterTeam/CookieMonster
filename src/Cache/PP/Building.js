@@ -1,9 +1,10 @@
 import GetWrinkConfigBank from '../../Disp/HelperFunctions/GetWrinkConfigBank';
 import { ColourGray } from '../../Disp/VariablesAndData';
 import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
+import FillCMDCache from '../FillCMDCache';
 import {
-  CacheMinPP, // eslint-disable-line no-unused-vars
-  CacheMinPPBulk, // eslint-disable-line no-unused-vars
+  CacheMinPP,
+  CacheMinPPBulk,
   CacheObjects1,
   CacheObjects10,
   CacheObjects100,
@@ -106,4 +107,6 @@ export default function CacheBuildingsPP() {
   CacheColour(CacheObjects1, 1);
   CacheColour(CacheObjects10, 10);
   CacheColour(CacheObjects100, 100);
+
+  FillCMDCache({ CacheMinPP, CacheMinPPBulk, CachePPArray });
 }

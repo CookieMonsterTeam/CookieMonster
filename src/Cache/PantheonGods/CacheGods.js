@@ -1,4 +1,5 @@
 import CalculateChangeGod from '../../Sim/SimulationEvents/GodChange';
+import FillCMDCache from '../FillCMDCache';
 import { CacheGods } from '../VariablesAndData';
 
 /**
@@ -10,4 +11,6 @@ export default function CachePantheonGods() {
       CacheGods[god][slot] = CalculateChangeGod(god, slot);
     }
   }
+
+  FillCMDCache({ CacheGods });
 }

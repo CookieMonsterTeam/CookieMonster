@@ -1,4 +1,5 @@
 import BuildingGetPrice from '../../Sim/SimulationEvents/BuyBuilding';
+import FillCMDCache from '../FillCMDCache';
 import { CacheObjectsNextAchievement } from '../VariablesAndData';
 import IndividualAmountTillNextAchievement from './IndividualAmountTillNextAchievement';
 
@@ -41,5 +42,7 @@ export default function AllAmountTillNextAchievement(forceRecalc) {
       };
     }
   });
-  CacheObjectsNextAchievement = result; // eslint-disable-line no-unused-vars
+  CacheObjectsNextAchievement = result;
+
+  FillCMDCache({ CacheObjectsNextAchievement });
 }
