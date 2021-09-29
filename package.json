@@ -72,6 +72,6 @@
   },
   "dependencies": {
     "@eastdesire/jscolor": "2.4.6",
-    "@cookiemonsterteam/cookiemonsterframework": "0.2.2"
+    "@cookiemonsterteam/cookiemonsterframework": "0.2.3"
   }
 }
