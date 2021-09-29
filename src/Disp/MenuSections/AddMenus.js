@@ -1,3 +1,4 @@
+import createMenuOptions from './createMenuOptions';
 import AddMenuStats from './Statistics/AddStatsPage';
 
 /**
@@ -12,5 +13,10 @@ export default function AddMenu() {
       title.textContent = 'Cookie Monster Statistics';
       AddMenuStats(title);
     }
+  } else if (Game.onMenu === 'prefs') { // Added because Framework is broken
+    l('menu').childNodes[2].insertBefore(
+      createMenuOptions(),
+      l('menu').childNodes[2].childNodes[l('menu').childNodes[2].childNodes.length - 1],
+    );
   }
 }
