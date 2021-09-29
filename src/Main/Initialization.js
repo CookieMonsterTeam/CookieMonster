@@ -18,7 +18,7 @@ import ReplaceNative from './ReplaceGameFunctions/ReplaceNative';
 import { LastModCount } from './VariablesAndData'; // eslint-disable-line no-unused-vars
 import AddWrinklerAreaDetect from './WrinklerArea/AddDetectArea';
 import createBuildingLockButtons from '../Disp/buildingTiles/createBuildingLockButtons';
-import createMenuInfo from '../Disp/MenuSections/createMenuInfo';
+// import createMenuInfo from '../Disp/MenuSections/createMenuInfo';
 import createMenuOptions from '../Disp/MenuSections/createMenuOptions';
 
 /**
@@ -29,7 +29,8 @@ export default function InitializeCookieMonster() {
   window.CookieMonsterData = {};
 
   // Register listeners in Cookie Monster Mod Framework
-  Game.mods.cookieMonsterFramework.listeners.infoMenu.push(createMenuInfo);
+  // Commented because Framework is currently broken
+  // Game.mods.cookieMonsterFramework.listeners.infoMenu.push(createMenuInfo);
   Game.mods.cookieMonsterFramework.listeners.optionsMenu.push(createMenuOptions);
 
   InitData();
