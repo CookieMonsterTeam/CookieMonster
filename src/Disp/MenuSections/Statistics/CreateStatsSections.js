@@ -402,6 +402,19 @@ export function SpellsSection() {
     conjureFrenzyReqSmall.textContent = ` (${conjureFrenzyTime})`;
     conjureFrenzyReqFrag.appendChild(conjureFrenzyReqSmall);
   }
+  const spellsCast = parseInt(document.getElementById("grimoireInfo").innerHTML.match(/[0-9]+/) || [0], 10);
+  const spellsNeeded = (function(val) {
+    switch(true) {
+      case (val < 9):
+        return 9 - val;
+      case (val < 99):
+        return 99 - val;
+      case (val < 999):
+        return 999 - val;
+      default:
+        return 'NA';
+    }
+  })(spellsCast);
   section.appendChild(
     StatsListing(
       'withTooltip',
@@ -436,6 +449,15 @@ export function SpellsSection() {
       ),
     );
   }
+  section.appendChild(
+    StatsListing(
+      'basic',
+      'Spells cast',
+      spellsCast < 999
+        ? document.createTextNode(`Next achievement in ${spellsNeeded}, current total: ${Beautify(spellsCast)}`)
+        : document.createTextNode(`No new achievement, current total: ${Beautify(spellsCast)}`)
+    ),
+  );
   return section;
 }
 
