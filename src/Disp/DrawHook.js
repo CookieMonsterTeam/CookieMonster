@@ -1,5 +1,4 @@
 import ToggleWrinklerButtons from '../Config/Toggles/ToggleWrinklerButtons';
-import Beautify from './BeautifyAndFormatting/Beautify';
 import UpdateBuildings from './BuildingsUpgrades/Buildings';
 import UpdateUpgradeSectionsHeight from './BuildingsUpgrades/UpdateUpgradeSectionsHeight';
 import UpdateUpgrades from './BuildingsUpgrades/Upgrades';
@@ -50,11 +49,4 @@ export default function CMDrawHook() {
 
   // Update display of wrinkler buttons, this checks if Elder Pledge has been bought and if they should be disabled
   ToggleWrinklerButtons();
-
-  // Replace Cookies counter because Orteil uses very weird code to "pad" it...
-  if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.Scale && !Game.OnAscend) {
-    let str = l('cookies').innerHTML.replace(/.*(?=<br>)/i, Beautify(Game.cookies));
-    if (Game.prefs.monospace) str = `<span class="monospace">${str}</span>`;
-    l('cookies').innerHTML = str;
-  }
 }
