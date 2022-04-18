@@ -44,7 +44,7 @@
   },
   "homepage": "https://github.com/CookieMonsterTeam/CookieMonster#readme",
   "devDependencies": {
-    "@types/chai": "^4.2.19",
+    "@types/chai": "^4.3.1",
     "@types/mocha": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "@typescript-eslint/parser": "^4.30.0",
