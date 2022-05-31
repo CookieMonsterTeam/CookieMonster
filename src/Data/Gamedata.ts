@@ -20,6 +20,7 @@ export const Fortunes: string[] = [
   'Fortune #016',
   'Fortune #017',
   'Fortune #018',
+  'Fortune #019',
   'Fortune #100',
   'Fortune #101',
   'Fortune #102',
