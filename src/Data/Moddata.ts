@@ -14,4 +14,5 @@ export const ModDescription = `<a href="https://github.com/CookieMonsterTeam/Coo
 /** Latest releasenotes of Cookie Monster to be displayed in the info section */
 export const LatestReleaseNotes = `This update adds support for some parts of cookie clicker 2.048</br>
 - added support for Dragin Aura 'Supreme Intellect' in the pantheon calculations</br>
-- major issue resolved for negative calculations due to missing glucosimium upgrades, kittens, and achievements</br>`;
+- added support for new tiers of Shimmering veil</br>
+- resolved major issue for negative calculations due to missing glucosimium upgrades, kittens, and achievements</br>`;
