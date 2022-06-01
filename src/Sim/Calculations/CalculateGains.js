@@ -50,7 +50,7 @@ export default function CalculateGains() {
   Object.keys(Game.cookieUpgrades).forEach((i) => {
     const me = Game.cookieUpgrades[i];
     if (SimHas(me.name)) {
-      // Some upgrades have a functio as .power (notably the valentine cookies)
+      // Some upgrades have a function as .power (notably the valentine cookies)
       // CM.Sim.InitialBuildingData has changed to use CM.Sim.Has instead of Game.Has etc.
       // Therefore this call is to the .power of the Sim.Object
       if (typeof me.power === 'function') {
@@ -134,11 +134,11 @@ export default function CalculateGains() {
   if (SimHas('Kitten specialists')) catMult *= 1 + milkProgress * 0.2 * milkMult;
   if (SimHas('Kitten experts')) catMult *= 1 + milkProgress * 0.2 * milkMult;
   if (SimHas('Kitten consultants')) catMult *= 1 + milkProgress * 0.2 * milkMult;
-  if (SimHas('Kitten assistants to the regional manager'))
-    catMult *= 1 + milkProgress * 0.175 * milkMult;
+  if (SimHas('Kitten assistants to the regional manager')) catMult *= 1 + milkProgress * 0.175 * milkMult;
   if (SimHas('Kitten marketeers')) catMult *= 1 + milkProgress * 0.15 * milkMult;
   if (SimHas('Kitten analysts')) catMult *= 1 + milkProgress * 0.125 * milkMult;
   if (SimHas('Kitten executives')) catMult *= 1 + milkProgress * 0.115 * milkMult;
+  if (SimHas('Kitten admins')) catMult *= 1 + milkProgress * 0.11 * milkMult;
   if (SimHas('Kitten angels')) catMult *= 1 + milkProgress * 0.1 * milkMult;
   if (SimHas('Fortune #103')) catMult *= 1 + milkProgress * 0.05 * milkMult;
 
@@ -216,6 +216,9 @@ export default function CalculateGains() {
   if (SimHas('Shimmering veil [off]')) {
     let veilMult = 0.5;
     if (SimHas('Reinforced membrane')) veilMult += 0.1;
+    if (SimHas('Delicate touch')) veilMult += 0.05;
+    if (SimHas('Steadfast murmur')) veilMult += 0.05;
+    if (SimHas('Glittering edge')) veilMult += 0.05;
     mult *= 1 + veilMult;
   }
 

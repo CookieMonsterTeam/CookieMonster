@@ -49,13 +49,15 @@ export default function CheckOtherAchiev() {
   if (minAmount >= 500) SimWin('Quincentennial');
   if (minAmount >= 550) SimWin('Quincentennial and a half');
   if (minAmount >= 600) SimWin('Sexcentennial');
+  if (minAmount >= 650) SimWin('Sexcentennial and a half');
 
   if (buildingsOwned >= 100) SimWin('Builder');
   if (buildingsOwned >= 500) SimWin('Architect');
   if (buildingsOwned >= 1000) SimWin('Engineer');
-  if (buildingsOwned >= 2000) SimWin('Lord of Constructs');
-  if (buildingsOwned >= 4000) SimWin('Grand design');
-  if (buildingsOwned >= 8000) SimWin('Ecumenopolis');
+  if (buildingsOwned >= 2500) SimWin('Lord of Constructs');
+  if (buildingsOwned >= 5000) SimWin('Grand design');
+  if (buildingsOwned >= 7500) SimWin('Ecumenopolis');
+  if (buildingsOwned >= 10000) SimWin('Myriad');
 
   if (SimUpgradesOwned >= 20) SimWin('Enhancer');
   if (SimUpgradesOwned >= 50) SimWin('Augmenter');
@@ -63,6 +65,8 @@ export default function CheckOtherAchiev() {
   if (SimUpgradesOwned >= 200) SimWin('Lord of Progress');
   if (SimUpgradesOwned >= 300) SimWin('The full picture');
   if (SimUpgradesOwned >= 400) SimWin("When there's nothing left to add");
+  if (SimUpgradesOwned >= 500) SimWin("Kaizen");
+  if (SimUpgradesOwned >= 600) SimWin("Beyond quality");
 
   if (buildingsOwned >= 4000 && SimUpgradesOwned >= 300) SimWin('Polymath');
   if (buildingsOwned >= 8000 && SimUpgradesOwned >= 400) SimWin('Renaissance baker');
