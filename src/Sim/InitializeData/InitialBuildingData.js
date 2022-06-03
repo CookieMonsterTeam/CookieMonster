@@ -95,7 +95,7 @@ export default function InitialBuildingData(buildingName) {
     };
   }
 
-  // Below is needed for above eval, specifically for the GetTieredCpsMult function
+  // Below is needed for above eval, specifically for the SimGetTieredCpsMult function
   you.baseCps = me.baseCps;
   you.name = me.name;
   you.tieredUpgrades = me.tieredUpgrades;
@@ -105,5 +105,6 @@ export default function InitialBuildingData(buildingName) {
   you.baseCPS = me.baseCps;
   you.id = me.id;
   you.vanilla = me.vanilla;
+  you.unshackleUpgrade = me.unshackleUpgrade;
   return you;
 }
