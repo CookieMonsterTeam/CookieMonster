@@ -1,8 +1,7 @@
 import SimAuraMult from './SimAuraMult';
 
 /**
- * This function calculates the sell multiplier based on current "sim data"
- * It is called by CM.Sim.BuildingSell()
+ * This functions creates functions similarly to Game.getSellMultiplier but checks Sim Data instead of Game Data
  * @returns {number}	giveBack	The multiplier
  */
 export default function SimGetSellMultiplier() {

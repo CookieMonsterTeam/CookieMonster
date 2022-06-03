@@ -12,7 +12,8 @@ export default function SimAuraMult(what) {
     n = 1;
   if (
     Game.dragonAuras[SimDragonAura].name === 'Reality Bending' ||
-    Game.dragonAuras[SimDragonAura2].name === 'Reality Bending'
+    Game.dragonAuras[SimDragonAura2].name === 'Reality Bending' &&
+    Game.dragonLevel >= Game.dragonAurasBN[what].id + 4
   )
     n += 0.1;
   return n;
