@@ -17,4 +17,5 @@ export const LatestReleaseNotes = `This update adds support for some parts of co
 - added support for new tiers of Shimmering veil</br>
 - added support for unshackled upgrades</br>
 - updated some simulator logic to more cloesly match updated cookie clicker logic</br>
-- resolved major issue for negative calculations due to missing glucosimium upgrades, kittens, and achievements</br>`;
+- Bugfix: conjure backed goods tooltip used cached no gold switch raw cps instead of live cps</br>
+- Bugfix: negative calculations due to glucosimium upgrades, kittens, unshackled, and achievements</br>`;
