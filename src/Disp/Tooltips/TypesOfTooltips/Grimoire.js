@@ -1,4 +1,3 @@
-
 import Beautify from '../../BeautifyAndFormatting/Beautify';
 import GetTimeColour from '../../BeautifyAndFormatting/GetTimeColour';
 import CalculateGrimoireRefillTime from '../../HelperFunctions/CalculateGrimoireRefillTime';
@@ -56,13 +55,7 @@ export default function Grimoire() {
       const reward = document.createElement('span');
       reward.style.color = '#33FF00';
       reward.textContent = Beautify(
-        Math.max(
-          Math.min(
-            Game.cookies * 0.15,
-            Game.cookiesPs * 60 * 30
-          ),
-          7
-        ),
+        Math.max(Math.min(Game.cookies * 0.15, Game.cookiesPs * 60 * 30), 7),
         2,
       );
       conjure.appendChild(reward);
@@ -72,14 +65,8 @@ export default function Grimoire() {
       const loss = document.createElement('span');
       loss.style.color = 'red';
       loss.textContent = Beautify(
-        Math.min(
-          Game.cookies,
-          Math.min(
-            Game.cookies * 0.15,
-            Game.cookiesPs * 60 * 15
-          ) + 13
-        ),
-        2
+        Math.min(Game.cookies, Math.min(Game.cookies * 0.15, Game.cookiesPs * 60 * 15) + 13),
+        2,
       );
       conjure.appendChild(loss);
     }

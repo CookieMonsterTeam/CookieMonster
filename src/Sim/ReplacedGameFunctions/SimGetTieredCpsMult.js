@@ -5,15 +5,19 @@ import SimHas from './SimHas';
  * This functions creates functions similarly to Game.GetTieredCpsMult but checks Sim Data instead of Game Data
  */
 export default function SimGetTieredCpsMult(me) {
-
   let mult = 1;
   Object.keys(me.tieredUpgrades).forEach((i) => {
-    if (!Game.Tiers[me.tieredUpgrades[i].tier].special && SimHas(me.tieredUpgrades[i].name)){
-      let tierMult=2;
-      // unshackled multipliers     
-      if (Game.ascensionMode!==1 && SimHas(me.unshackleUpgrade) && SimHas(Game.Tiers[me.tieredUpgrades[i].tier].unshackleUpgrade)) tierMult+=me.id===1?0.5:(20-me.id)*0.1;
-      mult*=tierMult;
-    };
+    if (!Game.Tiers[me.tieredUpgrades[i].tier].special && SimHas(me.tieredUpgrades[i].name)) {
+      let tierMult = 2;
+      // unshackled multipliers
+      if (
+        Game.ascensionMode !== 1 &&
+        SimHas(me.unshackleUpgrade) &&
+        SimHas(Game.Tiers[me.tieredUpgrades[i].tier].unshackleUpgrade)
+      )
+        tierMult += me.id === 1 ? 0.5 : (20 - me.id) * 0.1;
+      mult *= tierMult;
+    }
   });
   Object.keys(me.synergies).forEach((i) => {
     if (SimHas(me.synergies[i].name)) {
