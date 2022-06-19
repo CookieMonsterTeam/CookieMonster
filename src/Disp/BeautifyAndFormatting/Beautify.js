@@ -1,6 +1,6 @@
 /** General functions to format or beautify strings */
 
-import { metric, shortScale, shortScaleAbbreviated } from '../../Data/Scales.ts';
+import { metric, shortScale, shortScaleAbbreviated } from '../../Data/Scales';
 import { BackupFunctions } from '../../Main/VariablesAndData';
 
 /**

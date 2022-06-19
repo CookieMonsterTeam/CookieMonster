@@ -3,7 +3,7 @@
 import { AddMissingUpgrades } from './CreateMissingUpgrades';
 import * as CreateSections from './CreateStatsSections';
 import * as CreateElements from './CreateDOMElements';
-import * as GameData from '../../../Data/Gamedata.ts';
+import * as GameData from '../../../Data/Gamedata';
 
 import {
   CacheAverageClicks,

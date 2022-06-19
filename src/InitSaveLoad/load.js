@@ -1,7 +1,7 @@
 import { saveAndLoadingFunctions } from '@cookiemonsterteam/cookiemonsterframework/src/index';
 
 import headers from '../Data/headers';
-import { VersionMajor, VersionMinor } from '../Data/Moddata.ts';
+import { VersionMajor, VersionMinor } from '../Data/Moddata';
 import settings from '../Data/settings';
 import UpdateColours from '../Disp/HelperFunctions/UpdateColours';
 import CMLoopHook from '../Main/LoopHook';

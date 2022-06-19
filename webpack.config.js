@@ -10,16 +10,7 @@ module.exports = function (env) {
     },
     entry: './src/CookieMonster.js',
     resolve: {
-      extensions: ['.ts', '.js'],
-    },
-    module: {
-      rules: [
-        {
-          test: /\.tsx?/,
-          use: 'ts-loader',
-          exclude: /node_modules/,
-        },
-      ],
+      extensions: ['.js'],
     },
     output: {
       filename: env.finalfile ? 'CookieMonster.js' : 'CookieMonsterDev.js',
