@@ -7,4 +7,11 @@ repos:
           - '--print-width=100'
           - '--single-quote'
           - '--trailing-comma=all'
-        exclude: 'CookieMonster(Dev)?.js'
+        exclude: &build 'CookieMonster(Dev)?.js(.map)?'
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: *build
+      - id: end-of-file-fixer
+        exclude: *build

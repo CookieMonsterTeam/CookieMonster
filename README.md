@@ -23,14 +23,14 @@ If the relevant option is enabled, CM will color-code each of them based on thei
 
 <details>
   <summary>The following standard colours are used:</summary>
-  
-* Light Blue: (upgrades) This item has a better PP than the best building to buy
-* Green: This building has the best PP
-* Yellow: This building is within the top 10 of best PP's
-* Orange: This building is within the top 20 of best PP's
-* Red: This building is within the top 30 of best PP's
-* Purple: This building is worse than the top 10 of best PP's
-* Gray: This item does not have a PP, often this means that there is no change to CPS
+
+- Light Blue: (upgrades) This item has a better PP than the best building to buy
+- Green: This building has the best PP
+- Yellow: This building is within the top 10 of best PP's
+- Orange: This building is within the top 20 of best PP's
+- Red: This building is within the top 30 of best PP's
+- Purple: This building is worse than the top 10 of best PP's
+- Gray: This item does not have a PP, often this means that there is no change to CPS
 
 </details>
 
