@@ -19,10 +19,7 @@ export default function FormatTime(time, longFormat) {
 
   if (Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.TimeFormat === 0) {
     if (formattedTime > 777600000) return longFormat ? 'Over 9000 days!' : '>9000d';
-    str +=
-      y > 0
-        ? `${y + (longFormat ? (y === 1 ? ' year' : ' years') : 'y')}, `
-        : '';
+    str += y > 0 ? `${y + (longFormat ? (y === 1 ? ' year' : ' years') : 'y')}, ` : '';
     if (str.length > 0 || d > 0)
       str += `${d + (longFormat ? (d === 1 ? ' day' : ' days') : 'd')}, `;
     if (str.length > 0 || h > 0)
