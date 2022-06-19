@@ -15,8 +15,11 @@ export default function CacheDragonCost() {
       Game.dragonLevel < 25 &&
       Game.dragonLevels[Game.dragonLevel].buy.toString().includes('sacrifice')
     ) {
-      const objectMatch = Game.dragonLevels[Game.dragonLevel].buy.toString().match(/Objects\[(.*)\]/);
-      let target = objectMatch !== null ? objectMatch[1] : Game.ObjectsById[Game.dragonLevel-5].name;
+      const objectMatch = Game.dragonLevels[Game.dragonLevel].buy
+        .toString()
+        .match(/Objects\[(.*)\]/);
+      let target =
+        objectMatch !== null ? objectMatch[1] : Game.ObjectsById[Game.dragonLevel - 5].name;
       const amount = Game.dragonLevels[Game.dragonLevel].buy
         .toString()
         .match(/sacrifice\((.*?)\)/)[1];

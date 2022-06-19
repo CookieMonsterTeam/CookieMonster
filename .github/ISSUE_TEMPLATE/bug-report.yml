@@ -16,8 +16,7 @@ body:
     id: what-happened
     attributes:
       label: Bug description
-      description:
-        What is the bug about?
+      description: What is the bug about?
       placeholder: |
         # Please describe the bug and what you would have expected the mod to do
     validations:
@@ -26,8 +25,7 @@ body:
     id: reproduce
     attributes:
       label: To reproduce
-      description:
-        How can you reproduce the bug?
+      description: How can you reproduce the bug?
       placeholder: |
         The steps needed to reproduce the behavior: 
         1.

@@ -1,5 +1,5 @@
 import { SimGod1, SimGod2, SimGod3, SimObjects } from '../VariablesAndData';
-import SimHasAura from './SimHasAura'
+import SimHasAura from './SimHasAura';
 
 /**
  * This function checks for the current God level in the sim data
@@ -16,13 +16,13 @@ export default function SimHasGod(what) {
       return 1;
     }
     if (SimGod2 === god.id) {
-      if (SimHasAura('Supreme Intellect')){
+      if (SimHasAura('Supreme Intellect')) {
         return 1;
       }
       return 2;
     }
     if (SimGod3 === god.id) {
-      if (SimHasAura('Supreme Intellect')){
+      if (SimHasAura('Supreme Intellect')) {
         return 2;
       }
       return 3;
