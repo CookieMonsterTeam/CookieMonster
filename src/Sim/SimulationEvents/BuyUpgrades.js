@@ -33,7 +33,7 @@ function MouseCps() {
   if (SimHas('Octillion fingers')) add *= 20;
   if (SimHas('Nonillion fingers')) add *= 20;
   if (SimHas('Decillion fingers')) add *= 20;
-  if (SimHas('Unshackled cursors')) add*=	25;
+  if (SimHas('Unshackled cursors')) add *= 25;
   let num = 0;
   Object.keys(SimObjects).forEach((i) => {
     num += SimObjects[i].amount;
