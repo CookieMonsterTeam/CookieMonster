@@ -3,7 +3,7 @@
 ## Cookie Monster
 
 **Cookie Monster** is an addon you can load into Cookie Clicker, that offers a wide range of tools and statistics to enhance the game. **It is not a cheat interface** – although it does offer helpers for golden cookies and such, everything can be toggled off at will to only leave how much information you want.
-The mod helps you to *whichever* degree you want, if you only need some help shortening long numbers, it does that. If you need to be accompanied by hand to pick the best buildings to buy, it does that, but **everything is an option**.
+The mod helps you to _whichever_ degree you want, if you only need some help shortening long numbers, it does that. If you need to be accompanied by hand to pick the best buildings to buy, it does that, but **everything is an option**.
 
 ### Current version
 
@@ -13,7 +13,7 @@ Github Pages is hosted from the `gh-pages` branch
 
 ### What it does
 
-At its core, Cookie Monster computes an index for both buildings and upgrades: the **Payback Period (PP)**. CM will take *everything* in consideration, meaning if buying a building also unlocks an achievement which boosts your income, which unlocks an achievement, CM will know and highlight that building's value. CM uses the following formula to calculate the PP:
+At its core, Cookie Monster computes an index for both buildings and upgrades: the **Payback Period (PP)**. CM will take _everything_ in consideration, meaning if buying a building also unlocks an achievement which boosts your income, which unlocks an achievement, CM will know and highlight that building's value. CM uses the following formula to calculate the PP:
 
 ```javascript
 max(cost - cookies in bank, 0)/cps + cost/Δ cps
@@ -23,14 +23,14 @@ If the relevant option is enabled, CM will color-code each of them based on thei
 
 <details>
   <summary>The following standard colours are used:</summary>
-  
-* Light Blue: (upgrades) This item has a better PP than the best building to buy
-* Green: This building has the best PP
-* Yellow: This building is within the top 10 of best PP's
-* Orange: This building is within the top 20 of best PP's
-* Red: This building is within the top 30 of best PP's
-* Purple: This building is worse than the top 10 of best PP's
-* Gray: This item does not have a PP, often this means that there is no change to CPS
+
+- Light Blue: (upgrades) This item has a better PP than the best building to buy
+- Green: This building has the best PP
+- Yellow: This building is within the top 10 of best PP's
+- Orange: This building is within the top 20 of best PP's
+- Red: This building is within the top 30 of best PP's
+- Purple: This building is worse than the top 10 of best PP's
+- Gray: This item does not have a PP, often this means that there is no change to CPS
 
 </details>
 
@@ -45,7 +45,7 @@ Copy this code and save it as a bookmark. Paste it in the URL section. To activa
 ```javascript
 javascript: (function () {
   Game.LoadMod('https://cookiemonsterteam.github.io/CookieMonster/dist/CookieMonster.js');
-}());
+})();
 ```
 
 If (for some reason) the above doesn't work, trying pasting everything after the <code>javascript:</code> bit into your browser's console.
@@ -80,10 +80,10 @@ Before pushing a new version to `main` and Github pages use the `build-final` co
 
 ## Contributors
 
-* **[Raving_Kumquat](https://cookieclicker.wikia.com/wiki/User:Raving_Kumquat)**: Original author
-* **[Maxime Fabre](https://github.com/Anahkiasen)**: Previous maintainer
-* **[BlackenedGem](https://github.com/BlackenedGem)**: Golden/Wrath Cookie Favicons
-* **[Sandworm](https://github.com/svschouw)**: Modified PP calculation
-* **[Aktanusa](https://github.com/Aktanusa)**: Current maintainer
-* **[DanielNoord](https://github.com/DanielNoord)**: Current maintainer
-* **[bitsandbytes1708](https://github.com/bitsandbytes1708)**: Current maintainer
+- **[Raving_Kumquat](https://cookieclicker.wikia.com/wiki/User:Raving_Kumquat)**: Original author
+- **[Maxime Fabre](https://github.com/Anahkiasen)**: Previous maintainer
+- **[BlackenedGem](https://github.com/BlackenedGem)**: Golden/Wrath Cookie Favicons
+- **[Sandworm](https://github.com/svschouw)**: Modified PP calculation
+- **[Aktanusa](https://github.com/Aktanusa)**: Current maintainer
+- **[DanielNoord](https://github.com/DanielNoord)**: Current maintainer
+- **[bitsandbytes1708](https://github.com/bitsandbytes1708)**: Current maintainer

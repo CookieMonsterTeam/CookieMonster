@@ -12,32 +12,32 @@ jobs:
     env:
       GITHUB_REGISTERY_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: 12
-    - name: Install dependencies
-      run: npm ci
-    - name: Run ESLint
-      run: npx eslint src
-    - name: Run Mocha tests
-      run: npx mocha
-    - name: Check if CookieMonsterDev.js is built correctly
-      run: |
-        npx webpack -o ./tmp --env minimize
-        if cmp <(head -n 2 dist/CookieMonsterDev.js) <(head -n 2 tmp/CookieMonsterDev.js); then
-            echo '### SUCCESS: CookieMonsterDev is built correctly! ###'
-        else
-            echo '### WARNING: CookieMonsterDev.js does not seem to be correct. Make sure to run "npm run build-dev" after saving all your changes! ###'
-            exit 1
-        fi
-    - name: Check if CookieMonster.js is built correctly
-      if: github.ref == 'refs/heads/master'
-      run: |
-        npx webpack -o ./tmp --env minimize --env finalfile
-        if cmp <(head -n 2 dist/CookieMonster.js) <(head -n 2 tmp/CookieMonster.js); then
-            echo '### SUCCESS: CookieMonster is built correctly! ###'
-        else
-            echo '### WARNING: CookieMonster.js does not seem to be correct. Make sure to run "npm run build-final" after saving all your changes! ###'
-            exit 1
-        fi
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
+      - name: Install dependencies
+        run: npm ci
+      - name: Run ESLint
+        run: npx eslint src
+      - name: Run Mocha tests
+        run: npx mocha
+      - name: Check if CookieMonsterDev.js is built correctly
+        run: |
+          npx webpack -o ./tmp --env minimize
+          if cmp <(head -n 2 dist/CookieMonsterDev.js) <(head -n 2 tmp/CookieMonsterDev.js); then
+              echo '### SUCCESS: CookieMonsterDev is built correctly! ###'
+          else
+              echo '### WARNING: CookieMonsterDev.js does not seem to be correct. Make sure to run "npm run build-dev" after saving all your changes! ###'
+              exit 1
+          fi
+      - name: Check if CookieMonster.js is built correctly
+        if: github.ref == 'refs/heads/master'
+        run: |
+          npx webpack -o ./tmp --env minimize --env finalfile
+          if cmp <(head -n 2 dist/CookieMonster.js) <(head -n 2 tmp/CookieMonster.js); then
+              echo '### SUCCESS: CookieMonster is built correctly! ###'
+          else
+              echo '### WARNING: CookieMonster.js does not seem to be correct. Make sure to run "npm run build-final" after saving all your changes! ###'
+              exit 1
+          fi
