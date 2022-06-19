@@ -7,3 +7,4 @@ repos:
           - '--print-width=100'
           - '--single-quote'
           - '--trailing-comma=all'
+        exclude: 'CookieMonster(Dev)?.js'
