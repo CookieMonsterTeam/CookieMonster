@@ -1,4 +1,4 @@
-import { ChristCookies, HalloCookies } from '../../Data/Gamedata.ts';
+import { ChristCookies, HalloCookies } from '../../Data/Gamedata';
 import SimHas from '../ReplacedGameFunctions/SimHas';
 import SimHasAchiev from '../ReplacedGameFunctions/SimHasAchiev';
 import SimWin from '../SimulationData/SimWin';
@@ -65,8 +65,8 @@ export default function CheckOtherAchiev() {
   if (SimUpgradesOwned >= 200) SimWin('Lord of Progress');
   if (SimUpgradesOwned >= 300) SimWin('The full picture');
   if (SimUpgradesOwned >= 400) SimWin("When there's nothing left to add");
-  if (SimUpgradesOwned >= 500) SimWin("Kaizen");
-  if (SimUpgradesOwned >= 600) SimWin("Beyond quality");
+  if (SimUpgradesOwned >= 500) SimWin('Kaizen');
+  if (SimUpgradesOwned >= 600) SimWin('Beyond quality');
 
   if (buildingsOwned >= 4000 && SimUpgradesOwned >= 300) SimWin('Polymath');
   if (buildingsOwned >= 8000 && SimUpgradesOwned >= 400) SimWin('Renaissance baker');

@@ -1,4 +1,4 @@
 {
   "recursive": true,
-  "require": ["esm", "ts-node/register"]
+  "require": ["esm"]
 }

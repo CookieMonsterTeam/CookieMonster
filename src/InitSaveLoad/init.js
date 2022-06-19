@@ -1,5 +1,5 @@
 import { initFunctions } from '@cookiemonsterteam/cookiemonsterframework';
-import { VersionMajor, VersionMinor } from '../Data/Moddata.ts';
+import { VersionMajor, VersionMinor } from '../Data/Moddata';
 import CMDrawHook from '../Disp/DrawHook';
 import CMClickHook from '../Main/ClickHook';
 import InitializeCookieMonster from '../Main/Initialization';

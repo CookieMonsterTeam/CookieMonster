@@ -1,5 +1,5 @@
 import { menuFunctions as mF } from '@cookiemonsterteam/cookiemonsterframework';
-import { ConfigGroups, ConfigGroupsNotification } from '../../Data/Sectionheaders.ts';
+import { ConfigGroups, ConfigGroupsNotification } from '../../Data/Sectionheaders';
 import settings from '../../Data/settings';
 import UpdateColours from '../HelperFunctions/UpdateColours';
 import RefreshScale from '../HelperFunctions/RefreshScale';

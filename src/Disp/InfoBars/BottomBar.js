@@ -1,7 +1,7 @@
 /** Functions related to the Bottom Bar */
 
 import { CacheObjects1, CacheObjects10, CacheObjects100 } from '../../Cache/VariablesAndData';
-import { VersionMajor, VersionMinor } from '../../Data/Moddata.ts';
+import { VersionMajor, VersionMinor } from '../../Data/Moddata';
 import Beautify from '../BeautifyAndFormatting/Beautify';
 import FormatTime from '../BeautifyAndFormatting/FormatTime';
 import GetTimeColour from '../BeautifyAndFormatting/GetTimeColour';

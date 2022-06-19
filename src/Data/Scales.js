@@ -1,10 +1,10 @@
 /** Data related directly to the scales used by Cookie Monster */
 
 /** Array of abbreviations used in the "Metric" scale */
-export const metric: string[] = ['', '', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
+export const metric = ['', '', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
 
 /** Array of abbreviations used in the "Short" scale */
-export const shortScale: string[] = [
+export const shortScale = [
   '',
   '',
   'M',
@@ -34,7 +34,7 @@ export const shortScale: string[] = [
 ];
 
 /** Array of abbreviations used in the "Abbreviated Short" scale */
-export const shortScaleAbbreviated: string[] = [
+export const shortScaleAbbreviated = [
   '',
   'K',
   'M',
