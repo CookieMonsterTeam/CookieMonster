@@ -87,7 +87,7 @@ export default function ReplaceNative() {
   Game.ClickProduct = function (what) {
     if (
       !Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.BulkBuyBlock ||
-      Game.ObjectsById[what].bulkPrice < Game.cookies ||
+      Game.ObjectsById[what].bulkPrice <= Game.cookies ||
       Game.buyMode === -1
     ) {
       BackupFunctions.ClickProduct(what);
