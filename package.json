@@ -44,9 +44,9 @@
   },
   "homepage": "https://github.com/CookieMonsterTeam/CookieMonster#readme",
   "devDependencies": {
-    "@types/chai": "^4.3.1",
+    "@types/chai": "^4.3.4",
     "@types/mocha": "^9.0.0",
-    "chai": "^4.3.6",
+    "chai": "^4.3.7",
     "eslint": "^8.36.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.5.0",
