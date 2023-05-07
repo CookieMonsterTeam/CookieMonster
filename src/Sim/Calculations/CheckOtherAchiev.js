@@ -50,6 +50,7 @@ export default function CheckOtherAchiev() {
   if (minAmount >= 550) SimWin('Quincentennial and a half');
   if (minAmount >= 600) SimWin('Sexcentennial');
   if (minAmount >= 650) SimWin('Sexcentennial and a half');
+  if (minAmount >= 700) SimWin('Septcentennial');
 
   if (buildingsOwned >= 100) SimWin('Builder');
   if (buildingsOwned >= 500) SimWin('Architect');
@@ -67,6 +68,7 @@ export default function CheckOtherAchiev() {
   if (SimUpgradesOwned >= 400) SimWin("When there's nothing left to add");
   if (SimUpgradesOwned >= 500) SimWin('Kaizen');
   if (SimUpgradesOwned >= 600) SimWin('Beyond quality');
+  if (SimUpgradesOwned >= 700) SimWin("Oft we mar what's well");
 
   if (buildingsOwned >= 4000 && SimUpgradesOwned >= 300) SimWin('Polymath');
   if (buildingsOwned >= 8000 && SimUpgradesOwned >= 400) SimWin('Renaissance baker');

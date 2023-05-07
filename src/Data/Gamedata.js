@@ -21,6 +21,7 @@ export const Fortunes = [
   'Fortune #017',
   'Fortune #018',
   'Fortune #019',
+  'Fortune #020',
   'Fortune #100',
   'Fortune #101',
   'Fortune #102',

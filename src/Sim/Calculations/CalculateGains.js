@@ -140,6 +140,7 @@ export default function CalculateGains() {
   if (SimHas('Kitten analysts')) catMult *= 1 + milkProgress * 0.125 * milkMult;
   if (SimHas('Kitten executives')) catMult *= 1 + milkProgress * 0.115 * milkMult;
   if (SimHas('Kitten admins')) catMult *= 1 + milkProgress * 0.11 * milkMult;
+  if (SimHas('Kitten strategists')) catMult *= 1 + milkProgress * 0.105 * milkMult;
   if (SimHas('Kitten angels')) catMult *= 1 + milkProgress * 0.1 * milkMult;
   if (SimHas('Fortune #103')) catMult *= 1 + milkProgress * 0.05 * milkMult;
 

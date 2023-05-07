@@ -33,6 +33,7 @@ function MouseCps() {
   if (SimHas('Octillion fingers')) add *= 20;
   if (SimHas('Nonillion fingers')) add *= 20;
   if (SimHas('Decillion fingers')) add *= 20;
+  if (SimHas('Undecillion fingers')) add *= 20;
   if (SimHas('Unshackled cursors')) add *= 25;
   let num = 0;
   Object.keys(SimObjects).forEach((i) => {
@@ -56,6 +57,7 @@ function MouseCps() {
   if (SimHas('Plasmarble mouse')) add += SimCookiesPs * 0.01;
   if (SimHas('Miraculite mouse')) add += SimCookiesPs * 0.01;
   if (SimHas('Aetherice mouse')) add += SimCookiesPs * 0.01;
+  if (SimHas('Omniplast mouse')) add += SimCookiesPs * 0.01;
 
   if (SimHas('Fortune #104')) add += SimCookiesPs * 0.01;
 
