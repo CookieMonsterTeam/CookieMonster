@@ -1,6 +1,6 @@
 /** Data related directly to Cookie Monster */
 
-export const VersionMajor = '2.048';
+export const VersionMajor = '2.052';
 export const VersionMinor = '10';
 
 /** Information about Cookie Monster to be displayed in the info section */

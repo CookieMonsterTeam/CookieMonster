@@ -28,6 +28,8 @@ export default function BuyBuildingsBonusIncome(building, amount) {
     if (me.amount >= 600) SimWin('With her finger and her thumb');
     if (me.amount >= 700) SimWin('Gotta hand it to you');
     if (me.amount >= 800) SimWin("The devil's workshop");
+    if (me.amount >= 900) SimWin('All on deck');
+    if (me.amount >= 1000) SimWin('A round of applause');
   } else {
     Object.keys(Game.Objects[me.name].tieredAchievs).forEach((j) => {
       if (me.amount >= Game.Tiers[Game.Objects[me.name].tieredAchievs[j].tier].achievUnlock) {
