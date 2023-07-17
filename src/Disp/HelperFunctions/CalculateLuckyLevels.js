@@ -11,7 +11,7 @@ export function CountSevens(number) {
 
   while (localNumber >= SPECIAL_DIGIT) {
     if (localNumber % 10 === SPECIAL_DIGIT) sevenCount += 1;
-    localNumber = Math.floor(localNumber / 10); 
+    localNumber = Math.floor(localNumber / 10);
   }
 
   return sevenCount;

@@ -607,11 +607,7 @@ export function PrestigeSection() {
   const currentPrestige = Math.floor(Game.HowMuchPrestige(Game.cookiesReset));
   const willHave = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
   const willGet = willHave - currentPrestige;
-  const {
-    luckyDigit,
-    luckyNumber,
-    luckyPayout
-  } = CalculateLuckyLevels(willHave);
+  const { luckyDigit, luckyNumber, luckyPayout } = CalculateLuckyLevels(willHave);
   if (!Game.Has('Lucky digit')) {
     const luckyDigitDelta = luckyDigit - willHave;
     const luckyDigitReset = willGet + luckyDigitDelta;
@@ -621,7 +617,9 @@ export function PrestigeSection() {
         `${luckyDigit.toLocaleString()} / ${luckyDigitReset.toLocaleString()} (+${luckyDigitDelta})`,
       ),
     );
-    section.appendChild(StatsListing('basic', 'Next "Lucky Digit" (total / reset)', fragLuckyDigit));
+    section.appendChild(
+      StatsListing('basic', 'Next "Lucky Digit" (total / reset)', fragLuckyDigit),
+    );
   }
 
   if (!Game.Has('Lucky number')) {
@@ -633,7 +631,9 @@ export function PrestigeSection() {
         `${luckyNumber.toLocaleString()} / ${luckyNumberReset.toLocaleString()} (+${luckyNumberDelta})`,
       ),
     );
-    section.appendChild(StatsListing('basic', 'Next "Lucky Number" (total / reset)', fragLuckyNumber));
+    section.appendChild(
+      StatsListing('basic', 'Next "Lucky Number" (total / reset)', fragLuckyNumber),
+    );
   }
 
   if (!Game.Has('Lucky payout')) {
@@ -645,7 +645,9 @@ export function PrestigeSection() {
         `${luckyPayout.toLocaleString()} / ${luckyPayoutReset.toLocaleString()} (+${luckyPayoutDelta})`,
       ),
     );
-    section.appendChild(StatsListing('basic', 'Next "Lucky Payout" (total / reset)', fragLuckyPayout));
+    section.appendChild(
+      StatsListing('basic', 'Next "Lucky Payout" (total / reset)', fragLuckyPayout),
+    );
   }
 
   return section;

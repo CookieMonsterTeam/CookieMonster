@@ -1,20 +1,23 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
-import CalculateLuckyLevels, { CalculateSevenDelta, CountSevens } from '../../src/Disp/HelperFunctions/CalculateLuckyLevels';
+import CalculateLuckyLevels, {
+  CalculateSevenDelta,
+  CountSevens,
+} from '../../src/Disp/HelperFunctions/CalculateLuckyLevels';
 
 describe('CountSevens', () => {
   const examples = [
     { input: 1234567890, output: 1 },
     { input: 7777777777, output: 10 },
     { input: 1111111111, output: 0 },
-    { input: 7897897897, output: 4 }
+    { input: 7897897897, output: 4 },
   ];
 
   examples.forEach((example) => {
     it(`Counts sevens in ${example.input}`, () => {
       expect(CountSevens(example.input)).to.equal(example.output);
-    })
+    });
   });
 });
 
@@ -38,7 +41,7 @@ describe('CalculateSevenDelta', () => {
     it(`Calculates delta from ${example.number} to the next 7 in the ${example.digit}s digit`, () => {
       expect(CalculateSevenDelta(example.number, example.digit)).to.equal(example.output);
     });
-  })
+  });
 });
 
 describe('CalculateLuckyLevels', () => {
@@ -55,8 +58,8 @@ describe('CalculateLuckyLevels', () => {
       expect(CalculateLuckyLevels(example.input)).to.deep.equal({
         luckyDigit: example.luckyDigit,
         luckyNumber: example.luckyNumber,
-        luckyPayout: example.luckyPayout
-      })
+        luckyPayout: example.luckyPayout,
+      });
     });
-  })
+  });
 });
