@@ -37,7 +37,6 @@ import {
   CacheWrinklersTotal,
 } from '../../../Cache/VariablesAndData';
 import ResetBonus from '../../../Sim/SimulationEvents/ResetAscension';
-import CalculateLuckyLevels from '../../HelperFunctions/CalculateLuckyLevels';
 import GetCPS from '../../HelperFunctions/GetCPS';
 import GetWrinkConfigBank from '../../HelperFunctions/GetWrinkConfigBank';
 import { ColourGreen, ColourRed, ColourTextPre } from '../../VariablesAndData';
@@ -607,47 +606,46 @@ export function PrestigeSection() {
   const currentPrestige = Math.floor(Game.HowMuchPrestige(Game.cookiesReset));
   const willHave = Math.floor(Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned));
   const willGet = willHave - currentPrestige;
-  const { luckyDigit, luckyNumber, luckyPayout } = CalculateLuckyLevels(willHave);
   if (!Game.Has('Lucky digit')) {
-    const luckyDigitDelta = luckyDigit - willHave;
-    const luckyDigitReset = willGet + luckyDigitDelta;
-    const fragLuckyDigit = document.createDocumentFragment();
-    fragLuckyDigit.appendChild(
+    let delta7 = 7 - (willHave % 10);
+    if (delta7 < 0) delta7 += 10;
+    const next7Reset = willGet + delta7;
+    const next7Total = willHave + delta7;
+    const frag7 = document.createDocumentFragment();
+    frag7.appendChild(
       document.createTextNode(
-        `${luckyDigit.toLocaleString()} / ${luckyDigitReset.toLocaleString()} (+${luckyDigitDelta})`,
+        `${next7Total.toLocaleString()} / ${next7Reset.toLocaleString()} (+${delta7})`,
       ),
     );
-    section.appendChild(
-      StatsListing('basic', 'Next "Lucky Digit" (total / reset)', fragLuckyDigit),
-    );
+    section.appendChild(StatsListing('basic', 'Next "Lucky Digit" (total / reset)', frag7));
   }
 
   if (!Game.Has('Lucky number')) {
-    const luckyNumberDelta = luckyNumber - willHave;
-    const luckyNumberReset = willGet + luckyNumberDelta;
-    const fragLuckyNumber = document.createDocumentFragment();
-    fragLuckyNumber.appendChild(
+    let delta777 = 777 - (willHave % 1000);
+    if (delta777 < 0) delta777 += 1000;
+    const next777Reset = willGet + delta777;
+    const next777Total = willHave + delta777;
+    const frag777 = document.createDocumentFragment();
+    frag777.appendChild(
       document.createTextNode(
-        `${luckyNumber.toLocaleString()} / ${luckyNumberReset.toLocaleString()} (+${luckyNumberDelta})`,
+        `${next777Total.toLocaleString()} / ${next777Reset.toLocaleString()} (+${delta777})`,
       ),
     );
-    section.appendChild(
-      StatsListing('basic', 'Next "Lucky Number" (total / reset)', fragLuckyNumber),
-    );
+    section.appendChild(StatsListing('basic', 'Next "Lucky Number" (total / reset)', frag777));
   }
 
   if (!Game.Has('Lucky payout')) {
-    const luckyPayoutDelta = luckyPayout - willHave;
-    const luckyPayoutReset = willGet + luckyPayoutDelta;
-    const fragLuckyPayout = document.createDocumentFragment();
-    fragLuckyPayout.appendChild(
+    let delta777777 = 777777 - (willHave % 1000000);
+    if (delta777777 < 0) delta777777 += 1000000;
+    const next777777Reset = willGet + delta777777;
+    const next777777Total = willHave + delta777777;
+    const frag777777 = document.createDocumentFragment();
+    frag777777.appendChild(
       document.createTextNode(
-        `${luckyPayout.toLocaleString()} / ${luckyPayoutReset.toLocaleString()} (+${luckyPayoutDelta})`,
+        `${next777777Total.toLocaleString()} / ${next777777Reset.toLocaleString()} (+${delta777777})`,
       ),
     );
-    section.appendChild(
-      StatsListing('basic', 'Next "Lucky Payout" (total / reset)', fragLuckyPayout),
-    );
+    section.appendChild(StatsListing('basic', 'Next "Lucky Payout" (total / reset)', frag777777));
   }
 
   return section;
