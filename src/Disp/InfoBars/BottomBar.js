@@ -98,9 +98,8 @@ export function UpdateBotBar() {
       l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[count].className =
         ColourTextPre + timeColour.colour;
       if (timeColour.text === 'Done!' && Game.cookies < Game.Objects[i].bulkPrice) {
-        l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[
-          count
-        ].textContent = `${timeColour.text} (with Wrink)`;
+        l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[count].textContent =
+          `${timeColour.text} (with Wrink)`;
       } else
         l('CMBotBar').firstChild.firstChild.childNodes[3].childNodes[count].textContent =
           timeColour.text;
