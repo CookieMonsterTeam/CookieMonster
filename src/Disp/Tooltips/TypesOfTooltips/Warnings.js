@@ -101,9 +101,8 @@ export default function Warnings() {
       ) {
         l('CMDispTooltipWarnUser').style.display = '';
         // Need to update tooltip text dynamically
-        l(
-          'CMDispTooltipWarnUser',
-        ).children[0].textContent = `Purchase of this item will put you under the number of Cookies equal to ${Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ToolWarnUser} seconds of CPS`;
+        l('CMDispTooltipWarnUser').children[0].textContent =
+          `Purchase of this item will put you under the number of Cookies equal to ${Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ToolWarnUser} seconds of CPS`;
         l('CMDispTooltipWarnUserText').textContent = `${Beautify(
           Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ToolWarnUser *
             GetCPS() -
