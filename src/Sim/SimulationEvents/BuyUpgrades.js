@@ -110,7 +110,7 @@ function MouseCps() {
  * This function calculates the bonus income of buying a building
  * It is called by CM.Cache.CacheBuildingIncome()
  * @param	{string}				building	The name of the upgrade to be bought
- * @returns {[{number, number}]}				The bonus income of the upgrade and the difference in MouseCPS
+ * @returns {[number, number]}				The bonus income of the upgrade and the difference in MouseCPS
  */
 export default function BuyUpgradesBonusIncome(upgrade) {
   if (
