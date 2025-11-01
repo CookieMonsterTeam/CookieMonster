@@ -1,9 +1,14 @@
 /* eslint-disable no-restricted-syntax */
- 
+
 import Beautify from '../../BeautifyAndFormatting/Beautify.js';
 import { TooltipName } from '../../VariablesAndData.js';
 import * as Create from '../CreateTooltip.js';
-import { CacheFarmLevel, CacheGardenSoil, CachePlotChances, CacheSupremeIntellect } from '../../../Cache/VariablesAndData.js';
+import {
+  CacheFarmLevel,
+  CacheGardenSoil,
+  CachePlotChances,
+  CacheSupremeIntellect,
+} from '../../../Cache/VariablesAndData.js';
 import CalculateAllPlotChances from '../../HelperFunctions/CalculateAllPlotChances.js';
 
 /**
@@ -47,7 +52,11 @@ export default function GardenPlots() {
       if (rewardTooltip.style.display !== 'none') tooltipBorder.appendChild(rewardTooltip);
     }
 
-    if (minigame.parent.level !== CacheFarmLevel || minigame.soil !== CacheGardenSoil || Game.auraMult('Supreme Intellect') !== CacheSupremeIntellect) {
+    if (
+      minigame.parent.level !== CacheFarmLevel ||
+      minigame.soil !== CacheGardenSoil ||
+      Game.auraMult('Supreme Intellect') !== CacheSupremeIntellect
+    ) {
       CacheFarmLevel = minigame.parent.level;
       CacheGardenSoil = minigame.soil;
       CacheSupremeIntellect = Game.auraMult('Supreme Intellect');
@@ -55,8 +64,7 @@ export default function GardenPlots() {
     }
     const plotChances = CachePlotChances[TooltipName[1]][TooltipName[0]];
 
-
-    tooltipBorder.appendChild(Create.TooltipCreateHeader('After Next Tick:'))
+    tooltipBorder.appendChild(Create.TooltipCreateHeader('After Next Tick:'));
 
     const showIcon = [];
     for (let id = 0; id < minigame.plantsById.length; id++) {
@@ -65,24 +73,25 @@ export default function GardenPlots() {
         showIcon[id] = true;
         continue; // eslint-disable-line no-continue
       }
-      for (let y = 0; y < 6; y++) for (let x = 0; x < 6; x++) {
-        if (minigame.plot[y][x][0] - 1 === id) {
-          showIcon[id] = true;
-          break;
+      for (let y = 0; y < 6; y++)
+        for (let x = 0; x < 6; x++) {
+          if (minigame.plot[y][x][0] - 1 === id) {
+            showIcon[id] = true;
+            break;
+          }
         }
-      }
     }
 
     const tooltipOutcomes = document.createElement('div');
-    const ConvertToPercentage = function(x) {
+    const ConvertToPercentage = function (x) {
       if (x <= 0) return '0%';
       if (x >= 1) return '100%';
       if (x < 0.000005) return '<0.001%';
       if (x >= 0.999995) return '>99.999%';
-      
+
       const xH = x * 100;
       return `${Beautify(xH)}%`;
-    }
+    };
     for (const outcome of plotChances) {
       const outcomeInfo = document.createElement('div');
       outcomeInfo.style.height = '48px';
@@ -116,7 +125,7 @@ export default function GardenPlots() {
         }
       }
       outcomeInfo.appendChild(outcomeIcon);
-      
+
       const outcomeInfoText = document.createElement('div');
       outcomeInfoText.style.marginLeft = '5px';
 

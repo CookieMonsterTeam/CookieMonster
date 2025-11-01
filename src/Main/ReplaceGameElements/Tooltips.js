@@ -61,15 +61,16 @@ function ReplaceTooltipGarden() {
     const OldHarvestAll = Game.Objects.Farm.minigame.harvestAll;
     const OldHarvest = Game.Objects.Farm.minigame.harvest;
 
-    Game.Objects.Farm.minigame.harvestAll = function(...args) {
+    Game.Objects.Farm.minigame.harvestAll = function (...args) {
       OldHarvestAll(...args);
       CalculateAllPlotChances(Game.Objects.Farm.minigame, Game.auraMult('Supreme Intellect'));
-    }
+    };
 
-    Game.Objects.Farm.minigame.harvest = function(x, y, manual) {
+    Game.Objects.Farm.minigame.harvest = function (x, y, manual) {
       OldHarvest(...arguments); // eslint-disable-line prefer-rest-params
-      if (manual) CalculateAllPlotChances(Game.Objects.Farm.minigame, Game.auraMult('Supreme Intellect'));
-    }
+      if (manual)
+        CalculateAllPlotChances(Game.Objects.Farm.minigame, Game.auraMult('Supreme Intellect'));
+    };
   }
 }
 
