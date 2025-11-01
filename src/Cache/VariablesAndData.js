@@ -104,6 +104,11 @@ export let CacheDoRemakeBuildPrices;
 
 export let CacheHadBuildAura;
 
+export let CacheFarmLevel = -1;
+export let CacheGardenSoil = -1;
+export let CacheSupremeIntellect = -1;
+export let CachePlotChances = [[], [], [], [], [], []];
+
 /** Store the CPS effect of each god if it was put into each slot */
 export let CacheGods = {
   0: [0, 0, 0],
