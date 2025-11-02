@@ -1,6 +1,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-continue */
 /* eslint-disable no-restricted-syntax */
+/* eslint-disable no-param-reassign */
 
 /**
  * Calculates the possible plants for a tile after the next garden tick.
@@ -232,7 +233,7 @@ export default function CalculateSingleTileChances(
   if (Math.abs(total - 1) > 1e-9) {
     futureStates.forEach((o) => {
       o.p /= total;
-    }); // eslint-disable-line no-param-reassign
+    });
   }
 
   return futureStates;
