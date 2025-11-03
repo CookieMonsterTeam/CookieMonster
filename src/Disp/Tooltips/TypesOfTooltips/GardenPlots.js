@@ -1,4 +1,5 @@
 /* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 
 import Beautify from '../../BeautifyAndFormatting/Beautify.js';
 import { TooltipName } from '../../VariablesAndData.js';
@@ -66,30 +67,35 @@ export default function GardenPlots() {
 
     tooltipBorder.appendChild(Create.TooltipCreateHeader('After Next Tick:'));
 
+
     const showIcon = [];
-    for (let id = 0; id < minigame.plantsById.length; id++) {
+    for (const id in minigame.plantsById) {
       showIcon[id] = false;
       if (minigame.plantsById[id].unlocked !== 0) {
         showIcon[id] = true;
         continue; // eslint-disable-line no-continue
       }
-      for (let y = 0; y < 6; y++)
-        for (let x = 0; x < 6; x++) {
+      for (let y = 0; y < 6 && !showIcon[id]; y++)
+        for (let x = 0; x < 6; x++)
           if (minigame.plot[y][x][0] - 1 === id) {
             showIcon[id] = true;
             break;
           }
-        }
     }
+
 
     const tooltipOutcomes = document.createElement('div');
     const ConvertToPercentage = function (x) {
       if (x <= 0) return '0%';
       if (x >= 1) return '100%';
-      if (x < 0.000005) return '<0.001%';
-      if (x >= 0.999995) return '>99.999%';
-
+      
       const xH = x * 100;
+      const decimals =
+        Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleDecimals + 1;
+      const delta = 10 ** -decimals;
+      if (xH < delta) return `<${Beautify(delta)}%`;
+      if (xH > delta) return `>${Beautify(1 - delta)}%`;
+
       return `${Beautify(xH)}%`;
     };
     for (const outcome of plotChances) {
