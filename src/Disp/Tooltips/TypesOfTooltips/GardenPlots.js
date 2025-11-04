@@ -92,7 +92,7 @@ export default function GardenPlots() {
       const decimals =
         Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleDecimals + 1;
       const delta = 10 ** -decimals;
-      
+
       const xH = x * 100;
       if (xH < delta) return `<${Beautify(delta)}%`;
       if (xH > 100 - delta) return `>${Beautify(100 - delta)}%`;
