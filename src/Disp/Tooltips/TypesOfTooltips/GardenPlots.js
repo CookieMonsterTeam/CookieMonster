@@ -67,7 +67,6 @@ export default function GardenPlots() {
 
     tooltipBorder.appendChild(Create.TooltipCreateHeader('After Next Tick:'));
 
-
     const showIcon = [];
     for (const id in minigame.plantsById) {
       showIcon[id] = false;
@@ -83,12 +82,11 @@ export default function GardenPlots() {
           }
     }
 
-
     const tooltipOutcomes = document.createElement('div');
     const ConvertToPercentage = function (x) {
       if (x <= 0) return '0%';
       if (x >= 1) return '100%';
-      
+
       const xH = x * 100;
       const decimals =
         Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleDecimals + 1;
