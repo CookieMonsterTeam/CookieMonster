@@ -1,5 +1,6 @@
 import { notificationsFunctions as nF } from '@cookiemonsterteam/cookiemonsterframework/src/index.js';
 import { LastGardenNextStep } from '../VariablesAndData.js';
+import CalculateAllPlotChances from '../../Disp/HelperFunctions/CalculateAllPlotChances.js';
 
 /**
  * This function checks if a garden tick has happened
@@ -18,6 +19,7 @@ export default function CheckGardenTick() {
         'GardVolume',
         false,
       );
+      CalculateAllPlotChances(Game.Objects.Farm.minigame, Game.auraMult('Supreme Intellect'));
     }
     LastGardenNextStep = Game.Objects.Farm.minigame.nextStep;
   }

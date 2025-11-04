@@ -1,5 +1,6 @@
 /** Functions related to replacing tooltips */
 
+import CalculateAllPlotChances from '../../Disp/HelperFunctions/CalculateAllPlotChances.js';
 import { CreateTooltip } from '../../Disp/Tooltips/Tooltip.js';
 import { LoadMinigames, TooltipBuildBackup, TooltipLumpBackup } from '../VariablesAndData.js'; // eslint-disable-line no-unused-vars
 import ReplaceNativeGrimoire from './NativeGrimoire.js';
@@ -37,7 +38,7 @@ function ReplaceTooltipLump() {
 }
 
 /**
- * This function replaces the original .onmouseover functions of all garden plants
+ * Replaces functions for the garden minigame
  */
 function ReplaceTooltipGarden() {
   if (Game.Objects.Farm.minigameLoaded) {
@@ -55,6 +56,21 @@ function ReplaceTooltipGarden() {
         Game.tooltip.wobble();
       };
     });
+
+    // overwrite the harvesting functions to allow CachePlotChances to be updated
+    const OldHarvestAll = Game.Objects.Farm.minigame.harvestAll;
+    const OldHarvest = Game.Objects.Farm.minigame.harvest;
+
+    Game.Objects.Farm.minigame.harvestAll = function (...args) {
+      OldHarvestAll(...args);
+      CalculateAllPlotChances(Game.Objects.Farm.minigame, Game.auraMult('Supreme Intellect'));
+    };
+
+    Game.Objects.Farm.minigame.harvest = function (x, y, manual) {
+      OldHarvest(...arguments); // eslint-disable-line prefer-rest-params
+      if (manual)
+        CalculateAllPlotChances(Game.Objects.Farm.minigame, Game.auraMult('Supreme Intellect'));
+    };
   }
 }
 
