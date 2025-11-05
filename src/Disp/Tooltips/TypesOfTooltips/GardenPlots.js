@@ -33,19 +33,19 @@ export default function GardenPlots() {
       reward.id = 'CMTooltipPlantReward';
       rewardTooltip.appendChild(reward);
       if (plantName === 'Chocoroot' || plantName === 'White chocoroot') {
-        l('CMTooltipPlantReward').textContent = `${
+        reward.textContent = `${
           mature ? Beautify(Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 3)) : '0'
         } / ${Beautify(Game.cookiesPs * 60 * 3)}`;
       } else if (plantName === 'Bakeberry') {
-        l('CMTooltipPlantReward').textContent = `${
+        reward.textContent = `${
           mature ? Beautify(Math.min(Game.cookies * 0.03, Game.cookiesPs * 60 * 30)) : '0'
         } / ${Beautify(Game.cookiesPs * 60 * 30)}`;
       } else if (plantName === 'Queenbeet') {
-        l('CMTooltipPlantReward').textContent = `${
+        reward.textContent = `${
           mature ? Beautify(Math.min(Game.cookies * 0.04, Game.cookiesPs * 60 * 60)) : '0'
         } / ${Beautify(Game.cookiesPs * 60 * 60)}`;
       } else if (plantName === 'Duketater') {
-        l('CMTooltipPlantReward').textContent = `${
+        reward.textContent = `${
           mature ? Beautify(Math.min(Game.cookies * 0.08, Game.cookiesPs * 60 * 120)) : '0'
         } / ${Beautify(Game.cookiesPs * 60 * 120)}`;
       } else rewardTooltip.style.display = 'none';
@@ -65,7 +65,9 @@ export default function GardenPlots() {
     }
     const plotChances = CachePlotChances[TooltipName[1]][TooltipName[0]];
 
-    tooltipBorder.appendChild(Create.TooltipCreateHeader('After Next Tick:'));
+    const plotTooltip = document.createElement('div');
+    if (l('CMTooltipPlantReward')) plotTooltip.style.marginTop = '5px';
+    plotTooltip.appendChild(Create.TooltipCreateHeader('After Next Tick:'));
 
     const showIcon = [];
     for (const id in minigame.plantsById) {
@@ -147,10 +149,9 @@ export default function GardenPlots() {
       }
 
       outcomeInfo.appendChild(outcomeInfoText);
-
       tooltipOutcomes.appendChild(outcomeInfo);
     }
-
-    tooltipBorder.appendChild(tooltipOutcomes);
+    plotTooltip.appendChild(tooltipOutcomes);
+    tooltipBorder.appendChild(plotTooltip);
   } else l('CMTooltipArea').style.display = 'none';
 }

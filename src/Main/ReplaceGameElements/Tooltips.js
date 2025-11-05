@@ -57,19 +57,11 @@ function ReplaceTooltipGarden() {
       };
     });
 
-    // overwrite the harvesting functions to allow CachePlotChances to be updated
-    const OldHarvestAll = Game.Objects.Farm.minigame.harvestAll;
-    const OldHarvest = Game.Objects.Farm.minigame.harvest;
-
-    Game.Objects.Farm.minigame.harvestAll = function (...args) {
-      OldHarvestAll(...args);
+    // overwrite the harvesting function to allow CachePlotChances to be updated
+    const OldBuildPlot = Game.Objects.Farm.minigame.buildPlot;
+    Game.Objects.Farm.minigame.buildPlot = function () {
+      OldBuildPlot(arguments); // eslint-disable-line prefer-rest-params
       CalculateAllPlotChances(Game.Objects.Farm.minigame, Game.auraMult('Supreme Intellect'));
-    };
-
-    Game.Objects.Farm.minigame.harvest = function (x, y, manual) {
-      OldHarvest(...arguments); // eslint-disable-line prefer-rest-params
-      if (manual)
-        CalculateAllPlotChances(Game.Objects.Farm.minigame, Game.auraMult('Supreme Intellect'));
     };
   }
 }
