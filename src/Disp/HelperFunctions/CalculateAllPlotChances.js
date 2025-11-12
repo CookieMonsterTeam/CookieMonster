@@ -43,18 +43,22 @@ export default function CalculateAllPlotChances(minigame, auraMult) {
       switch (id) {
         case 7:
           ageMult = 1.03;
+          weedMult = 1;
           range = 1;
           break;
         case 31:
+          ageMult = 1;
           weedMult = 0;
           range = 2;
           break;
         case 32:
+          ageMult = 1;
           weedMult = 0;
           range = 1;
           break;
         case 33:
           ageMult = 0.5;
+          weedMult = 1;
           range = 1;
           break;
         default:
