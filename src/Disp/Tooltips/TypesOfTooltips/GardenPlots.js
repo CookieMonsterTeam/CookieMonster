@@ -71,14 +71,11 @@ export default function GardenPlots() {
 
     const showIcon = [];
     for (const id in minigame.plantsById) {
-      showIcon[id] = false;
-      if (minigame.plantsById[id].unlocked !== 0) {
-        showIcon[id] = true;
-        continue; // eslint-disable-line no-continue
-      }
+      showIcon[id] = minigame.plantsById[id].unlocked !== 0;
       for (let y = 0; y < 6 && !showIcon[id]; y++) {
         for (let x = 0; x < 6; x++) {
-          if (minigame.plot[y][x][0] - 1 === id) {
+          // eslint-disable-next-line eqeqeq
+          if (minigame.plot[y][x][0] - 1 == id) {
             showIcon[id] = true;
             break;
           }
