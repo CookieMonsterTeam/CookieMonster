@@ -74,7 +74,8 @@ export default function GardenPlots() {
       showIcon[id] = minigame.plantsById[id].unlocked !== 0;
       for (let y = 0; y < 6 && !showIcon[id]; y++) {
         for (let x = 0; x < 6; x++) {
-          if (minigame.plot[y][x][0] - 1 == id) { // eslint-disable-line eqeqeq
+          if (minigame.plot[y][x][0] - 1 == id) {
+            // eslint-disable-line eqeqeq
             showIcon[id] = true;
             break;
           }
