@@ -77,7 +77,6 @@ export default function CalculateGains() {
   if (SimHas('Dragon scale')) mult *= 1.03;
 
   if (SimHas('Wrinkler ambergris')) mult *= 1.06;
-  console.log('SimHasWinklerAmbergris:', SimHas('Wrinkler ambergris'))
 
   // Check effect of chosen Gods
   let buildMult = 1;
