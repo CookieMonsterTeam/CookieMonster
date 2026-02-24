@@ -58,7 +58,7 @@
     "@cookiemonsterteam/cookiemonsterframework": "0.2.3",
     "@eastdesire/jscolor": "^2.5.1",
     "@eslint/compat": "^1.2.7",
-    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.20.0",
     "chai": "^5.2.0",
     "eslint": "^9.21.0",
