@@ -679,7 +679,7 @@ const settings = {
   ),
   GCVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationGC', [], 'Volume'),
   GCSoundURL: new settingClasses.SettingStandard(
-    'https://freesound.org/data/previews/66/66717_931655-lq.mp3',
+    'https://github.com/CookieMonsterTeam/CookieMonster/raw/refs/heads/dev/src/Sounds/NotificationGC.mp3',
     'url',
     'NotificationGC',
     'Sound URL:',
@@ -722,7 +722,7 @@ const settings = {
   ),
   FortuneVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationFC', [], 'Volume'),
   FortuneSoundURL: new settingClasses.SettingStandard(
-    'https://freesound.org/data/previews/174/174027_3242494-lq.mp3',
+    'https://github.com/CookieMonsterTeam/CookieMonster/raw/refs/heads/dev/src/Sounds/NotificationFC.mp3',
     'url',
     'NotificationFC',
     'Sound URL:',
@@ -765,7 +765,7 @@ const settings = {
   ),
   SeaVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationSea', [], 'Volume'),
   SeaSoundURL: new settingClasses.SettingStandard(
-    'https://www.freesound.org/data/previews/121/121099_2193266-lq.mp3',
+    'https://github.com/CookieMonsterTeam/CookieMonster/raw/refs/heads/dev/src/Sounds/NotificationSea.mp3',
     'url',
     'NotificationSea',
     'Sound URL:',
@@ -795,7 +795,7 @@ const settings = {
   ),
   GardVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationGard', [], 'Volume'),
   GardSoundURL: new settingClasses.SettingStandard(
-    'https://freesound.org/data/previews/103/103046_861714-lq.mp3',
+    'https://github.com/CookieMonsterTeam/CookieMonster/raw/refs/heads/dev/src/Sounds/NotificationGard.mp3',
     'url',
     'NotificationGard',
     'Garden Tick Sound URL:',
@@ -838,7 +838,7 @@ const settings = {
   ),
   MagicVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationMagi', [], 'Volume'),
   MagicSoundURL: new settingClasses.SettingStandard(
-    'https://freesound.org/data/previews/221/221683_1015240-lq.mp3',
+    'https://github.com/CookieMonsterTeam/CookieMonster/raw/refs/heads/dev/src/Sounds/NotificationMagi.mp3',
     'url',
     'NotificationMagi',
     'Sound URL:',
@@ -881,7 +881,7 @@ const settings = {
   ),
   WrinklerVolume: new settingClasses.SettingVolume(100, 'vol', 'NotificationWrink', [], 'Volume'),
   WrinklerSoundURL: new settingClasses.SettingStandard(
-    'https://freesound.org/data/previews/124/124186_8043-lq.mp3',
+    'https://github.com/CookieMonsterTeam/CookieMonster/raw/refs/heads/dev/src/Sounds/NotificationWrink.mp3',
     'url',
     'NotificationWrink',
     'Sound URL:',
@@ -930,7 +930,7 @@ const settings = {
     'Volume',
   ),
   WrinklerMaxSoundURL: new settingClasses.SettingStandard(
-    'https://freesound.org/data/previews/152/152743_15663-lq.mp3',
+    'https://github.com/CookieMonsterTeam/CookieMonster/raw/refs/heads/dev/src/Sounds/NotificationWrinkMax.mp3',
     'url',
     'NotificationWrinkMax',
     'Sound URL:',
