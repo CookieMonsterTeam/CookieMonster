@@ -38,7 +38,7 @@ export default function Upgrade() {
       l('CMTooltipPP').style.display = 'none';
     } else {
       if (Number.isFinite(increase) && increase !== 0) {
-        l('CMTooltipIncome').textContent += ` (${increase / 100}% of income)`;
+        l('CMTooltipIncome').textContent += ` (${Beautify(increase / 100, 2)}% of income)`;
       } else {
         l('CMTooltipIncome').textContent += ` (<0${
           Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.ScaleSeparator
