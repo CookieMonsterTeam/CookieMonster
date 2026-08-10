@@ -12,7 +12,7 @@ function CrateTooltipLockedAchievements(me) {
   let { icon } = me;
   if (me.iconFunction) icon = me.iconFunction();
 
-  let { desc } = me;
+  let desc = me.ddesc;
   if (me.descFunc) desc = me.descFunc('stats');
 
   let tagsStr = '';
